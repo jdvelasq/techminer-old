@@ -1,1 +1,0 @@
-# techminer-new
