@@ -19,7 +19,7 @@ def _expand(pdf, column, sep):
         sep = SCOPUS_SEPS[column]
     if sep is not None:
         result[column] = result[column].map(
-            lambda x: x.split(sep) if isinstance(x, str) else x
+            lambda x: sorted(list(set(x.split(sep)))) if isinstance(x, str) else x
         )
         result = result.explode(column)
         result[column] = result[column].map(
@@ -366,65 +366,6 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-        ## computes the number of documents by term by term
-
-        data = self[[column_r, column_c, "Year", "ID"]].dropna()
-        data = _expand_column(data, column_r, sep_r)
-        data = _expand_column(data, column_c, sep_c)
-
-        numdocs = data.groupby(by=[column_r, column_c, "Year"]).size()
-
-        ## results dataframe
-        a = [t for t, _, _ in numdocs.index]
-        b = [t for _, t, _ in numdocs.index]
-        y = [t for _, _, t in numdocs.index]
-        result = pd.DataFrame(
-            {column_r: a, column_c: b, "Year": y, "Num Documents": numdocs.tolist()}
-        )
-
-        ## compute top_n terms
-        if top_n is not None:
-            ## rows
-            top = self.documents_by_terms(column_r, sep_r)
-            if len(top) > top_n:
-                top = top[0:top_n][column_r].tolist()
-                selected = [
-                    True if row[0] in top else False for idx, row in result.iterrows()
-                ]
-                result = result[selected]
-
-            ## cols
-            top = self.documents_by_terms(column_c, sep_c)
-            if len(top) > top_n:
-                top = top[0:top_n][column_c].tolist()
-                selected = [
-                    True if row[1] in top else False for idx, row in result.iterrows()
-                ]
-                result = result[selected]
-
-        result = _minmax(result, minmax)
-
-        result["ID"] = None
-        for idx, row in result.iterrows():
-            term0 = row[0]
-            term1 = row[1]
-            term2 = row[2]
-            selected_IDs = data[
-                (data[column_r] == term0)
-                & (data[column_c] == term1)
-                & (data["Year"] == term2)
-            ]["ID"]
-            if len(selected_IDs):
-                result.at[idx, "ID"] = selected_IDs.tolist()
-
-        ## counts the number of ddcuments only in the results matrix -----------------------
-
-        result = Result(result, call="terms_by_terms_by_year")
-        result._add_count_to_label(column_r)
-        result._add_count_to_label(column_c)
-        result._add_count_to_label("Year")
-        return result
-
     def co_ocurrence(
         self, column_r, column_c, sep_r=None, sep_c=None, minmax_range=None, top_n=None
     ):
@@ -681,9 +622,117 @@ class DataFrame(pd.DataFrame):
 
         return result
 
+    #
+    #
+    #  Analytical functions
+    #
+    #
 
-#
-#
-#  Analytical functions
-#
-#
+    def compute_tfm(self, column, sep, top_n=20):
+        """
+
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf.compute_tfm('Authors', sep=',', top_n=5).head() # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+           Hernandez G.  Tefas A.  Wang J.  Yan X.  Zhang G.
+        0             0         0        0       0         0
+        1             0         0        0       0         0
+        2             0         0        0       0         0
+        3             0         0        1       0         0
+        4             0         0        0       0         0
+
+        """
+
+        data = self[[column, "ID"]].copy()
+        data["value"] = 1.0
+        data = _expand(data, column, sep)
+
+        result = pd.pivot_table(
+            data=data, index="ID", columns=column, margins=False, fill_value=0.0,
+        )
+        result.columns = [b for _, b in result.columns]
+
+        if top_n is not None:
+            top_terms = self.documents_by_term(column, sep, top_n)[column].tolist()
+            result = result[
+                result.columns[[col in top_terms for col in result.columns]]
+            ]
+
+        result.index = list(range(len(result)))
+
+        return result
+
+    def auto_corr(self, column, sep=None, top_n=20, method="pearson"):
+        """Computes the autocorrelation among items in a column of the dataframe.
+
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf.auto_corr(column='Authors', sep=',', top_n=5) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+                      Hernandez G.  Tefas A.   Wang J.    Yan X.  Zhang G.
+        Hernandez G.      1.000000 -0.021277 -0.030415 -0.021277 -0.024656
+        Tefas A.         -0.021277  1.000000 -0.030415 -0.021277 -0.024656
+        Wang J.          -0.030415 -0.030415  1.000000 -0.030415 -0.035245
+        Yan X.           -0.021277 -0.021277 -0.030415  1.000000 -0.024656
+        Zhang G.         -0.024656 -0.024656 -0.035245 -0.024656  1.000000
+
+        """
+
+        result = self.compute_tfm(column=column, sep=sep, top_n=top_n)
+
+        if top_n is not None:
+            top_terms = self.documents_by_term(column, sep, top_n)[column].tolist()
+            result = result[
+                result.columns[[col in top_terms for col in result.columns]]
+            ]
+
+        result = result.corr(method=method)
+
+        return result
+
+    def cross_corr(
+        self,
+        column_r,
+        column_c=None,
+        sep_r=None,
+        sep_c=None,
+        top_n=8,
+        method="pearson",
+    ):
+        """Computes the crosscorrelation among items in two different columns of the dataframe.
+
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf.cross_corr(column_r='Authors', sep_r=',', column_c='Author Keywords', sep_c=';', top_n=5)
+                      Deep Learning  Deep learning  Financial time series      LSTM  Recurrent neural network
+        Hernandez G.      -0.046635       0.020874              -0.038514 -0.064886                 -0.041351
+        Tefas A.          -0.046635       0.020874              -0.038514  0.084112                 -0.041351
+        Wang J.           -0.060710       0.149704               0.127494 -0.084469                 -0.053830
+        Yan X.            -0.046635      -0.096780              -0.038514 -0.064886                 -0.041351
+        Zhang G.          -0.054074      -0.112217              -0.044658  0.054337                 -0.047946
+
+
+        """
+
+        tfm_r = self.compute_tfm(column=column_r, sep=sep_r, top_n=top_n)
+        tfm_c = self.compute_tfm(column=column_c, sep=sep_c, top_n=top_n)
+
+        if top_n is not None:
+
+            top_terms_r = self.documents_by_term(column_r, sep_r, top_n)[
+                column_r
+            ].tolist()
+            tfm_r = tfm_r[tfm_r.columns[[col in top_terms_r for col in tfm_r.columns]]]
+
+            top_terms_c = self.documents_by_term(column_c, sep_c, top_n)[
+                column_c
+            ].tolist()
+            tfm_c = tfm_c[tfm_c.columns[[col in top_terms_c for col in tfm_c.columns]]]
+
+        tfm = pd.concat([tfm_c, tfm_r], axis=1)
+
+        result = tfm.corr(method=method)
+
+        result = result[result.columns[[col in top_terms_c for col in result.columns]]]
+
+        result = result[result.index.map(lambda x: x in top_terms_r)]
+        return result
