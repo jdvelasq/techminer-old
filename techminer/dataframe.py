@@ -8,6 +8,7 @@ TechMiner.DataFrame
 """
 import pandas as pd
 import numpy as np
+from sklearn.decomposition import PCA
 
 SCOPUS_SEPS = {"Authors": ",", "Author Keywords": ";", "Index Keywords": ";", "ID": ";"}
 
@@ -729,10 +730,51 @@ class DataFrame(pd.DataFrame):
             tfm_c = tfm_c[tfm_c.columns[[col in top_terms_c for col in tfm_c.columns]]]
 
         tfm = pd.concat([tfm_c, tfm_r], axis=1)
-
         result = tfm.corr(method=method)
-
         result = result[result.columns[[col in top_terms_c for col in result.columns]]]
-
         result = result[result.index.map(lambda x: x in top_terms_r)]
+
+        return result
+
+    def factor_analysis(self, column, sep=None, n_components=None, top_n=10):
+        """Computes the matrix of factors for terms in a given column.
+
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf.factor_analysis(
+        ...    column='Authors',
+        ...    sep=',',
+        ...    n_components=5,
+        ...    top_n=40).head() # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+                           F0        F1        F2        F3        F4
+        Ar\xe9valo A.  -0.029542  0.489821  0.002071  0.023022  0.012202
+        Borovykh A. -0.006824 -0.009375 -0.003671 -0.060149 -0.040898
+        Bu H.       -0.008162 -0.012594  0.099892 -0.066203  0.469863
+        Chen J.     -0.008817 -0.014159  0.173627  0.092506  0.250997
+        Chen Y.     -0.007328 -0.010763  0.064704 -0.057130  0.317516
+
+        """
+
+        tfm = self.compute_tfm(column, sep, top_n)
+        terms = tfm.columns.tolist()
+
+        if n_components is None:
+            n_components = int(math.sqrt(len(set(terms))))
+
+        pca = PCA(n_components=n_components)
+
+        result = np.transpose(pca.fit(X=tfm.values).components_)
+        result = pd.DataFrame(
+            result, columns=["F" + str(i) for i in range(n_components)], index=terms
+        )
+
+        # cols = [["F" + str(i) for i in range(n_components)] for k in range(len(terms))]
+        # rows = [[t for n in range(n_components)] for t in terms]
+        # values = [values[i, j] for i in range(len(terms)) for j in range(n_components)]
+
+        # cols = [e for row in cols for e in row]
+        # rows = [e for row in rows for e in row]
+
+        # result = pd.DataFrame({column: rows, "Factor": cols, "value": values})
+
         return result
