@@ -3,5 +3,6 @@
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
     "python.formatting.provider": "black",
-    "python.formatting.blackPath": "/usr/local/bin/black"
+    "python.formatting.blackPath": "/usr/local/bin/black",
+    "editor.formatOnType": true
 }
