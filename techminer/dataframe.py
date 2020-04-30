@@ -34,12 +34,16 @@ class DataFrame(pd.DataFrame):
     """Class to represent a dataframe of bibliographic records.
     """
 
-    # ----------------------------------------------------------------------------------------------
+    # ----------------------------------------------------------------------
+    # Compatitbility with pandas.DataFrame
+    #
     @property
     def _constructor_expanddim(self):
         return self
 
-    # ----------------------------------------------------------------------------------------------
+    #
+    # Numeration of documents for referencing
+    #
     def generate_ID(self, fmt=None):
         """Generates a unique ID for each document.
         """
@@ -50,50 +54,10 @@ class DataFrame(pd.DataFrame):
         self.index = list(range(len(self)))
         return self
 
-    # ----------------------------------------------------------------------------------------------
-    def extract_terms(self, column, sep=None):
-        """
+    #
+    # Basic info
+    #
 
-        >>> import pandas as pd
-        >>> pdf = pd.DataFrame({'A': ['1;2', '3', '3;4;5'], 'B':[0] * 3})
-        >>> DataFrame(pdf).extract_terms(column='A', sep=';')
-           A
-        0  1
-        1  2
-        2  3
-        3  4
-        4  5
-
-        >>> pdf = pd.DataFrame({'Authors': ['xxx', 'yyy', 'xxx, zzz', 'xxx, yyy, zzz']})
-        >>> DataFrame(pdf).extract_terms(column='Authors')
-          Authors
-        0     xxx
-        1     yyy
-        2     zzz
-
-        """
-        result = _expand(self, column, sep)
-        result = pd.unique(result[column])
-        result = np.sort(result)
-        return pd.DataFrame({column: result})
-
-    # ----------------------------------------------------------------------------------------------
-    def count_terms(self, column, sep=None):
-        """
-
-        >>> import pandas as pd
-        >>> pdf = pd.DataFrame({'A': ['1;2', '3', '3;4;5'], 'B':[0] * 3})
-        >>> DataFrame(pdf).count_terms(column='A', sep=';')
-        5
-
-        >>> pdf = pd.DataFrame({'Authors': ['xxx', 'yyy', 'xxx, zzz', 'xxx, yyy, zzz']})
-        >>> DataFrame(pdf).count_terms(column='Authors')
-        3
-
-        """
-        return len(self.extract_terms(column, sep))
-
-    # ----------------------------------------------------------------------------------------------
     def coverage(self):
         """Counts the number of None values per column.
 
@@ -148,7 +112,57 @@ class DataFrame(pd.DataFrame):
             }
         )
 
-    # ----------------------------------------------------------------------------------------------
+    #
+    # Term extraction
+    #
+
+    def extract_terms(self, column, sep=None):
+        """
+
+        >>> import pandas as pd
+        >>> pdf = pd.DataFrame({'A': ['1;2', '3', '3;4;5'], 'B':[0] * 3})
+        >>> DataFrame(pdf).extract_terms(column='A', sep=';')
+           A
+        0  1
+        1  2
+        2  3
+        3  4
+        4  5
+
+        >>> pdf = pd.DataFrame({'Authors': ['xxx', 'yyy', 'xxx, zzz', 'xxx, yyy, zzz']})
+        >>> DataFrame(pdf).extract_terms(column='Authors')
+          Authors
+        0     xxx
+        1     yyy
+        2     zzz
+
+        """
+        result = _expand(self, column, sep)
+        result = pd.unique(result[column])
+        result = np.sort(result)
+        return pd.DataFrame({column: result})
+
+    def count_terms(self, column, sep=None):
+        """
+
+        >>> import pandas as pd
+        >>> pdf = pd.DataFrame({'A': ['1;2', '3', '3;4;5'], 'B':[0] * 3})
+        >>> DataFrame(pdf).count_terms(column='A', sep=';')
+        5
+
+        >>> pdf = pd.DataFrame({'Authors': ['xxx', 'yyy', 'xxx, zzz', 'xxx, yyy, zzz']})
+        >>> DataFrame(pdf).count_terms(column='Authors')
+        3
+
+        """
+        return len(self.extract_terms(column, sep))
+
+    #
+    #
+    # Document counting
+    #
+    #
+
     def documents_by_term(self, column, sep=None, top_n=None):
         """Computes the number of documents per term in a given column.
 
@@ -184,69 +198,10 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    # ----------------------------------------------------------------------------------------------
-    def citations_by_term(self, column, sep=None, top_n=None, minmax_range=None):
-        """Computes the number of citations by item in a column.
+    #
+    #
+    #
 
-        >>> from techminer.datasets import load_test_cleaned
-        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-        >>> rdf.citations_by_term(column='Authors', sep=',', top_n=10)
-                Authors  Cited by                             ID
-        0   Hsieh T.-J.     188.0                          [140]
-        1   Hsiao H.-F.     188.0                          [140]
-        2     Yeh W.-C.     188.0                          [140]
-        3  Hussain A.J.      52.0                     [125, 139]
-        4     Krauss C.      49.0                           [62]
-        5    Fischer T.      49.0                           [62]
-        6       Wang J.      46.0  [3, 10, 15, 80, 87, 128, 128]
-        7    Liatsis P.      42.0                          [139]
-        8    Ghazali R.      42.0                          [139]
-        9  Matsubara T.      37.0                          [124]
-
-        >>> rdf.citations_by_term(column='Authors', sep=',', minmax_range=(30,50))
-                   Authors  Cited by                             ID
-        0        Krauss C.      49.0                           [62]
-        1       Fischer T.      49.0                           [62]
-        2          Wang J.      46.0  [3, 10, 15, 80, 87, 128, 128]
-        3       Liatsis P.      42.0                          [139]
-        4       Ghazali R.      42.0                          [139]
-        5     Matsubara T.      37.0                          [124]
-        6     Yoshihara A.      37.0                          [124]
-        7        Uehara K.      37.0                          [124]
-        8         Akita R.      37.0                          [124]
-        9      Passalis N.      31.0                  [8, 110, 114]
-        10      Gabbouj M.      31.0                  [8, 110, 114]
-        11    Iosifidis A.      31.0                  [8, 110, 114]
-        12        Tefas A.      31.0                  [8, 110, 114]
-        13   Kanniainen J.      31.0                  [8, 110, 114]
-        14  Tsantekidis A.      31.0                     [110, 114]
-
-        """
-
-        data = _expand(self[[column, "Cited by", "ID"]], column, sep)
-
-        result = data.groupby(column, as_index=False).agg({"Cited by": np.sum})
-
-        result = result.assign(
-            ID=data.groupby(column).agg({"ID": list}).reset_index()["ID"]
-        )
-        result.sort_values("Cited by", ascending=False, inplace=True)
-
-        if top_n is not None:
-            result = result.head(top_n)
-
-        if minmax_range is not None:
-            min_val, max_val = minmax_range
-            if min_val is not None:
-                result = result[result["Cited by"] >= min_val]
-            if max_val is not None:
-                result = result[result["Cited by"] <= max_val]
-
-        result.index = list(range(len(result)))
-
-        return result
-
-    # ----------------------------------------------------------------------------------------------
     def documents_by_year(self, cumulative=False):
         """Computes the number of documents per year.
 
@@ -283,36 +238,68 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    # ----------------------------------------------------------------------------------------------
-    def citations_by_year(self, cumulative=False):
-        """Computes the number of citations by year.
+    def documents_by_term_by_year(
+        self, column, sep=None, top_n=None, minmax_range=None
+    ):
+        """
 
         >>> from techminer.datasets import load_test_cleaned
         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-        >>> rdf.citations_by_year().head()
-           Year  Cited by                    ID
-        0  2010      21.0       [141, 142, 143]
-        1  2011     230.0            [139, 140]
-        2  2012      16.0            [137, 138]
-        3  2013      36.0  [133, 134, 135, 136]
-        4  2014      23.0            [131, 132]
+        >>> rdf.documents_by_term_by_year(column='Author Keywords', top_n=5).head()
+          Author Keywords  Year  Num Documents                                                 ID
+        0   Deep learning  2018             20  [57, 61, 62, 66, 68, 70, 71, 73, 74, 76, 77, 8...
+        1   Deep learning  2019             10             [3, 7, 13, 19, 25, 27, 34, 38, 40, 50]
+        2            LSTM  2019              7                       [21, 30, 31, 34, 42, 45, 50]
+        3   Deep Learning  2018              6                           [54, 78, 79, 86, 95, 97]
+        4            LSTM  2018              5                               [71, 72, 74, 88, 89]
+
+        >>> rdf.documents_by_term_by_year('Author Keywords',  minmax_range=(2,3)).head()
+                     Author Keywords  Year  Num Documents               ID
+        0                Forecasting  2018              3     [71, 95, 99]
+        1   Recurrent neural network  2018              3     [74, 77, 83]
+        2  Recurrent neural networks  2019              3     [16, 28, 32]
+        3           Limit Order Book  2018              3     [78, 79, 82]
+        4                       LSTM  2017              3  [112, 115, 121]
+
+        >>> rdf.documents_by_term_by_year('Author Keywords',  top_n=3, minmax_range=(1,3), sep=';').head()
+          Author Keywords  Year  Num Documents               ID
+        0            LSTM  2017              3  [112, 115, 121]
+        1   Deep learning  2017              2       [117, 120]
+        2            LSTM  2013              2       [133, 135]
+        3   Deep learning  2013              1            [134]
+        4   Deep learning  2016              1            [125]
 
         """
 
-        result = self.citations_by_term(column="Year")
-        years = [year for year in range(result.Year.min(), result.Year.max() + 1)]
-        result = result.set_index("Year")
-        result = result.reindex(years, fill_value=0)
-        result["ID"] = result.ID.map(
-            lambda x: None if isinstance(x, int) and x == 0 else x
+        data = _expand(self[[column, "Year", "ID"]], column, sep)
+
+        result = (
+            data.groupby([column, "Year"], as_index=False)
+            .agg({"ID": np.size})
+            .rename(columns={"ID": "Num Documents"})
         )
-        if cumulative is True:
-            result["Cited by"] = result["Cited by"].cumsum()
-        result = result.reset_index()
+
+        result = result.assign(
+            ID=data.groupby([column, "Year"]).agg({"ID": list}).reset_index()["ID"]
+        )
+
+        if top_n is not None:
+            top_terms = self.documents_by_term(column, sep, top_n)[column].tolist()
+            result = result[result[column].map(lambda x: x in top_terms)]
+
+        if minmax_range is not None:
+            min_val, max_val = minmax_range
+            if min_val is not None:
+                result = result[result["Num Documents"] >= min_val]
+            if max_val is not None:
+                result = result[result["Num Documents"] <= max_val]
+
+        result.sort_values("Num Documents", ascending=False, inplace=True)
+
+        result.index = list(range(len(result)))
 
         return result
 
-    # ----------------------------------------------------------------------------------------------
     def co_ocurrence(
         self, column_r, column_c, sep_r=None, sep_c=None, minmax_range=None, top_n=None
     ):
@@ -374,94 +361,6 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    # ----------------------------------------------------------------------------------------------
-    def citations_by_term_by_year(
-        self, column, sep=None, top_n=None, minmax_range=None
-    ):
-        """Computes the number of citations by term by year in a column.
-
-        >>> from techminer.datasets import load_test_cleaned
-        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-        >>> rdf.citations_by_term_by_year('Authors', sep=',', top_n=5)
-                Authors  Year  Cited by     ID
-        0   Hsiao H.-F.  2011     188.0  [140]
-        1   Hsieh T.-J.  2011     188.0  [140]
-        2     Yeh W.-C.  2011     188.0  [140]
-        3     Krauss C.  2018      49.0   [62]
-        4  Hussain A.J.  2011      42.0  [139]
-        5  Hussain A.J.  2016      10.0  [125]
-
-        """
-
-        data = _expand(self[[column, "Cited by", "Year", "ID"]], column, sep)
-
-        result = data.groupby([column, "Year"], as_index=False).agg(
-            {"Cited by": np.sum}
-        )
-
-        result = result.assign(
-            ID=data.groupby([column, "Year"]).agg({"ID": list}).reset_index()["ID"]
-        )
-
-        if top_n is not None:
-            top_terms = self.citations_by_term(column, sep, top_n)[column].tolist()
-            result = result[result[column].map(lambda x: x in top_terms)]
-
-        if minmax_range is not None:
-            min_val, max_val = minmax_range
-            if min_val is not None:
-                result = result[result["Cited by"] >= min_val]
-            if max_val is not None:
-                result = result[result["Cited by"] <= max_val]
-
-        result.sort_values("Cited by", ascending=False, inplace=True)
-
-        result.index = list(range(len(result)))
-
-        return result
-
-        # data = self[[column, "Cited by", "Year", "ID"]].dropna()
-        # data["Year"] = data["Year"].map(int)
-        # data = _expand_column(data, column, sep)
-
-        # numcitations = data.groupby(by=[column, "Year"], as_index=True).agg(
-        #     {"Cited by": np.sum}
-        # )
-
-        # ## results dataframe
-        # a = [t for t, _ in numcitations.index]
-        # b = [t for _, t in numcitations.index]
-        # result = pd.DataFrame(
-        #     {column: a, "Year": b, "Cited by": numcitations["Cited by"].tolist()}
-        # )
-
-        # ## rows
-        # top = self.citations_by_terms(column, sep)
-        # if top_n is not None and len(top) > top_n:
-        #     top = top[0:top_n][column].tolist()
-        #     top = [u[0 : u.find("[")].strip() for u in top]
-        #     selected = [
-        #         True if row[0] in top else False for idx, row in result.iterrows()
-        #     ]
-        #     result = result[selected]
-
-        # result = _minmax(result, minmax)
-        # result["ID"] = None
-        # for idx, row in result.iterrows():
-        #     selected_IDs = data[(data[column] == row[0]) & (data["Year"] == row[1])][
-        #         "ID"
-        #     ]
-        #     if len(selected_IDs):
-        #         result.at[idx, "ID"] = selected_IDs.tolist()
-
-        # ## counts the number of ddcuments only in the results matrix -----------------------
-
-        # resul = self._add_documents_by_terms_to_label(result, column, sep)
-        # resul = self._add_documents_by_terms_to_label(result, "Year", sep=None)
-        # result.index = list(range(len(result)))
-        # return Result(result, call="citations_by_terms_by_year")
-
-    # ----------------------------------------------------------------------------------------------
     def ocurrence(self, column, sep=None, top_n=None, minmax_range=None):
         """
 
@@ -517,101 +416,123 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-        # data = data[[column_r, column_c, "ID"]]
+    #
+    #
+    # Citation count
+    #
+    #
 
-        # data = _expand_column(data, column_r, sep)
-        # data = _expand_column(data, column_c, sep)
-
-        # ## number of documents
-        # numdocs = data.groupby(by=[column_r, column_c]).size()
-
-        # ## results dataframe
-        # a = [t for t, _ in numdocs.index]
-        # b = [t for _, t in numdocs.index]
-        # result = pd.DataFrame(
-        #     {column_r: a, column_c: b, "Num Documents": numdocs.tolist()}
-        # )
-
-        # ## compute top_n terms
-        # if top_n is not None:
-        #     ## rows
-        #     # top = self.documents_by_terms(column_r, sep_r)
-        #     if len(top) > top_n:
-
-        #         top = top[0:top_n][top.columns[0]].tolist()
-
-        #         selected = [
-        #             True if row[0] in top else False for idx, row in result.iterrows()
-        #         ]
-        #         result = result[selected]
-
-        #         selected = [
-        #             True if row[1] in top else False for idx, row in result.iterrows()
-        #         ]
-        #         result = result[selected]
-
-        # result = _minmax(result, minmax)
-
-        # ## collects the references
-        # result["ID"] = None
-        # for idx, row in result.iterrows():
-        #     term0 = row[0]
-        #     term1 = row[1]
-        #     selected_IDs = data[(data[column_r] == term0) & (data[column_c] == term1)][
-        #         "ID"
-        #     ]
-        #     if len(selected_IDs):
-        #         result.at[idx, "ID"] = selected_IDs.tolist()
-
-        # result.index = list(range(len(result)))
-
-        # ## counts the number of ddcuments only in the results matrix -----------------------
-
-        # result = Result(result, call="ocurrence")
-        # result._add_count_to_label(column_r)
-        # result._add_count_to_label(column_c)
-        # return result
-
-    # ----------------------------------------------------------------------------------------------
-    def documents_by_term_by_year(
-        self, column, sep=None, top_n=None, minmax_range=None
-    ):
-        """
+    def citations_by_term(self, column, sep=None, top_n=None, minmax_range=None):
+        """Computes the number of citations by item in a column.
 
         >>> from techminer.datasets import load_test_cleaned
         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-        >>> rdf.documents_by_term_by_year(column='Author Keywords', top_n=5).head()
-          Author Keywords  Year  Num Documents                                                 ID
-        0   Deep learning  2018             20  [57, 61, 62, 66, 68, 70, 71, 73, 74, 76, 77, 8...
-        1   Deep learning  2019             10             [3, 7, 13, 19, 25, 27, 34, 38, 40, 50]
-        2            LSTM  2019              7                       [21, 30, 31, 34, 42, 45, 50]
-        3   Deep Learning  2018              6                           [54, 78, 79, 86, 95, 97]
-        4            LSTM  2018              5                               [71, 72, 74, 88, 89]
+        >>> rdf.citations_by_term(column='Authors', sep=',', top_n=10)
+                Authors  Cited by                             ID
+        0   Hsieh T.-J.     188.0                          [140]
+        1   Hsiao H.-F.     188.0                          [140]
+        2     Yeh W.-C.     188.0                          [140]
+        3  Hussain A.J.      52.0                     [125, 139]
+        4     Krauss C.      49.0                           [62]
+        5    Fischer T.      49.0                           [62]
+        6       Wang J.      46.0  [3, 10, 15, 80, 87, 128, 128]
+        7    Liatsis P.      42.0                          [139]
+        8    Ghazali R.      42.0                          [139]
+        9  Matsubara T.      37.0                          [124]
 
-        >>> rdf.documents_by_term_by_year('Author Keywords',  minmax_range=(2,3)).head()
-                     Author Keywords  Year  Num Documents               ID
-        0                Forecasting  2018              3     [71, 95, 99]
-        1   Recurrent neural network  2018              3     [74, 77, 83]
-        2  Recurrent neural networks  2019              3     [16, 28, 32]
-        3           Limit Order Book  2018              3     [78, 79, 82]
-        4                       LSTM  2017              3  [112, 115, 121]
-
-        >>> rdf.documents_by_term_by_year('Author Keywords',  top_n=3, minmax_range=(1,3), sep=';').head()
-          Author Keywords  Year  Num Documents               ID
-        0            LSTM  2017              3  [112, 115, 121]
-        1   Deep learning  2017              2       [117, 120]
-        2            LSTM  2013              2       [133, 135]
-        3   Deep learning  2013              1            [134]
-        4   Deep learning  2016              1            [125]
+        >>> rdf.citations_by_term(column='Authors', sep=',', minmax_range=(30,50))
+                   Authors  Cited by                             ID
+        0        Krauss C.      49.0                           [62]
+        1       Fischer T.      49.0                           [62]
+        2          Wang J.      46.0  [3, 10, 15, 80, 87, 128, 128]
+        3       Liatsis P.      42.0                          [139]
+        4       Ghazali R.      42.0                          [139]
+        5     Matsubara T.      37.0                          [124]
+        6     Yoshihara A.      37.0                          [124]
+        7        Uehara K.      37.0                          [124]
+        8         Akita R.      37.0                          [124]
+        9      Passalis N.      31.0                  [8, 110, 114]
+        10      Gabbouj M.      31.0                  [8, 110, 114]
+        11    Iosifidis A.      31.0                  [8, 110, 114]
+        12        Tefas A.      31.0                  [8, 110, 114]
+        13   Kanniainen J.      31.0                  [8, 110, 114]
+        14  Tsantekidis A.      31.0                     [110, 114]
 
         """
 
-        data = _expand(self[[column, "Year", "ID"]], column, sep)
+        data = _expand(self[[column, "Cited by", "ID"]], column, sep)
 
-        result = (
-            data.groupby([column, "Year"], as_index=False)
-            .agg({"ID": np.size})
-            .rename(columns={"ID": "Num Documents"})
+        result = data.groupby(column, as_index=False).agg({"Cited by": np.sum})
+
+        result = result.assign(
+            ID=data.groupby(column).agg({"ID": list}).reset_index()["ID"]
+        )
+        result.sort_values("Cited by", ascending=False, inplace=True)
+
+        if top_n is not None:
+            result = result.head(top_n)
+
+        if minmax_range is not None:
+            min_val, max_val = minmax_range
+            if min_val is not None:
+                result = result[result["Cited by"] >= min_val]
+            if max_val is not None:
+                result = result[result["Cited by"] <= max_val]
+
+        result.index = list(range(len(result)))
+
+        return result
+
+    def citations_by_year(self, cumulative=False):
+        """Computes the number of citations by year.
+
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf.citations_by_year().head()
+           Year  Cited by                    ID
+        0  2010      21.0       [141, 142, 143]
+        1  2011     230.0            [139, 140]
+        2  2012      16.0            [137, 138]
+        3  2013      36.0  [133, 134, 135, 136]
+        4  2014      23.0            [131, 132]
+
+        """
+
+        result = self.citations_by_term(column="Year")
+        years = [year for year in range(result.Year.min(), result.Year.max() + 1)]
+        result = result.set_index("Year")
+        result = result.reindex(years, fill_value=0)
+        result["ID"] = result.ID.map(
+            lambda x: None if isinstance(x, int) and x == 0 else x
+        )
+        if cumulative is True:
+            result["Cited by"] = result["Cited by"].cumsum()
+        result = result.reset_index()
+
+        return result
+
+    def citations_by_term_by_year(
+        self, column, sep=None, top_n=None, minmax_range=None
+    ):
+        """Computes the number of citations by term by year in a column.
+
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf.citations_by_term_by_year('Authors', sep=',', top_n=5)
+                Authors  Year  Cited by     ID
+        0   Hsiao H.-F.  2011     188.0  [140]
+        1   Hsieh T.-J.  2011     188.0  [140]
+        2     Yeh W.-C.  2011     188.0  [140]
+        3     Krauss C.  2018      49.0   [62]
+        4  Hussain A.J.  2011      42.0  [139]
+        5  Hussain A.J.  2016      10.0  [125]
+
+        """
+
+        data = _expand(self[[column, "Cited by", "Year", "ID"]], column, sep)
+
+        result = data.groupby([column, "Year"], as_index=False).agg(
+            {"Cited by": np.sum}
         )
 
         result = result.assign(
@@ -619,17 +540,17 @@ class DataFrame(pd.DataFrame):
         )
 
         if top_n is not None:
-            top_terms = self.documents_by_term(column, sep, top_n)[column].tolist()
+            top_terms = self.citations_by_term(column, sep, top_n)[column].tolist()
             result = result[result[column].map(lambda x: x in top_terms)]
 
         if minmax_range is not None:
             min_val, max_val = minmax_range
             if min_val is not None:
-                result = result[result["Num Documents"] >= min_val]
+                result = result[result["Cited by"] >= min_val]
             if max_val is not None:
-                result = result[result["Num Documents"] <= max_val]
+                result = result[result["Cited by"] <= max_val]
 
-        result.sort_values("Num Documents", ascending=False, inplace=True)
+        result.sort_values("Cited by", ascending=False, inplace=True)
 
         result.index = list(range(len(result)))
 
