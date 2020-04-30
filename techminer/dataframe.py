@@ -34,16 +34,18 @@ class DataFrame(pd.DataFrame):
     """Class to represent a dataframe of bibliographic records.
     """
 
-    # ----------------------------------------------------------------------
+    #
     # Compatitbility with pandas.DataFrame
     #
+
     @property
     def _constructor_expanddim(self):
         return self
 
     #
-    # Numeration of documents for referencing
+    # Document ID
     #
+
     def generate_ID(self, fmt=None):
         """Generates a unique ID for each document.
         """
@@ -113,7 +115,9 @@ class DataFrame(pd.DataFrame):
         )
 
     #
+    #
     # Term extraction
+    #
     #
 
     def extract_terms(self, column, sep=None):
@@ -198,10 +202,6 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    #
-    #
-    #
-
     def documents_by_year(self, cumulative=False):
         """Computes the number of documents per year.
 
@@ -238,14 +238,14 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def documents_by_term_by_year(
+    def documents_by_term_per_year(
         self, column, sep=None, top_n=None, minmax_range=None
     ):
         """
 
         >>> from techminer.datasets import load_test_cleaned
         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-        >>> rdf.documents_by_term_by_year(column='Author Keywords', top_n=5).head()
+        >>> rdf.documents_by_term_per_year(column='Author Keywords', top_n=5).head()
           Author Keywords  Year  Num Documents                                                 ID
         0   Deep learning  2018             20  [57, 61, 62, 66, 68, 70, 71, 73, 74, 76, 77, 8...
         1   Deep learning  2019             10             [3, 7, 13, 19, 25, 27, 34, 38, 40, 50]
@@ -253,7 +253,7 @@ class DataFrame(pd.DataFrame):
         3   Deep Learning  2018              6                           [54, 78, 79, 86, 95, 97]
         4            LSTM  2018              5                               [71, 72, 74, 88, 89]
 
-        >>> rdf.documents_by_term_by_year('Author Keywords',  minmax_range=(2,3)).head()
+        >>> rdf.documents_by_term_per_year('Author Keywords',  minmax_range=(2,3)).head()
                      Author Keywords  Year  Num Documents               ID
         0                Forecasting  2018              3     [71, 95, 99]
         1   Recurrent neural network  2018              3     [74, 77, 83]
@@ -261,7 +261,7 @@ class DataFrame(pd.DataFrame):
         3           Limit Order Book  2018              3     [78, 79, 82]
         4                       LSTM  2017              3  [112, 115, 121]
 
-        >>> rdf.documents_by_term_by_year('Author Keywords',  top_n=3, minmax_range=(1,3), sep=';').head()
+        >>> rdf.documents_by_term_per_year('Author Keywords',  top_n=3, minmax_range=(1,3), sep=';').head()
           Author Keywords  Year  Num Documents               ID
         0            LSTM  2017              3  [112, 115, 121]
         1   Deep learning  2017              2       [117, 120]
@@ -298,6 +298,131 @@ class DataFrame(pd.DataFrame):
 
         result.index = list(range(len(result)))
 
+        return result
+
+    def documents_by_terms_per_terms_per_year(
+        self, column_r, column_c, sep_r=None, sep_c=None, top_n=None, minmax_range=None
+    ):
+        """
+
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf.documents_by_terms_per_terms_per_year(
+        ... column_r='Authors', sep_r=',', column_c='Author Keywords', sep_c=';', top_n=5)
+                Authors        Author Keywords  Year  Num Documents         ID
+        0  Hernandez G.          Deep learning  2018              2  [94, 100]
+        1       Wang J.          Deep Learning  2019              1       [15]
+        2       Wang J.          Deep learning  2018              1       [87]
+        3       Wang J.          Deep learning  2019              1        [3]
+        4        Yan X.          Deep learning  2019              1       [13]
+        5        Yan X.  Financial time series  2019              1       [13]
+        6      Zhang G.          Deep Learning  2018              1       [78]
+        7      Zhang G.          Deep learning  2017              1      [117]
+        8      Zhang G.          Deep learning  2019              1       [27]
+        9      Zhang G.  Financial time series  2017              1      [119]
+
+        """
+
+        data = _expand(self[[column_r, column_c, "Year", "ID"]], column_r, sep_r)
+        data = _expand(data[[column_r, column_c, "Year", "ID"]], column_c, sep_c)
+
+        result = (
+            data.groupby([column_r, column_c, "Year"], as_index=False)
+            .agg({"ID": np.size})
+            .rename(columns={"ID": "Num Documents"})
+        )
+
+        result = result.assign(
+            ID=data.groupby([column_r, column_c, "Year"])
+            .agg({"ID": list})
+            .reset_index()["ID"]
+        )
+
+        if top_n is not None:
+
+            top_terms_r = self.documents_by_term(column_r, sep_r, top_n)[
+                column_r
+            ].tolist()
+
+            top_terms_c = self.documents_by_term(column_c, sep_c, top_n)[
+                column_c
+            ].tolist()
+
+            result = result[
+                result[column_r].map(lambda x: x in top_terms_r)
+                & result[column_c].map(lambda x: x in top_terms_c)
+            ]
+
+        if minmax_range is not None:
+            min_val, max_val = minmax_range
+            if min_val is not None:
+                result = result[result["Num Documents"] >= min_val]
+            if max_val is not None:
+                result = result[result["Num Documents"] <= max_val]
+
+        result.sort_values("Num Documents", ascending=False, inplace=True)
+
+        result.index = list(range(len(result)))
+
+        return result
+
+        ## computes the number of documents by term by term
+
+        data = self[[column_r, column_c, "Year", "ID"]].dropna()
+        data = _expand_column(data, column_r, sep_r)
+        data = _expand_column(data, column_c, sep_c)
+
+        numdocs = data.groupby(by=[column_r, column_c, "Year"]).size()
+
+        ## results dataframe
+        a = [t for t, _, _ in numdocs.index]
+        b = [t for _, t, _ in numdocs.index]
+        y = [t for _, _, t in numdocs.index]
+        result = pd.DataFrame(
+            {column_r: a, column_c: b, "Year": y, "Num Documents": numdocs.tolist()}
+        )
+
+        ## compute top_n terms
+        if top_n is not None:
+            ## rows
+            top = self.documents_by_terms(column_r, sep_r)
+            if len(top) > top_n:
+                top = top[0:top_n][column_r].tolist()
+                selected = [
+                    True if row[0] in top else False for idx, row in result.iterrows()
+                ]
+                result = result[selected]
+
+            ## cols
+            top = self.documents_by_terms(column_c, sep_c)
+            if len(top) > top_n:
+                top = top[0:top_n][column_c].tolist()
+                selected = [
+                    True if row[1] in top else False for idx, row in result.iterrows()
+                ]
+                result = result[selected]
+
+        result = _minmax(result, minmax)
+
+        result["ID"] = None
+        for idx, row in result.iterrows():
+            term0 = row[0]
+            term1 = row[1]
+            term2 = row[2]
+            selected_IDs = data[
+                (data[column_r] == term0)
+                & (data[column_c] == term1)
+                & (data["Year"] == term2)
+            ]["ID"]
+            if len(selected_IDs):
+                result.at[idx, "ID"] = selected_IDs.tolist()
+
+        ## counts the number of ddcuments only in the results matrix -----------------------
+
+        result = Result(result, call="terms_by_terms_by_year")
+        result._add_count_to_label(column_r)
+        result._add_count_to_label(column_c)
+        result._add_count_to_label("Year")
         return result
 
     def co_ocurrence(
@@ -511,14 +636,14 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def citations_by_term_by_year(
+    def citations_by_term_per_year(
         self, column, sep=None, top_n=None, minmax_range=None
     ):
         """Computes the number of citations by term by year in a column.
 
         >>> from techminer.datasets import load_test_cleaned
         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-        >>> rdf.citations_by_term_by_year('Authors', sep=',', top_n=5)
+        >>> rdf.citations_by_term_per_year('Authors', sep=',', top_n=5)
                 Authors  Year  Cited by     ID
         0   Hsiao H.-F.  2011     188.0  [140]
         1   Hsieh T.-J.  2011     188.0  [140]
@@ -555,3 +680,10 @@ class DataFrame(pd.DataFrame):
         result.index = list(range(len(result)))
 
         return result
+
+
+#
+#
+#  Analytical functions
+#
+#
