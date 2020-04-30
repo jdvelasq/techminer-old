@@ -185,12 +185,12 @@ class DataFrame(pd.DataFrame):
         return result
 
     # ----------------------------------------------------------------------------------------------
-    def citations_by_terms(self, column, sep=None, top_n=None, minmax_range=None):
+    def citations_by_term(self, column, sep=None, top_n=None, minmax_range=None):
         """Computes the number of citations by item in a column.
 
         >>> from techminer.datasets import load_test_cleaned
         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-        >>> rdf.citations_by_terms(column='Authors', sep=',', top_n=10)
+        >>> rdf.citations_by_term(column='Authors', sep=',', top_n=10)
                 Authors  Cited by                             ID
         0   Hsieh T.-J.     188.0                          [140]
         1   Hsiao H.-F.     188.0                          [140]
@@ -203,7 +203,7 @@ class DataFrame(pd.DataFrame):
         8    Ghazali R.      42.0                          [139]
         9  Matsubara T.      37.0                          [124]
 
-        >>> rdf.citations_by_terms(column='Authors', sep=',', minmax_range=(30,50))
+        >>> rdf.citations_by_term(column='Authors', sep=',', minmax_range=(30,50))
                    Authors  Cited by                             ID
         0        Krauss C.      49.0                           [62]
         1       Fischer T.      49.0                           [62]
@@ -282,6 +282,71 @@ class DataFrame(pd.DataFrame):
         result = result.reset_index()
 
         return result
+
+    # ----------------------------------------------------------------------------------------------
+    def citations_by_year(self, cumulative=False):
+        """Computes the number of citations by year.
+
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf.citations_by_year().head()
+           Year  Cited by                    ID
+        0  2010      21.0       [141, 142, 143]
+        1  2011     230.0            [139, 140]
+        2  2012      16.0            [137, 138]
+        3  2013      36.0  [133, 134, 135, 136]
+        4  2014      23.0            [131, 132]
+
+        """
+
+        result = self.citations_by_term(column="Year")
+        years = [year for year in range(result.Year.min(), result.Year.max() + 1)]
+        result = result.set_index("Year")
+        result = result.reindex(years, fill_value=0)
+        result["ID"] = result.ID.map(
+            lambda x: None if isinstance(x, int) and x == 0 else x
+        )
+        if cumulative is True:
+            result["Cited by"] = result["Cited by"].cumsum()
+        result = result.reset_index()
+
+        return result
+
+    #     ## computes number of citations
+    #     data = self[['Year', 'Cited by', 'ID']].dropna()
+    #     data['Year'] = data['Year'].map(int)
+    #     citations = data.groupby(['Year'], as_index=True).agg({
+    #         'Cited by': np.sum
+    #     })
+
+    #     result = self._years_list()
+    #     result = result.to_frame()
+    #     result['Year'] = result.index
+    #     result['Cited by'] = 0
+    #     result.at[citations.index, 'Cited by'] = citations['Cited by'].tolist()
+    #     result.index = list(range(len(result)))
+
+    #     ## IDs ---------------------------------------------------------------------------------
+    #     result['ID'] = None
+    #     for idx, row in result.iterrows():
+    #         selected_IDs = data[(data['Year'] == row[0]) & (data['Cited by'] > 0)]['ID']
+    #         if len(selected_IDs):
+    #             result.at[idx, 'ID'] = selected_IDs.tolist()
+
+    #     ## end ----------------------------------------------------------------------------------
+
+    #     if cumulative is True:
+    #         result['Cited by'] = result['Cited by'].cumsum()
+
+    #    ## counts the number of documents --------------------------------------------------------
+
+    #     count = self.documents_by_year(cumulative=cumulative)
+    #     count = {key : value for key, value in zip(count[count.columns[0]], count[count.columns[1]])}
+    #     result['Year'] = result['Year'].map(lambda x: cut_text(str(x) + ' [' + str(count[x]) + ']'))
+
+    #     ## end -----------------------------------------------------------------------------------
+
+    #     return Result(result, call='citations_by_year')
 
     # ----------------------------------------------------------------------------------------------
     def co_ocurrence(
