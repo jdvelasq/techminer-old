@@ -471,71 +471,109 @@ class DataFrame(pd.DataFrame):
         result.index = list(range(len(result)))
         return result
 
-    # def documents_by_terms_per_terms_per_year(
-    #     self, column_r, column_c, sep_r=None, sep_c=None, top_n=None, minmax_range=None
-    # ):
-    #     """
+    def summarize_by_term_per_term_per_year(
+        self, column_r, column_c, sep_r=None, sep_c=None
+    ):
+        """
 
-    #     >>> from techminer.datasets import load_test_cleaned
-    #     >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-    #     >>> rdf.documents_by_terms_per_terms_per_year(
-    #     ... column_r='Authors', sep_r=',', column_c='Author Keywords', sep_c=';', top_n=5)
-    #             Authors        Author Keywords  Year  Num Documents         ID
-    #     0  Hernandez G.          Deep learning  2018              2  [94, 100]
-    #     1       Wang J.          Deep Learning  2019              1       [15]
-    #     2       Wang J.          Deep learning  2018              1       [87]
-    #     3       Wang J.          Deep learning  2019              1        [3]
-    #     4        Yan X.          Deep learning  2019              1       [13]
-    #     5        Yan X.  Financial time series  2019              1       [13]
-    #     6      Zhang G.          Deep Learning  2018              1       [78]
-    #     7      Zhang G.          Deep learning  2017              1      [117]
-    #     8      Zhang G.          Deep learning  2019              1       [27]
-    #     9      Zhang G.  Financial time series  2017              1      [119]
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf.summarize_by_term_per_term_per_year('Authors', 'Author Keywords').head(5)
+                Authors Author Keywords  Year  Cited by  Num Documents     ID
+        0  Bekiros S.D.            LSTM  2013       2.0              1  [133]
+        1  Bekiros S.D.     Time series  2013       2.0              1  [133]
+        2  Bekiros S.D.   Time weighted  2013       2.0              1  [133]
+        3  Bekiros S.D.           stock  2013       2.0              1  [133]
+        4        Cai X.         Cluster  2013       5.0              1  [135]
+        """
 
-    #     """
+        data = _expand(
+            self[[column_r, column_c, "Year", "Cited by", "ID"]], column_r, sep_r
+        )
+        data = _expand(
+            data[[column_r, column_c, "Year", "Cited by", "ID"]], column_c, sep_c
+        )
 
-    #     data = _expand(self[[column_r, column_c, "Year", "ID"]], column_r, sep_r)
-    #     data = _expand(data[[column_r, column_c, "Year", "ID"]], column_c, sep_c)
+        result = (
+            data.groupby([column_r, column_c, "Year"], as_index=False)
+            .agg({"Cited by": np.sum, "ID": np.size})
+            .rename(columns={"ID": "Num Documents"})
+        )
 
-    #     result = (
-    #         data.groupby([column_r, column_c, "Year"], as_index=False)
-    #         .agg({"ID": np.size})
-    #         .rename(columns={"ID": "Num Documents"})
-    #     )
+        result = result.assign(
+            ID=data.groupby([column_r, column_c, "Year"])
+            .agg({"ID": list})
+            .reset_index()["ID"]
+        )
+        result.sort_values(["Year", column_r, column_c,], ascending=True, inplace=True)
+        result.index = list(range(len(result)))
+        return result
 
-    #     result = result.assign(
-    #         ID=data.groupby([column_r, column_c, "Year"])
-    #         .agg({"ID": list})
-    #         .reset_index()["ID"]
-    #     )
+    def documents_by_terms_per_terms_per_year(
+        self, column_r, column_c, sep_r=None, sep_c=None
+    ):
+        """
 
-    #     if top_n is not None:
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf.documents_by_terms_per_terms_per_year(
+        ... column_r='Authors', column_c='Author Keywords').head(10)
+                Authors          Author Keywords  Year  Num Documents     ID
+        0  Bekiros S.D.                     LSTM  2013              1  [133]
+        1  Bekiros S.D.              Time series  2013              1  [133]
+        2  Bekiros S.D.            Time weighted  2013              1  [133]
+        3  Bekiros S.D.                    stock  2013              1  [133]
+        4        Cai X.                  Cluster  2013              1  [135]
+        5        Cai X.  Correlation coefficient  2013              1  [135]
+        6        Cai X.                     LSTM  2013              1  [135]
+        7        Cai X.              Time series  2013              1  [135]
+        8        Lai G.                  Cluster  2013              1  [135]
+        9        Lai G.  Correlation coefficient  2013              1  [135]
 
-    #         top_terms_r = self.documents_by_term(column_r, sep_r, top_n)[
-    #             column_r
-    #         ].tolist()
+        """
 
-    #         top_terms_c = self.documents_by_term(column_c, sep_c, top_n)[
-    #             column_c
-    #         ].tolist()
+        result = self.summarize_by_term_per_term_per_year(
+            column_r, column_c, sep_r, sep_c
+        )
+        result.pop("Cited by")
+        result.sort_values(
+            ["Year", column_r, column_c], ascending=[True, True, True], inplace=True,
+        )
+        result.index = list(range(len(result)))
+        return result
 
-    #         result = result[
-    #             result[column_r].map(lambda x: x in top_terms_r)
-    #             & result[column_c].map(lambda x: x in top_terms_c)
-    #         ]
+    def citations_by_terms_per_terms_per_year(
+        self, column_r, column_c, sep_r=None, sep_c=None
+    ):
+        """
 
-    #     if minmax_range is not None:
-    #         min_val, max_val = minmax_range
-    #         if min_val is not None:
-    #             result = result[result["Num Documents"] >= min_val]
-    #         if max_val is not None:
-    #             result = result[result["Num Documents"] <= max_val]
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf.citations_by_terms_per_terms_per_year(
+        ... column_r='Authors', column_c='Author Keywords').head(10)
+                Authors          Author Keywords  Year  Num Documents     ID
+        0  Bekiros S.D.                     LSTM  2013              1  [133]
+        1  Bekiros S.D.              Time series  2013              1  [133]
+        2  Bekiros S.D.            Time weighted  2013              1  [133]
+        3  Bekiros S.D.                    stock  2013              1  [133]
+        4        Cai X.                  Cluster  2013              1  [135]
+        5        Cai X.  Correlation coefficient  2013              1  [135]
+        6        Cai X.                     LSTM  2013              1  [135]
+        7        Cai X.              Time series  2013              1  [135]
+        8        Lai G.                  Cluster  2013              1  [135]
+        9        Lai G.  Correlation coefficient  2013              1  [135]
 
-    #     result.sort_values("Num Documents", ascending=False, inplace=True)
+        """
 
-    #     result.index = list(range(len(result)))
-
-    #     return result
+        result = self.summarize_by_term_per_term_per_year(
+            column_r, column_c, sep_r, sep_c
+        )
+        result.pop("Cited by")
+        result.sort_values(
+            ["Year", column_r, column_c], ascending=[True, True, True], inplace=True,
+        )
+        result.index = list(range(len(result)))
+        return result
 
     # def co_ocurrence(
     #     self, column_r, column_c, sep_r=None, sep_c=None, minmax_range=None, top_n=None
