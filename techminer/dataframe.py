@@ -446,68 +446,30 @@ class DataFrame(pd.DataFrame):
         result.index = list(range(len(result)))
         return result
 
-    # def citations_by_term_per_year(
-    #     self, column, sep=None, top_n=None, minmax_range=None
-    # ):
-    #     """Computes the number of citations by term by year in a column.
+    def citations_by_term_per_year(
+        self, column, sep=None, top_n=None, minmax_range=None
+    ):
+        """Computes the number of citations by term by year in a column.
 
-    #     >>> from techminer.datasets import load_test_cleaned
-    #     >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-    #     >>> rdf.citations_by_term_per_year('Authors').head(5)
-    #                     Authors          Year  Cited by     ID
-    #     0       Laws J. [1, 12]  2010 [3, 21]      12.0  [142]
-    #     1    Dunis C.L. [1, 12]  2010 [3, 21]      12.0  [142]
-    #     2  Sermpinis G. [1, 12]  2010 [3, 21]      12.0  [142]
-    #     3       Song Y. [2, 10]  2010 [3, 21]       9.0  [143]
-    #     4        Lin X. [2, 14]  2010 [3, 21]       9.0  [143]
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf.citations_by_term_per_year('Authors').head(5)
+                Authors  Year  Cited by     ID
+        0    Dunis C.L.  2010      12.0  [142]
+        1       Laws J.  2010      12.0  [142]
+        2  Sermpinis G.  2010      12.0  [142]
+        3        Lin X.  2010       9.0  [143]
+        4       Song Y.  2010       9.0  [143]
 
-    #     """
+        """
 
-    #     result = self._docs_and_citedby_by_term_per_year(column, sep)
-
-    #     if top_n is not None:
-
-    #         top_terms = self._docs_and_citedby_by_term(column, sep)
-    #         top_terms.sort_values("Num Documents", ascending=False, inplace=True)
-    #         top_terms = top_terms.head(top_n)[column]
-    #         result = result[result[column].map(lambda x: x in top_terms)]
-
-    #     if minmax_range is not None:
-    #         min_val, max_val = minmax_range
-    #         if min_val is not None:
-    #             result = result[result["Cited by"] >= min_val]
-    #         if max_val is not None:
-    #             result = result[result["Cited by"] <= max_val]
-
-    #     result.sort_values(["Year", "Cited by"], ascending=[True, False], inplace=True)
-
-    #     rename_years = self._docs_and_citedby_by_year(cumulative=False)
-    #     rename_years = {
-    #         year: "{:d} [{:d}, {:d}]".format(year, docs_per_year, cites_per_year)
-    #         for year, docs_per_year, cites_per_year in zip(
-    #             rename_years["Year"],
-    #             rename_years["Num Documents"],
-    #             rename_years["Cited by"],
-    #         )
-    #     }
-    #     result["Year"] = result["Year"].map(lambda y: rename_years[y])
-
-    #     rename_terms = self._docs_and_citedby_by_term(column, sep)
-    #     rename_terms = {
-    #         term: "{:s} [{:d}, {:d}]".format(term, docs_per_term, cites_per_term)
-    #         for term, docs_per_term, cites_per_term in zip(
-    #             rename_terms[column],
-    #             rename_terms["Num Documents"],
-    #             rename_terms["Cited by"],
-    #         )
-    #     }
-    #     result[column] = result[column].map(lambda t: rename_terms[t])
-
-    #     result.pop("Num Documents")
-
-    #     result.index = list(range(len(result)))
-
-    #     return result
+        result = self.summarize_by_term_per_year(column, sep)
+        result.pop("Num Documents")
+        result.sort_values(
+            ["Year", "Cited by", column], ascending=[True, False, True], inplace=True,
+        )
+        result.index = list(range(len(result)))
+        return result
 
     # def documents_by_terms_per_terms_per_year(
     #     self, column_r, column_c, sep_r=None, sep_c=None, top_n=None, minmax_range=None
