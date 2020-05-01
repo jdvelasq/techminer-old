@@ -398,11 +398,11 @@ class DataFrame(pd.DataFrame):
         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
         >>> rdf.summarize_by_term_per_year(column='Authors').head()
                 Authors  Year  Cited by  Num Documents     ID
-        0    Dunis C.L.  2010      12.0              1  [142]
-        1       Laws J.  2010      12.0              1  [142]
-        2        Lin X.  2010       9.0              1  [143]
-        3  Sermpinis G.  2010      12.0              1  [142]
-        4       Song Y.  2010       9.0              1  [143]
+        0    Dunis C.L.  2010        12              1  [142]
+        1       Laws J.  2010        12              1  [142]
+        2        Lin X.  2010         9              1  [143]
+        3  Sermpinis G.  2010        12              1  [142]
+        4       Song Y.  2010         9              1  [143]
 
 
         """
@@ -415,6 +415,7 @@ class DataFrame(pd.DataFrame):
         result = result.assign(
             ID=data.groupby([column, "Year"]).agg({"ID": list}).reset_index()["ID"]
         )
+        result["Cited by"] = result["Cited by"].map(lambda x: int(x))
         result.sort_values(["Year", column], ascending=True, inplace=True)
         result.index = list(range(len(result)))
         return result
@@ -455,11 +456,11 @@ class DataFrame(pd.DataFrame):
         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
         >>> rdf.citations_by_term_per_year('Authors').head(5)
                 Authors  Year  Cited by     ID
-        0    Dunis C.L.  2010      12.0  [142]
-        1       Laws J.  2010      12.0  [142]
-        2  Sermpinis G.  2010      12.0  [142]
-        3        Lin X.  2010       9.0  [143]
-        4       Song Y.  2010       9.0  [143]
+        0    Dunis C.L.  2010        12  [142]
+        1       Laws J.  2010        12  [142]
+        2  Sermpinis G.  2010        12  [142]
+        3        Lin X.  2010         9  [143]
+        4       Song Y.  2010         9  [143]
 
         """
 
@@ -471,6 +472,12 @@ class DataFrame(pd.DataFrame):
         result.index = list(range(len(result)))
         return result
 
+    #
+    #
+    #  Documents and citations by term per term per year
+    #
+    #
+
     def summarize_by_term_per_term_per_year(
         self, column_r, column_c, sep_r=None, sep_c=None
     ):
@@ -480,11 +487,11 @@ class DataFrame(pd.DataFrame):
         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
         >>> rdf.summarize_by_term_per_term_per_year('Authors', 'Author Keywords').head(5)
                 Authors Author Keywords  Year  Cited by  Num Documents     ID
-        0  Bekiros S.D.            LSTM  2013       2.0              1  [133]
-        1  Bekiros S.D.     Time series  2013       2.0              1  [133]
-        2  Bekiros S.D.   Time weighted  2013       2.0              1  [133]
-        3  Bekiros S.D.           stock  2013       2.0              1  [133]
-        4        Cai X.         Cluster  2013       5.0              1  [135]
+        0  Bekiros S.D.            LSTM  2013         2              1  [133]
+        1  Bekiros S.D.     Time series  2013         2              1  [133]
+        2  Bekiros S.D.   Time weighted  2013         2              1  [133]
+        3  Bekiros S.D.           stock  2013         2              1  [133]
+        4        Cai X.         Cluster  2013         5              1  [135]
         """
 
         data = _expand(
@@ -493,18 +500,17 @@ class DataFrame(pd.DataFrame):
         data = _expand(
             data[[column_r, column_c, "Year", "Cited by", "ID"]], column_c, sep_c
         )
-
         result = (
             data.groupby([column_r, column_c, "Year"], as_index=False)
             .agg({"Cited by": np.sum, "ID": np.size})
             .rename(columns={"ID": "Num Documents"})
         )
-
         result = result.assign(
             ID=data.groupby([column_r, column_c, "Year"])
             .agg({"ID": list})
             .reset_index()["ID"]
         )
+        result["Cited by"] = result["Cited by"].map(lambda x: int(x))
         result.sort_values(["Year", column_r, column_c,], ascending=True, inplace=True)
         result.index = list(range(len(result)))
         return result
@@ -575,96 +581,143 @@ class DataFrame(pd.DataFrame):
         result.index = list(range(len(result)))
         return result
 
-    # def co_ocurrence(
-    #     self, column_r, column_c, sep_r=None, sep_c=None, minmax_range=None, top_n=None
-    # ):
-    #     """Computes the number of rows containing two given items in different columns.
+    #
+    #
+    #  Ocurrence and co-ocurrence
+    #
+    #
+    def summarize_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None):
+        """Summarize ocurrence and citations.
 
-    #     >>> from techminer.datasets import load_test_cleaned
-    #     >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-    #     >>> rdf.co_ocurrence(column_r='Authors', column_c='Document Type').head(10)
-    #             Authors     Document Type  Num Documents                     ID
-    #     0       Wang J.           Article              5  [3, 10, 80, 128, 128]
-    #     1  Hernandez G.  Conference Paper              3          [52, 94, 100]
-    #     2      Tefas A.  Conference Paper              3          [8, 110, 114]
-    #     3       Wang J.  Conference Paper              2               [15, 87]
-    #     4        Yan X.  Conference Paper              2               [13, 85]
-    #     5      Zhang G.           Article              2              [27, 117]
-    #     6      Zhang G.  Conference Paper              2              [78, 119]
-    #     7        Yan X.           Article              1                   [44]
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf.summarize_ocurrence(column_r='Authors', column_c='Document Type').head(10)
+                 Authors     Document Type  Cited by  Num Documents     ID
+        0       Aadil F.           Article         0              1   [28]
+        1    Adam M.T.P.  Conference Paper         6              1   [70]
+        2     Afolabi D.           Article         3              1  [108]
+        3       Afzal S.           Article         0              1   [28]
+        4       Ahmed S.           Article         0              1   [39]
+        5       Akita R.  Conference Paper        37              1  [124]
+        6     Aktas M.S.  Conference Paper         0              1   [21]
+        7    Al-Askar H.           Article        10              1  [125]
+        8  Al-Jumeily D.           Article        10              1  [125]
+        9  Ali Mahmud S.           Article         3              1  [131]
 
-    #     >>> rdf.co_ocurrence(column_r='Authors', column_c='Document Type', top_n=5)
 
-    #     """
+        """
+        data = _expand(self[[column_r, column_c, "Cited by", "ID"]], column_r, sep_r)
+        data = _expand(data[[column_r, column_c, "Cited by", "ID"]], column_c, sep_c)
+        result = (
+            data.groupby([column_r, column_c], as_index=False)
+            .agg({"Cited by": np.sum, "ID": np.size})
+            .rename(columns={"ID": "Num Documents"})
+        )
+        result = result.assign(
+            ID=data.groupby([column_r, column_c]).agg({"ID": list}).reset_index()["ID"]
+        )
+        result.sort_values(
+            [column_r, column_c], ascending=[True, True], inplace=True,
+        )
+        result["Cited by"] = result["Cited by"].map(lambda x: int(x))
+        result.index = list(range(len(result)))
+        return result
 
-    #     data = _expand(self[[column_r, column_c, "ID"]], column_r, sep_r)
-    #     data = _expand(data[[column_r, column_c, "ID"]], column_c, sep_c)
+    def co_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None):
+        """
 
-    #     result = (
-    #         data.groupby([column_r, column_c], as_index=False)
-    #         .agg({"ID": np.size})
-    #         .rename(columns={"ID": "Num Documents"})
-    #     )
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents()
+        >>> rdf.co_ocurrence(column_r='Authors', column_c='Document Type').head(10)
+                     Authors          Document Type  Num Documents                     ID
+        0        Wang J. [7]           Article [52]              5  [3, 10, 80, 128, 128]
+        1     Arevalo A. [3]  Conference Paper [88]              3          [52, 94, 100]
+        2     Gabbouj M. [3]  Conference Paper [88]              3          [8, 110, 114]
+        3   Hernandez G. [3]  Conference Paper [88]              3          [52, 94, 100]
+        4   Iosifidis A. [3]  Conference Paper [88]              3          [8, 110, 114]
+        5  Kanniainen J. [3]  Conference Paper [88]              3          [8, 110, 114]
+        6        Leon D. [3]  Conference Paper [88]              3          [52, 94, 100]
+        7        Nino J. [3]  Conference Paper [88]              3          [52, 94, 100]
+        8    Passalis N. [3]  Conference Paper [88]              3          [8, 110, 114]
+        9    Sandoval J. [3]  Conference Paper [88]              3          [52, 94, 100]
 
-    #     result = result.assign(
-    #         ID=data.groupby([column_r, column_c]).agg({"ID": list}).reset_index()["ID"]
-    #     )
 
-    #     if top_n is not None:
+        """
 
-    #         top_terms_r = self._docs_and_citedby_by_term(column_r, sep_r)
-    #         top_terms_r.sort_values("Cited by", ascending=False, inplace=True)
-    #         top_terms_r = top_terms_r.head(top_n)
-    #         top_terms_r = top_terms_r[column_r].tolist()
+        def generate_dic(column, sep):
+            new_names = self.documents_by_term(column, sep)
+            new_names = {
+                term: "{:s} [{:d}]".format(term, docs_per_term)
+                for term, docs_per_term in zip(
+                    new_names[column], new_names["Num Documents"],
+                )
+            }
+            return new_names
 
-    #         top_terms_c = self._docs_and_citedby_by_term(column_c, sep_c)
-    #         top_terms_c.sort_values("Cited by", ascending=False, inplace=True)
-    #         top_terms_c = top_terms_c.head(top_n)
-    #         top_terms_c = top_terms_c[column_c].tolist()
+        result = self.summarize_ocurrence(column_r, column_c, sep_r, sep_c)
+        result.pop("Cited by")
+        result.sort_values(
+            ["Num Documents", column_r, column_c],
+            ascending=[False, True, True],
+            inplace=True,
+        )
+        result.index = list(range(len(result)))
 
-    #         result = result[
-    #             result[column_r].map(lambda x: x in top_terms_r)
-    #             & result[column_c].map(lambda x: x in top_terms_c)
-    #         ]
+        new_names = generate_dic(column_c, sep_c)
+        result[column_c] = result[column_c].map(lambda x: new_names[x])
 
-    #     if minmax_range is not None:
-    #         min_val, max_val = minmax_range
-    #         if min_val is not None:
-    #             result = result[result["Num Documents"] >= min_val]
-    #         if max_val is not None:
-    #             result = result[result["Num Documents"] <= max_val]
+        new_names = generate_dic(column_r, sep_r)
+        result[column_r] = result[column_r].map(lambda x: new_names[x])
 
-    #     result.sort_values(
-    #         ["Num Documents", column_r, column_c],
-    #         ascending=[False, True, True],
-    #         inplace=True,
-    #     )
+        return result
 
-    #     rename_terms_r = self._docs_and_citedby_by_term(column_r, sep_r)
-    #     rename_terms_r = {
-    #         term: "{:s} [{:d}, {:d}]".format(term, docs_per_term, cites_per_term)
-    #         for term, docs_per_term, cites_per_term in zip(
-    #             rename_terms_r[column_r],
-    #             rename_terms_r["Num Documents"],
-    #             rename_terms_r["Cited by"],
-    #         )
-    #     }
-    #     result[column_r] = result[column_r].map(lambda t: rename_terms_r[t])
+    def co_citation(self, column_r, column_c, sep_r=None, sep_c=None):
+        """
 
-    #     rename_terms_c = self._docs_and_citedby_by_term(column_c, sep_c)
-    #     rename_terms_c = {
-    #         term: "{:s} [{:d}, {:d}]".format(term, docs_per_term, cites_per_term)
-    #         for term, docs_per_term, cites_per_term in zip(
-    #             rename_terms_c[column_c],
-    #             rename_terms_c["Num Documents"],
-    #             rename_terms_c["Cited by"],
-    #         )
-    #     }
-    #     result[column_c] = result[column_c].map(lambda t: rename_terms_c[t])
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents()
+        >>> rdf.co_citation(column_r='Authors', column_c='Document Type').head(10)
+                     Authors           Document Type  Cited by                     ID
+        0  Hsiao H.-F. [188]  Conference Paper [371]       188                  [140]
+        1  Hsieh T.-J. [188]  Conference Paper [371]       188                  [140]
+        2    Yeh W.-C. [188]  Conference Paper [371]       188                  [140]
+        3  Hussain A.J. [52]           Article [323]        52             [125, 139]
+        4    Fischer T. [49]           Article [323]        49                   [62]
+        5     Krauss C. [49]           Article [323]        49                   [62]
+        6    Ghazali R. [42]           Article [323]        42                  [139]
+        7    Liatsis P. [42]           Article [323]        42                  [139]
+        8       Wang J. [46]           Article [323]        42  [3, 10, 80, 128, 128]
+        9      Akita R. [37]  Conference Paper [371]        37                  [124]
 
-    #     result.index = list(range(len(result)))
 
-    #     return result
+        """
+
+        def generate_dic(column, sep):
+            new_names = self.citations_by_term(column, sep)
+            new_names = {
+                term: "{:s} [{:d}]".format(term, docs_per_term)
+                for term, docs_per_term in zip(
+                    new_names[column], new_names["Cited by"],
+                )
+            }
+            return new_names
+
+        result = self.summarize_ocurrence(column_r, column_c, sep_r, sep_c)
+        result.pop("Num Documents")
+        result.sort_values(
+            ["Cited by", column_r, column_c],
+            ascending=[False, True, True],
+            inplace=True,
+        )
+        result.index = list(range(len(result)))
+
+        new_names = generate_dic(column_c, sep_c)
+        result[column_c] = result[column_c].map(lambda x: new_names[x])
+
+        new_names = generate_dic(column_r, sep_r)
+        result[column_r] = result[column_r].map(lambda x: new_names[x])
+
+        return result
 
     # def ocurrence(self, column, sep=None, top_n=None, minmax_range=None):
     #     """
