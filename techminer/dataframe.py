@@ -295,10 +295,21 @@ class DataFrame(pd.DataFrame):
 
         >>> from techminer.datasets import load_test_cleaned
         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-        >>> rdf.summarize(cumulative=False).head(5)
+        >>> rdf.summarize_by_year(cumulative=False).head(5)
+           Year  Cited by  Num Documents                    ID
+        0  2010        21              3       [141, 142, 143]
+        1  2011       230              2            [139, 140]
+        2  2012        16              2            [137, 138]
+        3  2013        36              4  [133, 134, 135, 136]
+        4  2014        23              2            [131, 132]
 
-
-        >>> rdf.summarize(cumulative=True).head(5)
+        >>> rdf.summarize_by_year(cumulative=True).head(5)
+           Year  Cited by  Num Documents                    ID
+        0  2010        21              3       [141, 142, 143]
+        1  2011       251              5            [139, 140]
+        2  2012       267              7            [137, 138]
+        3  2013       303             11  [133, 134, 135, 136]
+        4  2014       326             13            [131, 132]
 
         """
         data = _expand(self[["Year", "Cited by", "ID"]], "Year", None)
@@ -329,65 +340,51 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    # def documents_by_year(self, cumulative=False):
-    #     """Computes the number of documents per year.
+    def documents_by_year(self, cumulative=False):
+        """Computes the number of documents per year.
 
-    #     >>> from techminer.datasets import load_test_cleaned
-    #     >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-    #     >>> rdf.documents_by_year().head()
-    #              Year  Num Documents                    ID
-    #     0   2010 [21]              3       [141, 142, 143]
-    #     1  2011 [230]              2            [139, 140]
-    #     2   2012 [16]              2            [137, 138]
-    #     3   2013 [36]              4  [133, 134, 135, 136]
-    #     4   2014 [23]              2            [131, 132]
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf.documents_by_year().head()
+           Year  Num Documents                    ID
+        0  2010              3       [141, 142, 143]
+        1  2011              2            [139, 140]
+        2  2012              2            [137, 138]
+        3  2013              4  [133, 134, 135, 136]
+        4  2014              2            [131, 132]
 
-    #     >>> rdf.documents_by_year(cumulative=True).head()
-    #              Year  Num Documents                    ID
-    #     0   2010 [21]              3       [141, 142, 143]
-    #     1  2011 [251]              5            [139, 140]
-    #     2  2012 [267]              7            [137, 138]
-    #     3  2013 [303]             11  [133, 134, 135, 136]
-    #     4  2014 [326]             13            [131, 132]
+        >>> rdf.documents_by_year(cumulative=True).head()
+           Year  Num Documents                    ID
+        0  2010              3       [141, 142, 143]
+        1  2011              5            [139, 140]
+        2  2012              7            [137, 138]
+        3  2013             11  [133, 134, 135, 136]
+        4  2014             13            [131, 132]
 
-    #     """
+        """
+        result = self.summarize_by_year(cumulative)
+        result.pop("Cited by")
+        result.index = list(range(len(result)))
+        return result
 
-    #     result = self._docs_and_citedby_by_year(cumulative)
+    def citations_by_year(self, cumulative=False):
+        """Computes the number of citations by year.
 
-    #     result["Year"] = [
-    #         str(a) + " [" + str(int(b)) + "]"
-    #         for a, b in zip(result["Year"], result["Cited by"])
-    #     ]
-    #     result.pop("Cited by")
-    #     result.index = list(range(len(result)))
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf.citations_by_year().head()
+           Year  Cited by                    ID
+        0  2010        21       [141, 142, 143]
+        1  2011       230            [139, 140]
+        2  2012        16            [137, 138]
+        3  2013        36  [133, 134, 135, 136]
+        4  2014        23            [131, 132]
 
-    #     return result
-
-    # def citations_by_year(self, cumulative=False):
-    #     """Computes the number of citations by year.
-
-    #     >>> from techminer.datasets import load_test_cleaned
-    #     >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-    #     >>> rdf.citations_by_year().head()
-    #            Year  Cited by                    ID
-    #     0  2010 [3]        21       [141, 142, 143]
-    #     1  2011 [2]       230            [139, 140]
-    #     2  2012 [2]        16            [137, 138]
-    #     3  2013 [4]        36  [133, 134, 135, 136]
-    #     4  2014 [2]        23            [131, 132]
-
-    #     """
-
-    #     result = self._docs_and_citedby_by_year(cumulative)
-
-    #     result["Year"] = [
-    #         str(a) + " [" + str(int(b)) + "]"
-    #         for a, b in zip(result["Year"], result["Num Documents"])
-    #     ]
-    #     result.pop("Num Documents")
-    #     result.index = list(range(len(result)))
-
-    #     return result
+        """
+        result = self.summarize_by_year(cumulative)
+        result.pop("Num Documents")
+        result.index = list(range(len(result)))
+        return result
 
     # #
     # #
