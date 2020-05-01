@@ -208,12 +208,12 @@ class DataFrame(pd.DataFrame):
         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
         >>> rdf = rdf.remove_accents()
         >>> rdf.summarize_by_term('Authors', sep=None).head(5)
-                 Authors  Num Documents  Cited by                             ID
-        0        Wang J.              7        46  [3, 10, 15, 80, 87, 128, 128]
-        1       Zhang G.              4        12             [27, 78, 117, 119]
-        2     Gabbouj M.              3        31                  [8, 110, 114]
-        3   Iosifidis A.              3        31                  [8, 110, 114]
-        4  Kanniainen J.              3        31                  [8, 110, 114]
+               Authors  Num Documents  Cited by     ID
+        0     Aadil F.              1         0   [28]
+        1  Adam M.T.P.              1         6   [70]
+        2   Afolabi D.              1         3  [108]
+        3     Afzal S.              1         0   [28]
+        4     Ahmed S.              1         0   [39]
 
         """
         data = _expand(self[[column, "Cited by", "ID"]], column, sep)
@@ -227,8 +227,8 @@ class DataFrame(pd.DataFrame):
         )
         result["Cited by"] = result["Cited by"].map(lambda x: int(x))
         result.sort_values(
-            ["Num Documents", "Cited by", "Authors"],
-            ascending=[False, False, True],
+            ["Authors", "Num Documents", "Cited by"],
+            ascending=[True, False, False],
             inplace=True,
         )
         result.index = list(range(len(result)))
@@ -386,31 +386,40 @@ class DataFrame(pd.DataFrame):
         result.index = list(range(len(result)))
         return result
 
-    # #
-    # #
-    # #  Documents and citations by term per year
-    # #
-    # #
+    #
+    #
+    #  Documents and citations by term per year
+    #
+    #
 
-    # def _docs_and_citedby_by_term_per_year(self, column, sep=None):
+    def summarize_by_term_per_year(self, column, sep=None):
+        """
 
-    #     data = _expand(self[[column, "Year", "Cited by", "ID"]], column, sep)
 
-    #     result = (
-    #         data.groupby([column, "Year"], as_index=False)
-    #         .agg({"Cited by": np.sum, "ID": np.size})
-    #         .rename(columns={"ID": "Num Documents"})
-    #     )
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf.summarize_by_term_per_year(column='Authors').head()
+                Authors  Year  Cited by  Num Documents     ID
+        0    Dunis C.L.  2010      12.0              1  [142]
+        1       Laws J.  2010      12.0              1  [142]
+        2        Lin X.  2010       9.0              1  [143]
+        3  Sermpinis G.  2010      12.0              1  [142]
+        4       Song Y.  2010       9.0              1  [143]
 
-    #     result = result.assign(
-    #         ID=data.groupby([column, "Year"]).agg({"ID": list}).reset_index()["ID"]
-    #     )
 
-    #     result.sort_values("Year", ascending=True, inplace=True)
-
-    #     result.index = list(range(len(result)))
-
-    #     return result
+        """
+        data = _expand(self[["Year", column, "Cited by", "ID"]], column, sep)
+        result = (
+            data.groupby([column, "Year"], as_index=False)
+            .agg({"Cited by": np.sum, "ID": np.size})
+            .rename(columns={"ID": "Num Documents"})
+        )
+        result = result.assign(
+            ID=data.groupby([column, "Year"]).agg({"ID": list}).reset_index()["ID"]
+        )
+        result.sort_values(["Year", column], ascending=True, inplace=True)
+        result.index = list(range(len(result)))
+        return result
 
     # def documents_by_term_per_year(
     #     self, column, sep=None, top_n=None, minmax_range=None

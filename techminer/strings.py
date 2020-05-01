@@ -232,14 +232,14 @@ def extract_nearby(
         else:
             for i in range(n_words, -1, -1):
 
-                ## Checks at the beginning
+                # Checks at the beginning
                 pattern = "^" + "\w\W" * i + y + "\W\w" * n_words
                 result = check(pattern)
                 if result is not None:
                     return result
 
             for j in range(n_words, -1, -1):
-                ## Checks at the end
+                # Checks at the end
                 pattern = "\w\W" * n_words + y + "\W\w" * j + "$"
                 result = check(pattern)
                 if result is not None:
@@ -329,7 +329,7 @@ def extract_country(x, sep=";"):
     >>> x = pd.DataFrame({
     ...     'Affiliations': [
     ...         'University, Cuba; University, Venezuela',
-    ...         'Univesity, United States; Univesity, Singapore',
+    ...         'University, United States; Univesity, Singapore',
     ...         'University;',
     ...         'University; Univesity',
     ...         'University,',
@@ -350,24 +350,24 @@ def extract_country(x, sep=";"):
     if x is None:
         return None
 
-    ##
-    ## lista generica de nombres de paises
-    ##
+    #
+    # lista generica de nombres de paises
+    #
     country_names = sorted(
         geopandas.read_file(
             geopandas.datasets.get_path("naturalearth_lowres")
         ).name.tolist()
     )
 
-    ## paises faltantes
+    # paises faltantes
     country_names.append("Singapore")
     country_names.append("Malta")
     country_names.append("United States")
 
-    ##
-    ## Reemplazo de nombres de regiones administrativas
-    ## por nombres de paises
-    ##
+    #
+    #  Reemplazo de nombres de regiones administrativas
+    # por nombres de paises
+    #
     x = re.sub("Bosnia and Herzegovina", "Bosnia and Herz.", x)
     x = re.sub("Czech Republic", "Czechia", x)
     x = re.sub("Russian Federation", "Russia", x)
