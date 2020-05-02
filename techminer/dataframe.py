@@ -24,31 +24,35 @@ SCOPUS_SEPS = {
 def _expand(pdf, column, sep):
     """
 
-    # >>> from techminer.datasets import load_test_cleaned
-    # >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
-    # >>> result = _expand(rdf, 'Authors', sep=None)
-    # >>> result[result['Authors'] == 'Wang J.'][['Authors', 'ID']]
-    #      Authors   ID
-    # 11   Wang J.    3
-    # 36   Wang J.   10
-    # 434  Wang J.  128
+    >>> from techminer.datasets import load_test_cleaned
+    >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
+    >>> result = _expand(rdf, 'Authors', sep=None)
+    >>> result[result['Authors'].map(lambda x: 'Wang J.' in x) ][['Authors', 'Author(s) ID', 'ID']]
+            Authors                                     Author(s) ID   ID
+    11      Wang J.                          57207830408;57207828548    3
+    36   Wang J.[1]                          57205691331;55946707000   10
+    51   Wang J.[2]  15060001900;57209464952;57209470539;57209477365   15
+    262  Wang J.[3]              57194399361;56380147600;37002500800   80
+    282  Wang J.[4]  57204819270;56108513500;57206642524;57206677306   87
+    312  Wang J.-J.              57203011511;57204046656;57204046789   92
+    434  Wang J.[1]  56527464300;55946707000;42361194900;55286614500  128
+    435  Wang J.[5]  56527464300;55946707000;42361194900;55286614500  128
 
-    # >>> result[result['Authors'] == 'Wang J.*'][['Authors', 'ID']]
-    #       Authors  ID
-    # 51   Wang J.*  15
-    # 262  Wang J.*  80
-    # 282  Wang J.*  87
+    >>> result[result['Authors'] == 'Wang J.[1]'][['Authors', 'Author(s) ID', 'ID']]
+            Authors                                     Author(s) ID   ID
+    36   Wang J.[1]                          57205691331;55946707000   10
+    434  Wang J.[1]  56527464300;55946707000;42361194900;55286614500  128
 
 
 
 
 
-    # >>> result[result['ID'] == 128][['Authors', 'Author(s) ID', 'ID']]
-    #      Authors                                      Author(s) ID   ID
-    # 432  Fang W.  56527464300;55946707000;42361194900;55286614500;  128
-    # 433   Niu H.  56527464300;55946707000;42361194900;55286614500;  128
-    # 434  Wang J.  56527464300;55946707000;42361194900;55286614500;  128
-    # 435  Wang J.  56527464300;55946707000;42361194900;55286614500;  128
+    >>> result[result['ID'] == 128][['Authors', 'Author(s) ID', 'ID']]
+            Authors                                     Author(s) ID   ID
+    432     Fang W.  56527464300;55946707000;42361194900;55286614500  128
+    433      Niu H.  56527464300;55946707000;42361194900;55286614500  128
+    434  Wang J.[1]  56527464300;55946707000;42361194900;55286614500  128
+    435  Wang J.[5]  56527464300;55946707000;42361194900;55286614500  128
 
     """
 
@@ -138,9 +142,9 @@ class DataFrame(pd.DataFrame):
 
         >>> DataFrame(df).disambiguate_authors()
                               Authors                Author(s) ID
-        0          xxx x,xxx x*,yyy y                      0;2; 1
-        1         xxx x**,yyy y,ddd d                      6;1; 3
-        2                      ddd d*                           4
+        0        xxx x,xxx x[1],yyy y                      0;2; 1
+        1        xxx x[2],yyy y,ddd d                      6;1; 3
+        2                    ddd d[1]                           4
         3                       eee e                           5
         4                        None                        None
         5  [No author name available]  [No author name available]
@@ -162,12 +166,12 @@ class DataFrame(pd.DataFrame):
         >>> rdf[rdf['Authors'].map(lambda x: 'Wang J.' in x)][['Authors', 'Author(s) ID', 'ID']]
                                           Authors                                     Author(s) ID   ID
         3                          Cao J.,Wang J.                          57207830408;57207828548    3
-        10                       Wang B.,Wang J.*                          57205691331;55946707000   10
-        15         Du J.,Liu Q.,Chen K.,Wang J.**  15060001900;57209464952;57209470539;57209477365   15
-        80              Dong Y.,Wang J.***,Guo Z.              57194399361;56380147600;37002500800   80
-        87     Luo R.,Zhang W.*,Xu X.,Wang J.****  57204819270;56108513500;57206642524;57206677306   87
+        10                     Wang B.,Wang J.[1]                          57205691331;55946707000   10
+        15        Du J.,Liu Q.,Chen K.,Wang J.[2]  15060001900;57209464952;57209470539;57209477365   15
+        80              Dong Y.,Wang J.[3],Guo Z.              57194399361;56380147600;37002500800   80
+        87    Luo R.,Zhang W.[1],Xu X.,Wang J.[4]  57204819270;56108513500;57206642524;57206677306   87
         92       Tsai Y.-C.,Chen J.-H.,Wang J.-J.              57203011511;57204046656;57204046789   92
-        128  Wang J.*****,Wang J.*,Fang W.,Niu H.  56527464300;55946707000;42361194900;55286614500  128
+        128  Wang J.[5],Wang J.[1],Fang W.,Niu H.  56527464300;55946707000;42361194900;55286614500  128
 
         """
 
@@ -211,10 +215,13 @@ class DataFrame(pd.DataFrame):
 
         ids_names = {}
         for author_name in names_ids.keys():
-            suffix = ""
+            suffix = 0
             for author_id in names_ids[author_name]:
-                ids_names[author_id] = author_name + suffix
-                suffix += "*"
+                if suffix > 0:
+                    ids_names[author_id] = author_name + "[" + str(suffix) + "]"
+                else:
+                    ids_names[author_id] = author_name
+                suffix += 1
 
         result = self.copy()
 
