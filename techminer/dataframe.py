@@ -38,6 +38,7 @@ def _expand(pdf, column, sep):
     434  Wang J.[1]  56527464300;55946707000;42361194900;55286614500  128
     435  Wang J.[5]  56527464300;55946707000;42361194900;55286614500  128
 
+
     >>> result[result['Authors'] == 'Wang J.[1]'][['Authors', 'Author(s) ID', 'ID']]
             Authors                                     Author(s) ID   ID
     36   Wang J.[1]                          57205691331;55946707000   10
@@ -49,6 +50,13 @@ def _expand(pdf, column, sep):
     433      Niu H.  56527464300;55946707000;42361194900;55286614500  128
     434  Wang J.[1]  56527464300;55946707000;42361194900;55286614500  128
     435  Wang J.[5]  56527464300;55946707000;42361194900;55286614500  128
+
+    >>> result[result['Authors'].map(lambda x: 'Zhang G.' in x) ][['Authors', 'Author(s) ID', 'ID']]
+             Authors                                       Author(s) ID   ID
+    92      Zhang G.                44062068800;57005856100;56949237700   27
+    254  Zhang G.[1]  57202058986;56528648300;15077721900;5719383101...   78
+    402  Zhang G.[2]                 56670483600;7404745474;56278752300  117
+    407  Zhang G.[2]                 57197735758;7404745474;56670483600  119
 
     """
 
@@ -392,7 +400,7 @@ class DataFrame(pd.DataFrame):
         3     Afzal S.              1         0   [28]
         4     Ahmed S.              1         0   [39]
 
-        >>> result = rdf.summarize_by_term('Authors')
+        >>> result = rdf.summarize_by_term('Authors', sep=None)
         >>> result[result['Authors'].map(lambda x: 'Wang J.' in x)]
                 Authors  Num Documents  Cited by         ID
         337     Wang J.              1         0        [3]
@@ -422,53 +430,55 @@ class DataFrame(pd.DataFrame):
         result.index = list(range(len(result)))
         return result
 
-    # def documents_by_term(self, column, sep=None):
-    #     """Computes the number of documents per term in a given column.
+    def documents_by_term(self, column, sep=None):
+        """Computes the number of documents per term in a given column.
 
-    #     >>> from techminer.datasets import load_test_cleaned
-    #     >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
-    #     >>> rdf.documents_by_term('Authors').head(5)
-    #             Authors  Num Documents                             ID
-    #     0       Wang J.              7  [3, 10, 15, 80, 87, 128, 128]
-    #     1      Zhang G.              4             [27, 78, 117, 119]
-    #     2    Arevalo A.              3                  [52, 94, 100]
-    #     3    Gabbouj M.              3                  [8, 110, 114]
-    #     4  Hernandez G.              3                  [52, 94, 100]
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
+        >>> rdf.documents_by_term('Authors').head(5)
+                 Authors  Num Documents             ID
+        0     Arevalo A.              3  [52, 94, 100]
+        1     Gabbouj M.              3  [8, 110, 114]
+        2   Hernandez G.              3  [52, 94, 100]
+        3   Iosifidis A.              3  [8, 110, 114]
+        4  Kanniainen J.              3  [8, 110, 114]
 
-    #     """
 
-    #     result = self.summarize_by_term(column, sep)
-    #     result.pop("Cited by")
-    #     result.sort_values(
-    #         ["Num Documents", column], ascending=[False, True], inplace=True
-    #     )
-    #     result.index = list(range(len(result)))
-    #     return result
 
-    # def citations_by_term(self, column, sep=None):
-    #     """Computes the number of citations by item in a column.
+        """
 
-    #     >>> from techminer.datasets import load_test_cleaned
-    #     >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().disambiguate_authors()
-    #     >>> rdf.citations_by_term(column='Authors', sep=',').head(10)
-    #             Authors  Cited by                             ID
-    #     0   Hsiao H.-F.       188                          [140]
-    #     1   Hsieh T.-J.       188                          [140]
-    #     2     Yeh W.-C.       188                          [140]
-    #     3  Hussain A.J.        52                     [125, 139]
-    #     4    Fischer T.        49                           [62]
-    #     5     Krauss C.        49                           [62]
-    #     6       Wang J.        46  [3, 10, 15, 80, 87, 128, 128]
-    #     7    Ghazali R.        42                          [139]
-    #     8    Liatsis P.        42                          [139]
-    #     9      Akita R.        37                          [124]
+        result = self.summarize_by_term(column, sep)
+        result.pop("Cited by")
+        result.sort_values(
+            ["Num Documents", column], ascending=[False, True], inplace=True
+        )
+        result.index = list(range(len(result)))
+        return result
 
-    #     """
-    #     result = self.summarize_by_term(column, sep)
-    #     result.pop("Num Documents")
-    #     result.sort_values(["Cited by", column], ascending=[False, True], inplace=True)
-    #     result.index = list(range(len(result)))
-    #     return result
+    def citations_by_term(self, column, sep=None):
+        """Computes the number of citations by item in a column.
+
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().disambiguate_authors()
+        >>> rdf.citations_by_term(column='Authors', sep=',').head(10)
+                Authors  Cited by          ID
+        0   Hsiao H.-F.       188       [140]
+        1   Hsieh T.-J.       188       [140]
+        2     Yeh W.-C.       188       [140]
+        3  Hussain A.J.        52  [125, 139]
+        4    Fischer T.        49        [62]
+        5     Krauss C.        49        [62]
+        6    Ghazali R.        42       [139]
+        7    Liatsis P.        42       [139]
+        8      Akita R.        37       [124]
+        9  Matsubara T.        37       [124]
+
+        """
+        result = self.summarize_by_term(column, sep)
+        result.pop("Num Documents")
+        result.sort_values(["Cited by", column], ascending=[False, True], inplace=True)
+        result.index = list(range(len(result)))
+        return result
 
     #
     #
