@@ -43,10 +43,6 @@ def _expand(pdf, column, sep):
     36   Wang J.[1]                          57205691331;55946707000   10
     434  Wang J.[1]  56527464300;55946707000;42361194900;55286614500  128
 
-
-
-
-
     >>> result[result['ID'] == 128][['Authors', 'Author(s) ID', 'ID']]
             Authors                                     Author(s) ID   ID
     432     Fang W.  56527464300;55946707000;42361194900;55286614500  128
@@ -96,7 +92,7 @@ class DataFrame(pd.DataFrame):
         else:
             self["ID"] = [fmt.format(x) for x in range(len(self))]
         self.index = list(range(len(self)))
-        return self
+        return DataFrame(self)
 
     #
     # Distinc authors with same name
@@ -231,7 +227,7 @@ class DataFrame(pd.DataFrame):
             else x
         )
 
-        return result
+        return DataFrame(result)
 
     #
     # Accents
@@ -351,17 +347,24 @@ class DataFrame(pd.DataFrame):
     def count_report(self):
         """
 
-        #>>> from techminer.datasets import load_test_cleaned
-        #>>> rdf = DataFrame(load_test_cleaned().data).generate_ID().disambiguate_authors()
-        #>>> rdf.count_report()
-        #            Column  Number of items
-        0          Authors              407
-        1     Source title              103
-        2  Author Keywords              404
-        3   Index Keywords              881
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().disambiguate_authors()
+        >>> rdf.count_report()
+                    Column  Number of items
+        0          Authors              434
+        1     Author(s) ID              434
+        2     Source title              103
+        3  Author Keywords              404
+        4   Index Keywords              881
 
         """
-        columns = ["Authors", "Source title", "Author Keywords", "Index Keywords"]
+        columns = [
+            "Authors",
+            "Author(s) ID",
+            "Source title",
+            "Author Keywords",
+            "Index Keywords",
+        ]
         return pd.DataFrame(
             {
                 "Column": columns,
@@ -378,10 +381,10 @@ class DataFrame(pd.DataFrame):
     def summarize_by_term(self, column, sep):
         """Auxiliary function
 
-        #>>> from techminer.datasets import load_test_cleaned
-        #>>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-        #>>> rdf = rdf.remove_accents().disambiguate_authors()
-        #>>> rdf.summarize_by_term('Authors', sep=None).head(5)
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf = rdf.remove_accents().disambiguate_authors()
+        >>> rdf.summarize_by_term('Authors', sep=None).head(5)
                Authors  Num Documents  Cited by     ID
         0     Aadil F.              1         0   [28]
         1  Adam M.T.P.              1         6   [70]
@@ -389,9 +392,16 @@ class DataFrame(pd.DataFrame):
         3     Afzal S.              1         0   [28]
         4     Ahmed S.              1         0   [39]
 
-        #>>> result = rdf.summarize_by_term('Authors', sep=None)
-        #>>> result[result['Authors'] == 'Wang J.']
-
+        >>> result = rdf.summarize_by_term('Authors')
+        >>> result[result['Authors'].map(lambda x: 'Wang J.' in x)]
+                Authors  Num Documents  Cited by         ID
+        337     Wang J.              1         0        [3]
+        338  Wang J.-J.              1         1       [92]
+        339  Wang J.[1]              2        19  [10, 128]
+        340  Wang J.[2]              1         0       [15]
+        341  Wang J.[3]              1         4       [80]
+        342  Wang J.[4]              1         4       [87]
+        343  Wang J.[5]              1        19      [128]
 
         """
         data = _expand(self[[column, "Cited by", "ID"]], column, sep)
