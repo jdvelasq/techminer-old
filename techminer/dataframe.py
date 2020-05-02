@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 from sklearn.decomposition import PCA
 
-from .strings import asciify
+# from .strings import asciify
 
 SCOPUS_SEPS = {
     "Authors": ",",

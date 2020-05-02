@@ -8,8 +8,9 @@ from paver.tasks import task, needs
 @task
 def nosetests():
     """unit testing"""
-    sh('nosetests --verbose --cover-package=techminer --cover-tests '
-       ' --with-doctest --rednose  ./techminer/')
+    #sh('nosetests --verbose --cover-package=techminer --cover-tests '
+    #   ' --with-doctest --rednose  ./techminer/')
+    sh('python -m  unittest discover')
 
 @task
 def pylint():
