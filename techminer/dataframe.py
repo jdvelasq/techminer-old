@@ -435,7 +435,8 @@ class DataFrame(pd.DataFrame):
 
         >>> from techminer.datasets import load_test_cleaned
         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
-        >>> rdf.documents_by_term('Authors').head(5)
+        >>> result = rdf.documents_by_term('Authors').head(5)
+        >>> result
                  Authors  Num Documents             ID
         0     Arevalo A.              3  [52, 94, 100]
         1     Gabbouj M.              3  [8, 110, 114]
@@ -443,7 +444,9 @@ class DataFrame(pd.DataFrame):
         3   Iosifidis A.              3  [8, 110, 114]
         4  Kanniainen J.              3  [8, 110, 114]
 
-
+        >>> result['lenIDs'] = result['ID'].map(lambda x: len(x))
+        >>> sum(result['Num Documents']) == sum(result['lenIDs'])
+        True
 
         """
 
