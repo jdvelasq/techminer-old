@@ -107,8 +107,8 @@ class DataFrame(pd.DataFrame):
         >>> DataFrame(df).generate_ID()
                               Authors  ID
         0  author 0,author 1,author 2   0
-        1                    author 3   1 
-        2                    author 4   2      
+        1                    author 3   1
+        2                    author 4   2
 
         """
         if fmt is None:
@@ -145,10 +145,10 @@ class DataFrame(pd.DataFrame):
         2                    author 0           4;
 
         >>> DataFrame(df).disambiguate_authors()
-                                    Authors  Author(s) ID
-        0  author 0,author 0(1),author 0(2)        0;1;2;
-        1                       author 0(3)            3;
-        2                       author 0(4)            4;
+                                    Authors Author(s) ID
+        0  author 0,author 0(1),author 0(2)        0;1;2
+        1                       author 0(3)            3
+        2                       author 0(4)            4
 
 
         """
@@ -211,106 +211,112 @@ class DataFrame(pd.DataFrame):
 
         return DataFrame(result)
 
+    #     #
+    #     # Accents
+    #     #
+    #     def remove_accents(self):
+    #         """Remove accents for all strings on a DataFrame
+    #         """
+    #         return DataFrame(
+    #             self.applymap(lambda x: asciify(x) if isinstance(x, str) else x)
+    #         )
 
-#     #
-#     # Accents
-#     #
-#     def remove_accents(self):
-#         """Remove accents for all strings on a DataFrame
-#         """
-#         return DataFrame(
-#             self.applymap(lambda x: asciify(x) if isinstance(x, str) else x)
-#         )
+    #     #
+    #     # Basic info
+    #     #
 
-#     #
-#     # Basic info
-#     #
+    #     def coverage(self):
+    #         """Counts the number of None values per column.
 
-#     def coverage(self):
-#         """Counts the number of None values per column.
+    #         Returns:
+    #             Pandas DataFrame.
 
+    #         >>> from techminer.datasets import load_test_cleaned
+    #         >>> rdf = DataFrame(load_test_cleaned().data)
+    #         >>> rdf.coverage()
+    #                         Column  Number of items Coverage (%)
+    #         0              Authors              144      100.00%
+    #         1         Author(s) ID              144      100.00%
+    #         2                Title              144      100.00%
+    #         3                 Year              144      100.00%
+    #         4         Source title              144      100.00%
+    #         5               Volume               97       67.36%
+    #         6                Issue               27       18.75%
+    #         7             Art. No.               49       34.03%
+    #         8           Page start              119       82.64%
+    #         9             Page end              119       82.64%
+    #         10          Page count                0        0.00%
+    #         11            Cited by               68       47.22%
+    #         12                 DOI              133       92.36%
+    #         13        Affiliations              143       99.31%
+    #         14       Document Type              144      100.00%
+    #         15         Access Type               16       11.11%
+    #         16              Source              144      100.00%
+    #         17                 EID              144      100.00%
+    #         18            Abstract              144      100.00%
+    #         19     Author Keywords              124       86.11%
+    #         20      Index Keywords              123       85.42%
+    #         21          References              137       95.14%
+    #         22            keywords              144      100.00%
+    #         23                CONF              144      100.00%
+    #         24  keywords (cleaned)              144      100.00%
+    #         25            SELECTED              144      100.00%
+    #         26                  ID              144      100.00%
 
-#         Returns:
-#             Pandas DataFrame.
+    #         """
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data)
-#         >>> rdf.coverage()
-#                         Column  Number of items Coverage (%)
-#         0              Authors              144      100.00%
-#         1         Author(s) ID              144      100.00%
-#         2                Title              144      100.00%
-#         3                 Year              144      100.00%
-#         4         Source title              144      100.00%
-#         5               Volume               97       67.36%
-#         6                Issue               27       18.75%
-#         7             Art. No.               49       34.03%
-#         8           Page start              119       82.64%
-#         9             Page end              119       82.64%
-#         10          Page count                0        0.00%
-#         11            Cited by               68       47.22%
-#         12                 DOI              133       92.36%
-#         13        Affiliations              143       99.31%
-#         14       Document Type              144      100.00%
-#         15         Access Type               16       11.11%
-#         16              Source              144      100.00%
-#         17                 EID              144      100.00%
-#         18            Abstract              144      100.00%
-#         19     Author Keywords              124       86.11%
-#         20      Index Keywords              123       85.42%
-#         21          References              137       95.14%
-#         22            keywords              144      100.00%
-#         23                CONF              144      100.00%
-#         24  keywords (cleaned)              144      100.00%
-#         25            SELECTED              144      100.00%
-#         26                  ID              144      100.00%
+    #         return pd.DataFrame(
+    #             {
+    #                 "Column": self.columns,
+    #                 "Number of items": [
+    #                     len(self) - self[col].isnull().sum() for col in self.columns
+    #                 ],
+    #                 "Coverage (%)": [
+    #                     "{:5.2%}".format((len(self) - self[col].isnull().sum()) / len(self))
+    #                     for col in self.columns
+    #                 ],
+    #             }
+    #         )
 
-#         """
+    #
+    #
+    # Term extraction
+    #
+    #
 
-#         return pd.DataFrame(
-#             {
-#                 "Column": self.columns,
-#                 "Number of items": [
-#                     len(self) - self[col].isnull().sum() for col in self.columns
-#                 ],
-#                 "Coverage (%)": [
-#                     "{:5.2%}".format((len(self) - self[col].isnull().sum()) / len(self))
-#                     for col in self.columns
-#                 ],
-#             }
-#         )
+    def extract_terms(self, column, sep=None):
+        """Extracts unique terms in a column, exploding multvalued columns.
 
-#     #
-#     #
-#     # Term extraction
-#     #
-#     #
+        >>> import pandas as pd
+        >>> pdf = pd.DataFrame({'A': ['1;2', '3', '3;4;5'], 'B':[0] * 3})
+        >>> DataFrame(pdf).extract_terms(column='A', sep=';')
+           A
+        0  1
+        1  2
+        2  3
+        3  4
+        4  5
 
-#     def extract_terms(self, column, sep=None):
-#         """
+        >>> pdf = pd.DataFrame({'Authors': ['xxx', 'xxx, zzz', 'yyy', 'xxx, yyy, zzz']})
+        >>> pdf
+                 Authors
+        0            xxx
+        1       xxx, zzz
+        2            yyy
+        3  xxx, yyy, zzz
+        
+        >>> DataFrame(pdf).extract_terms(column='Authors')
+          Authors
+        0     xxx
+        1     yyy
+        2     zzz
 
-#         >>> import pandas as pd
-#         >>> pdf = pd.DataFrame({'A': ['1;2', '3', '3;4;5'], 'B':[0] * 3})
-#         >>> DataFrame(pdf).extract_terms(column='A', sep=';')
-#            A
-#         0  1
-#         1  2
-#         2  3
-#         3  4
-#         4  5
+        """
+        result = self.explode(column, sep)
+        result = pd.unique(result[column].dropna())
+        result = np.sort(result)
+        return pd.DataFrame({column: result})
 
-#         >>> pdf = pd.DataFrame({'Authors': ['xxx', 'xxx, zzz', 'yyy', 'xxx, yyy, zzz']})
-#         >>> DataFrame(pdf).extract_terms(column='Authors')
-#           Authors
-#         0     xxx
-#         1     yyy
-#         2     zzz
-
-#         """
-#         result = _expand(self, column, sep)
-#         result = pd.unique(result[column].dropna())
-#         result = np.sort(result)
-#         return pd.DataFrame({column: result})
 
 #     def count_terms(self, column, sep=None):
 #         """
