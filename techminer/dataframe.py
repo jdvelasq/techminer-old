@@ -33,7 +33,6 @@ class DataFrame(pd.DataFrame):
     def _constructor_expanddim(self):
         return self
 
-
     def explode(self, column, sep=None):
         """Transform each element of a list-like to a row, reseting index values.
 
@@ -96,20 +95,20 @@ class DataFrame(pd.DataFrame):
 
         return result
 
+    #
+    # Document ID
+    #
 
-#     #
-#     # Document ID
-#     #
+    def generate_ID(self, fmt=None):
+        """Generates a unique ID for each document.
+        """
+        if fmt is None:
+            self["ID"] = [x for x in range(len(self))]
+        else:
+            self["ID"] = [fmt.format(x) for x in range(len(self))]
+        self.index = list(range(len(self)))
+        return DataFrame(self)
 
-#     def generate_ID(self, fmt=None):
-#         """Generates a unique ID for each document.
-#         """
-#         if fmt is None:
-#             self["ID"] = [x for x in range(len(self))]
-#         else:
-#             self["ID"] = [fmt.format(x) for x in range(len(self))]
-#         self.index = list(range(len(self)))
-#         return DataFrame(self)
 
 #     #
 #     # Distinc authors with same name
@@ -833,7 +832,6 @@ class DataFrame(pd.DataFrame):
 #         7             C                     c              1         3     [3]
 #         8             D                     c              1         4     [4]
 #         9             D                     d              1         4     [4]
-
 
 
 #         >>> from techminer.datasets import load_test_cleaned
