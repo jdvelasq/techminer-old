@@ -57,7 +57,7 @@ class DataFrame(pd.DataFrame):
         312  Wang J.-J.              57203011511;57204046656;57204046789   92
         434  Wang J.(1)  56527464300;55946707000;42361194900;55286614500  128
         435  Wang J.(5)  56527464300;55946707000;42361194900;55286614500  128
-
+        
 
         >>> result[result['Authors'] == 'Wang J.(1)'][['Authors', 'Author(s) ID', 'ID']]
                 Authors                                     Author(s) ID   ID

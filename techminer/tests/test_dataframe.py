@@ -50,7 +50,7 @@ def test_disambiguate_authors():
 
     expected = pd.DataFrame(
         {
-            "Authors": "author 0;author 0(1);author 0(2);author 0(3);author 0(4)".split(
+            "Authors": "author 0,author 0(1),author 0(2);author 0(3);author 0(4)".split(
                 ";"
             ),
             "Author(s) ID": "0;1;2,3,4".split(","),
@@ -58,5 +58,6 @@ def test_disambiguate_authors():
         }
     )
 
-    result = DataFrame(testdf).explode("Authors")
+    result = DataFrame(testdf).disambiguate_authors()
+    print(result)
     tm.assert_frame_equal(result, expected)

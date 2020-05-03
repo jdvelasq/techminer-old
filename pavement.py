@@ -8,20 +8,23 @@ from paver.tasks import task, needs
 @task
 def tests():
     """unit testing"""
-    #sh('nosetests --verbose --cover-package=techminer --cover-tests '
+    # sh('nosetests --verbose --cover-package=techminer --cover-tests '
     #   ' --with-doctest --rednose  ./techminer/')
-    sh('python -m  unittest discover')
+    sh("pytest ")
+
 
 @task
 def pylint():
     """pyltin"""
-    sh('pylint ./techminer/')
+    sh("pylint ./techminer/")
+
 
 @task
 def pypi():
     """Instalation on PyPi"""
-    sh('python setup.py sdist')
-    sh('twine upload dist/*')
+    sh("python setup.py sdist")
+    sh("twine upload dist/*")
+
 
 @task
 def local():
@@ -33,9 +36,10 @@ def local():
 @task
 def sphinx():
     """Document creation using Shinx"""
-    sh('cd guide; make html; cd ..')
+    sh("cd guide; make html; cd ..")
 
-@needs('nosetests', 'pylint', 'sphinx')
+
+@needs("nosetests", "pylint", "sphinx")
 @task
 def default():
     """default"""
