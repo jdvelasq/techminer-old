@@ -18,26 +18,26 @@ from techminer import DataFrame
 #     )
 
 
-def test_disambiguate_authors():
+# def test_disambiguate_authors():
 
-    testdf = pd.DataFrame(
-        {
-            "Authors": "author 0,author 0,author 0;author 0;author 0".split(";"),
-            "Author(s) ID": "0;1;2,3,4".split(","),
-            "ID": list(range(3)),
-        }
-    )
+#     testdf = pd.DataFrame(
+#         {
+#             "Authors": "author 0,author 0,author 0;author 0;author 0".split(";"),
+#             "Author(s) ID": "0;1;2,3,4".split(","),
+#             "ID": list(range(3)),
+#         }
+#     )
 
-    expected = pd.DataFrame(
-        {
-            "Authors": "author 0,author 0(1),author 0(2);author 0(3);author 0(4)".split(
-                ";"
-            ),
-            "Author(s) ID": "0;1;2,3,4".split(","),
-            "ID": list(range(3)),
-        }
-    )
+#     expected = pd.DataFrame(
+#         {
+#             "Authors": "author 0,author 0(1),author 0(2);author 0(3);author 0(4)".split(
+#                 ";"
+#             ),
+#             "Author(s) ID": "0;1;2,3,4".split(","),
+#             "ID": list(range(3)),
+#         }
+#     )
 
-    result = DataFrame(testdf).disambiguate_authors()
-    print(result)
-    tm.assert_frame_equal(result, expected)
+#     result = DataFrame(testdf).disambiguate_authors()
+#     print(result)
+#     tm.assert_frame_equal(result, expected)
