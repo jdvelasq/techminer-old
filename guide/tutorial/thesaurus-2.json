@@ -1,0 +1,790 @@
+{
+  "adaboost algorithm": [
+    "AdaBoost algorithm",
+    "validating AdaBoost algorithm"
+  ],
+  "adaptive noise": [
+    "Adaptive noise",
+    "adaptive noise reducer"
+  ],
+  "algorithmic trading": [
+    "Algorithmic trading",
+    "Algorithmic trading models"
+  ],
+  "algorithms": [
+    "Algorithmic approach",
+    "Analysis algorithms",
+    "Boruta algorithm",
+    "Classification algorithm",
+    "Clustering algorithms",
+    "Immune algorithms",
+    "Learning algorithms",
+    "Learning-based algorithms",
+    "Levenberg-Marquardt algorithm",
+    "NARX algorithm",
+    "State-of-the-art algorithms",
+    "algorithms",
+    "genetic algorithms",
+    "hybrid algorithms"
+  ],
+  "arima": [
+    "ARIMA",
+    "arima modeling"
+  ],
+  "article": [
+    "ARTICLE",
+    "Article",
+    "article"
+  ],
+  "artificial intelligence": [
+    "Artificial Intelligence (AI)",
+    "Artificial intelligence",
+    "artificial intelligence"
+  ],
+  "artificial neural networks": [
+    "Artificial Neural Network",
+    "Artificial Neural Networks",
+    "Artificial neural network models",
+    "Artificial neural networks (ANN)",
+    "artificial neural networks"
+  ],
+  "attention": [
+    "Attention",
+    "attention mechanisms"
+  ],
+  "autoencoder": [
+    "Autoencoder",
+    "autoencoder"
+  ],
+  "backpropagation": [
+    "Backpropagation",
+    "Backpropagation network",
+    "Modified backpropagation"
+  ],
+  "backpropagation algorithms": [
+    "Backpropagation algorithms",
+    "backpropagation learning algorithm"
+  ],
+  "brain": [
+    "Brain",
+    "brain"
+  ],
+  "classification methods": [
+    "Classification Methods",
+    "Classification methods"
+  ],
+  "cluster": [
+    "Cluster",
+    "Cluster analysis",
+    "cluster"
+  ],
+  "commerce": [
+    "Commerce",
+    "Conversational Commerce"
+  ],
+  "convolution": [
+    "Convolution",
+    "Convolution Networks",
+    "Convolution layer",
+    "Time convolution",
+    "convolution"
+  ],
+  "convolutional neural network": [
+    "Deep convolutional neural networks",
+    "convolutional neural network",
+    "convolutional neural networks (cnn)"
+  ],
+  "correlation coefficient": [
+    "Correlation coefficient",
+    "Rank correlation coefficient"
+  ],
+  "costs": [
+    "costs",
+    "energy cost"
+  ],
+  "coupled systems": [
+    "Coupled systems",
+    "FHN coupled system"
+  ],
+  "covariance matrix": [
+    "Covariance matrix",
+    "Covariance matrix forecasting"
+  ],
+  "cross modality": [
+    "Cross modality",
+    "Cross modality learning"
+  ],
+  "cryptocurrency": [
+    "Cryptocurrency",
+    "cryptocurrency prediction"
+  ],
+  "decision making": [
+    "Decision making",
+    "Investment decision making"
+  ],
+  "deep belief networks": [
+    "Deep belief network (DBN)",
+    "Deep belief networks"
+  ],
+  "deep learning": [
+    "Deep learning (DL)",
+    "Sequence-to-sequence deep learning",
+    "deep learning"
+  ],
+  "echo state networks": [
+    "echo state network",
+    "echo state networks"
+  ],
+  "economics": [
+    "Economic analysis",
+    "Economics",
+    "Financial economics",
+    "economic model"
+  ],
+  "embeddings": [
+    "Embedding Method",
+    "Embeddings",
+    "Relationship embedding",
+    "cycle embeddings"
+  ],
+  "encoder-decoder": [
+    "Encoder-decoder",
+    "Encoder-decoder architecture"
+  ],
+  "ensemble learning": [
+    "Ensemble learning",
+    "Ensemble learning approach",
+    "ensemble learning"
+  ],
+  "errors": [
+    "Errors",
+    "Percentage error"
+  ],
+  "evolutionary algorithms": [
+    "Evolutionary algorithms",
+    "evolutionary algorithms"
+  ],
+  "exchange rate forecasting": [
+    "Exchange rate forecasting",
+    "Foreign exchange rates forecasting"
+  ],
+  "exchange rates": [
+    "Exchange Rate Prediction",
+    "Exchange rates",
+    "foreign exchange rates"
+  ],
+  "exponential smoothing": [
+    "Exponential smoothing",
+    "Simple exponential smoothing"
+  ],
+  "extreme learning machine": [
+    "Extreme learning machine",
+    "Extreme learning machine (ELM)",
+    "extreme learning machine"
+  ],
+  "feed-forward": [
+    "Feed-Forward",
+    "Feed-forward network"
+  ],
+  "feedforward neural networks": [
+    "Feedforward neural networks",
+    "Multilayer feedforward neural networks",
+    "feedforward neural networks"
+  ],
+  "finance": [
+    "Computational finance",
+    "Finance",
+    "Quantitative finance"
+  ],
+  "financial data": [
+    "Financial data",
+    "Financial data processing",
+    "financial data"
+  ],
+  "financial prediction": [
+    "Financial data prediction",
+    "Financial market prediction",
+    "financial prediction"
+  ],
+  "financial time series": [
+    "Financial Time Series Data",
+    "financial time series"
+  ],
+  "financial time series predictions": [
+    "And financial time series prediction",
+    "financial time series prediction",
+    "financial time series predictions"
+  ],
+  "forecasting": [
+    "Forecasting accuracy",
+    "Forecasting error",
+    "Forecasting methods",
+    "Forecasting problems",
+    "Forecasting techniques",
+    "High-frequency forecasting",
+    "Long-term forecasting",
+    "Market forecast",
+    "Short-term forecasting",
+    "Statistical forecasting",
+    "financial forecasting",
+    "forecasting",
+    "forecasting models",
+    "forecasting performance",
+    "trend forecasting",
+    "volatility forecasting"
+  ],
+  "functions": [
+    "Effective function",
+    "Function evaluation",
+    "Functions",
+    "Quasi-linear functions",
+    "Transfer functions",
+    "Weighted function",
+    "basic function"
+  ],
+  "gated recurrent unit": [
+    "Gated recurrent unit",
+    "Gated recurrent unit (GRU)"
+  ],
+  "genetic programming": [
+    "Cartesian genetic programming",
+    "Genetic programming"
+  ],
+  "geometric brownian motion": [
+    "Geometric Brownian motion",
+    "geometric Brownian motion (GBM)"
+  ],
+  "gradient algorithm": [
+    "Adaptive gradient algorithm",
+    "Gradient algorithm",
+    "Gradient descent algorithms"
+  ],
+  "hierarchical structures": [
+    "Hierarchical structures",
+    "hierarchical structures"
+  ],
+  "high-frequency data": [
+    "high-frequency data",
+    "high-frequency financial data"
+  ],
+  "higher order": [
+    "Higher order",
+    "Higher order statistics"
+  ],
+  "human": [
+    "Human",
+    "human"
+  ],
+  "human computer interaction": [
+    "Human Computer Interaction (HCI)",
+    "Human computer interaction"
+  ],
+  "hybrid model": [
+    "Hybrid intelligent model",
+    "Hybrid model"
+  ],
+  "independent components analysis": [
+    "Independent components analysis (ICA)",
+    "independent component analysis",
+    "independent components analysis"
+  ],
+  "information systems": [
+    "Information systems",
+    "financial information system"
+  ],
+  "input features": [
+    "Multivariate feature input",
+    "Univariate feature input",
+    "input features"
+  ],
+  "insider trading": [
+    "Illegal Insider Trading",
+    "Insider trading"
+  ],
+  "integrated systems": [
+    "Integrated systems",
+    "Integrated visualization systems"
+  ],
+  "intelligent computing": [
+    "Computational intelligence techniques",
+    "Intelligent computing"
+  ],
+  "intrusion detection": [
+    "Intrusion detection",
+    "intrusion detection"
+  ],
+  "investments": [
+    "Investment market",
+    "Investment portfolio",
+    "Investment strategy",
+    "Security investments",
+    "investments"
+  ],
+  "kalman filters": [
+    "Linear Kalman filters",
+    "Traditional Kalman filters",
+    "kalman filters"
+  ],
+  "learning methods": [
+    "Learning methods",
+    "Machine learning methods"
+  ],
+  "learning techniques": [
+    "Learning techniques",
+    "learning techniques"
+  ],
+  "linear regression": [
+    "Linear regression",
+    "Linear regression models"
+  ],
+  "logistic regressions": [
+    "Logistic regression classifier",
+    "Logistic regressions"
+  ],
+  "long short-term memory neural network": [
+    "Long Short-Term Memory neural network",
+    "Long short-term memory (LSTM)\u00a0neural network"
+  ],
+  "lstm": [
+    "LSTM",
+    "LSTM Network"
+  ],
+  "machine learning": [
+    "Interference-less machine learning",
+    "Machine learning approaches",
+    "Machine learning models",
+    "machine learning"
+  ],
+  "machine learning techniques": [
+    "Machine learning techniques",
+    "machine learning techniques"
+  ],
+  "map-reduce programming": [
+    "Map-Reduce Programming Model",
+    "Map-reduce programming"
+  ],
+  "market": [
+    "Database marketing",
+    "Direct marketing",
+    "Financial markets",
+    "Forex markets",
+    "Futures markets",
+    "Heterogeneous markets",
+    "Market",
+    "Market Vector",
+    "Market condition",
+    "Market data",
+    "Market information",
+    "Market participants",
+    "Market trends",
+    "emerging markets",
+    "market",
+    "marketing campaigns"
+  ],
+  "market microstructure": [
+    "Market microstructure",
+    "microstructure market data"
+  ],
+  "market prediction": [
+    "market prediction",
+    "stock market prediction"
+  ],
+  "mean absolute error": [
+    "Mean absolute error",
+    "Mean absolute percentage error"
+  ],
+  "mean square error": [
+    "mean square error",
+    "root mean squared errors"
+  ],
+  "membership functions": [
+    "Fuzzy membership function",
+    "Membership functions"
+  ],
+  "metadata": [
+    "Metadata",
+    "metadata"
+  ],
+  "motion estimation": [
+    "Motion estimation",
+    "motion estimation"
+  ],
+  "multi agent": [
+    "Multi agent",
+    "Multi agent systems"
+  ],
+  "multilayer neural networks": [
+    "Multilayer neural networks",
+    "regularized multilayer neural network"
+  ],
+  "multiple scale": [
+    "Multiple scale",
+    "Multiple scale dynamics"
+  ],
+  "multivariate time series": [
+    "Multivariate time series",
+    "Multivariate time series forecasting"
+  ],
+  "natural language processing": [
+    "Natural language processing systems",
+    "natural language processing"
+  ],
+  "network architecture": [
+    "Network architecture",
+    "Neural networks architecture"
+  ],
+  "neural networks": [
+    "Classical neural networks",
+    "DPFWR neural network",
+    "Elman neural network",
+    "Fuzzy neural networks",
+    "Hybrid neural networks",
+    "Multi-layer neural network",
+    "Neural Networks (Computer)",
+    "Neural network classification",
+    "Neural network method",
+    "Neural network techniques",
+    "Perceptron neural networks",
+    "Polynomial neural networks",
+    "Random neural network",
+    "attention neural network",
+    "back-propagation neural networks",
+    "bp neural networks",
+    "deep neural networks",
+    "dynamic neural networks",
+    "higher-order neural networks",
+    "neural networks"
+  ],
+  "neural networks model": [
+    "BP neural network model",
+    "Wavelet neural network model",
+    "neural networks model"
+  ],
+  "oil": [
+    "Crude oil",
+    "oil"
+  ],
+  "online sequential extreme learning machine": [
+    "Online sequential extreme learning machine",
+    "Online sequential extreme learning machine (OS-ELM)"
+  ],
+  "optimization": [
+    "Adam Optimizer",
+    "Optimal decisions",
+    "Optimal strategies",
+    "Portfolio optimization",
+    "optimization"
+  ],
+  "overfitting": [
+    "Overfitting",
+    "Overfitting preventions"
+  ],
+  "parallel processing": [
+    "Parallel data processing",
+    "Parallel processing"
+  ],
+  "petroleum": [
+    "Petroleum analysis",
+    "petroleum"
+  ],
+  "polynomials": [
+    "Polynomial functions",
+    "Polynomials"
+  ],
+  "prediction": [
+    "Accurate prediction",
+    "Bankruptcy prediction",
+    "Change prediction",
+    "Confidence predictions",
+    "Directional predictions",
+    "Long-term prediction",
+    "Movement prediction",
+    "Multi-step-ahead predictions",
+    "Prediction",
+    "Prediction horizon",
+    "Prediction methods",
+    "Prediction problem",
+    "Predictive abilities",
+    "Predictive analysis",
+    "Predictive analytics",
+    "Predictive information",
+    "Recursive prediction",
+    "Satisfactory predictions",
+    "Sequence prediction",
+    "prediction",
+    "prediction accuracy",
+    "prediction performance",
+    "prediction systems",
+    "predictive algorithms",
+    "predictive capabilities",
+    "predictive models",
+    "trading prediction",
+    "trend prediction"
+  ],
+  "prediction errors": [
+    "Prediction errors",
+    "Prediction mean-squared errors"
+  ],
+  "predictive value": [
+    "Stock value prediction",
+    "predictive value"
+  ],
+  "prices forecasting": [
+    "price forecasting",
+    "prices forecasting",
+    "stock price forecasting"
+  ],
+  "principle component": [
+    "Principle component",
+    "Principle component analysis"
+  ],
+  "profitability": [
+    "Profit earning",
+    "Profitability"
+  ],
+  "radial basis function networks": [
+    "Radial basis function networks",
+    "radial basis function neural networks"
+  ],
+  "random forests": [
+    "random forest",
+    "random forests"
+  ],
+  "recurrent neural networks": [
+    "Dynamic recurrent neural networks",
+    "Elman recurrent neural network",
+    "Recurrent neural network model",
+    "Simple recurrent neural networks",
+    "Stochastic recurrent neural network",
+    "deep recurrent neural network",
+    "recurrent neural networks"
+  ],
+  "regression": [
+    "Regression",
+    "Regression analysis",
+    "Ridge regression",
+    "Stepwise regression",
+    "regression"
+  ],
+  "regression problem": [
+    "Regression problem",
+    "regression problem"
+  ],
+  "regularization": [
+    "Regularization",
+    "Regularization methods",
+    "Regularization schemes",
+    "Regularization technique"
+  ],
+  "reinforcement learning": [
+    "Reinforcement learning",
+    "reinforcement learning"
+  ],
+  "representative patterns": [
+    "Representative pattern discovery",
+    "Representative patterns"
+  ],
+  "restricted boltzmann machine": [
+    "Restricted boltzmann machine",
+    "conditional restricted boltzmann machines"
+  ],
+  "robotics": [
+    "Intelligent robots",
+    "Robotics"
+  ],
+  "sampling": [
+    "High-frequency sampling",
+    "Sampling"
+  ],
+  "self-organized neural networks": [
+    "Self-organized neural networks",
+    "dynamic self-organized neural network",
+    "regularized self-organized neural network"
+  ],
+  "semantics": [
+    "Semantic relations",
+    "Semantics"
+  ],
+  "simulation": [
+    "Extensive simulations",
+    "Simulation applications",
+    "Simulation result",
+    "computer simulation",
+    "simulation"
+  ],
+  "slide windows": [
+    "Sliding window models",
+    "slide windows"
+  ],
+  "statistics": [
+    "Statistical arbitrage",
+    "Statistical comparisons",
+    "Statistical modeling",
+    "Statistical moments",
+    "Statistical significance",
+    "Statistical tests",
+    "Statistics"
+  ],
+  "stochastic volatility": [
+    "Stochastic Volatility Model",
+    "Stochastic volatility"
+  ],
+  "stock": [
+    "Similar Stock",
+    "Stock index",
+    "stock",
+    "stock data"
+  ],
+  "stock exchange": [
+    "Colombo Stock Exchange",
+    "London Stock Exchange",
+    "Stock exchange",
+    "Tokyo Stock Exchange"
+  ],
+  "stock forecasting": [
+    "Stock market forecasting",
+    "stock forecasting"
+  ],
+  "stock indices": [
+    "IBM stock indices",
+    "Stock indices"
+  ],
+  "stock markets": [
+    "China stock markets",
+    "Chinese stock market",
+    "Global stock markets",
+    "International stock markets",
+    "Stock market index",
+    "Stock market prices",
+    "Taiwan stock markets",
+    "stock market",
+    "stock markets",
+    "stock markets analysis"
+  ],
+  "stock prediction": [
+    "Stock trend prediction",
+    "stock index predictions",
+    "stock prediction"
+  ],
+  "stock price": [
+    "Stock price",
+    "stock price"
+  ],
+  "stock price movements": [
+    "Stock price movement predictions",
+    "Stock price movements"
+  ],
+  "support vector machines": [
+    "Support vector machines (SVM)",
+    "support vector machines"
+  ],
+  "synthesis features": [
+    "synthesis feature",
+    "synthesis features"
+  ],
+  "technical indicator": [
+    "Technical Analysis Indicators",
+    "technical indicator"
+  ],
+  "temporal data": [
+    "Correlated temporal data",
+    "Temporal Data"
+  ],
+  "testing": [
+    "Empirical testing",
+    "Testing"
+  ],
+  "time series": [
+    "Non-stationary time series",
+    "Stock time series",
+    "Time Series",
+    "time series",
+    "time series analysis"
+  ],
+  "time series forecasting": [
+    "Time series forecasting models",
+    "financial time series forecasting",
+    "time series forecasting"
+  ],
+  "time series models": [
+    "Linear time series model",
+    "time series models"
+  ],
+  "time series prediction": [
+    "Time series prediction (TSP)",
+    "time series prediction"
+  ],
+  "time-series": [
+    "time-series",
+    "time-series data"
+  ],
+  "timing characteristics": [
+    "Time series characteristic",
+    "Timing characteristics"
+  ],
+  "topology": [
+    "Topology",
+    "topology"
+  ],
+  "trading": [
+    "Electronic trading",
+    "International trade",
+    "Real-time trading",
+    "Trading",
+    "high-frequency trading",
+    "trading"
+  ],
+  "trading strategies": [
+    "Quantitative trading strategies",
+    "trading strategies"
+  ],
+  "transaction": [
+    "Stock transaction",
+    "Transaction cost",
+    "transaction"
+  ],
+  "trends": [
+    "Component trends",
+    "Price trends",
+    "trend analysis",
+    "trends"
+  ],
+  "uncertainty": [
+    "Uncertainty",
+    "Uncertainty analysis",
+    "Uncertainty modelling"
+  ],
+  "univariate": [
+    "Univariate",
+    "univariate"
+  ],
+  "visualization": [
+    "Flow visualization",
+    "Visual languages",
+    "data visualization",
+    "visualization"
+  ],
+  "volatility": [
+    "Realized volatility",
+    "Volatility",
+    "Volatility estimations",
+    "Volatility trading",
+    "market volatility",
+    "return volatility"
+  ],
+  "wavelet decomposition": [
+    "Wavelet decomposition",
+    "wavelet multi-resolution decomposition"
+  ],
+  "wavelet transforms": [
+    "discrete wavelet transforms",
+    "wavelet transform",
+    "wavelet transforms"
+  ],
+  "wavelets": [
+    "Haar wavelets",
+    "Wavelets",
+    "wavelet analysis",
+    "wavelet coherences"
+  ]
+}

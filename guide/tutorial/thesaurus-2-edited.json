@@ -1,0 +1,638 @@
+{
+  "(2D) 2 PCA": [
+    "(2D) 2 PCA",
+    "(2D) <sup>2</sup> PCA"
+  ],
+  "Empirical research": [
+    "Empirical research",
+    "Empirical studies"
+  ],
+  "(2D) 2 PCA": [
+    "(2D) 2 PCA",
+    "(2D) <sup>2</sup> PCA"
+  ],
+  "Learning-based algorithms": [
+    "Learning-based algorithms",
+    "Learning-based approach",
+    "Learning-based methods"
+  ],
+  "Classifiers": [
+    "Classification Methods",
+    "Classification algorithm",
+    "Classification methods"
+  ],
+  "Forex": [
+    "Forex (FX)",
+    "Forex markets"
+  ],
+  "Elman neural network": [
+    "Elman neural network",
+    "Elman recurrent neural network",
+    "Elman network"
+  ],
+  "adaboost algorithm": [
+    "AdaBoost algorithm",
+    "validating AdaBoost algorithm"
+  ],
+  "adaptive noise": [
+    "Adaptive noise",
+    "adaptive noise reducer"
+  ],
+  "algorithmic trading": [
+    "Algorithmic trading",
+    "Algorithmic trading models"
+  ],
+  "algorithms": [
+    "Algorithmic approach",
+    "Analysis algorithms",
+    "State-of-the-art algorithms",
+    "algorithms"
+  ],
+  "arima": [
+    "ARIMA",
+    "arima modeling",
+    "Autoregressive Integrated Moving Average (ARIMA)",
+    "Autoregressive integrated moving average models",
+    "Auto-regressive integrated moving average",
+    "arima",
+    "seasonal autoregressive integrated moving average"
+  ],
+  "artificial intelligence": [
+    "Artificial Intelligence (AI)",
+    "Artificial intelligence"
+  ],
+  "attention": [
+    "Attention",
+    "attention mechanisms"
+  ],
+  "backpropagation": [
+    "Backpropagation",
+    "Modified backpropagation",
+    "Backpropagation algorithms",
+    "backpropagation learning algorithm",
+    "backpropagation",
+    "back propagation"
+  ],
+  "capital flow": [
+    "Capital flow",
+    "capital flow prediction"
+  ],
+  "cluster": [
+    "Cluster",
+    "Cluster analysis"
+  ],
+  "commerce": [
+    "Commerce",
+    "Conversational Commerce"
+  ],
+  "convolution": [
+    "Convolution",
+    "Convolution layer",
+    "Time convolution"
+  ],
+  "convolutional neural network": [
+    "Deep convolutional neural networks",
+    "convolutional neural network",
+    "convolutional neural networks (cnn)",
+    "Convolution Networks",
+    "cnn"
+  ],
+  "correlation coefficient": [
+    "Correlation coefficient",
+    "Rank correlation coefficient"
+  ],
+  "coupled systems": [
+    "Coupled systems",
+    "FHN coupled system"
+  ],
+  "covariance matrix": [
+    "Covariance matrix",
+    "Covariance matrix forecasting"
+  ],
+  "cross modality": [
+    "Cross modality",
+    "Cross modality learning"
+  ],
+  "cryptocurrency": [
+    "Cryptocurrency",
+    "cryptocurrency prediction"
+  ],
+  "decision making": [
+    "Decision making",
+    "Investment decision making"
+  ],
+  "deep belief networks": [
+    "Deep belief network (DBN)",
+    "Deep belief networks"
+  ],
+  "deep learning": [
+    "Deep learning (DL)",
+    "deep learning",
+    "deep neural networks"
+  ],
+  "dynamical systems": [
+    "Dynamical systems",
+    "Non-linear dynamic systems"
+  ],
+  "echo state network": [
+    "echo state networks"
+  ],
+  "economics": [
+    "Economic analysis",
+    "Economics",
+    "Financial economics",
+    "economic model"
+  ],
+  "embeddings": [
+    "Embedding Method",
+    "Embeddings",
+    "Relationship embedding",
+    "cycle embeddings"
+  ],
+  "encoder-decoder": [
+    "Encoder-decoder",
+    "Encoder-decoder architecture"
+  ],
+  "ensemble learning": [
+    "Ensemble learning",
+    "Ensemble learning approach"
+  ],
+  "exchange rate forecasting": [
+    "Exchange rate forecasting",
+    "Foreign exchange rates forecasting",
+    "Exchange Rate Prediction",
+    "foreign exchange rates"
+  ],
+  "exponential smoothing": [
+    "Exponential smoothing",
+    "Simple exponential smoothing"
+  ],
+  "extract informations": [
+    "Extract informations",
+    "Open information extraction"
+  ],
+  "extreme learning machine": [
+    "Extreme learning machine",
+    "Extreme learning machine (ELM)"
+  ],
+  "finance": [
+    "Computational finance",
+    "Finance",
+    "Quantitative finance"
+  ],
+  "financial data": [
+    "Financial data",
+    "Financial data processing"
+  ],
+  "financial prediction": [
+    "Financial data prediction",
+    "Financial market prediction",
+    "financial prediction"
+  ],
+  "financial returns": [
+    "Financial asset returns",
+    "Financial returns"
+  ],
+  "financial time series": [
+    "Financial Time Series Data",
+    "financial time series"
+  ],
+  "financial time series forecasting": [
+    "And financial time series prediction",
+    "financial time series predictions",
+    "financial time series prediction",
+    "financial forecasting"
+  ],
+  "forecasting models": [
+    "Forecasting methods",
+    "Forecasting techniques",
+    "forecasting models",
+    "Prediction methods",
+    "predictive algorithms",
+    "prediction systems",
+    "predictive models"
+  ],
+  "forecasting accuracy": [
+    "Forecasting accuracy",
+    "forecasting performance",
+    "Forecasting error",
+    "prediction accuracy",
+    "prediction performance",
+    "Accurate prediction"
+  ],
+  "functions": [
+    "Effective function",
+    "Function evaluation",
+    "Functions",
+    "Quasi-linear functions",
+    "Transfer functions",
+    "Weighted function",
+    "basic function"
+  ],
+  "gated recurrent unit": [
+    "Gated recurrent unit",
+    "Gated recurrent unit (GRU)"
+  ],
+  "genetic programming": [
+    "Cartesian genetic programming",
+    "Genetic programming"
+  ],
+  "geometric brownian motion": [
+    "Geometric Brownian motion",
+    "geometric Brownian motion (GBM)"
+  ],
+  "gradient algorithm": [
+    "Adaptive gradient algorithm",
+    "Gradient algorithm",
+    "Gradient descent algorithms"
+  ],
+  "high-frequency data": [
+    "high-frequency data",
+    "high-frequency financial data"
+  ],
+  "higher order": [
+    "Higher order",
+    "Higher order statistics"
+  ],
+  "human computer interaction": [
+    "Human Computer Interaction (HCI)",
+    "Human computer interaction"
+  ],
+  "hybrid model": [
+    "Hybrid intelligent model",
+    "Hybrid model"
+  ],
+  "independent components analysis": [
+    "Independent components analysis (ICA)",
+    "independent components analysis",
+    "independent component analysis"
+  ],
+  "input features": [
+    "Multivariate feature input",
+    "Univariate feature input",
+    "input features"
+  ],
+  "insider trading": [
+    "Illegal Insider Trading",
+    "Insider trading"
+  ],
+  "integrated systems": [
+    "Integrated systems",
+    "Integrated visualization systems"
+  ],
+  "intelligent computing": [
+    "Computational intelligence techniques",
+    "Intelligent computing"
+  ],
+  "portfolio":[
+    "Portfolio optimization",
+    "Investment portfolio"
+  ],
+  "investments": [
+    "Investment market",
+    "Security investments",
+    "investments"
+  ],
+  "kalman filters": [
+    "Linear Kalman filters",
+    "Traditional Kalman filters",
+    "kalman filters"
+  ],
+  "learning techniques": [
+    "Learning techniques",
+    "Learning methods"
+  ],
+  "linear regression": [
+    "Linear regression",
+    "Linear regression models"
+  ],
+  "logistic regressions": [
+    "Logistic regression classifier",
+    "Logistic regressions"
+  ],
+  "long short-term memory neural network": [
+    "Long Short-Term Memory neural network",
+    "Long short-term memory (LSTM)\u00a0neural network",
+    "Long Short-Term Memory(LSTM)",
+    "Long and short term memory",
+    "Long shortterm memory",
+    "long short term memory network",
+    "long short-term memory neural network",
+    "LSTM",
+    "LSTM Network"
+  ],
+  "Short term prediction": [
+    "Short term prediction",
+    "Short-term forecasting"
+  ],
+  "machine learning": [
+    "Interference-less machine learning",
+    "Machine learning approaches",
+    "Machine learning models",
+    "machine learning",
+    "Machine learning techniques",
+    "machine learning techniques",
+    "Machine learning methods"
+  ],
+  "map-reduce programming": [
+    "Map-Reduce Programming Model",
+    "Map-reduce programming"
+  ],
+  "market microstructure": [
+    "Market microstructure",
+    "microstructure market data"
+  ],
+  "maximal information": [
+    "Maximal information",
+    "Maximal information coefficient"
+  ],
+  "mean absolute error": [
+    "Mean absolute error",
+    "Mean absolute percentage error"
+  ],
+  "mean square error": [
+    "mean square error",
+    "root mean squared errors"
+  ],
+  "membership functions": [
+    "Fuzzy membership function",
+    "Membership functions"
+  ],
+  "multi agent": [
+    "Multi agent",
+    "Multi agent systems"
+  ],
+  "multiple scale": [
+    "Multiple scale",
+    "Multiple scale dynamics"
+  ],
+  "multivariate time series": [
+    "Multivariate time series",
+    "Multivariate time series forecasting"
+  ],
+  "natural language processing": [
+    "Natural language processing systems",
+    "natural language processing"
+  ],
+  "artificial neural networks": [
+    "Artificial neural network models",
+    "Artificial Neural Network(ANN)",
+    "Artificial neural networks (ANN)",
+    "Artificial Neural Networks",
+    "artificial neural networks",
+    "Classical neural networks",
+    "Neural Networks (Computer)",
+    "Neural network classification",
+    "Neural network method",
+    "Neural network techniques",
+    "neural networks",
+    "neural networks model",
+    "Network architecture",
+    "Neural networks architecture",
+    "ann"
+  ],
+  "feedforward neural networks": [
+    "Feedforward neural networks",
+    "Feed forward neural network",
+    "Feed-Forward",
+    "Multi-layer neural network",
+    "Multilayer neural networks",
+    "Feed-forward network",
+    "Multilayer feedforward neural networks",
+    "Backpropagation network",
+    "BP neural network model",
+    "bp neural networks",
+    "back-propagation neural networks",
+    "Perceptron neural networks",
+    "MLP",
+    "Multi-layer perceptron networks",
+    "Multi layer perceptron"
+  ],
+  "Multi-step ahead forecast": [
+    "Multi-step ahead forecast",
+    "Multi-step-ahead predictions"
+  ],
+  "Non-linear methods": [
+    "Non-linear methods",
+    "Nonlinear techniques"
+  ],
+  "Oil and gas prices": [
+    "Oil and gas prices",
+    "Oil and natural gas"
+  ],
+  "price forecasting": [
+    "price forecasting",
+    "prices forecasting"
+  ],
+  "random forest" : [
+    "random forest",
+    "random forests"
+  ],
+  "oil": [
+    "Crude oil",
+    "oil"
+  ],
+  "online sequential extreme learning machine": [
+    "Online sequential extreme learning machine",
+    "Online sequential extreme learning machine (OS-ELM)"
+  ],
+  "overfitting": [
+    "Overfitting",
+    "Overfitting preventions"
+  ],
+  "Particle swarm optimisation": [
+    "Particle swarm optimisation",
+    "Particle swarm optimization (PSO)"
+  ],
+  "parallel processing": [
+    "Parallel data processing",
+    "Parallel processing"
+  ],
+  "petroleum": [
+    "Petroleum analysis",
+    "petroleum"
+  ],
+  "polynomials": [
+    "Polynomial functions",
+    "Polynomials"
+  ],
+  "prediction errors": [
+    "Prediction errors",
+    "Prediction mean-squared errors"
+  ],
+  "predictive value": [
+    "Stock value prediction",
+    "predictive value"
+  ],
+  "principle component": [
+    "Principle component",
+    "Principle component analysis"
+  ],
+  "profitability": [
+    "Profit earning",
+    "Profitability"
+  ],
+  "radial basis function networks": [
+    "Radial basis function networks",
+    "radial basis function neural networks"
+  ],
+  "recurrent neural networks": [
+    "Recurrent neural network model",
+    "recurrent neural networks",
+    "Recurrent Neural Netwrok(RNN)"
+  ],
+  "regression": [
+    "Regression",
+    "Regression analysis",
+    "Regression problem"
+  ],
+  "regularization": [
+    "Regularization",
+    "Regularization methods",
+    "Regularization schemes",
+    "Regularization technique"
+  ],
+  "representative patterns": [
+    "Representative pattern discovery",
+    "Representative patterns"
+  ],
+  "restricted boltzmann machine": [
+    "Restricted boltzmann machine",
+    "conditional restricted boltzmann machines"
+  ],
+  "robotics": [
+    "Intelligent robots",
+    "Robotics"
+  ],
+  "sampling": [
+    "High-frequency sampling",
+    "Sampling"
+  ],
+  "semantics": [
+    "Semantic relations",
+    "Semantics"
+  ],
+  "slide windows": [
+    "Sliding window models",
+    "slide windows"
+  ],
+  "stochastic volatility": [
+    "Stochastic Volatility Model",
+    "Stochastic volatility"
+  ],
+  "stock forecasting": [
+    "Stock market forecasting",
+    "stock forecasting",
+    "stock price forecasting",
+    "stock market prediction"
+  ],
+  "Chinese stock market": [
+    "China stock markets",
+    "Chinese stock market"
+  ],
+  "stock markets": [
+    "Global stock markets",
+    "International stock markets",
+    "stock market"
+  ],
+  "trend forecasting": [
+    "trend forecasting",
+    "trend prediction"
+  ],
+  "stock prediction": [
+    "Stock trend prediction",
+    "stock index predictions",
+    "stock prediction",
+    "stock forecasting"
+  ],
+  "stock price movements": [
+    "Stock price movement predictions",
+    "Stock price movements"
+  ],
+  "support vector machines": [
+    "Support vector machines (SVM)",
+    "support vector machines",
+    "SVM",
+    "Support Vector Machines(SVM)",
+    "Support vector regression (SVR)"
+  ],
+  "technical indicator": [
+    "Technical Analysis Indicators",
+    "technical indicator"
+  ],
+  "temporal data": [
+    "Correlated temporal data",
+    "Temporal Data"
+  ],
+  "testing": [
+    "Empirical testing",
+    "Testing"
+  ],
+  "time series": [
+    "Non-stationary time series",
+    "time series",
+    "time series analysis"
+  ],
+  "time series forecasting": [
+    "Time series forecasting models",
+    "financial time series forecasting",
+    "time series forecasting",
+    "Time series prediction (TSP)",
+    "time series prediction"
+  ],
+  "time series models": [
+    "Linear time series model",
+    "time series models"
+  ],
+  "timing characteristics": [
+    "Time series characteristic",
+    "Timing characteristics"
+  ],
+  "trading": [
+    "Electronic trading",
+    "International trade",
+    "Real-time trading",
+    "Trading",
+    "high-frequency trading"
+  ],
+  "trading strategies": [
+    "Quantitative trading strategies",
+    "trading strategies"
+  ],
+  "transaction": [
+    "Stock transaction",
+    "transaction"
+  ],
+  "trends": [
+    "Component trends",
+    "Price trends",
+    "trend analysis",
+    "trends"
+  ],
+  "visualization": [
+    "Flow visualization",
+    "Visual languages",
+    "data visualization",
+    "visualization"
+  ],
+  "volatility": [
+    "Volatility",
+    "market volatility",
+    "return volatility"
+  ],
+  "wavelet decomposition": [
+    "Wavelet decomposition",
+    "wavelet multi-resolution decomposition"
+  ],
+  "wavelet transforms": [
+    "discrete wavelet transforms",
+    "wavelet transforms",
+    "wavelet transforms"
+  ],
+  "wavelets": [
+    "Haar wavelets",
+    "Wavelets",
+    "wavelet analysis",
+    "wavelet coherences"
+  ]
+}

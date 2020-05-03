@@ -6,7 +6,7 @@ from paver.tasks import task, needs
 
 
 @task
-def nosetests():
+def tests():
     """unit testing"""
     #sh('nosetests --verbose --cover-package=techminer --cover-tests '
     #   ' --with-doctest --rednose  ./techminer/')

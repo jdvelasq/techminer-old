@@ -1,0 +1,591 @@
+{
+  "algorithms": [
+    "Algorithms",
+    "algorithm"
+  ],
+  "ann": [
+    "ANN",
+    "ann"
+  ],
+  "anomaly detection": [
+    "Anomaly detection",
+    "anomaly detection"
+  ],
+  "arima modeling": [
+    "ARIMA Model",
+    "ARIMA model",
+    "ARIMA modeling"
+  ],
+  "artificial neural networks": [
+    "Artificial neural network",
+    "Artificial neural networks",
+    "artificial neural network"
+  ],
+  "attention mechanisms": [
+    "Attention mechanisms",
+    "attention mechanism"
+  ],
+  "back-propagation neural networks": [
+    "Back propagation neural networks",
+    "Back-propagation neural networks"
+  ],
+  "backpropagation learning algorithm": [
+    "Backpropagation learning algorithm",
+    "backpropagation learning algorithm"
+  ],
+  "basic function": [
+    "Basic functions",
+    "basic function"
+  ],
+  "black-scholes equation": [
+    "Black Scholes equations",
+    "Black-Scholes equation"
+  ],
+  "bp neural networks": [
+    "BP neural network",
+    "BP neural networks"
+  ],
+  "cnn": [
+    "CNN",
+    "CNNs"
+  ],
+  "computationally efficient": [
+    "Computational efficiency",
+    "Computationally efficient"
+  ],
+  "computer simulation": [
+    "Computer Simulation",
+    "Computer simulation",
+    "computer simulation"
+  ],
+  "conditional restricted boltzmann machines": [
+    "Conditional restricted Boltzmann machine",
+    "Conditional restricted boltzmann machines"
+  ],
+  "consumer credits": [
+    "Consumer credit",
+    "Consumer credits"
+  ],
+  "convolutional neural network": [
+    "Convolution neural network",
+    "Convolutional Neural Networks",
+    "Convolutional neural network",
+    "Convolutional neural networks",
+    "convolutional neural network",
+    "convolutional neural networks"
+  ],
+  "convolutional neural networks (cnn)": [
+    "Convolutional Neural Networks (CNN)",
+    "Convolutional neural network (CNN)",
+    "convolutional neural network (CNN)"
+  ],
+  "costs": [
+    "Costs",
+    "costs"
+  ],
+  "data centers": [
+    "Data Center",
+    "Data centers"
+  ],
+  "data visualization": [
+    "Data visualization",
+    "data visualization"
+  ],
+  "deep learning": [
+    "Deep Learning",
+    "Deep learning",
+    "deep learning"
+  ],
+  "deep neural networks": [
+    "Deep Neural Networks",
+    "Deep neural network",
+    "Deep neural networks",
+    "deep neural network"
+  ],
+  "differential evolution": [
+    "Differential Evolution",
+    "differential evolution"
+  ],
+  "dimensionality reduction": [
+    "Dimensionality reduction",
+    "dimensionality reduction"
+  ],
+  "discrete wavelet transforms": [
+    "Discrete Wavelet Transform",
+    "Discrete wavelet transform",
+    "Discrete wavelet transforms"
+  ],
+  "dnns": [
+    "DNN",
+    "DNNs"
+  ],
+  "double scale complexity invariant distance": [
+    "Double-scale complexity invariant Distance",
+    "double scale complexity invariant distance"
+  ],
+  "dynamic factor models": [
+    "Dynamic factor modeling",
+    "Dynamic factor models"
+  ],
+  "dynamic neural networks": [
+    "Dynamic neural network",
+    "Dynamic neural networks"
+  ],
+  "echo state networks": [
+    "Echo State Network",
+    "Echo state networks"
+  ],
+  "economic model": [
+    "Models, Economic",
+    "economic model"
+  ],
+  "emerging markets": [
+    "Emerging Markets",
+    "Emerging markets"
+  ],
+  "empirical mode decomposition": [
+    "Empirical Mode Decomposition",
+    "Empirical mode decomposition"
+  ],
+  "end-to-end": [
+    "End to end",
+    "End-to-end"
+  ],
+  "excitable systems": [
+    "Excitable system",
+    "Excitable systems"
+  ],
+  "f-transform": [
+    "F transforms",
+    "F-transform"
+  ],
+  "feature engineerings": [
+    "Feature engineering",
+    "Feature engineerings"
+  ],
+  "feature extraction": [
+    "Extracting features",
+    "Feature extraction"
+  ],
+  "financial analysis": [
+    "Financial analysis",
+    "financial analysis"
+  ],
+  "financial forecasting": [
+    "Financial forecasting",
+    "financial forecasting"
+  ],
+  "financial indicator": [
+    "Financial indicator",
+    "Financial indicators"
+  ],
+  "financial prediction": [
+    "Financial prediction",
+    "financial prediction"
+  ],
+  "financial signals": [
+    "Financial signal",
+    "Financial signals"
+  ],
+  "financial text minings": [
+    "Financial text mining",
+    "Financial text minings"
+  ],
+  "financial time series": [
+    "Financial Time Series",
+    "Financial time series",
+    "Financial time-series",
+    "financial time series"
+  ],
+  "financial time series forecasting": [
+    "Financial time series forecasting",
+    "Forecasting financial time series"
+  ],
+  "financial time series predictions": [
+    "Financial time series prediction",
+    "Financial time series predictions"
+  ],
+  "forecasting": [
+    "Forecast",
+    "Forecasting",
+    "forecast",
+    "forecasting"
+  ],
+  "forecasting models": [
+    "Forecasting modeling",
+    "Forecasting models"
+  ],
+  "forecasting performance": [
+    "Forecast performance",
+    "Forecasting performance"
+  ],
+  "foreign exchange rates": [
+    "Foreign Exchange Rate",
+    "Foreign exchange rate",
+    "Foreign exchange rates"
+  ],
+  "fusion methods": [
+    "Fusion method",
+    "Fusion methods"
+  ],
+  "fuzzy partition": [
+    "Fuzzy partition",
+    "fuzzy partition"
+  ],
+  "genetic algorithms": [
+    "Genetic algorithm",
+    "Genetic algorithms"
+  ],
+  "granger causality": [
+    "Granger Causality",
+    "Granger causality"
+  ],
+  "hidden markov models": [
+    "Hidden Markov Model",
+    "Hidden Markov models"
+  ],
+  "high-frequency data": [
+    "High frequency data",
+    "High-frequency data"
+  ],
+  "high-frequency trading": [
+    "High frequency trading",
+    "High-frequency trading"
+  ],
+  "higher-order neural networks": [
+    "Higher order neural network",
+    "Higher-order neural networks"
+  ],
+  "human": [
+    "Humans",
+    "human"
+  ],
+  "hybrid algorithms": [
+    "Hybrid algorithm",
+    "Hybrid algorithms"
+  ],
+  "hybrid-network": [
+    "Hybrid network",
+    "Hybrid-network"
+  ],
+  "independent components analysis": [
+    "Independent component analysis",
+    "Independent components analysis"
+  ],
+  "input features": [
+    "Feature input",
+    "Input features"
+  ],
+  "investments": [
+    "Investments",
+    "investments"
+  ],
+  "investor sentiments": [
+    "Investor sentiment",
+    "Investor sentiments"
+  ],
+  "kalman filters": [
+    "Kalman filter",
+    "Kalman filters"
+  ],
+  "limit order book": [
+    "Limit Order Book",
+    "Limit order book",
+    "limit order book"
+  ],
+  "long short term memory network": [
+    "Long short-term memory network",
+    "long short term memory network",
+    "Long Short-Term Memory",
+    "Long short term memory",
+    "Long short-term memory",
+    "Long-short term memory",
+    "long short-term memory",
+    "Long Short-Term Memory (LSTM)",
+    "Long short term memory (LSTM)",
+    "Long short-term memory (LSTM)",
+    "long short-term memory (LSTM)",
+    "long-short term memory (LSTM)"
+  ],
+  "machine learning": [
+    "Machine Learning",
+    "Machine learning",
+    "machine learning"
+  ],
+  "mape": [
+    "MAPE",
+    "Mape"
+  ],
+  "market prediction": [
+    "Market Prediction",
+    "Market prediction"
+  ],
+  "market volatility": [
+    "Market volatility",
+    "market volatility"
+  ],
+  "marketing campaigns": [
+    "Marketing campaign",
+    "Marketing campaigns"
+  ],
+  "mean square error": [
+    "Mean square error",
+    "Mean squared error"
+  ],
+  "model interpretation": [
+    "Model interpretations",
+    "model interpretation"
+  ],
+  "monetary policy": [
+    "Monetary policies",
+    "Monetary policy"
+  ],
+  "natural gas": [
+    "Natural gas",
+    "natural gas"
+  ],
+  "natural language processing": [
+    "NAtural language processing",
+    "Natural Language Processing",
+    "Natural language processing"
+  ],
+  "network public opinions": [
+    "Network public opinion",
+    "Network public opinions"
+  ],
+  "neural networks": [
+    "Neural network model",
+    "Neural networks model",
+    "Neural Network",
+    "Neural Networks",
+    "Neural network",
+    "Neural networks",
+    "neural network"
+  ],
+  "neuro-wavelets": [
+    "Neuro-wavelets",
+    "neuro-wavelets"
+  ],
+  "optimization": [
+    "Optimization",
+    "Optimizers"
+  ],
+  "phase-space reconstruction": [
+    "Phase space reconstruction",
+    "Phase-space reconstruction"
+  ],
+  "portfolio managements": [
+    "Portfolio management",
+    "Portfolio managements"
+  ],
+  "prediction accuracy": [
+    "Prediction accuracy",
+    "Predictive accuracy"
+  ],
+  "prediction performance": [
+    "Prediction performance",
+    "Predictive performance"
+  ],
+  "prediction systems": [
+    "Prediction systems",
+    "prediction system"
+  ],
+  "predictive algorithms": [
+    "Prediction algorithms",
+    "Predictive algorithms"
+  ],
+  "predictive capabilities": [
+    "Prediction capability",
+    "Predictive capabilities"
+  ],
+  "predictive models": [
+    "Prediction model",
+    "Predictive models"
+  ],
+  "prices forecasting": [
+    "Price forecasting",
+    "Prices forecasting"
+  ],
+  "principal component analysis": [
+    "Principal Component Analysis",
+    "Principal component analysis"
+  ],
+  "radial basis function neural networks": [
+    "Radial Basis Function Neural Network",
+    "Radial basis function neural networks"
+  ],
+  "random forests": [
+    "Random forest",
+    "Random forests"
+  ],
+  "recurrent neural networks": [
+    "Recurrent Neural Network",
+    "Recurrent Neural Networks",
+    "Recurrent neural network",
+    "Recurrent neural networks",
+    "recurrent neural network",
+    "recurrent neural networks",
+    "Recurrent neural network (RNN)",
+    "Recurrent neural network (RNNs)",
+    "RNN",
+    "RNNs"
+  ],
+  "return volatility": [
+    "Return volatilities",
+    "Return volatility"
+  ],
+  "root mean squared errors": [
+    "Root mean square errors",
+    "Root mean squared errors"
+  ],
+  "slide windows": [
+    "Slide Window",
+    "Slide windows"
+  ],
+  "social networking (online)": [
+    "Online Social Networks",
+    "Social networking (online)"
+  ],
+  "stock data": [
+    "Stock Data",
+    "Stock data"
+  ],
+  "stock forecasting": [
+    "Stock forecasting",
+    "Stocks forecast",
+    "stock forecasting"
+  ],
+  "stock index predictions": [
+    "Stock index prediction",
+    "Stock index predictions"
+  ],
+  "stock market": [
+    "Stock Market",
+    "Stock market",
+    "Stock markets"
+  ],
+  "stock market prediction": [
+    "Stock market prediction",
+    "stock market prediction"
+  ],
+  "stock markets analysis": [
+    "Stock market analysis",
+    "Stock markets analysis"
+  ],
+  "stock prediction": [
+    "Stock Prediction",
+    "Stock predictability",
+    "Stock prediction",
+    "Stock predictions",
+    "stock prediction"
+  ],
+  "stock price forecasting": [
+    "Forecasting Stock Prices",
+    "Forecasting stock prices",
+    "Stock price forecasting",
+    "Stock price forecasts",
+    "Stock price prediction",
+    "stock price prediction"
+  ],
+  "stock selections": [
+    "Stock selection",
+    "Stock selections"
+  ],
+  "support vector machines": [
+    "Support vector machine",
+    "Support vector machines",
+    "support vector machine"
+  ],
+  "synthesis features": [
+    "Synthesis feature",
+    "Synthesis features"
+  ],
+  "technical analysis": [
+    "Technical Analysis",
+    "Technical analysis"
+  ],
+  "technical indicator": [
+    "Technical Indicator",
+    "Technical indicator",
+    "Technical indicators"
+  ],
+  "technological advances": [
+    "Technological advancement",
+    "Technological advances"
+  ],
+  "time factor": [
+    "Time Factors",
+    "time factor"
+  ],
+  "time series": [
+    "Time series",
+    "Time-series",
+    "time series"
+  ],
+  "time series analysis": [
+    "Time Series Analysis",
+    "Time series analysis",
+    "Time-series analysis",
+    "time series analysis",
+    "time-series analysis"
+  ],
+  "time series forecasting": [
+    "Forecasting time series",
+    "Time series forecasting",
+    "time series forecasting",
+    "time-series forecasting"
+  ],
+  "time series models": [
+    "Time series modeling",
+    "Time series models",
+    "Time-series modelling"
+  ],
+  "time series prediction": [
+    "Time Series Prediction",
+    "Time series prediction"
+  ],
+  "time-series data": [
+    "Time Series Data",
+    "Time-series data"
+  ],
+  "trading strategies": [
+    "Trading strategies",
+    "trading strategies"
+  ],
+  "transaction": [
+    "Transaction",
+    "transaction"
+  ],
+  "trend analysis": [
+    "Trend Analysis",
+    "Trend analysis"
+  ],
+  "trend forecasting": [
+    "Trend forecast",
+    "Trend forecasting"
+  ],
+  "trend prediction": [
+    "Trend prediction",
+    "trend prediction"
+  ],
+  "visualization": [
+    "Visualization",
+    "visualization"
+  ],
+  "volatility forecasting": [
+    "Forecasting volatility",
+    "Volatility forecasting"
+  ],
+  "wavelet analysis": [
+    "Wavelet analysis",
+    "wavelet analysis"
+  ],
+  "wavelet coherences": [
+    "Wavelet coherence",
+    "Wavelet coherences"
+  ],
+  "wavelet transforms": [
+    "Wavelet transform",
+    "Wavelet transforms"
+  ]
+}
