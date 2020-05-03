@@ -109,141 +109,141 @@ class DataFrame(pd.DataFrame):
         self.index = list(range(len(self)))
         return DataFrame(self)
 
+    #
+    # Distinc authors with same name
+    #
+    def disambiguate_authors(
+        self,
+        col_authors="Authors",
+        sep_authors=None,
+        col_ids="Author(s) ID",
+        sep_ids=None,
+    ):
+        """
 
-#     #
-#     # Distinc authors with same name
-#     #
-#     def disambiguate_authors(
-#         self,
-#         col_authors="Authors",
-#         sep_authors=None,
-#         col_ids="Author(s) ID",
-#         sep_ids=None,
-#     ):
-#         """
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...    {
+        ...        'Authors': [
+        ...               'xxx x, xxx x, yyy y',
+        ...               'xxx x, yyy y, ddd d',
+        ...               'ddd d',
+        ...               'eee e',
+        ...               None,
+        ...               '[No author name available]'
+        ...          ],
+        ...        'Author(s) ID': [
+        ...               '0;2; 1;',
+        ...               '6;1; 3;',
+        ...               '4',
+        ...               '5',
+        ...               None,
+        ...               '[No author name available]'
+        ...          ]
+        ...    }
+        ... )
+        >>> df
+                              Authors                Author(s) ID
+        0         xxx x, xxx x, yyy y                     0;2; 1;
+        1         xxx x, yyy y, ddd d                     6;1; 3;
+        2                       ddd d                           4
+        3                       eee e                           5
+        4                        None                        None
+        5  [No author name available]  [No author name available]
 
-#         >>> import pandas as pd
-#         >>> df = pd.DataFrame(
-#         ...    {
-#         ...        'Authors': [
-#         ...               'xxx x, xxx x, yyy y',
-#         ...               'xxx x, yyy y, ddd d',
-#         ...               'ddd d',
-#         ...               'eee e',
-#         ...               None,
-#         ...               '[No author name available]'
-#         ...          ],
-#         ...        'Author(s) ID': [
-#         ...               '0;2; 1;',
-#         ...               '6;1; 3;',
-#         ...               '4',
-#         ...               '5',
-#         ...               None,
-#         ...               '[No author name available]'
-#         ...          ]
-#         ...    }
-#         ... )
-#         >>> df
-#                               Authors                Author(s) ID
-#         0         xxx x, xxx x, yyy y                     0;2; 1;
-#         1         xxx x, yyy y, ddd d                     6;1; 3;
-#         2                       ddd d                           4
-#         3                       eee e                           5
-#         4                        None                        None
-#         5  [No author name available]  [No author name available]
+        >>> DataFrame(df).disambiguate_authors()
+                              Authors                Author(s) ID
+        0        xxx x,xxx x(1),yyy y                      0;2; 1
+        1        xxx x(2),yyy y,ddd d                      6;1; 3
+        2                    ddd d(1)                           4
+        3                       eee e                           5
+        4                        None                        None
+        5  [No author name available]  [No author name available]
 
-#         >>> DataFrame(df).disambiguate_authors()
-#                               Authors                Author(s) ID
-#         0        xxx x,xxx x(1),yyy y                      0;2; 1
-#         1        xxx x(2),yyy y,ddd d                      6;1; 3
-#         2                    ddd d(1)                           4
-#         3                       eee e                           5
-#         4                        None                        None
-#         5  [No author name available]  [No author name available]
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        >>> rdf = rdf.remove_accents()
+        >>> rdf[rdf['Authors'].map(lambda x: 'Wang J.' in x)][['Authors', 'Author(s) ID', 'ID']]
+                                        Authors                                      Author(s) ID   ID
+        3                       Cao J., Wang J.                          57207830408;57207828548;    3
+        10                     Wang B., Wang J.                          57205691331;55946707000;   10
+        15      Du J., Liu Q., Chen K., Wang J.  15060001900;57209464952;57209470539;57209477365;   15
+        80             Dong Y., Wang J., Guo Z.              57194399361;56380147600;37002500800;   80
+        87     Luo R., Zhang W., Xu X., Wang J.  57204819270;56108513500;57206642524;57206677306;   87
+        92   Tsai Y.-C., Chen J.-H., Wang J.-J.              57203011511;57204046656;57204046789;   92
+        128   Wang J., Wang J., Fang W., Niu H.  56527464300;55946707000;42361194900;55286614500;  128
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-#         >>> rdf = rdf.remove_accents()
-#         >>> rdf[rdf['Authors'].map(lambda x: 'Wang J.' in x)][['Authors', 'Author(s) ID', 'ID']]
-#                                         Authors                                      Author(s) ID   ID
-#         3                       Cao J., Wang J.                          57207830408;57207828548;    3
-#         10                     Wang B., Wang J.                          57205691331;55946707000;   10
-#         15      Du J., Liu Q., Chen K., Wang J.  15060001900;57209464952;57209470539;57209477365;   15
-#         80             Dong Y., Wang J., Guo Z.              57194399361;56380147600;37002500800;   80
-#         87     Luo R., Zhang W., Xu X., Wang J.  57204819270;56108513500;57206642524;57206677306;   87
-#         92   Tsai Y.-C., Chen J.-H., Wang J.-J.              57203011511;57204046656;57204046789;   92
-#         128   Wang J., Wang J., Fang W., Niu H.  56527464300;55946707000;42361194900;55286614500;  128
+        >>> rdf = rdf.disambiguate_authors()
+        >>> rdf[rdf['Authors'].map(lambda x: 'Wang J.' in x)][['Authors', 'Author(s) ID', 'ID']]
+                                          Authors                                     Author(s) ID   ID
+        3                          Cao J.,Wang J.                          57207830408;57207828548    3
+        10                     Wang B.,Wang J.(1)                          57205691331;55946707000   10
+        15        Du J.,Liu Q.,Chen K.,Wang J.(2)  15060001900;57209464952;57209470539;57209477365   15
+        80              Dong Y.,Wang J.(3),Guo Z.              57194399361;56380147600;37002500800   80
+        87    Luo R.,Zhang W.(1),Xu X.,Wang J.(4)  57204819270;56108513500;57206642524;57206677306   87
+        92       Tsai Y.-C.,Chen J.-H.,Wang J.-J.              57203011511;57204046656;57204046789   92
+        128  Wang J.(5),Wang J.(1),Fang W.,Niu H.  56527464300;55946707000;42361194900;55286614500  128
 
-#         >>> rdf = rdf.disambiguate_authors()
-#         >>> rdf[rdf['Authors'].map(lambda x: 'Wang J.' in x)][['Authors', 'Author(s) ID', 'ID']]
-#                                           Authors                                     Author(s) ID   ID
-#         3                          Cao J.,Wang J.                          57207830408;57207828548    3
-#         10                     Wang B.,Wang J.(1)                          57205691331;55946707000   10
-#         15        Du J.,Liu Q.,Chen K.,Wang J.(2)  15060001900;57209464952;57209470539;57209477365   15
-#         80              Dong Y.,Wang J.(3),Guo Z.              57194399361;56380147600;37002500800   80
-#         87    Luo R.,Zhang W.(1),Xu X.,Wang J.(4)  57204819270;56108513500;57206642524;57206677306   87
-#         92       Tsai Y.-C.,Chen J.-H.,Wang J.-J.              57203011511;57204046656;57204046789   92
-#         128  Wang J.(5),Wang J.(1),Fang W.,Niu H.  56527464300;55946707000;42361194900;55286614500  128
+        """
 
-#         """
+        if sep_authors is None:
+            sep_authors = SCOPUS_SEPS[col_authors]
 
-#         if sep_authors is None:
-#             sep_authors = SCOPUS_SEPS[col_authors]
+        if sep_ids is None:
+            sep_ids = SCOPUS_SEPS[col_ids]
 
-#         if sep_ids is None:
-#             sep_ids = SCOPUS_SEPS[col_ids]
+        self[col_ids] = self[col_ids].map(
+            lambda x: x[:-1] if x is not None and x[-1] == ";" else x
+        )
 
-#         self[col_ids] = self[col_ids].map(
-#             lambda x: x[:-1] if x is not None and x[-1] == ";" else x
-#         )
+        data = self[[col_authors, col_ids]]
+        data = data.dropna()
 
-#         data = self[[col_authors, col_ids]]
-#         data = data.dropna()
+        data["*info*"] = [(a, b) for (a, b) in zip(data[col_authors], data[col_ids])]
 
-#         data["*info*"] = [(a, b) for (a, b) in zip(data[col_authors], data[col_ids])]
+        data["*info*"] = data["*info*"].map(
+            lambda x: [
+                (u.strip(), v.strip())
+                for u, v in zip(x[0].split(sep_authors), x[1].split(sep_ids))
+            ]
+        )
 
-#         data["*info*"] = data["*info*"].map(
-#             lambda x: [
-#                 (u.strip(), v.strip())
-#                 for u, v in zip(x[0].split(sep_authors), x[1].split(sep_ids))
-#             ]
-#         )
+        data = data[["*info*"]].explode("*info*")
+        data.index = range(len(data))
 
-#         data = data[["*info*"]].explode("*info*")
-#         data.index = range(len(data))
+        names_ids = {}
+        for idx in range(len(data)):
 
-#         names_ids = {}
-#         for idx in range(len(data)):
+            author_name = data.at[idx, "*info*"][0]
+            author_id = data.at[idx, "*info*"][1]
 
-#             author_name = data.at[idx, "*info*"][0]
-#             author_id = data.at[idx, "*info*"][1]
+            if author_name in names_ids.keys():
 
-#             if author_name in names_ids.keys():
+                if author_id not in names_ids[author_name]:
+                    names_ids[author_name] = names_ids[author_name] + [author_id]
+            else:
+                names_ids[author_name] = [author_id]
 
-#                 if author_id not in names_ids[author_name]:
-#                     names_ids[author_name] = names_ids[author_name] + [author_id]
-#             else:
-#                 names_ids[author_name] = [author_id]
+        ids_names = {}
+        for author_name in names_ids.keys():
+            suffix = 0
+            for author_id in names_ids[author_name]:
+                if suffix > 0:
+                    ids_names[author_id] = author_name + "(" + str(suffix) + ")"
+                else:
+                    ids_names[author_id] = author_name
+                suffix += 1
 
-#         ids_names = {}
-#         for author_name in names_ids.keys():
-#             suffix = 0
-#             for author_id in names_ids[author_name]:
-#                 if suffix > 0:
-#                     ids_names[author_id] = author_name + "(" + str(suffix) + ")"
-#                 else:
-#                     ids_names[author_id] = author_name
-#                 suffix += 1
+        result = self.copy()
 
-#         result = self.copy()
+        result[col_authors] = result[col_ids].map(
+            lambda x: sep_authors.join([ids_names[w.strip()] for w in x.split(sep_ids)])
+            if x is not None
+            else x
+        )
 
-#         result[col_authors] = result[col_ids].map(
-#             lambda x: sep_authors.join([ids_names[w.strip()] for w in x.split(sep_ids)])
-#             if x is not None
-#             else x
-#         )
+        return DataFrame(result)
 
-#         return DataFrame(result)
 
 #     #
 #     # Accents
