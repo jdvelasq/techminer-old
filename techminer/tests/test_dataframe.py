@@ -18,26 +18,6 @@ from techminer import DataFrame
 #     )
 
 
-def test_explode():
-
-    testdf = pd.DataFrame(
-        {
-            "Authors": "author 0,author 1,author 2;author 3;author 4".split(";"),
-            "ID": list(range(3)),
-        }
-    )
-
-    expected = pd.DataFrame(
-        {
-            "Authors": "author 0;author 1;author 2;author 3;author 4".split(";"),
-            "ID": [0, 0, 0, 1, 2],
-        }
-    )
-
-    result = DataFrame(testdf).explode("Authors")
-    tm.assert_frame_equal(result, expected)
-
-
 def test_disambiguate_authors():
 
     testdf = pd.DataFrame(
