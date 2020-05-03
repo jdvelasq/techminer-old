@@ -1,1 +1,1 @@
-from test_strings import *
+from . import *

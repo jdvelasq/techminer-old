@@ -21,72 +21,81 @@ SCOPUS_SEPS = {
 }
 
 
-# def _expand(pdf, column, sep):
-#     """
+class DataFrame(pd.DataFrame):
+    """Class to represent a dataframe of bibliographic records.
+    """
 
-#     >>> from techminer.datasets import load_test_cleaned
-#     >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
-#     >>> result = _expand(rdf, 'Authors', sep=None)
-#     >>> result[result['Authors'].map(lambda x: 'Wang J.' in x) ][['Authors', 'Author(s) ID', 'ID']]
-#             Authors                                     Author(s) ID   ID
-#     11      Wang J.                          57207830408;57207828548    3
-#     36   Wang J.(1)                          57205691331;55946707000   10
-#     51   Wang J.(2)  15060001900;57209464952;57209470539;57209477365   15
-#     262  Wang J.(3)              57194399361;56380147600;37002500800   80
-#     282  Wang J.(4)  57204819270;56108513500;57206642524;57206677306   87
-#     312  Wang J.-J.              57203011511;57204046656;57204046789   92
-#     434  Wang J.(1)  56527464300;55946707000;42361194900;55286614500  128
-#     435  Wang J.(5)  56527464300;55946707000;42361194900;55286614500  128
+    #
+    # Compatitbility with pandas.DataFrame
+    #
+
+    @property
+    def _constructor_expanddim(self):
+        return self
 
 
-#     >>> result[result['Authors'] == 'Wang J.(1)'][['Authors', 'Author(s) ID', 'ID']]
-#             Authors                                     Author(s) ID   ID
-#     36   Wang J.(1)                          57205691331;55946707000   10
-#     434  Wang J.(1)  56527464300;55946707000;42361194900;55286614500  128
+    def explode(self, column, sep=None):
+        """Transform each element of a list-like to a row, reseting index values.
 
-#     >>> result[result['ID'] == 128][['Authors', 'Author(s) ID', 'ID']]
-#             Authors                                     Author(s) ID   ID
-#     432     Fang W.  56527464300;55946707000;42361194900;55286614500  128
-#     433      Niu H.  56527464300;55946707000;42361194900;55286614500  128
-#     434  Wang J.(1)  56527464300;55946707000;42361194900;55286614500  128
-#     435  Wang J.(5)  56527464300;55946707000;42361194900;55286614500  128
+        Args:
+            column (str): the column to explode.
+            sep (str): Optional. Character used as internal separator for the elements in the column.
 
-#     >>> result[result['Authors'].map(lambda x: 'Zhang G.' in x) ][['Authors', 'Author(s) ID', 'ID']]
-#              Authors                                       Author(s) ID   ID
-#     92      Zhang G.                44062068800;57005856100;56949237700   27
-#     254  Zhang G.(1)  57202058986;56528648300;15077721900;5719383101...   78
-#     402  Zhang G.(2)                 56670483600;7404745474;56278752300  117
-#     407  Zhang G.(2)                 57197735758;7404745474;56670483600  119
-
-#     """
-
-#     result = pdf.copy()
-#     if sep is None and column in SCOPUS_SEPS.keys():
-#         sep = SCOPUS_SEPS[column]
-#     if sep is not None:
-#         result[column] = result[column].map(
-#             lambda x: sorted(list(set(x.split(sep)))) if isinstance(x, str) else x
-#         )
-#         result = result.explode(column)
-#         result[column] = result[column].map(
-#             lambda x: x.strip() if isinstance(x, str) else x
-#         )
-#         result.index = list(range(len(result)))
-
-#     return result
+        Returns:
+            DataFrame. Exploded dataframe.
 
 
-# class DataFrame(pd.DataFrame):
-#     """Class to represent a dataframe of bibliographic records.
-#     """
+        >>> from techminer.datasets import load_test_cleaned
+        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
+        >>> result = _expand(rdf, 'Authors', sep=None)
+        >>> result[result['Authors'].map(lambda x: 'Wang J.' in x) ][['Authors', 'Author(s) ID', 'ID']]
+                Authors                                     Author(s) ID   ID
+        11      Wang J.                          57207830408;57207828548    3
+        36   Wang J.(1)                          57205691331;55946707000   10
+        51   Wang J.(2)  15060001900;57209464952;57209470539;57209477365   15
+        262  Wang J.(3)              57194399361;56380147600;37002500800   80
+        282  Wang J.(4)  57204819270;56108513500;57206642524;57206677306   87
+        312  Wang J.-J.              57203011511;57204046656;57204046789   92
+        434  Wang J.(1)  56527464300;55946707000;42361194900;55286614500  128
+        435  Wang J.(5)  56527464300;55946707000;42361194900;55286614500  128
 
-#     #
-#     # Compatitbility with pandas.DataFrame
-#     #
 
-#     @property
-#     def _constructor_expanddim(self):
-#         return self
+        >>> result[result['Authors'] == 'Wang J.(1)'][['Authors', 'Author(s) ID', 'ID']]
+                Authors                                     Author(s) ID   ID
+        36   Wang J.(1)                          57205691331;55946707000   10
+        434  Wang J.(1)  56527464300;55946707000;42361194900;55286614500  128
+
+        >>> result[result['ID'] == 128][['Authors', 'Author(s) ID', 'ID']]
+                Authors                                     Author(s) ID   ID
+        432     Fang W.  56527464300;55946707000;42361194900;55286614500  128
+        433      Niu H.  56527464300;55946707000;42361194900;55286614500  128
+        434  Wang J.(1)  56527464300;55946707000;42361194900;55286614500  128
+        435  Wang J.(5)  56527464300;55946707000;42361194900;55286614500  128
+
+        >>> result[result['Authors'].map(lambda x: 'Zhang G.' in x) ][['Authors', 'Author(s) ID', 'ID']]
+                Authors                                       Author(s) ID   ID
+        92      Zhang G.                44062068800;57005856100;56949237700   27
+        254  Zhang G.(1)  57202058986;56528648300;15077721900;5719383101...   78
+        402  Zhang G.(2)                 56670483600;7404745474;56278752300  117
+        407  Zhang G.(2)                 57197735758;7404745474;56670483600  119
+
+        """
+
+        result = self.copy()
+        if sep is None and column in SCOPUS_SEPS.keys():
+            sep = SCOPUS_SEPS[column]
+        if sep is not None:
+            result[column] = result[column].map(
+                lambda x: sorted(list(set(x.split(sep)))) if isinstance(x, str) else x
+            )
+            result = result.explode(column)
+            result[column] = result[column].map(
+                lambda x: x.strip() if isinstance(x, str) else x
+            )
+            result.index = list(range(len(result)))
+
+        return result
+
 
 #     #
 #     # Document ID

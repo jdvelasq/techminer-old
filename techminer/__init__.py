@@ -1,6 +1,6 @@
 """Module importation
 """
-# from techminer.dataframe import *
+from .dataframe import *
 # from techminer.plot import *
 # from techminer.strings import *
 
