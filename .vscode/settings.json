@@ -7,8 +7,5 @@
     "editor.formatOnType": true,
     "python.testing.unittestEnabled": false,
     "python.testing.nosetestsEnabled": false,
-    "python.testing.pytestEnabled": true,
-    "python.testing.pytestArgs": [
-        "techminer"
-    ]
+    "python.testing.pytestEnabled": true
 }

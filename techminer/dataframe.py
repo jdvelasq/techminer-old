@@ -22,7 +22,11 @@ SCOPUS_SEPS = {
 
 
 class DataFrame(pd.DataFrame):
-    """Class to represent a dataframe of bibliographic records.
+    """Data structure derived from a `pandas:DataFrame 
+    <https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame>`_. 
+    object with specialized functions to summarize and query bibliographic data.
+
+
     """
 
     #
@@ -34,7 +38,7 @@ class DataFrame(pd.DataFrame):
         return self
 
     def explode(self, column, sep=None):
-        """Transform each element of a list-like to a row, reseting index values.
+        """Transform each element of a field to a row, reseting index values.
 
         Args:
             column (str): the column to explode.
@@ -43,40 +47,26 @@ class DataFrame(pd.DataFrame):
         Returns:
             DataFrame. Exploded dataframe.
 
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     {
+        ...          "Authors": "author 0,author 1,author 2;author 3;author 4".split(";"),
+        ...          "ID": list(range(3)),
+        ...     }
+        ... )
+        >>> df
+                              Authors  ID
+        0  author 0,author 1,author 2   0
+        1                    author 3   1
+        2                    author 4   2
 
-        # >>> from techminer.datasets import load_test_cleaned
-        # >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
-        # >>> result = _expand(rdf, 'Authors', sep=None)
-        # >>> result[result['Authors'].map(lambda x: 'Wang J.' in x) ][['Authors', 'Author(s) ID', 'ID']]
-        #         Authors                                     Author(s) ID   ID
-        # 11      Wang J.                          57207830408;57207828548    3
-        # 36   Wang J.(1)                          57205691331;55946707000   10
-        # 51   Wang J.(2)  15060001900;57209464952;57209470539;57209477365   15
-        # 262  Wang J.(3)              57194399361;56380147600;37002500800   80
-        # 282  Wang J.(4)  57204819270;56108513500;57206642524;57206677306   87
-        # 312  Wang J.-J.              57203011511;57204046656;57204046789   92
-        # 434  Wang J.(1)  56527464300;55946707000;42361194900;55286614500  128
-        # 435  Wang J.(5)  56527464300;55946707000;42361194900;55286614500  128
-        
-
-        # >>> result[result['Authors'] == 'Wang J.(1)'][['Authors', 'Author(s) ID', 'ID']]
-        #         Authors                                     Author(s) ID   ID
-        # 36   Wang J.(1)                          57205691331;55946707000   10
-        # 434  Wang J.(1)  56527464300;55946707000;42361194900;55286614500  128
-
-        # >>> result[result['ID'] == 128][['Authors', 'Author(s) ID', 'ID']]
-        #         Authors                                     Author(s) ID   ID
-        # 432     Fang W.  56527464300;55946707000;42361194900;55286614500  128
-        # 433      Niu H.  56527464300;55946707000;42361194900;55286614500  128
-        # 434  Wang J.(1)  56527464300;55946707000;42361194900;55286614500  128
-        # 435  Wang J.(5)  56527464300;55946707000;42361194900;55286614500  128
-
-        # >>> result[result['Authors'].map(lambda x: 'Zhang G.' in x) ][['Authors', 'Author(s) ID', 'ID']]
-        #         Authors                                       Author(s) ID   ID
-        # 92      Zhang G.                44062068800;57005856100;56949237700   27
-        # 254  Zhang G.(1)  57202058986;56528648300;15077721900;5719383101...   78
-        # 402  Zhang G.(2)                 56670483600;7404745474;56278752300  117
-        # 407  Zhang G.(2)                 57197735758;7404745474;56670483600  119
+        >>> DataFrame(df).explode('Authors')
+            Authors  ID
+        0  author 0   0
+        1  author 1   0
+        2  author 2   0
+        3  author 3   1
+        4  author 4   2
 
         """
 
