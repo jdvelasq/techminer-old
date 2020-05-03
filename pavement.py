@@ -10,7 +10,7 @@ def tests():
     """unit testing"""
     # sh('nosetests --verbose --cover-package=techminer --cover-tests '
     #   ' --with-doctest --rednose  ./techminer/')
-    sh("pytest ")
+    sh("pytest --doctest-modules")
 
 
 @task

@@ -44,39 +44,39 @@ class DataFrame(pd.DataFrame):
             DataFrame. Exploded dataframe.
 
 
-        >>> from techminer.datasets import load_test_cleaned
-        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
-        >>> result = _expand(rdf, 'Authors', sep=None)
-        >>> result[result['Authors'].map(lambda x: 'Wang J.' in x) ][['Authors', 'Author(s) ID', 'ID']]
-                Authors                                     Author(s) ID   ID
-        11      Wang J.                          57207830408;57207828548    3
-        36   Wang J.(1)                          57205691331;55946707000   10
-        51   Wang J.(2)  15060001900;57209464952;57209470539;57209477365   15
-        262  Wang J.(3)              57194399361;56380147600;37002500800   80
-        282  Wang J.(4)  57204819270;56108513500;57206642524;57206677306   87
-        312  Wang J.-J.              57203011511;57204046656;57204046789   92
-        434  Wang J.(1)  56527464300;55946707000;42361194900;55286614500  128
-        435  Wang J.(5)  56527464300;55946707000;42361194900;55286614500  128
+        # >>> from techminer.datasets import load_test_cleaned
+        # >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
+        # >>> result = _expand(rdf, 'Authors', sep=None)
+        # >>> result[result['Authors'].map(lambda x: 'Wang J.' in x) ][['Authors', 'Author(s) ID', 'ID']]
+        #         Authors                                     Author(s) ID   ID
+        # 11      Wang J.                          57207830408;57207828548    3
+        # 36   Wang J.(1)                          57205691331;55946707000   10
+        # 51   Wang J.(2)  15060001900;57209464952;57209470539;57209477365   15
+        # 262  Wang J.(3)              57194399361;56380147600;37002500800   80
+        # 282  Wang J.(4)  57204819270;56108513500;57206642524;57206677306   87
+        # 312  Wang J.-J.              57203011511;57204046656;57204046789   92
+        # 434  Wang J.(1)  56527464300;55946707000;42361194900;55286614500  128
+        # 435  Wang J.(5)  56527464300;55946707000;42361194900;55286614500  128
         
 
-        >>> result[result['Authors'] == 'Wang J.(1)'][['Authors', 'Author(s) ID', 'ID']]
-                Authors                                     Author(s) ID   ID
-        36   Wang J.(1)                          57205691331;55946707000   10
-        434  Wang J.(1)  56527464300;55946707000;42361194900;55286614500  128
+        # >>> result[result['Authors'] == 'Wang J.(1)'][['Authors', 'Author(s) ID', 'ID']]
+        #         Authors                                     Author(s) ID   ID
+        # 36   Wang J.(1)                          57205691331;55946707000   10
+        # 434  Wang J.(1)  56527464300;55946707000;42361194900;55286614500  128
 
-        >>> result[result['ID'] == 128][['Authors', 'Author(s) ID', 'ID']]
-                Authors                                     Author(s) ID   ID
-        432     Fang W.  56527464300;55946707000;42361194900;55286614500  128
-        433      Niu H.  56527464300;55946707000;42361194900;55286614500  128
-        434  Wang J.(1)  56527464300;55946707000;42361194900;55286614500  128
-        435  Wang J.(5)  56527464300;55946707000;42361194900;55286614500  128
+        # >>> result[result['ID'] == 128][['Authors', 'Author(s) ID', 'ID']]
+        #         Authors                                     Author(s) ID   ID
+        # 432     Fang W.  56527464300;55946707000;42361194900;55286614500  128
+        # 433      Niu H.  56527464300;55946707000;42361194900;55286614500  128
+        # 434  Wang J.(1)  56527464300;55946707000;42361194900;55286614500  128
+        # 435  Wang J.(5)  56527464300;55946707000;42361194900;55286614500  128
 
-        >>> result[result['Authors'].map(lambda x: 'Zhang G.' in x) ][['Authors', 'Author(s) ID', 'ID']]
-                Authors                                       Author(s) ID   ID
-        92      Zhang G.                44062068800;57005856100;56949237700   27
-        254  Zhang G.(1)  57202058986;56528648300;15077721900;5719383101...   78
-        402  Zhang G.(2)                 56670483600;7404745474;56278752300  117
-        407  Zhang G.(2)                 57197735758;7404745474;56670483600  119
+        # >>> result[result['Authors'].map(lambda x: 'Zhang G.' in x) ][['Authors', 'Author(s) ID', 'ID']]
+        #         Authors                                       Author(s) ID   ID
+        # 92      Zhang G.                44062068800;57005856100;56949237700   27
+        # 254  Zhang G.(1)  57202058986;56528648300;15077721900;5719383101...   78
+        # 402  Zhang G.(2)                 56670483600;7404745474;56278752300  117
+        # 407  Zhang G.(2)                 57197735758;7404745474;56670483600  119
 
         """
 
@@ -160,29 +160,31 @@ class DataFrame(pd.DataFrame):
         4                        None                        None
         5  [No author name available]  [No author name available]
 
-        >>> from techminer.datasets import load_test_cleaned
-        >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-        >>> rdf = rdf.remove_accents()
-        >>> rdf[rdf['Authors'].map(lambda x: 'Wang J.' in x)][['Authors', 'Author(s) ID', 'ID']]
-                                        Authors                                      Author(s) ID   ID
-        3                       Cao J., Wang J.                          57207830408;57207828548;    3
-        10                     Wang B., Wang J.                          57205691331;55946707000;   10
-        15      Du J., Liu Q., Chen K., Wang J.  15060001900;57209464952;57209470539;57209477365;   15
-        80             Dong Y., Wang J., Guo Z.              57194399361;56380147600;37002500800;   80
-        87     Luo R., Zhang W., Xu X., Wang J.  57204819270;56108513500;57206642524;57206677306;   87
-        92   Tsai Y.-C., Chen J.-H., Wang J.-J.              57203011511;57204046656;57204046789;   92
-        128   Wang J., Wang J., Fang W., Niu H.  56527464300;55946707000;42361194900;55286614500;  128
+        # >>> from techminer.datasets import load_test_cleaned
+        # >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
+        # >>> rdf = rdf.remove_accents()
+        # >>> rdf[rdf['Authors'].map(lambda x: 'Wang J.' in x)][['Authors', 'Author(s) ID', 'ID']]
+        #                                 Authors                                      Author(s) ID   ID
+        # 3                       Cao J., Wang J.                          57207830408;57207828548;    3
+        # 10                     Wang B., Wang J.                          57205691331;55946707000;   10
+        # 15      Du J., Liu Q., Chen K., Wang J.  15060001900;57209464952;57209470539;57209477365;   15
+        # 80             Dong Y., Wang J., Guo Z.              57194399361;56380147600;37002500800;   80
+        # 87     Luo R., Zhang W., Xu X., Wang J.  57204819270;56108513500;57206642524;57206677306;   87
+        # 92   Tsai Y.-C., Chen J.-H., Wang J.-J.              57203011511;57204046656;57204046789;   92
+        # 128   Wang J., Wang J., Fang W., Niu H.  56527464300;55946707000;42361194900;55286614500;  128
 
-        >>> rdf = rdf.disambiguate_authors()
-        >>> rdf[rdf['Authors'].map(lambda x: 'Wang J.' in x)][['Authors', 'Author(s) ID', 'ID']]
-                                          Authors                                     Author(s) ID   ID
-        3                          Cao J.,Wang J.                          57207830408;57207828548    3
-        10                     Wang B.,Wang J.(1)                          57205691331;55946707000   10
-        15        Du J.,Liu Q.,Chen K.,Wang J.(2)  15060001900;57209464952;57209470539;57209477365   15
-        80              Dong Y.,Wang J.(3),Guo Z.              57194399361;56380147600;37002500800   80
-        87    Luo R.,Zhang W.(1),Xu X.,Wang J.(4)  57204819270;56108513500;57206642524;57206677306   87
-        92       Tsai Y.-C.,Chen J.-H.,Wang J.-J.              57203011511;57204046656;57204046789   92
-        128  Wang J.(5),Wang J.(1),Fang W.,Niu H.  56527464300;55946707000;42361194900;55286614500  128
+        # >>> rdf = rdf.disambiguate_authors()
+        # >>> rdf[rdf['Authors'].map(lambda x: 'Wang J.' in x)][['Authors', 'Author(s) ID', 'ID']]
+        #                                   Authors                                     Author(s) ID   ID
+        # 3                          Cao J.,Wang J.                          57207830408;57207828548    3
+        # 10                     Wang B.,Wang J.(1)                          57205691331;55946707000   10
+        # 15        Du J.,Liu Q.,Chen K.,Wang J.(2)  15060001900;57209464952;57209470539;57209477365   15
+        # 80              Dong Y.,Wang J.(3),Guo Z.              57194399361;56380147600;37002500800   80
+        # 87    Luo R.,Zhang W.(1),Xu X.,Wang J.(4)  57204819270;56108513500;57206642524;57206677306   87
+        # 92       Tsai Y.-C.,Chen J.-H.,Wang J.-J.              57203011511;57204046656;57204046789   92
+        # 128  Wang J.(5),Wang J.(1),Fang W.,Niu H.  56527464300;55946707000;42361194900;55286614500  128
+        # X
+
 
         """
 

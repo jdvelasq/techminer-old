@@ -3,9 +3,9 @@ TechMiner.Thesaurus
 ==================================================================================================
 
 """
-import pandas as pd
-import json
-from techminer.strings import find_string, replace_string, fingerprint, steamming_all
+# import pandas as pd
+# import json
+# from techminer.strings import find_string, replace_string, fingerprint, steamming_all
 
 # -------------------------------------------------------------------------------------------------
 # def text_clustering(x, name_strategy='mostfrequent', search_strategy='fingerprint', sep=None, transformer=None, min_cluster_size=1):
