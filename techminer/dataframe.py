@@ -792,114 +792,173 @@ class DataFrame(pd.DataFrame):
         result.index = list(range(len(result)))
         return result
 
-#     #
-#     #
-#     #  Documents and citations by term per term per year
-#     #
-#     #
+    #
+    #
+    #  Documents and citations by term per term per year
+    #
+    #
 
-#     def summarize_by_term_per_term_per_year(
-#         self, column_r, column_c, sep_r=None, sep_c=None
-#     ):
-#         """
+    def summarize_by_term_per_term_per_year(
+        self, column_r, column_c, sep_r=None, sep_c=None
+    ):
+        """
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().disambiguate_authors()
-#         >>> rdf.summarize_by_term_per_term_per_year('Authors', 'Author Keywords').head(5)
-#                 Authors Author Keywords  Year  Cited by  Num Documents     ID
-#         0  Bekiros S.D.            LSTM  2013         2              1  [133]
-#         1  Bekiros S.D.     Time series  2013         2              1  [133]
-#         2  Bekiros S.D.   Time weighted  2013         2              1  [133]
-#         3  Bekiros S.D.           stock  2013         2              1  [133]
-#         4        Cai X.         Cluster  2013         5              1  [135]
-#         """
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     {
+        ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
+        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4".split(";"),
+        ...          "Author Keywords": "w0;w1,w0,w1,w5;w3;w4,w5,w3".split(','),
+        ...          "Cited by": list(range(10,16)),
+        ...          "ID": list(range(6)),
+        ...     }
+        ... )
+        >>> df
+           Year                     Authors Author Keywords  Cited by  ID
+        0  2010  author 0,author 1,author 2           w0;w1        10   0
+        1  2010                    author 0              w0        11   1
+        2  2011                    author 1              w1        12   2
+        3  2011                    author 3        w5;w3;w4        13   3
+        4  2012                    author 4              w5        14   4
+        5  2014                    author 4              w3        15   5
 
-#         data = _expand(
-#             self[[column_r, column_c, "Year", "Cited by", "ID"]], column_r, sep_r
-#         )
-#         data = _expand(
-#             data[[column_r, column_c, "Year", "Cited by", "ID"]], column_c, sep_c
-#         )
-#         result = (
-#             data.groupby([column_r, column_c, "Year"], as_index=False)
-#             .agg({"Cited by": np.sum, "ID": np.size})
-#             .rename(columns={"ID": "Num Documents"})
-#         )
-#         result = result.assign(
-#             ID=data.groupby([column_r, column_c, "Year"])
-#             .agg({"ID": list})
-#             .reset_index()["ID"]
-#         )
-#         result["Cited by"] = result["Cited by"].map(lambda x: int(x))
-#         result.sort_values(["Year", column_r, column_c,], ascending=True, inplace=True)
-#         result.index = list(range(len(result)))
-#         return result
+        >>> DataFrame(df).summarize_by_term_per_term_per_year('Authors', 'Author Keywords')
+             Authors Author Keywords  Year  Cited by  Num Documents      ID
+        0   author 0              w0  2010        21              2  [0, 1]
+        1   author 0              w1  2010        10              1     [0]
+        2   author 1              w0  2010        10              1     [0]
+        3   author 1              w1  2010        10              1     [0]
+        4   author 2              w0  2010        10              1     [0]
+        5   author 2              w1  2010        10              1     [0]
+        6   author 1              w1  2011        12              1     [2]
+        7   author 3              w3  2011        13              1     [3]
+        8   author 3              w4  2011        13              1     [3]
+        9   author 3              w5  2011        13              1     [3]
+        10  author 4              w5  2012        14              1     [4]
+        11  author 4              w3  2014        15              1     [5]
 
-#     def documents_by_terms_per_terms_per_year(
-#         self, column_r, column_c, sep_r=None, sep_c=None
-#     ):
-#         """
+        """
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().disambiguate_authors()
-#         >>> rdf.documents_by_terms_per_terms_per_year(
-#         ... column_r='Authors', column_c='Author Keywords').head(10)
-#                 Authors          Author Keywords  Year  Num Documents     ID
-#         0  Bekiros S.D.                     LSTM  2013              1  [133]
-#         1  Bekiros S.D.              Time series  2013              1  [133]
-#         2  Bekiros S.D.            Time weighted  2013              1  [133]
-#         3  Bekiros S.D.                    stock  2013              1  [133]
-#         4        Cai X.                  Cluster  2013              1  [135]
-#         5        Cai X.  Correlation coefficient  2013              1  [135]
-#         6        Cai X.                     LSTM  2013              1  [135]
-#         7        Cai X.              Time series  2013              1  [135]
-#         8        Lai G.                  Cluster  2013              1  [135]
-#         9        Lai G.  Correlation coefficient  2013              1  [135]
+        data = DataFrame(self[[column_r, column_c, "Year", "Cited by", "ID"]]).explode(column_r, sep_r)
+        data = DataFrame(data).explode(column_c, sep_c)
+        data['Num Documents'] = 1
+        result = (
+            data.groupby([column_r, column_c, "Year"], as_index=False)
+            .agg({"Cited by": np.sum, "Num Documents": np.size})
+        )
+        result = result.assign(
+            ID=data.groupby([column_r, column_c, "Year"])
+            .agg({"ID": list})
+            .reset_index()["ID"]
+        )
+        result["Cited by"] = result["Cited by"].map(lambda x: int(x))
+        result.sort_values(["Year", column_r, column_c,], ascending=True, inplace=True)
+        result.index = list(range(len(result)))
+        return result
 
-#         """
+    def documents_by_terms_per_terms_per_year(
+        self, column_r, column_c, sep_r=None, sep_c=None
+    ):
+        """
 
-#         result = self.summarize_by_term_per_term_per_year(
-#             column_r, column_c, sep_r, sep_c
-#         )
-#         result.pop("Cited by")
-#         result.sort_values(
-#             ["Year", column_r, column_c], ascending=[True, True, True], inplace=True,
-#         )
-#         result.index = list(range(len(result)))
-#         return result
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     {
+        ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
+        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4".split(";"),
+        ...          "Author Keywords": "w0;w1,w0,w1,w5;w3;w4,w5,w3".split(','),
+        ...          "Cited by": list(range(10,16)),
+        ...          "ID": list(range(6)),
+        ...     }
+        ... )
+        >>> df
+           Year                     Authors Author Keywords  Cited by  ID
+        0  2010  author 0,author 1,author 2           w0;w1        10   0
+        1  2010                    author 0              w0        11   1
+        2  2011                    author 1              w1        12   2
+        3  2011                    author 3        w5;w3;w4        13   3
+        4  2012                    author 4              w5        14   4
+        5  2014                    author 4              w3        15   5
 
-#     def citations_by_terms_per_terms_per_year(
-#         self, column_r, column_c, sep_r=None, sep_c=None
-#     ):
-#         """
+        >>> DataFrame(df).documents_by_terms_per_terms_per_year('Authors', 'Author Keywords')
+             Authors Author Keywords  Year  Num Documents      ID
+        0   author 0              w0  2010              2  [0, 1]
+        1   author 0              w1  2010              1     [0]
+        2   author 1              w0  2010              1     [0]
+        3   author 1              w1  2010              1     [0]
+        4   author 2              w0  2010              1     [0]
+        5   author 2              w1  2010              1     [0]
+        6   author 1              w1  2011              1     [2]
+        7   author 3              w3  2011              1     [3]
+        8   author 3              w4  2011              1     [3]
+        9   author 3              w5  2011              1     [3]
+        10  author 4              w5  2012              1     [4]
+        11  author 4              w3  2014              1     [5]
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().disambiguate_authors()
-#         >>> rdf.citations_by_terms_per_terms_per_year(
-#         ... column_r='Authors', column_c='Author Keywords').head(10)
-#                 Authors          Author Keywords  Year  Num Documents     ID
-#         0  Bekiros S.D.                     LSTM  2013              1  [133]
-#         1  Bekiros S.D.              Time series  2013              1  [133]
-#         2  Bekiros S.D.            Time weighted  2013              1  [133]
-#         3  Bekiros S.D.                    stock  2013              1  [133]
-#         4        Cai X.                  Cluster  2013              1  [135]
-#         5        Cai X.  Correlation coefficient  2013              1  [135]
-#         6        Cai X.                     LSTM  2013              1  [135]
-#         7        Cai X.              Time series  2013              1  [135]
-#         8        Lai G.                  Cluster  2013              1  [135]
-#         9        Lai G.  Correlation coefficient  2013              1  [135]
 
-#         """
+        """
 
-#         result = self.summarize_by_term_per_term_per_year(
-#             column_r, column_c, sep_r, sep_c
-#         )
-#         result.pop("Cited by")
-#         result.sort_values(
-#             ["Year", column_r, column_c], ascending=[True, True, True], inplace=True,
-#         )
-#         result.index = list(range(len(result)))
-#         return result
+        result = self.summarize_by_term_per_term_per_year(
+            column_r, column_c, sep_r, sep_c
+        )
+        result.pop("Cited by")
+        result.sort_values(
+            ["Year", column_r, column_c], ascending=[True, True, True], inplace=True,
+        )
+        result.index = list(range(len(result)))
+        return result
+
+    def citations_by_terms_per_terms_per_year(
+        self, column_r, column_c, sep_r=None, sep_c=None
+    ):
+        """
+
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     {
+        ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
+        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4".split(";"),
+        ...          "Author Keywords": "w0;w1,w0,w1,w5;w3;w4,w5,w3".split(','),
+        ...          "Cited by": list(range(10,16)),
+        ...          "ID": list(range(6)),
+        ...     }
+        ... )
+        >>> df
+           Year                     Authors Author Keywords  Cited by  ID
+        0  2010  author 0,author 1,author 2           w0;w1        10   0
+        1  2010                    author 0              w0        11   1
+        2  2011                    author 1              w1        12   2
+        3  2011                    author 3        w5;w3;w4        13   3
+        4  2012                    author 4              w5        14   4
+        5  2014                    author 4              w3        15   5
+
+        >>> DataFrame(df).citations_by_terms_per_terms_per_year('Authors', 'Author Keywords')
+             Authors Author Keywords  Year  Cited by      ID
+        0   author 0              w0  2010        21  [0, 1]
+        1   author 0              w1  2010        10     [0]
+        2   author 1              w0  2010        10     [0]
+        3   author 1              w1  2010        10     [0]
+        4   author 2              w0  2010        10     [0]
+        5   author 2              w1  2010        10     [0]
+        6   author 1              w1  2011        12     [2]
+        7   author 3              w3  2011        13     [3]
+        8   author 3              w4  2011        13     [3]
+        9   author 3              w5  2011        13     [3]
+        10  author 4              w5  2012        14     [4]
+        11  author 4              w3  2014        15     [5]
+
+
+        """
+
+        result = self.summarize_by_term_per_term_per_year(
+            column_r, column_c, sep_r, sep_c
+        )
+        result.pop("Num Documents")
+        result.sort_values(
+            ["Year", column_r, column_c], ascending=[True, True, True], inplace=True,
+        )
+        result.index = list(range(len(result)))
+        return result
 
 #     #
 #     #
@@ -943,20 +1002,6 @@ class DataFrame(pd.DataFrame):
 #         9             D                     d              1         4     [4]
 
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().disambiguate_authors()
-#         >>> rdf.summarize_co_ocurrence(column_r='Authors', column_c='Document Type').head(10)
-#            Authors (row) Document Type (col)  Num Documents  Cited by     ID
-#         0       Aadil F.             Article              1         0   [28]
-#         1    Adam M.T.P.    Conference Paper              1         6   [70]
-#         2     Afolabi D.             Article              1         3  [108]
-#         3       Afzal S.             Article              1         0   [28]
-#         4       Ahmed S.             Article              1         0   [39]
-#         5       Akita R.    Conference Paper              1        37  [124]
-#         6     Aktas M.S.    Conference Paper              1         0   [21]
-#         7    Al-Askar H.             Article              1        10  [125]
-#         8  Al-Jumeily D.             Article              1        10  [125]
-#         9  Ali Mahmud S.             Article              1         3  [131]
 
 #         """
 
