@@ -1479,49 +1479,101 @@ class DataFrame(pd.DataFrame):
         4     B,D             c;d         4   4
         5     A,B               d         5   5
 
+
+        >>> DataFrame(df).compute_tfm('Authors')
+           A  B  C  D
+        0  1  0  0  0
+        1  1  1  0  0
+        2  0  1  0  0
+        3  1  1  1  0
+        4  0  1  0  1
+        5  1  1  0  0
+
+        >>> DataFrame(df).compute_tfm('Author Keywords')
+           a  b  c  d
+        0  1  0  0  0
+        1  1  1  0  0
+        2  0  1  0  0
+        3  0  0  1  0
+        4  0  0  1  1
+        5  0  0  0  1
+
+
         >>> DataFrame(df).cross_corr('Authors', 'Author Keywords')
-
-
-        
-
+              a         b         c         d
+        A  0.50 -0.632456 -0.316228 -0.316228
+        B -0.25  0.316228 -0.316228 -0.316228
+        C -0.25  0.316228  0.632456  0.632456
+        D -0.25  0.316228 -0.316228  0.632456
 
 
         """
 
         tfm_r = self.compute_tfm(column=column_r, sep=sep_r)
         tfm_c = self.compute_tfm(column=column_c, sep=sep_c)
-        tfm = pd.concat([tfm_c, tfm_r], axis=1)
-        return tfm.corr(method=method)
 
-#     def factor_analysis(self, column, sep=None, n_components=None):
-#         """Computes the matrix of factors for terms in a given column.
+        result = pd.DataFrame(
+            [[tfm_r[row].corr(tfm_c[col]) for row in tfm_r.columns] for col in tfm_c.columns],
+            columns=tfm_c.columns,
+            index=tfm_r.columns
+        )
+        
+        return result
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
-#         >>> rdf.factor_analysis(
-#         ...    column='Authors',
-#         ...    sep=',',
-#         ...    n_components=5).head() # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-#                            F0        F1        F2        F3            F4
-#         Aadil F.    -0.003299 -0.004744 -0.004056  0.376626 -5.496588e-15
-#         Adam M.T.P. -0.002974 -0.004202 -0.003542 -0.008438 -2.642608e-02
-#         Afolabi D.  -0.002708 -0.003770 -0.003144 -0.004172  2.765398e-16
-#         Afzal S.    -0.003299 -0.004744 -0.004056  0.376626 -5.578519e-15
-#         Ahmed S.    -0.002708 -0.003770 -0.003144 -0.004172  2.247380e-16
+    def factor_analysis(self, column, sep=None, n_components=None):
+        """Computes the matrix of factors for terms in a given column.
 
-#         """
+        >>> import pandas as pd
+        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D', 'A,B']
+        >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd']
+        >>> df = pd.DataFrame(
+        ...    {
+        ...       'Authors': x,
+        ...       'Author Keywords': y,
+        ...       'Cited by': list(range(len(x))),
+        ...       'ID': list(range(len(x))),
+        ...    }
+        ... )
+        >>> df
+          Authors Author Keywords  Cited by  ID
+        0       A               a         0   0
+        1     A,B             a;b         1   1
+        2       B               b         2   2
+        3   A,B,C               c         3   3
+        4     B,D             c;d         4   4
+        5     A,B               d         5   5
 
-#         tfm = self.compute_tfm(column, sep)
-#         terms = tfm.columns.tolist()
 
-#         if n_components is None:
-#             n_components = int(math.sqrt(len(set(terms))))
+        >>> DataFrame(df).compute_tfm('Authors')
+           A  B  C  D
+        0  1  0  0  0
+        1  1  1  0  0
+        2  0  1  0  0
+        3  1  1  1  0
+        4  0  1  0  1
+        5  1  1  0  0
 
-#         pca = PCA(n_components=n_components)
 
-#         result = np.transpose(pca.fit(X=tfm.values).components_)
-#         result = pd.DataFrame(
-#             result, columns=["F" + str(i) for i in range(n_components)], index=terms
-#         )
+        >>> DataFrame(df).factor_analysis('Authors', n_components=3)
+                 F0            F1       F2
+        A -0.774597 -0.000000e+00  0.00000
+        B  0.258199  7.071068e-01 -0.57735
+        C -0.258199  7.071068e-01  0.57735
+        D  0.516398  1.110223e-16  0.57735
 
-#         return result
+        """
+
+        tfm = self.compute_tfm(column, sep)
+        terms = tfm.columns.tolist()
+
+        if n_components is None:
+            n_components = int(math.sqrt(len(set(terms))))
+
+        pca = PCA(n_components=n_components)
+
+        result = np.transpose(pca.fit(X=tfm.values).components_)
+        result = pd.DataFrame(
+            result, columns=["F" + str(i) for i in range(n_components)], index=terms
+        )
+
+        return result
