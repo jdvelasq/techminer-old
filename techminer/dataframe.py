@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 from sklearn.decomposition import PCA
 
-# from .strings import asciify
+from .strings import remove_accents
 
 SCOPUS_SEPS = {
     "Authors": ",",
@@ -52,10 +52,10 @@ class DataFrame(pd.DataFrame):
 
         >>> import pandas as pd
         >>> df = pd.DataFrame(
-        ...     {
-        ...          "Authors": "author 0,author 1,author 2;author 3;author 4".split(";"),
-        ...          "ID": list(range(3)),
-        ...     }
+        ...   {
+        ...     "Authors": "author 0,author 1,author 2;author 3;author 4".split(";"),
+        ...     "ID": list(range(3)),
+        ...   }
         ... )
         >>> df
                               Authors  ID
@@ -101,9 +101,9 @@ class DataFrame(pd.DataFrame):
 
         >>> import pandas as pd
         >>> df = pd.DataFrame(
-        ...     {
-        ...          "Authors": "author 0,author 1,author 2;author 3;author 4".split(";"),
-        ...     }
+        ...   {
+        ...     "Authors": "author 0,author 1,author 2;author 3;author 4".split(";"),
+        ...   }
         ... )
         >>> df
                               Authors
@@ -144,10 +144,10 @@ class DataFrame(pd.DataFrame):
 
         >>> import pandas as pd
         >>> df = pd.DataFrame(
-        ...     {
-        ...          "Authors": "author 0,author 0,author 0;author 0;author 0".split(";"),
-        ...          "Author(s) ID": "0;1;2;,3;,4;".split(','),
-        ...     }
+        ...   {
+        ...      "Authors": "author 0,author 0,author 0;author 0;author 0".split(";"),
+        ...      "Author(s) ID": "0;1;2;,3;,4;".split(','),
+        ...   }
         ... )
         >>> df
                               Authors Author(s) ID
@@ -177,7 +177,6 @@ class DataFrame(pd.DataFrame):
         self[col_ids] = self[col_ids].map(
             lambda x: x[:-1] if x is not None and x[-1] == sep_ids else x
         )
-
 
         data = self[[col_authors, col_ids]]
         data = data.dropna()
@@ -227,15 +226,30 @@ class DataFrame(pd.DataFrame):
 
         return DataFrame(result)
 
-    #     #
-    #     # Accents
-    #     #
-    #     def remove_accents(self):
-    #         """Remove accents for all strings on a DataFrame
-    #         """
-    #         return DataFrame(
-    #             self.applymap(lambda x: asciify(x) if isinstance(x, str) else x)
-    #         )
+        #
+        # Accents
+        #
+        def remove_accents(self):
+            """Remove accents for all strings on a DataFrame
+
+            >>> import pandas as pd
+            >>> df = pd.DataFrame(
+            ...   {
+            ...      "Authors": "áàÁÀ;éèÉÈ;íìÌÍ;ÑÑÑñññ".split(";"),
+            ...   }
+            ... )
+            >>> df
+               Authors
+            0     aaAA
+            1     eeEE
+            2     iiII
+            3     NNNn
+
+
+            """
+            return DataFrame(
+                self.applymap(lambda x: remove_accents(x) if isinstance(x, str) else x)
+            )
 
     #     #
     #     # Basic info
@@ -337,7 +351,6 @@ class DataFrame(pd.DataFrame):
         result = pd.unique(result[column].dropna())
         result = np.sort(result)
         return pd.DataFrame({column: result})
-
 
     def count_terms(self, column, sep=None):
         """
@@ -444,10 +457,9 @@ class DataFrame(pd.DataFrame):
 
         """
         data = DataFrame(self[[column, "Cited by", "ID"]]).explode(column, sep)
-        data['Num Documents'] = 1
-        result = (
-            data.groupby(column, as_index=False)
-            .agg({"Num Documents": np.size, "Cited by": np.sum})
+        data["Num Documents"] = 1
+        result = data.groupby(column, as_index=False).agg(
+            {"Num Documents": np.size, "Cited by": np.sum}
         )
         result = result.assign(
             ID=data.groupby(column).agg({"ID": list}).reset_index()["ID"]
@@ -584,10 +596,9 @@ class DataFrame(pd.DataFrame):
 
         """
         data = DataFrame(self[["Year", "Cited by", "ID"]]).explode("Year", None)
-        data['Num Documents'] = 1
-        result = (
-            data.groupby("Year", as_index=False)
-            .agg({"Cited by": np.sum, "Num Documents": np.size})
+        data["Num Documents"] = 1
+        result = data.groupby("Year", as_index=False).agg(
+            {"Cited by": np.sum, "Num Documents": np.size}
         )
         result = result.assign(
             ID=data.groupby("Year").agg({"ID": list}).reset_index()["ID"]
@@ -596,7 +607,7 @@ class DataFrame(pd.DataFrame):
         years = [year for year in range(result.Year.min(), result.Year.max() + 1)]
         result = result.set_index("Year")
         result = result.reindex(years, fill_value=0)
-        result['ID'] = result['ID'].map(lambda x: [] if x == 0 else x)
+        result["ID"] = result["ID"].map(lambda x: [] if x == 0 else x)
         result.sort_values("Year", ascending=True, inplace=True)
         if cumulative is True:
             result["Num Documents"] = result["Num Documents"].cumsum()
@@ -736,10 +747,9 @@ class DataFrame(pd.DataFrame):
 
         """
         data = DataFrame(self[["Year", column, "Cited by", "ID"]]).explode(column, sep)
-        data['Num Documents'] = 1
-        result = (
-            data.groupby([column, "Year"], as_index=False)
-            .agg({"Cited by": np.sum, "Num Documents": np.size})
+        data["Num Documents"] = 1
+        result = data.groupby([column, "Year"], as_index=False).agg(
+            {"Cited by": np.sum, "Num Documents": np.size}
         )
         result = result.assign(
             ID=data.groupby([column, "Year"]).agg({"ID": list}).reset_index()["ID"]
@@ -893,12 +903,13 @@ class DataFrame(pd.DataFrame):
 
         """
 
-        data = DataFrame(self[[column_r, column_c, "Year", "Cited by", "ID"]]).explode(column_r, sep_r)
+        data = DataFrame(self[[column_r, column_c, "Year", "Cited by", "ID"]]).explode(
+            column_r, sep_r
+        )
         data = DataFrame(data).explode(column_c, sep_c)
-        data['Num Documents'] = 1
-        result = (
-            data.groupby([column_r, column_c, "Year"], as_index=False)
-            .agg({"Cited by": np.sum, "Num Documents": np.size})
+        data["Num Documents"] = 1
+        result = data.groupby([column_r, column_c, "Year"], as_index=False).agg(
+            {"Cited by": np.sum, "Num Documents": np.size}
         )
         result = result.assign(
             ID=data.groupby([column_r, column_c, "Year"])
@@ -1595,9 +1606,12 @@ class DataFrame(pd.DataFrame):
         tfm_r = self.compute_tfm(column=column_r, sep=sep_r)
         tfm_c = self.compute_tfm(column=column_c, sep=sep_c)
         return pd.DataFrame(
-            [[tfm_r[row].corr(tfm_c[col]) for row in tfm_r.columns] for col in tfm_c.columns],
+            [
+                [tfm_r[row].corr(tfm_c[col]) for row in tfm_r.columns]
+                for col in tfm_c.columns
+            ],
             columns=tfm_c.columns,
-            index=tfm_r.columns
+            index=tfm_r.columns,
         )
 
     def factor_analysis(self, column, sep=None, n_components=None):
@@ -1646,10 +1660,9 @@ class DataFrame(pd.DataFrame):
         tfm = self.compute_tfm(column, sep)
         terms = tfm.columns.tolist()
         if n_components is None:
-            n_components = int(math.sqrt(len(set(terms))))
+            n_components = int(np.sqrt(len(set(terms))))
         pca = PCA(n_components=n_components)
         result = np.transpose(pca.fit(X=tfm.values).components_)
         return pd.DataFrame(
             result, columns=["F" + str(i) for i in range(n_components)], index=terms
         )
-
