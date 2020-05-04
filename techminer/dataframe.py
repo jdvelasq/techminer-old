@@ -652,91 +652,145 @@ class DataFrame(pd.DataFrame):
         result.index = list(range(len(result)))
         return result
 
-#     #
-#     #
-#     #  Documents and citations by term per year
-#     #
-#     #
+    #
+    #
+    #  Documents and citations by term per year
+    #
+    #
 
-#     def summarize_by_term_per_year(self, column, sep=None):
-#         """
+    def summarize_by_term_per_year(self, column, sep=None):
+        """
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().disambiguate_authors()
-#         >>> rdf.summarize_by_term_per_year(column='Authors').head()
-#                 Authors  Year  Cited by  Num Documents     ID
-#         0    Dunis C.L.  2010        12              1  [142]
-#         1       Laws J.  2010        12              1  [142]
-#         2     Lin X.(1)  2010         9              1  [143]
-#         3  Sermpinis G.  2010        12              1  [142]
-#         4    Song Y.(1)  2010         9              1  [143]
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     {
+        ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
+        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4".split(";"),
+        ...          "Cited by": list(range(10,16)),
+        ...          "ID": list(range(6)),
+        ...     }
+        ... )
+        >>> df
+           Year                     Authors  Cited by  ID
+        0  2010  author 0,author 1,author 2        10   0
+        1  2010                    author 0        11   1
+        2  2011                    author 1        12   2
+        3  2011                    author 3        13   3
+        4  2012                    author 4        14   4
+        5  2014                    author 4        15   5
 
-#         """
-#         data = _expand(self[["Year", column, "Cited by", "ID"]], column, sep)
-#         result = (
-#             data.groupby([column, "Year"], as_index=False)
-#             .agg({"Cited by": np.sum, "ID": np.size})
-#             .rename(columns={"ID": "Num Documents"})
-#         )
-#         result = result.assign(
-#             ID=data.groupby([column, "Year"]).agg({"ID": list}).reset_index()["ID"]
-#         )
-#         result["Cited by"] = result["Cited by"].map(lambda x: int(x))
-#         result.sort_values(["Year", column], ascending=True, inplace=True)
-#         result.index = list(range(len(result)))
-#         return result
+        >>> DataFrame(df).summarize_by_term_per_year('Authors')
+            Authors  Year  Cited by  Num Documents      ID
+        0  author 0  2010        21              2  [0, 1]
+        1  author 1  2010        10              1     [0]
+        2  author 2  2010        10              1     [0]
+        3  author 1  2011        12              1     [2]
+        4  author 3  2011        13              1     [3]
+        5  author 4  2012        14              1     [4]
+        6  author 4  2014        15              1     [5]
 
-#     def documents_by_term_per_year(
-#         self, column, sep=None, top_n=None, minmax_range=None
-#     ):
-#         """
+        """
+        data = DataFrame(self[["Year", column, "Cited by", "ID"]]).explode(column, sep)
+        data['Num Documents'] = 1
+        result = (
+            data.groupby([column, "Year"], as_index=False)
+            .agg({"Cited by": np.sum, "Num Documents": np.size})
+        )
+        result = result.assign(
+            ID=data.groupby([column, "Year"]).agg({"ID": list}).reset_index()["ID"]
+        )
+        result["Cited by"] = result["Cited by"].map(lambda x: int(x))
+        result.sort_values(["Year", column], ascending=True, inplace=True)
+        result.index = list(range(len(result)))
+        return result
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().disambiguate_authors()
-#         >>> rdf.documents_by_term_per_year(column='Authors').head()
-#                 Authors  Year  Num Documents     ID
-#         0    Dunis C.L.  2010              1  [142]
-#         1       Laws J.  2010              1  [142]
-#         2     Lin X.(1)  2010              1  [143]
-#         3  Sermpinis G.  2010              1  [142]
-#         4    Song Y.(1)  2010              1  [143]
+    def documents_by_term_per_year(
+        self, column, sep=None, top_n=None, minmax_range=None
+    ):
+        """
 
-#         """
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     {
+        ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
+        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4".split(";"),
+        ...          "Cited by": list(range(10,16)),
+        ...          "ID": list(range(6)),
+        ...     }
+        ... )
+        >>> df
+           Year                     Authors  Cited by  ID
+        0  2010  author 0,author 1,author 2        10   0
+        1  2010                    author 0        11   1
+        2  2011                    author 1        12   2
+        3  2011                    author 3        13   3
+        4  2012                    author 4        14   4
+        5  2014                    author 4        15   5
 
-#         result = self.summarize_by_term_per_year(column, sep)
-#         result.pop("Cited by")
-#         result.sort_values(
-#             ["Year", "Num Documents", column],
-#             ascending=[True, False, True],
-#             inplace=True,
-#         )
-#         result.index = list(range(len(result)))
-#         return result
+        >>> DataFrame(df).documents_by_term_per_year('Authors')
+            Authors  Year  Num Documents      ID
+        0  author 0  2010              2  [0, 1]
+        1  author 1  2010              1     [0]
+        2  author 2  2010              1     [0]
+        3  author 1  2011              1     [2]
+        4  author 3  2011              1     [3]
+        5  author 4  2012              1     [4]
+        6  author 4  2014              1     [5]
 
-#     def citations_by_term_per_year(
-#         self, column, sep=None, top_n=None, minmax_range=None
-#     ):
-#         """Computes the number of citations by term by year in a column.
+        """
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().disambiguate_authors()
-#         >>> rdf.citations_by_term_per_year('Authors').head(5)
-#                 Authors  Year  Cited by     ID
-#         0    Dunis C.L.  2010        12  [142]
-#         1       Laws J.  2010        12  [142]
-#         2  Sermpinis G.  2010        12  [142]
-#         3     Lin X.(1)  2010         9  [143]
-#         4    Song Y.(1)  2010         9  [143]
+        result = self.summarize_by_term_per_year(column, sep)
+        result.pop("Cited by")
+        result.sort_values(
+            ["Year", "Num Documents", column],
+            ascending=[True, False, True],
+            inplace=True,
+        )
+        result.index = list(range(len(result)))
+        return result
 
-#         """
+    def citations_by_term_per_year(
+        self, column, sep=None, top_n=None, minmax_range=None
+    ):
+        """Computes the number of citations by term by year in a column.
 
-#         result = self.summarize_by_term_per_year(column, sep)
-#         result.pop("Num Documents")
-#         result.sort_values(
-#             ["Year", "Cited by", column], ascending=[True, False, True], inplace=True,
-#         )
-#         result.index = list(range(len(result)))
-#         return result
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     {
+        ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
+        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4".split(";"),
+        ...          "Cited by": list(range(10,16)),
+        ...          "ID": list(range(6)),
+        ...     }
+        ... )
+        >>> df
+           Year                     Authors  Cited by  ID
+        0  2010  author 0,author 1,author 2        10   0
+        1  2010                    author 0        11   1
+        2  2011                    author 1        12   2
+        3  2011                    author 3        13   3
+        4  2012                    author 4        14   4
+        5  2014                    author 4        15   5
+
+        >>> DataFrame(df).citations_by_term_per_year('Authors')
+            Authors  Year  Cited by      ID
+        0  author 0  2010        21  [0, 1]
+        1  author 1  2010        10     [0]
+        2  author 2  2010        10     [0]
+        3  author 3  2011        13     [3]
+        4  author 1  2011        12     [2]
+        5  author 4  2012        14     [4]
+        6  author 4  2014        15     [5]
+
+        """
+
+        result = self.summarize_by_term_per_year(column, sep)
+        result.pop("Num Documents")
+        result.sort_values(
+            ["Year", "Cited by", column], ascending=[True, False, True], inplace=True,
+        )
+        result.index = list(range(len(result)))
+        return result
 
 #     #
 #     #
