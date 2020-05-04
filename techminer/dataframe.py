@@ -960,212 +960,249 @@ class DataFrame(pd.DataFrame):
         result.index = list(range(len(result)))
         return result
 
-#     #
-#     #
-#     #  Co-ccurrence
-#     #
-#     #
+    #
+    #
+    #  Co-ccurrence
+    #
+    #
 
-#     def summarize_co_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None):
-#         """Summarize ocurrence and citations.
+    def summarize_co_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None):
+        """Summarize ocurrence and citations.
 
-#         >>> import pandas as pd
-#         >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D']
-#         >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d']
-#         >>> df = pd.DataFrame(
-#         ...    {
-#         ...       'Authors': x,
-#         ...       'Author Keywords': y,
-#         ...       'Cited by': list(range(len(x))),
-#         ...       'ID': list(range(len(x))),
-#         ...    }
-#         ... )
-#         >>> df
-#           Authors Author Keywords  Cited by  ID
-#         0       A               a         0   0
-#         1     A,B             a;b         1   1
-#         2       B               b         2   2
-#         3   A,B,C               c         3   3
-#         4     B,D             c;d         4   4
+        >>> import pandas as pd
+        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D']
+        >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d']
+        >>> df = pd.DataFrame(
+        ...    {
+        ...       'Authors': x,
+        ...       'Author Keywords': y,
+        ...       'Cited by': list(range(len(x))),
+        ...       'ID': list(range(len(x))),
+        ...    }
+        ... )
+        >>> df
+          Authors Author Keywords  Cited by  ID
+        0       A               a         0   0
+        1     A,B             a;b         1   1
+        2       B               b         2   2
+        3   A,B,C               c         3   3
+        4     B,D             c;d         4   4
 
-#         >>> DataFrame(df).summarize_co_ocurrence(column_r='Authors', column_c='Author Keywords')
-#           Authors (row) Author Keywords (col)  Num Documents  Cited by      ID
-#         0             A                     a              2         1  [0, 1]
-#         1             A                     b              1         1     [1]
-#         2             A                     c              1         3     [3]
-#         3             B                     a              1         1     [1]
-#         4             B                     b              2         3  [1, 2]
-#         5             B                     c              2         7  [3, 4]
-#         6             B                     d              1         4     [4]
-#         7             C                     c              1         3     [3]
-#         8             D                     c              1         4     [4]
-#         9             D                     d              1         4     [4]
-
-
-
-#         """
-
-#         def generate_pairs(w, v):
-#             if sep_r is not None:
-#                 w = [x.strip() for x in w.split(sep_r)]
-#             else:
-#                 w = [w]
-#             if sep_c is not None:
-#                 v = [x.strip() for x in v.split(sep_c)]
-#             else:
-#                 v = [v]
-#             result = []
-#             for idx0 in range(len(w)):
-#                 for idx1 in range(len(v)):
-#                     result.append((w[idx0], v[idx1]))
-#             return result
-
-#         if sep_r is None and column_r in SCOPUS_SEPS:
-#             sep_r = SCOPUS_SEPS[column_r]
-
-#         if sep_c is None and column_c in SCOPUS_SEPS:
-#             sep_c = SCOPUS_SEPS[column_c]
-
-#         data = self.copy()
-#         data = data[[column_r, column_c, "Cited by", "ID"]]
-#         data["Num Documents"] = 1
-#         data["pairs"] = [
-#             generate_pairs(a, b) for a, b in zip(data[column_r], data[column_c])
-#         ]
-#         data = data[["pairs", "Num Documents", "Cited by", "ID"]]
-#         data = data.explode("pairs")
-
-#         result = data.groupby("pairs", as_index=False).agg(
-#             {"Cited by": np.sum, "Num Documents": np.sum, "ID": list}
-#         )
-
-#         result["Cited by"] = result["Cited by"].map(int)
-
-#         result[column_r + " (row)"] = result["pairs"].map(lambda x: x[0])
-#         result[column_c + " (col)"] = result["pairs"].map(lambda x: x[1])
-#         result.pop("pairs")
-
-#         result = result[
-#             [
-#                 column_r + " (row)",
-#                 column_c + " (col)",
-#                 "Num Documents",
-#                 "Cited by",
-#                 "ID",
-#             ]
-#         ]
-
-#         result = result.sort_values([column_r + " (row)", column_c + " (col)"])
-
-#         return result
-
-#     def co_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None):
-#         """
-
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
-#         >>> rdf.co_ocurrence(column_r='Authors', column_c='Document Type').head(10)
-#                  Authors (row)    Document Type (col)  Num Documents             ID
-#         14      Arevalo A. [3]  Conference Paper [88]              3  [52, 94, 100]
-#         99      Gabbouj M. [3]  Conference Paper [88]              3  [8, 110, 114]
-#         119   Hernandez G. [3]  Conference Paper [88]              3  [52, 94, 100]
-#         139   Iosifidis A. [3]  Conference Paper [88]              3  [8, 110, 114]
-#         150  Kanniainen J. [3]  Conference Paper [88]              3  [8, 110, 114]
-#         178        Leon D. [3]  Conference Paper [88]              3  [52, 94, 100]
-#         252        Nino J. [3]  Conference Paper [88]              3  [52, 94, 100]
-#         265    Passalis N. [3]  Conference Paper [88]              3  [8, 110, 114]
-#         291    Sandoval J. [3]  Conference Paper [88]              3  [52, 94, 100]
-#         323       Tefas A. [3]  Conference Paper [88]              3  [8, 110, 114]
+        >>> DataFrame(df).summarize_co_ocurrence(column_r='Authors', column_c='Author Keywords')
+          Authors (row) Author Keywords (col)  Num Documents  Cited by      ID
+        0             A                     a              2         1  [0, 1]
+        1             A                     b              1         1     [1]
+        2             A                     c              1         3     [3]
+        3             B                     a              1         1     [1]
+        4             B                     b              2         3  [1, 2]
+        5             B                     c              2         7  [3, 4]
+        6             B                     d              1         4     [4]
+        7             C                     c              1         3     [3]
+        8             D                     c              1         4     [4]
+        9             D                     d              1         4     [4]
 
 
-#         """
 
-#         def generate_dic(column, sep):
-#             new_names = self.documents_by_term(column, sep)
-#             new_names = {
-#                 term: "{:s} [{:d}]".format(term, docs_per_term)
-#                 for term, docs_per_term in zip(
-#                     new_names[column], new_names["Num Documents"],
-#                 )
-#             }
-#             return new_names
+        """
 
-#         result = self.summarize_co_ocurrence(column_r, column_c, sep_r, sep_c)
-#         result.pop("Cited by")
-#         result.sort_values(
-#             [column_r + " (row)", column_c + " (col)", "Num Documents",],
-#             ascending=[True, True, False],
-#             inplace=True,
-#         )
-#         result.index = list(range(len(result)))
+        def generate_pairs(w, v):
+            if sep_r is not None:
+                w = [x.strip() for x in w.split(sep_r)]
+            else:
+                w = [w]
+            if sep_c is not None:
+                v = [x.strip() for x in v.split(sep_c)]
+            else:
+                v = [v]
+            result = []
+            for idx0 in range(len(w)):
+                for idx1 in range(len(v)):
+                    result.append((w[idx0], v[idx1]))
+            return result
 
-#         new_names = generate_dic(column_c, sep_c)
-#         result[column_c + " (col)"] = result[column_c + " (col)"].map(
-#             lambda x: new_names[x]
-#         )
+        if sep_r is None and column_r in SCOPUS_SEPS:
+            sep_r = SCOPUS_SEPS[column_r]
 
-#         new_names = generate_dic(column_r, sep_r)
-#         result[column_r + " (row)"] = result[column_r + " (row)"].map(
-#             lambda x: new_names[x]
-#         )
+        if sep_c is None and column_c in SCOPUS_SEPS:
+            sep_c = SCOPUS_SEPS[column_c]
 
-#         result = result.sort_values(
-#             ["Num Documents", column_r + " (row)", column_c + " (col)"],
-#             ascending=[False, True, True],
-#         )
+        data = self.copy()
+        data = data[[column_r, column_c, "Cited by", "ID"]]
+        data["Num Documents"] = 1
+        data["pairs"] = [
+            generate_pairs(a, b) for a, b in zip(data[column_r], data[column_c])
+        ]
+        data = data[["pairs", "Num Documents", "Cited by", "ID"]]
+        data = data.explode("pairs")
 
-#         return result
+        result = data.groupby("pairs", as_index=False).agg(
+            {"Cited by": np.sum, "Num Documents": np.sum, "ID": list}
+        )
 
-#     def co_citation(self, column_r, column_c, sep_r=None, sep_c=None):
-#         """
+        result["Cited by"] = result["Cited by"].map(int)
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
-#         >>> rdf.co_citation(column_r='Authors', column_c='Document Type').head(10)
-#                Authors (row)     Document Type (col)  Cited by          ID
-#         0  Hsiao H.-F. [188]  Conference Paper [371]       188       [140]
-#         1  Hsieh T.-J. [188]  Conference Paper [371]       188       [140]
-#         2    Yeh W.-C. [188]  Conference Paper [371]       188       [140]
-#         3  Hussain A.J. [52]           Article [323]        52  [125, 139]
-#         4    Fischer T. [49]           Article [323]        49        [62]
-#         5     Krauss C. [49]           Article [323]        49        [62]
-#         6    Ghazali R. [42]           Article [323]        42       [139]
-#         7    Liatsis P. [42]           Article [323]        42       [139]
-#         8      Akita R. [37]  Conference Paper [371]        37       [124]
-#         9  Matsubara T. [37]  Conference Paper [371]        37       [124]
+        result[column_r + " (row)"] = result["pairs"].map(lambda x: x[0])
+        result[column_c + " (col)"] = result["pairs"].map(lambda x: x[1])
+        result.pop("pairs")
 
-#         """
+        result = result[
+            [
+                column_r + " (row)",
+                column_c + " (col)",
+                "Num Documents",
+                "Cited by",
+                "ID",
+            ]
+        ]
 
-#         def generate_dic(column, sep):
-#             new_names = self.citations_by_term(column, sep)
-#             new_names = {
-#                 term: "{:s} [{:d}]".format(term, docs_per_term)
-#                 for term, docs_per_term in zip(
-#                     new_names[column], new_names["Cited by"],
-#                 )
-#             }
-#             return new_names
+        result = result.sort_values([column_r + " (row)", column_c + " (col)"])
 
-#         result = self.summarize_co_ocurrence(column_r, column_c, sep_r, sep_c)
-#         result.pop("Num Documents")
-#         result.sort_values(
-#             ["Cited by", column_r + " (row)", column_c + " (col)",],
-#             ascending=[False, True, True,],
-#             inplace=True,
-#         )
-#         result.index = list(range(len(result)))
+        return result
 
-#         new_names = generate_dic(column_c, sep_c)
-#         result[column_c + " (col)"] = result[column_c + " (col)"].map(
-#             lambda x: new_names[x]
-#         )
+    def co_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None):
+        """
 
-#         new_names = generate_dic(column_r, sep_r)
-#         result[column_r + " (row)"] = result[column_r + " (row)"].map(
-#             lambda x: new_names[x]
-#         )
+        >>> import pandas as pd
+        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D']
+        >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d']
+        >>> df = pd.DataFrame(
+        ...    {
+        ...       'Authors': x,
+        ...       'Author Keywords': y,
+        ...       'Cited by': list(range(len(x))),
+        ...       'ID': list(range(len(x))),
+        ...    }
+        ... )
+        >>> df
+          Authors Author Keywords  Cited by  ID
+        0       A               a         0   0
+        1     A,B             a;b         1   1
+        2       B               b         2   2
+        3   A,B,C               c         3   3
+        4     B,D             c;d         4   4
 
-#         return result
+        >>> DataFrame(df).co_ocurrence(column_r='Authors', column_c='Author Keywords')
+          Authors (row) Author Keywords (col)  Num Documents      ID
+        0         A [3]                 a [2]              2  [0, 1]
+        4         B [4]                 b [2]              2  [1, 2]
+        5         B [4]                 c [2]              2  [3, 4]
+        1         A [3]                 b [2]              1     [1]
+        2         A [3]                 c [2]              1     [3]
+        3         B [4]                 a [2]              1     [1]
+        6         B [4]                 d [1]              1     [4]
+        7         C [1]                 c [2]              1     [3]
+        8         D [1]                 c [2]              1     [4]
+        9         D [1]                 d [1]              1     [4]
+
+
+
+        """
+
+        def generate_dic(column, sep):
+            new_names = self.documents_by_term(column, sep)
+            new_names = {
+                term: "{:s} [{:d}]".format(term, docs_per_term)
+                for term, docs_per_term in zip(
+                    new_names[column], new_names["Num Documents"],
+                )
+            }
+            return new_names
+
+        result = self.summarize_co_ocurrence(column_r, column_c, sep_r, sep_c)
+        result.pop("Cited by")
+        result.sort_values(
+            [column_r + " (row)", column_c + " (col)", "Num Documents",],
+            ascending=[True, True, False],
+            inplace=True,
+        )
+        result.index = list(range(len(result)))
+
+        new_names = generate_dic(column_c, sep_c)
+        result[column_c + " (col)"] = result[column_c + " (col)"].map(
+            lambda x: new_names[x]
+        )
+
+        new_names = generate_dic(column_r, sep_r)
+        result[column_r + " (row)"] = result[column_r + " (row)"].map(
+            lambda x: new_names[x]
+        )
+
+        result = result.sort_values(
+            ["Num Documents", column_r + " (row)", column_c + " (col)"],
+            ascending=[False, True, True],
+        )
+
+        return result
+
+    def co_citation(self, column_r, column_c, sep_r=None, sep_c=None):
+        """
+
+        >>> import pandas as pd
+        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D']
+        >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d']
+        >>> df = pd.DataFrame(
+        ...    {
+        ...       'Authors': x,
+        ...       'Author Keywords': y,
+        ...       'Cited by': list(range(len(x))),
+        ...       'ID': list(range(len(x))),
+        ...    }
+        ... )
+        >>> df
+          Authors Author Keywords  Cited by  ID
+        0       A               a         0   0
+        1     A,B             a;b         1   1
+        2       B               b         2   2
+        3   A,B,C               c         3   3
+        4     B,D             c;d         4   4
+
+        >>> DataFrame(df).co_citation(column_r='Authors', column_c='Author Keywords')
+          Authors (row) Author Keywords (col)  Cited by      ID
+        0        B [10]                 c [7]         7  [3, 4]
+        1        B [10]                 d [4]         4     [4]
+        2         D [4]                 c [7]         4     [4]
+        3         D [4]                 d [4]         4     [4]
+        4         A [4]                 c [7]         3     [3]
+        5        B [10]                 b [3]         3  [1, 2]
+        6         C [3]                 c [7]         3     [3]
+        7         A [4]                 a [1]         1  [0, 1]
+        8         A [4]                 b [3]         1     [1]
+        9        B [10]                 a [1]         1     [1]
+
+
+
+        """
+
+        def generate_dic(column, sep):
+            new_names = self.citations_by_term(column, sep)
+            new_names = {
+                term: "{:s} [{:d}]".format(term, docs_per_term)
+                for term, docs_per_term in zip(
+                    new_names[column], new_names["Cited by"],
+                )
+            }
+            return new_names
+
+        result = self.summarize_co_ocurrence(column_r, column_c, sep_r, sep_c)
+        result.pop("Num Documents")
+        result.sort_values(
+            ["Cited by", column_r + " (row)", column_c + " (col)",],
+            ascending=[False, True, True,],
+            inplace=True,
+        )
+        result.index = list(range(len(result)))
+
+        new_names = generate_dic(column_c, sep_c)
+        result[column_c + " (col)"] = result[column_c + " (col)"].map(
+            lambda x: new_names[x]
+        )
+
+        new_names = generate_dic(column_r, sep_r)
+        result[column_r + " (row)"] = result[column_r + " (row)"].map(
+            lambda x: new_names[x]
+        )
+
+        return result
 
 #     #
 #     #
