@@ -47,6 +47,9 @@ class DataFrame(pd.DataFrame):
         Returns:
             DataFrame. Exploded dataframe.
 
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...     {
@@ -92,6 +95,10 @@ class DataFrame(pd.DataFrame):
     def generate_ID(self, fmt=None):
         """Generates a unique ID for each document.
 
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...     {
@@ -130,6 +137,10 @@ class DataFrame(pd.DataFrame):
     ):
         """Verify if author's names are unique. For duplicated names, based on `Author(s) ID` column, 
         adds a consecutive number to the name.
+
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> df = pd.DataFrame(
@@ -292,6 +303,10 @@ class DataFrame(pd.DataFrame):
     def extract_terms(self, column, sep=None):
         """Extracts unique terms in a column, exploding multvalued columns.
 
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> pdf = pd.DataFrame({'A': ['1;2', '3', '3;4;5'], 'B':[0] * 3})
         >>> DataFrame(pdf).extract_terms(column='A', sep=';')
@@ -327,6 +342,10 @@ class DataFrame(pd.DataFrame):
     def count_terms(self, column, sep=None):
         """
 
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> pdf = pd.DataFrame({'Authors': ['xxx', 'xxx, zzz', 'yyy', 'xxx, yyy, zzz']})
         >>> pdf
                  Authors
@@ -343,6 +362,10 @@ class DataFrame(pd.DataFrame):
 
     def count_report(self):
         """
+
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> df = pd.DataFrame(
@@ -394,6 +417,9 @@ class DataFrame(pd.DataFrame):
     def summarize_by_term(self, column, sep):
         """Auxiliary function
 
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...     {
@@ -439,6 +465,10 @@ class DataFrame(pd.DataFrame):
     def documents_by_term(self, column, sep=None):
         """Computes the number of documents per term in a given column.
 
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...     {
@@ -473,6 +503,9 @@ class DataFrame(pd.DataFrame):
 
     def citations_by_term(self, column, sep=None):
         """Computes the number of citations by item in a column.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> df = pd.DataFrame(
@@ -512,6 +545,9 @@ class DataFrame(pd.DataFrame):
 
     def summarize_by_year(self, cumulative=False):
         """Auxiliary function
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> df = pd.DataFrame(
@@ -571,6 +607,9 @@ class DataFrame(pd.DataFrame):
     def documents_by_year(self, cumulative=False):
         """Computes the number of documents per year.
 
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...     {
@@ -612,6 +651,9 @@ class DataFrame(pd.DataFrame):
 
     def citations_by_year(self, cumulative=False):
         """Computes the number of citations by year.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> df = pd.DataFrame(
@@ -661,6 +703,9 @@ class DataFrame(pd.DataFrame):
     def summarize_by_term_per_year(self, column, sep=None):
         """
 
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...     {
@@ -709,6 +754,9 @@ class DataFrame(pd.DataFrame):
     ):
         """
 
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...     {
@@ -753,6 +801,9 @@ class DataFrame(pd.DataFrame):
         self, column, sep=None, top_n=None, minmax_range=None
     ):
         """Computes the number of citations by term by year in a column.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> df = pd.DataFrame(
@@ -802,6 +853,9 @@ class DataFrame(pd.DataFrame):
         self, column_r, column_c, sep_r=None, sep_c=None
     ):
         """
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> df = pd.DataFrame(
@@ -861,6 +915,9 @@ class DataFrame(pd.DataFrame):
     ):
         """
 
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...     {
@@ -912,6 +969,9 @@ class DataFrame(pd.DataFrame):
         self, column_r, column_c, sep_r=None, sep_c=None
     ):
         """
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> df = pd.DataFrame(
@@ -968,6 +1028,9 @@ class DataFrame(pd.DataFrame):
 
     def summarize_co_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None):
         """Summarize ocurrence and citations.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D']
@@ -1062,6 +1125,9 @@ class DataFrame(pd.DataFrame):
     def co_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None):
         """
 
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D']
         >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d']
@@ -1136,6 +1202,9 @@ class DataFrame(pd.DataFrame):
 
     def co_citation(self, column_r, column_c, sep_r=None, sep_c=None):
         """
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D']
@@ -1214,6 +1283,9 @@ class DataFrame(pd.DataFrame):
         """Summarize ocurrence and citations.
 
 
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> x = [ 'A', 'A', 'A,B', 'B', 'A,B,C', 'D', 'B,D']
         >>> df = pd.DataFrame(
@@ -1290,6 +1362,9 @@ class DataFrame(pd.DataFrame):
     def ocurrence(self, column, sep=None):
         """
 
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> x = [ 'A', 'A', 'A,B', 'B', 'A,B,C', 'D', 'B,D']
         >>> df = pd.DataFrame(
@@ -1360,6 +1435,9 @@ class DataFrame(pd.DataFrame):
     def compute_tfm(self, column, sep=None):
         """
 
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D']
         >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d']
@@ -1414,6 +1492,9 @@ class DataFrame(pd.DataFrame):
     def auto_corr(self, column, sep=None, method="pearson"):
         """Computes the autocorrelation among items in a column of the dataframe.
 
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D', 'A,B']
         >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd']
@@ -1458,6 +1539,9 @@ class DataFrame(pd.DataFrame):
         self, column_r, column_c=None, sep_r=None, sep_c=None, method="pearson",
     ):
         """Computes the crosscorrelation among items in two different columns of the dataframe.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D', 'A,B']
