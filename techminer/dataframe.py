@@ -1204,150 +1204,152 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-#     #
-#     #
-#     #  Occurrence
-#     #
-#     #
+    #
+    #
+    #  Occurrence
+    #
+    #
 
-#     def summarize_ocurrence(self, column, sep=None):
-#         """Summarize ocurrence and citations.
-
-
-#         >>> import pandas as pd
-#         >>> x = [ 'A', 'A', 'A,B', 'B', 'A,B,C', 'D', 'B,D']
-#         >>> df = pd.DataFrame(
-#         ...    {
-#         ...       'Authors': x,
-#         ...       'Cited by': list(range(len(x))),
-#         ...       'ID': list(range(len(x))),
-#         ...    }
-#         ... )
-#         >>> df
-#           Authors  Cited by  ID
-#         0       A         0   0
-#         1       A         1   1
-#         2     A,B         2   2
-#         3       B         3   3
-#         4   A,B,C         4   4
-#         5       D         5   5
-#         6     B,D         6   6
-
-#         >>> DataFrame(df).summarize_ocurrence(column='Authors')
-#           Authors (row) Authors (col)  Num Documents  Cited by            ID
-#         0             A             A              4         7  [0, 1, 2, 4]
-#         1             A             B              2         6        [2, 4]
-#         2             A             C              1         4           [4]
-#         3             B             B              4        15  [2, 3, 4, 6]
-#         4             B             C              1         4           [4]
-#         5             B             D              1         6           [6]
-#         6             C             C              1         4           [4]
-#         7             D             D              2        11        [5, 6]
+    def summarize_ocurrence(self, column, sep=None):
+        """Summarize ocurrence and citations.
 
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
-#         >>> rdf.summarize_ocurrence(column='Authors').head(10)
-#           Authors (row) Authors (col)  Num Documents  Cited by     ID
-#         0      Aadil F.      Aadil F.              1         0   [28]
-#         1      Aadil F.    Mehmood I.              1         0   [28]
-#         2      Aadil F.        Rho S.              1         0   [28]
-#         3   Adam M.T.P.   Adam M.T.P.              1         6   [70]
-#         4   Adam M.T.P.        Fan Z.              1         6   [70]
-#         5   Adam M.T.P.         Hu Z.              1         6   [70]
-#         6   Adam M.T.P.       Lutz B.              1         6   [70]
-#         7   Adam M.T.P.    Neumann D.              1         6   [70]
-#         8    Afolabi D.    Afolabi D.              1         3  [108]
-#         9    Afolabi D.    Guan S.-U.              1         3  [108]
+        >>> import pandas as pd
+        >>> x = [ 'A', 'A', 'A,B', 'B', 'A,B,C', 'D', 'B,D']
+        >>> df = pd.DataFrame(
+        ...    {
+        ...       'Authors': x,
+        ...       'Cited by': list(range(len(x))),
+        ...       'ID': list(range(len(x))),
+        ...    }
+        ... )
+        >>> df
+          Authors  Cited by  ID
+        0       A         0   0
+        1       A         1   1
+        2     A,B         2   2
+        3       B         3   3
+        4   A,B,C         4   4
+        5       D         5   5
+        6     B,D         6   6
 
-#         """
+        >>> DataFrame(df).summarize_ocurrence(column='Authors')
+          Authors (row) Authors (col)  Num Documents  Cited by            ID
+        0             A             A              4         7  [0, 1, 2, 4]
+        1             A             B              2         6        [2, 4]
+        2             A             C              1         4           [4]
+        3             B             B              4        15  [2, 3, 4, 6]
+        4             B             C              1         4           [4]
+        5             B             D              1         6           [6]
+        6             C             C              1         4           [4]
+        7             D             D              2        11        [5, 6]
 
-#         def generate_pairs(w):
-#             w = [x.strip() for x in w.split(sep)]
-#             result = []
-#             for idx0 in range(len(w)):
-#                 for idx1 in range(idx0, len(w)):
-#                     result.append((w[idx0], w[idx1]))
-#             return result
 
-#         if sep is None and column in SCOPUS_SEPS:
-#             sep = SCOPUS_SEPS[column]
+        
+        """
 
-#         data = self.copy()
-#         data = data[[column, "Cited by", "ID"]]
-#         data["count"] = 1
+        def generate_pairs(w):
+            w = [x.strip() for x in w.split(sep)]
+            result = []
+            for idx0 in range(len(w)):
+                for idx1 in range(idx0, len(w)):
+                    result.append((w[idx0], w[idx1]))
+            return result
 
-#         data["pairs"] = data[column].map(lambda x: generate_pairs(x))
-#         data = data[["pairs", "count", "Cited by", "ID"]]
-#         data = data.explode("pairs")
+        if sep is None and column in SCOPUS_SEPS:
+            sep = SCOPUS_SEPS[column]
 
-#         result = (
-#             data.groupby("pairs", as_index=False)
-#             .agg({"Cited by": np.sum, "count": np.sum, "ID": list})
-#             .rename(columns={"count": "Num Documents"})
-#         )
+        data = self.copy()
+        data = data[[column, "Cited by", "ID"]]
+        data["count"] = 1
 
-#         result["Cited by"] = result["Cited by"].map(int)
+        data["pairs"] = data[column].map(lambda x: generate_pairs(x))
+        data = data[["pairs", "count", "Cited by", "ID"]]
+        data = data.explode("pairs")
 
-#         result[column + " (row)"] = result["pairs"].map(lambda x: x[0])
-#         result[column + " (col)"] = result["pairs"].map(lambda x: x[1])
-#         result.pop("pairs")
+        result = (
+            data.groupby("pairs", as_index=False)
+            .agg({"Cited by": np.sum, "count": np.sum, "ID": list})
+            .rename(columns={"count": "Num Documents"})
+        )
 
-#         result = result[
-#             [column + " (row)", column + " (col)", "Num Documents", "Cited by", "ID"]
-#         ]
+        result["Cited by"] = result["Cited by"].map(int)
 
-#         result = result.sort_values([column + " (row)", column + " (col)"])
+        result[column + " (row)"] = result["pairs"].map(lambda x: x[0])
+        result[column + " (col)"] = result["pairs"].map(lambda x: x[1])
+        result.pop("pairs")
 
-#         return result
+        result = result[
+            [column + " (row)", column + " (col)", "Num Documents", "Cited by", "ID"]
+        ]
 
-#     def ocurrence(self, column, sep=None):
-#         """
+        result = result.sort_values([column + " (row)", column + " (col)"])
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
-#         >>> rdf.ocurrence(column='Authors').head(10)
-#                Authors (row)     Authors (col)  Num Documents             ID
-#         0     Arevalo A. [3]    Arevalo A. [3]              3  [52, 94, 100]
-#         1     Arevalo A. [3]       Leon D. [3]              3  [52, 94, 100]
-#         2     Arevalo A. [3]   Sandoval J. [3]              3  [52, 94, 100]
-#         3     Gabbouj M. [3]    Gabbouj M. [3]              3  [8, 110, 114]
-#         4     Gabbouj M. [3]  Iosifidis A. [3]              3  [8, 110, 114]
-#         5   Hernandez G. [3]  Hernandez G. [3]              3  [52, 94, 100]
-#         6   Hernandez G. [3]   Sandoval J. [3]              3  [52, 94, 100]
-#         7   Iosifidis A. [3]  Iosifidis A. [3]              3  [8, 110, 114]
-#         8  Kanniainen J. [3]    Gabbouj M. [3]              3  [8, 110, 114]
-#         9  Kanniainen J. [3]  Iosifidis A. [3]              3  [8, 110, 114]
+        return result
 
-#         """
+    def ocurrence(self, column, sep=None):
+        """
 
-#         def generate_dic(column, sep):
-#             new_names = self.documents_by_term(column, sep)
-#             new_names = {
-#                 term: "{:s} [{:d}]".format(term, docs_per_term)
-#                 for term, docs_per_term in zip(
-#                     new_names[column], new_names["Num Documents"],
-#                 )
-#             }
-#             return new_names
+        >>> import pandas as pd
+        >>> x = [ 'A', 'A', 'A,B', 'B', 'A,B,C', 'D', 'B,D']
+        >>> df = pd.DataFrame(
+        ...    {
+        ...       'Authors': x,
+        ...       'Cited by': list(range(len(x))),
+        ...       'ID': list(range(len(x))),
+        ...    }
+        ... )
+        >>> df
+          Authors  Cited by  ID
+        0       A         0   0
+        1       A         1   1
+        2     A,B         2   2
+        3       B         3   3
+        4   A,B,C         4   4
+        5       D         5   5
+        6     B,D         6   6
 
-#         column_r = column + " (row)"
-#         column_c = column + " (col)"
+        >>> DataFrame(df).ocurrence(column='Authors')
+          Authors (row) Authors (col)  Num Documents            ID
+        0         A [4]         A [4]              4  [0, 1, 2, 4]
+        1         B [4]         B [4]              4  [2, 3, 4, 6]
+        2         A [4]         B [4]              2        [2, 4]
+        3         D [2]         D [2]              2        [5, 6]
+        4         A [4]         C [1]              1           [4]
+        5         B [4]         C [1]              1           [4]
+        6         B [4]         D [2]              1           [6]
+        7         C [1]         C [1]              1           [4]
 
-#         result = self.summarize_ocurrence(column, sep)
-#         result.pop("Cited by")
-#         result.sort_values(
-#             ["Num Documents", column_r, column_c],
-#             ascending=[False, True, True],
-#             inplace=True,
-#         )
-#         result.index = list(range(len(result)))
 
-#         new_names = generate_dic(column, sep)
-#         result[column_c] = result[column_c].map(lambda x: new_names[x])
-#         result[column_r] = result[column_r].map(lambda x: new_names[x])
+        """
 
-#         return result
+        def generate_dic(column, sep):
+            new_names = self.documents_by_term(column, sep)
+            new_names = {
+                term: "{:s} [{:d}]".format(term, docs_per_term)
+                for term, docs_per_term in zip(
+                    new_names[column], new_names["Num Documents"],
+                )
+            }
+            return new_names
+
+        column_r = column + " (row)"
+        column_c = column + " (col)"
+
+        result = self.summarize_ocurrence(column, sep)
+        result.pop("Cited by")
+        result.sort_values(
+            ["Num Documents", column_r, column_c],
+            ascending=[False, True, True],
+            inplace=True,
+        )
+        result.index = list(range(len(result)))
+
+        new_names = generate_dic(column, sep)
+        result[column_c] = result[column_c].map(lambda x: new_names[x])
+        result[column_r] = result[column_r].map(lambda x: new_names[x])
+
+        return result
 
 #     #
 #     #
