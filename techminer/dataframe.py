@@ -1351,42 +1351,65 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-#     #
-#     #
-#     #  Analytical functions
-#     #
-#     #
+    #
+    #
+    #  Analytical functions
+    #
+    #
 
-#     def compute_tfm(self, column, sep):
-#         """
+    def compute_tfm(self, column, sep=None):
+        """
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
-#         >>> tfm = rdf.compute_tfm('Authors', sep=',')
-#         >>> authors = rdf.documents_by_term('Authors').head()['Authors']
-#         >>> authors = authors.tolist()
-#         >>> tfm[authors].head() # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-#            Arevalo A.  Gabbouj M.  Hernandez G.  Iosifidis A.  Kanniainen J.
-#         0           0           0             0             0              0
-#         1           0           0             0             0              0
-#         2           0           0             0             0              0
-#         3           0           0             0             0              0
-#         4           0           0             0             0              0
+        >>> import pandas as pd
+        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D']
+        >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d']
+        >>> df = pd.DataFrame(
+        ...    {
+        ...       'Authors': x,
+        ...       'Author Keywords': y,
+        ...       'Cited by': list(range(len(x))),
+        ...       'ID': list(range(len(x))),
+        ...    }
+        ... )
+        >>> df
+          Authors Author Keywords  Cited by  ID
+        0       A               a         0   0
+        1     A,B             a;b         1   1
+        2       B               b         2   2
+        3   A,B,C               c         3   3
+        4     B,D             c;d         4   4
 
-#         """
+        >>> DataFrame(df).compute_tfm('Authors')
+           A  B  C  D
+        0  1  0  0  0
+        1  1  1  0  0
+        2  0  1  0  0
+        3  1  1  1  0
+        4  0  1  0  1
 
-#         data = self[[column, "ID"]].copy()
-#         data["value"] = 1.0
-#         data = _expand(data, column, sep)
+        >>> DataFrame(df).compute_tfm('Author Keywords')
+           a  b  c  d
+        0  1  0  0  0
+        1  1  1  0  0
+        2  0  1  0  0
+        3  0  0  1  0
+        4  0  0  1  1
+        
 
-#         result = pd.pivot_table(
-#             data=data, index="ID", columns=column, margins=False, fill_value=0.0,
-#         )
-#         result.columns = [b for _, b in result.columns]
+        """
 
-#         result.index = list(range(len(result)))
+        data = self[[column, "ID"]].copy()
+        data["value"] = 1.0
+        data = DataFrame(data).explode(column, sep)
 
-#         return result
+        result = pd.pivot_table(
+            data=data, index="ID", columns=column, margins=False, fill_value=0.0,
+        )
+        result.columns = [b for _, b in result.columns]
+
+        result.index = list(range(len(result)))
+
+        return result
 
 #     def auto_corr(self, column, sep=None, method="pearson"):
 #         """Computes the autocorrelation among items in a column of the dataframe.
