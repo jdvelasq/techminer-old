@@ -377,7 +377,7 @@ class DataFrame(pd.DataFrame):
 
     def count_report(self):
         """
-
+        Reports the number of different items per column in dataframe.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -430,7 +430,7 @@ class DataFrame(pd.DataFrame):
     #
 
     def summarize_by_term(self, column, sep):
-        """Auxiliary function
+        """Summarize the number of documents and citations by term in a dataframe.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -558,7 +558,7 @@ class DataFrame(pd.DataFrame):
     #
 
     def summarize_by_year(self, cumulative=False):
-        """Auxiliary function
+        """Computes the number of document and the number of total citations per year.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -714,7 +714,7 @@ class DataFrame(pd.DataFrame):
     #
 
     def summarize_by_term_per_year(self, column, sep=None):
-        """
+        """Computes the number of documents and citations by term per year.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -764,7 +764,7 @@ class DataFrame(pd.DataFrame):
     def documents_by_term_per_year(
         self, column, sep=None, top_n=None, minmax_range=None
     ):
-        """
+        """Computes the number of documents by term per year.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -864,7 +864,7 @@ class DataFrame(pd.DataFrame):
     def summarize_by_term_per_term_per_year(
         self, column_r, column_c, sep_r=None, sep_c=None
     ):
-        """
+        """Computes the number of documents and citations by term per term by year.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -926,7 +926,7 @@ class DataFrame(pd.DataFrame):
     def documents_by_terms_per_terms_per_year(
         self, column_r, column_c, sep_r=None, sep_c=None
     ):
-        """
+        """Computes the number of documents by term per term per year.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -981,7 +981,7 @@ class DataFrame(pd.DataFrame):
     def citations_by_terms_per_terms_per_year(
         self, column_r, column_c, sep_r=None, sep_c=None
     ):
-        """
+        """Computes the number of citations by term per term per year.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -1040,7 +1040,7 @@ class DataFrame(pd.DataFrame):
     #
 
     def summarize_co_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None):
-        """Summarize ocurrence and citations.
+        """Summarize ocurrence and citations by terms in two different columns.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -1136,7 +1136,8 @@ class DataFrame(pd.DataFrame):
         return result
 
     def co_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None):
-        """
+        """Computes the co-ocurrence of two terms in different colums. The report adds
+        the number of documents by term between brackets.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -1214,7 +1215,8 @@ class DataFrame(pd.DataFrame):
         return result
 
     def co_citation(self, column_r, column_c, sep_r=None, sep_c=None):
-        """
+        """Computes the number of citations shared by two terms in different columns.
+
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -1293,7 +1295,7 @@ class DataFrame(pd.DataFrame):
     #
 
     def summarize_ocurrence(self, column, sep=None):
-        """Summarize ocurrence and citations.
+        """Summarize ocurrence and citations by terms in a column of a dataframe.
 
 
         Examples
@@ -1373,7 +1375,7 @@ class DataFrame(pd.DataFrame):
         return result
 
     def ocurrence(self, column, sep=None):
-        """
+        """Computes the ocurrence between the terms in a column.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -1446,7 +1448,7 @@ class DataFrame(pd.DataFrame):
     #
 
     def compute_tfm(self, column, sep=None):
-        """
+        """Computes the term-frequency matrix for the terms in a column.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -1551,7 +1553,7 @@ class DataFrame(pd.DataFrame):
     def cross_corr(
         self, column_r, column_c=None, sep_r=None, sep_c=None, method="pearson",
     ):
-        """Computes the crosscorrelation among items in two different columns of the dataframe.
+        """Computes the cross-correlation among items in two different columns of the dataframe.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -1618,6 +1620,9 @@ class DataFrame(pd.DataFrame):
 
     def factor_analysis(self, column, sep=None, n_components=None):
         """Computes the matrix of factors for terms in a given column.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D', 'A,B']
