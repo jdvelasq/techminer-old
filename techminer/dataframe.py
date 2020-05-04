@@ -226,87 +226,89 @@ class DataFrame(pd.DataFrame):
 
         return DataFrame(result)
 
-        #
-        # Accents
-        #
-        def remove_accents(self):
-            """Remove accents for all strings on a DataFrame
+    #
+    # Accents
+    #
+    def remove_accents(self):
+        """Remove accents for all strings on a DataFrame
 
-            >>> import pandas as pd
-            >>> df = pd.DataFrame(
-            ...   {
-            ...      "Authors": "áàÁÀ;éèÉÈ;íìÌÍ;ÑÑÑñññ".split(";"),
-            ...   }
-            ... )
-            >>> df
-               Authors
-            0     aaAA
-            1     eeEE
-            2     iiII
-            3     NNNn
+        Examples
+        ----------------------------------------------------------------------------------------------
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...   {
+        ...      "Authors": "áàÁÀ;éèÉÈ;íìÌÍ;ÑÑÑñññ".split(";"),
+        ...   }
+        ... )
+        >>> DataFrame(df).remove_accents()
+          Authors
+        0    aaAA
+        1    eeEE
+        2    iiII
+        3  NNNnnn
 
 
-            """
-            return DataFrame(
-                self.applymap(lambda x: remove_accents(x) if isinstance(x, str) else x)
-            )
+        """
+        return DataFrame(
+            self.applymap(lambda x: remove_accents(x) if isinstance(x, str) else x)
+        )
 
-    #     #
-    #     # Basic info
-    #     #
+    #
+    # Basic info
+    #
 
-    #     def coverage(self):
-    #         """Counts the number of None values per column.
+    def coverage(self):
+        """Reports the number of not `None` elements for column in a dataframe.
 
-    #         Returns:
-    #             Pandas DataFrame.
 
-    #         >>> from techminer.datasets import load_test_cleaned
-    #         >>> rdf = DataFrame(load_test_cleaned().data)
-    #         >>> rdf.coverage()
-    #                         Column  Number of items Coverage (%)
-    #         0              Authors              144      100.00%
-    #         1         Author(s) ID              144      100.00%
-    #         2                Title              144      100.00%
-    #         3                 Year              144      100.00%
-    #         4         Source title              144      100.00%
-    #         5               Volume               97       67.36%
-    #         6                Issue               27       18.75%
-    #         7             Art. No.               49       34.03%
-    #         8           Page start              119       82.64%
-    #         9             Page end              119       82.64%
-    #         10          Page count                0        0.00%
-    #         11            Cited by               68       47.22%
-    #         12                 DOI              133       92.36%
-    #         13        Affiliations              143       99.31%
-    #         14       Document Type              144      100.00%
-    #         15         Access Type               16       11.11%
-    #         16              Source              144      100.00%
-    #         17                 EID              144      100.00%
-    #         18            Abstract              144      100.00%
-    #         19     Author Keywords              124       86.11%
-    #         20      Index Keywords              123       85.42%
-    #         21          References              137       95.14%
-    #         22            keywords              144      100.00%
-    #         23                CONF              144      100.00%
-    #         24  keywords (cleaned)              144      100.00%
-    #         25            SELECTED              144      100.00%
-    #         26                  ID              144      100.00%
+        Returns:
+            Pandas DataFrame.
 
-    #         """
+        Examples
+        ----------------------------------------------------------------------------------------------
 
-    #         return pd.DataFrame(
-    #             {
-    #                 "Column": self.columns,
-    #                 "Number of items": [
-    #                     len(self) - self[col].isnull().sum() for col in self.columns
-    #                 ],
-    #                 "Coverage (%)": [
-    #                     "{:5.2%}".format((len(self) - self[col].isnull().sum()) / len(self))
-    #                     for col in self.columns
-    #                 ],
-    #             }
-    #         )
+
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...   {
+        ...      "Authors": "author 0,author 0,author 0;author 0;author 0;author 1;author 2;author 0".split(";"),
+        ...      "Author(s) ID": "0;1;2;,3;,4;,5;,6;,7:".split(','),
+        ...      "ID": list(range(6)),
+        ...      "Source title": ['source {:d}'.format(w) for w in range(5)] + [None],
+        ...      "None field": [None] * 6,
+        ...   }
+        ... )
+        >>> df
+                              Authors Author(s) ID  ID Source title None field
+        0  author 0,author 0,author 0       0;1;2;   0     source 0       None
+        1                    author 0           3;   1     source 1       None
+        2                    author 0           4;   2     source 2       None
+        3                    author 1           5;   3     source 3       None
+        4                    author 2           6;   4     source 4       None
+        5                    author 0           7:   5         None       None
+
+        >>> DataFrame(df).coverage()
+                 Column  Number of items Coverage (%)
+        0       Authors                6      100.00%
+        1  Author(s) ID                6      100.00%
+        2            ID                6      100.00%
+        3  Source title                5       83.33%
+        4    None field                0        0.00%
+
+        """
+
+        return pd.DataFrame(
+            {
+                "Column": self.columns,
+                "Number of items": [
+                    len(self) - self[col].isnull().sum() for col in self.columns
+                ],
+                "Coverage (%)": [
+                    "{:5.2%}".format((len(self) - self[col].isnull().sum()) / len(self))
+                    for col in self.columns
+                ],
+            }
+        )
 
     #
     #
