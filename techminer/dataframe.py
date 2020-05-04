@@ -1508,17 +1508,13 @@ class DataFrame(pd.DataFrame):
 
 
         """
-
         tfm_r = self.compute_tfm(column=column_r, sep=sep_r)
         tfm_c = self.compute_tfm(column=column_c, sep=sep_c)
-
-        result = pd.DataFrame(
+        return pd.DataFrame(
             [[tfm_r[row].corr(tfm_c[col]) for row in tfm_r.columns] for col in tfm_c.columns],
             columns=tfm_c.columns,
             index=tfm_r.columns
         )
-        
-        return result
 
     def factor_analysis(self, column, sep=None, n_components=None):
         """Computes the matrix of factors for terms in a given column.
@@ -1565,15 +1561,11 @@ class DataFrame(pd.DataFrame):
 
         tfm = self.compute_tfm(column, sep)
         terms = tfm.columns.tolist()
-
         if n_components is None:
             n_components = int(math.sqrt(len(set(terms))))
-
         pca = PCA(n_components=n_components)
-
         result = np.transpose(pca.fit(X=tfm.values).components_)
-        result = pd.DataFrame(
+        return pd.DataFrame(
             result, columns=["F" + str(i) for i in range(n_components)], index=terms
         )
 
-        return result
