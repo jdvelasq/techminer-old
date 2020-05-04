@@ -156,12 +156,17 @@ class DataFrame(pd.DataFrame):
         if sep_authors is None:
             sep_authors = SCOPUS_SEPS[col_authors]
 
+        self[col_authors] = self[col_authors].map(
+            lambda x: x[:-1] if x is not None and x[-1] == sep_authors else x
+        )
+
         if sep_ids is None:
             sep_ids = SCOPUS_SEPS[col_ids]
 
         self[col_ids] = self[col_ids].map(
-            lambda x: x[:-1] if x is not None and x[-1] == ";" else x
+            lambda x: x[:-1] if x is not None and x[-1] == sep_ids else x
         )
+
 
         data = self[[col_authors, col_ids]]
         data = data.dropna()
@@ -313,53 +318,72 @@ class DataFrame(pd.DataFrame):
 
         """
         result = self.explode(column, sep)
+        result[column] = result[column].map(lambda x: x.strip())
         result = pd.unique(result[column].dropna())
         result = np.sort(result)
         return pd.DataFrame({column: result})
 
 
-#     def count_terms(self, column, sep=None):
-#         """
+    def count_terms(self, column, sep=None):
+        """
 
-#         >>> import pandas as pd
-#         >>> pdf = pd.DataFrame({'A': ['1;2', '3', '3;4;5'], 'B':[0] * 3})
-#         >>> DataFrame(pdf).count_terms(column='A', sep=';')
-#         5
+        >>> pdf = pd.DataFrame({'Authors': ['xxx', 'xxx, zzz', 'yyy', 'xxx, yyy, zzz']})
+        >>> pdf
+                 Authors
+        0            xxx
+        1       xxx, zzz
+        2            yyy
+        3  xxx, yyy, zzz
+        
+        >>> DataFrame(pdf).count_terms(column='Authors')
+        3
 
-#         >>> pdf = pd.DataFrame({'Authors': ['xxx', 'yyy', 'xxx, zzz', 'xxx, yyy, zzz']})
-#         >>> DataFrame(pdf).count_terms(column='Authors')
-#         3
+        """
+        return len(self.extract_terms(column, sep))
 
-#         """
-#         return len(self.extract_terms(column, sep))
+    def count_report(self):
+        """
 
-#     def count_report(self):
-#         """
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     {
+        ...          'Authors':  'xxx,xxx; zzz,yyy; xxx; yyy; zzz'.split(';'),
+        ...          'Author(s) ID': '0;1,    3;4;,  4;,  5;,  6;'.split(','),
+        ...          'Source title': ' s0,     s0,   s1,  s1, s2'.split(','),
+        ...          'Author Keywords': 'k0;k1, k0;k2, k3;k2;k1, k4, k5'.split(','),
+        ...          'Index Keywords': 'w0;w1, w0;w2, w3;k1;w1, w4, w5'.split(','),
+        ...     }
+        ... )
+        >>> df
+            Authors Author(s) ID Source title Author Keywords Index Keywords
+        0   xxx,xxx          0;1           s0           k0;k1          w0;w1
+        1   zzz,yyy         3;4;           s0           k0;k2          w0;w2
+        2       xxx           4;           s1        k3;k2;k1       w3;k1;w1
+        3       yyy           5;           s1              k4             w4
+        4       zzz           6;           s2              k5             w5
+        
+        >>> DataFrame(df).count_report()
+                    Column  Number of items
+        0          Authors                3
+        1     Author(s) ID                7
+        2     Source title                3
+        3  Author Keywords                6
+        4   Index Keywords                7
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().disambiguate_authors()
-#         >>> rdf.count_report()
-#                     Column  Number of items
-#         0          Authors              434
-#         1     Author(s) ID              434
-#         2     Source title              103
-#         3  Author Keywords              404
-#         4   Index Keywords              881
-
-#         """
-#         columns = [
-#             "Authors",
-#             "Author(s) ID",
-#             "Source title",
-#             "Author Keywords",
-#             "Index Keywords",
-#         ]
-#         return pd.DataFrame(
-#             {
-#                 "Column": columns,
-#                 "Number of items": [self.count_terms(w) for w in columns],
-#             }
-#         )
+        """
+        columns = [
+            "Authors",
+            "Author(s) ID",
+            "Source title",
+            "Author Keywords",
+            "Index Keywords",
+        ]
+        return pd.DataFrame(
+            {
+                "Column": columns,
+                "Number of items": [self.count_terms(w) for w in columns],
+            }
+        )
 
 #     #
 #     #
