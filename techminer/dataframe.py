@@ -1411,57 +1411,87 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-#     def auto_corr(self, column, sep=None, method="pearson"):
-#         """Computes the autocorrelation among items in a column of the dataframe.
+    def auto_corr(self, column, sep=None, method="pearson"):
+        """Computes the autocorrelation among items in a column of the dataframe.
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
-#         >>> result = rdf.auto_corr(column='Authors', sep=',')
-#         >>> authors = rdf.documents_by_term('Authors').head()['Authors'].tolist()
-#         >>> authors
-#         ['Arevalo A.', 'Gabbouj M.', 'Hernandez G.', 'Iosifidis A.', 'Kanniainen J.']
+        >>> import pandas as pd
+        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D', 'A,B']
+        >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd']
+        >>> df = pd.DataFrame(
+        ...    {
+        ...       'Authors': x,
+        ...       'Author Keywords': y,
+        ...       'Cited by': list(range(len(x))),
+        ...       'ID': list(range(len(x))),
+        ...    }
+        ... )
+        >>> df
+          Authors Author Keywords  Cited by  ID
+        0       A               a         0   0
+        1     A,B             a;b         1   1
+        2       B               b         2   2
+        3   A,B,C               c         3   3
+        4     B,D             c;d         4   4
+        5     A,B               d         5   5
 
-#         >>> result.loc[authors, authors]  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-#                        Arevalo A.  Gabbouj M.  Hernandez G.  Iosifidis A.  Kanniainen J.
-#         Arevalo A.       1.000000   -0.021277      1.000000     -0.021277      -0.021277
-#         Gabbouj M.      -0.021277    1.000000     -0.021277      1.000000       1.000000
-#         Hernandez G.     1.000000   -0.021277      1.000000     -0.021277      -0.021277
-#         Iosifidis A.    -0.021277    1.000000     -0.021277      1.000000       1.000000
-#         Kanniainen J.   -0.021277    1.000000     -0.021277      1.000000       1.000000
+        >>> DataFrame(df).auto_corr('Authors')
+                  A         B         C         D
+        A  1.000000 -0.316228  0.316228 -0.632456
+        B -0.316228  1.000000  0.200000  0.200000
+        C  0.316228  0.200000  1.000000 -0.200000
+        D -0.632456  0.200000 -0.200000  1.000000
 
-#         """
+        >>> DataFrame(df).auto_corr('Author Keywords')
+              a     b     c     d
+        a  1.00  0.25 -0.50 -0.50
+        b  0.25  1.00 -0.50 -0.50
+        c -0.50 -0.50  1.00  0.25
+        d -0.50 -0.50  0.25  1.00
 
-#         result = self.compute_tfm(column=column, sep=sep)
-#         result = result.corr(method=method)
-#         return result
+        """
 
-#     def cross_corr(
-#         self, column_r, column_c=None, sep_r=None, sep_c=None, method="pearson",
-#     ):
-#         """Computes the crosscorrelation among items in two different columns of the dataframe.
+        result = self.compute_tfm(column=column, sep=sep)
+        result = result.corr(method=method)
+        return result
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID().remove_accents().disambiguate_authors()
-#         >>> keywords = rdf.documents_by_term('Author Keywords').head()['Author Keywords'].tolist()
-#         >>> keywords
-#         ['Deep learning', 'LSTM', 'Deep Learning', 'Recurrent neural network', 'Financial time series']
+    def cross_corr(
+        self, column_r, column_c=None, sep_r=None, sep_c=None, method="pearson",
+    ):
+        """Computes the crosscorrelation among items in two different columns of the dataframe.
 
-#         >>> result = rdf.cross_corr(column_r='Authors', column_c='Author Keywords')
-#         >>> result[keywords].head()
+        >>> import pandas as pd
+        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D', 'A,B']
+        >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd']
+        >>> df = pd.DataFrame(
+        ...    {
+        ...       'Authors': x,
+        ...       'Author Keywords': y,
+        ...       'Cited by': list(range(len(x))),
+        ...       'ID': list(range(len(x))),
+        ...    }
+        ... )
+        >>> df
+          Authors Author Keywords  Cited by  ID
+        0       A               a         0   0
+        1     A,B             a;b         1   1
+        2       B               b         2   2
+        3   A,B,C               c         3   3
+        4     B,D             c;d         4   4
+        5     A,B               d         5   5
 
-#                       Deep Learning  Deep learning  Financial time series      LSTM  Recurrent neural network
-#         Hernandez G.      -0.046635       0.020874              -0.038514 -0.064886                 -0.041351
-#         Tefas A.          -0.046635       0.020874              -0.038514  0.084112                 -0.041351
-#         Wang J.           -0.060710       0.149704               0.127494 -0.084469                 -0.053830
-#         Yan X.            -0.046635      -0.096780              -0.038514 -0.064886                 -0.041351
-#         Zhang G.          -0.054074      -0.112217              -0.044658  0.054337                 -0.047946
+        >>> DataFrame(df).cross_corr('Authors', 'Author Keywords')
 
-#         """
 
-#         tfm_r = self.compute_tfm(column=column_r, sep=sep_r)
-#         tfm_c = self.compute_tfm(column=column_c, sep=sep_c)
-#         tfm = pd.concat([tfm_c, tfm_r], axis=1)
-#         return tfm.corr(method=method)
+        
+
+
+
+        """
+
+        tfm_r = self.compute_tfm(column=column_r, sep=sep_r)
+        tfm_c = self.compute_tfm(column=column_c, sep=sep_c)
+        tfm = pd.concat([tfm_c, tfm_r], axis=1)
+        return tfm.corr(method=method)
 
 #     def factor_analysis(self, column, sep=None, n_components=None):
 #         """Computes the matrix of factors for terms in a given column.
