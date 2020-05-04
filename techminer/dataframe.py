@@ -385,56 +385,56 @@ class DataFrame(pd.DataFrame):
             }
         )
 
-#     #
-#     #
-#     #  Analysis by term
-#     #
-#     #
+    #
+    #
+    #  Analysis by term
+    #
+    #
 
-#     def summarize_by_term(self, column, sep):
-#         """Auxiliary function
+    def summarize_by_term(self, column, sep):
+        """Auxiliary function
 
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-#         >>> rdf = rdf.remove_accents().disambiguate_authors()
-#         >>> rdf.summarize_by_term('Authors', sep=None).head(5)
-#                Authors  Num Documents  Cited by     ID
-#         0     Aadil F.              1         0   [28]
-#         1  Adam M.T.P.              1         6   [70]
-#         2   Afolabi D.              1         3  [108]
-#         3     Afzal S.              1         0   [28]
-#         4     Ahmed S.              1         0   [39]
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     {
+        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3".split(";"),
+        ...          "Cited by": list(range(10,14)),
+        ...          "ID": list(range(4)),
+        ...     }
+        ... )
+        >>> df
+                              Authors  Cited by  ID
+        0  author 0,author 1,author 2        10   0
+        1                    author 0        11   1
+        2                    author 1        12   2
+        3                    author 3        13   3
 
-#         >>> result = rdf.summarize_by_term('Authors', sep=None)
-#         >>> result[result['Authors'].map(lambda x: 'Wang J.' in x)]
-#                 Authors  Num Documents  Cited by         ID
-#         337     Wang J.              1         0        [3]
-#         338  Wang J.(1)              2        19  [10, 128]
-#         339  Wang J.(2)              1         0       [15]
-#         340  Wang J.(3)              1         4       [80]
-#         341  Wang J.(4)              1         4       [87]
-#         342  Wang J.(5)              1        19      [128]
-#         343  Wang J.-J.              1         1       [92]
+        >>> DataFrame(df).summarize_by_term('Authors', sep=',')
+            Authors  Num Documents  Cited by      ID
+        0  author 0              2        21  [0, 1]
+        1  author 1              2        22  [0, 2]
+        2  author 2              1        10     [0]
+        3  author 3              1        13     [3]
 
-#         """
-#         data = _expand(self[[column, "Cited by", "ID"]], column, sep)
-#         result = (
-#             data.groupby(column, as_index=False)
-#             .agg({"ID": np.size, "Cited by": np.sum})
-#             .rename(columns={"ID": "Num Documents"})
-#         )
-#         result = result.assign(
-#             ID=data.groupby(column).agg({"ID": list}).reset_index()["ID"]
-#         )
-#         result["Cited by"] = result["Cited by"].map(lambda x: int(x))
-#         result.sort_values(
-#             [column, "Num Documents", "Cited by"],
-#             ascending=[True, False, False],
-#             inplace=True,
-#         )
+        """
+        data = DataFrame(self[[column, "Cited by", "ID"]]).explode(column, sep)
+        data['Num Documents'] = 1
+        result = (
+            data.groupby(column, as_index=False)
+            .agg({"Num Documents": np.size, "Cited by": np.sum})
+        )
+        result = result.assign(
+            ID=data.groupby(column).agg({"ID": list}).reset_index()["ID"]
+        )
+        result["Cited by"] = result["Cited by"].map(lambda x: int(x))
+        result.sort_values(
+            [column, "Num Documents", "Cited by"],
+            ascending=[True, False, False],
+            inplace=True,
+        )
 
-#         result.index = list(range(len(result)))
-#         return result
+        result.index = list(range(len(result)))
+        return result
 
 #     def documents_by_term(self, column, sep=None):
 #         """Computes the number of documents per term in a given column.
