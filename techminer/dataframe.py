@@ -96,6 +96,12 @@ class DataFrame(pd.DataFrame):
         """Generates a unique ID for each document.
 
 
+        Args:
+            fmt (str): (Optional) format used to generate the documents' ID.
+
+        Returns:
+            DataFrame.
+       
         Examples
         ----------------------------------------------------------------------------------------------
 
@@ -138,6 +144,16 @@ class DataFrame(pd.DataFrame):
         """Verify if author's names are unique. For duplicated names, based on `Author(s) ID` column, 
         adds a consecutive number to the name.
 
+
+        Args:
+            col_authors (str): Optional. Author's name column.
+            sep_authors (str): Optional. Character used as internal separator for the elements in the column with the author's name.
+            col_ids (str): Optional. Author's ID column.
+            sep_ids (str): Optional. Character used as internal separator for the elements in the column with the author's ID.
+
+        Returns:
+            DataFrame.
+       
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -232,6 +248,12 @@ class DataFrame(pd.DataFrame):
     def remove_accents(self):
         """Remove accents for all strings on a DataFrame
 
+        Arsgs:
+            None
+
+        Returns:
+            A dataframe.
+
         Examples
         ----------------------------------------------------------------------------------------------
         >>> import pandas as pd
@@ -260,6 +282,8 @@ class DataFrame(pd.DataFrame):
     def coverage(self):
         """Reports the number of not `None` elements for column in a dataframe.
 
+        Args:
+            None.
 
         Returns:
             Pandas DataFrame.
@@ -319,6 +343,12 @@ class DataFrame(pd.DataFrame):
     def extract_terms(self, column, sep=None):
         """Extracts unique terms in a column, exploding multvalued columns.
 
+        Args:
+            column (str): the column to explode.
+            sep (str): Optional. Character used as internal separator for the elements in the column.
+
+        Returns:
+            DataFrame.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -355,8 +385,14 @@ class DataFrame(pd.DataFrame):
         return pd.DataFrame({column: result})
 
     def count_terms(self, column, sep=None):
-        """
+        """Counts the number of different terms in a column.
 
+        Args:
+            column (str): the column to explode.
+            sep (str): Optional. Character used as internal separator for the elements in the column.
+
+        Returns:
+            DataFrame.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -378,6 +414,12 @@ class DataFrame(pd.DataFrame):
     def count_report(self):
         """
         Reports the number of different items per column in dataframe.
+
+        Args:
+            None.
+
+        Returns:
+            DataFrame.        
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -431,7 +473,14 @@ class DataFrame(pd.DataFrame):
 
     def summarize_by_term(self, column, sep):
         """Summarize the number of documents and citations by term in a dataframe.
+        
+        Args:
+            column (str): the column to explode.
+            sep (str): Optional. Character used as internal separator for the elements in the column.
 
+        Returns:
+            DataFrame.
+        
         Examples
         ----------------------------------------------------------------------------------------------
 
@@ -479,6 +528,12 @@ class DataFrame(pd.DataFrame):
     def documents_by_term(self, column, sep=None):
         """Computes the number of documents per term in a given column.
 
+        Args:
+            column (str): the column to explode.
+            sep (str): Optional. Character used as internal separator for the elements in the column.
+
+        Returns:
+            DataFrame.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -518,6 +573,13 @@ class DataFrame(pd.DataFrame):
     def citations_by_term(self, column, sep=None):
         """Computes the number of citations by item in a column.
 
+        Args:
+            column (str): the column to explode.
+            sep (str): Optional. Character used as internal separator for the elements in the column.
+
+        Returns:
+            DataFrame.
+            
         Examples
         ----------------------------------------------------------------------------------------------
 
@@ -559,6 +621,12 @@ class DataFrame(pd.DataFrame):
 
     def summarize_by_year(self, cumulative=False):
         """Computes the number of document and the number of total citations per year.
+        
+        Args:
+            cumulative (bool): cumulate values per year.
+
+        Returns:
+            DataFrame.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -620,6 +688,12 @@ class DataFrame(pd.DataFrame):
     def documents_by_year(self, cumulative=False):
         """Computes the number of documents per year.
 
+        Args:
+            cumulative (bool): cumulate values per year.
+
+        Returns:
+            DataFrame.
+
         Examples
         ----------------------------------------------------------------------------------------------
 
@@ -664,6 +738,12 @@ class DataFrame(pd.DataFrame):
 
     def citations_by_year(self, cumulative=False):
         """Computes the number of citations by year.
+
+        Args:
+            cumulative (bool): cumulate values per year.
+
+        Returns:
+            DataFrame.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -716,6 +796,13 @@ class DataFrame(pd.DataFrame):
     def summarize_by_term_per_year(self, column, sep=None):
         """Computes the number of documents and citations by term per year.
 
+        Args:
+            column (str): the column to explode.
+            sep (str): Optional. Character used as internal separator for the elements in the column.
+
+        Returns:
+            DataFrame.
+            
         Examples
         ----------------------------------------------------------------------------------------------
 
@@ -761,10 +848,17 @@ class DataFrame(pd.DataFrame):
         result.index = list(range(len(result)))
         return result
 
-    def documents_by_term_per_year(
-        self, column, sep=None, top_n=None, minmax_range=None
-    ):
+    def documents_by_term_per_year(self, column, sep=None, minmax_range=None):
         """Computes the number of documents by term per year.
+
+        Args:
+            column (str): the column to explode.
+            sep (str): Optional. Character used as internal separator for the elements in the column.
+            minmax_range (tuple(int, int)): min and max values to report.
+
+        Returns:
+            DataFrame.
+
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -801,6 +895,12 @@ class DataFrame(pd.DataFrame):
 
         result = self.summarize_by_term_per_year(column, sep)
         result.pop("Cited by")
+        if minmax_range is not None:
+            min_value, max_value = minmax_range
+            if min_value is not None:
+                result = result[result["Num Documents"] >= min_value]
+            if max_value is not None:
+                result = result[result["Num Documents"] <= max_value]
         result.sort_values(
             ["Year", "Num Documents", column],
             ascending=[True, False, True],
@@ -809,10 +909,17 @@ class DataFrame(pd.DataFrame):
         result.index = list(range(len(result)))
         return result
 
-    def citations_by_term_per_year(
-        self, column, sep=None, top_n=None, minmax_range=None
-    ):
+    def citations_by_term_per_year(self, column, sep=None, minmax_range=None):
         """Computes the number of citations by term by year in a column.
+
+        Args:
+            column (str): the column to explode.
+            sep (str): Optional. Character used as internal separator for the elements in the column.
+            minmax_range (tuple(int, int)): min and max values to report.
+
+        Returns:
+            DataFrame.
+
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -838,19 +945,32 @@ class DataFrame(pd.DataFrame):
         >>> DataFrame(df).citations_by_term_per_year('Authors')
             Authors  Year  Cited by      ID
         0  author 0  2010        21  [0, 1]
-        1  author 1  2010        10     [0]
-        2  author 2  2010        10     [0]
+        1  author 2  2010        10     [0]
+        2  author 1  2010        10     [0]
         3  author 3  2011        13     [3]
         4  author 1  2011        12     [2]
         5  author 4  2012        14     [4]
         6  author 4  2014        15     [5]
 
-        """
+        >>> DataFrame(df).citations_by_term_per_year('Authors', minmax_range=(12, 15))
+            Authors  Year  Cited by   ID
+        0  author 3  2011        13  [3]
+        1  author 1  2011        12  [2]
+        2  author 4  2012        14  [4]
+        3  author 4  2014        15  [5]
 
+
+        """
         result = self.summarize_by_term_per_year(column, sep)
         result.pop("Num Documents")
+        if minmax_range is not None:
+            min_value, max_value = minmax_range
+            if min_value is not None:
+                result = result[result["Cited by"] >= min_value]
+            if max_value is not None:
+                result = result[result["Cited by"] <= max_value]
         result.sort_values(
-            ["Year", "Cited by", column], ascending=[True, False, True], inplace=True,
+            ["Year", "Cited by", column], ascending=[True, False, False], inplace=True,
         )
         result.index = list(range(len(result)))
         return result
@@ -865,6 +985,15 @@ class DataFrame(pd.DataFrame):
         self, column_r, column_c, sep_r=None, sep_c=None
     ):
         """Computes the number of documents and citations by term per term by year.
+
+        Args:
+            column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
+            sep_r (str): Optional. Character used as internal separator for the elements in the column_r.
+            column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
+            sep_c (str): Optional. Character used as internal separator for the elements in the column_c.
+
+        Returns:
+            DataFrame.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -924,9 +1053,19 @@ class DataFrame(pd.DataFrame):
         return result
 
     def documents_by_terms_per_terms_per_year(
-        self, column_r, column_c, sep_r=None, sep_c=None
+        self, column_r, column_c, sep_r=None, sep_c=None, minmax_range=None
     ):
         """Computes the number of documents by term per term per year.
+
+        Args:
+            column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
+            sep_r (str): Optional. Character used as internal separator for the elements in the column_r.
+            column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
+            sep_c (str): Optional. Character used as internal separator for the elements in the column_c.
+            minmax_range (tuple(int, int)): min and max values to report.
+
+        Returns:
+            DataFrame.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -972,6 +1111,12 @@ class DataFrame(pd.DataFrame):
             column_r, column_c, sep_r, sep_c
         )
         result.pop("Cited by")
+        if minmax_range is not None:
+            min_value, max_value = minmax_range
+            if min_value is not None:
+                result = result[result["Num Documents"] >= min_value]
+            if max_value is not None:
+                result = result[result["Num Documents"] <= max_value]
         result.sort_values(
             ["Year", column_r, column_c], ascending=[True, True, True], inplace=True,
         )
@@ -979,9 +1124,19 @@ class DataFrame(pd.DataFrame):
         return result
 
     def citations_by_terms_per_terms_per_year(
-        self, column_r, column_c, sep_r=None, sep_c=None
+        self, column_r, column_c, sep_r=None, sep_c=None, minmax_range=None
     ):
         """Computes the number of citations by term per term per year.
+
+        Args:
+            column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
+            sep_r (str): Optional. Character used as internal separator for the elements in the column_r.
+            column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
+            sep_c (str): Optional. Character used as internal separator for the elements in the column_c.
+            minmax_range (tuple(int, int)): min and max values to report.
+
+        Returns:
+            DataFrame.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -1027,6 +1182,12 @@ class DataFrame(pd.DataFrame):
             column_r, column_c, sep_r, sep_c
         )
         result.pop("Num Documents")
+        if minmax_range is not None:
+            min_value, max_value = minmax_range
+            if min_value is not None:
+                result = result[result["Cited by"] >= min_value]
+            if max_value is not None:
+                result = result[result["Cited by"] <= max_value]
         result.sort_values(
             ["Year", column_r, column_c], ascending=[True, True, True], inplace=True,
         )
@@ -1041,6 +1202,15 @@ class DataFrame(pd.DataFrame):
 
     def summarize_co_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None):
         """Summarize ocurrence and citations by terms in two different columns.
+
+        Args:
+            column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
+            sep_r (str): Optional. Character used as internal separator for the elements in the column_r.
+            column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
+            sep_c (str): Optional. Character used as internal separator for the elements in the column_c.
+
+        Returns:
+            DataFrame.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -1076,8 +1246,6 @@ class DataFrame(pd.DataFrame):
         7             C                     c              1         3     [3]
         8             D                     c              1         4     [4]
         9             D                     d              1         4     [4]
-
-
 
         """
 
@@ -1135,9 +1303,21 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def co_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None):
+    def co_ocurrence(
+        self, column_r, column_c, sep_r=None, sep_c=None, minmax_range=None
+    ):
         """Computes the co-ocurrence of two terms in different colums. The report adds
         the number of documents by term between brackets.
+
+        Args:
+            column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
+            sep_r (str): Optional. Character used as internal separator for the elements in the column_r.
+            column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
+            sep_c (str): Optional. Character used as internal separator for the elements in the column_c.
+            minmax_range (tuple(int, int)): min and max values to report.
+
+        Returns:
+            DataFrame.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -1190,6 +1370,12 @@ class DataFrame(pd.DataFrame):
 
         result = self.summarize_co_ocurrence(column_r, column_c, sep_r, sep_c)
         result.pop("Cited by")
+        if minmax_range is not None:
+            min_value, max_value = minmax_range
+            if min_value is not None:
+                result = result[result["Num Documents"] >= min_value]
+            if max_value is not None:
+                result = result[result["Num Documents"] <= max_value]
         result.sort_values(
             [column_r + " (row)", column_c + " (col)", "Num Documents",],
             ascending=[True, True, False],
@@ -1214,7 +1400,9 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def co_citation(self, column_r, column_c, sep_r=None, sep_c=None):
+    def co_citation(
+        self, column_r, column_c, sep_r=None, sep_c=None, minmax_range=None
+    ):
         """Computes the number of citations shared by two terms in different columns.
 
 
@@ -1269,6 +1457,12 @@ class DataFrame(pd.DataFrame):
 
         result = self.summarize_co_ocurrence(column_r, column_c, sep_r, sep_c)
         result.pop("Num Documents")
+        if minmax_range is not None:
+            min_value, max_value = minmax_range
+            if min_value is not None:
+                result = result[result["Cited by"] >= min_value]
+            if max_value is not None:
+                result = result[result["Cited by"] <= max_value]
         result.sort_values(
             ["Cited by", column_r + " (row)", column_c + " (col)",],
             ascending=[False, True, True,],
@@ -1297,7 +1491,13 @@ class DataFrame(pd.DataFrame):
     def summarize_ocurrence(self, column, sep=None):
         """Summarize ocurrence and citations by terms in a column of a dataframe.
 
+        Args:
+            column (str): the column to explode.
+            sep (str): Optional. Character used as internal separator for the elements in the column.
 
+        Returns:
+            DataFrame.
+            
         Examples
         ----------------------------------------------------------------------------------------------
 
@@ -1374,9 +1574,16 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def ocurrence(self, column, sep=None):
+    def ocurrence(self, column, sep=None, minmax_range=None):
         """Computes the ocurrence between the terms in a column.
 
+        Args:
+            column (str): the column to explode.
+            sep (str): Optional. Character used as internal separator for the elements in the column.
+
+        Returns:
+            DataFrame.
+            
         Examples
         ----------------------------------------------------------------------------------------------
 
@@ -1428,6 +1635,12 @@ class DataFrame(pd.DataFrame):
 
         result = self.summarize_ocurrence(column, sep)
         result.pop("Cited by")
+        if minmax_range is not None:
+            min_value, max_value = minmax_range
+            if min_value is not None:
+                result = result[result["Num Documents"] >= min_value]
+            if max_value is not None:
+                result = result[result["Num Documents"] <= max_value]
         result.sort_values(
             ["Num Documents", column_r, column_c],
             ascending=[False, True, True],
@@ -1450,6 +1663,13 @@ class DataFrame(pd.DataFrame):
     def compute_tfm(self, column, sep=None):
         """Computes the term-frequency matrix for the terms in a column.
 
+        Args:
+            column (str): the column to explode.
+            sep (str): Optional. Character used as internal separator for the elements in the column.
+
+        Returns:
+            DataFrame.
+            
         Examples
         ----------------------------------------------------------------------------------------------
 
@@ -1488,9 +1708,7 @@ class DataFrame(pd.DataFrame):
         3  0  0  1  0
         4  0  0  1  1
         
-
         """
-
         data = self[[column, "ID"]].copy()
         data["value"] = 1.0
         data = DataFrame(data).explode(column, sep)
@@ -1507,6 +1725,17 @@ class DataFrame(pd.DataFrame):
     def auto_corr(self, column, sep=None, method="pearson"):
         """Computes the autocorrelation among items in a column of the dataframe.
 
+        Args:
+            column (str): the column to explode.
+            sep (str): Optional. Character used as internal separator for the elements in the column.
+            method (str): Available methods are:
+                * pearson : Standard correlation coefficient
+                * kendall : Kendall Tau correlation coefficient
+                * spearman : Spearman rank correlation
+
+        Returns:
+            DataFrame.
+            
         Examples
         ----------------------------------------------------------------------------------------------
 
@@ -1621,6 +1850,15 @@ class DataFrame(pd.DataFrame):
     def factor_analysis(self, column, sep=None, n_components=None):
         """Computes the matrix of factors for terms in a given column.
 
+
+        Args:
+            column (str): the column to explode.
+            sep (str): Optional. Character used as internal separator for the elements in the column.
+            n_components: Number of components to compute.
+
+        Returns:
+            DataFrame.
+       
         Examples
         ----------------------------------------------------------------------------------------------
 
