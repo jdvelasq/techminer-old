@@ -1734,16 +1734,17 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def auto_corr(self, column, sep=None, method="pearson"):
+    def auto_corr(self, column, sep=None, method="pearson", as_matrix=True):
         """Computes the autocorrelation among items in a column of the dataframe.
 
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
             method (str): Available methods are:
-                * pearson : Standard correlation coefficient
-                * kendall : Kendall Tau correlation coefficient
-                * spearman : Spearman rank correlation
+                * pearson : Standard correlation coefficient.
+                * kendall : Kendall Tau correlation coefficient.
+                * spearman : Spearman rank correlation.
+            as_matrix (bool): the result is reshaped by melt or not.
 
         Returns:
             DataFrame.
@@ -1771,12 +1772,32 @@ class DataFrame(pd.DataFrame):
         4     B,D             c;d         4   4
         5     A,B               d         5   5
 
+        
         >>> DataFrame(df).auto_corr('Authors')
                   A         B         C         D
         A  1.000000 -0.316228  0.316228 -0.632456
         B -0.316228  1.000000  0.200000  0.200000
         C  0.316228  0.200000  1.000000 -0.200000
         D -0.632456  0.200000 -0.200000  1.000000
+        
+        >>> DataFrame(df).auto_corr('Authors', as_matrix=False)
+           Authors (ROW) Authors (COL)     value
+        0              A             A  1.000000
+        1              B             A -0.316228
+        2              C             A  0.316228
+        3              D             A -0.632456
+        4              A             B -0.316228
+        5              B             B  1.000000
+        6              C             B  0.200000
+        7              D             B  0.200000
+        8              A             C  0.316228
+        9              B             C  0.200000
+        10             C             C  1.000000
+        11             D             C -0.200000
+        12             A             D -0.632456
+        13             B             D  0.200000
+        14             C             D -0.200000
+        15             D             D  1.000000
 
         >>> DataFrame(df).auto_corr('Author Keywords')
               a     b     c     d
@@ -1788,10 +1809,14 @@ class DataFrame(pd.DataFrame):
         """
 
         result = self.compute_tfm(column=column, sep=sep)
-
         result = result.corr(method=method)
-
-        return result
+        if as_matrix is True:
+            return result
+        return (
+            result.reset_index()
+            .melt("index")
+            .rename(columns={"index": column + " (ROW)", "variable": column + " (COL)"})
+        )
 
     def cross_corr(
         self, column_r, column_c=None, sep_r=None, sep_c=None, method="pearson",
