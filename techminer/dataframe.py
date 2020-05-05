@@ -1355,16 +1355,16 @@ class DataFrame(pd.DataFrame):
 
         >>> DataFrame(df).co_ocurrence(column_r='Authors', column_c='Author Keywords')
           Authors (row) Author Keywords (col)  Num Documents      ID
-        0         A [3]                 a [2]              2  [0, 1]
-        4         B [4]                 b [2]              2  [1, 2]
-        5         B [4]                 c [2]              2  [3, 4]
-        1         A [3]                 b [2]              1     [1]
-        2         A [3]                 c [2]              1     [3]
-        3         B [4]                 a [2]              1     [1]
-        6         B [4]                 d [1]              1     [4]
-        7         C [1]                 c [2]              1     [3]
-        8         D [1]                 c [2]              1     [4]
-        9         D [1]                 d [1]              1     [4]
+        0             A                     a              2  [0, 1]
+        4             B                     b              2  [1, 2]
+        5             B                     c              2  [3, 4]
+        1             A                     b              1     [1]
+        2             A                     c              1     [3]
+        3             B                     a              1     [1]
+        6             B                     d              1     [4]
+        7             C                     c              1     [3]
+        8             D                     c              1     [4]
+        9             D                     d              1     [4]
 
 
 
@@ -1395,15 +1395,15 @@ class DataFrame(pd.DataFrame):
         )
         result = result.reset_index(drop=True)
 
-        new_names = generate_dic(column_c, sep_c)
-        result[column_c + " (col)"] = result[column_c + " (col)"].map(
-            lambda x: new_names[x]
-        )
+        # new_names = generate_dic(column_c, sep_c)
+        # result[column_c + " (col)"] = result[column_c + " (col)"].map(
+        #     lambda x: new_names[x]
+        # )
 
-        new_names = generate_dic(column_r, sep_r)
-        result[column_r + " (row)"] = result[column_r + " (row)"].map(
-            lambda x: new_names[x]
-        )
+        # new_names = generate_dic(column_r, sep_r)
+        # result[column_r + " (row)"] = result[column_r + " (row)"].map(
+        #     lambda x: new_names[x]
+        # )
 
         result = result.sort_values(
             ["Num Documents", column_r + " (row)", column_c + " (col)"],
