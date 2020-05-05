@@ -517,7 +517,7 @@ class DataFrame(pd.DataFrame):
             inplace=True,
         )
 
-        result.index = list(range(len(result)))
+        result = result.reset_index(drop=True)
         return result
 
     def documents_by_term(self, column, sep=None):
@@ -562,7 +562,7 @@ class DataFrame(pd.DataFrame):
         result.sort_values(
             ["Num Documents", column], ascending=[False, True], inplace=True
         )
-        result.index = list(range(len(result)))
+        result = result.reset_index(drop=True)
         return result
 
     def citations_by_term(self, column, sep=None):
@@ -605,7 +605,7 @@ class DataFrame(pd.DataFrame):
         result = self.summarize_by_term(column, sep)
         result.pop("Num Documents")
         result.sort_values(["Cited by", column], ascending=[False, True], inplace=True)
-        result.index = list(range(len(result)))
+        result = result.reset_index(drop=True)
         return result
 
     #
@@ -744,7 +744,7 @@ class DataFrame(pd.DataFrame):
         """
         result = self.summarize_by_year(cumulative)
         result.pop("Cited by")
-        result.index = list(range(len(result)))
+        result = result.reset_index(drop=True)
         return result
 
     def citations_by_year(self, cumulative=False):
@@ -796,7 +796,7 @@ class DataFrame(pd.DataFrame):
         """
         result = self.summarize_by_year(cumulative)
         result.pop("Num Documents")
-        result.index = list(range(len(result)))
+        result = result.reset_index(drop=True)
         return result
 
     #
@@ -857,7 +857,7 @@ class DataFrame(pd.DataFrame):
         )
         result["Cited by"] = result["Cited by"].map(lambda x: int(x))
         result.sort_values(["Year", column], ascending=True, inplace=True)
-        result.index = list(range(len(result)))
+        result = result.reset_index(drop=True)
         return result
 
     def documents_by_term_per_year(self, column, sep=None, minmax_range=None):
@@ -918,7 +918,7 @@ class DataFrame(pd.DataFrame):
             ascending=[True, False, True],
             inplace=True,
         )
-        result.index = list(range(len(result)))
+        result = result.reset_index(drop=True)
         return result
 
     def citations_by_term_per_year(self, column, sep=None, minmax_range=None):
@@ -984,7 +984,7 @@ class DataFrame(pd.DataFrame):
         result.sort_values(
             ["Year", "Cited by", column], ascending=[True, False, False], inplace=True,
         )
-        result.index = list(range(len(result)))
+        result = result.reset_index(drop=True)
         return result
 
     #
@@ -1061,7 +1061,7 @@ class DataFrame(pd.DataFrame):
         )
         result["Cited by"] = result["Cited by"].map(lambda x: int(x))
         result.sort_values(["Year", column_r, column_c,], ascending=True, inplace=True)
-        result.index = list(range(len(result)))
+        result = result.reset_index(drop=True)
         return result
 
     def documents_by_terms_per_terms_per_year(
@@ -1132,7 +1132,7 @@ class DataFrame(pd.DataFrame):
         result.sort_values(
             ["Year", column_r, column_c], ascending=[True, True, True], inplace=True,
         )
-        result.index = list(range(len(result)))
+        result = result.reset_index(drop=True)
         return result
 
     def citations_by_terms_per_terms_per_year(
@@ -1203,7 +1203,7 @@ class DataFrame(pd.DataFrame):
         result.sort_values(
             ["Year", column_r, column_c], ascending=[True, True, True], inplace=True,
         )
-        result.index = list(range(len(result)))
+        result = result.reset_index(drop=True)
         return result
 
     #
@@ -1393,7 +1393,7 @@ class DataFrame(pd.DataFrame):
             ascending=[True, True, False],
             inplace=True,
         )
-        result.index = list(range(len(result)))
+        result = result.reset_index(drop=True)
 
         new_names = generate_dic(column_c, sep_c)
         result[column_c + " (col)"] = result[column_c + " (col)"].map(
@@ -1480,7 +1480,7 @@ class DataFrame(pd.DataFrame):
             ascending=[False, True, True,],
             inplace=True,
         )
-        result.index = list(range(len(result)))
+        result = result.reset_index(drop=True)
 
         new_names = generate_dic(column_c, sep_c)
         result[column_c + " (col)"] = result[column_c + " (col)"].map(
@@ -1658,7 +1658,7 @@ class DataFrame(pd.DataFrame):
             ascending=[False, True, True],
             inplace=True,
         )
-        result.index = list(range(len(result)))
+        result = result.reset_index(drop=True)
 
         new_names = generate_dic(column, sep)
         result[column_c] = result[column_c].map(lambda x: new_names[x])
@@ -1730,7 +1730,7 @@ class DataFrame(pd.DataFrame):
         )
         result.columns = [b for _, b in result.columns]
 
-        result.index = list(range(len(result)))
+        result = result.reset_index(drop=True)
 
         return result
 
