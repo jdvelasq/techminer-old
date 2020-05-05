@@ -1819,9 +1819,29 @@ class DataFrame(pd.DataFrame):
         )
 
     def cross_corr(
-        self, column_r, column_c=None, sep_r=None, sep_c=None, method="pearson",
+        self,
+        column_r,
+        column_c=None,
+        sep_r=None,
+        sep_c=None,
+        method="pearson",
+        as_matrix=True,
     ):
         """Computes the cross-correlation among items in two different columns of the dataframe.
+
+        Args:
+            column_r (str): the first column.
+            sep_r (str): Character used as internal separator for the elements in the column_r.
+            column_c (str): the second column.
+            sep_c (str): Character used as internal separator for the elements in the column_c.
+            method (str): Available methods are:
+                * pearson : Standard correlation coefficient.
+                * kendall : Kendall Tau correlation coefficient.
+                * spearman : Spearman rank correlation.
+            as_matrix (bool): the result is reshaped by melt or not.
+
+        Returns:
+            DataFrame.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -1874,16 +1894,46 @@ class DataFrame(pd.DataFrame):
         D -0.25  0.316228 -0.316228  0.632456
 
 
+        >>> DataFrame(df).cross_corr('Authors', 'Author Keywords', as_matrix=False)
+           Authors Author Keywords     value
+        0        A               a  0.500000
+        1        B               a -0.250000
+        2        C               a -0.250000
+        3        D               a -0.250000
+        4        A               b -0.632456
+        5        B               b  0.316228
+        6        C               b  0.316228
+        7        D               b  0.316228
+        8        A               c -0.316228
+        9        B               c -0.316228
+        10       C               c  0.632456
+        11       D               c -0.316228
+        12       A               d -0.316228
+        13       B               d -0.316228
+        14       C               d  0.632456
+        15       D               d  0.632456
+
         """
+        if column_r == column_c:
+            return self.auto_corr(
+                column=column_r, sep=sep_r, method=method, as_matrix=as_matrix
+            )
         tfm_r = self.compute_tfm(column=column_r, sep=sep_r)
         tfm_c = self.compute_tfm(column=column_c, sep=sep_c)
-        return pd.DataFrame(
+        result = pd.DataFrame(
             [
                 [tfm_r[row].corr(tfm_c[col]) for row in tfm_r.columns]
                 for col in tfm_c.columns
             ],
             columns=tfm_c.columns,
             index=tfm_r.columns,
+        )
+        if as_matrix is True:
+            return result
+        return (
+            result.reset_index()
+            .melt("index")
+            .rename(columns={"index": column_r, "variable": column_c})
         )
 
     def factor_analysis(self, column, sep=None, n_components=None):
