@@ -1442,16 +1442,16 @@ class DataFrame(pd.DataFrame):
 
         >>> DataFrame(df).co_citation(column_r='Authors', column_c='Author Keywords')
           Authors (row) Author Keywords (col)  Cited by      ID
-        0        B [10]                 c [7]         7  [3, 4]
-        1        B [10]                 d [4]         4     [4]
-        2         D [4]                 c [7]         4     [4]
-        3         D [4]                 d [4]         4     [4]
-        4         A [4]                 c [7]         3     [3]
-        5        B [10]                 b [3]         3  [1, 2]
-        6         C [3]                 c [7]         3     [3]
-        7         A [4]                 a [1]         1  [0, 1]
-        8         A [4]                 b [3]         1     [1]
-        9        B [10]                 a [1]         1     [1]
+        0             B                     c         7  [3, 4]
+        1             B                     d         4     [4]
+        2             D                     c         4     [4]
+        3             D                     d         4     [4]
+        4             A                     c         3     [3]
+        5             B                     b         3  [1, 2]
+        6             C                     c         3     [3]
+        7             A                     a         1  [0, 1]
+        8             A                     b         1     [1]
+        9             B                     a         1     [1]
 
 
 
@@ -1482,15 +1482,15 @@ class DataFrame(pd.DataFrame):
         )
         result = result.reset_index(drop=True)
 
-        new_names = generate_dic(column_c, sep_c)
-        result[column_c + " (col)"] = result[column_c + " (col)"].map(
-            lambda x: new_names[x]
-        )
+        # new_names = generate_dic(column_c, sep_c)
+        # result[column_c + " (col)"] = result[column_c + " (col)"].map(
+        #     lambda x: new_names[x]
+        # )
 
-        new_names = generate_dic(column_r, sep_r)
-        result[column_r + " (row)"] = result[column_r + " (row)"].map(
-            lambda x: new_names[x]
-        )
+        # new_names = generate_dic(column_r, sep_r)
+        # result[column_r + " (row)"] = result[column_r + " (row)"].map(
+        #     lambda x: new_names[x]
+        # )
 
         return result
 
