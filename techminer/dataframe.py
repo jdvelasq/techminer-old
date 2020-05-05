@@ -252,14 +252,12 @@ class DataFrame(pd.DataFrame):
     def remove_accents(self):
         """Remove accents for all strings on a DataFrame
 
-        Arsgs:
-            None
-
         Returns:
             A dataframe.
 
         Examples
         ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...   {
@@ -285,9 +283,6 @@ class DataFrame(pd.DataFrame):
 
     def coverage(self):
         """Reports the number of not `None` elements for column in a dataframe.
-
-        Args:
-            None.
 
         Returns:
             Pandas DataFrame.
@@ -419,9 +414,6 @@ class DataFrame(pd.DataFrame):
         """
         Reports the number of different items per column in dataframe.
 
-        Args:
-            None.
-
         Returns:
             DataFrame.        
 
@@ -475,7 +467,7 @@ class DataFrame(pd.DataFrame):
     #
     #
 
-    def summarize_by_term(self, column, sep):
+    def summarize_by_term(self, column, sep=None):
         """Summarize the number of documents and citations by term in a dataframe.
         
         Args:
@@ -625,6 +617,8 @@ class DataFrame(pd.DataFrame):
 
     def summarize_by_year(self, cumulative=False):
         """Computes the number of document and the number of total citations per year.
+        This funciton adds the missing years in the sequence.
+
         
         Args:
             cumulative (bool): cumulate values per year.
@@ -638,7 +632,7 @@ class DataFrame(pd.DataFrame):
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...     {
-        ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
+        ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
         ...          "Cited by": list(range(10,16)),
         ...          "ID": list(range(6)),
         ...     }
@@ -650,7 +644,7 @@ class DataFrame(pd.DataFrame):
         2  2011        12   2
         3  2011        13   3
         4  2012        14   4
-        5  2014        15   5
+        5  2016        15   5
 
         >>> DataFrame(df).summarize_by_year()
            Year  Cited by  Num Documents      ID
@@ -658,7 +652,9 @@ class DataFrame(pd.DataFrame):
         1  2011        25              2  [2, 3]
         2  2012        14              1     [4]
         3  2013         0              0      []
-        4  2014        15              1     [5]
+        4  2014         0              0      []
+        5  2015         0              0      []
+        6  2016        15              1     [5]
 
         >>> DataFrame(df).summarize_by_year(cumulative=True)
            Year  Cited by  Num Documents      ID
@@ -666,7 +662,19 @@ class DataFrame(pd.DataFrame):
         1  2011        46              4  [2, 3]
         2  2012        60              5     [4]
         3  2013        60              5      []
-        4  2014        75              6     [5]
+        4  2014        60              5      []
+        5  2015        60              5      []
+        6  2016        75              6     [5]
+
+
+        Compariison with `summarize_by_term`.
+
+        >>> DataFrame(df).summarize_by_term('Year')
+           Year  Num Documents  Cited by      ID
+        0  2010              2        21  [0, 1]
+        1  2011              2        25  [2, 3]
+        2  2012              1        14     [4]
+        3  2016              1        15     [5]
 
         """
         data = DataFrame(self[["Year", "Cited by", "ID"]]).explode("Year", None)
