@@ -860,13 +860,12 @@ class DataFrame(pd.DataFrame):
         result = result.reset_index(drop=True)
         return result
 
-    def documents_by_term_per_year(self, column, sep=None, minmax_range=None):
+    def documents_by_term_per_year(self, column, sep=None):
         """Computes the number of documents by term per year.
 
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
-            minmax_range (tuple(int, int)): min and max values to report.
 
         Returns:
             DataFrame.
@@ -907,27 +906,19 @@ class DataFrame(pd.DataFrame):
 
         result = self.summarize_by_term_per_year(column, sep)
         result.pop("Cited by")
-        if minmax_range is not None:
-            min_value, max_value = minmax_range
-            if min_value is not None:
-                result = result[result["Num Documents"] >= min_value]
-            if max_value is not None:
-                result = result[result["Num Documents"] <= max_value]
         result.sort_values(
             ["Year", "Num Documents", column],
             ascending=[True, False, True],
             inplace=True,
         )
-        result = result.reset_index(drop=True)
-        return result
+        return result.reset_index(drop=True)
 
-    def citations_by_term_per_year(self, column, sep=None, minmax_range=None):
+    def citations_by_term_per_year(self, column, sep=None):
         """Computes the number of citations by term by year in a column.
 
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
-            minmax_range (tuple(int, int)): min and max values to report.
 
         Returns:
             DataFrame.
@@ -964,28 +955,14 @@ class DataFrame(pd.DataFrame):
         5  author 4  2012        14     [4]
         6  author 4  2014        15     [5]
 
-        >>> DataFrame(df).citations_by_term_per_year('Authors', minmax_range=(12, 15))
-            Authors  Year  Cited by   ID
-        0  author 3  2011        13  [3]
-        1  author 1  2011        12  [2]
-        2  author 4  2012        14  [4]
-        3  author 4  2014        15  [5]
-
 
         """
         result = self.summarize_by_term_per_year(column, sep)
         result.pop("Num Documents")
-        if minmax_range is not None:
-            min_value, max_value = minmax_range
-            if min_value is not None:
-                result = result[result["Cited by"] >= min_value]
-            if max_value is not None:
-                result = result[result["Cited by"] <= max_value]
         result.sort_values(
             ["Year", "Cited by", column], ascending=[True, False, False], inplace=True,
         )
-        result = result.reset_index(drop=True)
-        return result
+        return result.reset_index(drop=True)
 
     #
     #
@@ -1065,7 +1042,7 @@ class DataFrame(pd.DataFrame):
         return result
 
     def documents_by_terms_per_terms_per_year(
-        self, column_r, column_c, sep_r=None, sep_c=None, minmax_range=None
+        self, column_r, column_c, sep_r=None, sep_c=None
     ):
         """Computes the number of documents by term per term per year.
 
@@ -1074,7 +1051,6 @@ class DataFrame(pd.DataFrame):
             sep_r (str): Character used as internal separator for the elements in the column_r.
             column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
             sep_c (str): Character used as internal separator for the elements in the column_c.
-            minmax_range (tuple(int, int)): min and max values to report.
 
         Returns:
             DataFrame.
@@ -1123,12 +1099,6 @@ class DataFrame(pd.DataFrame):
             column_r, column_c, sep_r, sep_c
         )
         result.pop("Cited by")
-        if minmax_range is not None:
-            min_value, max_value = minmax_range
-            if min_value is not None:
-                result = result[result["Num Documents"] >= min_value]
-            if max_value is not None:
-                result = result[result["Num Documents"] <= max_value]
         result.sort_values(
             ["Year", column_r, column_c], ascending=[True, True, True], inplace=True,
         )
@@ -1136,7 +1106,7 @@ class DataFrame(pd.DataFrame):
         return result
 
     def citations_by_terms_per_terms_per_year(
-        self, column_r, column_c, sep_r=None, sep_c=None, minmax_range=None
+        self, column_r, column_c, sep_r=None, sep_c=None
     ):
         """Computes the number of citations by term per term per year.
 
@@ -1145,7 +1115,6 @@ class DataFrame(pd.DataFrame):
             sep_r (str): Character used as internal separator for the elements in the column_r.
             column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
             sep_c (str): Character used as internal separator for the elements in the column_c.
-            minmax_range (tuple(int, int)): min and max values to report.
 
         Returns:
             DataFrame.
@@ -1194,17 +1163,10 @@ class DataFrame(pd.DataFrame):
             column_r, column_c, sep_r, sep_c
         )
         result.pop("Num Documents")
-        if minmax_range is not None:
-            min_value, max_value = minmax_range
-            if min_value is not None:
-                result = result[result["Cited by"] >= min_value]
-            if max_value is not None:
-                result = result[result["Cited by"] <= max_value]
         result.sort_values(
             ["Year", column_r, column_c], ascending=[True, True, True], inplace=True,
         )
-        result = result.reset_index(drop=True)
-        return result
+        return result.reset_index(drop=True)
 
     #
     #
@@ -1315,9 +1277,7 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def co_ocurrence(
-        self, column_r, column_c, sep_r=None, sep_c=None, minmax_range=None
-    ):
+    def co_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None):
         """Computes the co-ocurrence of two terms in different colums. The report adds
         the number of documents by term between brackets.
 
@@ -1326,7 +1286,6 @@ class DataFrame(pd.DataFrame):
             sep_r (str): Character used as internal separator for the elements in the column_r.
             column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
             sep_c (str): Character used as internal separator for the elements in the column_c.
-            minmax_range (tuple(int, int)): min and max values to report.
 
         Returns:
             DataFrame.
@@ -1356,11 +1315,11 @@ class DataFrame(pd.DataFrame):
         >>> DataFrame(df).co_ocurrence(column_r='Authors', column_c='Author Keywords')
           Authors (row) Author Keywords (col)  Num Documents      ID
         0             A                     a              2  [0, 1]
-        4             B                     b              2  [1, 2]
-        5             B                     c              2  [3, 4]
-        1             A                     b              1     [1]
-        2             A                     c              1     [3]
-        3             B                     a              1     [1]
+        1             B                     b              2  [1, 2]
+        2             B                     c              2  [3, 4]
+        3             A                     b              1     [1]
+        4             A                     c              1     [3]
+        5             B                     a              1     [1]
         6             B                     d              1     [4]
         7             C                     c              1     [3]
         8             D                     c              1     [4]
@@ -1382,39 +1341,18 @@ class DataFrame(pd.DataFrame):
 
         result = self.summarize_co_ocurrence(column_r, column_c, sep_r, sep_c)
         result.pop("Cited by")
-        if minmax_range is not None:
-            min_value, max_value = minmax_range
-            if min_value is not None:
-                result = result[result["Num Documents"] >= min_value]
-            if max_value is not None:
-                result = result[result["Num Documents"] <= max_value]
         result.sort_values(
             [column_r + " (row)", column_c + " (col)", "Num Documents",],
             ascending=[True, True, False],
             inplace=True,
         )
-        result = result.reset_index(drop=True)
-
-        # new_names = generate_dic(column_c, sep_c)
-        # result[column_c + " (col)"] = result[column_c + " (col)"].map(
-        #     lambda x: new_names[x]
-        # )
-
-        # new_names = generate_dic(column_r, sep_r)
-        # result[column_r + " (row)"] = result[column_r + " (row)"].map(
-        #     lambda x: new_names[x]
-        # )
-
         result = result.sort_values(
             ["Num Documents", column_r + " (row)", column_c + " (col)"],
             ascending=[False, True, True],
         )
+        return result.reset_index(drop=True)
 
-        return result
-
-    def co_citation(
-        self, column_r, column_c, sep_r=None, sep_c=None, minmax_range=None
-    ):
+    def co_citation(self, column_r, column_c, sep_r=None, sep_c=None):
         """Computes the number of citations shared by two terms in different columns.
 
 
@@ -1469,30 +1407,12 @@ class DataFrame(pd.DataFrame):
 
         result = self.summarize_co_ocurrence(column_r, column_c, sep_r, sep_c)
         result.pop("Num Documents")
-        if minmax_range is not None:
-            min_value, max_value = minmax_range
-            if min_value is not None:
-                result = result[result["Cited by"] >= min_value]
-            if max_value is not None:
-                result = result[result["Cited by"] <= max_value]
         result.sort_values(
             ["Cited by", column_r + " (row)", column_c + " (col)",],
             ascending=[False, True, True,],
             inplace=True,
         )
-        result = result.reset_index(drop=True)
-
-        # new_names = generate_dic(column_c, sep_c)
-        # result[column_c + " (col)"] = result[column_c + " (col)"].map(
-        #     lambda x: new_names[x]
-        # )
-
-        # new_names = generate_dic(column_r, sep_r)
-        # result[column_r + " (row)"] = result[column_r + " (row)"].map(
-        #     lambda x: new_names[x]
-        # )
-
-        return result
+        return result.reset_index(drop=True)
 
     #
     #
@@ -1586,7 +1506,7 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def ocurrence(self, column, sep=None, minmax_range=None):
+    def ocurrence(self, column, sep=None):
         """Computes the ocurrence between the terms in a column.
 
         Args:
@@ -1647,24 +1567,12 @@ class DataFrame(pd.DataFrame):
 
         result = self.summarize_ocurrence(column, sep)
         result.pop("Cited by")
-        if minmax_range is not None:
-            min_value, max_value = minmax_range
-            if min_value is not None:
-                result = result[result["Num Documents"] >= min_value]
-            if max_value is not None:
-                result = result[result["Num Documents"] <= max_value]
         result.sort_values(
             ["Num Documents", column_r, column_c],
             ascending=[False, True, True],
             inplace=True,
         )
-        result = result.reset_index(drop=True)
-
-        # new_names = generate_dic(column, sep)
-        # result[column_c] = result[column_c].map(lambda x: new_names[x])
-        # result[column_r] = result[column_r].map(lambda x: new_names[x])
-
-        return result
+        return result.reset_index(drop=True)
 
     #
     #
