@@ -93,11 +93,11 @@ class DataFrame(pd.DataFrame):
     #
 
     def generate_ID(self, fmt=None):
-        """Generates a unique ID for each document.
+        """Generates a sequence of integers as ID for each document.
 
 
         Args:
-            fmt (str): (Optional) format used to generate the documents' ID.
+            fmt (str): (Optional) Format used to generate ID column.
 
         Returns:
             DataFrame.
@@ -136,20 +136,20 @@ class DataFrame(pd.DataFrame):
     #
     def disambiguate_authors(
         self,
-        col_authors="Authors",
-        sep_authors=None,
-        col_ids="Author(s) ID",
-        sep_ids=None,
+        col_Authors="Authors",
+        sep_Authors=None,
+        col_AuthorsID="Author(s) ID",
+        sep_AuthorsID=None,
     ):
         """Verify if author's names are unique. For duplicated names, based on `Author(s) ID` column, 
         adds a consecutive number to the name.
 
 
         Args:
-            col_authors (str): Optional. Author's name column.
-            sep_authors (str): Optional. Character used as internal separator for the elements in the column with the author's name.
-            col_ids (str): Optional. Author's ID column.
-            sep_ids (str): Optional. Character used as internal separator for the elements in the column with the author's ID.
+            col_Authors (str): Optional. Author's name column.
+            sep_Authors (str): Optional. Character used as internal separator for the elements in the column with the author's name.
+            col_AuthorsID (str): Optional. Author's ID column.
+            sep_AuthorsID (str): Optional. Character used as internal separator for the elements in the column with the author's ID.
 
         Returns:
             DataFrame.
@@ -180,29 +180,31 @@ class DataFrame(pd.DataFrame):
 
         """
 
-        if sep_authors is None:
-            sep_authors = SCOPUS_SEPS[col_authors]
+        if sep_Authors is None:
+            sep_Authors = SCOPUS_SEPS[col_Authors]
 
-        self[col_authors] = self[col_authors].map(
-            lambda x: x[:-1] if x is not None and x[-1] == sep_authors else x
+        self[col_Authors] = self[col_Authors].map(
+            lambda x: x[:-1] if x is not None and x[-1] == sep_Authors else x
         )
 
-        if sep_ids is None:
-            sep_ids = SCOPUS_SEPS[col_ids]
+        if sep_AuthorsID is None:
+            sep_AuthorsID = SCOPUS_SEPS[col_AuthorsID]
 
-        self[col_ids] = self[col_ids].map(
-            lambda x: x[:-1] if x is not None and x[-1] == sep_ids else x
+        self[col_AuthorsID] = self[col_AuthorsID].map(
+            lambda x: x[:-1] if x is not None and x[-1] == sep_AuthorsID else x
         )
 
-        data = self[[col_authors, col_ids]]
+        data = self[[col_Authors, col_AuthorsID]]
         data = data.dropna()
 
-        data["*info*"] = [(a, b) for (a, b) in zip(data[col_authors], data[col_ids])]
+        data["*info*"] = [
+            (a, b) for (a, b) in zip(data[col_Authors], data[col_AuthorsID])
+        ]
 
         data["*info*"] = data["*info*"].map(
             lambda x: [
                 (u.strip(), v.strip())
-                for u, v in zip(x[0].split(sep_authors), x[1].split(sep_ids))
+                for u, v in zip(x[0].split(sep_Authors), x[1].split(sep_AuthorsID))
             ]
         )
 
@@ -234,8 +236,10 @@ class DataFrame(pd.DataFrame):
 
         result = self.copy()
 
-        result[col_authors] = result[col_ids].map(
-            lambda x: sep_authors.join([ids_names[w.strip()] for w in x.split(sep_ids)])
+        result[col_Authors] = result[col_AuthorsID].map(
+            lambda x: sep_Authors.join(
+                [ids_names[w.strip()] for w in x.split(sep_AuthorsID)]
+            )
             if x is not None
             else x
         )
