@@ -1936,7 +1936,7 @@ class DataFrame(pd.DataFrame):
             .rename(columns={"index": column_r, "variable": column_c})
         )
 
-    def factor_analysis(self, column, sep=None, n_components=None):
+    def factor_analysis(self, column, sep=None, n_components=None, as_matrix=True):
         """Computes the matrix of factors for terms in a given column.
 
 
@@ -1944,6 +1944,7 @@ class DataFrame(pd.DataFrame):
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
             n_components: Number of components to compute.
+            as_matrix (bool): the result is reshaped by melt or not.
 
         Returns:
             DataFrame.
@@ -1989,6 +1990,21 @@ class DataFrame(pd.DataFrame):
         C -0.258199  7.071068e-01  0.57735
         D  0.516398  1.110223e-16  0.57735
 
+        >>> DataFrame(df).factor_analysis('Authors', n_components=3, as_matrix=False)
+           Authors Factor         value
+        0        A     F0 -7.745967e-01
+        1        B     F0  2.581989e-01
+        2        C     F0 -2.581989e-01
+        3        D     F0  5.163978e-01
+        4        A     F1 -0.000000e+00
+        5        B     F1  7.071068e-01
+        6        C     F1  7.071068e-01
+        7        D     F1  1.110223e-16
+        8        A     F2  0.000000e+00
+        9        B     F2 -5.773503e-01
+        10       C     F2  5.773503e-01
+        11       D     F2  5.773503e-01
+
         """
 
         tfm = self.compute_tfm(column, sep)
@@ -1997,6 +2013,13 @@ class DataFrame(pd.DataFrame):
             n_components = int(np.sqrt(len(set(terms))))
         pca = PCA(n_components=n_components)
         result = np.transpose(pca.fit(X=tfm.values).components_)
-        return pd.DataFrame(
+        result = pd.DataFrame(
             result, columns=["F" + str(i) for i in range(n_components)], index=terms
+        )
+        if as_matrix is True:
+            return result
+        return (
+            result.reset_index()
+            .melt("index")
+            .rename(columns={"index": column, "variable": "Factor"})
         )
