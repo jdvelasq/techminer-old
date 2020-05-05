@@ -42,7 +42,7 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column (str): the column to explode.
-            sep (str): Optional. Character used as internal separator for the elements in the column.
+            sep (str): Character used as internal separator for the elements in the column.
 
         Returns:
             DataFrame. Exploded dataframe.
@@ -97,7 +97,7 @@ class DataFrame(pd.DataFrame):
 
 
         Args:
-            fmt (str): (Optional) Format used to generate ID column.
+            fmt (str): Format used to generate ID column.
 
         Returns:
             DataFrame.
@@ -146,10 +146,10 @@ class DataFrame(pd.DataFrame):
 
 
         Args:
-            col_Authors (str): Optional. Author's name column.
-            sep_Authors (str): Optional. Character used as internal separator for the elements in the column with the author's name.
-            col_AuthorsID (str): Optional. Author's ID column.
-            sep_AuthorsID (str): Optional. Character used as internal separator for the elements in the column with the author's ID.
+            col_Authors (str): Author's name column.
+            sep_Authors (str): Character used as internal separator for the elements in the column with the author's name.
+            col_AuthorsID (str): Author's ID column.
+            sep_AuthorsID (str): Character used as internal separator for the elements in the column with the author's ID.
 
         Returns:
             DataFrame.
@@ -344,7 +344,7 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column (str): the column to explode.
-            sep (str): Optional. Character used as internal separator for the elements in the column.
+            sep (str): Character used as internal separator for the elements in the column.
 
         Returns:
             DataFrame.
@@ -388,7 +388,7 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column (str): the column to explode.
-            sep (str): Optional. Character used as internal separator for the elements in the column.
+            sep (str): Character used as internal separator for the elements in the column.
 
         Returns:
             DataFrame.
@@ -472,7 +472,7 @@ class DataFrame(pd.DataFrame):
         
         Args:
             column (str): the column to explode.
-            sep (str): Optional. Character used as internal separator for the elements in the column.
+            sep (str): Character used as internal separator for the elements in the column.
 
         Returns:
             DataFrame.
@@ -526,7 +526,7 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column (str): the column to explode.
-            sep (str): Optional. Character used as internal separator for the elements in the column.
+            sep (str): Character used as internal separator for the elements in the column.
 
         Returns:
             DataFrame.
@@ -571,7 +571,7 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column (str): the column to explode.
-            sep (str): Optional. Character used as internal separator for the elements in the column.
+            sep (str): Character used as internal separator for the elements in the column.
 
         Returns:
             DataFrame.
@@ -698,7 +698,7 @@ class DataFrame(pd.DataFrame):
         return result
 
     def documents_by_year(self, cumulative=False):
-        """Computes the number of documents per year.
+        """Computes the number of documents per year. This funciton adds the missing years in the sequence.
 
         Args:
             cumulative (bool): cumulate values per year.
@@ -749,7 +749,8 @@ class DataFrame(pd.DataFrame):
         return result
 
     def citations_by_year(self, cumulative=False):
-        """Computes the number of citations by year.
+        """Computes the number of citations by year. 
+        This funciton adds the missing years in the sequence.
 
         Args:
             cumulative (bool): cumulate values per year.
@@ -810,7 +811,7 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column (str): the column to explode.
-            sep (str): Optional. Character used as internal separator for the elements in the column.
+            sep (str): Character used as internal separator for the elements in the column.
 
         Returns:
             DataFrame.
@@ -865,7 +866,7 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column (str): the column to explode.
-            sep (str): Optional. Character used as internal separator for the elements in the column.
+            sep (str): Character used as internal separator for the elements in the column.
             minmax_range (tuple(int, int)): min and max values to report.
 
         Returns:
@@ -926,7 +927,7 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column (str): the column to explode.
-            sep (str): Optional. Character used as internal separator for the elements in the column.
+            sep (str): Character used as internal separator for the elements in the column.
             minmax_range (tuple(int, int)): min and max values to report.
 
         Returns:
@@ -1000,9 +1001,9 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
-            sep_r (str): Optional. Character used as internal separator for the elements in the column_r.
+            sep_r (str): Character used as internal separator for the elements in the column_r.
             column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
-            sep_c (str): Optional. Character used as internal separator for the elements in the column_c.
+            sep_c (str): Character used as internal separator for the elements in the column_c.
 
         Returns:
             DataFrame.
@@ -1071,9 +1072,9 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
-            sep_r (str): Optional. Character used as internal separator for the elements in the column_r.
+            sep_r (str): Character used as internal separator for the elements in the column_r.
             column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
-            sep_c (str): Optional. Character used as internal separator for the elements in the column_c.
+            sep_c (str): Character used as internal separator for the elements in the column_c.
             minmax_range (tuple(int, int)): min and max values to report.
 
         Returns:
@@ -1142,9 +1143,9 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
-            sep_r (str): Optional. Character used as internal separator for the elements in the column_r.
+            sep_r (str): Character used as internal separator for the elements in the column_r.
             column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
-            sep_c (str): Optional. Character used as internal separator for the elements in the column_c.
+            sep_c (str): Character used as internal separator for the elements in the column_c.
             minmax_range (tuple(int, int)): min and max values to report.
 
         Returns:
@@ -1217,9 +1218,9 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
-            sep_r (str): Optional. Character used as internal separator for the elements in the column_r.
+            sep_r (str): Character used as internal separator for the elements in the column_r.
             column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
-            sep_c (str): Optional. Character used as internal separator for the elements in the column_c.
+            sep_c (str): Character used as internal separator for the elements in the column_c.
 
         Returns:
             DataFrame.
@@ -1323,9 +1324,9 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
-            sep_r (str): Optional. Character used as internal separator for the elements in the column_r.
+            sep_r (str): Character used as internal separator for the elements in the column_r.
             column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
-            sep_c (str): Optional. Character used as internal separator for the elements in the column_c.
+            sep_c (str): Character used as internal separator for the elements in the column_c.
             minmax_range (tuple(int, int)): min and max values to report.
 
         Returns:
@@ -1505,7 +1506,7 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column (str): the column to explode.
-            sep (str): Optional. Character used as internal separator for the elements in the column.
+            sep (str): Character used as internal separator for the elements in the column.
 
         Returns:
             DataFrame.
@@ -1591,7 +1592,7 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column (str): the column to explode.
-            sep (str): Optional. Character used as internal separator for the elements in the column.
+            sep (str): Character used as internal separator for the elements in the column.
 
         Returns:
             DataFrame.
@@ -1677,7 +1678,7 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column (str): the column to explode.
-            sep (str): Optional. Character used as internal separator for the elements in the column.
+            sep (str): Character used as internal separator for the elements in the column.
 
         Returns:
             DataFrame.
@@ -1739,7 +1740,7 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column (str): the column to explode.
-            sep (str): Optional. Character used as internal separator for the elements in the column.
+            sep (str): Character used as internal separator for the elements in the column.
             method (str): Available methods are:
                 * pearson : Standard correlation coefficient
                 * kendall : Kendall Tau correlation coefficient
@@ -1865,7 +1866,7 @@ class DataFrame(pd.DataFrame):
 
         Args:
             column (str): the column to explode.
-            sep (str): Optional. Character used as internal separator for the elements in the column.
+            sep (str): Character used as internal separator for the elements in the column.
             n_components: Number of components to compute.
 
         Returns:
