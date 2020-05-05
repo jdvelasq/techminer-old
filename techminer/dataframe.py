@@ -84,7 +84,7 @@ class DataFrame(pd.DataFrame):
             result[column] = result[column].map(
                 lambda x: x.strip() if isinstance(x, str) else x
             )
-            result.index = list(range(len(result)))
+            result = result.reset_index(drop=True)
 
         return result
 
@@ -128,7 +128,6 @@ class DataFrame(pd.DataFrame):
             self["ID"] = [x for x in range(len(self))]
         else:
             self["ID"] = [fmt.format(x) for x in range(len(self))]
-        self.index = list(range(len(self)))
         return DataFrame(self)
 
     #
@@ -209,7 +208,7 @@ class DataFrame(pd.DataFrame):
         )
 
         data = data[["*info*"]].explode("*info*")
-        data.index = range(len(data))
+        data = data.reset_index(drop=True)
 
         names_ids = {}
         for idx in range(len(data)):
@@ -1789,7 +1788,9 @@ class DataFrame(pd.DataFrame):
         """
 
         result = self.compute_tfm(column=column, sep=sep)
+
         result = result.corr(method=method)
+
         return result
 
     def cross_corr(
