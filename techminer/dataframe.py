@@ -1620,14 +1620,14 @@ class DataFrame(pd.DataFrame):
 
         >>> DataFrame(df).ocurrence(column='Authors')
           Authors (row) Authors (col)  Num Documents            ID
-        0         A [4]         A [4]              4  [0, 1, 2, 4]
-        1         B [4]         B [4]              4  [2, 3, 4, 6]
-        2         A [4]         B [4]              2        [2, 4]
-        3         D [2]         D [2]              2        [5, 6]
-        4         A [4]         C [1]              1           [4]
-        5         B [4]         C [1]              1           [4]
-        6         B [4]         D [2]              1           [6]
-        7         C [1]         C [1]              1           [4]
+        0             A             A              4  [0, 1, 2, 4]
+        1             B             B              4  [2, 3, 4, 6]
+        2             A             B              2        [2, 4]
+        3             D             D              2        [5, 6]
+        4             A             C              1           [4]
+        5             B             C              1           [4]
+        6             B             D              1           [6]
+        7             C             C              1           [4]
 
 
         """
@@ -1660,9 +1660,9 @@ class DataFrame(pd.DataFrame):
         )
         result = result.reset_index(drop=True)
 
-        new_names = generate_dic(column, sep)
-        result[column_c] = result[column_c].map(lambda x: new_names[x])
-        result[column_r] = result[column_r].map(lambda x: new_names[x])
+        # new_names = generate_dic(column, sep)
+        # result[column_c] = result[column_c].map(lambda x: new_names[x])
+        # result[column_r] = result[column_r].map(lambda x: new_names[x])
 
         return result
 
@@ -1835,9 +1835,13 @@ class DataFrame(pd.DataFrame):
             column_c (str): the second column.
             sep_c (str): Character used as internal separator for the elements in the column_c.
             method (str): Available methods are:
-                * pearson : Standard correlation coefficient.
-                * kendall : Kendall Tau correlation coefficient.
-                * spearman : Spearman rank correlation.
+                
+                - pearson : Standard correlation coefficient.
+                
+                - kendall : Kendall Tau correlation coefficient.
+                
+                - spearman : Spearman rank correlation.
+
             as_matrix (bool): the result is reshaped by melt or not.
 
         Returns:
