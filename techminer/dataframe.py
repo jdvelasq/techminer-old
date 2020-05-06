@@ -21,6 +21,9 @@ SCOPUS_SEPS = {
 }
 
 
+# def _sort_matrix(x, sort_columns_by)
+
+
 class DataFrame(pd.DataFrame):
     """Data structure derived from a `pandas:DataFrame 
     <https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame>`_. 
@@ -515,9 +518,8 @@ class DataFrame(pd.DataFrame):
             [column, "Num Documents", "Cited by"],
             ascending=[True, False, False],
             inplace=True,
+            ignore_index=True,
         )
-
-        result = result.reset_index(drop=True)
         return result
 
     def documents_by_term(self, column, sep=None):
@@ -560,9 +562,11 @@ class DataFrame(pd.DataFrame):
         result = self.summarize_by_term(column, sep)
         result.pop("Cited by")
         result.sort_values(
-            ["Num Documents", column], ascending=[False, True], inplace=True
+            ["Num Documents", column],
+            ascending=[False, True],
+            inplace=True,
+            ignore_index=True,
         )
-        result = result.reset_index(drop=True)
         return result
 
     def citations_by_term(self, column, sep=None):
@@ -604,8 +608,12 @@ class DataFrame(pd.DataFrame):
         """
         result = self.summarize_by_term(column, sep)
         result.pop("Num Documents")
-        result.sort_values(["Cited by", column], ascending=[False, True], inplace=True)
-        result = result.reset_index(drop=True)
+        result.sort_values(
+            ["Cited by", column],
+            ascending=[False, True],
+            inplace=True,
+            ignore_index=True,
+        )
         return result
 
     #
@@ -689,7 +697,9 @@ class DataFrame(pd.DataFrame):
         result = result.set_index("Year")
         result = result.reindex(years, fill_value=0)
         result["ID"] = result["ID"].map(lambda x: [] if x == 0 else x)
-        result.sort_values("Year", ascending=True, inplace=True)
+        result.sort_values(
+            "Year", ascending=True, inplace=True,
+        )
         if cumulative is True:
             result["Num Documents"] = result["Num Documents"].cumsum()
             result["Cited by"] = result["Cited by"].cumsum()
@@ -856,8 +866,9 @@ class DataFrame(pd.DataFrame):
             ID=data.groupby([column, "Year"]).agg({"ID": list}).reset_index()["ID"]
         )
         result["Cited by"] = result["Cited by"].map(lambda x: int(x))
-        result.sort_values(["Year", column], ascending=True, inplace=True)
-        result = result.reset_index(drop=True)
+        result.sort_values(
+            ["Year", column], ascending=True, inplace=True, ignore_index=True,
+        )
         return result
 
     def documents_by_term_per_year(self, column, sep=None):
@@ -1038,8 +1049,7 @@ class DataFrame(pd.DataFrame):
         )
         result["Cited by"] = result["Cited by"].map(lambda x: int(x))
         result.sort_values(["Year", column_r, column_c,], ascending=True, inplace=True)
-        result = result.reset_index(drop=True)
-        return result
+        return result.reset_index(drop=True)
 
     def documents_by_terms_per_terms_per_year(
         self, column_r, column_c, sep_r=None, sep_c=None
@@ -1102,8 +1112,7 @@ class DataFrame(pd.DataFrame):
         result.sort_values(
             ["Year", column_r, column_c], ascending=[True, True, True], inplace=True,
         )
-        result = result.reset_index(drop=True)
-        return result
+        return result.reset_index(drop=True)
 
     def citations_by_terms_per_terms_per_year(
         self, column_r, column_c, sep_r=None, sep_c=None
@@ -1273,7 +1282,9 @@ class DataFrame(pd.DataFrame):
             ]
         ]
 
-        result = result.sort_values([column_r + " (row)", column_c + " (col)"])
+        result = result.sort_values(
+            [column_r + " (row)", column_c + " (col)"], ignore_index=True,
+        )
 
         return result
 
@@ -1462,8 +1473,6 @@ class DataFrame(pd.DataFrame):
         5             B             D              1         6           [6]
         6             C             C              1         4           [4]
         7             D             D              2        11        [5, 6]
-
-
         
         """
 
@@ -1502,7 +1511,9 @@ class DataFrame(pd.DataFrame):
             [column + " (row)", column + " (col)", "Num Documents", "Cited by", "ID"]
         ]
 
-        result = result.sort_values([column + " (row)", column + " (col)"])
+        result = result.sort_values(
+            [column + " (row)", column + " (col)"], ignore_index=True,
+        )
 
         return result
 
