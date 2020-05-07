@@ -16,6 +16,69 @@ class Pyplot:
     def __init__(self, df):
         self.df = df
 
+    def gant(self, hlines_lw=0.5, hlines_c="gray", hlines_ls=":", *args, **kwargs):
+
+        """Creates a gant activity plot from a dataframe.
+
+        >>> import pandas as pd
+        >>> pd = pd.DataFrame(
+        ...     {
+        ...         "author 0": [1, 1, 0, 0, 0, 0, 0],
+        ...         "author 1": [0, 1, 1, 0, 0, 0, 0],
+        ...         "author 2": [1, 0, 0, 0, 0, 0, 0],
+        ...         "author 3": [0, 0, 1, 1, 1, 0, 0],
+        ...         "author 4": [0, 0, 0, 0, 0, 0, 1],
+        ...     },
+        ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
+        ... )
+        >>> pd
+              author 0  author 1  author 2  author 3  author 4
+        2010         1         0         1         0         0
+        2011         1         1         0         0         0
+        2012         0         1         0         1         0
+        2013         0         0         0         1         0
+        2014         0         0         0         1         0
+        2015         0         0         0         0         0
+        2016         0         0         0         0         1
+
+        >>> _ = Pyplot(pd).gant()
+        >>> plt.savefig('guide/images/gantplot.png')
+        
+        .. image:: images/gantplot.png
+            :width: 400px
+            :align: center
+
+
+        """
+        x = self.df.copy()
+        plt.clf()
+        if "linewidth" not in kwargs.keys() and "lw" not in kwargs.keys():
+            kwargs["linewidth"] = 4
+        if "marker" not in kwargs.keys():
+            kwargs["marker"] = "o"
+        if "markersize" not in kwargs.keys() and "ms" not in kwargs.keys():
+            kwargs["markersize"] = 10
+        if "color" not in kwargs.keys() and "c" not in kwargs.keys():
+            kwargs["color"] = "k"
+        for idx, col in enumerate(x.columns):
+            w = x[col]
+            w = w[w > 0]
+            plt.gca().plot(w.index, [idx] * len(w.index), **kwargs)
+        plt.hlines(
+            range(len(x.columns)),
+            x.index.min(),
+            x.index.max(),
+            linewidth=hlines_lw,
+            color=hlines_c,
+            linestyle=hlines_ls,
+        )
+        plt.yticks(np.arange(len(x.columns)), x.columns)
+        plt.gca().spines["top"].set_visible(False)
+        plt.gca().spines["right"].set_visible(False)
+        plt.gca().spines["left"].set_visible(False)
+        plt.gca().spines["bottom"].set_visible(False)
+        return plt.gca()
+
     def pie(
         self,
         cmap=plt.cm.Greys,
@@ -53,7 +116,7 @@ class Pyplot:
         >>> plt.savefig('guide/images/pieplot.png')
         
         .. image:: images/pieplot.png
-            :width: 600px
+            :width: 400px
             :align: center
 
 
@@ -107,7 +170,7 @@ class Pyplot:
         >>> plt.savefig('guide/images/barplot.png')
         
         .. image:: images/barplot.png
-            :width: 600px
+            :width: 400px
             :align: center
 
 
@@ -161,7 +224,7 @@ class Pyplot:
         >>> plt.savefig('guide/images/barhplot.png')
         
         .. image:: images/barhplot.png
-            :width: 600px
+            :width: 400px
             :align: center
         
         """
@@ -214,7 +277,7 @@ class Pyplot:
         >>> plt.savefig('guide/images/plotplot.png')
         
         .. image:: images/plotplot.png
-            :width: 600px
+            :width: 400px
             :align: center
 
 
@@ -291,7 +354,7 @@ class Pyplot:
         >>> plt.savefig('guide/images/wordcloud.png')        
         
         .. image:: images/wordcloud.png
-            :width: 600px
+            :width: 400px
             :align: center     
         """
         x = self.df.copy()
