@@ -21,10 +21,38 @@ SCOPUS_SEPS = {
 }
 
 
+def heatmap(df, cmap):
+    """Display the dataframe as a heatmap in Jupyter.
+
+        Args:
+            df (pandas.DataFrame): dataframe as a matrix.
+            cmap (colormap): colormap used to build a heatmap.
+
+        Returns:
+            DataFrame. Exploded dataframe.
+
+
+    """
+    return df.style.backgroud_gradient(cmap=cmap)
+
+
 def sort_by_numdocuments(
     df, matrix, axis=0, ascending=True, kind="quicksort", axis_name=None, axis_sep=None
 ):
-    """
+    """Sorts a matrix axis by the number of documents.
+
+
+    Args:
+        df (pandas.DataFrame): dataframe with bibliographic information.
+        matrix (pandas.DataFrame): matrix to sort.
+        axis {0 or ‘index’, 1 or ‘columns’}, default 0
+        ascending (bool): sort ascending?.
+        kind (str): ‘quicksort’, ‘mergesort’, ‘heapsort’.
+        axis_name (str): column name used to sort by number of documents.
+        axis_sep (str): character used to separate the internal values of column axis_name.
+
+    Returns:
+        DataFrame sorted.
 
     >>> import pandas as pd
     >>> df = pd.DataFrame(
@@ -102,7 +130,20 @@ def sort_by_numdocuments(
 def sort_by_citations(
     df, matrix, axis=0, ascending=True, kind="quicksort", axis_name=None, axis_sep=None
 ):
-    """
+    """Sorts a matrix axis by the citations.
+
+
+    Args:
+        df (pandas.DataFrame): dataframe with bibliographic information.
+        matrix (pandas.DataFrame): matrix to sort.
+        axis {0 or ‘index’, 1 or ‘columns’}, default 0
+        ascending (bool): sort ascending?.
+        kind (str): ‘quicksort’, ‘mergesort’, ‘heapsort’.
+        axis_name (str): column name used to sort by citations.
+        axis_sep (str): character used to separate the internal values of column axis_name.
+
+    Returns:
+        DataFrame sorted.
 
     >>> import pandas as pd
     >>> df = pd.DataFrame(
