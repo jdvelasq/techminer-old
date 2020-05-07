@@ -1024,7 +1024,7 @@ class DataFrame(pd.DataFrame):
         )
         return result
 
-    def documents_by_term_per_year(self, column, sep=None):
+    def documents_by_term_per_year(self, column, sep=None, as_matrix=False):
         """Computes the number of documents by term per year.
 
         Args:
@@ -1066,6 +1066,12 @@ class DataFrame(pd.DataFrame):
         5  author 4  2012              1     [4]
         6  author 4  2014              1     [5]
 
+        >>> DataFrame(df).documents_by_term_per_year('Authors', as_matrix=True)
+              author 0  author 1  author 2  author 3  author 4
+        2010         2         1         1         0         0
+        2011         0         1         0         1         0
+        2012         0         0         0         0         1
+        2014         0         0         0         0         1
         """
 
         result = self.summarize_by_term_per_year(column, sep)
@@ -1075,7 +1081,18 @@ class DataFrame(pd.DataFrame):
             ascending=[True, False, True],
             inplace=True,
         )
-        return result.reset_index(drop=True)
+        result.reset_index(drop=True)
+        if as_matrix == True:
+            result = pd.pivot_table(
+                result,
+                values="Num Documents",
+                index="Year",
+                columns=column,
+                fill_value=0,
+            )
+            result.columns = result.columns.tolist()
+            result.index = result.index.tolist()
+        return result
 
     def citations_by_term_per_year(self, column, sep=None):
         """Computes the number of citations by term by year in a column.
