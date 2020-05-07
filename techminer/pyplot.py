@@ -10,11 +10,60 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from wordcloud import ImageColorGenerator, WordCloud
+import geopandas
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 class Pyplot:
     def __init__(self, df):
         self.df = df
+
+    def worldmap(self, cmap=plt.cm.Pastel2, legend=True, *args, **kwargs):
+        """Worldmap plot with the number of documents per country.
+        
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     {
+        ...         "Country": ["China", "Taiwan", "United States", "United Kingdom", "India", "Colombia"],
+        ...         "Num Documents": [1000, 900, 800, 700, 600, 1000],
+        ...     },
+        ... )
+        >>> df
+                  Country  Num Documents
+        0           China           1000
+        1          Taiwan            900
+        2   United States            800
+        3  United Kingdom            700
+        4           India            600
+        5        Colombia           1000
+
+
+        >>> _ = plt.figure(figsize=(10, 6))
+        >>> _ = Pyplot(df).worldmap()
+        >>> plt.savefig('guide/images/worldmap.png')
+        
+        .. image:: images/worldmap.png
+            :width: 600px
+            :align: center
+        
+        
+        """
+        x = self.df.copy()
+        x[x.columns[0]] = x[x.columns[0]].map(
+            lambda w: w.replace("United States", "United States of America")
+        )
+        world = geopandas.read_file(geopandas.datasets.get_path("naturalearth_lowres"))
+        world = world[world.name != "Antarctica"]
+        world["q"] = 0
+        world.index = world.name
+        for _, row in x.iterrows():
+            if row[0] in world.index:
+                world.at[row[0], "q"] = row[1]
+        axx = plt.gca()
+        divider = make_axes_locatable(plt.gca())
+        cax = divider.append_axes("right", size="5%", pad=0.1)
+        world.plot(column="q", cmap=cmap, legend=legend, ax=axx, cax=cax, **kwargs)
+        return plt.gca()
 
     def gant(self, hlines_lw=0.5, hlines_c="gray", hlines_ls=":", *args, **kwargs):
 
@@ -334,7 +383,7 @@ class Pyplot:
         include_numbers=False,
         min_word_length=0,
     ):
-        """
+        """Plots a wordcloud from a dataframe.
 
         >>> import pandas as pd
         >>> pd = pd.DataFrame(
