@@ -45,7 +45,7 @@ def sort_by_numdocuments(
     Args:
         df (pandas.DataFrame): dataframe with bibliographic information.
         matrix (pandas.DataFrame): matrix to sort.
-        axis {0 or ‘index’, 1 or ‘columns’}, default 0
+        axis ({0 or ‘index’, 1 or ‘columns’}), default 0: axis to be sorted.
         ascending (bool): sort ascending?.
         kind (str): ‘quicksort’, ‘mergesort’, ‘heapsort’.
         axis_name (str): column name used to sort by number of documents.
@@ -136,7 +136,7 @@ def sort_by_citations(
     Args:
         df (pandas.DataFrame): dataframe with bibliographic information.
         matrix (pandas.DataFrame): matrix to sort.
-        axis {0 or ‘index’, 1 or ‘columns’}, default 0
+        axis ({0 or ‘index’, 1 or ‘columns’}), default 0: axis to be sorted.
         ascending (bool): sort ascending?.
         kind (str): ‘quicksort’, ‘mergesort’, ‘heapsort’.
         axis_name (str): column name used to sort by citations.
@@ -868,7 +868,7 @@ class DataFrame(pd.DataFrame):
         6  2016        75              6     [5]
 
 
-        Compariison with `summarize_by_term`.
+        Comparison with `summarize_by_term`.
 
         >>> DataFrame(df).summarize_by_term('Year')
            Year  Num Documents  Cited by      ID
@@ -901,7 +901,7 @@ class DataFrame(pd.DataFrame):
         return result
 
     def documents_by_year(self, cumulative=False):
-        """Computes the number of documents per year. This funciton adds the missing years in the sequence.
+        """Computes the number of documents per year. This function adds the missing years in the sequence.
 
         Args:
             cumulative (bool): cumulate values per year.
@@ -953,7 +953,7 @@ class DataFrame(pd.DataFrame):
 
     def citations_by_year(self, cumulative=False):
         """Computes the number of citations by year. 
-        This funciton adds the missing years in the sequence.
+        This function adds the missing years in the sequence.
 
         Args:
             cumulative (bool): cumulate values per year.
@@ -1816,15 +1816,19 @@ class DataFrame(pd.DataFrame):
         6     B,D         6   6
 
         >>> DataFrame(df).summarize_ocurrence(column='Authors')
-          Authors (IDX) Authors (COL)  Num Documents  Cited by            ID
-        0             A             A              4         7  [0, 1, 2, 4]
-        1             A             B              2         6        [2, 4]
-        2             A             C              1         4           [4]
-        3             B             B              4        15  [2, 3, 4, 6]
-        4             B             C              1         4           [4]
-        5             B             D              1         6           [6]
-        6             C             C              1         4           [4]
-        7             D             D              2        11        [5, 6]
+           Authors (IDX) Authors (COL)  Num Documents  Cited by            ID
+        0              A             A              4         7  [0, 1, 2, 4]
+        1              A             B              2         6        [2, 4]
+        2              A             C              1         4           [4]
+        3              B             A              2         6        [2, 4]
+        4              B             B              4        15  [2, 3, 4, 6]
+        5              B             C              1         4           [4]
+        6              B             D              1         6           [6]
+        7              C             A              1         4           [4]
+        8              C             B              1         4           [4]
+        9              C             C              1         4           [4]
+        10             D             B              1         6           [6]
+        11             D             D              2        11        [5, 6]
         
         """
 
@@ -1832,7 +1836,8 @@ class DataFrame(pd.DataFrame):
             w = [x.strip() for x in w.split(sep)]
             result = []
             for idx0 in range(len(w)):
-                for idx1 in range(idx0, len(w)):
+                # for idx1 in range(idx0, len(w)):
+                for idx1 in range(len(w)):
                     result.append((w[idx0], w[idx1]))
             return result
 
@@ -1904,27 +1909,32 @@ class DataFrame(pd.DataFrame):
         6     B,D         6   6
 
         >>> DataFrame(df).ocurrence(column='Authors')
-          Authors (IDX) Authors (COL)  Num Documents            ID
-        0             A             A              4  [0, 1, 2, 4]
-        1             B             B              4  [2, 3, 4, 6]
-        2             A             B              2        [2, 4]
-        3             D             D              2        [5, 6]
-        4             A             C              1           [4]
-        5             B             C              1           [4]
-        6             B             D              1           [6]
-        7             C             C              1           [4]
+           Authors (IDX) Authors (COL)  Num Documents            ID
+        0              A             A              4  [0, 1, 2, 4]
+        1              B             B              4  [2, 3, 4, 6]
+        2              A             B              2        [2, 4]
+        3              B             A              2        [2, 4]
+        4              D             D              2        [5, 6]
+        5              A             C              1           [4]
+        6              B             C              1           [4]
+        7              B             D              1           [6]
+        8              C             A              1           [4]
+        9              C             B              1           [4]
+        10             C             C              1           [4]
+        11             D             B              1           [6]
 
         >>> DataFrame(df).ocurrence(column='Authors', as_matrix=True)
            A  B  C  D
         A  4  2  1  0
-        B  0  4  1  1
-        C  0  0  1  0
-        D  0  0  0  2
+        B  2  4  1  1
+        C  1  1  1  0
+        D  0  1  0  2
 
         >>> DataFrame(df).ocurrence(column='Authors', as_matrix=True, minmax=(2,3))
-           B  D
-        A  2  0
-        D  0  2
+           A  B  D
+        A  0  2  0
+        B  2  0  0
+        D  0  0  2
 
         """
 
