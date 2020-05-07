@@ -1094,7 +1094,7 @@ class DataFrame(pd.DataFrame):
             result.index = result.index.tolist()
         return result
 
-    def citations_by_term_per_year(self, column, sep=None):
+    def citations_by_term_per_year(self, column, sep=None, as_matrix=False):
         """Computes the number of citations by term by year in a column.
 
         Args:
@@ -1136,6 +1136,12 @@ class DataFrame(pd.DataFrame):
         5  author 4  2012        14     [4]
         6  author 4  2014        15     [5]
 
+        >>> DataFrame(df).citations_by_term_per_year('Authors', as_matrix=True)
+              author 0  author 1  author 2  author 3  author 4
+        2010        21        10        10         0         0
+        2011         0        12         0        13         0
+        2012         0         0         0         0        14
+        2014         0         0         0         0        15
 
         """
         result = self.summarize_by_term_per_year(column, sep)
@@ -1143,7 +1149,14 @@ class DataFrame(pd.DataFrame):
         result.sort_values(
             ["Year", "Cited by", column], ascending=[True, False, False], inplace=True,
         )
-        return result.reset_index(drop=True)
+        result = result.reset_index(drop=True)
+        if as_matrix == True:
+            result = pd.pivot_table(
+                result, values="Cited by", index="Year", columns=column, fill_value=0,
+            )
+            result.columns = result.columns.tolist()
+            result.index = result.index.tolist()
+        return result
 
     #
     #
@@ -1458,7 +1471,7 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def co_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None):
+    def co_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None, as_matrix=False):
         """Computes the co-ocurrence of two terms in different colums. The report adds
         the number of documents by term between brackets.
 
@@ -1506,7 +1519,12 @@ class DataFrame(pd.DataFrame):
         8             D                     c              1     [4]
         9             D                     d              1     [4]
 
-
+        >>> DataFrame(df).co_ocurrence(column_r='Authors', column_c='Author Keywords', as_matrix=True)
+           a  b  c  d
+        A  2  1  1  0
+        B  1  2  2  1
+        C  0  0  1  0
+        D  0  0  1  1
 
         """
 
@@ -1531,9 +1549,20 @@ class DataFrame(pd.DataFrame):
             ["Num Documents", column_r + " (row)", column_c + " (col)"],
             ascending=[False, True, True],
         )
-        return result.reset_index(drop=True)
+        result = result.reset_index(drop=True)
+        if as_matrix == True:
+            result = pd.pivot_table(
+                result,
+                values="Num Documents",
+                index=column_r + " (row)",
+                columns=column_c + " (col)",
+                fill_value=0,
+            )
+            result.columns = result.columns.tolist()
+            result.index = result.index.tolist()
+        return result
 
-    def co_citation(self, column_r, column_c, sep_r=None, sep_c=None):
+    def co_citation(self, column_r, column_c, sep_r=None, sep_c=None, as_matrix=False):
         """Computes the number of citations shared by two terms in different columns.
 
 
@@ -1572,6 +1601,12 @@ class DataFrame(pd.DataFrame):
         8             A                     b         1     [1]
         9             B                     a         1     [1]
 
+        >>> DataFrame(df).co_citation(column_r='Authors', column_c='Author Keywords', as_matrix=True)
+           a  b  c  d
+        A  1  1  3  0
+        B  1  3  7  4
+        C  0  0  3  0
+        D  0  0  4  4
 
 
         """
@@ -1593,7 +1628,18 @@ class DataFrame(pd.DataFrame):
             ascending=[False, True, True,],
             inplace=True,
         )
-        return result.reset_index(drop=True)
+        result = result.reset_index(drop=True)
+        if as_matrix == True:
+            result = pd.pivot_table(
+                result,
+                values="Cited by",
+                index=column_r + " (row)",
+                columns=column_c + " (col)",
+                fill_value=0,
+            )
+            result.columns = result.columns.tolist()
+            result.index = result.index.tolist()
+        return result
 
     #
     #
@@ -1687,7 +1733,7 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def ocurrence(self, column, sep=None):
+    def ocurrence(self, column, sep=None, as_matrix=False):
         """Computes the ocurrence between the terms in a column.
 
         Args:
@@ -1753,7 +1799,18 @@ class DataFrame(pd.DataFrame):
             ascending=[False, True, True],
             inplace=True,
         )
-        return result.reset_index(drop=True)
+        result = result.reset_index(drop=True)
+        if as_matrix == True:
+            result = pd.pivot_table(
+                result,
+                values="Cited by",
+                index=column_r + " (row)",
+                columns=column_c + " (col)",
+                fill_value=0,
+            )
+            result.columns = result.columns.tolist()
+            result.index = result.index.tolist()
+        return result
 
     #
     #
