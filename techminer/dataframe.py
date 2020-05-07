@@ -1033,7 +1033,7 @@ class DataFrame(pd.DataFrame):
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
             as_matrix (bool): Results are returned as a matrix.
-            minmax (pair(int,int)): filter by >=min,<=max.
+            minmax (pair(number,number)): filter values by >=min,<=max.
 
         Returns:
             DataFrame.
@@ -1125,6 +1125,7 @@ class DataFrame(pd.DataFrame):
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
             as_matrix (bool): Results are returned as a matrix.
+            minmax (pair(number,number)): filter values by >=min,<=max.
 
         Returns:
             DataFrame.
@@ -1535,6 +1536,7 @@ class DataFrame(pd.DataFrame):
             column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
             sep_COL (str): Character used as internal separator for the elements in the column_COL.
             as_matrix (bool): Results are returned as a matrix.
+            minmax (pair(number,number)): filter values by >=min,<=max.
 
         Returns:
             DataFrame.
@@ -1645,8 +1647,7 @@ class DataFrame(pd.DataFrame):
             column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
             sep_COL (str): Character used as internal separator for the elements in the column_COL.
             as_matrix (bool): Results are returned as a matrix.
-
-
+            minmax (pair(number,number)): filter values by >=min,<=max.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -1834,6 +1835,7 @@ class DataFrame(pd.DataFrame):
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
             as_matrix (bool): Results are returned as a matrix.
+            minmax (pair(number,number)): filter values by >=min,<=max.
 
         Returns:
             DataFrame.
@@ -2009,6 +2011,7 @@ class DataFrame(pd.DataFrame):
                 * spearman : Spearman rank correlation.
 
             as_matrix (bool): Results are returned as a matrix.
+            minmax (pair(number,number)): filter values by >=min,<=max.
 
         Returns:
             DataFrame.
@@ -2105,6 +2108,7 @@ class DataFrame(pd.DataFrame):
                 result.columns = result.columns.tolist()
                 result.index = result.index.tolist()
                 result = result.astype("float")
+
         return result
 
     def cross_corr(
@@ -2133,6 +2137,7 @@ class DataFrame(pd.DataFrame):
                 - spearman : Spearman rank correlation.
 
             as_matrix (bool): the result is reshaped by melt or not.
+            minmax (pair(number,number)): filter values by >=min,<=max.
 
         Returns:
             DataFrame.
