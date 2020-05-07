@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-# class Plot:
+# class Pyplot:
 #     def __init__(self, pdf):
 #         self.pdf = pdf
 

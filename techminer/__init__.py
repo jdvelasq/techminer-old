@@ -3,7 +3,9 @@
 from .dataframe import *
 
 # from techminer.plot import *
-from techminer.strings import *
+from .strings import *
+from .dataframe import *
+from .pyplot import *
 
 # from techminer.keywords import *
 # from techminer.records import *
