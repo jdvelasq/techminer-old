@@ -18,6 +18,134 @@ class Pyplot:
     def __init__(self, df):
         self.df = df
 
+    def bubble(
+        self,
+        axis=0,
+        rmax=80,
+        cmap=plt.cm.Blues,
+        grid_lw=1.0,
+        grid_c="gray",
+        grid_ls=":",
+        **kwargs
+    ):
+
+        """Creates a gant activity plot from a dataframe.
+
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     {
+        ...         "author 0": [ 1, 2, 3, 4, 5, 6, 7],
+        ...         "author 1": [14, 13, 12, 11, 10, 9, 8],
+        ...         "author 2": [1, 5, 8, 9, 0, 0, 0],
+        ...         "author 3": [0, 0, 1, 1, 1, 0, 0],
+        ...         "author 4": [0, 10, 0, 4, 2, 0, 1],
+        ...     },
+        ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
+        ... )
+        >>> df
+              author 0  author 1  author 2  author 3  author 4
+        2010         1        14         1         0         0
+        2011         2        13         5         0        10
+        2012         3        12         8         1         0
+        2013         4        11         9         1         4
+        2014         5        10         0         1         2
+        2015         6         9         0         0         0
+        2016         7         8         0         0         1
+
+        >>> _ = Pyplot(df).bubble(axis=0, alpha=0.5, rmax=150)
+        >>> plt.savefig('guide/images/bubbleplot0.png')
+        
+        .. image:: images/bubbleplot0.png
+            :width: 400px
+            :align: center
+
+        >>> _ = Pyplot(df).bubble(axis=1, alpha=0.5, rmax=150)
+        >>> plt.savefig('guide/images/bubbleplot1.png')
+        
+        .. image:: images/bubbleplot1.png
+            :width: 400px
+            :align: center
+
+
+        """
+        x = self.df.copy()
+        if axis == "index":
+            axis == 0
+        if axis == "columns":
+            axis == 1
+        plt.clf()
+
+        vmax = x.max().max()
+        vmin = x.min().min()
+
+        rmin = 0
+
+        if axis == 0:
+            for idx, row in enumerate(x.iterrows()):
+                values = [
+                    10 * (rmin + (rmax - rmin) * w / (vmax - vmin))
+                    for w in row[1].tolist()
+                ]
+                plt.gca().scatter(
+                    range(len(x.columns)),
+                    [idx] * len(x.columns),
+                    marker="o",
+                    s=values,
+                    **kwargs,
+                )
+                plt.hlines(
+                    idx,
+                    -1,
+                    len(x.columns),
+                    linewidth=grid_lw,
+                    color=grid_c,
+                    linestyle=grid_ls,
+                )
+        else:
+            for idx, col in enumerate(x.columns):
+                values = [
+                    10 * (rmin + (rmax - rmin) * w / (vmax - vmin)) for w in x[col]
+                ]
+                plt.gca().scatter(
+                    [idx] * len(x.index),
+                    range(len(x.index)),
+                    marker="o",
+                    s=values,
+                    **kwargs,
+                )
+                plt.vlines(
+                    idx,
+                    -1,
+                    len(x.index),
+                    linewidth=grid_lw,
+                    color=grid_c,
+                    linestyle=grid_ls,
+                )
+
+        for idx_col, col in enumerate(x.columns):
+            for idx_row, row in enumerate(x.index):
+
+                if x[col][row] != 0:
+                    plt.text(idx_col, idx_row, x[col][row], va="center", ha="center")
+
+        plt.xlim(-1, len(x.columns))
+        plt.ylim(-1, len(x.index) + 1)
+
+        plt.xticks(
+            np.arange(len(x.columns)),
+            x.columns,
+            rotation="vertical",
+            horizontalalignment="center",
+        )
+        plt.yticks(np.arange(len(x.index)), x.index)
+
+        plt.gca().spines["top"].set_visible(False)
+        plt.gca().spines["right"].set_visible(False)
+        plt.gca().spines["left"].set_visible(False)
+        plt.gca().spines["bottom"].set_visible(False)
+
+        return plt.gca()
+
     def worldmap(self, cmap=plt.cm.Pastel2, legend=True, *args, **kwargs):
         """Worldmap plot with the number of documents per country.
         
