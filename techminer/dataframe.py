@@ -1403,7 +1403,7 @@ class DataFrame(pd.DataFrame):
         4     B,D             c;d         4   4
 
         >>> DataFrame(df).summarize_co_ocurrence(column_r='Authors', column_c='Author Keywords')
-          Authors (row) Author Keywords (col)  Num Documents  Cited by      ID
+          Authors (IDX) Author Keywords (COL)  Num Documents  Cited by      ID
         0             A                     a              2         1  [0, 1]
         1             A                     b              1         1     [1]
         2             A                     c              1         3     [3]
@@ -1453,14 +1453,14 @@ class DataFrame(pd.DataFrame):
 
         result["Cited by"] = result["Cited by"].map(int)
 
-        result[column_r + " (row)"] = result["pairs"].map(lambda x: x[0])
-        result[column_c + " (col)"] = result["pairs"].map(lambda x: x[1])
+        result[column_r + " (IDX)"] = result["pairs"].map(lambda x: x[0])
+        result[column_c + " (COL)"] = result["pairs"].map(lambda x: x[1])
         result.pop("pairs")
 
         result = result[
             [
-                column_r + " (row)",
-                column_c + " (col)",
+                column_r + " (IDX)",
+                column_c + " (COL)",
                 "Num Documents",
                 "Cited by",
                 "ID",
@@ -1468,7 +1468,7 @@ class DataFrame(pd.DataFrame):
         ]
 
         result = result.sort_values(
-            [column_r + " (row)", column_c + " (col)"], ignore_index=True,
+            [column_r + " (IDX)", column_c + " (COL)"], ignore_index=True,
         )
 
         return result
@@ -1510,7 +1510,7 @@ class DataFrame(pd.DataFrame):
         4     B,D             c;d         4   4
 
         >>> DataFrame(df).co_ocurrence(column_r='Authors', column_c='Author Keywords')
-          Authors (row) Author Keywords (col)  Num Documents      ID
+          Authors (IDX) Author Keywords (COL)  Num Documents      ID
         0             A                     a              2  [0, 1]
         1             B                     b              2  [1, 2]
         2             B                     c              2  [3, 4]
@@ -1544,12 +1544,12 @@ class DataFrame(pd.DataFrame):
         result = self.summarize_co_ocurrence(column_r, column_c, sep_r, sep_c)
         result.pop("Cited by")
         result.sort_values(
-            [column_r + " (row)", column_c + " (col)", "Num Documents",],
+            [column_r + " (IDX)", column_c + " (COL)", "Num Documents",],
             ascending=[True, True, False],
             inplace=True,
         )
         result = result.sort_values(
-            ["Num Documents", column_r + " (row)", column_c + " (col)"],
+            ["Num Documents", column_r + " (IDX)", column_c + " (COL)"],
             ascending=[False, True, True],
         )
         result = result.reset_index(drop=True)
@@ -1557,8 +1557,8 @@ class DataFrame(pd.DataFrame):
             result = pd.pivot_table(
                 result,
                 values="Num Documents",
-                index=column_r + " (row)",
-                columns=column_c + " (col)",
+                index=column_r + " (IDX)",
+                columns=column_c + " (COL)",
                 fill_value=0,
             )
             result.columns = result.columns.tolist()
@@ -1600,7 +1600,7 @@ class DataFrame(pd.DataFrame):
         4     B,D             c;d         4   4
 
         >>> DataFrame(df).co_citation(column_r='Authors', column_c='Author Keywords')
-          Authors (row) Author Keywords (col)  Cited by      ID
+          Authors (IDX) Author Keywords (COL)  Cited by      ID
         0             B                     c         7  [3, 4]
         1             B                     d         4     [4]
         2             D                     c         4     [4]
@@ -1635,7 +1635,7 @@ class DataFrame(pd.DataFrame):
         result = self.summarize_co_ocurrence(column_r, column_c, sep_r, sep_c)
         result.pop("Num Documents")
         result.sort_values(
-            ["Cited by", column_r + " (row)", column_c + " (col)",],
+            ["Cited by", column_r + " (IDX)", column_c + " (COL)",],
             ascending=[False, True, True,],
             inplace=True,
         )
@@ -1644,8 +1644,8 @@ class DataFrame(pd.DataFrame):
             result = pd.pivot_table(
                 result,
                 values="Cited by",
-                index=column_r + " (row)",
-                columns=column_c + " (col)",
+                index=column_r + " (IDX)",
+                columns=column_c + " (COL)",
                 fill_value=0,
             )
             result.columns = result.columns.tolist()
@@ -1691,7 +1691,7 @@ class DataFrame(pd.DataFrame):
         6     B,D         6   6
 
         >>> DataFrame(df).summarize_ocurrence(column='Authors')
-          Authors (row) Authors (col)  Num Documents  Cited by            ID
+          Authors (IDX) Authors (COL)  Num Documents  Cited by            ID
         0             A             A              4         7  [0, 1, 2, 4]
         1             A             B              2         6        [2, 4]
         2             A             C              1         4           [4]
@@ -1730,16 +1730,16 @@ class DataFrame(pd.DataFrame):
 
         result["Cited by"] = result["Cited by"].map(int)
 
-        result[column + " (row)"] = result["pairs"].map(lambda x: x[0])
-        result[column + " (col)"] = result["pairs"].map(lambda x: x[1])
+        result[column + " (IDX)"] = result["pairs"].map(lambda x: x[0])
+        result[column + " (COL)"] = result["pairs"].map(lambda x: x[1])
         result.pop("pairs")
 
         result = result[
-            [column + " (row)", column + " (col)", "Num Documents", "Cited by", "ID"]
+            [column + " (IDX)", column + " (COL)", "Num Documents", "Cited by", "ID"]
         ]
 
         result = result.sort_values(
-            [column + " (row)", column + " (col)"], ignore_index=True,
+            [column + " (IDX)", column + " (COL)"], ignore_index=True,
         )
 
         return result
@@ -1778,7 +1778,7 @@ class DataFrame(pd.DataFrame):
         6     B,D         6   6
 
         >>> DataFrame(df).ocurrence(column='Authors')
-          Authors (row) Authors (col)  Num Documents            ID
+          Authors (IDX) Authors (COL)  Num Documents            ID
         0             A             A              4  [0, 1, 2, 4]
         1             B             B              4  [2, 3, 4, 6]
         2             A             B              2        [2, 4]
@@ -1801,8 +1801,8 @@ class DataFrame(pd.DataFrame):
             }
             return new_names
 
-        column_r = column + " (row)"
-        column_c = column + " (col)"
+        column_r = column + " (IDX)"
+        column_c = column + " (COL)"
 
         result = self.summarize_ocurrence(column, sep)
         result.pop("Cited by")
@@ -1816,8 +1816,8 @@ class DataFrame(pd.DataFrame):
             result = pd.pivot_table(
                 result,
                 values="Cited by",
-                index=column_r + " (row)",
-                columns=column_c + " (col)",
+                index=column_r + " (IDX)",
+                columns=column_c + " (COL)",
                 fill_value=0,
             )
             result.columns = result.columns.tolist()
@@ -1905,8 +1905,8 @@ class DataFrame(pd.DataFrame):
                 * kendall : Kendall Tau correlation coefficient.
 
                 * spearman : Spearman rank correlation.
-                
-            as_matrix (bool): the result is reshaped by melt or not.
+
+            as_matrix (bool): Results are returned as a matrix.
 
         Returns:
             DataFrame.
@@ -1943,7 +1943,7 @@ class DataFrame(pd.DataFrame):
         D -0.632456  0.200000 -0.200000  1.000000
         
         >>> DataFrame(df).auto_corr('Authors', as_matrix=False)
-           Authors (ROW) Authors (COL)     value
+           Authors (IDX) Authors (COL)     value
         0              A             A  1.000000
         1              B             A -0.316228
         2              C             A  0.316228
@@ -1977,7 +1977,7 @@ class DataFrame(pd.DataFrame):
         return (
             result.reset_index()
             .melt("index")
-            .rename(columns={"index": column + " (ROW)", "variable": column + " (COL)"})
+            .rename(columns={"index": column + " (IDX)", "variable": column + " (COL)"})
         )
 
     def cross_corr(
