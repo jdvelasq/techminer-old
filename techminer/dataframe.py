@@ -1024,13 +1024,16 @@ class DataFrame(pd.DataFrame):
         )
         return result
 
-    def documents_by_term_per_year(self, column, sep=None, as_matrix=False):
+    def documents_by_term_per_year(
+        self, column, sep=None, as_matrix=False, minmax=None
+    ):
         """Computes the number of documents by term per year.
 
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
             as_matrix (bool): Results are returned as a matrix.
+            minmax (pair(int,int)): filter by >=min,<=max.
 
         Returns:
             DataFrame.
@@ -1073,10 +1076,28 @@ class DataFrame(pd.DataFrame):
         2011         0         1         0         1         0
         2012         0         0         0         0         1
         2014         0         0         0         0         1
+
+        >>> DataFrame(df).documents_by_term_per_year('Authors', as_matrix=True, minmax=(2, None))
+              author 0
+        2010         2
+
+        >>> DataFrame(df).documents_by_term_per_year('Authors', as_matrix=True, minmax=(0, 1))
+              author 1  author 2  author 3  author 4
+        2010         1         1         0         0
+        2011         1         0         1         0
+        2012         0         0         0         1
+        2014         0         0         0         1
+
         """
 
         result = self.summarize_by_term_per_year(column, sep)
         result.pop("Cited by")
+        if minmax is not None:
+            min_value, max_value = minmax
+            if min_value is not None:
+                result = result[result["Num Documents"] >= min_value]
+            if max_value is not None:
+                result = result[result["Num Documents"] <= max_value]
         result.sort_values(
             ["Year", "Num Documents", column],
             ascending=[True, False, True],
@@ -1095,7 +1116,9 @@ class DataFrame(pd.DataFrame):
             result.index = result.index.tolist()
         return result
 
-    def citations_by_term_per_year(self, column, sep=None, as_matrix=False):
+    def citations_by_term_per_year(
+        self, column, sep=None, as_matrix=False, minmax=None
+    ):
         """Computes the number of citations by term by year in a column.
 
         Args:
@@ -1145,9 +1168,22 @@ class DataFrame(pd.DataFrame):
         2012         0         0         0         0        14
         2014         0         0         0         0        15
 
+        >>> DataFrame(df).citations_by_term_per_year('Authors', as_matrix=True, minmax=(12, 15))
+              author 1  author 3  author 4
+        2011        12        13         0
+        2012         0         0        14
+        2014         0         0        15
+
+
         """
         result = self.summarize_by_term_per_year(column, sep)
         result.pop("Num Documents")
+        if minmax is not None:
+            min_value, max_value = minmax
+            if min_value is not None:
+                result = result[result["Cited by"] >= min_value]
+            if max_value is not None:
+                result = result[result["Cited by"] <= max_value]
         result.sort_values(
             ["Year", "Cited by", column], ascending=[True, False, False], inplace=True,
         )
@@ -1167,15 +1203,15 @@ class DataFrame(pd.DataFrame):
     #
 
     def summarize_by_term_per_term_per_year(
-        self, column_r, column_c, sep_r=None, sep_c=None
+        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None
     ):
         """Computes the number of documents and citations by term per term by year.
 
         Args:
-            column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
-            sep_r (str): Character used as internal separator for the elements in the column_r.
-            column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
-            sep_c (str): Character used as internal separator for the elements in the column_c.
+            column_IDX (str): the column to explode. Their terms are used in the index of the result dataframe.
+            sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
+            column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
+            sep_COL (str): Character used as internal separator for the elements in the column_COL.
 
         Returns:
             DataFrame.
@@ -1219,33 +1255,35 @@ class DataFrame(pd.DataFrame):
 
         """
 
-        data = DataFrame(self[[column_r, column_c, "Year", "Cited by", "ID"]]).explode(
-            column_r, sep_r
-        )
-        data = DataFrame(data).explode(column_c, sep_c)
+        data = DataFrame(
+            self[[column_IDX, column_COL, "Year", "Cited by", "ID"]]
+        ).explode(column_IDX, sep_IDX)
+        data = DataFrame(data).explode(column_COL, sep_COL)
         data["Num Documents"] = 1
-        result = data.groupby([column_r, column_c, "Year"], as_index=False).agg(
+        result = data.groupby([column_IDX, column_COL, "Year"], as_index=False).agg(
             {"Cited by": np.sum, "Num Documents": np.size}
         )
         result = result.assign(
-            ID=data.groupby([column_r, column_c, "Year"])
+            ID=data.groupby([column_IDX, column_COL, "Year"])
             .agg({"ID": list})
             .reset_index()["ID"]
         )
         result["Cited by"] = result["Cited by"].map(lambda x: int(x))
-        result.sort_values(["Year", column_r, column_c,], ascending=True, inplace=True)
+        result.sort_values(
+            ["Year", column_IDX, column_COL,], ascending=True, inplace=True
+        )
         return result.reset_index(drop=True)
 
     def documents_by_terms_per_terms_per_year(
-        self, column_r, column_c, sep_r=None, sep_c=None
+        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None
     ):
         """Computes the number of documents by term per term per year.
 
         Args:
-            column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
-            sep_r (str): Character used as internal separator for the elements in the column_r.
-            column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
-            sep_c (str): Character used as internal separator for the elements in the column_c.
+            column_IDX (str): the column to explode. Their terms are used in the index of the result dataframe.
+            sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
+            column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
+            sep_COL (str): Character used as internal separator for the elements in the column_COL.
 
         Returns:
             DataFrame.
@@ -1291,24 +1329,26 @@ class DataFrame(pd.DataFrame):
         """
 
         result = self.summarize_by_term_per_term_per_year(
-            column_r, column_c, sep_r, sep_c
+            column_IDX, column_COL, sep_IDX, sep_COL
         )
         result.pop("Cited by")
         result.sort_values(
-            ["Year", column_r, column_c], ascending=[True, True, True], inplace=True,
+            ["Year", column_IDX, column_COL],
+            ascending=[True, True, True],
+            inplace=True,
         )
         return result.reset_index(drop=True)
 
     def citations_by_terms_per_terms_per_year(
-        self, column_r, column_c, sep_r=None, sep_c=None
+        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None
     ):
         """Computes the number of citations by term per term per year.
 
         Args:
-            column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
-            sep_r (str): Character used as internal separator for the elements in the column_r.
-            column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
-            sep_c (str): Character used as internal separator for the elements in the column_c.
+            column_IDX (str): the column to explode. Their terms are used in the index of the result dataframe.
+            sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
+            column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
+            sep_COL (str): Character used as internal separator for the elements in the column_COL.
 
         Returns:
             DataFrame.
@@ -1354,11 +1394,13 @@ class DataFrame(pd.DataFrame):
         """
 
         result = self.summarize_by_term_per_term_per_year(
-            column_r, column_c, sep_r, sep_c
+            column_IDX, column_COL, sep_IDX, sep_COL
         )
         result.pop("Num Documents")
         result.sort_values(
-            ["Year", column_r, column_c], ascending=[True, True, True], inplace=True,
+            ["Year", column_IDX, column_COL],
+            ascending=[True, True, True],
+            inplace=True,
         )
         return result.reset_index(drop=True)
 
@@ -1368,14 +1410,16 @@ class DataFrame(pd.DataFrame):
     #
     #
 
-    def summarize_co_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None):
+    def summarize_co_ocurrence(
+        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None
+    ):
         """Summarize ocurrence and citations by terms in two different columns.
 
         Args:
-            column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
-            sep_r (str): Character used as internal separator for the elements in the column_r.
-            column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
-            sep_c (str): Character used as internal separator for the elements in the column_c.
+            column_IDX (str): the column to explode. Their terms are used in the index of the result dataframe.
+            sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
+            column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
+            sep_COL (str): Character used as internal separator for the elements in the column_COL.
 
         Returns:
             DataFrame.
@@ -1402,7 +1446,7 @@ class DataFrame(pd.DataFrame):
         3   A,B,C               c         3   3
         4     B,D             c;d         4   4
 
-        >>> DataFrame(df).summarize_co_ocurrence(column_r='Authors', column_c='Author Keywords')
+        >>> DataFrame(df).summarize_co_ocurrence(column_IDX='Authors', column_COL='Author Keywords')
           Authors (IDX) Author Keywords (COL)  Num Documents  Cited by      ID
         0             A                     a              2         1  [0, 1]
         1             A                     b              1         1     [1]
@@ -1418,12 +1462,12 @@ class DataFrame(pd.DataFrame):
         """
 
         def generate_pairs(w, v):
-            if sep_r is not None:
-                w = [x.strip() for x in w.split(sep_r)]
+            if sep_IDX is not None:
+                w = [x.strip() for x in w.split(sep_IDX)]
             else:
                 w = [w]
-            if sep_c is not None:
-                v = [x.strip() for x in v.split(sep_c)]
+            if sep_COL is not None:
+                v = [x.strip() for x in v.split(sep_COL)]
             else:
                 v = [v]
             result = []
@@ -1432,17 +1476,17 @@ class DataFrame(pd.DataFrame):
                     result.append((w[idx0], v[idx1]))
             return result
 
-        if sep_r is None and column_r in SCOPUS_SEPS:
-            sep_r = SCOPUS_SEPS[column_r]
+        if sep_IDX is None and column_IDX in SCOPUS_SEPS:
+            sep_IDX = SCOPUS_SEPS[column_IDX]
 
-        if sep_c is None and column_c in SCOPUS_SEPS:
-            sep_c = SCOPUS_SEPS[column_c]
+        if sep_COL is None and column_COL in SCOPUS_SEPS:
+            sep_COL = SCOPUS_SEPS[column_COL]
 
         data = self.copy()
-        data = data[[column_r, column_c, "Cited by", "ID"]]
+        data = data[[column_IDX, column_COL, "Cited by", "ID"]]
         data["Num Documents"] = 1
         data["pairs"] = [
-            generate_pairs(a, b) for a, b in zip(data[column_r], data[column_c])
+            generate_pairs(a, b) for a, b in zip(data[column_IDX], data[column_COL])
         ]
         data = data[["pairs", "Num Documents", "Cited by", "ID"]]
         data = data.explode("pairs")
@@ -1453,14 +1497,14 @@ class DataFrame(pd.DataFrame):
 
         result["Cited by"] = result["Cited by"].map(int)
 
-        result[column_r + " (IDX)"] = result["pairs"].map(lambda x: x[0])
-        result[column_c + " (COL)"] = result["pairs"].map(lambda x: x[1])
+        result[column_IDX + " (IDX)"] = result["pairs"].map(lambda x: x[0])
+        result[column_COL + " (COL)"] = result["pairs"].map(lambda x: x[1])
         result.pop("pairs")
 
         result = result[
             [
-                column_r + " (IDX)",
-                column_c + " (COL)",
+                column_IDX + " (IDX)",
+                column_COL + " (COL)",
                 "Num Documents",
                 "Cited by",
                 "ID",
@@ -1468,20 +1512,28 @@ class DataFrame(pd.DataFrame):
         ]
 
         result = result.sort_values(
-            [column_r + " (IDX)", column_c + " (COL)"], ignore_index=True,
+            [column_IDX + " (IDX)", column_COL + " (COL)"], ignore_index=True,
         )
 
         return result
 
-    def co_ocurrence(self, column_r, column_c, sep_r=None, sep_c=None, as_matrix=False):
+    def co_ocurrence(
+        self,
+        column_IDX,
+        column_COL,
+        sep_IDX=None,
+        sep_COL=None,
+        as_matrix=False,
+        minmax=None,
+    ):
         """Computes the co-ocurrence of two terms in different colums. The report adds
         the number of documents by term between brackets.
 
         Args:
-            column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
-            sep_r (str): Character used as internal separator for the elements in the column_r.
-            column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
-            sep_c (str): Character used as internal separator for the elements in the column_c.
+            column_IDX (str): the column to explode. Their terms are used in the index of the result dataframe.
+            sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
+            column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
+            sep_COL (str): Character used as internal separator for the elements in the column_COL.
             as_matrix (bool): Results are returned as a matrix.
 
         Returns:
@@ -1509,7 +1561,7 @@ class DataFrame(pd.DataFrame):
         3   A,B,C               c         3   3
         4     B,D             c;d         4   4
 
-        >>> DataFrame(df).co_ocurrence(column_r='Authors', column_c='Author Keywords')
+        >>> DataFrame(df).co_ocurrence(column_IDX='Authors', column_COL='Author Keywords')
           Authors (IDX) Author Keywords (COL)  Num Documents      ID
         0             A                     a              2  [0, 1]
         1             B                     b              2  [1, 2]
@@ -1522,12 +1574,17 @@ class DataFrame(pd.DataFrame):
         8             D                     c              1     [4]
         9             D                     d              1     [4]
 
-        >>> DataFrame(df).co_ocurrence(column_r='Authors', column_c='Author Keywords', as_matrix=True)
+        >>> DataFrame(df).co_ocurrence(column_IDX='Authors', column_COL='Author Keywords', as_matrix=True)
            a  b  c  d
         A  2  1  1  0
         B  1  2  2  1
         C  0  0  1  0
         D  0  0  1  1
+
+        >>> DataFrame(df).co_ocurrence(column_IDX='Authors', column_COL='Author Keywords', as_matrix=True, minmax=(2,2))
+           a  b  c
+        A  2  0  0
+        B  0  2  2
 
         """
 
@@ -1541,15 +1598,21 @@ class DataFrame(pd.DataFrame):
             }
             return new_names
 
-        result = self.summarize_co_ocurrence(column_r, column_c, sep_r, sep_c)
+        result = self.summarize_co_ocurrence(column_IDX, column_COL, sep_IDX, sep_COL)
         result.pop("Cited by")
+        if minmax is not None:
+            min_value, max_value = minmax
+            if min_value is not None:
+                result = result[result["Num Documents"] >= min_value]
+            if max_value is not None:
+                result = result[result["Num Documents"] <= max_value]
         result.sort_values(
-            [column_r + " (IDX)", column_c + " (COL)", "Num Documents",],
+            [column_IDX + " (IDX)", column_COL + " (COL)", "Num Documents",],
             ascending=[True, True, False],
             inplace=True,
         )
         result = result.sort_values(
-            ["Num Documents", column_r + " (IDX)", column_c + " (COL)"],
+            ["Num Documents", column_IDX + " (IDX)", column_COL + " (COL)"],
             ascending=[False, True, True],
         )
         result = result.reset_index(drop=True)
@@ -1557,22 +1620,30 @@ class DataFrame(pd.DataFrame):
             result = pd.pivot_table(
                 result,
                 values="Num Documents",
-                index=column_r + " (IDX)",
-                columns=column_c + " (COL)",
+                index=column_IDX + " (IDX)",
+                columns=column_COL + " (COL)",
                 fill_value=0,
             )
             result.columns = result.columns.tolist()
             result.index = result.index.tolist()
         return result
 
-    def co_citation(self, column_r, column_c, sep_r=None, sep_c=None, as_matrix=False):
+    def co_citation(
+        self,
+        column_IDX,
+        column_COL,
+        sep_IDX=None,
+        sep_COL=None,
+        as_matrix=False,
+        minmax=None,
+    ):
         """Computes the number of citations shared by two terms in different columns.
 
         Args:
-            column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
-            sep_r (str): Character used as internal separator for the elements in the column_r.
-            column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
-            sep_c (str): Character used as internal separator for the elements in the column_c.
+            column_IDX (str): the column to explode. Their terms are used in the index of the result dataframe.
+            sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
+            column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
+            sep_COL (str): Character used as internal separator for the elements in the column_COL.
             as_matrix (bool): Results are returned as a matrix.
 
 
@@ -1599,7 +1670,7 @@ class DataFrame(pd.DataFrame):
         3   A,B,C               c         3   3
         4     B,D             c;d         4   4
 
-        >>> DataFrame(df).co_citation(column_r='Authors', column_c='Author Keywords')
+        >>> DataFrame(df).co_citation(column_IDX='Authors', column_COL='Author Keywords')
           Authors (IDX) Author Keywords (COL)  Cited by      ID
         0             B                     c         7  [3, 4]
         1             B                     d         4     [4]
@@ -1612,13 +1683,19 @@ class DataFrame(pd.DataFrame):
         8             A                     b         1     [1]
         9             B                     a         1     [1]
 
-        >>> DataFrame(df).co_citation(column_r='Authors', column_c='Author Keywords', as_matrix=True)
+        >>> DataFrame(df).co_citation(column_IDX='Authors', column_COL='Author Keywords', as_matrix=True)
            a  b  c  d
         A  1  1  3  0
         B  1  3  7  4
         C  0  0  3  0
         D  0  0  4  4
 
+        >>> DataFrame(df).co_citation(column_IDX='Authors', column_COL='Author Keywords', as_matrix=True, minmax=(3,4))
+           b  c  d
+        A  0  3  0
+        B  3  0  4
+        C  0  3  0
+        D  0  4  4
 
         """
 
@@ -1632,10 +1709,16 @@ class DataFrame(pd.DataFrame):
             }
             return new_names
 
-        result = self.summarize_co_ocurrence(column_r, column_c, sep_r, sep_c)
+        result = self.summarize_co_ocurrence(column_IDX, column_COL, sep_IDX, sep_COL)
         result.pop("Num Documents")
+        if minmax is not None:
+            min_value, max_value = minmax
+            if min_value is not None:
+                result = result[result["Cited by"] >= min_value]
+            if max_value is not None:
+                result = result[result["Cited by"] <= max_value]
         result.sort_values(
-            ["Cited by", column_r + " (IDX)", column_c + " (COL)",],
+            ["Cited by", column_IDX + " (IDX)", column_COL + " (COL)",],
             ascending=[False, True, True,],
             inplace=True,
         )
@@ -1644,8 +1727,8 @@ class DataFrame(pd.DataFrame):
             result = pd.pivot_table(
                 result,
                 values="Cited by",
-                index=column_r + " (IDX)",
-                columns=column_c + " (COL)",
+                index=column_IDX + " (IDX)",
+                columns=column_COL + " (COL)",
                 fill_value=0,
             )
             result.columns = result.columns.tolist()
@@ -1744,7 +1827,7 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def ocurrence(self, column, sep=None, as_matrix=False):
+    def ocurrence(self, column, sep=None, as_matrix=False, minmax=None):
         """Computes the ocurrence between the terms in a column.
 
         Args:
@@ -1788,6 +1871,17 @@ class DataFrame(pd.DataFrame):
         6             B             D              1           [6]
         7             C             C              1           [4]
 
+        >>> DataFrame(df).ocurrence(column='Authors', as_matrix=True)
+           A  B  C  D
+        A  4  2  1  0
+        B  0  4  1  1
+        C  0  0  1  0
+        D  0  0  0  2
+
+        >>> DataFrame(df).ocurrence(column='Authors', as_matrix=True, minmax=(2,3))
+           B  D
+        A  2  0
+        D  0  2
 
         """
 
@@ -1801,13 +1895,19 @@ class DataFrame(pd.DataFrame):
             }
             return new_names
 
-        column_r = column + " (IDX)"
-        column_c = column + " (COL)"
+        column_IDX = column + " (IDX)"
+        column_COL = column + " (COL)"
 
         result = self.summarize_ocurrence(column, sep)
         result.pop("Cited by")
+        if minmax is not None:
+            min_value, max_value = minmax
+            if min_value is not None:
+                result = result[result["Num Documents"] >= min_value]
+            if max_value is not None:
+                result = result[result["Num Documents"] <= max_value]
         result.sort_values(
-            ["Num Documents", column_r, column_c],
+            ["Num Documents", column_IDX, column_COL],
             ascending=[False, True, True],
             inplace=True,
         )
@@ -1815,9 +1915,9 @@ class DataFrame(pd.DataFrame):
         if as_matrix == True:
             result = pd.pivot_table(
                 result,
-                values="Cited by",
-                index=column_r + " (IDX)",
-                columns=column_c + " (COL)",
+                values="Num Documents",
+                index=column_IDX,
+                columns=column_COL,
                 fill_value=0,
             )
             result.columns = result.columns.tolist()
@@ -1892,7 +1992,9 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def auto_corr(self, column, sep=None, method="pearson", as_matrix=True):
+    def auto_corr(
+        self, column, sep=None, method="pearson", as_matrix=True, minmax=None
+    ):
         """Computes the autocorrelation among items in a column of the dataframe.
 
         Args:
@@ -1968,34 +2070,60 @@ class DataFrame(pd.DataFrame):
         c -0.50 -0.50  1.00  0.25
         d -0.50 -0.50  0.25  1.00
 
-        """
+        >>> DataFrame(df).auto_corr('Author Keywords', minmax=(0.25, None))
+             a    b     c     d
+        a  1.0  0.0  0.00  0.00
+        b  0.0  1.0  0.00  0.00
+        c  0.0  0.0  1.00  0.25
+        d  0.0  0.0  0.25  1.00
 
+        """
         result = self.compute_tfm(column=column, sep=sep)
         result = result.corr(method=method)
-        if as_matrix is True:
-            return result
-        return (
-            result.reset_index()
-            .melt("index")
-            .rename(columns={"index": column + " (IDX)", "variable": column + " (COL)"})
-        )
+        if as_matrix is False or minmax is not None:
+            result = (
+                result.reset_index()
+                .melt("index")
+                .rename(
+                    columns={"index": column + " (IDX)", "variable": column + " (COL)"}
+                )
+            )
+            if minmax is not None:
+                min_value, max_value = minmax
+                if min_value is not None:
+                    result = result[result["value"] >= float(min_value)]
+                if max_value is not None:
+                    result = result[result["value"] <= float(max_value)]
+            if as_matrix is True:
+                result = pd.pivot_table(
+                    result,
+                    values="value",
+                    index=column + " (IDX)",
+                    columns=column + " (COL)",
+                    fill_value=float(0.0),
+                )
+                result.columns = result.columns.tolist()
+                result.index = result.index.tolist()
+                result = result.astype("float")
+        return result
 
     def cross_corr(
         self,
-        column_r,
-        column_c=None,
-        sep_r=None,
-        sep_c=None,
+        column_IDX,
+        column_COL=None,
+        sep_IDX=None,
+        sep_COL=None,
         method="pearson",
         as_matrix=True,
+        minmax=None,
     ):
         """Computes the cross-correlation among items in two different columns of the dataframe.
 
         Args:
-            column_r (str): the first column.
-            sep_r (str): Character used as internal separator for the elements in the column_r.
-            column_c (str): the second column.
-            sep_c (str): Character used as internal separator for the elements in the column_c.
+            column_IDX (str): the first column.
+            sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
+            column_COL (str): the second column.
+            sep_COL (str): Character used as internal separator for the elements in the column_COL.
             method (str): Available methods are:
                 
                 - pearson : Standard correlation coefficient.
@@ -2059,6 +2187,11 @@ class DataFrame(pd.DataFrame):
         C -0.25  0.316228  0.632456  0.632456
         D -0.25  0.316228 -0.316228  0.632456
 
+        >>> DataFrame(df).cross_corr('Authors', 'Author Keywords', minmax=(0.45, 0.8))
+             a         c         d
+        A  0.5  0.000000  0.000000
+        C  0.0  0.632456  0.632456
+        D  0.0  0.000000  0.632456
 
         >>> DataFrame(df).cross_corr('Authors', 'Author Keywords', as_matrix=False)
            Authors Author Keywords     value
@@ -2080,12 +2213,16 @@ class DataFrame(pd.DataFrame):
         15       D               d  0.632456
 
         """
-        if column_r == column_c:
+        if column_IDX == column_COL:
             return self.auto_corr(
-                column=column_r, sep=sep_r, method=method, as_matrix=as_matrix
+                column=column_IDX,
+                sep=sep_IDX,
+                method=method,
+                as_matrix=as_matrix,
+                minmax=minmax,
             )
-        tfm_r = self.compute_tfm(column=column_r, sep=sep_r)
-        tfm_c = self.compute_tfm(column=column_c, sep=sep_c)
+        tfm_r = self.compute_tfm(column=column_IDX, sep=sep_IDX)
+        tfm_c = self.compute_tfm(column=column_COL, sep=sep_COL)
         result = pd.DataFrame(
             [
                 [tfm_r[row].corr(tfm_c[col]) for row in tfm_r.columns]
@@ -2094,13 +2231,31 @@ class DataFrame(pd.DataFrame):
             columns=tfm_c.columns,
             index=tfm_r.columns,
         )
-        if as_matrix is True:
-            return result
-        return (
-            result.reset_index()
-            .melt("index")
-            .rename(columns={"index": column_r, "variable": column_c})
-        )
+
+        if as_matrix is False or minmax is not None:
+            result = (
+                result.reset_index()
+                .melt("index")
+                .rename(columns={"index": column_IDX, "variable": column_COL})
+            )
+            if minmax is not None:
+                min_value, max_value = minmax
+                if min_value is not None:
+                    result = result[result["value"] >= float(min_value)]
+                if max_value is not None:
+                    result = result[result["value"] <= float(max_value)]
+            if as_matrix is True:
+                result = pd.pivot_table(
+                    result,
+                    values="value",
+                    index=column_IDX,
+                    columns=column_COL,
+                    fill_value=float(0.0),
+                )
+                result.columns = result.columns.tolist()
+                result.index = result.index.tolist()
+                result = result.astype("float")
+        return result
 
     def factor_analysis(self, column, sep=None, n_components=None, as_matrix=True):
         """Computes the matrix of factors for terms in a given column.
