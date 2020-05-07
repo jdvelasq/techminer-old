@@ -5,6 +5,7 @@ Modules
     :maxdepth: 1
     
     dataframe
+    pyplot
     keywords
     records
     result

@@ -1,5 +1,5 @@
 """
-TechMiner.Plot
+TechMiner.Pyplot
 ==================================================================================================
 
 
@@ -9,11 +9,329 @@ TechMiner.Plot
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from wordcloud import ImageColorGenerator, WordCloud
 
 
-# class Pyplot:
-#     def __init__(self, pdf):
-#         self.pdf = pdf
+class Pyplot:
+    def __init__(self, df):
+        self.df = df
+
+    def pie(
+        self,
+        cmap=plt.cm.Greys,
+        explode=None,
+        autopct=None,
+        pctdistance=0.6,
+        shadow=False,
+        labeldistance=1.1,
+        startangle=None,
+        radius=None,
+        counterclock=True,
+        wedgeprops=None,
+        textprops=None,
+        center=(0, 0),
+        frame=False,
+        rotatelabels=False,
+    ):
+        """Creates a pie plot from a dataframe.
+
+        >>> import pandas as pd
+        >>> pd = pd.DataFrame(
+        ...     {
+        ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+        ...         "Num Documents": [3, 2, 2, 1],
+        ...         "ID": list(range(4)),
+        ...     }
+        ... )
+        >>> pd
+            Authors  Num Documents  ID
+        0  author 3              3   0
+        1  author 1              2   1
+        2  author 0              2   2
+        3  author 2              1   3
+        >>> _ = Pyplot(pd).pie(cmap=plt.cm.Blues)
+        >>> plt.savefig('guide/images/pieplot.png')
+        
+        .. image:: images/pieplot.png
+            :width: 600px
+            :align: center
+
+
+        """
+        x = self.df.copy()
+        x.pop("ID")
+        colors = None
+        if cmap is not None:
+            colors = [
+                cmap(1.0 - 0.9 * (i / len(x))) for i in range(len(x[x.columns[1]]))
+            ]
+        plt.clf()
+        plt.gca().pie(
+            x=x[x.columns[1]],
+            explode=explode,
+            labels=x[x.columns[0]],
+            colors=colors,
+            autopct=autopct,
+            pctdistance=pctdistance,
+            shadow=shadow,
+            labeldistance=labeldistance,
+            startangle=startangle,
+            radius=radius,
+            counterclock=counterclock,
+            wedgeprops=wedgeprops,
+            textprops=textprops,
+            center=center,
+            frame=frame,
+            rotatelabels=rotatelabels,
+        )
+        return plt.gca()
+
+    def bar(self, width=0.8, bottom=None, align="center", cmap=plt.cm.Greys, **kwargs):
+        """Creates a bar plot from a dataframe.
+
+        >>> import pandas as pd
+        >>> pd = pd.DataFrame(
+        ...     {
+        ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+        ...         "Num Documents": [3, 2, 2, 1],
+        ...         "ID": list(range(4)),
+        ...     }
+        ... )
+        >>> pd
+            Authors  Num Documents  ID
+        0  author 3              3   0
+        1  author 1              2   1
+        2  author 0              2   2
+        3  author 2              1   3
+        >>> _ = Pyplot(pd).bar(cmap=plt.cm.Blues)
+        >>> plt.savefig('guide/images/barplot.png')
+        
+        .. image:: images/barplot.png
+            :width: 600px
+            :align: center
+
+
+        """
+        x = self.df.copy()
+        x.pop("ID")
+        if cmap is not None:
+            kwargs["color"] = [
+                cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
+                for i in range(len(x[x.columns[1]]))
+            ]
+        plt.clf()
+        result = plt.gca().bar(
+            x=range(len(x)),
+            height=x[x.columns[1]],
+            width=width,
+            bottom=bottom,
+            align=align,
+            **({}),
+            **kwargs,
+        )
+        plt.xticks(
+            np.arange(len(x[x.columns[0]])), x[x.columns[0]], rotation="vertical"
+        )
+        plt.xlabel(x.columns[0])
+        plt.ylabel(x.columns[1])
+        plt.gca().spines["top"].set_visible(False)
+        plt.gca().spines["right"].set_visible(False)
+        plt.gca().spines["left"].set_visible(False)
+        plt.gca().spines["bottom"].set_visible(False)
+        return plt.gca()
+
+    def barh(self, height=0.8, left=None, align="center", cmap=None, **kwargs):
+        """Make a pie chart from a dataframe.
+        
+        >>> import pandas as pd
+        >>> pd = pd.DataFrame(
+        ...     {
+        ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+        ...         "Num Documents": [3, 2, 2, 1],
+        ...         "ID": list(range(4)),
+        ...     }
+        ... )
+        >>> pd
+            Authors  Num Documents  ID
+        0  author 3              3   0
+        1  author 1              2   1
+        2  author 0              2   2
+        3  author 2              1   3
+        >>> _ = Pyplot(pd).barh(cmap=plt.cm.Blues)
+        >>> plt.savefig('guide/images/barhplot.png')
+        
+        .. image:: images/barhplot.png
+            :width: 600px
+            :align: center
+        
+        """
+        x = self.df.copy()
+        x.pop("ID")
+        if cmap is not None:
+            kwargs["color"] = [
+                cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
+                for i in range(len(x[x.columns[1]]))
+            ]
+        plt.clf()
+        plt.gca().barh(
+            y=range(len(x)),
+            width=x[x.columns[1]],
+            height=height,
+            left=left,
+            align=align,
+            **kwargs,
+        )
+        plt.gca().invert_yaxis()
+        plt.yticks(np.arange(len(x[x.columns[0]])), x[x.columns[0]])
+        plt.xlabel(x.columns[1])
+        plt.ylabel(x.columns[0])
+        #
+        plt.gca().spines["top"].set_visible(False)
+        plt.gca().spines["right"].set_visible(False)
+        plt.gca().spines["left"].set_visible(False)
+        plt.gca().spines["bottom"].set_visible(False)
+        #
+        return plt.gca()
+
+    def plot(self, *args, scalex=True, scaley=True, **kwargs):
+        """Creates a plot from a dataframe.
+
+        >>> import pandas as pd
+        >>> pd = pd.DataFrame(
+        ...     {
+        ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+        ...         "Num Documents": [3, 2, 2, 1],
+        ...         "ID": list(range(4)),
+        ...     }
+        ... )
+        >>> pd
+            Authors  Num Documents  ID
+        0  author 3              3   0
+        1  author 1              2   1
+        2  author 0              2   2
+        3  author 2              1   3
+        >>> _ = Pyplot(pd).plot()
+        >>> plt.savefig('guide/images/plotplot.png')
+        
+        .. image:: images/plotplot.png
+            :width: 600px
+            :align: center
+
+
+        """
+        x = self.df.copy()
+        x.pop("ID")
+        plt.clf()
+        plt.gca().plot(
+            range(len(x)),
+            x[x.columns[1]],
+            *args,
+            scalex=scalex,
+            scaley=scaley,
+            **kwargs,
+        )
+        plt.xticks(
+            np.arange(len(x[x.columns[0]])), x[x.columns[0]], rotation="vertical"
+        )
+        plt.xlabel(x.columns[0])
+        plt.ylabel(x.columns[1])
+        plt.gca().spines["top"].set_visible(False)
+        plt.gca().spines["right"].set_visible(False)
+        plt.gca().spines["left"].set_visible(False)
+        plt.gca().spines["bottom"].set_visible(False)
+        return plt.gca()
+
+    def wordcloud(
+        self,
+        font_path=None,
+        width=400,
+        height=200,
+        margin=2,
+        ranks_only=None,
+        prefer_horizontal=0.9,
+        mask=None,
+        scale=1,
+        color_func=None,
+        max_words=200,
+        min_font_size=4,
+        stopwords=None,
+        random_state=None,
+        background_color="black",
+        max_font_size=None,
+        font_step=1,
+        mode="RGB",
+        relative_scaling="auto",
+        regexp=None,
+        collocations=True,
+        colormap=None,
+        normalize_plurals=True,
+        contour_width=0,
+        contour_color="black",
+        repeat=False,
+        include_numbers=False,
+        min_word_length=0,
+    ):
+        """
+
+        >>> import pandas as pd
+        >>> pd = pd.DataFrame(
+        ...     {
+        ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+        ...         "Num Documents": [10, 5, 2, 1],
+        ...         "ID": list(range(4)),
+        ...     }
+        ... )
+        >>> pd
+            Authors  Num Documents  ID
+        0  author 3             10   0
+        1  author 1              5   1
+        2  author 0              2   2
+        3  author 2              1   3
+        >>> _ = Pyplot(pd).wordcloud()
+        >>> plt.savefig('guide/images/wordcloud.png')        
+        
+        .. image:: images/wordcloud.png
+            :width: 600px
+            :align: center     
+        """
+        x = self.df.copy()
+        x.pop("ID")
+        words = {row[0]: row[1] for _, row in x.iterrows()}
+        wordcloud = WordCloud(
+            font_path=font_path,
+            width=width,
+            height=height,
+            margin=margin,
+            ranks_only=ranks_only,
+            prefer_horizontal=prefer_horizontal,
+            mask=mask,
+            scale=scale,
+            color_func=color_func,
+            max_words=max_words,
+            min_font_size=min_font_size,
+            stopwords=stopwords,
+            random_state=random_state,
+            background_color=background_color,
+            max_font_size=max_font_size,
+            font_step=font_step,
+            mode=mode,
+            relative_scaling=relative_scaling,
+            regexp=regexp,
+            collocations=collocations,
+            colormap=colormap,
+            normalize_plurals=normalize_plurals,
+            contour_width=contour_width,
+            contour_color=contour_color,
+            repeat=repeat,
+            include_numbers=include_numbers,
+            min_word_length=min_word_length,
+        )
+        wordcloud.generate_from_frequencies(words)
+        plt.clf()
+        plt.gca().imshow(wordcloud, interpolation="bilinear")
+        plt.gca().axis("off")
+        return plt.gca()
+
 
 #     # ----------------------------------------------------------------------------------------------------
 #     def heatmap(
