@@ -1030,6 +1030,7 @@ class DataFrame(pd.DataFrame):
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
+            as_matrix (bool): Results are returned as a matrix.
 
         Returns:
             DataFrame.
@@ -1100,6 +1101,7 @@ class DataFrame(pd.DataFrame):
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
+            as_matrix (bool): Results are returned as a matrix.
 
         Returns:
             DataFrame.
@@ -1480,6 +1482,7 @@ class DataFrame(pd.DataFrame):
             sep_r (str): Character used as internal separator for the elements in the column_r.
             column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
             sep_c (str): Character used as internal separator for the elements in the column_c.
+            as_matrix (bool): Results are returned as a matrix.
 
         Returns:
             DataFrame.
@@ -1564,6 +1567,14 @@ class DataFrame(pd.DataFrame):
 
     def co_citation(self, column_r, column_c, sep_r=None, sep_c=None, as_matrix=False):
         """Computes the number of citations shared by two terms in different columns.
+
+        Args:
+            column_r (str): the column to explode. Their terms are used in the index of the result dataframe.
+            sep_r (str): Character used as internal separator for the elements in the column_r.
+            column_c (str): the column to explode. Their terms are used in the columns of the result dataframe.
+            sep_c (str): Character used as internal separator for the elements in the column_c.
+            as_matrix (bool): Results are returned as a matrix.
+
 
 
         Examples
@@ -1739,6 +1750,7 @@ class DataFrame(pd.DataFrame):
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
+            as_matrix (bool): Results are returned as a matrix.
 
         Returns:
             DataFrame.
@@ -1887,9 +1899,13 @@ class DataFrame(pd.DataFrame):
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
             method (str): Available methods are:
+
                 * pearson : Standard correlation coefficient.
+
                 * kendall : Kendall Tau correlation coefficient.
+
                 * spearman : Spearman rank correlation.
+                
             as_matrix (bool): the result is reshaped by melt or not.
 
         Returns:
