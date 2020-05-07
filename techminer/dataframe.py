@@ -1157,6 +1157,70 @@ class DataFrame(pd.DataFrame):
             result.index = result.index.tolist()
         return result
 
+    def gant(self, column, sep=None, minmax=None):
+        """Computes the number of documents by term per year.
+
+        Args:
+            column (str): the column to explode.
+            sep (str): Character used as internal separator for the elements in the column.
+            as_matrix (bool): Results are returned as a matrix.
+            minmax (pair(number,number)): filter values by >=min,<=max.
+
+        Returns:
+            DataFrame.
+
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     {
+        ...          "Year": [2010, 2011, 2011, 2012, 2015, 2012, 2016],
+        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3;author 3;author 4;author 4".split(";"),
+        ...          "Cited by": list(range(10,17)),
+        ...          "ID": list(range(7)),
+        ...     }
+        ... )
+        >>> DataFrame(df).documents_by_term_per_year('Authors', as_matrix=True)
+              author 0  author 1  author 2  author 3  author 4
+        2010         1         1         1         0         0
+        2011         1         1         0         0         0
+        2012         0         0         0         1         1
+        2015         0         0         0         1         0
+        2016         0         0         0         0         1
+
+        >>> DataFrame(df).gant('Authors')
+              author 0  author 1  author 2  author 3  author 4
+        2010         1         1         1         0         0
+        2011         1         1         0         0         0
+        2012         0         0         0         1         1
+        2013         0         0         0         1         1
+        2014         0         0         0         1         1
+        2015         0         0         0         1         1
+        2016         0         0         0         0         1
+
+        """
+        result = self.documents_by_term_per_year(
+            column=column, sep=sep, as_matrix=True, minmax=minmax
+        )
+        years = [year for year in range(result.index.min(), result.index.max() + 1)]
+        result = result.reindex(years, fill_value=0)
+
+        matrix1 = result.copy()
+        matrix1 = matrix1.cumsum()
+        matrix1 = matrix1.applymap(lambda x: True if x > 0 else False)
+
+        matrix2 = result.copy()
+        matrix2 = matrix2.sort_index(ascending=False)
+        matrix2 = matrix2.cumsum()
+        matrix2 = matrix2.applymap(lambda x: True if x > 0 else False)
+        matrix2 = matrix2.sort_index(ascending=True)
+        result = matrix1.eq(matrix2)
+        result = result.applymap(lambda x: 1 if x is True else 0)
+
+        return result
+
     def citations_by_term_per_year(
         self, column, sep=None, as_matrix=False, minmax=None
     ):
