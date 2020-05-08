@@ -5,13 +5,15 @@ Modules
     :maxdepth: 1
     
     dataframe
-    pyplot
-    keywords
-    records
-    result
-    strings
-    thesaurus
-    transform
-    common
-    datasets
+    plot
+    chord_diagram
+
+keywords
+records
+result
+strings
+thesaurus
+transform
+common
+datasets
     

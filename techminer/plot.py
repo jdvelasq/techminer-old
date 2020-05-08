@@ -1,5 +1,5 @@
 """
-TechMiner.Pyplot
+TechMiner.Plot
 ==================================================================================================
 
 
@@ -12,11 +12,51 @@ import numpy as np
 from wordcloud import ImageColorGenerator, WordCloud
 import geopandas
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+import squarify
+from techminer.chord_diagram import ChordDiagram
 
 
-class Pyplot:
+class Plot:
     def __init__(self, df):
         self.df = df
+
+    def tree(self, cmap=plt.cm.Blues, alpha=0.9):
+        """Creates a classification plot from a dataframe.
+
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     {
+        ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+        ...         "Num Documents": [10, 5, 2, 1],
+        ...         "ID": list(range(4)),
+        ...     }
+        ... )
+        >>> df
+            Authors  Num Documents  ID
+        0  author 3             10   0
+        1  author 1              5   1
+        2  author 0              2   2
+        3  author 2              1   3
+
+        >>> _ = Plot(df).tree()
+        >>> plt.savefig('guide/images/treeplot.png')
+        
+        .. image:: images/treeplot.png
+            :width: 400px
+            :align: center
+
+
+        """
+        x = self.df.copy()
+        colors = [
+            cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
+            for i in range(len(x[x.columns[1]]))
+        ]
+        squarify.plot(
+            sizes=x[x.columns[1]], label=x[x.columns[0]], color=colors, alpha=alpha
+        )
+        plt.gca().axis("off")
+        return plt.gca()
 
     def bubble(
         self,
@@ -52,14 +92,14 @@ class Pyplot:
         2015         6         9         0         0         0
         2016         7         8         0         0         1
 
-        >>> _ = Pyplot(df).bubble(axis=0, alpha=0.5, rmax=150)
+        >>> _ = Plot(df).bubble(axis=0, alpha=0.5, rmax=150)
         >>> plt.savefig('guide/images/bubbleplot0.png')
         
         .. image:: images/bubbleplot0.png
             :width: 400px
             :align: center
 
-        >>> _ = Pyplot(df).bubble(axis=1, alpha=0.5, rmax=150)
+        >>> _ = Plot(df).bubble(axis=1, alpha=0.5, rmax=150)
         >>> plt.savefig('guide/images/bubbleplot1.png')
         
         .. image:: images/bubbleplot1.png
@@ -167,7 +207,7 @@ class Pyplot:
 
 
         >>> _ = plt.figure(figsize=(10, 6))
-        >>> _ = Pyplot(df).worldmap()
+        >>> _ = Plot(df).worldmap()
         >>> plt.savefig('guide/images/worldmap.png')
         
         .. image:: images/worldmap.png
@@ -218,7 +258,7 @@ class Pyplot:
         2015         0         0         0         0         0
         2016         0         0         0         0         1
 
-        >>> _ = Pyplot(pd).gant()
+        >>> _ = Plot(pd).gant()
         >>> plt.savefig('guide/images/gantplot.png')
         
         .. image:: images/gantplot.png
@@ -289,7 +329,7 @@ class Pyplot:
         1  author 1              2   1
         2  author 0              2   2
         3  author 2              1   3
-        >>> _ = Pyplot(pd).pie(cmap=plt.cm.Blues)
+        >>> _ = Plot(pd).pie(cmap=plt.cm.Blues)
         >>> plt.savefig('guide/images/pieplot.png')
         
         .. image:: images/pieplot.png
@@ -343,7 +383,7 @@ class Pyplot:
         1  author 1              2   1
         2  author 0              2   2
         3  author 2              1   3
-        >>> _ = Pyplot(pd).bar(cmap=plt.cm.Blues)
+        >>> _ = Plot(pd).bar(cmap=plt.cm.Blues)
         >>> plt.savefig('guide/images/barplot.png')
         
         .. image:: images/barplot.png
@@ -397,7 +437,7 @@ class Pyplot:
         1  author 1              2   1
         2  author 0              2   2
         3  author 2              1   3
-        >>> _ = Pyplot(pd).barh(cmap=plt.cm.Blues)
+        >>> _ = Plot(pd).barh(cmap=plt.cm.Blues)
         >>> plt.savefig('guide/images/barhplot.png')
         
         .. image:: images/barhplot.png
@@ -450,7 +490,7 @@ class Pyplot:
         1  author 1              2   1
         2  author 0              2   2
         3  author 2              1   3
-        >>> _ = Pyplot(pd).plot()
+        >>> _ = Plot(pd).plot()
         >>> plt.savefig('guide/images/plotplot.png')
         
         .. image:: images/plotplot.png
@@ -527,7 +567,7 @@ class Pyplot:
         1  author 1              5   1
         2  author 0              2   2
         3  author 2              1   3
-        >>> _ = Pyplot(pd).wordcloud()
+        >>> _ = Plot(pd).wordcloud()
         >>> plt.savefig('guide/images/wordcloud.png')        
         
         .. image:: images/wordcloud.png
