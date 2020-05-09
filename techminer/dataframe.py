@@ -1512,14 +1512,14 @@ class DataFrame(pd.DataFrame):
 
     #
     #
-    #  Co-ccurrence
+    #  Co-occurrence
     #
     #
 
-    def summarize_co_ocurrence(
+    def summarize_co_occurrence(
         self, column_IDX, column_COL, sep_IDX=None, sep_COL=None
     ):
-        """Summarize ocurrence and citations by terms in two different columns.
+        """Summarize occurrence and citations by terms in two different columns.
 
         Args:
             column_IDX (str): the column to explode. Their terms are used in the index of the result dataframe.
@@ -1552,7 +1552,7 @@ class DataFrame(pd.DataFrame):
         3   A,B,C               c         3   3
         4     B,D             c;d         4   4
 
-        >>> DataFrame(df).summarize_co_ocurrence(column_IDX='Authors', column_COL='Author Keywords')
+        >>> DataFrame(df).summarize_co_occurrence(column_IDX='Authors', column_COL='Author Keywords')
           Authors (IDX) Author Keywords (COL)  Num Documents  Cited by      ID
         0             A                     a              2         1  [0, 1]
         1             A                     b              1         1     [1]
@@ -1623,7 +1623,7 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def co_ocurrence(
+    def co_occurrence(
         self,
         column_IDX,
         column_COL,
@@ -1632,7 +1632,7 @@ class DataFrame(pd.DataFrame):
         as_matrix=False,
         minmax=None,
     ):
-        """Computes the co-ocurrence of two terms in different colums. The report adds
+        """Computes the co-occurrence of two terms in different colums. The report adds
         the number of documents by term between brackets.
 
         Args:
@@ -1668,7 +1668,7 @@ class DataFrame(pd.DataFrame):
         3   A,B,C               c         3   3
         4     B,D             c;d         4   4
 
-        >>> DataFrame(df).co_ocurrence(column_IDX='Authors', column_COL='Author Keywords')
+        >>> DataFrame(df).co_occurrence(column_IDX='Authors', column_COL='Author Keywords')
           Authors (IDX) Author Keywords (COL)  Num Documents      ID
         0             A                     a              2  [0, 1]
         1             B                     b              2  [1, 2]
@@ -1681,14 +1681,14 @@ class DataFrame(pd.DataFrame):
         8             D                     c              1     [4]
         9             D                     d              1     [4]
 
-        >>> DataFrame(df).co_ocurrence(column_IDX='Authors', column_COL='Author Keywords', as_matrix=True)
+        >>> DataFrame(df).co_occurrence(column_IDX='Authors', column_COL='Author Keywords', as_matrix=True)
            a  b  c  d
         A  2  1  1  0
         B  1  2  2  1
         C  0  0  1  0
         D  0  0  1  1
 
-        >>> DataFrame(df).co_ocurrence(column_IDX='Authors', column_COL='Author Keywords', as_matrix=True, minmax=(2,2))
+        >>> DataFrame(df).co_occurrence(column_IDX='Authors', column_COL='Author Keywords', as_matrix=True, minmax=(2,2))
            a  b  c
         A  2  0  0
         B  0  2  2
@@ -1705,7 +1705,7 @@ class DataFrame(pd.DataFrame):
             }
             return new_names
 
-        result = self.summarize_co_ocurrence(column_IDX, column_COL, sep_IDX, sep_COL)
+        result = self.summarize_co_occurrence(column_IDX, column_COL, sep_IDX, sep_COL)
         result.pop("Cited by")
         if minmax is not None:
             min_value, max_value = minmax
@@ -1815,7 +1815,7 @@ class DataFrame(pd.DataFrame):
             }
             return new_names
 
-        result = self.summarize_co_ocurrence(column_IDX, column_COL, sep_IDX, sep_COL)
+        result = self.summarize_co_occurrence(column_IDX, column_COL, sep_IDX, sep_COL)
         result.pop("Num Documents")
         if minmax is not None:
             min_value, max_value = minmax
@@ -1847,8 +1847,8 @@ class DataFrame(pd.DataFrame):
     #
     #
 
-    def summarize_ocurrence(self, column, sep=None):
-        """Summarize ocurrence and citations by terms in a column of a dataframe.
+    def summarize_occurrence(self, column, sep=None):
+        """Summarize occurrence and citations by terms in a column of a dataframe.
 
         Args:
             column (str): the column to explode.
@@ -1879,7 +1879,7 @@ class DataFrame(pd.DataFrame):
         5       D         5   5
         6     B,D         6   6
 
-        >>> DataFrame(df).summarize_ocurrence(column='Authors')
+        >>> DataFrame(df).summarize_occurrence(column='Authors')
            Authors (IDX) Authors (COL)  Num Documents  Cited by            ID
         0              A             A              4         7  [0, 1, 2, 4]
         1              A             B              2         6        [2, 4]
@@ -1938,8 +1938,8 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def ocurrence(self, column, sep=None, as_matrix=False, minmax=None):
-        """Computes the ocurrence between the terms in a column.
+    def occurrence(self, column, sep=None, as_matrix=False, minmax=None):
+        """Computes the occurrence between the terms in a column.
 
         Args:
             column (str): the column to explode.
@@ -1972,7 +1972,7 @@ class DataFrame(pd.DataFrame):
         5       D         5   5
         6     B,D         6   6
 
-        >>> DataFrame(df).ocurrence(column='Authors')
+        >>> DataFrame(df).occurrence(column='Authors')
            Authors (IDX) Authors (COL)  Num Documents            ID
         0              A             A              4  [0, 1, 2, 4]
         1              B             B              4  [2, 3, 4, 6]
@@ -1987,14 +1987,14 @@ class DataFrame(pd.DataFrame):
         10             C             C              1           [4]
         11             D             B              1           [6]
 
-        >>> DataFrame(df).ocurrence(column='Authors', as_matrix=True)
+        >>> DataFrame(df).occurrence(column='Authors', as_matrix=True)
            A  B  C  D
         A  4  2  1  0
         B  2  4  1  1
         C  1  1  1  0
         D  0  1  0  2
 
-        >>> DataFrame(df).ocurrence(column='Authors', as_matrix=True, minmax=(2,3))
+        >>> DataFrame(df).occurrence(column='Authors', as_matrix=True, minmax=(2,3))
            A  B  D
         A  0  2  0
         B  2  0  0
@@ -2015,7 +2015,7 @@ class DataFrame(pd.DataFrame):
         column_IDX = column + " (IDX)"
         column_COL = column + " (COL)"
 
-        result = self.summarize_ocurrence(column, sep)
+        result = self.summarize_occurrence(column, sep)
         result.pop("Cited by")
         if minmax is not None:
             min_value, max_value = minmax

@@ -7,9 +7,12 @@ Modules
     dataframe
     plot
     chord_diagram
+    maps
 
 keywords
 records
+
+
 result
 strings
 thesaurus
