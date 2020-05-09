@@ -246,7 +246,7 @@ class Plot:
 
         return cd.plot()
 
-    def tree(self, cmap=plt.cm.Blues, alpha=0.9):
+    def tree(self, cmap="Blues", alpha=0.9):
         """Creates a classification plot from a dataframe.
 
         >>> import pandas as pd
@@ -275,6 +275,7 @@ class Plot:
         """
         plt.clf()
         x = self.df.copy()
+        cmap = plt.cm.get_cmap(cmap)
         colors = [
             cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
             for i in range(len(x[x.columns[1]]))
@@ -289,7 +290,7 @@ class Plot:
         self,
         axis=0,
         rmax=80,
-        cmap=plt.cm.Blues,
+        cmap="Blues",
         grid_lw=1.0,
         grid_c="gray",
         grid_ls=":",
@@ -336,6 +337,7 @@ class Plot:
 
         """
         plt.clf()
+        cmap = plt.cm.get_cmap(cmap)
         x = self.df.copy()
         if axis == "index":
             axis == 0
@@ -413,7 +415,7 @@ class Plot:
 
         return plt.gca()
 
-    def worldmap(self, cmap=plt.cm.Pastel2, legend=True, *args, **kwargs):
+    def worldmap(self, cmap="Pastel2", legend=True, *args, **kwargs):
         """Worldmap plot with the number of documents per country.
         
         >>> import pandas as pd
@@ -444,6 +446,7 @@ class Plot:
         
         """
         plt.clf()
+        cmap = plt.cm.get_cmap(cmap)
         x = self.df.copy()
         x[x.columns[0]] = x[x.columns[0]].map(
             lambda w: w.replace("United States", "United States of America")
@@ -526,7 +529,7 @@ class Plot:
 
     def pie(
         self,
-        cmap=plt.cm.Greys,
+        cmap="Greys",
         explode=None,
         autopct=None,
         pctdistance=0.6,
@@ -567,6 +570,7 @@ class Plot:
 
         """
         plt.clf()
+        cmap = plt.cm.get_cmap(cmap)
         x = self.df.copy()
         x.pop("ID")
         colors = None
@@ -594,7 +598,7 @@ class Plot:
         )
         return plt.gca()
 
-    def bar(self, width=0.8, bottom=None, align="center", cmap=plt.cm.Greys, **kwargs):
+    def bar(self, width=0.8, bottom=None, align="center", cmap="Greys", **kwargs):
         """Creates a bar plot from a dataframe.
 
         >>> import pandas as pd
@@ -621,6 +625,7 @@ class Plot:
 
         """
         plt.clf()
+        cmap = plt.cm.get_cmap(cmap)
         x = self.df.copy()
         x.pop("ID")
         if cmap is not None:
@@ -677,6 +682,7 @@ class Plot:
         x = self.df.copy()
         x.pop("ID")
         if cmap is not None:
+            cmap = plt.cm.get_cmap(cmap)
             kwargs["color"] = [
                 cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
                 for i in range(len(x[x.columns[1]]))
