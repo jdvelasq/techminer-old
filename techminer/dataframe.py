@@ -2041,6 +2041,74 @@ class DataFrame(pd.DataFrame):
             result.index = result.index.tolist()
         return result
 
+    def compute_occurrence_map(self, column, sep=None, minmax=None):
+        """Computes a occurrence between terms in a column.
+
+        Args:
+            column (str): the column to explode.
+            sep (str): Character used as internal separator for the elements in the column.
+            minmax (pair(number,number)): filter values by >=min,<=max.
+
+        Returns:
+            dictionary
+            
+        Examples
+        ----------------------------------------------------------------------------------------------
+
+        >>> import pandas as pd
+        >>> x = [ 'A', 'A', 'A,B', 'B', 'A,B,C', 'D', 'B,D']
+        >>> df = pd.DataFrame(
+        ...    {
+        ...       'Authors': x,
+        ...       'ID': list(range(len(x))),
+        ...    }
+        ... )
+        >>> df
+          Authors  ID
+        0       A   0
+        1       A   1
+        2     A,B   2
+        3       B   3
+        4   A,B,C   4
+        5       D   5
+        6     B,D   6
+
+        >>> DataFrame(df).compute_occurrence_map(column='Authors')
+        (['A', 'B', 'C', 'D', 'doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4', 'doc#5'], [('A', 'doc#0'), ('A', 'doc#1'), ('B', 'doc#1'), ('A', 'doc#2'), ('B', 'doc#2'), ('C', 'doc#2'), ('B', 'doc#3'), ('B', 'doc#4'), ('D', 'doc#4'), ('D', 'doc#5')], ['A', 'B', 'C', 'D', 2, 1, 1, 1, 1, 1])
+
+        """
+        result = self[[column]].copy()
+        result["count"] = 1
+
+        result = result.groupby(column, as_index=False).agg({"count": np.sum})
+
+        if sep is None and column in SCOPUS_SEPS.keys():
+            sep = SCOPUS_SEPS[column]
+        if sep is not None:
+            result[column] = result[column].map(
+                lambda x: sorted(x.split(sep)) if isinstance(x, str) else x
+            )
+
+        result["doc-ID"] = ["doc#{:d}".format(i) for i in range(len(result))]
+
+        nodes_column = result[[column]].copy()
+        nodes_column.explode(column)
+        nodes_column = [
+            item for sublist in nodes_column[column].tolist() for item in sublist
+        ]
+        nodes_column = sorted(set(nodes_column))
+        nodes_docs = result["doc-ID"].tolist()
+
+        nodes = nodes_column + nodes_docs
+        labels = nodes_column + result["count"].tolist()
+
+        edges = []
+        for field, docID in zip(result[column], result["doc-ID"]):
+            for item in field:
+                edges.append((item, docID))
+
+        return (nodes, edges, labels)
+
     #
     #
     #  Analytical functions
