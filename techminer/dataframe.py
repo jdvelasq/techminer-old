@@ -2074,7 +2074,7 @@ class DataFrame(pd.DataFrame):
         6     B,D   6
 
         >>> DataFrame(df).compute_occurrence_map(column='Authors')
-        (['A', 'B', 'C', 'D', 'doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4', 'doc#5'], [('A', 'doc#0'), ('A', 'doc#1'), ('B', 'doc#1'), ('A', 'doc#2'), ('B', 'doc#2'), ('C', 'doc#2'), ('B', 'doc#3'), ('B', 'doc#4'), ('D', 'doc#4'), ('D', 'doc#5')], ['A', 'B', 'C', 'D', 2, 1, 1, 1, 1, 1])
+        {'terms': ['A', 'B', 'C', 'D'], 'docs': ['doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4', 'doc#5'], 'edges': [('A', 'doc#0'), ('A', 'doc#1'), ('B', 'doc#1'), ('A', 'doc#2'), ('B', 'doc#2'), ('C', 'doc#2'), ('B', 'doc#3'), ('B', 'doc#4'), ('D', 'doc#4'), ('D', 'doc#5')], 'labels': {'doc#0': 2, 'doc#1': 1, 'doc#2': 1, 'doc#3': 1, 'doc#4': 1, 'doc#5': 1, 'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D'}}
 
         """
         result = self[[column]].copy()
@@ -2091,23 +2091,21 @@ class DataFrame(pd.DataFrame):
 
         result["doc-ID"] = ["doc#{:d}".format(i) for i in range(len(result))]
 
-        nodes_column = result[[column]].copy()
-        nodes_column.explode(column)
-        nodes_column = [
-            item for sublist in nodes_column[column].tolist() for item in sublist
-        ]
-        nodes_column = sorted(set(nodes_column))
-        nodes_docs = result["doc-ID"].tolist()
-
-        nodes = nodes_column + nodes_docs
-        labels = nodes_column + result["count"].tolist()
+        terms = result[[column]].copy()
+        terms.explode(column)
+        terms = [item for sublist in terms[column].tolist() for item in sublist]
+        terms = sorted(set(terms))
+        docs = result["doc-ID"].tolist()
+        label_docs = {doc: label for doc, label in zip(docs, result["count"].tolist())}
+        label_terms = {t: t for t in terms}
+        labels = {**label_docs, **label_terms}
 
         edges = []
         for field, docID in zip(result[column], result["doc-ID"]):
             for item in field:
                 edges.append((item, docID))
 
-        return (nodes, edges, labels)
+        return dict(terms=terms, docs=docs, edges=edges, labels=labels)
 
     #
     #
