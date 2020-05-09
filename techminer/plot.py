@@ -20,6 +20,232 @@ class Plot:
     def __init__(self, df):
         self.df = df
 
+    def heatmap(self, **kwargs):
+        """Plots a heatmap from a matrix.
+
+        Colormap availables are:
+            'Greys', 'Purples', 'Blues', 'Greens', 'Oranges', 'Reds',
+            'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd', 'RdPu', 'BuPu',
+            'GnBu', 'PuBu', 'YlGnBu', 'PuBuGn', 'BuGn', 'YlGn'
+
+
+        See more info in: 
+        https://matplotlib.org/3.1.0/tutorials/colors/colormaps.html
+
+
+        >>> df = pd.DataFrame(
+        ...     {
+        ...         'word 0': [1.00, 0.80, 0.70, 0.00,-0.30],
+        ...         'word 1': [0.80, 1.00, 0.70, 0.50, 0.00],
+        ...         'word 2': [0.70, 0.70, 1.00, 0.00, 0.00],
+        ...         'word 3': [0.00, 0.50, 0.00, 1.00, 0.30],
+        ...         'word 4': [-0.30, 0.00, 0.00, 0.30, 1.00],
+        ...     },
+        ...     index=['word {:d}'.format(i) for i in range(5)]
+        ... )
+        >>> df
+                word 0  word 1  word 2  word 3  word 4
+        word 0     1.0     0.8     0.7     0.0    -0.3
+        word 1     0.8     1.0     0.7     0.5     0.0
+        word 2     0.7     0.7     1.0     0.0     0.0
+        word 3     0.0     0.5     0.0     1.0     0.3
+        word 4    -0.3     0.0     0.0     0.3     1.0
+        >>> _ = Plot(df).heatmap()
+        >>> plt.savefig('guide/images/plotheatmap1.png')
+        
+        .. image:: images/plotheatmap1.png
+            :width: 400px
+            :align: center
+        
+        >>> _ = Plot(df).heatmap(cmap='Blues')
+        >>> plt.savefig('guide/images/plotheatmap2.png')
+        
+        .. image:: images/plotheatmap2.png
+            :width: 400px
+            :align: center
+
+
+        >>> df = pd.DataFrame(
+        ...     {
+        ...         'word 0': [100, 80, 70, 0,30],
+        ...         'word 1': [80, 100, 70, 50, 0],
+        ...         'word 2': [70, 70, 100, 0, 0],
+        ...         'word 3': [0, 50, 0, 100, 3],
+        ...         'word 4': [30, 0, 0, 30, 100],
+        ...     },
+        ...     index=['word {:d}'.format(i) for i in range(5)]
+        ... )
+        >>> df
+                word 0  word 1  word 2  word 3  word 4
+        word 0     100      80      70       0      30
+        word 1      80     100      70      50       0
+        word 2      70      70     100       0       0
+        word 3       0      50       0     100      30
+        word 4      30       0       0       3     100
+        >>> _ = Plot(df).heatmap(cmap='Greys')
+        >>> plt.savefig('guide/images/plotheatmap3.png')
+        
+        .. image:: images/plotheatmap3.png
+            :width: 400px
+            :align: center
+
+
+        """
+        plt.clf()
+        x = self.df.copy()
+        result = plt.gca().pcolor(x.values, **kwargs,)
+        plt.xticks(np.arange(len(x.index)) + 0.5, x.index, rotation="vertical")
+        plt.yticks(np.arange(len(x.columns)) + 0.5, x.columns)
+        plt.gca().invert_yaxis()
+
+        if "cmap" in kwargs:
+            cmap = plt.cm.get_cmap(kwargs["cmap"])
+        else:
+            cmap = plt.cm.get_cmap()
+
+        if x.values.max().max() <= 1.0 and x.values.min().min() >= -1:
+            fmt = "{:3.2f}"
+        else:
+            fmt = "{:3.0f}"
+
+        for idx_row, row in enumerate(x.index):
+            for idx_col, col in enumerate(x.columns):
+
+                if abs(x.at[row, col]) > x.values.max().max() / 2.0:
+                    color = cmap(0.0)
+                else:
+                    color = cmap(1.0)
+
+                plt.text(
+                    idx_row + 0.5,
+                    idx_col + 0.5,
+                    fmt.format(x.at[row, col]),
+                    ha="center",
+                    va="center",
+                    color=color,
+                )
+        plt.gca().xaxis.tick_top()
+
+        return plt.gca()
+
+    def chord_diagram(self, alpha=1.0, minval=0.0, top_n_links=None, solid_lines=False):
+        """Creates a chord diagram from a correlation or an auto-correlation matrix.
+
+        >>> df = pd.DataFrame(
+        ...     {
+        ...         'word 0': [1.00, 0.80, 0.70, 0.00,-0.30],
+        ...         'word 1': [0.80, 1.00, 0.70, 0.50, 0.00],
+        ...         'word 2': [0.70, 0.70, 1.00, 0.00, 0.00],
+        ...         'word 3': [0.00, 0.50, 0.00, 1.00, 0.30],
+        ...         'word 4': [-0.30, 0.00, 0.00, 0.30, 1.00],
+        ...     },
+        ...     index=['word {:d}'.format(i) for i in range(5)]
+        ... )
+        >>> df
+                word 0  word 1  word 2  word 3  word 4
+        word 0     1.0     0.8     0.7     0.0    -0.3
+        word 1     0.8     1.0     0.7     0.5     0.0
+        word 2     0.7     0.7     1.0     0.0     0.0
+        word 3     0.0     0.5     0.0     1.0     0.3
+        word 4    -0.3     0.0     0.0     0.3     1.0
+        >>> _ = Plot(df).chord_diagram()
+        >>> plt.savefig('guide/images/plotcd1.png')
+        
+        .. image:: images/plotcd1.png
+            :width: 400px
+            :align: center
+
+        >>> _ = Plot(df).chord_diagram(top_n_links=5)
+        >>> plt.savefig('guide/images/plotcd2.png')
+        
+        .. image:: images/plotcd2.png
+            :width: 400px
+            :align: center
+
+        >>> _ = Plot(df).chord_diagram(solid_lines=True)
+        >>> plt.savefig('guide/images/plotcd3.png')
+        
+        .. image:: images/plotcd3.png
+            :width: 400px
+            :align: center
+        
+        """
+        plt.clf()
+
+        x = self.df.copy()
+
+        cd = ChordDiagram()
+        cd.add_nodes_from(x.columns, color="black", s=40)
+
+        if top_n_links is not None and top_n_links <= len(x.columns):
+            values = []
+            for idx_col in range(len(x.columns) - 1):
+                for idx_row in range(idx_col + 1, len(x.columns)):
+                    node_a = x.index[idx_row]
+                    node_b = x.columns[idx_col]
+                    value = x[node_b][node_a]
+                    values.append(value)
+            values = sorted(values, reverse=True)
+            minval = values[top_n_links - 1]
+
+        style = list("--::")
+        if solid_lines is True:
+            style = list("----")
+
+        width = [2.5, 1, 1, 1]
+        if solid_lines is True:
+            width = [4, 2, 1, 1]
+
+        links = 0
+        for idx_col in range(len(x.columns) - 1):
+            for idx_row in range(idx_col + 1, len(x.columns)):
+
+                node_a = x.index[idx_row]
+                node_b = x.columns[idx_col]
+                value = x[node_b][node_a]
+
+                if value > 0.75 and value >= minval:
+                    cd.add_edge(
+                        node_a,
+                        node_b,
+                        linestyle=style[0],
+                        linewidth=width[0],
+                        color="black",
+                    )
+                    links += 1
+                elif value > 0.50 and value >= minval:
+                    cd.add_edge(
+                        node_a,
+                        node_b,
+                        linestyle=style[1],
+                        linewidth=width[1],
+                        color="black",
+                    )
+                    links += 1
+                elif value > 0.25 and value >= minval:
+                    cd.add_edge(
+                        node_a,
+                        node_b,
+                        linestyle=style[2],
+                        linewidth=width[2],
+                        color="black",
+                    )
+                    links += 1
+                elif value <= 0.25 and value >= minval:
+                    cd.add_edge(
+                        node_a,
+                        node_b,
+                        linestyle=style[3],
+                        linewidth=width[3],
+                        color="red",
+                    )
+                    links += 1
+
+                if top_n_links is not None and links >= top_n_links:
+                    continue
+
+        return cd.plot()
+
     def tree(self, cmap=plt.cm.Blues, alpha=0.9):
         """Creates a classification plot from a dataframe.
 
@@ -47,6 +273,7 @@ class Plot:
 
 
         """
+        plt.clf()
         x = self.df.copy()
         colors = [
             cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
@@ -108,12 +335,12 @@ class Plot:
 
 
         """
+        plt.clf()
         x = self.df.copy()
         if axis == "index":
             axis == 0
         if axis == "columns":
             axis == 1
-        plt.clf()
 
         vmax = x.max().max()
         vmin = x.min().min()
@@ -216,6 +443,7 @@ class Plot:
         
         
         """
+        plt.clf()
         x = self.df.copy()
         x[x.columns[0]] = x[x.columns[0]].map(
             lambda w: w.replace("United States", "United States of America")
@@ -267,8 +495,8 @@ class Plot:
 
 
         """
-        x = self.df.copy()
         plt.clf()
+        x = self.df.copy()
         if "linewidth" not in kwargs.keys() and "lw" not in kwargs.keys():
             kwargs["linewidth"] = 4
         if "marker" not in kwargs.keys():
@@ -338,6 +566,7 @@ class Plot:
 
 
         """
+        plt.clf()
         x = self.df.copy()
         x.pop("ID")
         colors = None
@@ -345,7 +574,6 @@ class Plot:
             colors = [
                 cmap(1.0 - 0.9 * (i / len(x))) for i in range(len(x[x.columns[1]]))
             ]
-        plt.clf()
         plt.gca().pie(
             x=x[x.columns[1]],
             explode=explode,
@@ -392,6 +620,7 @@ class Plot:
 
 
         """
+        plt.clf()
         x = self.df.copy()
         x.pop("ID")
         if cmap is not None:
@@ -399,7 +628,6 @@ class Plot:
                 cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
                 for i in range(len(x[x.columns[1]]))
             ]
-        plt.clf()
         result = plt.gca().bar(
             x=range(len(x)),
             height=x[x.columns[1]],
@@ -445,6 +673,7 @@ class Plot:
             :align: center
         
         """
+        plt.clf()
         x = self.df.copy()
         x.pop("ID")
         if cmap is not None:
@@ -452,7 +681,6 @@ class Plot:
                 cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
                 for i in range(len(x[x.columns[1]]))
             ]
-        plt.clf()
         plt.gca().barh(
             y=range(len(x)),
             width=x[x.columns[1]],
@@ -499,9 +727,9 @@ class Plot:
 
 
         """
+        plt.clf()
         x = self.df.copy()
         x.pop("ID")
-        plt.clf()
         plt.gca().plot(
             range(len(x)),
             x[x.columns[1]],
@@ -574,6 +802,7 @@ class Plot:
             :width: 400px
             :align: center     
         """
+        plt.clf()
         x = self.df.copy()
         x.pop("ID")
         words = {row[0]: row[1] for _, row in x.iterrows()}
@@ -607,149 +836,6 @@ class Plot:
             min_word_length=min_word_length,
         )
         wordcloud.generate_from_frequencies(words)
-        plt.clf()
         plt.gca().imshow(wordcloud, interpolation="bilinear")
         plt.gca().axis("off")
         return plt.gca()
-
-
-#     # ----------------------------------------------------------------------------------------------------
-#     def heatmap(
-#         self,
-#         ascending_r=None,
-#         ascending_c=None,
-#         alpha=None,
-#         norm=None,
-#         cmap=None,
-#         vmin=None,
-#         vmax=None,
-#         data=None,
-#         **kwargs
-#     ):
-#         """Heat map.
-
-
-#         https://matplotlib.org/3.1.0/tutorials/colors/colormaps.html
-
-#             'Greys', 'Purples', 'Blues', 'Greens', 'Oranges', 'Reds',
-#             'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd', 'RdPu', 'BuPu',
-#             'GnBu', 'PuBu', 'YlGnBu', 'PuBuGn', 'BuGn', 'YlGn'
-
-
-#         >>> from techminer.datasets import load_test_cleaned
-#         >>> from techminer.dataframe import DataFrame
-#         >>> rdf = DataFrame(load_test_cleaned().data).generate_ID()
-#         >>> result = rdf.co_ocurrence(column_r='Authors', column_c='Document Type', top_n=5)
-#         >>> from techminer.plot import Plot
-#         >>> Plot(result).heatmap()
-
-#         .. image:: ../figs//heatmap.jpg
-#             :width: 600px
-#             :align: center
-
-#         """
-
-#         x = self.pdf.copy()
-#         x.pop("ID")
-#         x = pd.pivot_table(
-#             data=x,
-#             index=x.columns[0],
-#             columns=x.columns[1],
-#             margins=False,
-#             fill_value=0,
-#         )
-#         x.columns = [b for _, b in x.columns]
-#         result = plt.gca().pcolor(
-#             x.values,
-#             alpha=alpha,
-#             norm=norm,
-#             cmap=cmap,
-#             vmin=vmin,
-#             vmax=vmax,
-#             data=data,
-#             **({}),
-#             **kwargs,
-#         )
-#         plt.xticks(np.arange(len(x.index)) + 0.5, x.index, rotation="vertical")
-#         plt.yticks(np.arange(len(x.columns)) + 0.5, x.columns)
-#         plt.gca().invert_yaxis()
-
-#         return
-
-#         # ## force the same order of cells in rows and cols ------------------------------------------
-#         # if self._call == 'auto_corr':
-#         #     if ascending_r is None and ascending_c is None:
-#         #         ascending_r = True
-#         #         ascending_c = True
-#         #     elif ascending_r is not None and ascending_r != ascending_c:
-#         #         ascending_c = ascending_r
-#         #     elif ascending_c is not None and ascending_c != ascending_r:
-#         #         ascending_r = ascending_c
-#         #     else:
-#         #         pass
-#         # ## end -------------------------------------------------------------------------------------
-
-#         x = self.tomatrix(ascending_r, ascending_c)
-
-#         ## rename columns and row index
-#         # x.columns = [cut_text(w) for w in x.columns]
-#         # x.index = [cut_text(w) for w in x.index]
-
-#         # if self._call == 'factor_analysis':
-#         #     x = self.tomatrix(ascending_r, ascending_c)
-#         #     x = x.transpose()
-#         #     plt.pcolor(np.transpose(abs(x.values)), cmap=cmap)
-#         # else:
-#         #     plt.pcolor(np.transpose(x.values), cmap=cmap)
-
-#         # plt.xticks(np.arange(len(x.index))+0.5, x.index, rotation='vertical')
-#         # plt.yticks(np.arange(len(x.columns))+0.5, x.columns)
-#         # plt.gca().invert_yaxis()
-
-#         ## changes the color of rectangle for autocorrelation heatmaps ---------------------------
-
-#         # if self._call == 'auto_corr':
-#         #     for idx in np.arange(len(x.index)):
-#         #         plt.gca().add_patch(
-#         #             Rectangle((idx, idx), 1, 1, fill=False, edgecolor='red')
-#         #         )
-
-#         ## end ------------------------------------------------------------------------------------
-
-#         ## annotation
-#         # for idx_row, row in enumerate(x.index):
-#         #     for idx_col, col in enumerate(x.columns):
-
-#         #         if self._call in ['auto_corr', 'cross_corr', 'factor_analysis']:
-
-#         #             if abs(x.at[row, col]) > x.values.max() / 2.0:
-#         #                 color = 'white'
-#         #             else:
-#         #                 color = 'black'
-
-#         #             plt.text(
-#         #                 idx_row + 0.5,
-#         #                 idx_col + 0.5,
-#         #                 "{:3.2f}".format(x.at[row, col]),
-#         #                 ha="center",
-#         #                 va="center",
-#         #                 color=color)
-
-#         #         else:
-#         #             if x.at[row, col] > 0:
-
-#         #                 if x.at[row, col] > x.values.max() / 2.0:
-#         #                     color = 'white'
-#         #                 else:
-#         #                     color = 'black'
-
-#         #                 plt.text(
-#         #                     idx_row + 0.5,
-#         #                     idx_col + 0.5,
-#         #                     int(x.at[row, col]),
-#         #                     ha="center",
-#         #                     va="center",
-#         #                     color=color)
-
-#         # plt.tight_layout()
-#         # plt.show()
