@@ -2181,9 +2181,7 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def auto_corr(
-        self, column, sep=None, method="pearson", as_matrix=True, minmax=None
-    ):
+    def autocorr(self, column, sep=None, method="pearson", as_matrix=True, minmax=None):
         """Computes the autocorrelation among items in a column of the dataframe.
 
         Args:
@@ -2227,14 +2225,14 @@ class DataFrame(pd.DataFrame):
         5     A,B               d         5   5
 
         
-        >>> DataFrame(df).auto_corr('Authors')
+        >>> DataFrame(df).autocorr('Authors')
                   A         B         C         D
         A  1.000000 -0.316228  0.316228 -0.632456
         B -0.316228  1.000000  0.200000  0.200000
         C  0.316228  0.200000  1.000000 -0.200000
         D -0.632456  0.200000 -0.200000  1.000000
         
-        >>> DataFrame(df).auto_corr('Authors', as_matrix=False)
+        >>> DataFrame(df).autocorr('Authors', as_matrix=False)
            Authors (IDX) Authors (COL)     value
         0              A             A  1.000000
         1              B             A -0.316228
@@ -2253,14 +2251,14 @@ class DataFrame(pd.DataFrame):
         14             C             D -0.200000
         15             D             D  1.000000
 
-        >>> DataFrame(df).auto_corr('Author Keywords')
+        >>> DataFrame(df).autocorr('Author Keywords')
               a     b     c     d
         a  1.00  0.25 -0.50 -0.50
         b  0.25  1.00 -0.50 -0.50
         c -0.50 -0.50  1.00  0.25
         d -0.50 -0.50  0.25  1.00
 
-        >>> DataFrame(df).auto_corr('Author Keywords', minmax=(0.25, None))
+        >>> DataFrame(df).autocorr('Author Keywords', minmax=(0.25, None))
              a    b     c     d
         a  1.0  0.0  0.00  0.00
         b  0.0  1.0  0.00  0.00
@@ -2342,7 +2340,7 @@ class DataFrame(pd.DataFrame):
         5     A,B               d         5   5
 
         
-        >>> DataFrame(df).auto_corr('Authors')
+        >>> DataFrame(df).autocorr('Authors')
                   A         B         C         D
         A  1.000000 -0.316228  0.316228 -0.632456
         B -0.316228  1.000000  0.200000  0.200000
@@ -2350,7 +2348,7 @@ class DataFrame(pd.DataFrame):
         D -0.632456  0.200000 -0.200000  1.000000
         
 
-        >>> DataFrame(df).auto_corr('Author Keywords')
+        >>> DataFrame(df).autocorr('Author Keywords')
               a     b     c     d
         a  1.00  0.25 -0.50 -0.50
         b  0.25  1.00 -0.50 -0.50
@@ -2390,7 +2388,7 @@ class DataFrame(pd.DataFrame):
 
         return dict(terms=terms, docs=docs, edges=edges, labels=labels)
 
-    def cross_corr(
+    def corr(
         self,
         column_IDX,
         column_COL=None,
@@ -2464,20 +2462,20 @@ class DataFrame(pd.DataFrame):
         5  0  0  0  1
 
 
-        >>> DataFrame(df).cross_corr('Authors', 'Author Keywords')
+        >>> DataFrame(df).corr('Authors', 'Author Keywords')
               a         b         c         d
         A  0.50 -0.632456 -0.316228 -0.316228
         B -0.25  0.316228 -0.316228 -0.316228
         C -0.25  0.316228  0.632456  0.632456
         D -0.25  0.316228 -0.316228  0.632456
 
-        >>> DataFrame(df).cross_corr('Authors', 'Author Keywords', minmax=(0.45, 0.8))
+        >>> DataFrame(df).corr('Authors', 'Author Keywords', minmax=(0.45, 0.8))
              a         c         d
         A  0.5  0.000000  0.000000
         C  0.0  0.632456  0.632456
         D  0.0  0.000000  0.632456
 
-        >>> DataFrame(df).cross_corr('Authors', 'Author Keywords', as_matrix=False)
+        >>> DataFrame(df).corr('Authors', 'Author Keywords', as_matrix=False)
            Authors Author Keywords     value
         0        A               a  0.500000
         1        B               a -0.250000
@@ -2498,7 +2496,7 @@ class DataFrame(pd.DataFrame):
 
         """
         if column_IDX == column_COL:
-            return self.auto_corr(
+            return self.autocorr(
                 column=column_IDX,
                 sep=sep_IDX,
                 method=method,
