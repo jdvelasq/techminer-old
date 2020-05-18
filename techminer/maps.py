@@ -27,21 +27,37 @@ class Map:
 
     def add_node(self, node_for_adding, **attr):
         """Adds a node to a current map.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         """
         self._graph.add_node(node_for_adding, **attr)
 
     def add_nodes_from(self, nodes_for_adding, **attr):
         """Adds a bunch of nodes to a current map.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         """
         self._graph.add_nodes_from(self, nodes_for_adding, **attr)
 
     def add_edge(self, u_of_edge, v_of_edge, **attr):
         """Add an edge to a current map.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         """
         self._graph.add_edge(self, u_of_edge, v_of_edge, **attr)
 
     def add_edges_from(self, ebunch_to_add, **attr):
         """Adds a bunch of edges to a current map.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         """
         self._graph().add_edges_from(self, ebunch_to_add, **attr)
 
@@ -60,6 +76,10 @@ class Map:
     ):
         """Cluster map for ocurrence and co-ocurrence matrices.
     
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> terms = ["A", "B", "C", "D"]
         >>> docs = ["doc#0", "doc#1", "doc#2", "doc#3", "doc#4", "doc#5"]
         >>> edges = [
@@ -162,6 +182,9 @@ class Map:
         self, terms, edges_75, edges_50, edges_25, other_edges, term_props={},
     ):
         """
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> kwargs = dict(
         ...     terms = list('ABCDE'),

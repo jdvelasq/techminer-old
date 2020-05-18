@@ -13,7 +13,15 @@ from wordcloud import ImageColorGenerator, WordCloud
 import geopandas
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import squarify
-from techminer.chord_diagram import ChordDiagram
+from .chord_diagram import ChordDiagram
+
+
+# ---------------------------------------------------------------------------------------------
+# def cut_text(w):
+#     if isinstance(w, (int, float)):
+#         return w
+#     return w if len(w) < 35 else w[:31] + '... ' + w[w.find('['):]
+# #---------------------------------------------------------------------------------------------
 
 
 class Plot:
@@ -32,6 +40,8 @@ class Plot:
         See more info in: 
         https://matplotlib.org/3.1.0/tutorials/colors/colormaps.html
 
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> df = pd.DataFrame(
         ...     {
@@ -130,6 +140,10 @@ class Plot:
 
     def chord_diagram(self, alpha=1.0, minval=0.0, top_n_links=None, solid_lines=False):
         """Creates a chord diagram from a correlation or an auto-correlation matrix.
+
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> df = pd.DataFrame(
         ...     {
@@ -249,6 +263,9 @@ class Plot:
     def tree(self, cmap="Blues", alpha=0.9):
         """Creates a classification plot from a dataframe.
 
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...     {
@@ -298,6 +315,9 @@ class Plot:
     ):
 
         """Creates a gant activity plot from a dataframe.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> df = pd.DataFrame(
@@ -418,6 +438,9 @@ class Plot:
     def worldmap(self, cmap="Pastel2", legend=True, *args, **kwargs):
         """Worldmap plot with the number of documents per country.
         
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...     {
@@ -467,6 +490,9 @@ class Plot:
     def gant(self, hlines_lw=0.5, hlines_c="gray", hlines_ls=":", *args, **kwargs):
 
         """Creates a gant activity plot from a dataframe.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> pd = pd.DataFrame(
@@ -546,6 +572,9 @@ class Plot:
     ):
         """Creates a pie plot from a dataframe.
 
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> pd = pd.DataFrame(
         ...     {
@@ -601,6 +630,9 @@ class Plot:
     def bar(self, width=0.8, bottom=None, align="center", cmap="Greys", **kwargs):
         """Creates a bar plot from a dataframe.
 
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> pd = pd.DataFrame(
         ...     {
@@ -655,7 +687,10 @@ class Plot:
 
     def barh(self, height=0.8, left=None, align="center", cmap=None, **kwargs):
         """Make a pie chart from a dataframe.
-        
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> import pandas as pd
         >>> pd = pd.DataFrame(
         ...     {
@@ -709,6 +744,9 @@ class Plot:
 
     def plot(self, *args, scalex=True, scaley=True, **kwargs):
         """Creates a plot from a dataframe.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> pd = pd.DataFrame(
@@ -786,6 +824,9 @@ class Plot:
         min_word_length=0,
     ):
         """Plots a wordcloud from a dataframe.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> pd = pd.DataFrame(

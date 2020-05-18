@@ -14,6 +14,9 @@ class ChordDiagram:
     """Class for plotting chord diagrams.
     
     
+    Examples
+    ----------------------------------------------------------------------------------------------
+
     >>> chord = ChordDiagram()
     >>> chord.add_nodes_from('abcdef', color='black', s=10)
     >>> chord.add_edge('a', 'b')
@@ -49,6 +52,10 @@ class ChordDiagram:
     def add_node(self, node_to_add, **attr):
         """
 
+        Examples
+        ----------------------------------------------------------------------------------------------
+    
+
         >>> chord = ChordDiagram()
         >>> chord.add_node('A', nodeA_prop=1)
         >>> chord.add_node('B', nodeB_prop=2)
@@ -66,6 +73,9 @@ class ChordDiagram:
     def add_nodes_from(self, nodes_for_adding, **attr):
         """
         
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> chord = ChordDiagram()
         >>> chord.add_nodes_from('abcde')
         >>> chord._nodes
@@ -91,7 +101,10 @@ class ChordDiagram:
 
     def add_edge(self, u, v, **attr):
         """
-        
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
         >>> chord = ChordDiagram()
         >>> chord.add_edge('A','B', edgeAB_prop1=1, edgeAB_prop2=2)
         >>> chord._edges
@@ -108,6 +121,9 @@ class ChordDiagram:
 
     def add_edges_from(self, edges_to_add, **attr):
         """
+
+        Examples
+        ----------------------------------------------------------------------------------------------
         
         >>> chord = ChordDiagram()
         >>> chord.add_edges_from([(2, 3, {'linewidth': 1}), (3, 4), (5, 4)], linewidth=20)
@@ -127,12 +143,25 @@ class ChordDiagram:
             self.add_edge(u, v, **d)
 
     def get_node_data(self, node, **default):
+        """
+
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
+        """
         if node not in self._nodes:
             return default
         else:
             return {**default, **self._nodes[node]}
 
     def get_edge_data(self, u, v, **default):
+        """
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
+        """
         u, v = sorted([u, v])
         key = (u, v)
         if key not in self._edges:

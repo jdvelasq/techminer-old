@@ -8,15 +8,11 @@ Modules
     plot
     chord_diagram
     maps
-
-keywords
-records
-
+    keywords
+    strings
+    thesaurus
 
 result
-strings
-thesaurus
-transform
-common
+
 datasets
     
