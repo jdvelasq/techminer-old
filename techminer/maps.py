@@ -208,6 +208,15 @@ class Map:
             :width: 600px
             :align: center
 
+        >>> nxmap = Map()
+        >>> kwargs = DataFrame(df).autocorr_map('Authors',  top_n_links=5)
+        >>> nxmap.correlation_map(**kwargs)
+        >>> plt.savefig('guide/images/correlation_map_2.png')
+
+        .. image:: images/correlation_map_2.png
+            :width: 600px
+            :align: center
+
 
         """
 

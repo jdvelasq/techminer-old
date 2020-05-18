@@ -2370,16 +2370,30 @@ class DataFrame(pd.DataFrame):
         edges_25 = []
         other_edges = []
 
+        if top_n_links is not None:
+            values = matrix.to_numpy()
+            top_value = []
+            for icol in range(n):
+                for irow in range(icol + 1, n):
+                    top_value.append(values[irow, icol])
+            top_value = sorted(top_value, reverse=True)
+            top_value = top_value[top_n_links - 1]
+            if minval is not None:
+                minval = max(minval, top_value)
+            else:
+                minval = top_value
+
         for icol in range(n):
             for irow in range(icol + 1, n):
-                if matrix[terms[icol]][terms[irow]] > 0.75:
-                    edges_75.append((terms[icol], terms[irow]))
-                elif matrix[terms[icol]][terms[irow]] > 0.50:
-                    edges_50.append((terms[icol], terms[irow]))
-                elif matrix[terms[icol]][terms[irow]] > 0.25:
-                    edges_25.append((terms[icol], terms[irow]))
-                else:
-                    other_edges.append((terms[icol], terms[irow]))
+                if minval is None or matrix[terms[icol]][terms[irow]] >= minval:
+                    if matrix[terms[icol]][terms[irow]] > 0.75:
+                        edges_75.append((terms[icol], terms[irow]))
+                    elif matrix[terms[icol]][terms[irow]] > 0.50:
+                        edges_50.append((terms[icol], terms[irow]))
+                    elif matrix[terms[icol]][terms[irow]] > 0.25:
+                        edges_25.append((terms[icol], terms[irow]))
+                    else:
+                        other_edges.append((terms[icol], terms[irow]))
 
         if len(edges_75) == 0:
             edges_75 = None
