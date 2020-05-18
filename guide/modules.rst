@@ -2,17 +2,13 @@ Modules
 ======================================
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 2
     
-    dataframe
-    plot
     chord_diagram
+    dataframe
     maps
-    keywords
+    plot
+    sankey_plot
     strings
     thesaurus
-
-result
-
-datasets
     
