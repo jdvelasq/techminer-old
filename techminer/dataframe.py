@@ -9,6 +9,7 @@ TechMiner.DataFrame
 import pandas as pd
 import numpy as np
 from sklearn.decomposition import PCA
+import math
 
 from .strings import remove_accents
 
@@ -19,6 +20,13 @@ SCOPUS_SEPS = {
     "Index Keywords": ";",
     "ID": ";",
 }
+
+
+def relationship(x, y):
+    sxy = sum([a * b * min(a, b) for a, b in zip(x, y)])
+    a = math.sqrt(sum(x))
+    b = math.sqrt(sum(y))
+    return sxy / (a * b)
 
 
 def heatmap(df, cmap):
@@ -2224,50 +2232,73 @@ class DataFrame(pd.DataFrame):
         4     B,D             c;d         4   4
         5     A,B               d         5   5
 
-        
+        >>> DataFrame(df).compute_tfm(column='Authors')
+           A  B  C  D
+        0  1  0  0  0
+        1  1  1  0  0
+        2  0  1  0  0
+        3  1  1  1  0
+        4  0  1  0  1
+        5  1  1  0  0
+
         >>> DataFrame(df).autocorr('Authors')
-                  A         B         C         D
-        A  1.000000 -0.316228  0.316228 -0.632456
-        B -0.316228  1.000000  0.200000  0.200000
-        C  0.316228  0.200000  1.000000 -0.200000
-        D -0.632456  0.200000 -0.200000  1.000000
+                 A         B         C         D
+        A  1.00000  0.670820  0.500000  0.000000
+        B  0.67082  1.000000  0.447214  0.447214
+        C  0.50000  0.447214  1.000000  0.000000
+        D  0.00000  0.447214  0.000000  1.000000
         
         >>> DataFrame(df).autocorr('Authors', as_matrix=False)
            Authors (IDX) Authors (COL)     value
         0              A             A  1.000000
-        1              B             A -0.316228
-        2              C             A  0.316228
-        3              D             A -0.632456
-        4              A             B -0.316228
+        1              B             A  0.670820
+        2              C             A  0.500000
+        3              D             A  0.000000
+        4              A             B  0.670820
         5              B             B  1.000000
-        6              C             B  0.200000
-        7              D             B  0.200000
-        8              A             C  0.316228
-        9              B             C  0.200000
+        6              C             B  0.447214
+        7              D             B  0.447214
+        8              A             C  0.500000
+        9              B             C  0.447214
         10             C             C  1.000000
-        11             D             C -0.200000
-        12             A             D -0.632456
-        13             B             D  0.200000
-        14             C             D -0.200000
+        11             D             C  0.000000
+        12             A             D  0.000000
+        13             B             D  0.447214
+        14             C             D  0.000000
         15             D             D  1.000000
 
         >>> DataFrame(df).autocorr('Author Keywords')
-              a     b     c     d
-        a  1.00  0.25 -0.50 -0.50
-        b  0.25  1.00 -0.50 -0.50
-        c -0.50 -0.50  1.00  0.25
-        d -0.50 -0.50  0.25  1.00
+             a    b    c    d
+        a  1.0  0.5  0.0  0.0
+        b  0.5  1.0  0.0  0.0
+        c  0.0  0.0  1.0  0.5
+        d  0.0  0.0  0.5  1.0
 
         >>> DataFrame(df).autocorr('Author Keywords', minmax=(0.25, None))
-             a    b     c     d
-        a  1.0  0.0  0.00  0.00
-        b  0.0  1.0  0.00  0.00
-        c  0.0  0.0  1.00  0.25
-        d  0.0  0.0  0.25  1.00
+             a    b    c    d
+        a  1.0  0.5  0.0  0.0
+        b  0.5  1.0  0.0  0.0
+        c  0.0  0.0  1.0  0.5
+        d  0.0  0.0  0.5  1.0
 
         """
-        result = self.compute_tfm(column=column, sep=sep)
-        result = result.corr(method=method)
+        tfm = self.compute_tfm(column=column, sep=sep)
+
+        result = pd.DataFrame(0.0, columns=tfm.columns, index=tfm.columns)
+        for term in tfm.columns:
+            result.at[term, term] = 1.0
+        for i in range(len(tfm.columns) - 1):
+            for j in range(i + 1, len(tfm.columns)):
+                d = pd.DataFrame({"x": tfm[tfm.columns[i]], "y": tfm[tfm.columns[j]]})
+                d = d[(d.x != 0) | (d.y != 0)]
+
+                if len(d) != 0 and sum(d.x * d.y) > 0:
+                    r = relationship(d.x, d.y)
+                    result.at[tfm.columns[i], tfm.columns[j]] = r
+                    result.at[tfm.columns[j], tfm.columns[i]] = r
+
+        # ---
+
         if as_matrix is False or minmax is not None:
             result = (
                 result.reset_index()
@@ -2344,15 +2375,16 @@ class DataFrame(pd.DataFrame):
 
         
         >>> DataFrame(df).autocorr('Authors')
-                  A         B         C         D
-        A  1.000000 -0.547723  0.547723 -0.645497
-        B -0.547723  1.000000 -0.416667  0.353553
-        C  0.547723 -0.416667  1.000000 -0.353553
-        D -0.645497  0.353553 -0.353553  1.000000
+                  A         B         C    D
+        A  1.000000  0.447214  0.774597  0.0
+        B  0.447214  1.000000  0.288675  0.5
+        C  0.774597  0.288675  1.000000  0.0
+        D  0.000000  0.500000  0.000000  1.0
         
 
         >>> DataFrame(df).autocorr_map('Authors')
-        {'terms': ['A', 'B', 'C', 'D'], 'edges_75': None, 'edges_50': [('A', 'C')], 'edges_25': [('B', 'D')], 'other_edges': [('A', 'B'), ('A', 'D'), ('B', 'C'), ('C', 'D')]}
+        {'terms': ['A', 'B', 'C', 'D'], 'edges_75': [('A', 'C')], 'edges_50': None, 'edges_25': [('A', 'B'), ('B', 'C'), ('B', 'D')], 'other_edges': [('A', 'D'), ('C', 'D')]}
+
 
 
 
