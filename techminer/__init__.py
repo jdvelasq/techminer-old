@@ -8,8 +8,9 @@ from .dataframe import *
 from .chord_diagram import *
 from .maps import *
 
+
 # from techminer.keywords import *
-# from techminer.records import *
+
 # from techminer.result import *
 # from techminer.thesaurus import *
 # from techminer.transform import *

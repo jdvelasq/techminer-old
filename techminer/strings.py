@@ -12,471 +12,491 @@ Functions in this module
 """
 
 
-# import re
-# import geopandas
-# import string
-# from nltk.stem import PorterStemmer
+import re
+import geopandas
+import string
+from nltk.stem import PorterStemmer
 
-# # -------------------------------------------------------------------------------------------
-# def find_string(pattern, x, ignore_case=True, full_match=False, use_re=False):
-#     r"""Find pattern in string.
 
-#     Args:
-#         pattern (string)
-#         x (string)
-#         ignore_case (bool)
-#         full_match (bool)
-#         use_re (bool)
+def find_string(pattern, x, ignore_case=True, full_match=False, use_re=False):
+    r"""Find pattern in string.
 
-#     Returns:
-#         string or None
+    Args:
+        pattern (string)
+        x (string)
+        ignore_case (bool)
+        full_match (bool)
+        use_re (bool)
 
-#     >>> find_string(r'\btwo\b', 'one two three four five', use_re=True)
-#     'two'
+    Returns:
+        string or None
 
-#     >>> find_string(r'\bTWO\b', 'one two three four five', use_re=True)
-#     'two'
 
-#     >>> find_string(r'\btwo\b', 'one TWO three four five', ignore_case=False, use_re=True) is None
-#     True
+    Examples
+    ----------------------------------------------------------------------------------------------
 
-#     >>> find_string(r'\btwo\Wthree\b', 'one two three four five', ignore_case=False, use_re=True)
-#     'two three'
+    >>> find_string(r'\btwo\b', 'one two three four five', use_re=True)
+    'two'
 
-#     """
+    >>> find_string(r'\bTWO\b', 'one two three four five', use_re=True)
+    'two'
 
-#     if use_re is False:
-#         pattern = re.escape(pattern)
+    >>> find_string(r'\btwo\b', 'one TWO three four five', ignore_case=False, use_re=True) is None
+    True
 
-#     if full_match is True:
-#         pattern = "^" + pattern + "$"
+    >>> find_string(r'\btwo\Wthree\b', 'one two three four five', ignore_case=False, use_re=True)
+    'two three'
 
-#     if ignore_case is True:
-#         result = re.findall(pattern, x, re.I)
-#     else:
-#         result = re.findall(pattern, x)
+    """
 
-#     if len(result):
-#         return result[0]
+    if use_re is False:
+        pattern = re.escape(pattern)
 
-#     return None
+    if full_match is True:
+        pattern = "^" + pattern + "$"
 
+    if ignore_case is True:
+        result = re.findall(pattern, x, re.I)
+    else:
+        result = re.findall(pattern, x)
 
-# # -------------------------------------------------------------------------------------------
-# def replace_string(
-#     pattern, x, repl=None, ignore_case=True, full_match=False, use_re=False
-# ):
-#     """Replace pattern in string.
+    if len(result):
+        return result[0]
 
-#     Args:
-#         pattern (string)
-#         x (string)
-#         repl (string, None)
-#         ignore_case (bool)
-#         full_match (bool)
-#         use_re (bool)
+    return None
 
-#     Returns:
-#         string or []
 
-#     """
+def replace_string(
+    pattern, x, repl=None, ignore_case=True, full_match=False, use_re=False
+):
+    """Replace pattern in string.
 
-#     if use_re is False:
-#         pattern = re.escape(pattern)
+    Args:
+        pattern (string)
+        x (string)
+        repl (string, None)
+        ignore_case (bool)
+        full_match (bool)
+        use_re (bool)
 
-#     if full_match is True:
-#         pattern = "^" + pattern + "$"
+    Returns:
+        string or []
 
-#     if ignore_case is True:
-#         return re.sub(pattern, repl, x, re.I)
-#     return re.sub(pattern, repl, x)
+    """
 
+    if use_re is False:
+        pattern = re.escape(pattern)
 
-# # -------------------------------------------------------------------------------------------
-# def extract_after_first(pattern, x, ignore_case=True, full_match=False, use_re=False):
-#     """Returns the string from the first ocurrence of the keyword to the end of string x.
+    if full_match is True:
+        pattern = "^" + pattern + "$"
 
-#     Args:
-#         pattern (string) :
-#         x : string
+    if ignore_case is True:
+        return re.sub(pattern, repl, x, re.I)
+    return re.sub(pattern, repl, x)
 
-#     Returns:
-#         String
 
-#     >>> extract_after_first('aaa', '1 aaa 4 aaa 5')
-#     'aaa 4 aaa 5'
+def extract_after_first(pattern, x, ignore_case=True, full_match=False, use_re=False):
+    """Returns the string from the first ocurrence of the keyword to the end of string x.
 
-#     >>> extract_after_first('bbb', '1 aaa 4 aaa 5')
+    Args:
+        pattern (string) :
+        x : string
 
-#     """
-#     y = find_string(pattern, x, ignore_case, full_match, use_re)
+    Returns:
+        String
+    
+    Examples
+    ----------------------------------------------------------------------------------------------
+    
+    >>> extract_after_first('aaa', '1 aaa 4 aaa 5')
+    'aaa 4 aaa 5'
 
-#     if y is not None:
+    >>> extract_after_first('bbb', '1 aaa 4 aaa 5')
 
-#         if ignore_case is True:
-#             c = re.compile(y, re.I)
-#         else:
-#             c = re.compile(y)
-
-#         z = c.search(x)
-
-#         if z:
-#             return x[z.start() :]
-#         else:
-#             return None
+    """
+    y = find_string(pattern, x, ignore_case, full_match, use_re)
 
-#     return None
+    if y is not None:
 
+        if ignore_case is True:
+            c = re.compile(y, re.I)
+        else:
+            c = re.compile(y)
 
-# # -------------------------------------------------------------------------------------------
-# def extract_after_last(pattern, x, ignore_case=True, full_match=False, use_re=False):
-#     """Returns the string from last ocurrence of a keyword to the end of string x.
+        z = c.search(x)
 
-#     Args:
-#         x: string
+        if z:
+            return x[z.start() :]
+        else:
+            return None
+
+    return None
 
-#     Returns:
-#         String
-
-#     >>> extract_after_last('aaa', '1 aaa 4 aaa 5')
-#     'aaa 5'
 
-#     """
-
-#     y = find_string(pattern, x, ignore_case, full_match, use_re)
-
-#     if y is not None:
-
-#         if ignore_case is True:
-#             c = re.compile(y, re.I)
-#         else:
-#             c = re.compile(y)
-
-#         z = c.findall(x)
-
-#         result = x
-#         for w in z[:-1]:
-#             y = c.search(result)
-#             result = result[y.end() :]
-#         y = c.search(result)
-#         return result[y.start() :]
-
-#     return None
-
-
-# # -------------------------------------------------------------------------------------------
-# def extract_nearby(
-#     pattern, x, n_words=1, ignore_case=True, full_match=False, use_re=False
-# ):
-#     """Extracts the words of string x in the proximity of the terms matching
-#     the keywords list.
+def extract_after_last(pattern, x, ignore_case=True, full_match=False, use_re=False):
+    """Returns the string from last ocurrence of a keyword to the end of string x.
 
-#     Args:
-#         x (string): A string object.
-#         n_words (integer): number of words around term.
+    Args:
+        x: string
 
-#     Returns:
-#         String.
+    Returns:
+        String
 
-#     **Examples**
+    Examples
+    ----------------------------------------------------------------------------------------------
 
-#     >>> import pandas as pd
-#     >>> df = pd.DataFrame({
-#     ...    'f': ['1 2 3 4 5 6', 'aaa 1 2 3 4 5', '1 aaa 2 3 4 5', '1 2 aaa 3 4 5',
-#     ...          '1 2 3 aaa 4 5', '1 2 3 4 aaa 5', '1 2 3 4 5 aaa'],
-#     ... })
-#     >>> df
-#                    f
-#     0    1 2 3 4 5 6
-#     1  aaa 1 2 3 4 5
-#     2  1 aaa 2 3 4 5
-#     3  1 2 aaa 3 4 5
-#     4  1 2 3 aaa 4 5
-#     5  1 2 3 4 aaa 5
-#     6  1 2 3 4 5 aaa
-#     >>> df.f.map(lambda x: extract_nearby('aaa', x, n_words=2)) # doctest: +NORMALIZE_WHITESPACE
-#     0           None
-#     1        aaa 1 2
-#     2      1 aaa 2 3
-#     3    1 2 aaa 3 4
-#     4    2 3 aaa 4 5
-#     5      3 4 aaa 5
-#     6        4 5 aaa
-#     Name: f, dtype: object
-#     """
+    >>> extract_after_last('aaa', '1 aaa 4 aaa 5')
+    'aaa 5'
 
-#     def check(pattern):
+    """
 
-#         if ignore_case is True:
-#             c = re.compile(pattern, re.I)
-#         else:
-#             c = re.compile(pattern)
+    y = find_string(pattern, x, ignore_case, full_match, use_re)
 
-#         if full_match is True:
-#             result = c.fullMatch(x)
-#         else:
-#             result = c.findall(x)
+    if y is not None:
+
+        if ignore_case is True:
+            c = re.compile(y, re.I)
+        else:
+            c = re.compile(y)
+
+        z = c.findall(x)
+
+        result = x
+        for w in z[:-1]:
+            y = c.search(result)
+            result = result[y.end() :]
+        y = c.search(result)
+        return result[y.start() :]
 
-#         if len(result):
-#             return result[0]
-#         else:
-#             return None
+    return None
 
-#     y = find_string(pattern, x, ignore_case, full_match, use_re)
 
-#     if y is not None:
+def extract_nearby(
+    pattern, x, n_words=1, ignore_case=True, full_match=False, use_re=False
+):
+    """Extracts the words of string x in the proximity of the terms matching
+    the keywords list.
 
-#         pattern = "\w\W" * n_words + y + "\W\w" * n_words
-#         result = check(pattern)
+    Args:
+        x (string): A string object.
+        n_words (integer): number of words around term.
 
-#         if result is not None:
-#             return result
-#         else:
-#             for i in range(n_words, -1, -1):
+    Returns:
+        String.
 
-#                 # Checks at the beginning
-#                 pattern = "^" + "\w\W" * i + y + "\W\w" * n_words
-#                 result = check(pattern)
-#                 if result is not None:
-#                     return result
+    Examples
+    ----------------------------------------------------------------------------------------------
+    
 
-#             for j in range(n_words, -1, -1):
-#                 # Checks at the end
-#                 pattern = "\w\W" * n_words + y + "\W\w" * j + "$"
-#                 result = check(pattern)
-#                 if result is not None:
-#                     return result
+    >>> import pandas as pd
+    >>> df = pd.DataFrame({
+    ...    'f': ['1 2 3 4 5 6', 'aaa 1 2 3 4 5', '1 aaa 2 3 4 5', '1 2 aaa 3 4 5',
+    ...          '1 2 3 aaa 4 5', '1 2 3 4 aaa 5', '1 2 3 4 5 aaa'],
+    ... })
+    >>> df
+                   f
+    0    1 2 3 4 5 6
+    1  aaa 1 2 3 4 5
+    2  1 aaa 2 3 4 5
+    3  1 2 aaa 3 4 5
+    4  1 2 3 aaa 4 5
+    5  1 2 3 4 aaa 5
+    6  1 2 3 4 5 aaa
+    >>> df.f.map(lambda x: extract_nearby('aaa', x, n_words=2)) # doctest: +NORMALIZE_WHITESPACE
+    0           None
+    1        aaa 1 2
+    2      1 aaa 2 3
+    3    1 2 aaa 3 4
+    4    2 3 aaa 4 5
+    5      3 4 aaa 5
+    6        4 5 aaa
+    Name: f, dtype: object
+    """
 
-#             for i in range(n_words, -1, -1):
-#                 for j in range(n_words, -1, -1):
-#                     pattern = "^" + "\w\W" * i + y + "\W\w" * j + "$"
-#                     result = check(pattern)
-#                     if result is not None:
-#                         return result[0]
+    def check(pattern):
 
-#     return None
+        if ignore_case is True:
+            c = re.compile(pattern, re.I)
+        else:
+            c = re.compile(pattern)
 
+        if full_match is True:
+            result = c.fullMatch(x)
+        else:
+            result = c.findall(x)
 
-# # -------------------------------------------------------------------------------------------
-# def extract_until_first(pattern, x, ignore_case=True, full_match=False, use_re=False):
-#     """Returns the string from begining of x to the first ocurrence of a keyword.
-
-#     Args:
-#         x: string
-
-#     Returns:
-#         String
-
-#     >>> extract_until_first('aaa', '1 aaa 4 aaa 5')
-#     '1 aaa'
-
-#     """
-#     y = find_string(pattern, x, ignore_case, full_match, use_re)
-
-#     if y is not None:
-
-#         if ignore_case is True:
-#             c = re.compile(y, re.I)
-#         else:
-#             c = re.compile(y)
-
-#         z = c.search(x)
-
-#         if z:
-#             return x[: z.end()]
-#         else:
-#             return None
-
-#     return None
-
-
-# # -------------------------------------------------------------------------------------------
-# def extract_until_last(pattern, x, ignore_case=True, full_match=False, use_re=False):
-#     """Returns the string from begining of x to the last ocurrence of a keyword.
-
-#     Args:
-#         x: string
-
-#     Returns:
-#         String
-
-#     >>> extract_until_last('aaa', '1 aaa 4 aaa 5')
-#     '1 aaa 4 aaa'
-
-#     """
-#     y = find_string(pattern, x, ignore_case, full_match, use_re)
+        if len(result):
+            return result[0]
+        else:
+            return None
 
-#     if y is not None:
+    y = find_string(pattern, x, ignore_case, full_match, use_re)
 
-#         if ignore_case is True:
-#             c = re.compile("[\w+\W+]+" + y, re.I)
-#         else:
-#             c = re.compile("[\w+\W+]+" + y)
+    if y is not None:
 
-#         z = c.search(x)
+        pattern = "\w\W" * n_words + y + "\W\w" * n_words
+        result = check(pattern)
 
-#         if z:
-#             return x[: z.end()]
-#         else:
-#             return None
+        if result is not None:
+            return result
+        else:
+            for i in range(n_words, -1, -1):
 
-#     return None
+                # Checks at the beginning
+                pattern = "^" + "\w\W" * i + y + "\W\w" * n_words
+                result = check(pattern)
+                if result is not None:
+                    return result
 
+            for j in range(n_words, -1, -1):
+                # Checks at the end
+                pattern = "\w\W" * n_words + y + "\W\w" * j + "$"
+                result = check(pattern)
+                if result is not None:
+                    return result
 
-# # -------------------------------------------------------------------------------------------
-# def extract_country(x, sep=";"):
-#     """
+            for i in range(n_words, -1, -1):
+                for j in range(n_words, -1, -1):
+                    pattern = "^" + "\w\W" * i + y + "\W\w" * j + "$"
+                    result = check(pattern)
+                    if result is not None:
+                        return result[0]
+
+    return None
 
-#     >>> import pandas as pd
-#     >>> x = pd.DataFrame({
-#     ...     'Affiliations': [
-#     ...         'University, Cuba; University, Venezuela',
-#     ...         'University, United States; Univesity, Singapore',
-#     ...         'University;',
-#     ...         'University; Univesity',
-#     ...         'University,',
-#     ...         'University',
-#     ...         None]
-#     ... })
-#     >>> x['Affiliations'].map(lambda x: extract_country(x))
-#     0             Cuba;Venezuela
-#     1    United States;Singapore
-#     2                       None
-#     3                       None
-#     4                       None
-#     5                       None
-#     6                       None
-#     Name: Affiliations, dtype: object
-#     """
 
-#     if x is None:
-#         return None
+def extract_until_first(pattern, x, ignore_case=True, full_match=False, use_re=False):
+    """Returns the string from begining of x to the first ocurrence of a keyword.
 
-#     #
-#     # lista generica de nombres de paises
-#     #
-#     country_names = sorted(
-#         geopandas.read_file(
-#             geopandas.datasets.get_path("naturalearth_lowres")
-#         ).name.tolist()
-#     )
+    Args:
+        x: string
+
+    Returns:
+        String
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+    
+    >>> extract_until_first('aaa', '1 aaa 4 aaa 5')
+    '1 aaa'
+
+    """
+    y = find_string(pattern, x, ignore_case, full_match, use_re)
+
+    if y is not None:
+
+        if ignore_case is True:
+            c = re.compile(y, re.I)
+        else:
+            c = re.compile(y)
+
+        z = c.search(x)
+
+        if z:
+            return x[: z.end()]
+        else:
+            return None
+
+    return None
+
+
+def extract_until_last(pattern, x, ignore_case=True, full_match=False, use_re=False):
+    """Returns the string from begining of x to the last ocurrence of a keyword.
+
+    Args:
+        x: string
+
+    Returns:
+        String
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+    
+    >>> extract_until_last('aaa', '1 aaa 4 aaa 5')
+    '1 aaa 4 aaa'
+
+    """
+    y = find_string(pattern, x, ignore_case, full_match, use_re)
+
+    if y is not None:
+
+        if ignore_case is True:
+            c = re.compile("[\w+\W+]+" + y, re.I)
+        else:
+            c = re.compile("[\w+\W+]+" + y)
 
-#     # paises faltantes
-#     country_names.append("Singapore")
-#     country_names.append("Malta")
-#     country_names.append("United States")
+        z = c.search(x)
 
-#     #
-#     #  Reemplazo de nombres de regiones administrativas
-#     # por nombres de paises
-#     #
-#     x = re.sub("Bosnia and Herzegovina", "Bosnia and Herz.", x)
-#     x = re.sub("Czech Republic", "Czechia", x)
-#     x = re.sub("Russian Federation", "Russia", x)
-#     x = re.sub("Hong Kong", "China", x)
-#     x = re.sub("Macau", "China", x)
-#     x = re.sub("Macao", "China", x)
+        if z:
+            return x[: z.end()]
+        else:
+            return None
 
-#     countries = [affiliation.split(",")[-1].strip() for affiliation in x.split(sep)]
+    return None
+
 
-#     countries = ";".join(
-#         [country if country in country_names else "" for country in countries]
-#     )
+def extract_country(x, sep=";"):
+    """
 
-#     if countries == "" or countries == ";":
-#         return None
-#     else:
-#         return countries
+    Examples
+    ----------------------------------------------------------------------------------------------
+    
+    >>> import pandas as pd
+    >>> x = pd.DataFrame({
+    ...     'Affiliations': [
+    ...         'University, Cuba; University, Venezuela',
+    ...         'University, United States; Univesity, Singapore',
+    ...         'University;',
+    ...         'University; Univesity',
+    ...         'University,',
+    ...         'University',
+    ...         None]
+    ... })
+    >>> x['Affiliations'].map(lambda x: extract_country(x))
+    0             Cuba;Venezuela
+    1    United States;Singapore
+    2                       None
+    3                       None
+    4                       None
+    5                       None
+    6                       None
+    Name: Affiliations, dtype: object
+    """
 
+    if x is None:
+        return None
 
-# # -------------------------------------------------------------------------------------------
-# def steamming(pattern, text):
+    #
+    # lista generica de nombres de paises
+    #
+    country_names = sorted(
+        geopandas.read_file(
+            geopandas.datasets.get_path("naturalearth_lowres")
+        ).name.tolist()
+    )
 
-#     text = asciify(text)
-#     pattern = asciify(pattern)
+    # paises faltantes
+    country_names.append("Singapore")
+    country_names.append("Malta")
+    country_names.append("United States")
 
-#     text = text.strip().lower()
-#     pattern = pattern.strip().lower()
+    #
+    #  Reemplazo de nombres de regiones administrativas
+    # por nombres de paises
+    #
+    x = re.sub("Bosnia and Herzegovina", "Bosnia and Herz.", x)
+    x = re.sub("Czech Republic", "Czechia", x)
+    x = re.sub("Russian Federation", "Russia", x)
+    x = re.sub("Hong Kong", "China", x)
+    x = re.sub("Macau", "China", x)
+    x = re.sub("Macao", "China", x)
 
-#     porter = PorterStemmer()
+    countries = [affiliation.split(",")[-1].strip() for affiliation in x.split(sep)]
 
-#     pattern = [porter.stem(w) for w in pattern.split()]
-#     text = [porter.stem(w) for w in text.split()]
+    countries = ";".join(
+        [country if country in country_names else "" for country in countries]
+    )
 
-#     return [m in text for m in pattern]
+    if countries == "" or countries == ";":
+        return None
+    else:
+        return countries
 
 
-# # -------------------------------------------------------------------------------------------
-# def steamming_all(pattern, text):
-#     """
+def steamming(pattern, text):
+    """
 
-#     >>> steamming_all('computers cars', 'car computing')
-#     True
+    Examples
+    ----------------------------------------------------------------------------------------------
+    
 
-#     >>> steamming_all('computers cars', 'car houses')
-#     False
+    """
+    text = remove_accents(text)
+    pattern = remove_accents(pattern)
 
-#     """
-#     return all(steamming(pattern, text))
+    text = text.strip().lower()
+    pattern = pattern.strip().lower()
 
+    porter = PorterStemmer()
 
-# # -------------------------------------------------------------------------------------------
-# def steamming_any(pattern, text):
-#     """
+    pattern = [porter.stem(w) for w in pattern.split()]
+    text = [porter.stem(w) for w in text.split()]
 
-#     >>> steamming_any('computers cars', 'car computing')
-#     True
+    return [m in text for m in pattern]
 
-#     >>> steamming_any('computers cars', 'computing house')
-#     True
 
-#     >>> steamming_all('computers cars', 'tree houses')
-#     False
+def steamming_all(pattern, text):
+    """
 
-#     """
-#     return any(steamming(pattern, text))
+    Examples
+    ----------------------------------------------------------------------------------------------
+    
+    >>> steamming_all('computers cars', 'car computing')
+    True
 
+    >>> steamming_all('computers cars', 'car houses')
+    False
 
-# # -------------------------------------------------------------------------------------------
-# def fingerprint(x):
-#     """Computes 'fingerprint' representation of string x.
+    """
+    return all(steamming(pattern, text))
 
-#     Args:
-#         x (string): string to convert.
 
-#     Returns:
-#         string.
+def steamming_any(pattern, text):
+    """
 
-#     **Examples**
+    Examples
+    ----------------------------------------------------------------------------------------------
+    
+    >>> steamming_any('computers cars', 'car computing')
+    True
 
-#     >>> fingerprint('a A b')
-#     'a b'
-#     >>> fingerprint('b a a')
-#     'a b'
-#     >>> fingerprint(None) is None
-#     True
-#     >>> fingerprint('b c')
-#     'b c'
-#     >>> fingerprint(' c b ')
-#     'b c'
+    >>> steamming_any('computers cars', 'computing house')
+    True
 
+    >>> steamming_all('computers cars', 'tree houses')
+    False
 
-#     """
-#     porter = PorterStemmer()
+    """
+    return any(steamming(pattern, text))
 
-#     if x is None:
-#         return None
-#     x = x.strip().lower()
-#     x = re.sub("-", " ", x)
-#     x = re.sub("[" + string.punctuation + "]", "", x)
-#     x = asciify(x)
-#     x = " ".join(porter.stem(w) for w in x.split())
-#     x = " ".join({w for w in x.split()})
-#     x = " ".join(sorted(x.split(" ")))
-#     return x
 
+def fingerprint(x):
+    """Computes 'fingerprint' representation of string x.
 
-# # -------------------------------------------------------------------------------------------
+    Args:
+        x (string): string to convert.
+
+    Returns:
+        string.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> fingerprint('a A b')
+    'a b'
+    >>> fingerprint('b a a')
+    'a b'
+    >>> fingerprint(None) is None
+    True
+    >>> fingerprint('b c')
+    'b c'
+    >>> fingerprint(' c b ')
+    'b c'
+
+
+    """
+    porter = PorterStemmer()
+
+    if x is None:
+        return None
+    x = x.strip().lower()
+    x = re.sub("-", " ", x)
+    x = re.sub("[" + string.punctuation + "]", "", x)
+    x = remove_accents(x)
+    x = " ".join(porter.stem(w) for w in x.split())
+    x = " ".join({w for w in x.split()})
+    x = " ".join(sorted(x.split(" ")))
+    return x
 
 
 def remove_accents(text):
