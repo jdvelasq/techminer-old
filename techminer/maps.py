@@ -217,6 +217,16 @@ class Map:
             :width: 600px
             :align: center
 
+        >>> nxmap = Map()
+        >>> kwargs = DataFrame(df).corr_map('Authors', by='Author Keywords',  top_n_links=4)
+        >>> nxmap.correlation_map(**kwargs)
+        >>> plt.savefig('guide/images/correlation_map_3.png')
+
+        .. image:: images/correlation_map_3.png
+            :width: 600px
+            :align: center
+
+
 
         """
 

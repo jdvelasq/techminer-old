@@ -2621,6 +2621,129 @@ class DataFrame(pd.DataFrame):
                 result = result.astype("float")
         return result
 
+    def corr_map(
+        self,
+        column,
+        by,
+        sep=None,
+        sep_by=None,
+        method="pearson",
+        minval=None,
+        top_n_links=None,
+    ):
+        """Computes the correlation map among items in a column of the dataframe.
+
+        Args:
+            column (str): the column to explode.
+            sep (str): Character used as internal separator for the elements in the column.
+            method (str): Available methods are:
+
+                * pearson : Standard correlation coefficient.
+
+                * kendall : Kendall Tau correlation coefficient.
+
+                * spearman : Spearman rank correlation.
+
+            minval (float): Minimum autocorrelation value to show links.
+            top_n_links (int): Shows top n links.
+
+        Returns:
+            DataFrame.
+            
+        Examples
+        ----------------------------------------------------------------------------------------------
+
+        >>> import pandas as pd
+        >>> x = [ 'A', 'A,C', 'B', 'A,B,C', 'B,D', 'A,B', 'A,C']
+        >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd', 'c;d']
+        >>> df = pd.DataFrame(
+        ...    {
+        ...       'Authors': x,
+        ...       'Author Keywords': y,
+        ...       'Cited by': list(range(len(x))),
+        ...       'ID': list(range(len(x))),
+        ...    }
+        ... )
+        >>> df
+          Authors Author Keywords  Cited by  ID
+        0       A               a         0   0
+        1     A,C             a;b         1   1
+        2       B               b         2   2
+        3   A,B,C               c         3   3
+        4     B,D             c;d         4   4
+        5     A,B               d         5   5
+        6     A,C             c;d         6   6
+
+        
+        >>> DataFrame(df).corr('Authors', 'Author Keywords')
+                  A         B         C         D
+        A  1.000000  0.866025  1.000000  0.707107
+        B  0.866025  1.000000  0.866025  0.816497
+        C  1.000000  0.866025  1.000000  0.707107
+        D  0.707107  0.816497  0.707107  1.000000
+        
+
+        >>> DataFrame(df).corr_map('Authors', 'Author Keywords')
+        {'terms': ['A', 'B', 'C', 'D'], 'edges_75': [('A', 'C')], 'edges_50': None, 'edges_25': [('A', 'B'), ('B', 'C'), ('B', 'D')], 'other_edges': [('A', 'D'), ('C', 'D')]}
+
+
+
+        """
+
+        matrix = self.autocorr(
+            column=column, sep=sep, method=method, as_matrix=True, minmax=None
+        )
+
+        terms = matrix.columns.tolist()
+
+        n = len(matrix.columns)
+        edges_75 = []
+        edges_50 = []
+        edges_25 = []
+        other_edges = []
+
+        if top_n_links is not None:
+            values = matrix.to_numpy()
+            top_value = []
+            for icol in range(n):
+                for irow in range(icol + 1, n):
+                    top_value.append(values[irow, icol])
+            top_value = sorted(top_value, reverse=True)
+            top_value = top_value[top_n_links - 1]
+            if minval is not None:
+                minval = max(minval, top_value)
+            else:
+                minval = top_value
+
+        for icol in range(n):
+            for irow in range(icol + 1, n):
+                if minval is None or matrix[terms[icol]][terms[irow]] >= minval:
+                    if matrix[terms[icol]][terms[irow]] > 0.75:
+                        edges_75.append((terms[icol], terms[irow]))
+                    elif matrix[terms[icol]][terms[irow]] > 0.50:
+                        edges_50.append((terms[icol], terms[irow]))
+                    elif matrix[terms[icol]][terms[irow]] > 0.25:
+                        edges_25.append((terms[icol], terms[irow]))
+                    else:
+                        other_edges.append((terms[icol], terms[irow]))
+
+        if len(edges_75) == 0:
+            edges_75 = None
+        if len(edges_50) == 0:
+            edges_50 = None
+        if len(edges_25) == 0:
+            edges_25 = None
+        if len(other_edges) == 0:
+            other_edges = None
+
+        return dict(
+            terms=terms,
+            edges_75=edges_75,
+            edges_50=edges_50,
+            edges_25=edges_25,
+            other_edges=other_edges,
+        )
+
     def factor_analysis(self, column, sep=None, n_components=None, as_matrix=True):
         """Computes the matrix of factors for terms in a given column.
 
