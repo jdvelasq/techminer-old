@@ -2296,7 +2296,9 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def autocorr_map(self, column, sep=None, method="pearson"):
+    def autocorr_map(
+        self, column, sep=None, method="pearson", minval=None, top_n_links=None
+    ):
         """Computes the autocorrelation map among items in a column of the dataframe.
 
         Args:
@@ -2310,8 +2312,8 @@ class DataFrame(pd.DataFrame):
 
                 * spearman : Spearman rank correlation.
 
-            as_matrix (bool): Results are returned as a matrix.
-            minmax (pair(number,number)): filter values by >=min,<=max.
+            minval (float): Minimum autocorrelation value to show links.
+            top_n_links (int): Shows top n links.
 
         Returns:
             DataFrame.
@@ -2320,8 +2322,8 @@ class DataFrame(pd.DataFrame):
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D', 'A,B']
-        >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd']
+        >>> x = [ 'A', 'A,C', 'B', 'A,B,C', 'B,D', 'A,B', 'A,C']
+        >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd', 'c;d']
         >>> df = pd.DataFrame(
         ...    {
         ...       'Authors': x,
@@ -2333,60 +2335,68 @@ class DataFrame(pd.DataFrame):
         >>> df
           Authors Author Keywords  Cited by  ID
         0       A               a         0   0
-        1     A,B             a;b         1   1
+        1     A,C             a;b         1   1
         2       B               b         2   2
         3   A,B,C               c         3   3
         4     B,D             c;d         4   4
         5     A,B               d         5   5
+        6     A,C             c;d         6   6
 
         
         >>> DataFrame(df).autocorr('Authors')
                   A         B         C         D
-        A  1.000000 -0.316228  0.316228 -0.632456
-        B -0.316228  1.000000  0.200000  0.200000
-        C  0.316228  0.200000  1.000000 -0.200000
-        D -0.632456  0.200000 -0.200000  1.000000
+        A  1.000000 -0.547723  0.547723 -0.645497
+        B -0.547723  1.000000 -0.416667  0.353553
+        C  0.547723 -0.416667  1.000000 -0.353553
+        D -0.645497  0.353553 -0.353553  1.000000
         
 
-        >>> DataFrame(df).autocorr('Author Keywords')
-              a     b     c     d
-        a  1.00  0.25 -0.50 -0.50
-        b  0.25  1.00 -0.50 -0.50
-        c -0.50 -0.50  1.00  0.25
-        d -0.50 -0.50  0.25  1.00
+        >>> DataFrame(df).autocorr_map('Authors')
+        {'terms': ['A', 'B', 'C', 'D'], 'edges_75': None, 'edges_50': [('A', 'C')], 'edges_25': [('B', 'D')], 'other_edges': [('A', 'B'), ('A', 'D'), ('B', 'C'), ('C', 'D')]}
+
 
 
         """
 
-        result = self[[column]].copy()
-        result["count"] = 1
+        matrix = self.autocorr(
+            column=column, sep=sep, method=method, as_matrix=True, minmax=None
+        )
 
-        result = result.groupby(column, as_index=False).agg({"count": np.sum})
+        terms = matrix.columns.tolist()
 
-        if sep is None and column in SCOPUS_SEPS.keys():
-            sep = SCOPUS_SEPS[column]
-        if sep is not None:
-            result[column] = result[column].map(
-                lambda x: sorted(x.split(sep)) if isinstance(x, str) else x
-            )
+        n = len(matrix.columns)
+        edges_75 = []
+        edges_50 = []
+        edges_25 = []
+        other_edges = []
 
-        result["doc-ID"] = ["doc#{:d}".format(i) for i in range(len(result))]
+        for icol in range(n):
+            for irow in range(icol + 1, n):
+                if matrix[terms[icol]][terms[irow]] > 0.75:
+                    edges_75.append((terms[icol], terms[irow]))
+                elif matrix[terms[icol]][terms[irow]] > 0.50:
+                    edges_50.append((terms[icol], terms[irow]))
+                elif matrix[terms[icol]][terms[irow]] > 0.25:
+                    edges_25.append((terms[icol], terms[irow]))
+                else:
+                    other_edges.append((terms[icol], terms[irow]))
 
-        terms = result[[column]].copy()
-        terms.explode(column)
-        terms = [item for sublist in terms[column].tolist() for item in sublist]
-        terms = sorted(set(terms))
-        docs = result["doc-ID"].tolist()
-        label_docs = {doc: label for doc, label in zip(docs, result["count"].tolist())}
-        label_terms = {t: t for t in terms}
-        labels = {**label_docs, **label_terms}
+        if len(edges_75) == 0:
+            edges_75 = None
+        if len(edges_50) == 0:
+            edges_50 = None
+        if len(edges_25) == 0:
+            edges_25 = None
+        if len(other_edges) == 0:
+            other_edges = None
 
-        edges = []
-        for field, docID in zip(result[column], result["doc-ID"]):
-            for item in field:
-                edges.append((item, docID))
-
-        return dict(terms=terms, docs=docs, edges=edges, labels=labels)
+        return dict(
+            terms=terms,
+            edges_75=edges_75,
+            edges_50=edges_50,
+            edges_25=edges_25,
+            other_edges=other_edges,
+        )
 
     def corr(
         self,

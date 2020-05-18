@@ -151,10 +151,113 @@ class Map:
         nx.draw_networkx_nodes(self._graph, pos=layout, nodelist=terms, **term_props)
         nx.draw_networkx_nodes(self._graph, pos=layout, nodelist=docs, **doc_props)
         nx.draw_networkx_edges(self._graph, pos=layout, **edge_props)
-        nx.draw_networkx_labels(
-            self._graph, pos=layout, labels=label_docs, **label_docs_props
-        )
+        # nx.draw_networkx_labels(
+        #    self._graph, pos=layout, labels=label_docs, **label_docs_props
+        # )
         self.draw_network_labels(pos=layout, labels=label_terms, **label_term_props)
+
+        plt.axis("off")
+
+    def correlation_map(
+        self, terms, edges_75, edges_50, edges_25, other_edges, term_props={},
+    ):
+        """
+
+        >>> kwargs = dict(
+        ...     terms = list('ABCDE'),
+        ...     edges_75 = [('A', 'B')],
+        ...     edges_50 = [('B', 'C'), ('A', 'C')],
+        ...     edges_25 = [('D', 'E')],
+        ...     other_edges = [('B', 'E')],
+        ... )
+        >>> nxmap = Map()
+        >>> nxmap.correlation_map(**kwargs)
+        >>> plt.savefig('guide/images/correlation_map.png')
+
+        .. image:: images/correlation_map.png
+            :width: 600px
+            :align: center
+        
+
+        >>> import pandas as pd
+        >>> x = [ 'A', 'A,C', 'B', 'A,B,C', 'B,D', 'A,B', 'A,C']
+        >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd', 'c;d']
+        >>> df = pd.DataFrame(
+        ...    {
+        ...       'Authors': x,
+        ...       'Author Keywords': y,
+        ...       'Cited by': list(range(len(x))),
+        ...       'ID': list(range(len(x))),
+        ...    }
+        ... )
+        >>> df
+          Authors Author Keywords  Cited by  ID
+        0       A               a         0   0
+        1     A,C             a;b         1   1
+        2       B               b         2   2
+        3   A,B,C               c         3   3
+        4     B,D             c;d         4   4
+        5     A,B               d         5   5
+        6     A,C             c;d         6   6
+        >>> nxmap = Map()
+        >>> kwargs = DataFrame(df).autocorr_map('Authors')
+        >>> nxmap.correlation_map(**kwargs)
+        >>> plt.savefig('guide/images/correlation_map_1.png')
+
+        .. image:: images/correlation_map_1.png
+            :width: 600px
+            :align: center
+
+
+        """
+
+        plt.clf()
+        self._graph.clear()
+        self._graph.add_nodes_from(terms)
+        if edges_75 is not None:
+            self._graph.add_edges_from(edges_75)
+        if edges_50 is not None:
+            self._graph.add_edges_from(edges_50)
+        if edges_25 is not None:
+            self._graph.add_edges_from(edges_25)
+        if other_edges is not None:
+            self._graph.add_edges_from(other_edges)
+
+        layout = self._compute_graph_layout()
+
+        nx.draw_networkx_nodes(self._graph, pos=layout, nodelist=terms, **term_props)
+
+        if edges_75 is not None:
+            edge_props = dict(
+                width=3, color="k", style="solid", alpha=0.9, arrows=False
+            )
+            nx.draw_networkx_edges(
+                self._graph, edgelist=edges_75, pos=layout, **edge_props
+            )
+        if edges_50 is not None:
+            edge_props = dict(
+                width=1, color="k", style="solid", alpha=0.9, arrows=False
+            )
+            nx.draw_networkx_edges(
+                self._graph, edgelist=edges_50, pos=layout, **edge_props
+            )
+        if edges_25 is not None:
+            edge_props = dict(
+                width=2, color="lightgray", style="dashed", alpha=0.7, arrows=False
+            )
+            nx.draw_networkx_edges(
+                self._graph, edgelist=edges_25, pos=layout, **edge_props
+            )
+        if other_edges is not None:
+            edge_props = dict(
+                width=2, color="lightgray", style="dotted", alpha=0.7, arrows=False,
+            )
+            nx.draw_networkx_edges(
+                self._graph, edgelist=other_edges, pos=layout, **edge_props
+            )
+
+        label_terms = {t: t for t in terms}
+        self.draw_network_labels(pos=layout, labels=label_terms, **term_props)
 
         plt.axis("off")
 
