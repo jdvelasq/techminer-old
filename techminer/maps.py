@@ -9,6 +9,7 @@ TechMiner.Maps
 import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
+from . import DataFrame
 
 
 class Map:
@@ -25,22 +26,22 @@ class Map:
         return nx.kamada_kawai_layout(self._graph, dist=distances.to_dict())
 
     def add_node(self, node_for_adding, **attr):
-        """
+        """Adds a node to a current map.
         """
         self._graph.add_node(node_for_adding, **attr)
 
     def add_nodes_from(self, nodes_for_adding, **attr):
-        """
+        """Adds a bunch of nodes to a current map.
         """
         self._graph.add_nodes_from(self, nodes_for_adding, **attr)
 
     def add_edge(self, u_of_edge, v_of_edge, **attr):
-        """
+        """Add an edge to a current map.
         """
         self._graph.add_edge(self, u_of_edge, v_of_edge, **attr)
 
     def add_edges_from(self, ebunch_to_add, **attr):
-        """
+        """Adds a bunch of edges to a current map.
         """
         self._graph().add_edges_from(self, ebunch_to_add, **attr)
 
@@ -96,7 +97,6 @@ class Map:
         ...     label_docs,
         ...     term_props={"node_color": "red"},
         ...     label_docs_props={"font_color": "lightblue"},
-        ...     #
         ...     label_term_props=dict(ma="left", rotation=0, fontsize=10, disp=3, bbox=None),
         ... )        
         >>> plt.savefig('guide/images/network_occurrence_map.png')
@@ -105,7 +105,39 @@ class Map:
             :width: 600px
             :align: center
 
+        >>> import pandas as pd
+        >>> x = [ 'A', 'A', 'A,B', 'B', 'A,B,C', 'D', 'B,D']
+        >>> df = pd.DataFrame(
+        ...    {
+        ...       'Authors': x,
+        ...       'ID': list(range(len(x))),
+        ...    }
+        ... )
+        >>> df
+          Authors  ID
+        0       A   0
+        1       A   1
+        2     A,B   2
+        3       B   3
+        4   A,B,C   4
+        5       D   5
+        6     B,D   6
+        >>> nxmap = Map()
+        >>> dic1 = DataFrame(df).occurrence_map(column='Authors')
+        >>> dic2 = dict(
+        ...     term_props={"node_color": "red"}, 
+        ...     label_docs_props={"font_color": "lightblue"}, 
+        ...     label_term_props=dict(ma="left", rotation=0, fontsize=10, disp=3, bbox=None)
+        ... )
+        >>> kwargs = {**dic1, **dic2}
+        >>> kwargs
+        {'terms': ['A', 'B', 'C', 'D'], 'docs': ['doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4', 'doc#5'], 'edges': [('A', 'doc#0'), ('A', 'doc#1'), ('B', 'doc#1'), ('A', 'doc#2'), ('B', 'doc#2'), ('C', 'doc#2'), ('B', 'doc#3'), ('B', 'doc#4'), ('D', 'doc#4'), ('D', 'doc#5')], 'label_terms': {'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D'}, 'label_docs': {'doc#0': 2, 'doc#1': 1, 'doc#2': 1, 'doc#3': 1, 'doc#4': 1, 'doc#5': 1}, 'term_props': {'node_color': 'red'}, 'label_docs_props': {'font_color': 'lightblue'}, 'label_term_props': {'ma': 'left', 'rotation': 0, 'fontsize': 10, 'disp': 3, 'bbox': None}}
+        >>> nxmap.ocurrence_map(**kwargs)
+        >>> plt.savefig('guide/images/network_occurrence_map_1.png')
 
+        .. image:: images/network_occurrence_map_1.png
+            :width: 600px
+            :align: center
         """
         plt.clf()
 

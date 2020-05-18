@@ -2041,7 +2041,7 @@ class DataFrame(pd.DataFrame):
             result.index = result.index.tolist()
         return result
 
-    def compute_occurrence_map(self, column, sep=None, minmax=None):
+    def occurrence_map(self, column, sep=None, minmax=None):
         """Computes a occurrence between terms in a column.
 
         Args:
@@ -2073,8 +2073,8 @@ class DataFrame(pd.DataFrame):
         5       D   5
         6     B,D   6
 
-        >>> DataFrame(df).compute_occurrence_map(column='Authors')
-        {'terms': ['A', 'B', 'C', 'D'], 'docs': ['doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4', 'doc#5'], 'edges': [('A', 'doc#0'), ('A', 'doc#1'), ('B', 'doc#1'), ('A', 'doc#2'), ('B', 'doc#2'), ('C', 'doc#2'), ('B', 'doc#3'), ('B', 'doc#4'), ('D', 'doc#4'), ('D', 'doc#5')], 'labels': {'doc#0': 2, 'doc#1': 1, 'doc#2': 1, 'doc#3': 1, 'doc#4': 1, 'doc#5': 1, 'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D'}}
+        >>> DataFrame(df).occurrence_map(column='Authors')
+        {'terms': ['A', 'B', 'C', 'D'], 'docs': ['doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4', 'doc#5'], 'edges': [('A', 'doc#0'), ('A', 'doc#1'), ('B', 'doc#1'), ('A', 'doc#2'), ('B', 'doc#2'), ('C', 'doc#2'), ('B', 'doc#3'), ('B', 'doc#4'), ('D', 'doc#4'), ('D', 'doc#5')], 'label_terms': {'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D'}, 'label_docs': {'doc#0': 2, 'doc#1': 1, 'doc#2': 1, 'doc#3': 1, 'doc#4': 1, 'doc#5': 1}}
 
         """
         result = self[[column]].copy()
@@ -2098,14 +2098,20 @@ class DataFrame(pd.DataFrame):
         docs = result["doc-ID"].tolist()
         label_docs = {doc: label for doc, label in zip(docs, result["count"].tolist())}
         label_terms = {t: t for t in terms}
-        labels = {**label_docs, **label_terms}
+        #  labels = {**label_docs, **label_terms}
 
         edges = []
         for field, docID in zip(result[column], result["doc-ID"]):
             for item in field:
                 edges.append((item, docID))
 
-        return dict(terms=terms, docs=docs, edges=edges, labels=labels)
+        return dict(
+            terms=terms,
+            docs=docs,
+            edges=edges,
+            label_terms=label_terms,
+            label_docs=label_docs,
+        )
 
     #
     #
@@ -2291,6 +2297,98 @@ class DataFrame(pd.DataFrame):
                 result = result.astype("float")
 
         return result
+
+    def autocorr_map(self, column, sep=None, method="pearson"):
+        """Computes the autocorrelation map among items in a column of the dataframe.
+
+        Args:
+            column (str): the column to explode.
+            sep (str): Character used as internal separator for the elements in the column.
+            method (str): Available methods are:
+
+                * pearson : Standard correlation coefficient.
+
+                * kendall : Kendall Tau correlation coefficient.
+
+                * spearman : Spearman rank correlation.
+
+            as_matrix (bool): Results are returned as a matrix.
+            minmax (pair(number,number)): filter values by >=min,<=max.
+
+        Returns:
+            DataFrame.
+            
+        Examples
+        ----------------------------------------------------------------------------------------------
+
+        >>> import pandas as pd
+        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D', 'A,B']
+        >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd']
+        >>> df = pd.DataFrame(
+        ...    {
+        ...       'Authors': x,
+        ...       'Author Keywords': y,
+        ...       'Cited by': list(range(len(x))),
+        ...       'ID': list(range(len(x))),
+        ...    }
+        ... )
+        >>> df
+          Authors Author Keywords  Cited by  ID
+        0       A               a         0   0
+        1     A,B             a;b         1   1
+        2       B               b         2   2
+        3   A,B,C               c         3   3
+        4     B,D             c;d         4   4
+        5     A,B               d         5   5
+
+        
+        >>> DataFrame(df).auto_corr('Authors')
+                  A         B         C         D
+        A  1.000000 -0.316228  0.316228 -0.632456
+        B -0.316228  1.000000  0.200000  0.200000
+        C  0.316228  0.200000  1.000000 -0.200000
+        D -0.632456  0.200000 -0.200000  1.000000
+        
+
+        >>> DataFrame(df).auto_corr('Author Keywords')
+              a     b     c     d
+        a  1.00  0.25 -0.50 -0.50
+        b  0.25  1.00 -0.50 -0.50
+        c -0.50 -0.50  1.00  0.25
+        d -0.50 -0.50  0.25  1.00
+
+
+        """
+
+        result = self[[column]].copy()
+        result["count"] = 1
+
+        result = result.groupby(column, as_index=False).agg({"count": np.sum})
+
+        if sep is None and column in SCOPUS_SEPS.keys():
+            sep = SCOPUS_SEPS[column]
+        if sep is not None:
+            result[column] = result[column].map(
+                lambda x: sorted(x.split(sep)) if isinstance(x, str) else x
+            )
+
+        result["doc-ID"] = ["doc#{:d}".format(i) for i in range(len(result))]
+
+        terms = result[[column]].copy()
+        terms.explode(column)
+        terms = [item for sublist in terms[column].tolist() for item in sublist]
+        terms = sorted(set(terms))
+        docs = result["doc-ID"].tolist()
+        label_docs = {doc: label for doc, label in zip(docs, result["count"].tolist())}
+        label_terms = {t: t for t in terms}
+        labels = {**label_docs, **label_terms}
+
+        edges = []
+        for field, docID in zip(result[column], result["doc-ID"]):
+            for item in field:
+                edges.append((item, docID))
+
+        return dict(terms=terms, docs=docs, edges=edges, labels=labels)
 
     def cross_corr(
         self,
