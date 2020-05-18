@@ -2446,10 +2446,10 @@ class DataFrame(pd.DataFrame):
 
     def corr(
         self,
-        column_IDX,
-        column_COL=None,
-        sep_IDX=None,
-        sep_COL=None,
+        column,
+        by=None,
+        sep=None,
+        sep_by=None,
         method="pearson",
         as_matrix=True,
         minmax=None,
@@ -2519,62 +2519,88 @@ class DataFrame(pd.DataFrame):
 
 
         >>> DataFrame(df).corr('Authors', 'Author Keywords')
-              a         b         c         d
-        A  0.50 -0.632456 -0.316228 -0.316228
-        B -0.25  0.316228 -0.316228 -0.316228
-        C -0.25  0.316228  0.632456  0.632456
-        D -0.25  0.316228 -0.316228  0.632456
+                  A         B         C         D
+        A  1.000000  1.000000  0.500000  0.707107
+        B  1.000000  1.000000  0.500000  0.707107
+        C  0.500000  0.500000  1.000000  0.707107
+        D  0.707107  0.707107  0.707107  1.000000
 
         >>> DataFrame(df).corr('Authors', 'Author Keywords', minmax=(0.45, 0.8))
-             a         c         d
-        A  0.5  0.000000  0.000000
-        C  0.0  0.632456  0.632456
-        D  0.0  0.000000  0.632456
+                  A         B         C         D
+        A  0.000000  0.000000  0.500000  0.707107
+        B  0.000000  0.000000  0.500000  0.707107
+        C  0.500000  0.500000  0.000000  0.707107
+        D  0.707107  0.707107  0.707107  0.000000
 
         >>> DataFrame(df).corr('Authors', 'Author Keywords', as_matrix=False)
            Authors Author Keywords     value
-        0        A               a  0.500000
-        1        B               a -0.250000
-        2        C               a -0.250000
-        3        D               a -0.250000
-        4        A               b -0.632456
-        5        B               b  0.316228
-        6        C               b  0.316228
-        7        D               b  0.316228
-        8        A               c -0.316228
-        9        B               c -0.316228
-        10       C               c  0.632456
-        11       D               c -0.316228
-        12       A               d -0.316228
-        13       B               d -0.316228
-        14       C               d  0.632456
-        15       D               d  0.632456
+        0        A               A  1.000000
+        1        B               A  1.000000
+        2        C               A  0.500000
+        3        D               A  0.707107
+        4        A               B  1.000000
+        5        B               B  1.000000
+        6        C               B  0.500000
+        7        D               B  0.707107
+        8        A               C  0.500000
+        9        B               C  0.500000
+        10       C               C  1.000000
+        11       D               C  0.707107
+        12       A               D  0.707107
+        13       B               D  0.707107
+        14       C               D  0.707107
+        15       D               D  1.000000
 
         """
-        if column_IDX == column_COL:
+        if column == by:
             return self.autocorr(
-                column=column_IDX,
-                sep=sep_IDX,
+                column=column,
+                sep=sep,
                 method=method,
                 as_matrix=as_matrix,
                 minmax=minmax,
             )
-        tfm_r = self.compute_tfm(column=column_IDX, sep=sep_IDX)
-        tfm_c = self.compute_tfm(column=column_COL, sep=sep_COL)
-        result = pd.DataFrame(
-            [
-                [tfm_r[row].corr(tfm_c[col]) for row in tfm_r.columns]
-                for col in tfm_c.columns
-            ],
-            columns=tfm_c.columns,
-            index=tfm_r.columns,
+
+        tfm = self.co_occurrence(
+            column_IDX=by,
+            column_COL=column,
+            sep_IDX=sep_by,
+            sep_COL=sep,
+            as_matrix=True,
+            minmax=None,
         )
+
+        tfm = tfm.applymap(lambda x: min(1.0, x))
+
+        result = pd.DataFrame(0.0, columns=tfm.columns, index=tfm.columns)
+        for term in tfm.columns:
+            result.at[term, term] = 1.0
+        for i in range(len(tfm.columns) - 1):
+            for j in range(i + 1, len(tfm.columns)):
+                d = pd.DataFrame({"x": tfm[tfm.columns[i]], "y": tfm[tfm.columns[j]]})
+                d = d[(d.x != 0) | (d.y != 0)]
+
+                if len(d) != 0 and sum(d.x * d.y) > 0:
+                    r = relationship(d.x, d.y)
+                    result.at[tfm.columns[i], tfm.columns[j]] = r
+                    result.at[tfm.columns[j], tfm.columns[i]] = r
+
+        ## tfm_r = self.compute_tfm(column=column_IDX, sep=sep_IDX)
+        ## tfm_c = self.compute_tfm(column=column_COL, sep=sep_COL)
+        ## result = pd.DataFrame(
+        ##     [
+        ##         [tfm_r[row].corr(tfm_c[col]) for row in tfm_r.columns]
+        ##         for col in tfm_c.columns
+        ##     ],
+        ##     columns=tfm_c.columns,
+        ##     index=tfm_r.columns,
+        ## )
 
         if as_matrix is False or minmax is not None:
             result = (
                 result.reset_index()
                 .melt("index")
-                .rename(columns={"index": column_IDX, "variable": column_COL})
+                .rename(columns={"index": column, "variable": by})
             )
             if minmax is not None:
                 min_value, max_value = minmax
@@ -2586,8 +2612,8 @@ class DataFrame(pd.DataFrame):
                 result = pd.pivot_table(
                     result,
                     values="value",
-                    index=column_IDX,
-                    columns=column_COL,
+                    index=column,
+                    columns=by,
                     fill_value=float(0.0),
                 )
                 result.columns = result.columns.tolist()
