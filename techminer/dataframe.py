@@ -2831,3 +2831,9 @@ class DataFrame(pd.DataFrame):
             .melt("index")
             .rename(columns={"index": column, "variable": "Factor"})
         )
+
+    def drop_duplicates(self, subset=None, keep="first"):
+        """Return DataFrame with duplicate rows removed.
+        """
+        result = self.drop_duplicates(sebset=subset, keep=keep)
+        return DataFrame(result)
