@@ -16,12 +16,10 @@ import squarify
 from .chord_diagram import ChordDiagram
 
 
-# ---------------------------------------------------------------------------------------------
-# def cut_text(w):
-#     if isinstance(w, (int, float)):
-#         return w
-#     return w if len(w) < 35 else w[:31] + '... ' + w[w.find('['):]
-# #---------------------------------------------------------------------------------------------
+def cut_text(w):
+    if isinstance(w, (int, float)):
+        return w
+    return w if len(w) < 35 else w[:31] + "... " + w[w.find("[") :]
 
 
 class Plot:
@@ -133,6 +131,8 @@ class Plot:
         plt.clf()
         x = self.df.copy()
         result = plt.gca().pcolor(np.transpose(x.values), **kwargs,)
+        x.columns = [cut_text(w) for w in w.columns]
+        x.index = [cut_text(w) for w in w.index]
         plt.xticks(np.arange(len(x.index)) + 0.5, x.index, rotation="vertical")
         plt.yticks(np.arange(len(x.columns)) + 0.5, x.columns)
         plt.gca().invert_yaxis()
