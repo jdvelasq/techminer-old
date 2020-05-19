@@ -2845,6 +2845,36 @@ class DataFrame(pd.DataFrame):
         Examples
         ----------------------------------------------------------------------------------------------
 
+        >>> import pandas as pd
+        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D', 'A,B']
+        >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd']
+        >>> df = pd.DataFrame(
+        ...    {
+        ...       'Authors': x,
+        ...       'Author Keywords': y,
+        ...       'Cited by': list(range(len(x))),
+        ...       'ID': list(range(len(x))),
+        ...    }
+        ... )
+        >>> df
+          Authors Author Keywords  Cited by  ID
+        0       A               a         0   0
+        1     A,B             a;b         1   1
+        2       B               b         2   2
+        3   A,B,C               c         3   3
+        4     B,D             c;d         4   4
+        5     A,B               d         5   5
+
+        >>> DataFrame(df).most_frequent('Authors', top_n=1)
+          Authors Author Keywords  Cited by  ID  top_1_Authors_freq
+        0       A               a         0   0               False
+        1     A,B             a;b         1   1                True
+        2       B               b         2   2                True
+        3   A,B,C               c         3   3                True
+        4     B,D             c;d         4   4                True
+        5     A,B               d         5   5                True
+
+
         """
         top = self.documents_by_term(column, sep=sep)[column].head(top_n)
         items = Keywords(x=top, ignore_case=False)
