@@ -5,25 +5,29 @@ Tutorial
     :maxdepth: 2
 
     01-introduction.ipynb
-    02-step-01-data-download.ipynb
-    03-step-02-file-merging.ipynb
-    04-step-03-keyword-completation.ipynb
-    05-step-04-data-deleting.ipynb
-    06-step-05-keywords-cleanup.ipynb
-    07-step-06-manual-review.ipynb
-    08-step-07-references.ipynb
-    09-step-08-direct-queries.ipynb
-    10-documents-by-year.ipynb
-    11-documents-by-terms.ipynb
-    12-terms-by-year.ipynb
-    13-ocurrence.ipynb
-    14-co_ocurrence.ipynb
-    15-terms-by-terms-by-year.ipynb
-    16-citations-by-terms.ipynb
-    17-citations-by-year.ipynb
-    18-citations-by-terms-by-year.ipynb
-    19-auto_corr.ipynb
-    20-cross_corr.ipynb
-    21-factor-analysis.ipynb
+    02-data-download.ipynb
+    03-data-merging.ipynb
+    04-manual-review.ipynb
+    05-keyword-completation.ipynb
+    06-deletion-of-records.ipynb
+    07-keywords-text-clustering.ipynb
+    08-keywords-text-nexting.ipynb
+    09-keywords-record-deletion.ipynb
+    10-record-ID.ipynb
+    11-author-desambiguation.ipynb
+    12-groups-creation.ipynb
+    13-direct-queries.ipynb
+    14-documents-by-year.ipynb
+    15-documents-by-terms.ipynb
+    16-terms-by-year.ipynb
+    17-ocurrence.ipynb
+    18-co-ocurrence.ipynb
+    19-terms-by-terms-by-year.ipynb
+    20-citations-by-terms.ipynb
+    21-citations-by-year.ipynb
+    22-citations-by-terms-by-year.ipynb
+    23-autocorr.ipynb
+    24-ccorr.ipynb
+    25-factor-analysis.ipynb
 
 
