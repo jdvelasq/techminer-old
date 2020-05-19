@@ -1,5 +1,5 @@
 """
-TechMiner.Maps
+Correlation Maps generation and manipulation
 ==================================================================================================
 
 

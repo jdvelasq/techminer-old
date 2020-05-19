@@ -1,5 +1,5 @@
 r"""
-TechMiner.Keywords
+Keywords manipulation
 ==================================================================================================
 
 This object contains a list of unique keywords (terms of interest).   

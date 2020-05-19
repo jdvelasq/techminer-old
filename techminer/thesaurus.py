@@ -1,5 +1,5 @@
 """
-TechMiner.Thesaurus
+Thesaurus
 ==================================================================================================
 
 """
@@ -186,6 +186,7 @@ def text_clustering(
                 result[groupName] = z
 
     return Thesaurus(result, ignore_case=False, full_match=True, use_re=False)
+
 
 def text_nesting(
     x, search_strategy="fingerprint", sep=None, transformer=None, max_distance=None
@@ -480,7 +481,6 @@ class Thesaurus:
             return result[0]
 
         return sep.join(result)
-
 
     def find_and_replace(self, x, sep=None):
         """Applies a thesaurus to a string, reemplacing the portion of string

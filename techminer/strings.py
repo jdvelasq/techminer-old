@@ -1,6 +1,6 @@
 """
-TechMiner.strings
-===============================
+String manipulation
+==================================================================================================
 
 This module contains functions for manipulating texts.
 
