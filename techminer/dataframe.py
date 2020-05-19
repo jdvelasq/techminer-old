@@ -2846,9 +2846,9 @@ class DataFrame(pd.DataFrame):
         ----------------------------------------------------------------------------------------------
 
         """
-        df = DataFrame(self.copy())
-        top = df.documents_by_term(column, sep=sep)[column].head(top_n)
+        top = self.documents_by_term(column, sep=sep)[column].head(top_n)
         items = Keywords(x=top, ignore_case=False)
         colname = "top_{:d}_{:s}_freq".format(top_n, column.replace(" ", "_"))
+        df = DataFrame(self.copy())
         df[colname] = df[column].map(lambda x: any([e in items for e in x.split(sep)]))
         return DataFrame(df)
