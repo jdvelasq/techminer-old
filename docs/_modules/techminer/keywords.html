@@ -1,0 +1,584 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>techminer.keywords &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TechMiner - A Package for Bibliographical Analysis using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TechMiner - A Package for Bibliographical Analysis using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>techminer.keywords</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for techminer.keywords</h1><div class="highlight"><pre>
+<span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Keywords manipulation</span>
+<span class="sd">==================================================================================================</span>
+
+<span class="sd">This object contains a list of unique keywords (terms of interest).   </span>
+
+
+<span class="sd">Regular expressions recipes</span>
+<span class="sd">---------------------------------------------------------------------------------------------------</span>
+
+<span class="sd">The following code exemplify some common cases using regular expressions.</span>
+
+<span class="sd">&gt;&gt;&gt; Keywords(&#39;111&#39;).extract_from_text(&#39;one two three four five&#39;) is None</span>
+<span class="sd">True</span>
+
+<span class="sd">* Partial match.</span>
+
+<span class="sd">&gt;&gt;&gt; Keywords(&#39;hre&#39;).extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;hre&#39;</span>
+
+
+<span class="sd">* **Word whole only**. `r&#39;\b&#39;` represents word boundaries.</span>
+
+<span class="sd">&gt;&gt;&gt; kyw = Keywords(r&#39;\btwo\b&#39;, use_re=True)</span>
+<span class="sd">&gt;&gt;&gt; kyw.extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two&#39;</span>
+
+<span class="sd">&gt;&gt;&gt; kyw = Keywords(r&quot;\b(TWO)\b&quot;, use_re=True)</span>
+<span class="sd">&gt;&gt;&gt; kyw.extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two&#39;</span>
+
+
+<span class="sd">* **Case sensitive**.</span>
+
+<span class="sd">&gt;&gt;&gt; Keywords(r&#39;\btwo\b&#39;, ignore_case=False, use_re=True).extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two&#39;</span>
+
+<span class="sd">&gt;&gt;&gt; Keywords(r&quot;\bTWO\b&quot;, ignore_case=False, use_re=True).extract_from_text(&#39;one TWO three four five&#39;)</span>
+<span class="sd">&#39;TWO&#39;</span>
+
+<span class="sd">&gt;&gt;&gt; Keywords(r&quot;\bTWO\b&quot;, ignore_case=False, use_re=True).extract_from_text(&#39;one two three four five&#39;) is None</span>
+<span class="sd">True</span>
+
+<span class="sd">* **A word followed by other word**.</span>
+
+<span class="sd">&gt;&gt;&gt; Keywords(r&#39;\btwo\Wthree\b&#39;, ignore_case=False, use_re=True).extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two three&#39;</span>
+
+
+<span class="sd">* **Multiple white spaces**.</span>
+
+<span class="sd">&gt;&gt;&gt; Keywords(r&quot;two\W+three&quot;, ignore_case=False, use_re=True).extract_from_text(&#39;one two   three four five&#39;)</span>
+<span class="sd">&#39;two   three&#39;</span>
+
+<span class="sd">* **A list of keywords**.</span>
+
+<span class="sd">&gt;&gt;&gt; Keywords([r&quot;xxx&quot;, r&quot;two&quot;, r&quot;yyy&quot;]).extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two&#39;</span>
+
+
+<span class="sd">* **Adjacent terms but the order is unimportant**.</span>
+
+<span class="sd">&gt;&gt;&gt; Keywords(r&quot;\bthree\W+two\b|\btwo\W+three\b&quot;, use_re=True).extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two three&#39;</span>
+
+<span class="sd">* **Near words**.</span>
+
+<span class="sd">Two words (`&#39;two&#39;`, `&#39;four&#39;`) separated by any other.</span>
+
+<span class="sd">&gt;&gt;&gt; Keywords(r&quot;\btwo\W+\w+\W+four\b&quot;, use_re=True).extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two three four&#39;</span>
+
+
+<span class="sd">Two words (`&#39;two&#39;`, `&#39;five&#39;`) separated by one, two or three unspecified words.</span>
+
+<span class="sd">&gt;&gt;&gt; Keywords(r&quot;\btwo\W+(?:\w+\W+){1,3}?five&quot;, use_re=True).extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two three four five&#39;</span>
+
+<span class="sd">* **Or operator**.</span>
+
+<span class="sd">&gt;&gt;&gt; Keywords(r&quot;123|two&quot;, use_re=True).extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two&#39;</span>
+
+<span class="sd">* **And operator**. One word followed by other at any word distance.</span>
+
+<span class="sd">&gt;&gt;&gt; Keywords(r&quot;\btwo\W+(?:\w+\W+)+?five&quot;, use_re=True).extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two three four five&#39;</span>
+
+
+
+<span class="sd">Functions in this module</span>
+<span class="sd">---------------------------------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">string</span>
+
+<span class="kn">import</span> <span class="nn">geopandas</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">.strings</span> <span class="kn">import</span> <span class="n">find_string</span><span class="p">,</span> <span class="n">fingerprint</span><span class="p">,</span> <span class="n">replace_string</span>
+
+
+<div class="viewcode-block" id="Keywords"><a class="viewcode-back" href="../../keywords.html#techminer.keywords.Keywords">[docs]</a><span class="k">class</span> <span class="nc">Keywords</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Creates a Keywords object used to find, extract or remove terms of interest from a string.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (string, list of strings) : keyword of list of keywords.</span>
+<span class="sd">        ignore_case (bool) :  Ignore string case.</span>
+<span class="sd">        full_match (bool): match whole word?.</span>
+<span class="sd">        use_re (bool): keywords as interpreted as regular expressions.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Keywords object</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">full_match</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_keywords</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_keywords</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_case</span> <span class="o">=</span> <span class="n">ignore_case</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_full_match</span> <span class="o">=</span> <span class="n">full_match</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_use_re</span> <span class="o">=</span> <span class="n">use_re</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">keywords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keywords</span>
+
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Implements in operator.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">        &gt;&gt;&gt; x = [&#39;Big data&#39;, &#39;neural networks&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; &#39;Big data&#39; in Keywords(x)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; &#39;big data&#39; in Keywords(x)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; &#39;deep learning&#39; in Keywords(x)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; &#39;big data&#39; in Keywords(x, ignore_case=False)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">        False</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the number of keywords.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">        &gt;&gt;&gt; len(Keywords([&#39;Big data&#39;, &#39;neural netoworks&#39;]))  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">        2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_keywords</span><span class="p">)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;String representation of the object.</span>
+
+<span class="sd">        &gt;&gt;&gt; Keywords([&#39;Big data&#39;, &#39;neural networks&#39;])  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">        [</span>
+<span class="sd">          &quot;Big data&quot;,</span>
+<span class="sd">          &quot;neural networks&quot;</span>
+<span class="sd">        ]</span>
+<span class="sd">        ignore_case=True, full_match=False, use_re=False</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_keywords</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">ignore_case=</span><span class="si">{}</span><span class="s2">, full_match=</span><span class="si">{}</span><span class="s2">, use_re=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_case</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_full_match</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_use_re</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">text</span>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Keywords.add_keywords"><a class="viewcode-back" href="../../keywords.html#techminer.keywords.Keywords.add_keywords">[docs]</a>    <span class="k">def</span> <span class="nf">add_keywords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds new keywords x to list of current keywords.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (string, list of strings): new keywords to be added.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Nothing</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">        &gt;&gt;&gt; kyw = Keywords()</span>
+<span class="sd">        &gt;&gt;&gt; kyw.add_keywords(&#39;ann&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; kyw</span>
+<span class="sd">        [</span>
+<span class="sd">          &quot;ann&quot;</span>
+<span class="sd">        ]</span>
+<span class="sd">        ignore_case=True, full_match=False, use_re=False</span>
+<span class="sd">        &gt;&gt;&gt; kyw.add_keywords(&#39;RNN&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; kyw</span>
+<span class="sd">        [</span>
+<span class="sd">          &quot;RNN&quot;,</span>
+<span class="sd">          &quot;ann&quot;</span>
+<span class="sd">        ]</span>
+<span class="sd">        ignore_case=True, full_match=False, use_re=False</span>
+<span class="sd">        &gt;&gt;&gt; kyw.add_keywords([&#39;deep learning&#39;, &#39;fuzzy&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; kyw</span>
+<span class="sd">        [</span>
+<span class="sd">          &quot;RNN&quot;,</span>
+<span class="sd">          &quot;ann&quot;,</span>
+<span class="sd">          &quot;deep learning&quot;,</span>
+<span class="sd">          &quot;fuzzy&quot;</span>
+<span class="sd">        ]</span>
+<span class="sd">        ignore_case=True, full_match=False, use_re=False</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Keywords</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">_keywords</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">sep</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">z</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">x</span>
+                <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">y</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">z</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">x</span> <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">y</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keywords</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_keywords</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_keywords</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_keywords</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Keywords.extract_from_text"><a class="viewcode-back" href="../../keywords.html#techminer.keywords.Keywords.extract_from_text">[docs]</a>    <span class="k">def</span> <span class="nf">extract_from_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Returns a new string with the keywords in string x matching the list of keywords used to fit the model.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">        &gt;&gt;&gt; Keywords([r&quot;xxx&quot;, r&quot;two&quot;, r&quot;yyy&quot;]).extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">        &#39;two&#39;</span>
+
+<span class="sd">        The funcion allows the extraction of complex patterns using regular expresions (regex).</span>
+<span class="sd">        Detail information about regex sintax in Python can be obtained at https://docs.python.org/3/library/re.html#re-syntax.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (string): A string object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            String.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keywords</span><span class="p">:</span>
+
+            <span class="n">y</span> <span class="o">=</span> <span class="n">find_string</span><span class="p">(</span>
+                <span class="n">pattern</span><span class="o">=</span><span class="n">keyword</span><span class="p">,</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">ignore_case</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_ignore_case</span><span class="p">,</span>
+                <span class="n">full_match</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_full_match</span><span class="p">,</span>
+                <span class="n">use_re</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_use_re</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">y</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">result</span><span class="p">))))</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Keywords.remove_from_text"><a class="viewcode-back" href="../../keywords.html#techminer.keywords.Keywords.remove_from_text">[docs]</a>    <span class="k">def</span> <span class="nf">remove_from_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a string removing the strings that match a</span>
+<span class="sd">        list of keywords from x.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (string): A string object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            String.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">        &gt;&gt;&gt; Keywords(&#39;aaa&#39;).remove_from_text(&#39;1 aaa 2&#39;)</span>
+<span class="sd">        &#39;1  2&#39;</span>
+
+<span class="sd">        &gt;&gt;&gt; Keywords(&#39;aaa&#39;).remove_from_text(&#39;1 2&#39;)</span>
+<span class="sd">        &#39;1 2&#39;</span>
+
+<span class="sd">        &gt;&gt;&gt; Keywords(&#39;aaa&#39;).remove_from_text(&#39;1 aaa 2 1 2&#39;)</span>
+<span class="sd">        &#39;1  2 1 2&#39;</span>
+
+<span class="sd">        &gt;&gt;&gt; Keywords([&#39;aaa&#39;, &#39;bbb&#39;]).remove_from_text(&#39;1 aaa bbb 2 1 aaa 2&#39;)</span>
+<span class="sd">        &#39;1   2 1  2&#39;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keywords</span><span class="p">:</span>
+
+            <span class="n">found_string</span> <span class="o">=</span> <span class="n">find_string</span><span class="p">(</span>
+                <span class="n">pattern</span><span class="o">=</span><span class="n">keyword</span><span class="p">,</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">ignore_case</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_ignore_case</span><span class="p">,</span>
+                <span class="n">full_match</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_full_match</span><span class="p">,</span>
+                <span class="n">use_re</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_use_re</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">found_string</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+                <span class="n">x</span> <span class="o">=</span> <span class="n">replace_string</span><span class="p">(</span>
+                    <span class="n">pattern</span><span class="o">=</span><span class="n">found_string</span><span class="p">,</span>
+                    <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                    <span class="n">repl</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">full_match</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">use_re</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">x</span></div>
+
+<div class="viewcode-block" id="Keywords.delete_keyword"><a class="viewcode-back" href="../../keywords.html#techminer.keywords.Keywords.delete_keyword">[docs]</a>    <span class="k">def</span> <span class="nf">delete_keyword</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove string x from the keywords list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_keywords</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Keywords.common"><a class="viewcode-back" href="../../keywords.html#techminer.keywords.Keywords.common">[docs]</a>    <span class="k">def</span> <span class="nf">common</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns True if x is in keywords list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (string): A string object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Boolean.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">        &gt;&gt;&gt; kyw = Keywords([&#39;ann&#39;, &#39;big data&#39;, &#39;deep learning&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; kyw.common(&#39;Big Data&#39;)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; kyw.common(&#39;Python&#39;)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; kyw.common(&#39;Python|R&#39;, sep=&#39;|&#39;)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; kyw.common(&#39;Python|big data&#39;, sep=&#39;|&#39;)</span>
+<span class="sd">        True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">_common</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">sep</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_common</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">any</span><span class="p">([</span><span class="n">_common</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">)])</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

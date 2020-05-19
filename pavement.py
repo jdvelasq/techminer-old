@@ -37,6 +37,8 @@ def local():
 def sphinx():
     """Document creation using Shinx"""
     sh("cd guide; make html; cd ..")
+    sh("rm -rf docs/*")
+    sh("cp -R guide/_build/html/* docs/")
 
 
 @needs("nosetests", "pylint", "sphinx")

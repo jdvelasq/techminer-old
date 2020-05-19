@@ -1,0 +1,474 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Keywords manipulation &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> TechMiner - A Package for Bibliographical Analysis using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">TechMiner - A Package for Bibliographical Analysis using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Keywords manipulation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/keywords.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<span class="target" id="module-techminer.keywords"></span><div class="section" id="keywords-manipulation">
+<h1>Keywords manipulation<a class="headerlink" href="#keywords-manipulation" title="Permalink to this headline">¶</a></h1>
+<p>This object contains a list of unique keywords (terms of interest).</p>
+<div class="section" id="regular-expressions-recipes">
+<h2>Regular expressions recipes<a class="headerlink" href="#regular-expressions-recipes" title="Permalink to this headline">¶</a></h2>
+<p>The following code exemplify some common cases using regular expressions.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">(</span><span class="s1">&#39;111&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="s1">&#39;one two three four five&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Partial match.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">(</span><span class="s1">&#39;hre&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="s1">&#39;one two three four five&#39;</span><span class="p">)</span>
+<span class="go">&#39;hre&#39;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Word whole only</strong>. <cite>r’b’</cite> represents word boundaries.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kyw</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\btwo\b&#39;</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kyw</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="s1">&#39;one two three four five&#39;</span><span class="p">)</span>
+<span class="go">&#39;two&#39;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kyw</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b(TWO)\b&quot;</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kyw</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="s1">&#39;one two three four five&#39;</span><span class="p">)</span>
+<span class="go">&#39;two&#39;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Case sensitive</strong>.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\btwo\b&#39;</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="s1">&#39;one two three four five&#39;</span><span class="p">)</span>
+<span class="go">&#39;two&#39;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\bTWO\b&quot;</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="s1">&#39;one TWO three four five&#39;</span><span class="p">)</span>
+<span class="go">&#39;TWO&#39;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\bTWO\b&quot;</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="s1">&#39;one two three four five&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>A word followed by other word</strong>.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\btwo\Wthree\b&#39;</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="s1">&#39;one two three four five&#39;</span><span class="p">)</span>
+<span class="go">&#39;two three&#39;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Multiple white spaces</strong>.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;two\W+three&quot;</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="s1">&#39;one two   three four five&#39;</span><span class="p">)</span>
+<span class="go">&#39;two   three&#39;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>A list of keywords</strong>.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">([</span><span class="sa">r</span><span class="s2">&quot;xxx&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;two&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;yyy&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="s1">&#39;one two three four five&#39;</span><span class="p">)</span>
+<span class="go">&#39;two&#39;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Adjacent terms but the order is unimportant</strong>.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\bthree\W+two\b|\btwo\W+three\b&quot;</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="s1">&#39;one two three four five&#39;</span><span class="p">)</span>
+<span class="go">&#39;two three&#39;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Near words</strong>.</p></li>
+</ul>
+<p>Two words (<cite>‘two’</cite>, <cite>‘four’</cite>) separated by any other.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\btwo\W+\w+\W+four\b&quot;</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="s1">&#39;one two three four five&#39;</span><span class="p">)</span>
+<span class="go">&#39;two three four&#39;</span>
+</pre></div>
+</div>
+<p>Two words (<cite>‘two’</cite>, <cite>‘five’</cite>) separated by one, two or three unspecified words.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\btwo\W+(?:\w+\W+){1,3}?five&quot;</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="s1">&#39;one two three four five&#39;</span><span class="p">)</span>
+<span class="go">&#39;two three four five&#39;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Or operator</strong>.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;123|two&quot;</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="s1">&#39;one two three four five&#39;</span><span class="p">)</span>
+<span class="go">&#39;two&#39;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>And operator</strong>. One word followed by other at any word distance.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\btwo\W+(?:\w+\W+)+?five&quot;</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="s1">&#39;one two three four five&#39;</span><span class="p">)</span>
+<span class="go">&#39;two three four five&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="functions-in-this-module">
+<h2>Functions in this module<a class="headerlink" href="#functions-in-this-module" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="techminer.keywords.Keywords">
+<em class="property">class </em><code class="sig-prename descclassname">techminer.keywords.</code><code class="sig-name descname">Keywords</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ignore_case</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">full_match</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_re</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/keywords.html#Keywords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.keywords.Keywords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Creates a Keywords object used to find, extract or remove terms of interest from a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>string</em><em>, </em><em>list of strings</em>) – keyword of list of keywords.</p></li>
+<li><p><strong>ignore_case</strong> (<em>bool</em>) – Ignore string case.</p></li>
+<li><p><strong>full_match</strong> (<em>bool</em>) – match whole word?.</p></li>
+<li><p><strong>use_re</strong> (<em>bool</em>) – keywords as interpreted as regular expressions.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Keywords object</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="techminer.keywords.Keywords.add_keywords">
+<code class="sig-name descname">add_keywords</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/keywords.html#Keywords.add_keywords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.keywords.Keywords.add_keywords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds new keywords x to list of current keywords.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>string</em><em>, </em><em>list of strings</em>) – new keywords to be added.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kyw</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kyw</span><span class="o">.</span><span class="n">add_keywords</span><span class="p">(</span><span class="s1">&#39;ann&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kyw</span>
+<span class="go">[</span>
+<span class="go">  &quot;ann&quot;</span>
+<span class="go">]</span>
+<span class="go">ignore_case=True, full_match=False, use_re=False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kyw</span><span class="o">.</span><span class="n">add_keywords</span><span class="p">(</span><span class="s1">&#39;RNN&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kyw</span>
+<span class="go">[</span>
+<span class="go">  &quot;RNN&quot;,</span>
+<span class="go">  &quot;ann&quot;</span>
+<span class="go">]</span>
+<span class="go">ignore_case=True, full_match=False, use_re=False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kyw</span><span class="o">.</span><span class="n">add_keywords</span><span class="p">([</span><span class="s1">&#39;deep learning&#39;</span><span class="p">,</span> <span class="s1">&#39;fuzzy&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kyw</span>
+<span class="go">[</span>
+<span class="go">  &quot;RNN&quot;,</span>
+<span class="go">  &quot;ann&quot;,</span>
+<span class="go">  &quot;deep learning&quot;,</span>
+<span class="go">  &quot;fuzzy&quot;</span>
+<span class="go">]</span>
+<span class="go">ignore_case=True, full_match=False, use_re=False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="techminer.keywords.Keywords.common">
+<code class="sig-name descname">common</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/keywords.html#Keywords.common"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.keywords.Keywords.common" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if x is in keywords list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>string</em>) – A string object.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Boolean.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kyw</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;ann&#39;</span><span class="p">,</span> <span class="s1">&#39;big data&#39;</span><span class="p">,</span> <span class="s1">&#39;deep learning&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kyw</span><span class="o">.</span><span class="n">common</span><span class="p">(</span><span class="s1">&#39;Big Data&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kyw</span><span class="o">.</span><span class="n">common</span><span class="p">(</span><span class="s1">&#39;Python&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kyw</span><span class="o">.</span><span class="n">common</span><span class="p">(</span><span class="s1">&#39;Python|R&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kyw</span><span class="o">.</span><span class="n">common</span><span class="p">(</span><span class="s1">&#39;Python|big data&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="techminer.keywords.Keywords.delete_keyword">
+<code class="sig-name descname">delete_keyword</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/keywords.html#Keywords.delete_keyword"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.keywords.Keywords.delete_keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove string x from the keywords list.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="techminer.keywords.Keywords.extract_from_text">
+<code class="sig-name descname">extract_from_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">';'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/keywords.html#Keywords.extract_from_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.keywords.Keywords.extract_from_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new string with the keywords in string x matching the list of keywords used to fit the model.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">([</span><span class="sa">r</span><span class="s2">&quot;xxx&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;two&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;yyy&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="s1">&#39;one two three four five&#39;</span><span class="p">)</span>
+<span class="go">&#39;two&#39;</span>
+</pre></div>
+</div>
+<p>The funcion allows the extraction of complex patterns using regular expresions (regex).
+Detail information about regex sintax in Python can be obtained at <a class="reference external" href="https://docs.python.org/3/library/re.html#re-syntax">https://docs.python.org/3/library/re.html#re-syntax</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>string</em>) – A string object.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="techminer.keywords.Keywords.keywords">
+<em class="property">property </em><code class="sig-name descname">keywords</code><a class="headerlink" href="#techminer.keywords.Keywords.keywords" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="techminer.keywords.Keywords.remove_from_text">
+<code class="sig-name descname">remove_from_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/keywords.html#Keywords.remove_from_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.keywords.Keywords.remove_from_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string removing the strings that match a
+list of keywords from x.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>string</em>) – A string object.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">remove_from_text</span><span class="p">(</span><span class="s1">&#39;1 aaa 2&#39;</span><span class="p">)</span>
+<span class="go">&#39;1  2&#39;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">remove_from_text</span><span class="p">(</span><span class="s1">&#39;1 2&#39;</span><span class="p">)</span>
+<span class="go">&#39;1 2&#39;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">remove_from_text</span><span class="p">(</span><span class="s1">&#39;1 aaa 2 1 2&#39;</span><span class="p">)</span>
+<span class="go">&#39;1  2 1 2&#39;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;aaa&#39;</span><span class="p">,</span> <span class="s1">&#39;bbb&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">remove_from_text</span><span class="p">(</span><span class="s1">&#39;1 aaa bbb 2 1 aaa 2&#39;</span><span class="p">)</span>
+<span class="go">&#39;1   2 1  2&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

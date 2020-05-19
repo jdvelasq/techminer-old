@@ -1,0 +1,541 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>String manipulation &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Thesaurus" href="thesaurus.html" />
+    <link rel="prev" title="Plots" href="plot.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> TechMiner - A Package for Bibliographical Analysis using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html#bibliographic-data-manipulation-and-analysis">Bibliographic data manipulation and analysis</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="dataframe.html">DataFrame object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot.html">Plots</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">String manipulation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#functions-in-this-module">Functions in this module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="thesaurus.html">Thesaurus</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#base-clases-for-plotting">Base clases for plotting</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">TechMiner - A Package for Bibliographical Analysis using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">Modules</a> &raquo;</li>
+        
+      <li>String manipulation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/strings.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<span class="target" id="module-techminer.strings"></span><div class="section" id="string-manipulation">
+<h1>String manipulation<a class="headerlink" href="#string-manipulation" title="Permalink to this headline">¶</a></h1>
+<p>This module contains functions for manipulating texts.</p>
+<div class="section" id="functions-in-this-module">
+<h2>Functions in this module<a class="headerlink" href="#functions-in-this-module" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="techminer.strings.extract_after_first">
+<code class="sig-prename descclassname">techminer.strings.</code><code class="sig-name descname">extract_after_first</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">ignore_case</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">full_match</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_re</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/strings.html#extract_after_first"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.strings.extract_after_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the string from the first ocurrence of the keyword to the end of string x.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pattern</strong> (<em>string</em>) – </p></li>
+<li><p><strong>x</strong> – string</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extract_after_first</span><span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">,</span> <span class="s1">&#39;1 aaa 4 aaa 5&#39;</span><span class="p">)</span>
+<span class="go">&#39;aaa 4 aaa 5&#39;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extract_after_first</span><span class="p">(</span><span class="s1">&#39;bbb&#39;</span><span class="p">,</span> <span class="s1">&#39;1 aaa 4 aaa 5&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.strings.extract_after_last">
+<code class="sig-prename descclassname">techminer.strings.</code><code class="sig-name descname">extract_after_last</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">ignore_case</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">full_match</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_re</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/strings.html#extract_after_last"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.strings.extract_after_last" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the string from last ocurrence of a keyword to the end of string x.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – string</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extract_after_last</span><span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">,</span> <span class="s1">&#39;1 aaa 4 aaa 5&#39;</span><span class="p">)</span>
+<span class="go">&#39;aaa 5&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.strings.extract_country">
+<code class="sig-prename descclassname">techminer.strings.</code><code class="sig-name descname">extract_country</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">';'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/strings.html#extract_country"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.strings.extract_country" title="Permalink to this definition">¶</a></dt>
+<dd><p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;Affiliations&#39;</span><span class="p">:</span> <span class="p">[</span>
+<span class="gp">... </span>        <span class="s1">&#39;University, Cuba; University, Venezuela&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;University, United States; Univesity, Singapore&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;University;&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;University; Univesity&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;University,&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;University&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="kc">None</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;Affiliations&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">extract_country</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="go">0             Cuba;Venezuela</span>
+<span class="go">1    United States;Singapore</span>
+<span class="go">2                       None</span>
+<span class="go">3                       None</span>
+<span class="go">4                       None</span>
+<span class="go">5                       None</span>
+<span class="go">6                       None</span>
+<span class="go">Name: Affiliations, dtype: object</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.strings.extract_nearby">
+<code class="sig-prename descclassname">techminer.strings.</code><code class="sig-name descname">extract_nearby</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">n_words</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">ignore_case</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">full_match</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_re</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/strings.html#extract_nearby"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.strings.extract_nearby" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the words of string x in the proximity of the terms matching
+the keywords list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>string</em>) – A string object.</p></li>
+<li><p><strong>n_words</strong> (<em>integer</em>) – number of words around term.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>   <span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1 2 3 4 5 6&#39;</span><span class="p">,</span> <span class="s1">&#39;aaa 1 2 3 4 5&#39;</span><span class="p">,</span> <span class="s1">&#39;1 aaa 2 3 4 5&#39;</span><span class="p">,</span> <span class="s1">&#39;1 2 aaa 3 4 5&#39;</span><span class="p">,</span>
+<span class="gp">... </span>         <span class="s1">&#39;1 2 3 aaa 4 5&#39;</span><span class="p">,</span> <span class="s1">&#39;1 2 3 4 aaa 5&#39;</span><span class="p">,</span> <span class="s1">&#39;1 2 3 4 5 aaa&#39;</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">               f</span>
+<span class="go">0    1 2 3 4 5 6</span>
+<span class="go">1  aaa 1 2 3 4 5</span>
+<span class="go">2  1 aaa 2 3 4 5</span>
+<span class="go">3  1 2 aaa 3 4 5</span>
+<span class="go">4  1 2 3 aaa 4 5</span>
+<span class="go">5  1 2 3 4 aaa 5</span>
+<span class="go">6  1 2 3 4 5 aaa</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">extract_nearby</span><span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">n_words</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span> 
+<span class="go">0           None</span>
+<span class="go">1        aaa 1 2</span>
+<span class="go">2      1 aaa 2 3</span>
+<span class="go">3    1 2 aaa 3 4</span>
+<span class="go">4    2 3 aaa 4 5</span>
+<span class="go">5      3 4 aaa 5</span>
+<span class="go">6        4 5 aaa</span>
+<span class="go">Name: f, dtype: object</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.strings.extract_until_first">
+<code class="sig-prename descclassname">techminer.strings.</code><code class="sig-name descname">extract_until_first</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">ignore_case</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">full_match</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_re</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/strings.html#extract_until_first"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.strings.extract_until_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the string from begining of x to the first ocurrence of a keyword.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – string</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extract_until_first</span><span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">,</span> <span class="s1">&#39;1 aaa 4 aaa 5&#39;</span><span class="p">)</span>
+<span class="go">&#39;1 aaa&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.strings.extract_until_last">
+<code class="sig-prename descclassname">techminer.strings.</code><code class="sig-name descname">extract_until_last</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">ignore_case</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">full_match</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_re</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/strings.html#extract_until_last"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.strings.extract_until_last" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the string from begining of x to the last ocurrence of a keyword.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – string</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extract_until_last</span><span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">,</span> <span class="s1">&#39;1 aaa 4 aaa 5&#39;</span><span class="p">)</span>
+<span class="go">&#39;1 aaa 4 aaa&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.strings.find_string">
+<code class="sig-prename descclassname">techminer.strings.</code><code class="sig-name descname">find_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">ignore_case</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">full_match</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_re</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/strings.html#find_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.strings.find_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find pattern in string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pattern</strong> (<em>string</em>) – </p></li>
+<li><p><strong>x</strong> (<em>string</em>) – </p></li>
+<li><p><strong>ignore_case</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>full_match</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>use_re</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>string or None</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">find_string</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\btwo\b&#39;</span><span class="p">,</span> <span class="s1">&#39;one two three four five&#39;</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">&#39;two&#39;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">find_string</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\bTWO\b&#39;</span><span class="p">,</span> <span class="s1">&#39;one two three four five&#39;</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">&#39;two&#39;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">find_string</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\btwo\b&#39;</span><span class="p">,</span> <span class="s1">&#39;one TWO three four five&#39;</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">find_string</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\btwo\Wthree\b&#39;</span><span class="p">,</span> <span class="s1">&#39;one two three four five&#39;</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">&#39;two three&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.strings.fingerprint">
+<code class="sig-prename descclassname">techminer.strings.</code><code class="sig-name descname">fingerprint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/strings.html#fingerprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.strings.fingerprint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes ‘fingerprint’ representation of string x.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>string</em>) – string to convert.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>string.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fingerprint</span><span class="p">(</span><span class="s1">&#39;a A b&#39;</span><span class="p">)</span>
+<span class="go">&#39;a b&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fingerprint</span><span class="p">(</span><span class="s1">&#39;b a a&#39;</span><span class="p">)</span>
+<span class="go">&#39;a b&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fingerprint</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fingerprint</span><span class="p">(</span><span class="s1">&#39;b c&#39;</span><span class="p">)</span>
+<span class="go">&#39;b c&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fingerprint</span><span class="p">(</span><span class="s1">&#39; c b &#39;</span><span class="p">)</span>
+<span class="go">&#39;b c&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.strings.remove_accents">
+<code class="sig-prename descclassname">techminer.strings.</code><code class="sig-name descname">remove_accents</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/strings.html#remove_accents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.strings.remove_accents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate non-ascii charaters to ascii equivalent. Based on Google Open Refine.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">remove_accents</span><span class="p">(</span><span class="s1">&#39;áéíóúñÁÉÍÓÚÑ&#39;</span><span class="p">)</span>
+<span class="go">&#39;aeiounAEIOUN&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.strings.replace_string">
+<code class="sig-prename descclassname">techminer.strings.</code><code class="sig-name descname">replace_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">repl</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ignore_case</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">full_match</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_re</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/strings.html#replace_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.strings.replace_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace pattern in string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pattern</strong> (<em>string</em>) – </p></li>
+<li><p><strong>x</strong> (<em>string</em>) – </p></li>
+<li><p><strong>repl</strong> (<em>string</em><em>, </em><em>None</em>) – </p></li>
+<li><p><strong>ignore_case</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>full_match</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>use_re</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>string or []</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.strings.steamming">
+<code class="sig-prename descclassname">techminer.strings.</code><code class="sig-name descname">steamming</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/strings.html#steamming"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.strings.steamming" title="Permalink to this definition">¶</a></dt>
+<dd><p class="rubric">Examples</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.strings.steamming_all">
+<code class="sig-prename descclassname">techminer.strings.</code><code class="sig-name descname">steamming_all</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/strings.html#steamming_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.strings.steamming_all" title="Permalink to this definition">¶</a></dt>
+<dd><p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">steamming_all</span><span class="p">(</span><span class="s1">&#39;computers cars&#39;</span><span class="p">,</span> <span class="s1">&#39;car computing&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">steamming_all</span><span class="p">(</span><span class="s1">&#39;computers cars&#39;</span><span class="p">,</span> <span class="s1">&#39;car houses&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.strings.steamming_any">
+<code class="sig-prename descclassname">techminer.strings.</code><code class="sig-name descname">steamming_any</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/strings.html#steamming_any"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.strings.steamming_any" title="Permalink to this definition">¶</a></dt>
+<dd><p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">steamming_any</span><span class="p">(</span><span class="s1">&#39;computers cars&#39;</span><span class="p">,</span> <span class="s1">&#39;car computing&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">steamming_any</span><span class="p">(</span><span class="s1">&#39;computers cars&#39;</span><span class="p">,</span> <span class="s1">&#39;computing house&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">steamming_all</span><span class="p">(</span><span class="s1">&#39;computers cars&#39;</span><span class="p">,</span> <span class="s1">&#39;tree houses&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="thesaurus.html" class="btn btn-neutral float-right" title="Thesaurus" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="plot.html" class="btn btn-neutral float-left" title="Plots" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
