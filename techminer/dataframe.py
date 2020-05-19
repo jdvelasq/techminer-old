@@ -11,6 +11,7 @@ import numpy as np
 from sklearn.decomposition import PCA
 import math
 
+from .keywords import Keywords
 from .strings import remove_accents
 
 SCOPUS_SEPS = {
@@ -2837,3 +2838,17 @@ class DataFrame(pd.DataFrame):
         """
         result = self.drop_duplicates(sebset=subset, keep=keep)
         return DataFrame(result)
+
+    def most_frequent(self, column, top_n=10, sep=None):
+        """Creates a group for most frequent items
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
+        """
+        df = self.copy()
+        top = df.documents_by_term(column, sep=sep)[column].head(top_n)
+        items = Keywords(x=top, ignore_case=False)
+        colname = "top_{:d}_{:s}_freq".format(top_n, column.replace(" ", "_"))
+        df[colname] = df[column].map(lambda x: any([e in items for e in x.split(sep)]))
+        return df
