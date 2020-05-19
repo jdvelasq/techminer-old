@@ -131,8 +131,8 @@ class Plot:
         plt.clf()
         x = self.df.copy()
         result = plt.gca().pcolor(np.transpose(x.values), **kwargs,)
-        x.columns = [cut_text(w) for w in w.columns]
-        x.index = [cut_text(w) for w in w.index]
+        x.columns = [cut_text(w) for w in x.columns]
+        x.index = [cut_text(w) for w in x.index]
         plt.xticks(np.arange(len(x.index)) + 0.5, x.index, rotation="vertical")
         plt.yticks(np.arange(len(x.columns)) + 0.5, x.columns)
         plt.gca().invert_yaxis()
