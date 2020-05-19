@@ -12,6 +12,7 @@ Bibliographic data manipulation and analysis
     maps
     plot
     strings
+    keywords
     thesaurus
     
 
