@@ -100,10 +100,39 @@ class Plot:
             :align: center
 
 
+
+        >>> df = pd.DataFrame(
+        ...     {
+        ...         'word 0': [100, 80, 70, 0,30, 1],
+        ...         'word 1': [80, 100, 70, 50, 0, 2],
+        ...         'word 2': [70, 70, 100, 0, 0, 3],
+        ...         'word 3': [0, 50, 0, 100, 3, 4],
+        ...         'word 4': [30, 0, 0, 30, 100, 5],
+        ...     },
+        ...     index=['word {:d}'.format(i) for i in range(6)]
+        ... )
+        >>> df
+                word 0  word 1  word 2  word 3  word 4
+        term 0     100      80      70       0      30
+        term 1      80     100      70      50       0
+        term 2      70      70     100       0       0
+        term 3       0      50       0     100      30
+        term 4      30       0       0       3     100
+        term 5       1       2       3       4       5
+        >>> _ = Plot(df).heatmap(cmap='Greys')
+        >>> plt.savefig('guide/images/plotheatmap3.png')
+        
+        .. image:: images/plotheatmap3.png
+            :width: 400px
+            :align: center
+
+
+
+
         """
         plt.clf()
         x = self.df.copy()
-        result = plt.gca().pcolor(x.values, **kwargs,)
+        result = plt.gca().pcolor(np.transpose(x.values), **kwargs,)
         plt.xticks(np.arange(len(x.index)) + 0.5, x.index, rotation="vertical")
         plt.yticks(np.arange(len(x.columns)) + 0.5, x.columns)
         plt.gca().invert_yaxis()
