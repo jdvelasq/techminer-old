@@ -37,6 +37,10 @@ def local():
 def sphinx():
     """Document creation using Shinx"""
     sh("cd guide; make html; cd ..")
+
+
+@task
+def publish():
     sh("rm -rf docs/*")
     sh("cp -R guide/_build/html/* docs/")
 
