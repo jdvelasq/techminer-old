@@ -583,7 +583,9 @@ class DataFrame(pd.DataFrame):
 
         """
         result = self.explode(column, sep)
-        result[column] = result[column].map(lambda x: x.strip())
+        result[column] = result[column].map(
+            lambda x: x.strip() if isinstance(x, str) else x
+        )
         result = pd.unique(result[column].dropna())
         result = np.sort(result)
         return pd.DataFrame({column: result})
