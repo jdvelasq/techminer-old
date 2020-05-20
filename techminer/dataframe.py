@@ -308,6 +308,7 @@ class DataFrame(pd.DataFrame):
     #  Data preparation functions
     #
     #
+
     def keywords_fusion(
         self,
         column="Author Keywords",
@@ -367,6 +368,32 @@ class DataFrame(pd.DataFrame):
         keywords = keywords.map(lambda x: None if x == "" else x)
         df[new_column] = keywords
         return df
+
+    def keywords_completation(self):
+        """Complete keywords in 'Keywords' column (if exists) from title and abstract.
+        """
+
+        cp = self.copy()
+        if "Keywords" not in self.columns:
+            cp = cp.keywords_fusion()
+
+        # Remove copyright character from abstract
+        abstract = cp.Abstract.map(
+            lambda x: x[0 : x.find("\u00a9")]
+            if isinstance(x, str) and x.find("\u00a9") != -1
+            else x
+        )
+
+        title_abstract = cp.Title + " " + abstract
+
+        kyw = Keywords()
+        kyw.add_keywords(cp.Keywords, sep=";")
+
+        keywords = title_abstract.map(lambda x: kyw.extract_from_text(x, sep=";"))
+        idx = cp.keywords.map(lambda x: x is None)
+        cp.loc[idx, "Keywords"] = keywords[idx]
+
+        return cp
 
     #
     # Document ID
