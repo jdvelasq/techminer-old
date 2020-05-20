@@ -655,7 +655,7 @@ class DataFrame(pd.DataFrame):
             ["Title", "Authors", "Year", "Cited by", "ID"]
         ]
         result["Cited by"] = result["Cited by"].map(
-            lambda x: int(x) if np.isna(x) is False else 0
+            lambda x: int(x) if pd.isna(x) is False else 0
         )
         return result
 
