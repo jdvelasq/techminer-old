@@ -2184,7 +2184,7 @@ class DataFrame(pd.DataFrame):
             result.index = result.index.tolist()
         return result
 
-    def occurrence_map(self, column, sep=None, minmax=None, filter=None):
+    def occurrence_map(self, column, sep=None, minmax=None, include_only=None):
         """Computes a occurrence between terms in a column.
 
         Args:
@@ -2219,16 +2219,49 @@ class DataFrame(pd.DataFrame):
         >>> DataFrame(df).occurrence_map(column='Authors')
         {'terms': ['A', 'B', 'C', 'D'], 'docs': ['doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4', 'doc#5'], 'edges': [('A', 'doc#0'), ('A', 'doc#1'), ('B', 'doc#1'), ('A', 'doc#2'), ('B', 'doc#2'), ('C', 'doc#2'), ('B', 'doc#3'), ('B', 'doc#4'), ('D', 'doc#4'), ('D', 'doc#5')], 'label_terms': {'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D'}, 'label_docs': {'doc#0': 2, 'doc#1': 1, 'doc#2': 1, 'doc#3': 1, 'doc#4': 1, 'doc#5': 1}}
 
+
+
+        >>> import pandas as pd
+        >>> df = DataFrame(
+        ...     pd.read_json(
+        ...         "https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/"
+        ...         + "cleaned-data.json",
+        ...         orient="records",
+        ...         lines=True,
+        ...     )
+        ... )
+        >>> top_authors = df.documents_by_term("Authors").head(5).Authors
+        >>> top_authors
+        0      Arevalo A.
+        1      Gabbouj M.
+        2    Hernandez G.
+        3    Hussain A.J.
+        4    Iosifidis A.
+        Name: Authors, dtype: object
+        >>> df.occurrence_map(column="Authors", include_only=top_authors)
+
+
         """
+        if sep is None and column in SCOPUS_SEPS.keys():
+            sep = SCOPUS_SEPS[column]
+
         result = self[[column]].copy()
         result["count"] = 1
 
-        result = result.groupby(column, as_index=False).agg({"count": np.sum})
-        if filter is not None:
-            result = result[result[column].map(lambda x: x in filter)]
+        if include_only is not None and not isinstance(include_only, list):
+            include_only = include_only.tolist()
 
-        if sep is None and column in SCOPUS_SEPS.keys():
-            sep = SCOPUS_SEPS[column]
+        result = result.groupby(column, as_index=False).agg({"count": np.sum})
+        if include_only is not None:
+            if sep is not None:
+                result = result[
+                    result[column].map(
+                        lambda x: any([e in include_only for e in x.split(sep)])
+                    )
+                ]
+            else:
+                result = result[result[column].map(lambda x: x in filter)]
+
         if sep is not None:
             result[column] = result[column].map(
                 lambda x: sorted(x.split(sep)) if isinstance(x, str) else x
@@ -2239,7 +2272,8 @@ class DataFrame(pd.DataFrame):
         terms.explode(column)
         terms = [item for sublist in terms[column].tolist() for item in sublist]
         terms = sorted(set(terms))
-        terms = [x for x in terms if x in filter]
+        if include_only is not None:
+            terms = [x for x in terms if x in include_only]
 
         docs = result["doc-ID"].tolist()
         label_docs = {doc: label for doc, label in zip(docs, result["count"].tolist())}
@@ -2248,7 +2282,7 @@ class DataFrame(pd.DataFrame):
         edges = []
         for field, docID in zip(result[column], result["doc-ID"]):
             for item in field:
-                if item in filter:
+                if include_only is None or item in include_only:
                     edges.append((item, docID))
 
         return dict(

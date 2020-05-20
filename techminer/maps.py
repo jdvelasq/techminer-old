@@ -158,6 +158,7 @@ class Map:
         .. image:: images/network_occurrence_map_1.png
             :width: 600px
             :align: center
+            
         """
         plt.clf()
 
