@@ -664,7 +664,9 @@ class DataFrame(pd.DataFrame):
             pandas.DataFrame
 
         """
-        return self.summarize_by_term("Authors")
+        result = self.summarize_by_term("Authors")
+        result = self.sort_values(by="Cited by", ascending=False)
+        return result
 
     ##
     ##
