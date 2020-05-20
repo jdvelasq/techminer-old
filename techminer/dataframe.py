@@ -43,7 +43,7 @@ def heatmap(df, cmap):
 
 
     """
-    return df.style.backgroud_gradient(cmap=cmap)
+    return df.style.background_gradient(cmap=cmap)
 
 
 def sort_by_numdocuments(
