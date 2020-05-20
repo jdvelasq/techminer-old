@@ -1,0 +1,270 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Data download &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Data merging and storing on json format" href="03-data-merging.html" />
+    <link rel="prev" title="Introduction" href="01-introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> TechMiner - A Package for Bibliographical Analysis using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01-introduction.html">Introduction</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Data download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03-data-merging.html">Data merging and storing on json format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04-manual-review.html">Manual review</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05-keyword-completation.html">Keyword completation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06-deletion-of-records.html">Deletion of records</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07-keywords-text-clustering.html">Keywords — Text clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08-keywords-text-nexting.html">Keywords — Text nesting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="09-keywords-record-deletion.html">Deletion of records based on keywords or other texts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10-record-ID.html">References ID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11-author-desambiguation.html">Author Desambiguation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12-groups-creation.html">Groups creation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="13-direct-queries.html">Direct queries over data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="14-documents-by-year.html">Documents by year</a></li>
+<li class="toctree-l2"><a class="reference internal" href="15-documents-by-terms.html">Documents by terms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="16-terms-by-year.html">Terms by year</a></li>
+<li class="toctree-l2"><a class="reference internal" href="17-ocurrence.html">Ocurrence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="18-co-ocurrence.html">Co-ocurrence analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="19-terms-by-terms-by-year.html">Analysis of terms by terms per year</a></li>
+<li class="toctree-l2"><a class="reference internal" href="20-citations-by-terms.html">Citations by term</a></li>
+<li class="toctree-l2"><a class="reference internal" href="21-citations-by-year.html">Citations by year</a></li>
+<li class="toctree-l2"><a class="reference internal" href="22-citations-by-terms-by-year.html">Citations by terms by year</a></li>
+<li class="toctree-l2"><a class="reference internal" href="23-autocorr.html">Autocorrelation matrix (Experimental)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="24-ccorr.html">Correlation matrix (Experimental)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="25-factor-analysis.html">Factor analysis (Experimental)</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Modules</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TechMiner - A Package for Bibliographical Analysis using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Tutorial</a> &raquo;</li>
+        
+      <li>Data download</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/tutorial/02-data-download.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="Data-download">
+<h1>Data download<a class="headerlink" href="#Data-download" title="Permalink to this headline">¶</a></h1>
+<p>The information is usually captured by the user directly in a biblographical database as Scopus using a complex search string. The refinement of the search string is iterative and preliminary analysis of the keywords can help debug the search string. In this first part of the tutorial it is assumed that the search string is refined.</p>
+<p>We recommend downloading the bibliographic information in three files to facilitate the loading of data in Python. The first file, named <code class="docutils literal notranslate"><span class="pre">demo-citations.csv</span></code>, contains the fields showed in the following figure:</p>
+<p><img alt="screen-capture-1.jpg" src="../_images/screen_capture_1.jpg" /></p>
+<p>The second file, named <code class="docutils literal notranslate"><span class="pre">demo-keywords.csv</span></code>, contains the information showed in the next figure.</p>
+<p><img alt="screen-capture-2.jpg" src="../_images/screen_capture_2.jpg" /></p>
+<p>Finally, the third file, <code class="docutils literal notranslate"><span class="pre">demo-refs.csv</span></code>, contains the information about references cited by docuemnts selected in the search.</p>
+<p><img alt="screen-capture-3.jpg" src="../_images/screen_capture_3.jpg" /></p>
+<p>The selected fields maximize the potential of information for obtain insights of the data.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="03-data-merging.html" class="btn btn-neutral float-right" title="Data merging and storing on json format" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="01-introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

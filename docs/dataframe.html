@@ -94,7 +94,9 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">DataFrame object</a></li>
 <li class="toctree-l3"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot.html">Plots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="strings.html">String manipulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keywords.html">Keywords manipulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="thesaurus.html">Thesaurus</a></li>
 </ul>
 </li>
@@ -1561,6 +1563,82 @@ adds a consecutive number to the name.</p>
 <span class="go">0  author 0,author 1,author 2   0</span>
 <span class="go">1                    author 3   1</span>
 <span class="go">2                    author 4   2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="techminer.dataframe.DataFrame.most_cited_by">
+<code class="sig-name descname">most_cited_by</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">top_n</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.most_cited_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.most_cited_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a group for most items cited by</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="p">{</span>
+<span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Author Keywords&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Cited by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>   <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">  Authors Author Keywords  Cited by  ID</span>
+<span class="go">0       A               a         0   0</span>
+<span class="go">1     A,B             a;b         1   1</span>
+<span class="go">2       B               b         2   2</span>
+<span class="go">3   A,B,C               c         3   3</span>
+<span class="go">4     B,D             c;d         4   4</span>
+<span class="go">5     A,B               d         5   5</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">most_cited_by</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">  Authors Author Keywords  Cited by  ID  top_1_Authors_cited_by</span>
+<span class="go">0       A               a         0   0                   False</span>
+<span class="go">1     A,B             a;b         1   1                    True</span>
+<span class="go">2       B               b         2   2                    True</span>
+<span class="go">3   A,B,C               c         3   3                    True</span>
+<span class="go">4     B,D             c;d         4   4                    True</span>
+<span class="go">5     A,B               d         5   5                    True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="techminer.dataframe.DataFrame.most_frequent">
+<code class="sig-name descname">most_frequent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">top_n</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.most_frequent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.most_frequent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a group for most frequent items</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="p">{</span>
+<span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Author Keywords&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Cited by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>   <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">  Authors Author Keywords  Cited by  ID</span>
+<span class="go">0       A               a         0   0</span>
+<span class="go">1     A,B             a;b         1   1</span>
+<span class="go">2       B               b         2   2</span>
+<span class="go">3   A,B,C               c         3   3</span>
+<span class="go">4     B,D             c;d         4   4</span>
+<span class="go">5     A,B               d         5   5</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">most_frequent</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">  Authors Author Keywords  Cited by  ID  top_1_Authors_freq</span>
+<span class="go">0       A               a         0   0               False</span>
+<span class="go">1     A,B             a;b         1   1                True</span>
+<span class="go">2       B               b         2   2                True</span>
+<span class="go">3   A,B,C               c         3   3                True</span>
+<span class="go">4     B,D             c;d         4   4                True</span>
+<span class="go">5     A,B               d         5   5                True</span>
 </pre></div>
 </div>
 </dd></dl>

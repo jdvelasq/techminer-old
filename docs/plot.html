@@ -94,7 +94,9 @@
 <li class="toctree-l3"><a class="reference internal" href="dataframe.html">DataFrame object</a></li>
 <li class="toctree-l3"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Plots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="strings.html">String manipulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keywords.html">Keywords manipulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="thesaurus.html">Thesaurus</a></li>
 </ul>
 </li>
@@ -423,6 +425,31 @@
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/plotheatmap3.png"><img alt="_images/plotheatmap3.png" class="align-center" src="_images/plotheatmap3.png" style="width: 400px;" /></a>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span>
+<span class="gp">... </span>        <span class="s1">&#39;word 0&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s1">&#39;word 1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s1">&#39;word 2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">70</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s1">&#39;word 3&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s1">&#39;word 4&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">},</span>
+<span class="gp">... </span>    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;word </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">        word 0  word 1  word 2  word 3  word 4</span>
+<span class="go">word 0     100      80      70       0      30</span>
+<span class="go">word 1      80     100      70      50       0</span>
+<span class="go">word 2      70      70     100       0       0</span>
+<span class="go">word 3       0      50       0     100      30</span>
+<span class="go">word 4      30       0       0       3     100</span>
+<span class="go">word 5       1       2       3       4       5</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">Plot</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;guide/images/plotheatmap3.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/plotheatmap3.png"><img alt="_images/plotheatmap3.png" class="align-center" src="_images/plotheatmap3.png" style="width: 400px;" /></a>
 </dd></dl>
 
 <dl class="py method">
@@ -562,6 +589,11 @@
 </dd></dl>
 
 </dd></dl>
+
+<dl class="py function">
+<dt id="techminer.plot.cut_text">
+<code class="sig-prename descclassname">techminer.plot.</code><code class="sig-name descname">cut_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">w</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/plot.html#cut_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.plot.cut_text" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 

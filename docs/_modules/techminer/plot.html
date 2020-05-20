@@ -169,12 +169,10 @@
 <span class="kn">from</span> <span class="nn">.chord_diagram</span> <span class="kn">import</span> <span class="n">ChordDiagram</span>
 
 
-<span class="c1"># ---------------------------------------------------------------------------------------------</span>
-<span class="c1"># def cut_text(w):</span>
-<span class="c1">#     if isinstance(w, (int, float)):</span>
-<span class="c1">#         return w</span>
-<span class="c1">#     return w if len(w) &lt; 35 else w[:31] + &#39;... &#39; + w[w.find(&#39;[&#39;):]</span>
-<span class="c1"># #---------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="cut_text"><a class="viewcode-back" href="../../plot.html#techminer.plot.cut_text">[docs]</a><span class="k">def</span> <span class="nf">cut_text</span><span class="p">(</span><span class="n">w</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">w</span>
+    <span class="k">return</span> <span class="n">w</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">35</span> <span class="k">else</span> <span class="n">w</span><span class="p">[:</span><span class="mi">31</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; ...&quot;</span></div>
 
 
 <div class="viewcode-block" id="Plot"><a class="viewcode-back" href="../../plot.html#techminer.plot.Plot">[docs]</a><span class="k">class</span> <span class="nc">Plot</span><span class="p">:</span>
@@ -253,10 +251,42 @@
 <span class="sd">            :align: center</span>
 
 
+
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">        ...     {</span>
+<span class="sd">        ...         &#39;word 0&#39;: [100, 80, 70, 0,30, 1],</span>
+<span class="sd">        ...         &#39;word 1&#39;: [80, 100, 70, 50, 0, 2],</span>
+<span class="sd">        ...         &#39;word 2&#39;: [70, 70, 100, 0, 0, 3],</span>
+<span class="sd">        ...         &#39;word 3&#39;: [0, 50, 0, 100, 3, 4],</span>
+<span class="sd">        ...         &#39;word 4&#39;: [30, 0, 0, 30, 100, 5],</span>
+<span class="sd">        ...     },</span>
+<span class="sd">        ...     index=[&#39;word {:d}&#39;.format(i) for i in range(6)]</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; df</span>
+<span class="sd">                word 0  word 1  word 2  word 3  word 4</span>
+<span class="sd">        word 0     100      80      70       0      30</span>
+<span class="sd">        word 1      80     100      70      50       0</span>
+<span class="sd">        word 2      70      70     100       0       0</span>
+<span class="sd">        word 3       0      50       0     100      30</span>
+<span class="sd">        word 4      30       0       0       3     100</span>
+<span class="sd">        word 5       1       2       3       4       5</span>
+
+<span class="sd">        &gt;&gt;&gt; _ = Plot(df).heatmap(cmap=&#39;Greys&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;guide/images/plotheatmap3.png&#39;)</span>
+<span class="sd">        </span>
+<span class="sd">        .. image:: images/plotheatmap3.png</span>
+<span class="sd">            :width: 400px</span>
+<span class="sd">            :align: center</span>
+
+
+
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">pcolor</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">pcolor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">cut_text</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">cut_text</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
