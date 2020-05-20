@@ -667,7 +667,7 @@ class DataFrame(pd.DataFrame):
 
         """
         result = self.summarize_by_term("Authors")
-        result = self.sort_values(by="Cited by", ascending=False)
+        result = result.sort_values(by="Cited by", ascending=False)
         return result
 
     ##
