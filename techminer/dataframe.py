@@ -236,21 +236,21 @@ class DataFrame(pd.DataFrame):
 
     """
 
-    #
-    #
-    #  Compatitbility with pandas.DataFrame
-    #
-    #
+    ##
+    ##
+    ##  Compatitbility with pandas.DataFrame
+    ##
+    ##
 
     @property
     def _constructor_expanddim(self):
         return self
 
-    #
-    #
-    #  Primitives
-    #
-    #
+    ##
+    ##
+    ##  Primitives
+    ##
+    ##
 
     def explode(self, column, sep=None):
         """Transform each element of a field to a row, reseting index values.
@@ -303,11 +303,11 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    #
-    #
-    #  Data preparation functions
-    #
-    #
+    ##
+    ##
+    ##  Data preparation functions
+    ##
+    ##
 
     def keywords_fusion(
         self,
@@ -395,10 +395,6 @@ class DataFrame(pd.DataFrame):
 
         return DataFrame(cp)
 
-    #
-    # Document ID
-    #
-
     def generate_ID(self, fmt=None):
         """Generates a sequence of integers as ID for each document.
 
@@ -437,9 +433,6 @@ class DataFrame(pd.DataFrame):
             self["ID"] = [fmt.format(x) for x in range(len(self))]
         return DataFrame(self)
 
-    #
-    # Distinc authors with same name
-    #
     def disambiguate_authors(
         self,
         col_Authors="Authors",
@@ -552,9 +545,6 @@ class DataFrame(pd.DataFrame):
 
         return DataFrame(result)
 
-    #
-    # Accents
-    #
     def remove_accents(self):
         """Remove accents for all strings on a DataFrame
 
@@ -583,9 +573,24 @@ class DataFrame(pd.DataFrame):
             self.applymap(lambda x: remove_accents(x) if isinstance(x, str) else x)
         )
 
-    #
-    # Basic info
-    #
+    ##
+    ##
+    ##  Row selection
+    ##
+    ##
+
+    def get_rows_by_IDs(self, IDs):
+        """Extracts records using the ID number.
+        """
+        IDs = [e for x in IDs for e in x]
+        result = self[self["ID"].map(lambda x: x in IDs)]
+        return DataFrame(result)
+
+    ##
+    ##
+    ## Data loading
+    ##
+    ##
 
     def coverage(self):
         """Reports the number of not `None` elements for column in a dataframe.
@@ -769,11 +774,11 @@ class DataFrame(pd.DataFrame):
             }
         )
 
-    #
-    #
-    #  Analysis by term
-    #
-    #
+    ##
+    ##
+    ##  Analysis by term
+    ##
+    ##
 
     def summarize_by_term(self, column, sep=None):
         """Summarize the number of documents and citations by term in a dataframe.
