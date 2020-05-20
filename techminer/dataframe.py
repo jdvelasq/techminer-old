@@ -654,7 +654,9 @@ class DataFrame(pd.DataFrame):
         result = self.sort_values(by="Cited by", ascending=False)[
             ["Title", "Authors", "Year", "Cited by", "ID"]
         ]
-        result["Cited by"] = result["Cited by"].map(lambda x: int(x))
+        result["Cited by"] = result["Cited by"].map(
+            lambda x: int(x) if np.isna(x) is False else 0
+        )
         return result
 
     def most_cited_authors(self):
