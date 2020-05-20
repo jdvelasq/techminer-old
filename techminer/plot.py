@@ -915,3 +915,6 @@ class Plot:
         plt.gca().imshow(wordcloud, interpolation="bilinear")
         plt.gca().axis("off")
         return plt.gca()
+
+    def __getitem__(self, key):
+        return DataFrame(super()[key])
