@@ -918,3 +918,6 @@ class Plot:
 
     def __getitem__(self, key):
         return DataFrame(super()[key])
+
+    def _getitem_bool_array(self, key):
+        return DataFrame(super()[key])
