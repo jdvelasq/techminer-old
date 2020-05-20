@@ -20,6 +20,7 @@ SCOPUS_SEPS = {
     "Author Keywords": ";",
     "Index Keywords": ";",
     "ID": ";",
+    "Keywords": ";",
 }
 
 
@@ -2960,7 +2961,6 @@ class DataFrame(pd.DataFrame):
     # def test(self):
     #     """
 
-
     #     >>> import pandas as pd
     #     >>> pd = pd.DataFrame(
     #     ...     {
@@ -2973,12 +2973,10 @@ class DataFrame(pd.DataFrame):
     #     >>> type(pd)
     #     <class 'techminer.dataframe.DataFrame'>
 
-    
     #     >>> type(pd[[True, True, False, False]])
     #     <class 'pandas.core.frame.DataFrame'>
 
     #     # >>> pd[[True, True, False, False]]
-        
 
     #     """
 
