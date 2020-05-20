@@ -237,12 +237,20 @@ class DataFrame(pd.DataFrame):
     """
 
     #
-    # Compatitbility with pandas.DataFrame
+    #
+    #  Compatitbility with pandas.DataFrame
+    #
     #
 
     @property
     def _constructor_expanddim(self):
         return self
+
+    #
+    #
+    #  Primitives
+    #
+    #
 
     def explode(self, column, sep=None):
         """Transform each element of a field to a row, reseting index values.
@@ -294,6 +302,71 @@ class DataFrame(pd.DataFrame):
             result = result.reset_index(drop=True)
 
         return result
+
+    #
+    #
+    #  Data preparation functions
+    #
+    #
+    def keywords_fusion(
+        self,
+        column="Author Keywords",
+        sep=None,
+        other="Index Keywords",
+        sep_other=None,
+        new_column="Keywords",
+        sep_new_column=None,
+    ):
+        """Combines keywords columns.
+
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...   {
+        ...      "Author Keywords": "k0;k2;,k1;,k3;,k4;,k5;".split(","),
+        ...      "Index Keywords": "k0;k1;,k2;k3;,k3;,k4;,k6;".split(','),
+        ...   }
+        ... )
+        >>> df
+          Author Keywords Index Keywords
+        0          k0;k2;         k0;k1;
+        1             k1;         k2;k3;
+        2             k3;            k3;
+        3             k4;            k4;
+        4             k5;            k6;
+        >>> DataFrame(df).keywords_fusion()
+          Author Keywords Index Keywords  Keywords
+        0          k0;k2;         k0;k1;  k0;k1;k2
+        1             k1;         k2;k3;  k1;k2;k3
+        2             k3;            k3;        k3
+        3             k4;            k4;        k4
+        4             k5;            k6;     k5;k6
+
+        """
+
+        if sep is None and column in SCOPUS_SEPS.keys():
+            sep = SCOPUS_SEPS[column]
+
+        if sep_other is None and other in SCOPUS_SEPS.keys():
+            sep_other = SCOPUS_SEPS[other]
+
+        if sep_new_column is None and new_column in SCOPUS_SEPS.keys():
+            sep_new_column = SCOPUS_SEPS[new_column]
+
+        df = self.copy()
+        author_keywords = df[column].map(
+            lambda x: x.split(sep) if x is not None else []
+        )
+        index_keywords = df[other].map(
+            lambda x: x.split(sep_other) if x is not None else []
+        )
+        keywords = author_keywords + index_keywords
+        keywords = keywords.map(lambda x: [e for e in x if e != ""])
+        keywords = keywords.map(lambda x: [e.strip() for e in x])
+        keywords = keywords.map(lambda x: sorted(set(x)))
+        keywords = keywords.map(lambda x: sep_new_column.join(x))
+        keywords = keywords.map(lambda x: None if x == "" else x)
+        df[new_column] = keywords
+        return df
 
     #
     # Document ID
