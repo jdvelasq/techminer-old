@@ -2184,7 +2184,7 @@ class DataFrame(pd.DataFrame):
             result.index = result.index.tolist()
         return result
 
-    def occurrence_map(self, column, sep=None, minmax=None):
+    def occurrence_map(self, column, sep=None, minmax=None, filter=None):
         """Computes a occurrence between terms in a column.
 
         Args:
@@ -2224,6 +2224,8 @@ class DataFrame(pd.DataFrame):
         result["count"] = 1
 
         result = result.groupby(column, as_index=False).agg({"count": np.sum})
+        if filter is not None:
+            result = result[result[column].map(lambda x: x in filter)]
 
         if sep is None and column in SCOPUS_SEPS.keys():
             sep = SCOPUS_SEPS[column]
@@ -2233,20 +2235,21 @@ class DataFrame(pd.DataFrame):
             )
 
         result["doc-ID"] = ["doc#{:d}".format(i) for i in range(len(result))]
-
         terms = result[[column]].copy()
         terms.explode(column)
         terms = [item for sublist in terms[column].tolist() for item in sublist]
         terms = sorted(set(terms))
+        terms = [x for x in terms if x in filter]
+
         docs = result["doc-ID"].tolist()
         label_docs = {doc: label for doc, label in zip(docs, result["count"].tolist())}
         label_terms = {t: t for t in terms}
-        #  labels = {**label_docs, **label_terms}
 
         edges = []
         for field, docID in zip(result[column], result["doc-ID"]):
             for item in field:
-                edges.append((item, docID))
+                if item in filter:
+                    edges.append((item, docID))
 
         return dict(
             terms=terms,
