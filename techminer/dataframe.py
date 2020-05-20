@@ -651,10 +651,11 @@ class DataFrame(pd.DataFrame):
             pandas.DataFrame
 
         """
-        return self.sort_values(by="Cited by", ascending=False)[
+        result = self.sort_values(by="Cited by", ascending=False)[
             ["Title", "Authors", "Year", "Cited by", "ID"]
         ]
-
+        result["Cited by"] = result["Cited by"].map(lambda x: int(x))
+        return result
 
     def most_cited_authors(self):
         """ Returns the cited authors.
@@ -663,8 +664,7 @@ class DataFrame(pd.DataFrame):
             pandas.DataFrame
 
         """
-        return self.summarize_by_term('Authors')
-
+        return self.summarize_by_term("Authors")
 
     ##
     ##
