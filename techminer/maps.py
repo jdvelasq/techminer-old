@@ -158,7 +158,7 @@ class Map:
         .. image:: images/network_occurrence_map_1.png
             :width: 600px
             :align: center
-            
+
         """
         plt.clf()
 
@@ -176,6 +176,7 @@ class Map:
         #    self._graph, pos=layout, labels=label_docs, **label_docs_props
         # )
         self.draw_network_labels(pos=layout, labels=label_terms, **label_term_props)
+        self.draw_network_labels(pos=layout, labels=label_docs, **label_docs_props)
 
         plt.axis("off")
 
