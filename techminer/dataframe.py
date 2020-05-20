@@ -393,7 +393,7 @@ class DataFrame(pd.DataFrame):
         idx = cp.keywords.map(lambda x: x is None)
         cp.loc[idx, "Keywords"] = keywords[idx]
 
-        return cp
+        return DataFrame(cp)
 
     #
     # Document ID
