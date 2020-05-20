@@ -111,12 +111,13 @@ class Plot:
         ... )
         >>> df
                 word 0  word 1  word 2  word 3  word 4
-        term 0     100      80      70       0      30
-        term 1      80     100      70      50       0
-        term 2      70      70     100       0       0
-        term 3       0      50       0     100      30
-        term 4      30       0       0       3     100
-        term 5       1       2       3       4       5
+        word 0     100      80      70       0      30
+        word 1      80     100      70      50       0
+        word 2      70      70     100       0       0
+        word 3       0      50       0     100      30
+        word 4      30       0       0       3     100
+        word 5       1       2       3       4       5
+
         >>> _ = Plot(df).heatmap(cmap='Greys')
         >>> plt.savefig('guide/images/plotheatmap3.png')
         
@@ -915,19 +916,3 @@ class Plot:
         plt.gca().imshow(wordcloud, interpolation="bilinear")
         plt.gca().axis("off")
         return plt.gca()
-
-    def __getitem__(self, key):
-        return DataFrame(super()[key])
-
-    def _getitem_bool_array(self, key):
-        return DataFrame(super()[key])
-
-    def _getitem_multilevel(self, key):
-        return DataFrame(super()._getitem_multilevel(key))
-
-    def _get_column_array(self, i):
-        return DataFrame(super()._get_column_array(i))
-
-    def assign(self, **kwargs):
-        return DataFrame(super().assign(**kwargs))
-

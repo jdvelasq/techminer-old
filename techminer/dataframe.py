@@ -2941,3 +2941,45 @@ class DataFrame(pd.DataFrame):
         else:
             df[colname] = self[column].map(lambda x: x in items)
         return DataFrame(df)
+
+    # def __getitem__(self, key):
+    #     return DataFrame(super().__getitem__(key))
+
+    # def _getitem_bool_array(self, key):
+    #     return DataFrame(super()._getitem_bool_array(key))
+
+    # def _getitem_multilevel(self, key):
+    #     return DataFrame(super()._getitem_multilevel(key))
+
+    # def _get_column_array(self, i):
+    #     return DataFrame(super()._get_column_array(i))
+
+    # def assign(self, **kwargs):
+    #     return DataFrame(super().assign(**kwargs))
+
+    # def test(self):
+    #     """
+
+
+    #     >>> import pandas as pd
+    #     >>> pd = pd.DataFrame(
+    #     ...     {
+    #     ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+    #     ...         "Num Documents": [10, 5, 2, 1],
+    #     ...         "ID": list(range(4)),
+    #     ...     }
+    #     ... )
+    #     >>> pd = DataFrame(pd)
+    #     >>> type(pd)
+    #     <class 'techminer.dataframe.DataFrame'>
+
+    
+    #     >>> type(pd[[True, True, False, False]])
+    #     <class 'pandas.core.frame.DataFrame'>
+
+    #     # >>> pd[[True, True, False, False]]
+        
+
+    #     """
+
+    #     pass
