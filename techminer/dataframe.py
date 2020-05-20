@@ -390,7 +390,7 @@ class DataFrame(pd.DataFrame):
         kyw.add_keywords(cp.Keywords, sep=";")
 
         keywords = title_abstract.map(lambda x: kyw.extract_from_text(x, sep=";"))
-        idx = cp.keywords.map(lambda x: x is None)
+        idx = cp.Keywords.map(lambda x: x is None)
         cp.loc[idx, "Keywords"] = keywords[idx]
 
         return DataFrame(cp)
