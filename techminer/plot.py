@@ -921,3 +921,13 @@ class Plot:
 
     def _getitem_bool_array(self, key):
         return DataFrame(super()[key])
+
+    def _getitem_multilevel(self, key):
+        return DataFrame(super()._getitem_multilevel(key))
+
+    def _get_column_array(self, i):
+        return DataFrame(super()._get_column_array(i))
+
+    def assign(self, **kwargs):
+        return DataFrame(super().assign(**kwargs))
+
