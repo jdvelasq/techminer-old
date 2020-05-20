@@ -588,7 +588,7 @@ class DataFrame(pd.DataFrame):
 
     ##
     ##
-    ## Data loading
+    ## Basic data information
     ##
     ##
 
@@ -644,11 +644,33 @@ class DataFrame(pd.DataFrame):
             }
         )
 
-    #
-    #
-    # Term extraction
-    #
-    #
+    def most_cited_documents(self):
+        """ Returns the cited documents.
+        
+        Results:
+            pandas.DataFrame
+
+        """
+        return self.sort_values(by="Cited by", ascending=False)[
+            ["Title", "Authors", "Year", "Cited by", "ID"]
+        ]
+
+
+    def most_cited_authors(self):
+        """ Returns the cited authors.
+        
+        Results:
+            pandas.DataFrame
+
+        """
+        return self.summarize_by_term('Authors')
+
+
+    ##
+    ##
+    ## Term extraction
+    ##
+    ##
 
     def extract_terms(self, column, sep=None):
         """Extracts unique terms in a column, exploding multvalued columns.
