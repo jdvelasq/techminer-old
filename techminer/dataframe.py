@@ -31,7 +31,7 @@ def relationship(x, y):
     return sxy / (a * b)
 
 
-def heatmap(df, cmap):
+def heatmap(df, cmap="Blues"):
     """Display the dataframe as a heatmap in Jupyter.
 
         Args:
