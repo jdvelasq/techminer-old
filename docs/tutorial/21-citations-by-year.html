@@ -450,36 +450,54 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="section" id="Citations-by-year">
 <h1>Citations by year<a class="headerlink" href="#Citations-by-year" title="Permalink to this headline">¶</a></h1>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#</span>
-<span class="c1"># Data loading</span>
-<span class="c1">#</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;cleaned-data.json&quot;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">techminer</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">Plot</span>
+<span class="kn">from</span> <span class="nn">techminer</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">Plot</span><span class="p">,</span> <span class="n">heatmap</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="c1"># Data loading</span>
+<span class="c1">#</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span>
+        <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;cleaned-data.json&quot;</span><span class="p">,</span>
+        <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span>
+        <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1">#</span>
+<span class="c1"># Columns of the dataframe</span>
+<span class="c1">#</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Index([&#39;Authors&#39;, &#39;Author(s) ID&#39;, &#39;Title&#39;, &#39;Year&#39;, &#39;Source title&#39;, &#39;Volume&#39;,
+       &#39;Issue&#39;, &#39;Art. No.&#39;, &#39;Page start&#39;, &#39;Page end&#39;, &#39;Page count&#39;, &#39;Cited by&#39;,
+       &#39;DOI&#39;, &#39;Affiliations&#39;, &#39;Document Type&#39;, &#39;Access Type&#39;, &#39;Source&#39;, &#39;EID&#39;,
+       &#39;Abstract&#39;, &#39;Author Keywords&#39;, &#39;Index Keywords&#39;, &#39;References&#39;,
+       &#39;keywords&#39;, &#39;CONF&#39;, &#39;fingerprint&#39;, &#39;keywords_cleaned&#39;, &#39;ID&#39;,
+       &#39;top_10_Authors_freq&#39;, &#39;top_10_keywords_freq&#39;,
+       &#39;top_10_Source_title_freq&#39;, &#39;top_10_Authors_cited_by&#39;,
+       &#39;top_10_keywords_cited_by&#39;, &#39;top_10_Source_title_cited_by&#39;],
+      dtype=&#39;object&#39;)
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -488,7 +506,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -581,21 +599,123 @@ div.rendered_html tbody tr:hover {
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">Plot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">citations_by_year</span><span class="p">())</span><span class="o">.</span><span class="n">barh</span><span class="p">()</span>
+<span></span><span class="n">df</span><span class="o">.</span><span class="n">citations_by_year</span><span class="p">(</span><span class="n">cumulative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Cited by</th>
+      <th>ID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2010</td>
+      <td>21</td>
+      <td>[142, 143, 144]</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2011</td>
+      <td>251</td>
+      <td>[140, 141]</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2012</td>
+      <td>267</td>
+      <td>[138, 139]</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2013</td>
+      <td>303</td>
+      <td>[134, 135, 136, 137]</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2014</td>
+      <td>326</td>
+      <td>[131, 132, 133]</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2015</td>
+      <td>332</td>
+      <td>[129, 130]</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2016</td>
+      <td>417</td>
+      <td>[124, 125, 126, 127, 128]</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2017</td>
+      <td>554</td>
+      <td>[105, 106, 107, 108, 109, 110, 111, 112, 113, ...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2018</td>
+      <td>672</td>
+      <td>[53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 6...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2019</td>
+      <td>696</td>
+      <td>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">Plot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">citations_by_year</span><span class="p">(</span><span class="n">cumulative</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">barh</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f6d9dc6a438&gt;
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f935a80fc88&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -604,44 +724,6 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <img alt="../_images/tutorial_21-citations-by-year_5_1.png" src="../_images/tutorial_21-citations-by-year_5_1.png" />
 </div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># df.documents_by_terms(&quot;Cited by&quot;).print_IDs()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-1.0 (21) : [*6*][*11*][*17*][*18*][*19*][*20*][*23*][*24*][*47*][*50*][*78*][*88*][*92*][*96*][*100*][*102*][*118*][*119*][*122*][*129*][*136*]
-3.0 (7) : [*2*][*4*][*27*][*68*][*108*][*120*][*131*]
-4.0 (5) : [*74*][*76*][*80*][*87*][*105*]
-2.0 (5) : [*54*][*83*][*111*][*133*][*138*]
-5.0 (3) : [*25*][*130*][*135*]
-6.0 (3) : [*70*][*81*][*91*]
-7.0 (3) : [*67*][*109*][*117*]
-14.0 (3) : [*112*][*116*][*137*]
-20.0 (2) : [*114*][*132*]
-9.0 (2) : [*107*][*143*]
-16.0 (2) : [*106*][*113*]
-19.0 (2) : [*127*][*128*]
-49.0 (1) : [*62*]
-42.0 (1) : [*139*]
-37.0 (1) : [*124*]
-28.0 (1) : [*134*]
-12.0 (1) : [*142*]
-15.0 (1) : [*104*]
-11.0 (1) : [*110*]
-10.0 (1) : [*125*]
-8.0 (1) : [*115*]
-188.0 (1) : [*140*]
-</pre></div></div>
 </div>
 </div>
 

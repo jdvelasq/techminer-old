@@ -455,22 +455,25 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="Deletion-of-records">
 <h1>Deletion of records<a class="headerlink" href="#Deletion-of-records" title="Permalink to this headline">¶</a></h1>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
-
-<span class="n">pdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;deletion-of-records.json&quot;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span>
+    <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
+    <span class="o">+</span> <span class="s2">&quot;deletion-of-records.json&quot;</span><span class="p">,</span>
+    <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span>
+    <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="Deleting-of-abstracts-of-proceedings-and-workshops">
 <h2>Deleting of abstracts of proceedings and workshops<a class="headerlink" href="#Deleting-of-abstracts-of-proceedings-and-workshops" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -478,16 +481,16 @@ div.rendered_html tbody tr:hover {
 
 <span class="n">conf</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">()</span>
 <span class="n">conf</span><span class="o">.</span><span class="n">add_keywords</span><span class="p">([</span><span class="s2">&quot;Conference&quot;</span><span class="p">,</span> <span class="s2">&quot;Proceeding&quot;</span><span class="p">,</span> <span class="s2">&quot;Workshop&quot;</span><span class="p">,</span> <span class="s2">&quot;Congress&quot;</span><span class="p">])</span>
-<span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;CONF&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pdf</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">conf</span> <span class="k">else</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;CONF&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">conf</span> <span class="k">else</span> <span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">pdf</span><span class="p">[</span><span class="n">pdf</span><span class="o">.</span><span class="n">CONF</span><span class="p">][</span><span class="s2">&quot;Title&quot;</span><span class="p">]:</span>
+<span></span><span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">CONF</span><span class="p">][</span><span class="s2">&quot;Title&quot;</span><span class="p">]:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -506,15 +509,15 @@ Intelligent Computing in Bioinformatics - 10th International Conference, ICIC 20
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Num. records before = &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdf</span><span class="p">))</span>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Num. records before = &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
 
-<span class="n">pdf</span> <span class="o">=</span> <span class="n">pdf</span><span class="p">[</span><span class="n">pdf</span><span class="o">.</span><span class="n">CONF</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="kc">True</span><span class="p">)]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">CONF</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="kc">True</span><span class="p">)]</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Num. records after = &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdf</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Num. records after = &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -531,11 +534,11 @@ Num. records after =  146
 <div class="section" id="Deleting-of-documents-with-the-same-title">
 <h2>Deleting of documents with the same title<a class="headerlink" href="#Deleting-of-documents-with-the-same-title" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Num. records before = &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdf</span><span class="p">))</span>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Num. records before = &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -548,23 +551,23 @@ Num. records before =  146
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">techminer.strings</span> <span class="kn">import</span> <span class="n">fingerprint</span>
 
-<span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;fingerprint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pdf</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">fingerprint</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;fingerprint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">fingerprint</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 
 <span class="c1">#</span>
 <span class="c1"># original title</span>
 <span class="c1">#</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">pdf</span><span class="o">.</span><span class="n">Title</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
 
 <span class="c1">#</span>
 <span class="c1"># Fingerprint of the title</span>
 <span class="c1">#</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">pdf</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -588,20 +591,20 @@ Name: fingerprint, dtype: object
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">pdf</span> <span class="o">=</span> <span class="n">pdf</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s2">&quot;fingerprint&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Num. records after = &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdf</span><span class="p">))</span>
+<span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s2">&quot;fingerprint&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Num. records after = &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -614,11 +617,11 @@ Num. records after =  145
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># pdf.to_json(&quot;keywords-cleanup.json&quot;, orient=&quot;records&quot;, lines=True)</span>
+<span></span><span class="c1">### df.to_json(&quot;keywords-text-clustering.json&quot;, orient=&quot;records&quot;, lines=True)</span>
 </pre></div>
 </div>
 </div>

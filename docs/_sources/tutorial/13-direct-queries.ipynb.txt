@@ -18,65 +18,15 @@
    ]
   },
   {
-   "cell_type": "code",
-   "execution_count": 2,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "#\n",
-    "# Data loading\n",
-    "#\n",
-    "import pandas as pd\n",
-    "\n",
-    "url = \"https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/\"\n",
-    "\n",
-    "df = pd.read_json(url + \"cleaned-data.json\", orient=\"records\", lines=True)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 3,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "from techminer import DataFrame\n",
-    "\n",
-    "df = DataFrame(df)"
-   ]
-  },
-  {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Some directec queries can be made directly over the dataframe without recurring to special functions or code."
+    "Some queries can be made directly over the dataframe without recurring to special functions or code."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 4,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "145"
-      ]
-     },
-     "execution_count": 4,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "#\n",
-    "# Number of records in the dataframe\n",
-    "#\n",
-    "len(df)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 5,
+   "execution_count": 2,
    "metadata": {},
    "outputs": [
     {
@@ -93,38 +43,147 @@
        "      dtype='object')"
       ]
      },
-     "execution_count": 5,
+     "execution_count": 2,
      "metadata": {},
      "output_type": "execute_result"
     }
    ],
    "source": [
+    "import pandas as pd\n",
+    "\n",
+    "from techminer import DataFrame, Plot, heatmap\n",
+    "\n",
+    "#\n",
+    "# Data loading\n",
+    "#\n",
+    "df = DataFrame(\n",
+    "    pd.read_json(\n",
+    "        \"https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/\"\n",
+    "        + \"cleaned-data.json\",\n",
+    "        orient=\"records\",\n",
+    "        lines=True,\n",
+    "    )\n",
+    ")\n",
+    "\n",
+    "#\n",
+    "# Columns of the dataframe\n",
+    "#\n",
     "df.columns"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 6,
+   "execution_count": 3,
    "metadata": {},
    "outputs": [
     {
      "data": {
       "text/plain": [
-       "407"
+       "145"
       ]
      },
-     "execution_count": 6,
+     "execution_count": 3,
      "metadata": {},
      "output_type": "execute_result"
     }
    ],
    "source": [
-    "df.count_terms('Author Keywords')"
+    "#\n",
+    "# Number of records in the dataframe\n",
+    "#\n",
+    "len(df)"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 7,
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Column</th>\n",
+       "      <th>Number of items</th>\n",
+       "      <th>Coverage (%)</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>Authors</td>\n",
+       "      <td>145</td>\n",
+       "      <td>100.00%</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>Author(s) ID</td>\n",
+       "      <td>145</td>\n",
+       "      <td>100.00%</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>Title</td>\n",
+       "      <td>145</td>\n",
+       "      <td>100.00%</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>Year</td>\n",
+       "      <td>145</td>\n",
+       "      <td>100.00%</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>Source title</td>\n",
+       "      <td>145</td>\n",
+       "      <td>100.00%</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "         Column  Number of items Coverage (%)\n",
+       "0       Authors              145      100.00%\n",
+       "1  Author(s) ID              145      100.00%\n",
+       "2         Title              145      100.00%\n",
+       "3          Year              145      100.00%\n",
+       "4  Source title              145      100.00%"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#\n",
+    "# Data coverage\n",
+    "#\n",
+    "df.coverage().head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
    "metadata": {},
    "outputs": [
     {
@@ -191,6 +250,185 @@
        "4   Index Keywords              884"
       ]
      },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#\n",
+    "# Number of terms \n",
+    "#\n",
+    "df.count_report()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "407"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#\n",
+    "# Number of terms for individual columns\n",
+    "#\n",
+    "df.count_terms('Author Keywords')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Title</th>\n",
+       "      <th>Authors</th>\n",
+       "      <th>Year</th>\n",
+       "      <th>Cited by</th>\n",
+       "      <th>ID</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>141</th>\n",
+       "      <td>Forecasting stock markets using wavelet transf...</td>\n",
+       "      <td>Hsieh T.-J.,Hsiao H.-F.,Yeh W.-C.</td>\n",
+       "      <td>2011</td>\n",
+       "      <td>188</td>\n",
+       "      <td>141</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>62</th>\n",
+       "      <td>Deep learning with long short-term memory netw...</td>\n",
+       "      <td>Fischer T.,Krauss C.</td>\n",
+       "      <td>2018</td>\n",
+       "      <td>49</td>\n",
+       "      <td>62</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>140</th>\n",
+       "      <td>Dynamic Ridge Polynomial Neural Network: Forec...</td>\n",
+       "      <td>Ghazali R.,Hussain A.J.,Liatsis P.</td>\n",
+       "      <td>2011</td>\n",
+       "      <td>42</td>\n",
+       "      <td>140</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>124</th>\n",
+       "      <td>Deep learning for stock prediction using numer...</td>\n",
+       "      <td>Akita R.,Yoshihara A.,Matsubara T.,Uehara K.</td>\n",
+       "      <td>2016</td>\n",
+       "      <td>37</td>\n",
+       "      <td>124</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>135</th>\n",
+       "      <td>A hybrid intelligent model based on recurrent ...</td>\n",
+       "      <td>Sharma V.,Srinivasan D.</td>\n",
+       "      <td>2013</td>\n",
+       "      <td>28</td>\n",
+       "      <td>135</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>132</th>\n",
+       "      <td>A neuro-wavelet model for the short-term forec...</td>\n",
+       "      <td>Ortega L.F.,Khashanah K.</td>\n",
+       "      <td>2014</td>\n",
+       "      <td>20</td>\n",
+       "      <td>132</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>114</th>\n",
+       "      <td>Forecasting stock prices from the limit order ...</td>\n",
+       "      <td>Tsantekidis A.,Passalis N.,Tefas A.,Kanniainen...</td>\n",
+       "      <td>2017</td>\n",
+       "      <td>20</td>\n",
+       "      <td>114</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>127</th>\n",
+       "      <td>Artificial neural networks architectures for s...</td>\n",
+       "      <td>Di Persio L.,Honchar O.</td>\n",
+       "      <td>2016</td>\n",
+       "      <td>19</td>\n",
+       "      <td>127</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>128</th>\n",
+       "      <td>Financial Time Series Prediction Using Elman R...</td>\n",
+       "      <td>Wang J.(5),Wang J.(1),Fang W.,Niu H.</td>\n",
+       "      <td>2016</td>\n",
+       "      <td>19</td>\n",
+       "      <td>128</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>113</th>\n",
+       "      <td>Stock prediction using deep learning</td>\n",
+       "      <td>Singh R.,Srivastava S.</td>\n",
+       "      <td>2017</td>\n",
+       "      <td>16</td>\n",
+       "      <td>113</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                                                 Title  \\\n",
+       "141  Forecasting stock markets using wavelet transf...   \n",
+       "62   Deep learning with long short-term memory netw...   \n",
+       "140  Dynamic Ridge Polynomial Neural Network: Forec...   \n",
+       "124  Deep learning for stock prediction using numer...   \n",
+       "135  A hybrid intelligent model based on recurrent ...   \n",
+       "132  A neuro-wavelet model for the short-term forec...   \n",
+       "114  Forecasting stock prices from the limit order ...   \n",
+       "127  Artificial neural networks architectures for s...   \n",
+       "128  Financial Time Series Prediction Using Elman R...   \n",
+       "113               Stock prediction using deep learning   \n",
+       "\n",
+       "                                               Authors  Year  Cited by   ID  \n",
+       "141                  Hsieh T.-J.,Hsiao H.-F.,Yeh W.-C.  2011       188  141  \n",
+       "62                                Fischer T.,Krauss C.  2018        49   62  \n",
+       "140                 Ghazali R.,Hussain A.J.,Liatsis P.  2011        42  140  \n",
+       "124       Akita R.,Yoshihara A.,Matsubara T.,Uehara K.  2016        37  124  \n",
+       "135                            Sharma V.,Srinivasan D.  2013        28  135  \n",
+       "132                           Ortega L.F.,Khashanah K.  2014        20  132  \n",
+       "114  Tsantekidis A.,Passalis N.,Tefas A.,Kanniainen...  2017        20  114  \n",
+       "127                            Di Persio L.,Honchar O.  2016        19  127  \n",
+       "128               Wang J.(5),Wang J.(1),Fang W.,Niu H.  2016        19  128  \n",
+       "113                             Singh R.,Srivastava S.  2017        16  113  "
+      ]
+     },
      "execution_count": 7,
      "metadata": {},
      "output_type": "execute_result"
@@ -198,9 +436,9 @@
    ],
    "source": [
     "#\n",
-    "# Number \n",
+    "# Top N most cited documents\n",
     "#\n",
-    "df.count_report()"
+    "df.most_cited_documents().head(10)"
    ]
   },
   {
@@ -320,7 +558,7 @@
    ],
    "source": [
     "#\n",
-    "# Top N most cited documents\n",
+    "# Or\n",
     "#\n",
     "df.citations_by_term('Title').head(10)"
    ]
@@ -332,8 +570,78 @@
    "outputs": [
     {
      "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Authors</th>\n",
+       "      <th>Num Documents</th>\n",
+       "      <th>Cited by</th>\n",
+       "      <th>ID</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>126</th>\n",
+       "      <td>Hsieh T.-J.</td>\n",
+       "      <td>1</td>\n",
+       "      <td>188</td>\n",
+       "      <td>[141]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>125</th>\n",
+       "      <td>Hsiao H.-F.</td>\n",
+       "      <td>1</td>\n",
+       "      <td>188</td>\n",
+       "      <td>[141]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>382</th>\n",
+       "      <td>Yeh W.-C.</td>\n",
+       "      <td>1</td>\n",
+       "      <td>188</td>\n",
+       "      <td>[141]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>135</th>\n",
+       "      <td>Hussain A.J.</td>\n",
+       "      <td>3</td>\n",
+       "      <td>52</td>\n",
+       "      <td>[125, 133, 140]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>162</th>\n",
+       "      <td>Krauss C.</td>\n",
+       "      <td>1</td>\n",
+       "      <td>49</td>\n",
+       "      <td>[62]</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
       "text/plain": [
-       "[141, 62, 140, 124, 135, 132, 114, 127, 128, 113]"
+       "          Authors  Num Documents  Cited by               ID\n",
+       "126   Hsieh T.-J.              1       188            [141]\n",
+       "125   Hsiao H.-F.              1       188            [141]\n",
+       "382     Yeh W.-C.              1       188            [141]\n",
+       "135  Hussain A.J.              3        52  [125, 133, 140]\n",
+       "162     Krauss C.              1        49             [62]"
       ]
      },
      "execution_count": 9,
@@ -343,14 +651,116 @@
    ],
    "source": [
     "#\n",
-    "# IDs can be collected\n",
+    "# Most cited authors\n",
     "#\n",
-    "[e for x in df.citations_by_term('Title').head(10)['ID'] for e in x]"
+    "df.most_cited_authors().head()"
    ]
   },
   {
    "cell_type": "code",
    "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "126     Hsieh T.-J.\n",
+       "125     Hsiao H.-F.\n",
+       "382       Yeh W.-C.\n",
+       "135    Hussain A.J.\n",
+       "162       Krauss C.\n",
+       "91       Fischer T.\n",
+       "101      Ghazali R.\n",
+       "188      Liatsis P.\n",
+       "329       Uehara K.\n",
+       "5          Akita R.\n",
+       "Name: Authors, dtype: object"
+      ]
+     },
+     "execution_count": 10,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#\n",
+    "# Top 10 most cited authors\n",
+    "#\n",
+    "df.most_cited_authors().head(10).Authors"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0       Arevalo A.\n",
+       "1       Gabbouj M.\n",
+       "2     Hernandez G.\n",
+       "3     Hussain A.J.\n",
+       "4     Iosifidis A.\n",
+       "5    Kanniainen J.\n",
+       "6          Leon D.\n",
+       "7          Nino J.\n",
+       "8      Passalis N.\n",
+       "9      Sandoval J.\n",
+       "Name: Authors, dtype: object"
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#\n",
+    "# Top 10 most frequent authors\n",
+    "#\n",
+    "df.documents_by_term('Authors').head(10).Authors"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Record extraction by IDs"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0    [141]\n",
+       "1     [62]\n",
+       "2    [140]\n",
+       "3    [124]\n",
+       "4    [135]\n",
+       "Name: ID, dtype: object"
+      ]
+     },
+     "execution_count": 12,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#\n",
+    "# IDs for top five documents\n",
+    "#\n",
+    "IDs = df.citations_by_term('Title')['ID'].head(5)\n",
+    "IDs"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
    "metadata": {},
    "outputs": [
     {
@@ -376,69 +786,33 @@
        "      <th></th>\n",
        "      <th>Title</th>\n",
        "      <th>Authors</th>\n",
-       "      <th>Cited by</th>\n",
        "    </tr>\n",
        "  </thead>\n",
        "  <tbody>\n",
        "    <tr>\n",
-       "      <th>141</th>\n",
-       "      <td>Forecasting stock markets using wavelet transf...</td>\n",
-       "      <td>Hsieh T.-J.,Hsiao H.-F.,Yeh W.-C.</td>\n",
-       "      <td>188.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
        "      <th>62</th>\n",
        "      <td>Deep learning with long short-term memory netw...</td>\n",
        "      <td>Fischer T.,Krauss C.</td>\n",
-       "      <td>49.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>140</th>\n",
-       "      <td>Dynamic Ridge Polynomial Neural Network: Forec...</td>\n",
-       "      <td>Ghazali R.,Hussain A.J.,Liatsis P.</td>\n",
-       "      <td>42.0</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>124</th>\n",
        "      <td>Deep learning for stock prediction using numer...</td>\n",
        "      <td>Akita R.,Yoshihara A.,Matsubara T.,Uehara K.</td>\n",
-       "      <td>37.0</td>\n",
        "    </tr>\n",
        "    <tr>\n",
        "      <th>135</th>\n",
        "      <td>A hybrid intelligent model based on recurrent ...</td>\n",
        "      <td>Sharma V.,Srinivasan D.</td>\n",
-       "      <td>28.0</td>\n",
        "    </tr>\n",
        "    <tr>\n",
-       "      <th>114</th>\n",
-       "      <td>Forecasting stock prices from the limit order ...</td>\n",
-       "      <td>Tsantekidis A.,Passalis N.,Tefas A.,Kanniainen...</td>\n",
-       "      <td>20.0</td>\n",
+       "      <th>140</th>\n",
+       "      <td>Dynamic Ridge Polynomial Neural Network: Forec...</td>\n",
+       "      <td>Ghazali R.,Hussain A.J.,Liatsis P.</td>\n",
        "    </tr>\n",
        "    <tr>\n",
-       "      <th>132</th>\n",
-       "      <td>A neuro-wavelet model for the short-term forec...</td>\n",
-       "      <td>Ortega L.F.,Khashanah K.</td>\n",
-       "      <td>20.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>127</th>\n",
-       "      <td>Artificial neural networks architectures for s...</td>\n",
-       "      <td>Di Persio L.,Honchar O.</td>\n",
-       "      <td>19.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>128</th>\n",
-       "      <td>Financial Time Series Prediction Using Elman R...</td>\n",
-       "      <td>Wang J.(5),Wang J.(1),Fang W.,Niu H.</td>\n",
-       "      <td>19.0</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>113</th>\n",
-       "      <td>Stock prediction using deep learning</td>\n",
-       "      <td>Singh R.,Srivastava S.</td>\n",
-       "      <td>16.0</td>\n",
+       "      <th>141</th>\n",
+       "      <td>Forecasting stock markets using wavelet transf...</td>\n",
+       "      <td>Hsieh T.-J.,Hsiao H.-F.,Yeh W.-C.</td>\n",
        "    </tr>\n",
        "  </tbody>\n",
        "</table>\n",
@@ -446,38 +820,30 @@
       ],
       "text/plain": [
        "                                                 Title  \\\n",
-       "141  Forecasting stock markets using wavelet transf...   \n",
        "62   Deep learning with long short-term memory netw...   \n",
-       "140  Dynamic Ridge Polynomial Neural Network: Forec...   \n",
        "124  Deep learning for stock prediction using numer...   \n",
        "135  A hybrid intelligent model based on recurrent ...   \n",
-       "114  Forecasting stock prices from the limit order ...   \n",
-       "132  A neuro-wavelet model for the short-term forec...   \n",
-       "127  Artificial neural networks architectures for s...   \n",
-       "128  Financial Time Series Prediction Using Elman R...   \n",
-       "113               Stock prediction using deep learning   \n",
+       "140  Dynamic Ridge Polynomial Neural Network: Forec...   \n",
+       "141  Forecasting stock markets using wavelet transf...   \n",
        "\n",
-       "                                               Authors  Cited by  \n",
-       "141                  Hsieh T.-J.,Hsiao H.-F.,Yeh W.-C.     188.0  \n",
-       "62                                Fischer T.,Krauss C.      49.0  \n",
-       "140                 Ghazali R.,Hussain A.J.,Liatsis P.      42.0  \n",
-       "124       Akita R.,Yoshihara A.,Matsubara T.,Uehara K.      37.0  \n",
-       "135                            Sharma V.,Srinivasan D.      28.0  \n",
-       "114  Tsantekidis A.,Passalis N.,Tefas A.,Kanniainen...      20.0  \n",
-       "132                           Ortega L.F.,Khashanah K.      20.0  \n",
-       "127                            Di Persio L.,Honchar O.      19.0  \n",
-       "128               Wang J.(5),Wang J.(1),Fang W.,Niu H.      19.0  \n",
-       "113                             Singh R.,Srivastava S.      16.0  "
+       "                                          Authors  \n",
+       "62                           Fischer T.,Krauss C.  \n",
+       "124  Akita R.,Yoshihara A.,Matsubara T.,Uehara K.  \n",
+       "135                       Sharma V.,Srinivasan D.  \n",
+       "140            Ghazali R.,Hussain A.J.,Liatsis P.  \n",
+       "141             Hsieh T.-J.,Hsiao H.-F.,Yeh W.-C.  "
       ]
      },
-     "execution_count": 10,
+     "execution_count": 13,
      "metadata": {},
      "output_type": "execute_result"
     }
    ],
    "source": [
-    "IDs = [e for x in df.citations_by_term('Title').head(10)['ID'] for e in x]\n",
-    "df[df.ID.map(lambda x: x in IDs)][['Title', 'Authors', 'Cited by']].sort_values('Cited by', ascending = False)"
+    "#\n",
+    "# Selects `Title` and `Authors` by IDs\n",
+    "#\n",
+    "df.get_rows_by_IDs(IDs)[['Title', 'Authors']]"
    ]
   }
  ],

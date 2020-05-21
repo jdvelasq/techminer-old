@@ -453,38 +453,56 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="section" id="Factor-analysis-(Experimental)">
 <h1>Factor analysis (Experimental)<a class="headerlink" href="#Factor-analysis-(Experimental)" title="Permalink to this headline">¶</a></h1>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#</span>
-<span class="c1"># Data loading</span>
-<span class="c1">#</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;cleaned-data.json&quot;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">techminer</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">Plot</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">techminer</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">Plot</span><span class="p">,</span> <span class="n">heatmap</span>
+
+<span class="c1">#</span>
+<span class="c1"># Data loading</span>
+<span class="c1">#</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span>
+        <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;cleaned-data.json&quot;</span><span class="p">,</span>
+        <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span>
+        <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1">#</span>
+<span class="c1"># Columns of the dataframe</span>
+<span class="c1">#</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span>
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Index([&#39;Authors&#39;, &#39;Author(s) ID&#39;, &#39;Title&#39;, &#39;Year&#39;, &#39;Source title&#39;, &#39;Volume&#39;,
+       &#39;Issue&#39;, &#39;Art. No.&#39;, &#39;Page start&#39;, &#39;Page end&#39;, &#39;Page count&#39;, &#39;Cited by&#39;,
+       &#39;DOI&#39;, &#39;Affiliations&#39;, &#39;Document Type&#39;, &#39;Access Type&#39;, &#39;Source&#39;, &#39;EID&#39;,
+       &#39;Abstract&#39;, &#39;Author Keywords&#39;, &#39;Index Keywords&#39;, &#39;References&#39;,
+       &#39;keywords&#39;, &#39;CONF&#39;, &#39;fingerprint&#39;, &#39;keywords_cleaned&#39;, &#39;ID&#39;,
+       &#39;top_10_Authors_freq&#39;, &#39;top_10_keywords_freq&#39;,
+       &#39;top_10_Source_title_freq&#39;, &#39;top_10_Authors_cited_by&#39;,
+       &#39;top_10_keywords_cited_by&#39;, &#39;top_10_Source_title_cited_by&#39;],
+      dtype=&#39;object&#39;)
+</pre></div></div>
+</div>
 <div class="section" id="Authors">
 <h2>Authors<a class="headerlink" href="#Authors" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -492,392 +510,23 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
-</div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>F0</th>
-      <th>F1</th>
-      <th>F2</th>
-      <th>F3</th>
-      <th>F4</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>Wang J. [7]</th>
-      <td>-0.025355</td>
-      <td>-0.040096</td>
-      <td>-0.695298</td>
-      <td>0.624399</td>
-      <td>0.223693</td>
-    </tr>
-    <tr>
-      <th>Zhang G. [4]</th>
-      <td>-0.017487</td>
-      <td>-0.028221</td>
-      <td>0.452656</td>
-      <td>0.559642</td>
-      <td>-0.167425</td>
-    </tr>
-    <tr>
-      <th>Yan X. [3]</th>
-      <td>-0.010094</td>
-      <td>-0.013940</td>
-      <td>-0.057740</td>
-      <td>-0.006361</td>
-      <td>-0.018068</td>
-    </tr>
-    <tr>
-      <th>Hernandez G. [3]</th>
-      <td>-0.029542</td>
-      <td>0.489821</td>
-      <td>0.002071</td>
-      <td>0.023022</td>
-      <td>0.012202</td>
-    </tr>
-    <tr>
-      <th>Tefas A. [3]</th>
-      <td>0.425717</td>
-      <td>0.023641</td>
-      <td>0.001237</td>
-      <td>0.014415</td>
-      <td>0.007825</td>
-    </tr>
-    <tr>
-      <th>Sandoval J. [3]</th>
-      <td>-0.029542</td>
-      <td>0.489821</td>
-      <td>0.002071</td>
-      <td>0.023022</td>
-      <td>0.012202</td>
-    </tr>
-    <tr>
-      <th>Iosifidis A. [3]</th>
-      <td>0.425717</td>
-      <td>0.023641</td>
-      <td>0.001237</td>
-      <td>0.014415</td>
-      <td>0.007825</td>
-    </tr>
-    <tr>
-      <th>Zhang Y. [3]</th>
-      <td>-0.009956</td>
-      <td>-0.013467</td>
-      <td>-0.004766</td>
-      <td>-0.074681</td>
-      <td>-0.048900</td>
-    </tr>
-    <tr>
-      <th>Arévalo A. [3]</th>
-      <td>-0.029542</td>
-      <td>0.489821</td>
-      <td>0.002071</td>
-      <td>0.023022</td>
-      <td>0.012202</td>
-    </tr>
-    <tr>
-      <th>Wu J. [3]</th>
-      <td>-0.012591</td>
-      <td>-0.019739</td>
-      <td>0.186196</td>
-      <td>-0.042854</td>
-      <td>0.672821</td>
-    </tr>
-    <tr>
-      <th>Passalis N. [3]</th>
-      <td>0.425717</td>
-      <td>0.023641</td>
-      <td>0.001237</td>
-      <td>0.014415</td>
-      <td>0.007825</td>
-    </tr>
-    <tr>
-      <th>Kanniainen J. [3]</th>
-      <td>0.425717</td>
-      <td>0.023641</td>
-      <td>0.001237</td>
-      <td>0.014415</td>
-      <td>0.007825</td>
-    </tr>
-    <tr>
-      <th>Zhu Y. [3]</th>
-      <td>-0.012706</td>
-      <td>-0.020151</td>
-      <td>0.272582</td>
-      <td>0.284154</td>
-      <td>-0.013801</td>
-    </tr>
-    <tr>
-      <th>Gabbouj M. [3]</th>
-      <td>0.425717</td>
-      <td>0.023641</td>
-      <td>0.001237</td>
-      <td>0.014415</td>
-      <td>0.007825</td>
-    </tr>
-    <tr>
-      <th>Li Y. [2]</th>
-      <td>-0.006412</td>
-      <td>-0.008670</td>
-      <td>0.023064</td>
-      <td>-0.008779</td>
-      <td>-0.001746</td>
-    </tr>
-    <tr>
-      <th>Liu C.-L. [2]</th>
-      <td>-0.006824</td>
-      <td>-0.009375</td>
-      <td>-0.003671</td>
-      <td>-0.060149</td>
-      <td>-0.040898</td>
-    </tr>
-    <tr>
-      <th>Leon D. [2]</th>
-      <td>-0.021473</td>
-      <td>0.368211</td>
-      <td>0.001752</td>
-      <td>0.020010</td>
-      <td>0.010791</td>
-    </tr>
-    <tr>
-      <th>Bu H. [2]</th>
-      <td>-0.008162</td>
-      <td>-0.012594</td>
-      <td>0.099892</td>
-      <td>-0.066203</td>
-      <td>0.469863</td>
-    </tr>
-    <tr>
-      <th>Oosterlee C.W. [2]</th>
-      <td>-0.006824</td>
-      <td>-0.009375</td>
-      <td>-0.003671</td>
-      <td>-0.060149</td>
-      <td>-0.040898</td>
-    </tr>
-    <tr>
-      <th>Chen Y. [2]</th>
-      <td>-0.007328</td>
-      <td>-0.010763</td>
-      <td>0.064704</td>
-      <td>-0.057130</td>
-      <td>0.317516</td>
-    </tr>
-    <tr>
-      <th>Fu X. [2]</th>
-      <td>-0.008615</td>
-      <td>-0.013808</td>
-      <td>0.187364</td>
-      <td>0.135807</td>
-      <td>0.204446</td>
-    </tr>
-    <tr>
-      <th>Niño J. [2]</th>
-      <td>-0.021473</td>
-      <td>0.368211</td>
-      <td>0.001752</td>
-      <td>0.020010</td>
-      <td>0.010791</td>
-    </tr>
-    <tr>
-      <th>Lin X. [2]</th>
-      <td>-0.006456</td>
-      <td>-0.008818</td>
-      <td>0.039084</td>
-      <td>0.027539</td>
-      <td>-0.040955</td>
-    </tr>
-    <tr>
-      <th>Dash P.K. [2]</th>
-      <td>-0.005856</td>
-      <td>-0.007459</td>
-      <td>-0.001960</td>
-      <td>-0.027839</td>
-      <td>-0.016956</td>
-    </tr>
-    <tr>
-      <th>Tseng V.S. [2]</th>
-      <td>-0.006824</td>
-      <td>-0.009375</td>
-      <td>-0.003671</td>
-      <td>-0.060149</td>
-      <td>-0.040898</td>
-    </tr>
-    <tr>
-      <th>Xu J. [2]</th>
-      <td>-0.005856</td>
-      <td>-0.007459</td>
-      <td>-0.001960</td>
-      <td>-0.027839</td>
-      <td>-0.016956</td>
-    </tr>
-    <tr>
-      <th>Xu L. [2]</th>
-      <td>-0.008337</td>
-      <td>-0.013228</td>
-      <td>0.208996</td>
-      <td>0.272781</td>
-      <td>-0.114969</td>
-    </tr>
-    <tr>
-      <th>Tsantekidis A. [2]</th>
-      <td>0.296071</td>
-      <td>0.016706</td>
-      <td>0.000922</td>
-      <td>0.010877</td>
-      <td>0.005949</td>
-    </tr>
-    <tr>
-      <th>Borovykh A. [2]</th>
-      <td>-0.006824</td>
-      <td>-0.009375</td>
-      <td>-0.003671</td>
-      <td>-0.060149</td>
-      <td>-0.040898</td>
-    </tr>
-    <tr>
-      <th>Chen J. [2]</th>
-      <td>-0.008817</td>
-      <td>-0.014159</td>
-      <td>0.173627</td>
-      <td>0.092506</td>
-      <td>0.250997</td>
-    </tr>
-    <tr>
-      <th>Wang Y. [2]</th>
-      <td>-0.005856</td>
-      <td>-0.007459</td>
-      <td>-0.001960</td>
-      <td>-0.027839</td>
-      <td>-0.016956</td>
-    </tr>
-    <tr>
-      <th>Wang H. [2]</th>
-      <td>-0.007837</td>
-      <td>-0.011852</td>
-      <td>0.107390</td>
-      <td>0.070967</td>
-      <td>0.051962</td>
-    </tr>
-    <tr>
-      <th>Zhang W. [2]</th>
-      <td>-0.008370</td>
-      <td>-0.012982</td>
-      <td>-0.177433</td>
-      <td>0.138155</td>
-      <td>0.043232</td>
-    </tr>
-    <tr>
-      <th>Wang L. [2]</th>
-      <td>-0.006562</td>
-      <td>-0.008835</td>
-      <td>-0.003071</td>
-      <td>-0.047897</td>
-      <td>-0.031269</td>
-    </tr>
-    <tr>
-      <th>Honchar O. [2]</th>
-      <td>-0.006824</td>
-      <td>-0.009375</td>
-      <td>-0.003671</td>
-      <td>-0.060149</td>
-      <td>-0.040898</td>
-    </tr>
-    <tr>
-      <th>Song Y. [2]</th>
-      <td>-0.008455</td>
-      <td>-0.013304</td>
-      <td>0.176142</td>
-      <td>0.206186</td>
-      <td>-0.081990</td>
-    </tr>
-    <tr>
-      <th>Lu Z. [2]</th>
-      <td>-0.005856</td>
-      <td>-0.007459</td>
-      <td>-0.001960</td>
-      <td>-0.027839</td>
-      <td>-0.016956</td>
-    </tr>
-    <tr>
-      <th>Di Persio L. [2]</th>
-      <td>-0.006824</td>
-      <td>-0.009375</td>
-      <td>-0.003671</td>
-      <td>-0.060149</td>
-      <td>-0.040898</td>
-    </tr>
-    <tr>
-      <th>Hussain A.J. [2]</th>
-      <td>-0.005856</td>
-      <td>-0.007459</td>
-      <td>-0.001960</td>
-      <td>-0.027839</td>
-      <td>-0.016956</td>
-    </tr>
-    <tr>
-      <th>Shao X. [2]</th>
-      <td>-0.005856</td>
-      <td>-0.007459</td>
-      <td>-0.001960</td>
-      <td>-0.027839</td>
-      <td>-0.016956</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">9</span><span class="p">))</span>
-<span class="n">Plot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">factor_analysis</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
+<span></span><span class="c1"># plt.figure(figsize=(4,9))</span>
+<span class="c1"># Plot(df.factor_analysis(column=&quot;Authors&quot;, sep=&quot;,&quot;, n_components=5, as_matrix=True)).heatmap(cmap=&#39;Blues&#39;)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/tutorial_25-factor-analysis_6_0.png" src="../_images/tutorial_25-factor-analysis_6_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># rdf.factor_analysis(column=&quot;Authors&quot;, sep=&quot;,&quot;, n_components=5, top_n=40).chord_diagram()</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/tutorial_25-factor-analysis_7_0.png" src="../_images/tutorial_25-factor-analysis_7_0.png" />
 </div>
 </div>
 </div>

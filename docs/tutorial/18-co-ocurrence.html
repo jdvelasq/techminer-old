@@ -453,51 +453,69 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="section" id="Co-ocurrence-analysis">
 <h1>Co-ocurrence analysis<a class="headerlink" href="#Co-ocurrence-analysis" title="Permalink to this headline">¶</a></h1>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#</span>
-<span class="c1"># Data loading</span>
-<span class="c1">#</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;cleaned-data.json&quot;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">techminer</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">Plot</span>
+<span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">techminer</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">Plot</span><span class="p">,</span> <span class="n">heatmap</span>
+
+<span class="c1">#</span>
+<span class="c1"># Data loading</span>
+<span class="c1">#</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span>
+        <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;cleaned-data.json&quot;</span><span class="p">,</span>
+        <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span>
+        <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1">#</span>
+<span class="c1"># Columns of the dataframe</span>
+<span class="c1">#</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Index([&#39;Authors&#39;, &#39;Author(s) ID&#39;, &#39;Title&#39;, &#39;Year&#39;, &#39;Source title&#39;, &#39;Volume&#39;,
+       &#39;Issue&#39;, &#39;Art. No.&#39;, &#39;Page start&#39;, &#39;Page end&#39;, &#39;Page count&#39;, &#39;Cited by&#39;,
+       &#39;DOI&#39;, &#39;Affiliations&#39;, &#39;Document Type&#39;, &#39;Access Type&#39;, &#39;Source&#39;, &#39;EID&#39;,
+       &#39;Abstract&#39;, &#39;Author Keywords&#39;, &#39;Index Keywords&#39;, &#39;References&#39;,
+       &#39;keywords&#39;, &#39;CONF&#39;, &#39;fingerprint&#39;, &#39;keywords_cleaned&#39;, &#39;ID&#39;,
+       &#39;top_10_Authors_freq&#39;, &#39;top_10_keywords_freq&#39;,
+       &#39;top_10_Source_title_freq&#39;, &#39;top_10_Authors_cited_by&#39;,
+       &#39;top_10_keywords_cited_by&#39;, &#39;top_10_Source_title_cited_by&#39;],
+      dtype=&#39;object&#39;)
+</pre></div></div>
 </div>
 <div class="section" id="Authors-vs-Source-Title-example">
 <h2>Authors vs Source Title example<a class="headerlink" href="#Authors-vs-Source-Title-example" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1">#</span>
 <span class="c1"># Top 10 most frequent authors</span>
 <span class="c1">#</span>
-<span class="n">top_authors</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">documents_by_term</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">top_authors</span> <span class="o">=</span> <span class="n">top_authors</span><span class="o">.</span><span class="n">Authors</span>
+<span class="n">top_authors</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">documents_by_term</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">Authors</span>
 <span class="n">top_authors</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -516,21 +534,20 @@ Name: Authors, dtype: object
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1">#</span>
 <span class="c1"># Top 10 most frequent Source titles</span>
 <span class="c1">#</span>
-<span class="n">top_sources</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">documents_by_term</span><span class="p">(</span><span class="s1">&#39;Source title&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">top_sources</span> <span class="o">=</span> <span class="n">top_sources</span><span class="p">[</span><span class="s1">&#39;Source title&#39;</span><span class="p">]</span>
+<span class="n">top_sources</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">documents_by_term</span><span class="p">(</span><span class="s1">&#39;Source title&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)[</span><span class="s1">&#39;Source title&#39;</span><span class="p">]</span>
 <span class="n">top_sources</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -549,191 +566,459 @@ Name: Source title, dtype: object
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">matrix</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">co_occurrence</span><span class="p">(</span>
     <span class="n">column_IDX</span><span class="o">=</span><span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="n">column_COL</span><span class="o">=</span><span class="s2">&quot;Source title&quot;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
-<span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">matrix</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">top_sources</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]]</span>
-<span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">matrix</span><span class="o">.</span><span class="n">index</span> <span class="k">if</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">top_authors</span><span class="o">.</span><span class="n">tolist</span><span class="p">()],:]</span>
-<span class="n">matrix</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">top_authors</span><span class="p">,</span> <span class="n">top_sources</span><span class="p">]</span>
+<span class="n">heatmap</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>ACM International Conference Proceeding Series</th>
-      <th>Advances in Intelligent Systems and Computing</th>
-      <th>Applied Soft Computing Journal</th>
-      <th>Communications in Computer and Information Science</th>
-      <th>Expert Systems with Applications</th>
-      <th>IEEE Access</th>
-      <th>International Journal of Circuits, Systems and Signal Processing</th>
-      <th>Lecture Notes in Computer Science (including subseries Lecture Notes in Artificial Intelligence and Lecture Notes in Bioinformatics)</th>
-      <th>Neural Computing and Applications</th>
-      <th>Procedia Computer Science</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>Arevalo A.</th>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>Gabbouj M.</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>Hernandez G.</th>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>Hussain A.J.</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>Iosifidis A.</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>Kanniainen J.</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>Leon D.</th>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>Nino J.</th>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>Passalis N.</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>Sandoval J.</th>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+<style  type="text/css" >
+    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col0 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col4 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col8 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col0 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col4 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col8 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col0 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col1 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col0 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col4 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col8 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col0 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col4 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col8 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col0 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col4 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col8 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }</style><table id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >Lecture Notes in Computer Science (including subseries Lecture Notes in Artificial Intelligence and Lecture Notes in Bioinformatics)</th>        <th class="col_heading level0 col1" >Expert Systems with Applications</th>        <th class="col_heading level0 col2" >IEEE Access</th>        <th class="col_heading level0 col3" >Procedia Computer Science</th>        <th class="col_heading level0 col4" >Advances in Intelligent Systems and Computing</th>        <th class="col_heading level0 col5" >Applied Soft Computing Journal</th>        <th class="col_heading level0 col6" >Neural Computing and Applications</th>        <th class="col_heading level0 col7" >ACM International Conference Proceeding Series</th>        <th class="col_heading level0 col8" >Communications in Computer and Information Science</th>        <th class="col_heading level0 col9" >International Journal of Circuits, Systems and Signal Processing</th>    </tr></thead><tbody>
+                <tr>
+                        <th id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002level0_row0" class="row_heading level0 row0" >Arevalo A.</th>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col0" class="data row0 col0" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col1" class="data row0 col1" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col2" class="data row0 col2" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col3" class="data row0 col3" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col4" class="data row0 col4" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col5" class="data row0 col5" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col6" class="data row0 col6" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col7" class="data row0 col7" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col8" class="data row0 col8" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row0_col9" class="data row0 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002level0_row1" class="row_heading level0 row1" >Gabbouj M.</th>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col0" class="data row1 col0" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col1" class="data row1 col1" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col2" class="data row1 col2" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col3" class="data row1 col3" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col4" class="data row1 col4" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col5" class="data row1 col5" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col6" class="data row1 col6" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col7" class="data row1 col7" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col8" class="data row1 col8" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row1_col9" class="data row1 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002level0_row2" class="row_heading level0 row2" >Hernandez G.</th>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col0" class="data row2 col0" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col1" class="data row2 col1" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col2" class="data row2 col2" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col3" class="data row2 col3" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col4" class="data row2 col4" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col5" class="data row2 col5" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col6" class="data row2 col6" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col7" class="data row2 col7" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col8" class="data row2 col8" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row2_col9" class="data row2 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002level0_row3" class="row_heading level0 row3" >Hussain A.J.</th>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col0" class="data row3 col0" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col1" class="data row3 col1" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col2" class="data row3 col2" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col3" class="data row3 col3" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col4" class="data row3 col4" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col5" class="data row3 col5" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col6" class="data row3 col6" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col7" class="data row3 col7" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col8" class="data row3 col8" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row3_col9" class="data row3 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002level0_row4" class="row_heading level0 row4" >Iosifidis A.</th>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col0" class="data row4 col0" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col1" class="data row4 col1" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col2" class="data row4 col2" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col3" class="data row4 col3" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col4" class="data row4 col4" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col5" class="data row4 col5" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col6" class="data row4 col6" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col7" class="data row4 col7" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col8" class="data row4 col8" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row4_col9" class="data row4 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002level0_row5" class="row_heading level0 row5" >Kanniainen J.</th>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col0" class="data row5 col0" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col1" class="data row5 col1" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col2" class="data row5 col2" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col3" class="data row5 col3" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col4" class="data row5 col4" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col5" class="data row5 col5" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col6" class="data row5 col6" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col7" class="data row5 col7" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col8" class="data row5 col8" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row5_col9" class="data row5 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002level0_row6" class="row_heading level0 row6" >Leon D.</th>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col0" class="data row6 col0" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col1" class="data row6 col1" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col2" class="data row6 col2" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col3" class="data row6 col3" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col4" class="data row6 col4" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col5" class="data row6 col5" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col6" class="data row6 col6" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col7" class="data row6 col7" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col8" class="data row6 col8" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row6_col9" class="data row6 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002level0_row7" class="row_heading level0 row7" >Nino J.</th>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col0" class="data row7 col0" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col1" class="data row7 col1" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col2" class="data row7 col2" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col3" class="data row7 col3" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col4" class="data row7 col4" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col5" class="data row7 col5" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col6" class="data row7 col6" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col7" class="data row7 col7" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col8" class="data row7 col8" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row7_col9" class="data row7 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002level0_row8" class="row_heading level0 row8" >Passalis N.</th>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col0" class="data row8 col0" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col1" class="data row8 col1" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col2" class="data row8 col2" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col3" class="data row8 col3" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col4" class="data row8 col4" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col5" class="data row8 col5" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col6" class="data row8 col6" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col7" class="data row8 col7" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col8" class="data row8 col8" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row8_col9" class="data row8 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002level0_row9" class="row_heading level0 row9" >Sandoval J.</th>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col0" class="data row9 col0" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col1" class="data row9 col1" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col2" class="data row9 col2" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col3" class="data row9 col3" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col4" class="data row9 col4" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col5" class="data row9 col5" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col6" class="data row9 col6" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col7" class="data row9 col7" >0</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col8" class="data row9 col8" >1</td>
+                        <td id="T_9a06cffa_9ae5_11ea_ab7f_0242ac110002row9_col9" class="data row9 col9" >0</td>
+            </tr>
+    </tbody></table></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -743,19 +1028,19 @@ Name: Source title, dtype: object
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f0096739390&gt;
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f70511895c0&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/tutorial_18-co-ocurrence_8_1.png" src="../_images/tutorial_18-co-ocurrence_8_1.png" />
+<img alt="../_images/tutorial_18-co-ocurrence_7_1.png" src="../_images/tutorial_18-co-ocurrence_7_1.png" />
 </div>
 </div>
 </div>

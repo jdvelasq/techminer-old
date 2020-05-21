@@ -147,6 +147,15 @@
    "source": [
     "The variable `df` contains the raw bibliographic raw records."
    ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "### df.to_json(\"manual-review.json\", orient=\"records\", lines=True)"
+   ]
   }
  ],
  "metadata": {

@@ -458,88 +458,90 @@ div.rendered_html tbody tr:hover {
 <h2>Data loading<a class="headerlink" href="#Data-loading" title="Permalink to this headline">¶</a></h2>
 <p>In this step, the records for the study are selected. The previous file is loaded with:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
-
-<span class="n">pdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;keyword-completation.json&quot;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span>
+    <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
+    <span class="o">+</span> <span class="s2">&quot;keyword-completation.json&quot;</span><span class="p">,</span>
+    <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span>
+    <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">NaN</span></code> values are changed by <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">pdf</span> <span class="o">=</span> <span class="n">pdf</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">x</span><span class="p">)</span>
+<span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="Keywords-completation">
 <h2>Keywords completation<a class="headerlink" href="#Keywords-completation" title="Permalink to this headline">¶</a></h2>
-<p>This step aims to create a column (field) in the dataframe containing key terms for document selection. The columns <code class="docutils literal notranslate"><span class="pre">'Author</span> <span class="pre">Keywords'</span></code> and <code class="docutils literal notranslate"><span class="pre">'Index</span> <span class="pre">Keywords'</span></code> are joined in a new column is called <code class="docutils literal notranslate"><span class="pre">'keywords'</span></code>.</p>
+<p>This step aims to create a column (field) in the dataframe containing key terms for document selection. The columns <code class="docutils literal notranslate"><span class="pre">'Author</span> <span class="pre">Keywords'</span></code> and <code class="docutils literal notranslate"><span class="pre">'Index</span> <span class="pre">Keywords'</span></code> are joined in a new column is called <code class="docutils literal notranslate"><span class="pre">'Keywords'</span></code>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">pdf</span> <span class="o">=</span> <span class="n">pdf</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
-    <span class="n">keywords</span><span class="o">=</span><span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;Author Keywords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[])</span>
-    <span class="o">+</span> <span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;Index Keywords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[])</span>
-<span class="p">)</span>
+<span></span><span class="kn">from</span> <span class="nn">techminer</span> <span class="kn">import</span> <span class="n">DataFrame</span>
 
-<span class="c1">#  remove blank spaces sorounding keywords</span>
-<span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;keywords&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;keywords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
-
-<span class="c1">#  join keywords in a new string</span>
-<span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;keywords&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;keywords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-
-<span class="c1"># converts in None empty keywords list</span>
-<span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;keywords&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pdf</span><span class="o">.</span><span class="n">keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">keywords_fusion</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">pdf</span><span class="o">.</span><span class="n">keywords</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span></span><span class="c1">#</span>
+<span class="c1"># New column Keywords:</span>
+<span class="c1">#</span>
+<span class="n">df</span><span class="o">.</span><span class="n">Keywords</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0    Component trends;Empirical mode decomposition;...
-1    Earnings;Financial data processing;Information...
-2    And financial time series prediction;Dynamic n...
-3    Artificial intelligence;Deep learning;Financia...
-4    Commerce;Deep learning;Electronic trading;Fina...
-Name: keywords, dtype: object
+0      Component trends;Empirical mode decomposition;...
+1      Consumer price index;Costs;Distributed represe...
+2      Algorithms;And financial time series predictio...
+3      Artificial intelligence;Auto-regressive exogen...
+4      Commerce;Deep learning;Electronic trading;Fina...
+                             ...
+147                                                 None
+148                                                 None
+149                                                 None
+150                                                 None
+151                                                 None
+Name: Keywords, Length: 152, dtype: object
 </pre></div></div>
 </div>
 <p>However, there are records without <code class="docutils literal notranslate"><span class="pre">'Author</span> <span class="pre">Keywords'</span></code> and <code class="docutils literal notranslate"><span class="pre">'Index</span> <span class="pre">Keywords'</span></code>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="nb">len</span><span class="p">(</span><span class="n">pdf</span><span class="p">[</span><span class="n">pdf</span><span class="o">.</span><span class="n">keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)])</span>
+<span></span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">Keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)])</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -548,21 +550,22 @@ Name: keywords, dtype: object
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Verification:</span>
-
-<span class="n">pdf</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span>
-    <span class="p">(</span><span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;Author Keywords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">))</span>
-    <span class="o">&amp;</span> <span class="p">(</span><span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;Index Keywords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">))</span>
+<span></span><span class="c1">#</span>
+<span class="c1"># Verification:</span>
+<span class="c1">#</span>
+<span class="n">df</span><span class="o">.</span><span class="n">Keywords</span><span class="p">[</span>
+    <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Author Keywords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">))</span>
+    <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Index Keywords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">))</span>
 <span class="p">]</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -575,71 +578,20 @@ Name: keywords, dtype: object
 149    None
 150    None
 151    None
-Name: keywords, dtype: object
+Name: Keywords, dtype: object
 </pre></div></div>
 </div>
-<p>In the following code, a <code class="docutils literal notranslate"><span class="pre">Keywords</span></code> object is created. The content of column <code class="docutils literal notranslate"><span class="pre">keywords</span></code> is added to the object.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">techminer.keywords</span> <span class="kn">import</span> <span class="n">Keywords</span>
-
-<span class="n">kyw</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">()</span>
-<span class="n">kyw</span><span class="o">.</span><span class="n">add_keywords</span><span class="p">(</span><span class="n">pdf</span><span class="o">.</span><span class="n">keywords</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
-<span class="n">kyw</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">20</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-[&#39;(2D) 2 PCA&#39;,
- &#39;(2D) &lt;sup&gt;2&lt;/sup&gt; PCA&#39;,
- &#39;AMAPE&#39;,
- &#39;ANN&#39;,
- &#39;ARIMA&#39;,
- &#39;ARIMA Model&#39;,
- &#39;ARIMA model&#39;,
- &#39;ARIMA modeling&#39;,
- &#39;Absolute values&#39;,
- &#39;Abstract representation&#39;,
- &#39;Accounts receivable&#39;,
- &#39;Accuracy Improvement&#39;,
- &#39;Accuracy of classifications&#39;,
- &#39;Accurate prediction&#39;,
- &#39;Activation layer&#39;,
- &#39;AdaBoost algorithm&#39;,
- &#39;Adam Optimizer&#39;,
- &#39;Adaptive boosting&#39;,
- &#39;Adaptive gradient algorithm&#39;,
- &#39;Adaptive noise&#39;]
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1">#</span>
-<span class="c1"># Number of records without abstract</span>
+<span class="c1"># Complete keywords based on abstract and title</span>
 <span class="c1">#</span>
-<span class="nb">len</span><span class="p">(</span><span class="n">pdf</span><span class="p">[</span><span class="n">pdf</span><span class="o">.</span><span class="n">Abstract</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">keywords_completation</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-0
-</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
@@ -647,9 +599,9 @@ Name: keywords, dtype: object
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1">#</span>
-<span class="c1"># Number of rows without title</span>
+<span class="c1"># Verify the number of rows without keywords</span>
 <span class="c1">#</span>
-<span class="nb">len</span><span class="p">(</span><span class="n">pdf</span><span class="p">[</span><span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)])</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">Keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)])</span>
 </pre></div>
 </div>
 </div>
@@ -667,76 +619,9 @@ Name: keywords, dtype: object
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#</span>
-<span class="c1"># Remove copyright character from abstract</span>
-<span class="c1">#</span>
-<span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;Abstract&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pdf</span><span class="o">.</span><span class="n">Abstract</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
-    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\u00a9</span><span class="s2">&quot;</span><span class="p">)]</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\u00a9</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="k">else</span> <span class="n">x</span>
-<span class="p">)</span>
+<span></span><span class="c1">### df.to_json(&quot;deletion-of-records.json&quot;, orient=&quot;records&quot;, lines=True)</span>
 </pre></div>
 </div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#</span>
-<span class="c1"># We combine title and abstract in a variable</span>
-<span class="c1">#</span>
-<span class="n">title_abstract</span> <span class="o">=</span> <span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;Abstract&quot;</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#</span>
-<span class="c1"># Extracts previous recorded keywords using the Keywords object.</span>
-<span class="c1">#</span>
-<span class="n">keywords_in_title_and_abstract</span> <span class="o">=</span> <span class="n">title_abstract</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
-    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">kyw</span><span class="o">.</span><span class="n">extract_from_text</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#</span>
-<span class="c1"># Adds the new keywords only to rows without keywords</span>
-<span class="c1">#</span>
-<span class="n">idx</span> <span class="o">=</span> <span class="n">pdf</span><span class="o">.</span><span class="n">keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
-<span class="n">pdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">&quot;keywords&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">keywords_in_title_and_abstract</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#</span>
-<span class="c1"># Verify the number of rows without keywords</span>
-<span class="c1">#</span>
-<span class="nb">len</span><span class="p">(</span><span class="n">pdf</span><span class="p">[</span><span class="n">pdf</span><span class="o">.</span><span class="n">keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)])</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-0
-</pre></div></div>
 </div>
 </div>
 </div>

@@ -311,6 +311,7 @@
 <span class="sd">        .. image:: images/network_occurrence_map_1.png</span>
 <span class="sd">            :width: 600px</span>
 <span class="sd">            :align: center</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
 
@@ -328,6 +329,7 @@
         <span class="c1">#    self._graph, pos=layout, labels=label_docs, **label_docs_props</span>
         <span class="c1"># )</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">draw_network_labels</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">label_terms</span><span class="p">,</span> <span class="o">**</span><span class="n">label_term_props</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_network_labels</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">label_docs</span><span class="p">,</span> <span class="o">**</span><span class="n">label_docs_props</span><span class="p">)</span>
 
         <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span></div>
 

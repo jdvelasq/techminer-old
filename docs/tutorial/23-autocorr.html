@@ -111,7 +111,6 @@
 <li class="toctree-l2"><a class="reference internal" href="22-citations-by-terms-by-year.html">Citations by terms by year</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Autocorrelation matrix (Experimental)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#Authors">Authors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Keywords">Keywords</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="24-ccorr.html">Correlation matrix (Experimental)</a></li>
@@ -454,33 +453,51 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="section" id="Autocorrelation-matrix-(Experimental)">
 <h1>Autocorrelation matrix (Experimental)<a class="headerlink" href="#Autocorrelation-matrix-(Experimental)" title="Permalink to this headline">¶</a></h1>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#</span>
-<span class="c1"># Data loading</span>
-<span class="c1">#</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;cleaned-data.json&quot;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">techminer</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">Plot</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">techminer</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">Plot</span><span class="p">,</span> <span class="n">heatmap</span>
+
+<span class="c1">#</span>
+<span class="c1"># Data loading</span>
+<span class="c1">#</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span>
+        <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;cleaned-data.json&quot;</span><span class="p">,</span>
+        <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span>
+        <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1">#</span>
+<span class="c1"># Columns of the dataframe</span>
+<span class="c1">#</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Index([&#39;Authors&#39;, &#39;Author(s) ID&#39;, &#39;Title&#39;, &#39;Year&#39;, &#39;Source title&#39;, &#39;Volume&#39;,
+       &#39;Issue&#39;, &#39;Art. No.&#39;, &#39;Page start&#39;, &#39;Page end&#39;, &#39;Page count&#39;, &#39;Cited by&#39;,
+       &#39;DOI&#39;, &#39;Affiliations&#39;, &#39;Document Type&#39;, &#39;Access Type&#39;, &#39;Source&#39;, &#39;EID&#39;,
+       &#39;Abstract&#39;, &#39;Author Keywords&#39;, &#39;Index Keywords&#39;, &#39;References&#39;,
+       &#39;keywords&#39;, &#39;CONF&#39;, &#39;fingerprint&#39;, &#39;keywords_cleaned&#39;, &#39;ID&#39;,
+       &#39;top_10_Authors_freq&#39;, &#39;top_10_keywords_freq&#39;,
+       &#39;top_10_Source_title_freq&#39;, &#39;top_10_Authors_cited_by&#39;,
+       &#39;top_10_keywords_cited_by&#39;, &#39;top_10_Source_title_cited_by&#39;],
+      dtype=&#39;object&#39;)
+</pre></div></div>
 </div>
 <div class="section" id="Authors">
 <h2>Authors<a class="headerlink" href="#Authors" title="Permalink to this headline">¶</a></h2>
@@ -492,8 +509,7 @@ div.rendered_html tbody tr:hover {
 <span></span><span class="c1">#</span>
 <span class="c1"># Top 10 most frequent authors</span>
 <span class="c1">#</span>
-<span class="n">top_authors</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">documents_by_term</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">top_authors</span> <span class="o">=</span> <span class="n">top_authors</span><span class="o">.</span><span class="n">Authors</span>
+<span class="n">top_authors</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">documents_by_term</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">Authors</span>
 <span class="n">top_authors</span>
 </pre></div>
 </div>
@@ -523,8 +539,7 @@ Name: Authors, dtype: object
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">matrix</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">autocorr</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">matrix</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">top_authors</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]]</span>
-<span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="n">row</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">matrix</span><span class="o">.</span><span class="n">index</span> <span class="k">if</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">top_authors</span><span class="o">.</span><span class="n">tolist</span><span class="p">()],:]</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">top_authors</span><span class="p">,</span><span class="n">top_authors</span><span class="p">]</span>
 <span class="n">matrix</span>
 </pre></div>
 </div>
@@ -715,14 +730,14 @@ Name: Authors, dtype: object
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f32369eccf8&gt;
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7efe323b88d0&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/tutorial_23-autocorr_7_1.png" src="../_images/tutorial_23-autocorr_7_1.png" />
+<img alt="../_images/tutorial_23-autocorr_6_1.png" src="../_images/tutorial_23-autocorr_6_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -730,100 +745,25 @@ Name: Authors, dtype: object
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># rdf.autocorr(column=&quot;Authors&quot;, sep=&quot;,&quot;, top_n=20).chord_diagram(figsize=(10, 10))</span>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">Plot</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span><span class="o">.</span><span class="n">chord_diagram</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7efe53550f28&gt;
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/tutorial_23-autocorr_8_0.png" src="../_images/tutorial_23-autocorr_8_0.png" />
-</div>
-</div>
-</div>
-<div class="section" id="Keywords">
-<h2>Keywords<a class="headerlink" href="#Keywords" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">rdf</span><span class="o">.</span><span class="n">auto_corr</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;keywords (cleaned)&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/tutorial_23-autocorr_10_0.png" src="../_images/tutorial_23-autocorr_10_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">rdf</span><span class="o">.</span><span class="n">auto_corr</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;keywords (cleaned)&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/tutorial_23-autocorr_11_0.png" src="../_images/tutorial_23-autocorr_11_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">rdf</span><span class="o">.</span><span class="n">auto_corr</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;keywords (cleaned)&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">14</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/tutorial_23-autocorr_12_0.png" src="../_images/tutorial_23-autocorr_12_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">rdf</span><span class="o">.</span><span class="n">auto_corr</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;keywords (cleaned)&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/tutorial_23-autocorr_13_0.png" src="../_images/tutorial_23-autocorr_13_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">rdf</span><span class="o">.</span><span class="n">auto_corr</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;keywords (cleaned)&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">chord_diagram</span><span class="p">(</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/tutorial_23-autocorr_14_0.png" src="../_images/tutorial_23-autocorr_14_0.png" />
+<img alt="../_images/tutorial_23-autocorr_7_1.png" src="../_images/tutorial_23-autocorr_7_1.png" />
 </div>
 </div>
 </div>

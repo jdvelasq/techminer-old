@@ -33,15 +33,18 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 1,
+   "execution_count": 2,
    "metadata": {},
    "outputs": [],
    "source": [
     "import pandas as pd\n",
     "\n",
-    "url = \"https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/\"\n",
-    "\n",
-    "pdf = pd.read_json(url + \"keyword-completation.json\", orient=\"records\", lines=True)"
+    "df = pd.read_json(\n",
+    "    \"https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/\"\n",
+    "    + \"keyword-completation.json\",\n",
+    "    orient=\"records\",\n",
+    "    lines=True,\n",
+    ")"
    ]
   },
   {
@@ -53,11 +56,11 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 2,
+   "execution_count": 3,
    "metadata": {},
    "outputs": [],
    "source": [
-    "pdf = pdf.applymap(lambda x: None if pd.isna(x) is True else x)"
+    "df = df.applymap(lambda x: None if pd.isna(x) is True else x)"
    ]
   },
   {
@@ -71,53 +74,52 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "This step aims to create a column (field) in the dataframe containing key terms for document selection. The columns `'Author Keywords'` and `'Index Keywords'` are joined in a new column is called `'keywords'`."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 3,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "pdf = pdf.assign(\n",
-    "    keywords=pdf[\"Author Keywords\"].map(lambda x: x.split(\";\") if x is not None else [])\n",
-    "    + pdf[\"Index Keywords\"].map(lambda x: x.split(\";\") if x is not None else [])\n",
-    ")\n",
-    "\n",
-    "#  remove blank spaces sorounding keywords\n",
-    "pdf[\"keywords\"] = pdf[\"keywords\"].map(lambda x: [e.strip() for e in x])\n",
-    "\n",
-    "#  join keywords in a new string\n",
-    "pdf[\"keywords\"] = pdf[\"keywords\"].map(lambda x: \";\".join(x))\n",
-    "\n",
-    "# converts in None empty keywords list\n",
-    "pdf[\"keywords\"] = pdf.keywords.map(lambda x: None if x == \"\" else x)"
+    "This step aims to create a column (field) in the dataframe containing key terms for document selection. The columns `'Author Keywords'` and `'Index Keywords'` are joined in a new column is called `'Keywords'`."
    ]
   },
   {
    "cell_type": "code",
    "execution_count": 4,
    "metadata": {},
+   "outputs": [],
+   "source": [
+    "from techminer import DataFrame\n",
+    "\n",
+    "df = DataFrame(df).keywords_fusion()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
    "outputs": [
     {
      "data": {
       "text/plain": [
-       "0    Component trends;Empirical mode decomposition;...\n",
-       "1    Earnings;Financial data processing;Information...\n",
-       "2    And financial time series prediction;Dynamic n...\n",
-       "3    Artificial intelligence;Deep learning;Financia...\n",
-       "4    Commerce;Deep learning;Electronic trading;Fina...\n",
-       "Name: keywords, dtype: object"
+       "0      Component trends;Empirical mode decomposition;...\n",
+       "1      Consumer price index;Costs;Distributed represe...\n",
+       "2      Algorithms;And financial time series predictio...\n",
+       "3      Artificial intelligence;Auto-regressive exogen...\n",
+       "4      Commerce;Deep learning;Electronic trading;Fina...\n",
+       "                             ...                        \n",
+       "147                                                 None\n",
+       "148                                                 None\n",
+       "149                                                 None\n",
+       "150                                                 None\n",
+       "151                                                 None\n",
+       "Name: Keywords, Length: 152, dtype: object"
       ]
      },
-     "execution_count": 4,
+     "execution_count": 5,
      "metadata": {},
      "output_type": "execute_result"
     }
    ],
    "source": [
-    "pdf.keywords.head()"
+    "#\n",
+    "# New column Keywords:\n",
+    "#\n",
+    "df.Keywords"
    ]
   },
   {
@@ -129,7 +131,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 5,
+   "execution_count": 6,
    "metadata": {},
    "outputs": [
     {
@@ -138,18 +140,18 @@
        "8"
       ]
      },
-     "execution_count": 5,
+     "execution_count": 6,
      "metadata": {},
      "output_type": "execute_result"
     }
    ],
    "source": [
-    "len(pdf[pdf.keywords.map(lambda x: x is None)])"
+    "len(df[df.Keywords.map(lambda x: x is None)])"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 6,
+   "execution_count": 7,
    "metadata": {},
    "outputs": [
     {
@@ -163,58 +165,7 @@
        "149    None\n",
        "150    None\n",
        "151    None\n",
-       "Name: keywords, dtype: object"
-      ]
-     },
-     "execution_count": 6,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "# Verification:\n",
-    "\n",
-    "pdf.keywords[\n",
-    "    (pdf[\"Author Keywords\"].map(lambda x: x is None))\n",
-    "    & (pdf[\"Index Keywords\"].map(lambda x: x is None))\n",
-    "]"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "In the following code, a `Keywords` object is created. The content of column `keywords` is added to the object."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 7,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "['(2D) 2 PCA',\n",
-       " '(2D) <sup>2</sup> PCA',\n",
-       " 'AMAPE',\n",
-       " 'ANN',\n",
-       " 'ARIMA',\n",
-       " 'ARIMA Model',\n",
-       " 'ARIMA model',\n",
-       " 'ARIMA modeling',\n",
-       " 'Absolute values',\n",
-       " 'Abstract representation',\n",
-       " 'Accounts receivable',\n",
-       " 'Accuracy Improvement',\n",
-       " 'Accuracy of classifications',\n",
-       " 'Accurate prediction',\n",
-       " 'Activation layer',\n",
-       " 'AdaBoost algorithm',\n",
-       " 'Adam Optimizer',\n",
-       " 'Adaptive boosting',\n",
-       " 'Adaptive gradient algorithm',\n",
-       " 'Adaptive noise']"
+       "Name: Keywords, dtype: object"
       ]
      },
      "execution_count": 7,
@@ -223,34 +174,25 @@
     }
    ],
    "source": [
-    "from techminer.keywords import Keywords\n",
-    "\n",
-    "kyw = Keywords()\n",
-    "kyw.add_keywords(pdf.keywords, sep=\";\")\n",
-    "kyw.keywords[0:20]"
+    "#\n",
+    "# Verification:\n",
+    "#\n",
+    "df.Keywords[\n",
+    "    (df[\"Author Keywords\"].map(lambda x: x is None))\n",
+    "    & (df[\"Index Keywords\"].map(lambda x: x is None))\n",
+    "]"
    ]
   },
   {
    "cell_type": "code",
    "execution_count": 8,
    "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "0"
-      ]
-     },
-     "execution_count": 8,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
+   "outputs": [],
    "source": [
     "#\n",
-    "# Number of records without abstract\n",
+    "# Complete keywords based on abstract and title\n",
     "#\n",
-    "len(pdf[pdf.Abstract.map(lambda x: x is None)])"
+    "df = DataFrame(df).keywords_completation()"
    ]
   },
   {
@@ -271,9 +213,9 @@
    ],
    "source": [
     "#\n",
-    "# Number of rows without title\n",
+    "# Verify the number of rows without keywords\n",
     "#\n",
-    "len(pdf[pdf[\"Title\"].map(lambda x: x is None)])"
+    "len(df[df.Keywords.map(lambda x: x is None)])"
    ]
   },
   {
@@ -282,76 +224,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "#\n",
-    "# Remove copyright character from abstract\n",
-    "#\n",
-    "pdf[\"Abstract\"] = pdf.Abstract.map(\n",
-    "    lambda x: x[0 : x.find(\"\\u00a9\")]\n",
-    "    if isinstance(x, str) and x.find(\"\\u00a9\") != -1\n",
-    "    else x\n",
-    ")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 11,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "#\n",
-    "# We combine title and abstract in a variable\n",
-    "#\n",
-    "title_abstract = pdf[\"Title\"] + \" \" + pdf[\"Abstract\"]"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 12,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "#\n",
-    "# Extracts previous recorded keywords using the Keywords object.\n",
-    "#\n",
-    "keywords_in_title_and_abstract = title_abstract.map(\n",
-    "    lambda x: kyw.extract_from_text(x, sep=\";\")\n",
-    ")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 13,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "#\n",
-    "# Adds the new keywords only to rows without keywords\n",
-    "#\n",
-    "idx = pdf.keywords.map(lambda x: x is None)\n",
-    "pdf.loc[idx, \"keywords\"] = keywords_in_title_and_abstract[idx]"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 14,
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "0"
-      ]
-     },
-     "execution_count": 14,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "#\n",
-    "# Verify the number of rows without keywords\n",
-    "#\n",
-    "len(pdf[pdf.keywords.map(lambda x: x is None)])"
+    "### df.to_json(\"deletion-of-records.json\", orient=\"records\", lines=True)"
    ]
   }
  ],

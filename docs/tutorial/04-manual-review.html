@@ -451,7 +451,12 @@ div.rendered_html tbody tr:hover {
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">pdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="s2">&quot;data-03.json&quot;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span>
+    <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
+    <span class="o">+</span> <span class="s2">&quot;manual-review.json&quot;</span><span class="p">,</span>
+    <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span>
+    <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -461,11 +466,11 @@ div.rendered_html tbody tr:hover {
 <p>To mark the registers, a new boolean column called <code class="docutils literal notranslate"><span class="pre">'SELECTED'</span></code> will be created. In this tutorial, we call group to this class of columns.</p>
 <p>In the next code, the column is created with a default value of <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">pdf</span><span class="p">[</span><span class="s2">&quot;SELECTED&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span></span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;SELECTED&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 </pre></div>
 </div>
 </div>
@@ -474,12 +479,12 @@ div.rendered_html tbody tr:hover {
 <h2>Manual review using external software<a class="headerlink" href="#Manual-review-using-external-software" title="Permalink to this headline">¶</a></h2>
 <p>It is possible to save the dataframe to disk for manual review using, for example, an external editor. In the following code, the columns <code class="docutils literal notranslate"><span class="pre">'Title'</span></code>, <code class="docutils literal notranslate"><span class="pre">'Author</span> <span class="pre">Keywords'</span></code>, <code class="docutils literal notranslate"><span class="pre">'Index</span> <span class="pre">Keywords'</span></code>, <code class="docutils literal notranslate"><span class="pre">'Abstract'</span></code>, and <code class="docutils literal notranslate"><span class="pre">'SELECTED'</span></code> are saved in json format.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">pdf</span><span class="p">[[</span><span class="s2">&quot;Title&quot;</span><span class="p">,</span> <span class="s2">&quot;Author Keywords&quot;</span><span class="p">,</span> <span class="s2">&quot;Index Keywords&quot;</span><span class="p">,</span> <span class="s2">&quot;Abstract&quot;</span><span class="p">,</span> <span class="s2">&quot;SELECTED&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span>
-    <span class="s2">&quot;data-03-for-review.json&quot;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span>
+<span></span><span class="n">df</span><span class="p">[[</span><span class="s2">&quot;Title&quot;</span><span class="p">,</span> <span class="s2">&quot;Author Keywords&quot;</span><span class="p">,</span> <span class="s2">&quot;Index Keywords&quot;</span><span class="p">,</span> <span class="s2">&quot;Abstract&quot;</span><span class="p">,</span> <span class="s2">&quot;SELECTED&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span>
+    <span class="s2">&quot;data-for-review.json&quot;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -487,18 +492,23 @@ div.rendered_html tbody tr:hover {
 <p>In the following figure, a partial view of the file is presented. Note that the use of json format allows the user to identify easily each field.</p>
 <p><img alt="screen-capture-4.jpg" src="../_images/screen_capture_4.jpg" /></p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">reviewed</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="s2">&quot;data-03-reviewed.json&quot;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span></span><span class="n">reviewed</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span>
+    <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
+    <span class="o">+</span> <span class="s2">&quot;manual-reviewed.json&quot;</span><span class="p">,</span>
+    <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span>
+    <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="n">reviewed</span><span class="o">.</span><span class="n">SELECTED</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -512,20 +522,11 @@ Name: SELECTED, dtype: bool
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">pdf</span> <span class="o">=</span> <span class="n">pdf</span><span class="p">[</span><span class="n">reviewed</span><span class="o">.</span><span class="n">SELECTED</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">pdf</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="s2">&quot;data-04.json&quot;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">reviewed</span><span class="o">.</span><span class="n">SELECTED</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>

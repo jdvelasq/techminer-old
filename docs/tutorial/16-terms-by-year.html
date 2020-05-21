@@ -456,37 +456,56 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="section" id="Terms-by-year">
 <h1>Terms by year<a class="headerlink" href="#Terms-by-year" title="Permalink to this headline">¶</a></h1>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#</span>
-<span class="c1"># Data loading</span>
-<span class="c1">#</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;cleaned-data.json&quot;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">techminer</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">Plot</span>
+<span class="kn">from</span> <span class="nn">techminer</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">Plot</span><span class="p">,</span> <span class="n">heatmap</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="c1">#</span>
+<span class="c1"># Data loading</span>
+<span class="c1">#</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span>
+        <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;cleaned-data.json&quot;</span><span class="p">,</span>
+        <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span>
+        <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1">#</span>
+<span class="c1"># Columns of the dataframe</span>
+<span class="c1">#</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Index([&#39;Authors&#39;, &#39;Author(s) ID&#39;, &#39;Title&#39;, &#39;Year&#39;, &#39;Source title&#39;, &#39;Volume&#39;,
+       &#39;Issue&#39;, &#39;Art. No.&#39;, &#39;Page start&#39;, &#39;Page end&#39;, &#39;Page count&#39;, &#39;Cited by&#39;,
+       &#39;DOI&#39;, &#39;Affiliations&#39;, &#39;Document Type&#39;, &#39;Access Type&#39;, &#39;Source&#39;, &#39;EID&#39;,
+       &#39;Abstract&#39;, &#39;Author Keywords&#39;, &#39;Index Keywords&#39;, &#39;References&#39;,
+       &#39;keywords&#39;, &#39;CONF&#39;, &#39;fingerprint&#39;, &#39;keywords_cleaned&#39;, &#39;ID&#39;,
+       &#39;top_10_Authors_freq&#39;, &#39;top_10_keywords_freq&#39;,
+       &#39;top_10_Source_title_freq&#39;, &#39;top_10_Authors_cited_by&#39;,
+       &#39;top_10_keywords_cited_by&#39;, &#39;top_10_Source_title_cited_by&#39;],
+      dtype=&#39;object&#39;)
+</pre></div></div>
 </div>
 <div class="section" id="Document-type">
 <h2>Document type<a class="headerlink" href="#Document-type" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -494,8 +513,196 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Document Type</th>
+      <th>Year</th>
+      <th>Num Documents</th>
+      <th>ID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Article</td>
+      <td>2010</td>
+      <td>1</td>
+      <td>[143]</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Conference Paper</td>
+      <td>2010</td>
+      <td>1</td>
+      <td>[144]</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Conference Review</td>
+      <td>2010</td>
+      <td>1</td>
+      <td>[142]</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Article</td>
+      <td>2011</td>
+      <td>1</td>
+      <td>[140]</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Conference Paper</td>
+      <td>2011</td>
+      <td>1</td>
+      <td>[141]</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Article</td>
+      <td>2012</td>
+      <td>1</td>
+      <td>[138]</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Conference Paper</td>
+      <td>2012</td>
+      <td>1</td>
+      <td>[139]</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Article</td>
+      <td>2013</td>
+      <td>3</td>
+      <td>[134, 135, 136]</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Book Chapter</td>
+      <td>2013</td>
+      <td>1</td>
+      <td>[137]</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Article</td>
+      <td>2014</td>
+      <td>2</td>
+      <td>[131, 132]</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Conference Paper</td>
+      <td>2014</td>
+      <td>1</td>
+      <td>[133]</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Article</td>
+      <td>2015</td>
+      <td>1</td>
+      <td>[130]</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Conference Paper</td>
+      <td>2015</td>
+      <td>1</td>
+      <td>[129]</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Article</td>
+      <td>2016</td>
+      <td>3</td>
+      <td>[125, 127, 128]</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Conference Paper</td>
+      <td>2016</td>
+      <td>2</td>
+      <td>[124, 126]</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Conference Paper</td>
+      <td>2017</td>
+      <td>12</td>
+      <td>[106, 107, 109, 110, 114, 115, 116, 118, 119, ...</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Article</td>
+      <td>2017</td>
+      <td>7</td>
+      <td>[105, 108, 111, 112, 113, 117, 123]</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Conference Paper</td>
+      <td>2018</td>
+      <td>42</td>
+      <td>[53, 55, 56, 57, 59, 60, 61, 63, 64, 65, 66, 6...</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Article</td>
+      <td>2018</td>
+      <td>8</td>
+      <td>[54, 58, 62, 67, 68, 80, 103, 104]</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>Article in Press</td>
+      <td>2018</td>
+      <td>2</td>
+      <td>[92, 95]</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>Conference Paper</td>
+      <td>2019</td>
+      <td>28</td>
+      <td>[7, 8, 9, 12, 13, 14, 15, 16, 17, 19, 20, 21, ...</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>Article</td>
+      <td>2019</td>
+      <td>25</td>
+      <td>[0, 1, 2, 3, 4, 5, 6, 10, 11, 18, 25, 27, 28, ...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -503,29 +710,479 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Article</th>
+      <th>Article in Press</th>
+      <th>Book Chapter</th>
+      <th>Conference Paper</th>
+      <th>Conference Review</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2010</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2011</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2012</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2013</th>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2014</th>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2015</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2016</th>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2017</th>
+      <td>7</td>
+      <td>0</td>
+      <td>0</td>
+      <td>12</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2018</th>
+      <td>8</td>
+      <td>2</td>
+      <td>0</td>
+      <td>42</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2019</th>
+      <td>25</td>
+      <td>0</td>
+      <td>0</td>
+      <td>28</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">Plot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Document Type&quot;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
+<span></span><span class="n">heatmap</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Document Type&quot;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<style  type="text/css" >
+    #T_4a06fac8_9add_11ea_ba52_0242ac110002row0_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row0_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row0_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row0_col3 {
+            background-color:  #f2f8fd;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row0_col4 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row1_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row1_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row1_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row1_col3 {
+            background-color:  #f2f8fd;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row1_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row2_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row2_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row2_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row2_col3 {
+            background-color:  #f2f8fd;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row2_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row3_col0 {
+            background-color:  #e7f0fa;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row3_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row3_col2 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row3_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row3_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row4_col0 {
+            background-color:  #eff6fc;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row4_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row4_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row4_col3 {
+            background-color:  #f2f8fd;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row4_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row5_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row5_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row5_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row5_col3 {
+            background-color:  #f2f8fd;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row5_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row6_col0 {
+            background-color:  #e7f0fa;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row6_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row6_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row6_col3 {
+            background-color:  #eef5fc;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row6_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row7_col0 {
+            background-color:  #c6dbef;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row7_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row7_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row7_col3 {
+            background-color:  #bad6eb;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row7_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row8_col0 {
+            background-color:  #b9d6ea;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row8_col1 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row8_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row8_col3 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row8_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row9_col0 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row9_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row9_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row9_col3 {
+            background-color:  #3787c0;
+            color:  #000000;
+        }    #T_4a06fac8_9add_11ea_ba52_0242ac110002row9_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }</style><table id="T_4a06fac8_9add_11ea_ba52_0242ac110002" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >Article</th>        <th class="col_heading level0 col1" >Article in Press</th>        <th class="col_heading level0 col2" >Book Chapter</th>        <th class="col_heading level0 col3" >Conference Paper</th>        <th class="col_heading level0 col4" >Conference Review</th>    </tr></thead><tbody>
+                <tr>
+                        <th id="T_4a06fac8_9add_11ea_ba52_0242ac110002level0_row0" class="row_heading level0 row0" >2010</th>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row0_col0" class="data row0 col0" >1</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row0_col1" class="data row0 col1" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row0_col2" class="data row0 col2" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row0_col3" class="data row0 col3" >1</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row0_col4" class="data row0 col4" >1</td>
+            </tr>
+            <tr>
+                        <th id="T_4a06fac8_9add_11ea_ba52_0242ac110002level0_row1" class="row_heading level0 row1" >2011</th>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row1_col0" class="data row1 col0" >1</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row1_col1" class="data row1 col1" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row1_col2" class="data row1 col2" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row1_col3" class="data row1 col3" >1</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row1_col4" class="data row1 col4" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_4a06fac8_9add_11ea_ba52_0242ac110002level0_row2" class="row_heading level0 row2" >2012</th>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row2_col0" class="data row2 col0" >1</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row2_col1" class="data row2 col1" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row2_col2" class="data row2 col2" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row2_col3" class="data row2 col3" >1</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row2_col4" class="data row2 col4" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_4a06fac8_9add_11ea_ba52_0242ac110002level0_row3" class="row_heading level0 row3" >2013</th>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row3_col0" class="data row3 col0" >3</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row3_col1" class="data row3 col1" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row3_col2" class="data row3 col2" >1</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row3_col3" class="data row3 col3" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row3_col4" class="data row3 col4" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_4a06fac8_9add_11ea_ba52_0242ac110002level0_row4" class="row_heading level0 row4" >2014</th>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row4_col0" class="data row4 col0" >2</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row4_col1" class="data row4 col1" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row4_col2" class="data row4 col2" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row4_col3" class="data row4 col3" >1</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row4_col4" class="data row4 col4" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_4a06fac8_9add_11ea_ba52_0242ac110002level0_row5" class="row_heading level0 row5" >2015</th>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row5_col0" class="data row5 col0" >1</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row5_col1" class="data row5 col1" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row5_col2" class="data row5 col2" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row5_col3" class="data row5 col3" >1</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row5_col4" class="data row5 col4" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_4a06fac8_9add_11ea_ba52_0242ac110002level0_row6" class="row_heading level0 row6" >2016</th>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row6_col0" class="data row6 col0" >3</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row6_col1" class="data row6 col1" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row6_col2" class="data row6 col2" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row6_col3" class="data row6 col3" >2</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row6_col4" class="data row6 col4" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_4a06fac8_9add_11ea_ba52_0242ac110002level0_row7" class="row_heading level0 row7" >2017</th>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row7_col0" class="data row7 col0" >7</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row7_col1" class="data row7 col1" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row7_col2" class="data row7 col2" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row7_col3" class="data row7 col3" >12</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row7_col4" class="data row7 col4" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_4a06fac8_9add_11ea_ba52_0242ac110002level0_row8" class="row_heading level0 row8" >2018</th>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row8_col0" class="data row8 col0" >8</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row8_col1" class="data row8 col1" >2</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row8_col2" class="data row8 col2" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row8_col3" class="data row8 col3" >42</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row8_col4" class="data row8 col4" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_4a06fac8_9add_11ea_ba52_0242ac110002level0_row9" class="row_heading level0 row9" >2019</th>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row9_col0" class="data row9 col0" >25</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row9_col1" class="data row9 col1" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row9_col2" class="data row9 col2" >0</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row9_col3" class="data row9 col3" >28</td>
+                        <td id="T_4a06fac8_9add_11ea_ba52_0242ac110002row9_col4" class="data row9 col4" >0</td>
+            </tr>
+    </tbody></table></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">Plot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Document Type&quot;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7faecdce06a0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorial_16-terms-by-year_7_1.png" src="../_images/tutorial_16-terms-by-year_7_1.png" />
 </div>
 </div>
 </div>
 <div class="section" id="Source-title">
 <h2>Source title<a class="headerlink" href="#Source-title" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">df</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Source title&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span></span><span class="n">df</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Source title&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Source title</th>
+      <th>Year</th>
+      <th>Num Documents</th>
+      <th>ID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>European Journal of Finance</td>
+      <td>2010</td>
+      <td>1</td>
+      <td>[143]</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Proceedings - 2010 6th International Conferenc...</td>
+      <td>2010</td>
+      <td>1</td>
+      <td>[144]</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Proceedings of the 18th European Symposium on ...</td>
+      <td>2010</td>
+      <td>1</td>
+      <td>[142]</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Applied Soft Computing Journal</td>
+      <td>2011</td>
+      <td>1</td>
+      <td>[141]</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Expert Systems with Applications</td>
+      <td>2011</td>
+      <td>1</td>
+      <td>[140]</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -533,24 +1190,142 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Source title</th>
+      <th>Year</th>
+      <th>Num Documents</th>
+      <th>ID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>30</th>
+      <td>Lecture Notes in Computer Science (including s...</td>
+      <td>2017</td>
+      <td>4</td>
+      <td>[119, 120, 121, 122]</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>ACM International Conference Proceeding Series</td>
+      <td>2018</td>
+      <td>2</td>
+      <td>[69, 75]</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>Applied Soft Computing Journal</td>
+      <td>2018</td>
+      <td>2</td>
+      <td>[67, 80]</td>
+    </tr>
+    <tr>
+      <th>62</th>
+      <td>Procedia Computer Science</td>
+      <td>2018</td>
+      <td>2</td>
+      <td>[90, 91]</td>
+    </tr>
+    <tr>
+      <th>74</th>
+      <td>Proceedings of the International Joint Confere...</td>
+      <td>2018</td>
+      <td>2</td>
+      <td>[63, 64]</td>
+    </tr>
+    <tr>
+      <th>100</th>
+      <td>Lecture Notes in Computer Science (including s...</td>
+      <td>2019</td>
+      <td>4</td>
+      <td>[36, 42, 45, 49]</td>
+    </tr>
+    <tr>
+      <th>82</th>
+      <td>Advances in Intelligent Systems and Computing</td>
+      <td>2019</td>
+      <td>3</td>
+      <td>[41, 51, 52]</td>
+    </tr>
+    <tr>
+      <th>87</th>
+      <td>Expert Systems with Applications</td>
+      <td>2019</td>
+      <td>3</td>
+      <td>[0, 1, 11]</td>
+    </tr>
+    <tr>
+      <th>101</th>
+      <td>Neural Computing and Applications</td>
+      <td>2019</td>
+      <td>3</td>
+      <td>[27, 37, 44]</td>
+    </tr>
+    <tr>
+      <th>99</th>
+      <td>Knowledge-Based Systems</td>
+      <td>2019</td>
+      <td>2</td>
+      <td>[4, 25]</td>
+    </tr>
+    <tr>
+      <th>103</th>
+      <td>Procedia Computer Science</td>
+      <td>2019</td>
+      <td>2</td>
+      <td>[40, 48]</td>
+    </tr>
+    <tr>
+      <th>104</th>
+      <td>Proceedings - 17th IEEE International Conferen...</td>
+      <td>2019</td>
+      <td>2</td>
+      <td>[23, 24]</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">Plot</span><span class="p">(</span>
     <span class="n">df</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Source title&quot;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="p">)</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fbe3e3bc668&gt;
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7faec9f7e390&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -561,51 +1336,268 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1">#</span>
 <span class="c1"># Selects the top 10 journals by frequency</span>
 <span class="c1">#</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">top_sources</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">top_10_Source_title_freq</span><span class="p">])</span>
-<span class="n">Plot</span><span class="p">(</span><span class="n">top_sources</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Source title&quot;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span>
-    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span>
-<span class="p">)</span>
+<span class="n">top_journals</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">documents_by_term</span><span class="p">(</span><span class="s2">&quot;Source title&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)[</span><span class="s2">&quot;Source title&quot;</span><span class="p">]</span>
+<span class="n">top_journals</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fbeccbe0240&gt;
+0    Lecture Notes in Computer Science (including s...
+1                     Expert Systems with Applications
+2                                          IEEE Access
+3                            Procedia Computer Science
+4        Advances in Intelligent Systems and Computing
+5                       Applied Soft Computing Journal
+6                    Neural Computing and Applications
+7       ACM International Conference Proceeding Series
+8    Communications in Computer and Information Sci...
+9    International Journal of Circuits, Systems and...
+Name: Source title, dtype: object
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Matrix of documents by `Source title` by `Year`</span>
+<span class="c1">#</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Source title&quot;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1">#</span>
+<span class="c1"># Column filtering by `top_journals`</span>
+<span class="c1">#</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">top_journals</span><span class="p">]</span>
+<span class="n">matrix</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Lecture Notes in Computer Science (including subseries Lecture Notes in Artificial Intelligence and Lecture Notes in Bioinformatics)</th>
+      <th>Expert Systems with Applications</th>
+      <th>IEEE Access</th>
+      <th>Procedia Computer Science</th>
+      <th>Advances in Intelligent Systems and Computing</th>
+      <th>Applied Soft Computing Journal</th>
+      <th>Neural Computing and Applications</th>
+      <th>ACM International Conference Proceeding Series</th>
+      <th>Communications in Computer and Information Science</th>
+      <th>International Journal of Circuits, Systems and Signal Processing</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2010</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2011</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2012</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2013</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2014</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2015</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2016</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2017</th>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2018</th>
+      <td>9</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2019</th>
+      <td>4</td>
+      <td>3</td>
+      <td>5</td>
+      <td>2</td>
+      <td>3</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Heatmap of number of documents by top journals per year</span>
+<span class="c1">#</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">Plot</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7faec9dd92e8&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/tutorial_16-terms-by-year_12_1.png" src="../_images/tutorial_16-terms-by-year_12_1.png" />
+<img alt="../_images/tutorial_16-terms-by-year_14_1.png" src="../_images/tutorial_16-terms-by-year_14_1.png" />
 </div>
 </div>
 </div>
 <div class="section" id="Authors">
 <h2>Authors<a class="headerlink" href="#Authors" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">df</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span></span><span class="n">df</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -636,264 +1628,572 @@ div.rendered_html tbody tr:hover {
   <tbody>
     <tr>
       <th>0</th>
-      <td>Ghazali R.</td>
-      <td>2011</td>
+      <td>Dunis C.L.</td>
+      <td>2010</td>
       <td>1</td>
-      <td>[140]</td>
+      <td>[143]</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>Hsiao H.-F.</td>
-      <td>2011</td>
+      <td>Laws J.</td>
+      <td>2010</td>
       <td>1</td>
-      <td>[141]</td>
+      <td>[143]</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>Hsieh T.-J.</td>
-      <td>2011</td>
+      <td>Lin X.(1)</td>
+      <td>2010</td>
       <td>1</td>
-      <td>[141]</td>
+      <td>[144]</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>Hussain A.J.</td>
-      <td>2011</td>
+      <td>Sermpinis G.</td>
+      <td>2010</td>
       <td>1</td>
-      <td>[140]</td>
+      <td>[143]</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>Liatsis P.</td>
-      <td>2011</td>
+      <td>Song Y.(1)</td>
+      <td>2010</td>
       <td>1</td>
-      <td>[140]</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>Yeh W.-C.</td>
-      <td>2011</td>
-      <td>1</td>
-      <td>[141]</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>Al-Askar H.</td>
-      <td>2014</td>
-      <td>1</td>
-      <td>[133]</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>Al-Jumeily D.</td>
-      <td>2014</td>
-      <td>1</td>
-      <td>[133]</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>Hussain A.J.</td>
-      <td>2014</td>
-      <td>1</td>
-      <td>[133]</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>Di Persio L.</td>
-      <td>2016</td>
-      <td>1</td>
-      <td>[127]</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>Honchar O.</td>
-      <td>2016</td>
-      <td>1</td>
-      <td>[127]</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>Bohte S.</td>
-      <td>2017</td>
-      <td>1</td>
-      <td>[120]</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>Borovykh A.</td>
-      <td>2017</td>
-      <td>1</td>
-      <td>[120]</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>Buczkowski P.</td>
-      <td>2017</td>
-      <td>1</td>
-      <td>[122]</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>Figueroa-Garcia J.C.</td>
-      <td>2017</td>
-      <td>1</td>
-      <td>[121]</td>
-    </tr>
-    <tr>
-      <th>15</th>
-      <td>Franco-Franco C.</td>
-      <td>2017</td>
-      <td>1</td>
-      <td>[121]</td>
-    </tr>
-    <tr>
-      <th>16</th>
-      <td>LoPez-Santana E.</td>
-      <td>2017</td>
-      <td>1</td>
-      <td>[121]</td>
-    </tr>
-    <tr>
-      <th>17</th>
-      <td>Oosterlee C.W.</td>
-      <td>2017</td>
-      <td>1</td>
-      <td>[120]</td>
-    </tr>
-    <tr>
-      <th>18</th>
-      <td>Xu L.</td>
-      <td>2017</td>
-      <td>1</td>
-      <td>[119]</td>
-    </tr>
-    <tr>
-      <th>19</th>
-      <td>Yu H.</td>
-      <td>2017</td>
-      <td>1</td>
-      <td>[119]</td>
+      <td>[144]</td>
     </tr>
   </tbody>
 </table>
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">top_authors</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">top_10_Authors_freq</span><span class="p">])</span>
-<span class="n">top_authors</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span></span><span class="n">top_authors</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">documents_by_term</span><span class="p">(</span><span class="s2">&quot;Authors&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">Authors</span>
+<span class="n">top_authors</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0       Arevalo A.
+1       Gabbouj M.
+2     Hernandez G.
+3     Hussain A.J.
+4     Iosifidis A.
+5    Kanniainen J.
+6          Leon D.
+7          Nino J.
+8      Passalis N.
+9      Sandoval J.
+Name: Authors, dtype: object
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Matrix of documents by `Authors` per`Year`</span>
+<span class="c1">#</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1">#</span>
+<span class="c1"># Column filtering by `top_journals`</span>
+<span class="c1">#</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">top_authors</span><span class="p">]</span>
+<span class="n">heatmap</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Al-Askar H.</th>
-      <th>Al-Jumeily D.</th>
-      <th>Arevalo A.</th>
-      <th>Ghazali R.</th>
-      <th>Hernandez G.</th>
-      <th>Hussain A.J.</th>
-      <th>Leon D.</th>
-      <th>Liatsis P.</th>
-      <th>Nino J.</th>
-      <th>Sandoval J.</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>2011</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>2014</th>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>2018</th>
-      <td>0</td>
-      <td>0</td>
-      <td>2</td>
-      <td>0</td>
-      <td>2</td>
-      <td>0</td>
-      <td>2</td>
-      <td>0</td>
-      <td>2</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>2019</th>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+<style  type="text/css" >
+    #T_894d170c_9ade_11ea_ba52_0242ac110002row0_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row0_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row0_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row0_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row0_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row0_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row0_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row0_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row0_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row0_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row1_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row1_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row1_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row1_col3 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row1_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row1_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row1_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row1_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row1_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row1_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row2_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row2_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row2_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row2_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row2_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row2_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row2_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row2_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row2_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row2_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row3_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row3_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row3_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row3_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row3_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row3_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row3_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row3_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row3_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row3_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row4_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row4_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row4_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row4_col3 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row4_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row4_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row4_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row4_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row4_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row4_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row5_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row5_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row5_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row5_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row5_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row5_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row5_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row5_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row5_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row5_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row6_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row6_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row6_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row6_col3 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row6_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row6_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row6_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row6_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row6_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row6_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row7_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row7_col1 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row7_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row7_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row7_col4 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row7_col5 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row7_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row7_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row7_col8 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row7_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row8_col0 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row8_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row8_col2 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row8_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row8_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row8_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row8_col6 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row8_col7 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row8_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row8_col9 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row9_col0 {
+            background-color:  #6aaed6;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row9_col1 {
+            background-color:  #6aaed6;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row9_col2 {
+            background-color:  #6aaed6;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row9_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row9_col4 {
+            background-color:  #6aaed6;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row9_col5 {
+            background-color:  #6aaed6;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row9_col6 {
+            background-color:  #6aaed6;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row9_col7 {
+            background-color:  #6aaed6;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row9_col8 {
+            background-color:  #6aaed6;
+            color:  #000000;
+        }    #T_894d170c_9ade_11ea_ba52_0242ac110002row9_col9 {
+            background-color:  #6aaed6;
+            color:  #000000;
+        }</style><table id="T_894d170c_9ade_11ea_ba52_0242ac110002" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >Arevalo A.</th>        <th class="col_heading level0 col1" >Gabbouj M.</th>        <th class="col_heading level0 col2" >Hernandez G.</th>        <th class="col_heading level0 col3" >Hussain A.J.</th>        <th class="col_heading level0 col4" >Iosifidis A.</th>        <th class="col_heading level0 col5" >Kanniainen J.</th>        <th class="col_heading level0 col6" >Leon D.</th>        <th class="col_heading level0 col7" >Nino J.</th>        <th class="col_heading level0 col8" >Passalis N.</th>        <th class="col_heading level0 col9" >Sandoval J.</th>    </tr></thead><tbody>
+                <tr>
+                        <th id="T_894d170c_9ade_11ea_ba52_0242ac110002level0_row0" class="row_heading level0 row0" >2010</th>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row0_col0" class="data row0 col0" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row0_col1" class="data row0 col1" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row0_col2" class="data row0 col2" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row0_col3" class="data row0 col3" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row0_col4" class="data row0 col4" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row0_col5" class="data row0 col5" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row0_col6" class="data row0 col6" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row0_col7" class="data row0 col7" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row0_col8" class="data row0 col8" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row0_col9" class="data row0 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_894d170c_9ade_11ea_ba52_0242ac110002level0_row1" class="row_heading level0 row1" >2011</th>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row1_col0" class="data row1 col0" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row1_col1" class="data row1 col1" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row1_col2" class="data row1 col2" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row1_col3" class="data row1 col3" >1</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row1_col4" class="data row1 col4" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row1_col5" class="data row1 col5" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row1_col6" class="data row1 col6" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row1_col7" class="data row1 col7" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row1_col8" class="data row1 col8" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row1_col9" class="data row1 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_894d170c_9ade_11ea_ba52_0242ac110002level0_row2" class="row_heading level0 row2" >2012</th>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row2_col0" class="data row2 col0" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row2_col1" class="data row2 col1" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row2_col2" class="data row2 col2" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row2_col3" class="data row2 col3" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row2_col4" class="data row2 col4" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row2_col5" class="data row2 col5" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row2_col6" class="data row2 col6" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row2_col7" class="data row2 col7" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row2_col8" class="data row2 col8" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row2_col9" class="data row2 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_894d170c_9ade_11ea_ba52_0242ac110002level0_row3" class="row_heading level0 row3" >2013</th>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row3_col0" class="data row3 col0" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row3_col1" class="data row3 col1" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row3_col2" class="data row3 col2" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row3_col3" class="data row3 col3" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row3_col4" class="data row3 col4" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row3_col5" class="data row3 col5" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row3_col6" class="data row3 col6" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row3_col7" class="data row3 col7" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row3_col8" class="data row3 col8" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row3_col9" class="data row3 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_894d170c_9ade_11ea_ba52_0242ac110002level0_row4" class="row_heading level0 row4" >2014</th>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row4_col0" class="data row4 col0" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row4_col1" class="data row4 col1" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row4_col2" class="data row4 col2" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row4_col3" class="data row4 col3" >1</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row4_col4" class="data row4 col4" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row4_col5" class="data row4 col5" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row4_col6" class="data row4 col6" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row4_col7" class="data row4 col7" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row4_col8" class="data row4 col8" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row4_col9" class="data row4 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_894d170c_9ade_11ea_ba52_0242ac110002level0_row5" class="row_heading level0 row5" >2015</th>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row5_col0" class="data row5 col0" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row5_col1" class="data row5 col1" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row5_col2" class="data row5 col2" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row5_col3" class="data row5 col3" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row5_col4" class="data row5 col4" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row5_col5" class="data row5 col5" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row5_col6" class="data row5 col6" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row5_col7" class="data row5 col7" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row5_col8" class="data row5 col8" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row5_col9" class="data row5 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_894d170c_9ade_11ea_ba52_0242ac110002level0_row6" class="row_heading level0 row6" >2016</th>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row6_col0" class="data row6 col0" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row6_col1" class="data row6 col1" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row6_col2" class="data row6 col2" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row6_col3" class="data row6 col3" >1</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row6_col4" class="data row6 col4" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row6_col5" class="data row6 col5" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row6_col6" class="data row6 col6" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row6_col7" class="data row6 col7" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row6_col8" class="data row6 col8" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row6_col9" class="data row6 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_894d170c_9ade_11ea_ba52_0242ac110002level0_row7" class="row_heading level0 row7" >2017</th>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row7_col0" class="data row7 col0" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row7_col1" class="data row7 col1" >2</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row7_col2" class="data row7 col2" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row7_col3" class="data row7 col3" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row7_col4" class="data row7 col4" >2</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row7_col5" class="data row7 col5" >2</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row7_col6" class="data row7 col6" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row7_col7" class="data row7 col7" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row7_col8" class="data row7 col8" >2</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row7_col9" class="data row7 col9" >0</td>
+            </tr>
+            <tr>
+                        <th id="T_894d170c_9ade_11ea_ba52_0242ac110002level0_row8" class="row_heading level0 row8" >2018</th>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row8_col0" class="data row8 col0" >2</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row8_col1" class="data row8 col1" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row8_col2" class="data row8 col2" >2</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row8_col3" class="data row8 col3" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row8_col4" class="data row8 col4" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row8_col5" class="data row8 col5" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row8_col6" class="data row8 col6" >2</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row8_col7" class="data row8 col7" >2</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row8_col8" class="data row8 col8" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row8_col9" class="data row8 col9" >2</td>
+            </tr>
+            <tr>
+                        <th id="T_894d170c_9ade_11ea_ba52_0242ac110002level0_row9" class="row_heading level0 row9" >2019</th>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row9_col0" class="data row9 col0" >1</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row9_col1" class="data row9 col1" >1</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row9_col2" class="data row9 col2" >1</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row9_col3" class="data row9 col3" >0</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row9_col4" class="data row9 col4" >1</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row9_col5" class="data row9 col5" >1</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row9_col6" class="data row9 col6" >1</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row9_col7" class="data row9 col7" >1</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row9_col8" class="data row9 col8" >1</td>
+                        <td id="T_894d170c_9ade_11ea_ba52_0242ac110002row9_col9" class="data row9 col9" >1</td>
+            </tr>
+    </tbody></table></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Heatmap of number of documents by author per year</span>
+<span class="c1">#</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">Plot</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7faec9cc0438&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorial_16-terms-by-year_19_1.png" src="../_images/tutorial_16-terms-by-year_19_1.png" />
+</div>
 </div>
 </div>
 <div class="section" id="Keywords">
 <h2>Keywords<a class="headerlink" href="#Keywords" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">df</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;keywords&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span></span><span class="n">df</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;keywords&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -923,162 +2223,57 @@ div.rendered_html tbody tr:hover {
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>Classification Methods</td>
-      <td>2011</td>
-      <td>2</td>
-      <td>[140, 141]</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Commerce</td>
-      <td>2011</td>
-      <td>2</td>
-      <td>[140, 141]</td>
-    </tr>
-    <tr>
       <th>2</th>
-      <td>Deep Learning</td>
-      <td>2011</td>
+      <td>Artificial Neural Network</td>
+      <td>2010</td>
       <td>2</td>
-      <td>[140, 141]</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>Embeddings</td>
-      <td>2011</td>
-      <td>2</td>
-      <td>[140, 141]</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>Finance</td>
-      <td>2011</td>
-      <td>2</td>
-      <td>[140, 141]</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>Forecast</td>
-      <td>2011</td>
-      <td>2</td>
-      <td>[140, 141]</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>Forecasting</td>
-      <td>2011</td>
-      <td>2</td>
-      <td>[140, 141]</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>Granger Causality</td>
-      <td>2011</td>
-      <td>2</td>
-      <td>[140, 141]</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>Human</td>
-      <td>2011</td>
-      <td>2</td>
-      <td>[140, 141]</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>Machine Learning</td>
-      <td>2011</td>
-      <td>2</td>
-      <td>[140, 141]</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>Prediction</td>
-      <td>2011</td>
-      <td>2</td>
-      <td>[140, 141]</td>
-    </tr>
-    <tr>
-      <th>17</th>
-      <td>Time Series</td>
-      <td>2011</td>
-      <td>2</td>
-      <td>[140, 141]</td>
-    </tr>
-    <tr>
-      <th>18</th>
-      <td>Transaction</td>
-      <td>2011</td>
-      <td>2</td>
-      <td>[140, 141]</td>
-    </tr>
-    <tr>
-      <th>19</th>
-      <td>Water</td>
-      <td>2011</td>
-      <td>2</td>
-      <td>[140, 141]</td>
-    </tr>
-    <tr>
-      <th>21</th>
-      <td>ann</td>
-      <td>2011</td>
-      <td>2</td>
-      <td>[140, 141]</td>
+      <td>[142, 144]</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>Dynamic Ridge Polynomial Neural Network</td>
-      <td>2011</td>
-      <td>1</td>
-      <td>[140]</td>
+      <td>Artificial Neural Networks</td>
+      <td>2010</td>
+      <td>2</td>
+      <td>[142, 144]</td>
     </tr>
     <tr>
-      <th>11</th>
-      <td>Market</td>
-      <td>2011</td>
-      <td>1</td>
-      <td>[140]</td>
+      <th>16</th>
+      <td>Machine Learning</td>
+      <td>2010</td>
+      <td>2</td>
+      <td>[142, 144]</td>
     </tr>
     <tr>
-      <th>12</th>
+      <th>18</th>
       <td>Neural Network</td>
-      <td>2011</td>
-      <td>1</td>
-      <td>[140]</td>
+      <td>2010</td>
+      <td>2</td>
+      <td>[142, 144]</td>
     </tr>
     <tr>
-      <th>13</th>
+      <th>19</th>
       <td>Neural Networks</td>
-      <td>2011</td>
-      <td>1</td>
-      <td>[140]</td>
-    </tr>
-    <tr>
-      <th>15</th>
-      <td>Recurrent Neural Network</td>
-      <td>2011</td>
-      <td>1</td>
-      <td>[140]</td>
+      <td>2010</td>
+      <td>2</td>
+      <td>[142, 144]</td>
     </tr>
   </tbody>
 </table>
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">df</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span>
     <span class="n">column</span><span class="o">=</span><span class="s2">&quot;keywords_cleaned&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
-<span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1100,79 +2295,560 @@ div.rendered_html tbody tr:hover {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>algorithms</th>
-      <th>commerce</th>
-      <th>deep learning</th>
-      <th>forecasting</th>
-      <th>long short term memory network</th>
-      <th>market</th>
-      <th>neural networks</th>
-      <th>prediction</th>
-      <th>recurrent neural networks</th>
-      <th>time series</th>
-      <th>trading</th>
+      <th>2017</th>
+      <th>2018</th>
+      <th>2019</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>2018</th>
+      <th>Learning systems</th>
       <td>0</td>
       <td>8</td>
-      <td>10</td>
-      <td>13</td>
       <td>7</td>
-      <td>13</td>
-      <td>8</td>
-      <td>0</td>
-      <td>0</td>
-      <td>12</td>
-      <td>12</td>
     </tr>
     <tr>
-      <th>2019</th>
-      <td>6</td>
+      <th>algorithms</th>
       <td>0</td>
-      <td>9</td>
-      <td>13</td>
-      <td>8</td>
-      <td>8</td>
-      <td>11</td>
+      <td>12</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>artificial intelligence</th>
+      <td>0</td>
+      <td>0</td>
       <td>6</td>
+    </tr>
+    <tr>
+      <th>artificial neural networks</th>
+      <td>0</td>
+      <td>0</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>brain</th>
+      <td>0</td>
       <td>8</td>
-      <td>13</td>
-      <td>9</td>
+      <td>0</td>
     </tr>
   </tbody>
 </table>
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
-<span class="n">top_keywords</span> <span class="o">=</span>  <span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">top_10_keywords_freq</span><span class="p">])</span>
-<span class="n">Plot</span><span class="p">(</span>
-    <span class="n">top_keywords</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;keywords&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="p">)</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
+<span></span><span class="n">top_keywords</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">documents_by_term</span><span class="p">(</span><span class="s2">&quot;keywords_cleaned&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">keywords_cleaned</span>
+<span class="p">)</span>
+<span class="n">top_keywords</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fbe3136e3c8&gt;
+0                       forecasting
+1                       time series
+2                            market
+3                     deep learning
+4                   neural networks
+5                           trading
+6                          commerce
+7         recurrent neural networks
+8    long short term memory network
+9                        prediction
+Name: keywords_cleaned, dtype: object
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Matrix of documents by `keywords_cleaned` per`Year`</span>
+<span class="c1">#</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span>
+    <span class="n">column</span><span class="o">=</span><span class="s2">&quot;keywords_cleaned&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1">#</span>
+<span class="c1"># Column filtering by `top_journals`</span>
+<span class="c1">#</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">top_keywords</span><span class="p">]</span>
+<span class="n">heatmap</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<style  type="text/css" >
+    #T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col0 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col1 {
+            background-color:  #ebf3fb;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col3 {
+            background-color:  #eaf3fb;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col4 {
+            background-color:  #e2edf8;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col5 {
+            background-color:  #f0f6fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col6 {
+            background-color:  #f0f6fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col7 {
+            background-color:  #e3eef9;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col9 {
+            background-color:  #dbe9f6;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col0 {
+            background-color:  #f2f8fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col1 {
+            background-color:  #f2f7fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col2 {
+            background-color:  #f1f7fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col3 {
+            background-color:  #eaf3fb;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col4 {
+            background-color:  #e9f2fa;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col5 {
+            background-color:  #f0f6fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col6 {
+            background-color:  #e9f2fa;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col7 {
+            background-color:  #e3eef9;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col9 {
+            background-color:  #e9f2fa;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col0 {
+            background-color:  #f2f8fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col1 {
+            background-color:  #f2f7fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col3 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col4 {
+            background-color:  #e9f2fa;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col7 {
+            background-color:  #eef5fc;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col9 {
+            background-color:  #e9f2fa;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col0 {
+            background-color:  #e7f1fa;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col1 {
+            background-color:  #ebf3fb;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col2 {
+            background-color:  #f1f7fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col3 {
+            background-color:  #f1f7fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col4 {
+            background-color:  #f0f6fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col5 {
+            background-color:  #f0f6fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col6 {
+            background-color:  #f0f6fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col7 {
+            background-color:  #eef5fc;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col8 {
+            background-color:  #e3eef9;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col9 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col0 {
+            background-color:  #edf4fc;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col2 {
+            background-color:  #eaf3fb;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col3 {
+            background-color:  #f1f7fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col4 {
+            background-color:  #f0f6fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col5 {
+            background-color:  #e9f2fa;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col6 {
+            background-color:  #e9f2fa;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col7 {
+            background-color:  #e3eef9;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col8 {
+            background-color:  #eef5fc;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col9 {
+            background-color:  #e9f2fa;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col0 {
+            background-color:  #f2f8fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col1 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col2 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col3 {
+            background-color:  #f1f7fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col4 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col5 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col6 {
+            background-color:  #f0f6fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col7 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col8 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col9 {
+            background-color:  #e9f2fa;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col0 {
+            background-color:  #e3eef8;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col1 {
+            background-color:  #ebf3fb;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col2 {
+            background-color:  #eaf3fb;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col3 {
+            background-color:  #e4eff9;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col4 {
+            background-color:  #f0f6fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col5 {
+            background-color:  #f0f6fd;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col6 {
+            background-color:  #f7fbff;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col7 {
+            background-color:  #d9e8f5;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col8 {
+            background-color:  #eef5fc;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col9 {
+            background-color:  #cde0f1;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col0 {
+            background-color:  #a0cbe2;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col1 {
+            background-color:  #b8d5ea;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col2 {
+            background-color:  #afd1e7;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col3 {
+            background-color:  #ccdff1;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col4 {
+            background-color:  #a4cce3;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col5 {
+            background-color:  #91c3de;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col6 {
+            background-color:  #abd0e6;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col7 {
+            background-color:  #d0e1f2;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col8 {
+            background-color:  #94c4df;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col9 {
+            background-color:  #e9f2fa;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col0 {
+            background-color:  #083d7f;
+            color:  #f1f1f1;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col1 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col2 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col3 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col4 {
+            background-color:  #1967ad;
+            color:  #f1f1f1;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col5 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col6 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col7 {
+            background-color:  #0d57a1;
+            color:  #f1f1f1;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col8 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col9 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col0 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col1 {
+            background-color:  #083776;
+            color:  #f1f1f1;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col2 {
+            background-color:  #3484bf;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col3 {
+            background-color:  #3989c1;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col4 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col5 {
+            background-color:  #1460a8;
+            color:  #f1f1f1;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col6 {
+            background-color:  #2d7dbb;
+            color:  #000000;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col7 {
+            background-color:  #08306b;
+            color:  #f1f1f1;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col8 {
+            background-color:  #0d57a1;
+            color:  #f1f1f1;
+        }    #T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col9 {
+            background-color:  #0b559f;
+            color:  #f1f1f1;
+        }</style><table id="T_0b104a52_9adf_11ea_ba52_0242ac110002" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >forecasting</th>        <th class="col_heading level0 col1" >time series</th>        <th class="col_heading level0 col2" >market</th>        <th class="col_heading level0 col3" >deep learning</th>        <th class="col_heading level0 col4" >neural networks</th>        <th class="col_heading level0 col5" >trading</th>        <th class="col_heading level0 col6" >commerce</th>        <th class="col_heading level0 col7" >recurrent neural networks</th>        <th class="col_heading level0 col8" >long short term memory network</th>        <th class="col_heading level0 col9" >prediction</th>    </tr></thead><tbody>
+                <tr>
+                        <th id="T_0b104a52_9adf_11ea_ba52_0242ac110002level0_row0" class="row_heading level0 row0" >2010</th>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col0" class="data row0 col0" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col1" class="data row0 col1" >3</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col2" class="data row0 col2" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col3" class="data row0 col3" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col4" class="data row0 col4" >3</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col5" class="data row0 col5" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col6" class="data row0 col6" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col7" class="data row0 col7" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col8" class="data row0 col8" >0</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row0_col9" class="data row0 col9" >3</td>
+            </tr>
+            <tr>
+                        <th id="T_0b104a52_9adf_11ea_ba52_0242ac110002level0_row1" class="row_heading level0 row1" >2011</th>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col0" class="data row1 col0" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col1" class="data row1 col1" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col2" class="data row1 col2" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col3" class="data row1 col3" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col4" class="data row1 col4" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col5" class="data row1 col5" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col6" class="data row1 col6" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col7" class="data row1 col7" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col8" class="data row1 col8" >0</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row1_col9" class="data row1 col9" >2</td>
+            </tr>
+            <tr>
+                        <th id="T_0b104a52_9adf_11ea_ba52_0242ac110002level0_row2" class="row_heading level0 row2" >2012</th>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col0" class="data row2 col0" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col1" class="data row2 col1" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col2" class="data row2 col2" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col3" class="data row2 col3" >0</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col4" class="data row2 col4" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col5" class="data row2 col5" >0</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col6" class="data row2 col6" >0</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col7" class="data row2 col7" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col8" class="data row2 col8" >0</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row2_col9" class="data row2 col9" >2</td>
+            </tr>
+            <tr>
+                        <th id="T_0b104a52_9adf_11ea_ba52_0242ac110002level0_row3" class="row_heading level0 row3" >2013</th>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col0" class="data row3 col0" >4</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col1" class="data row3 col1" >3</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col2" class="data row3 col2" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col3" class="data row3 col3" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col4" class="data row3 col4" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col5" class="data row3 col5" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col6" class="data row3 col6" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col7" class="data row3 col7" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col8" class="data row3 col8" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row3_col9" class="data row3 col9" >1</td>
+            </tr>
+            <tr>
+                        <th id="T_0b104a52_9adf_11ea_ba52_0242ac110002level0_row4" class="row_heading level0 row4" >2014</th>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col0" class="data row4 col0" >3</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col1" class="data row4 col1" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col2" class="data row4 col2" >3</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col3" class="data row4 col3" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col4" class="data row4 col4" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col5" class="data row4 col5" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col6" class="data row4 col6" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col7" class="data row4 col7" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col8" class="data row4 col8" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row4_col9" class="data row4 col9" >2</td>
+            </tr>
+            <tr>
+                        <th id="T_0b104a52_9adf_11ea_ba52_0242ac110002level0_row5" class="row_heading level0 row5" >2015</th>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col0" class="data row5 col0" >2</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col1" class="data row5 col1" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col2" class="data row5 col2" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col3" class="data row5 col3" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col4" class="data row5 col4" >0</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col5" class="data row5 col5" >0</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col6" class="data row5 col6" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col7" class="data row5 col7" >0</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col8" class="data row5 col8" >0</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row5_col9" class="data row5 col9" >2</td>
+            </tr>
+            <tr>
+                        <th id="T_0b104a52_9adf_11ea_ba52_0242ac110002level0_row6" class="row_heading level0 row6" >2016</th>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col0" class="data row6 col0" >5</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col1" class="data row6 col1" >3</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col2" class="data row6 col2" >3</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col3" class="data row6 col3" >3</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col4" class="data row6 col4" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col5" class="data row6 col5" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col6" class="data row6 col6" >0</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col7" class="data row6 col7" >3</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col8" class="data row6 col8" >1</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row6_col9" class="data row6 col9" >4</td>
+            </tr>
+            <tr>
+                        <th id="T_0b104a52_9adf_11ea_ba52_0242ac110002level0_row7" class="row_heading level0 row7" >2017</th>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col0" class="data row7 col0" >15</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col1" class="data row7 col1" >11</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col2" class="data row7 col2" >11</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col3" class="data row7 col3" >7</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col4" class="data row7 col4" >10</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col5" class="data row7 col5" >11</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col6" class="data row7 col6" >9</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col7" class="data row7 col7" >4</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col8" class="data row7 col8" >8</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row7_col9" class="data row7 col9" >2</td>
+            </tr>
+            <tr>
+                        <th id="T_0b104a52_9adf_11ea_ba52_0242ac110002level0_row8" class="row_heading level0 row8" >2018</th>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col0" class="data row8 col0" >37</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col1" class="data row8 col1" >35</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col2" class="data row8 col2" >32</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col3" class="data row8 col3" >32</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col4" class="data row8 col4" >22</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col5" class="data row8 col5" >27</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col6" class="data row8 col6" >27</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col7" class="data row8 col7" >17</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col8" class="data row8 col8" >20</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row8_col9" class="data row8 col9" >15</td>
+            </tr>
+            <tr>
+                        <th id="T_0b104a52_9adf_11ea_ba52_0242ac110002level0_row9" class="row_heading level0 row9" >2019</th>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col0" class="data row9 col0" >39</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col1" class="data row9 col1" >34</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col2" class="data row9 col2" >22</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col3" class="data row9 col3" >21</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col4" class="data row9 col4" >28</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col5" class="data row9 col5" >22</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col6" class="data row9 col6" >19</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col7" class="data row9 col7" >20</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col8" class="data row9 col8" >17</td>
+                        <td id="T_0b104a52_9adf_11ea_ba52_0242ac110002row9_col9" class="data row9 col9" >13</td>
+            </tr>
+    </tbody></table></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">Plot</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7faec9abc9b0&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/tutorial_16-terms-by-year_19_1.png" src="../_images/tutorial_16-terms-by-year_19_1.png" />
+<img alt="../_images/tutorial_16-terms-by-year_25_1.png" src="../_images/tutorial_16-terms-by-year_25_1.png" />
 </div>
 </div>
 </div>

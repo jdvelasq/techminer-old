@@ -19,15 +19,18 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 1,
+   "execution_count": 2,
    "metadata": {},
    "outputs": [],
    "source": [
     "import pandas as pd\n",
     "\n",
-    "url = \"https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/\"\n",
-    "\n",
-    "pdf = pd.read_json(url + \"deletion-of-records.json\", orient=\"records\", lines=True)"
+    "df = pd.read_json(\n",
+    "    \"https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/\"\n",
+    "    + \"deletion-of-records.json\",\n",
+    "    orient=\"records\",\n",
+    "    lines=True,\n",
+    ")"
    ]
   },
   {
@@ -39,7 +42,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 2,
+   "execution_count": 3,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -47,12 +50,12 @@
     "\n",
     "conf = Keywords()\n",
     "conf.add_keywords([\"Conference\", \"Proceeding\", \"Workshop\", \"Congress\"])\n",
-    "pdf[\"CONF\"] = pdf.Title.map(lambda x: True if x in conf else False)"
+    "df[\"CONF\"] = df.Title.map(lambda x: True if x in conf else False)"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 3,
+   "execution_count": 4,
    "metadata": {},
    "outputs": [
     {
@@ -69,13 +72,13 @@
     }
    ],
    "source": [
-    "for title in pdf[pdf.CONF][\"Title\"]:\n",
+    "for title in df[df.CONF][\"Title\"]:\n",
     "    print(title)"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 4,
+   "execution_count": 5,
    "metadata": {},
    "outputs": [
     {
@@ -88,11 +91,11 @@
     }
    ],
    "source": [
-    "print(\"Num. records before = \", len(pdf))\n",
+    "print(\"Num. records before = \", len(df))\n",
     "\n",
-    "pdf = pdf[pdf.CONF.map(lambda x: False if x is True else True)]\n",
+    "df = df[df.CONF.map(lambda x: False if x is True else True)]\n",
     "\n",
-    "print(\"Num. records after = \", len(pdf))"
+    "print(\"Num. records after = \", len(df))"
    ]
   },
   {
@@ -104,7 +107,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 5,
+   "execution_count": 6,
    "metadata": {},
    "outputs": [
     {
@@ -116,12 +119,12 @@
     }
    ],
    "source": [
-    "print(\"Num. records before = \", len(pdf))"
+    "print(\"Num. records before = \", len(df))"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 6,
+   "execution_count": 7,
    "metadata": {},
    "outputs": [
     {
@@ -146,31 +149,31 @@
    "source": [
     "from techminer.strings import fingerprint\n",
     "\n",
-    "pdf[\"fingerprint\"] = pdf.Title.map(lambda x: fingerprint(x))\n",
+    "df[\"fingerprint\"] = df.Title.map(lambda x: fingerprint(x))\n",
     "\n",
     "#\n",
     "# original title\n",
     "#\n",
-    "print(pdf.Title[0:5])\n",
+    "print(df.Title[0:5])\n",
     "\n",
     "#\n",
     "# Fingerprint of the title\n",
     "#\n",
-    "print(pdf.fingerprint[0:5])"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 7,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "pdf = pdf.drop_duplicates(subset=\"fingerprint\")"
+    "print(df.fingerprint[0:5])"
    ]
   },
   {
    "cell_type": "code",
    "execution_count": 8,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df = df.drop_duplicates(subset=\"fingerprint\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
    "metadata": {},
    "outputs": [
     {
@@ -182,16 +185,16 @@
     }
    ],
    "source": [
-    "print(\"Num. records after = \", len(pdf))"
+    "print(\"Num. records after = \", len(df))"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 9,
+   "execution_count": 10,
    "metadata": {},
    "outputs": [],
    "source": [
-    "# pdf.to_json(\"keywords-cleanup.json\", orient=\"records\", lines=True)"
+    "### df.to_json(\"keywords-text-clustering.json\", orient=\"records\", lines=True)"
    ]
   }
  ],
