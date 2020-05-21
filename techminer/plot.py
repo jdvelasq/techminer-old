@@ -278,7 +278,7 @@ class Plot:
                         color="black",
                     )
                     links += 1
-                elif value <= 0.25 and value >= minval:
+                elif value <= 0.25 and value >= minval and value > 0.0:
                     cd.add_edge(
                         node_a,
                         node_b,
