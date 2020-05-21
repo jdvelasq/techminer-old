@@ -143,19 +143,22 @@ class Plot:
         else:
             cmap = plt.cm.get_cmap()
 
-        if x.values.max().max() <= 1.0 and x.values.min().min() >= -1:
-            fmt = "{:3.2f}"
-        else:
+        if all(x.dtypes == "int64"):
             fmt = "{:3.0f}"
+        else:
+            fmt = "{:3.2f}"
+
+        # if x.values.max().max() <= 1.0 and x.values.min().min() >= -1:
+        #      fmt = "{:3.2f}"
+        #  else:
+        #      fmt = "{:3.0f}"
 
         for idx_row, row in enumerate(x.index):
             for idx_col, col in enumerate(x.columns):
-
                 if abs(x.at[row, col]) > x.values.max().max() / 2.0:
                     color = cmap(0.0)
                 else:
                     color = cmap(1.0)
-
                 plt.text(
                     idx_row + 0.5,
                     idx_col + 0.5,
