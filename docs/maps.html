@@ -1,0 +1,429 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Correlation Maps generation and manipulation &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Plots" href="plot.html" />
+    <link rel="prev" title="DataFrame object" href="dataframe.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> TechMiner - A Package for Bibliographical Analysis using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html#bibliographic-data-manipulation-and-analysis">Bibliographic data manipulation and analysis</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="dataframe.html">DataFrame object</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Correlation Maps generation and manipulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot.html">Plots</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Correlation Maps generation and manipulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="strings.html">String manipulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keywords.html">Keywords manipulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thesaurus.html">Thesaurus</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#base-clases-for-plotting">Base clases for plotting</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">TechMiner - A Package for Bibliographical Analysis using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">Modules</a> &raquo;</li>
+        
+      <li>Correlation Maps generation and manipulation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/maps.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<span class="target" id="module-techminer.maps"></span><div class="section" id="correlation-maps-generation-and-manipulation">
+<h1>Correlation Maps generation and manipulation<a class="headerlink" href="#correlation-maps-generation-and-manipulation" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="techminer.maps.Map">
+<em class="property">class </em><code class="sig-prename descclassname">techminer.maps.</code><code class="sig-name descname">Map</code><a class="reference internal" href="_modules/techminer/maps.html#Map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.maps.Map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="techminer.maps.Map.add_edge">
+<code class="sig-name descname">add_edge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">u_of_edge</span></em>, <em class="sig-param"><span class="n">v_of_edge</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">attr</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/maps.html#Map.add_edge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.maps.Map.add_edge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an edge to a current map.</p>
+<p class="rubric">Examples</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="techminer.maps.Map.add_edges_from">
+<code class="sig-name descname">add_edges_from</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ebunch_to_add</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">attr</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/maps.html#Map.add_edges_from"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.maps.Map.add_edges_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a bunch of edges to a current map.</p>
+<p class="rubric">Examples</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="techminer.maps.Map.add_node">
+<code class="sig-name descname">add_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_for_adding</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">attr</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/maps.html#Map.add_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.maps.Map.add_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a node to a current map.</p>
+<p class="rubric">Examples</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="techminer.maps.Map.add_nodes_from">
+<code class="sig-name descname">add_nodes_from</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">nodes_for_adding</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">attr</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/maps.html#Map.add_nodes_from"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.maps.Map.add_nodes_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a bunch of nodes to a current map.</p>
+<p class="rubric">Examples</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="techminer.maps.Map.correlation_map">
+<code class="sig-name descname">correlation_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">terms</span></em>, <em class="sig-param"><span class="n">edges_75</span></em>, <em class="sig-param"><span class="n">edges_50</span></em>, <em class="sig-param"><span class="n">edges_25</span></em>, <em class="sig-param"><span class="n">other_edges</span></em>, <em class="sig-param"><span class="n">term_props</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/maps.html#Map.correlation_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.maps.Map.correlation_map" title="Permalink to this definition">¶</a></dt>
+<dd><p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">terms</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s1">&#39;ABCDE&#39;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">edges_75</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)],</span>
+<span class="gp">... </span>    <span class="n">edges_50</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">)],</span>
+<span class="gp">... </span>    <span class="n">edges_25</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">)],</span>
+<span class="gp">... </span>    <span class="n">other_edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">)],</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nxmap</span> <span class="o">=</span> <span class="n">Map</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nxmap</span><span class="o">.</span><span class="n">correlation_map</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;guide/images/correlation_map.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/correlation_map.png"><img alt="_images/correlation_map.png" class="align-center" src="_images/correlation_map.png" style="width: 600px;" /></a>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,C&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="p">{</span>
+<span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Author Keywords&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Cited by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>   <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">  Authors Author Keywords  Cited by  ID</span>
+<span class="go">0       A               a         0   0</span>
+<span class="go">1     A,C             a;b         1   1</span>
+<span class="go">2       B               b         2   2</span>
+<span class="go">3   A,B,C               c         3   3</span>
+<span class="go">4     B,D             c;d         4   4</span>
+<span class="go">5     A,B               d         5   5</span>
+<span class="go">6     A,C             c;d         6   6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nxmap</span> <span class="o">=</span> <span class="n">Map</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">autocorr_map</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nxmap</span><span class="o">.</span><span class="n">correlation_map</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;guide/images/correlation_map_1.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/correlation_map_1.png"><img alt="_images/correlation_map_1.png" class="align-center" src="_images/correlation_map_1.png" style="width: 600px;" /></a>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nxmap</span> <span class="o">=</span> <span class="n">Map</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">autocorr_map</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span>  <span class="n">top_n_links</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nxmap</span><span class="o">.</span><span class="n">correlation_map</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;guide/images/correlation_map_2.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/correlation_map_2.png"><img alt="_images/correlation_map_2.png" class="align-center" src="_images/correlation_map_2.png" style="width: 600px;" /></a>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nxmap</span> <span class="o">=</span> <span class="n">Map</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">corr_map</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span>  <span class="n">top_n_links</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nxmap</span><span class="o">.</span><span class="n">correlation_map</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;guide/images/correlation_map_3.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/correlation_map_3.png"><img alt="_images/correlation_map_3.png" class="align-center" src="_images/correlation_map_3.png" style="width: 600px;" /></a>
+</dd></dl>
+
+<dl class="py method">
+<dt id="techminer.maps.Map.draw_network_labels">
+<code class="sig-name descname">draw_network_labels</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pos</span></em>, <em class="sig-param"><span class="n">labels</span></em>, <em class="sig-param"><span class="n">disp</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">fontdict</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/maps.html#Map.draw_network_labels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.maps.Map.draw_network_labels" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="techminer.maps.Map.ocurrence_map">
+<code class="sig-name descname">ocurrence_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">terms</span></em>, <em class="sig-param"><span class="n">docs</span></em>, <em class="sig-param"><span class="n">edges</span></em>, <em class="sig-param"><span class="n">label_terms</span></em>, <em class="sig-param"><span class="n">label_docs</span></em>, <em class="sig-param"><span class="n">term_props</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">doc_props</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">edge_props</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">label_term_props</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">label_docs_props</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/maps.html#Map.ocurrence_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.maps.Map.ocurrence_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cluster map for ocurrence and co-ocurrence matrices.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">terms</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">docs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;doc#0&quot;</span><span class="p">,</span> <span class="s2">&quot;doc#1&quot;</span><span class="p">,</span> <span class="s2">&quot;doc#2&quot;</span><span class="p">,</span> <span class="s2">&quot;doc#3&quot;</span><span class="p">,</span> <span class="s2">&quot;doc#4&quot;</span><span class="p">,</span> <span class="s2">&quot;doc#5&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;doc#0&quot;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;doc#1&quot;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;doc#1&quot;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;doc#2&quot;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;doc#2&quot;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;doc#2&quot;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;doc#3&quot;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;doc#4&quot;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;doc#4&quot;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;doc#5&quot;</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">label_docs</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;doc#0&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;doc#1&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;doc#2&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;doc#3&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;doc#4&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;doc#5&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">label_terms</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;Author A&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="s2">&quot;Author B&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="s2">&quot;Author C&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="s2">&quot;Author D&quot;</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nxmap</span> <span class="o">=</span> <span class="n">Map</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nxmap</span><span class="o">.</span><span class="n">ocurrence_map</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">terms</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">docs</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">edges</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">label_terms</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">label_docs</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">term_props</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;node_color&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="n">label_docs_props</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;font_color&quot;</span><span class="p">:</span> <span class="s2">&quot;lightblue&quot;</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="n">label_term_props</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">ma</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">disp</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;guide/images/network_occurrence_map.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/network_occurrence_map.png"><img alt="_images/network_occurrence_map.png" class="align-center" src="_images/network_occurrence_map.png" style="width: 600px;" /></a>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="p">{</span>
+<span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>   <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">  Authors  ID</span>
+<span class="go">0       A   0</span>
+<span class="go">1       A   1</span>
+<span class="go">2     A,B   2</span>
+<span class="go">3       B   3</span>
+<span class="go">4   A,B,C   4</span>
+<span class="go">5       D   5</span>
+<span class="go">6     B,D   6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nxmap</span> <span class="o">=</span> <span class="n">Map</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dic1</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">occurrence_map</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dic2</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">term_props</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;node_color&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="n">label_docs_props</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;font_color&quot;</span><span class="p">:</span> <span class="s2">&quot;lightblue&quot;</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="n">label_term_props</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">ma</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">disp</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">dic1</span><span class="p">,</span> <span class="o">**</span><span class="n">dic2</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs</span>
+<span class="go">{&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;docs&#39;: [&#39;doc#0&#39;, &#39;doc#1&#39;, &#39;doc#2&#39;, &#39;doc#3&#39;, &#39;doc#4&#39;, &#39;doc#5&#39;], &#39;edges&#39;: [(&#39;A&#39;, &#39;doc#0&#39;), (&#39;A&#39;, &#39;doc#1&#39;), (&#39;B&#39;, &#39;doc#1&#39;), (&#39;A&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#2&#39;), (&#39;C&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#3&#39;), (&#39;B&#39;, &#39;doc#4&#39;), (&#39;D&#39;, &#39;doc#4&#39;), (&#39;D&#39;, &#39;doc#5&#39;)], &#39;label_terms&#39;: {&#39;A&#39;: &#39;A&#39;, &#39;B&#39;: &#39;B&#39;, &#39;C&#39;: &#39;C&#39;, &#39;D&#39;: &#39;D&#39;}, &#39;label_docs&#39;: {&#39;doc#0&#39;: 2, &#39;doc#1&#39;: 1, &#39;doc#2&#39;: 1, &#39;doc#3&#39;: 1, &#39;doc#4&#39;: 1, &#39;doc#5&#39;: 1}, &#39;term_props&#39;: {&#39;node_color&#39;: &#39;red&#39;}, &#39;label_docs_props&#39;: {&#39;font_color&#39;: &#39;lightblue&#39;}, &#39;label_term_props&#39;: {&#39;ma&#39;: &#39;left&#39;, &#39;rotation&#39;: 0, &#39;fontsize&#39;: 10, &#39;disp&#39;: 3, &#39;bbox&#39;: None}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nxmap</span><span class="o">.</span><span class="n">ocurrence_map</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;guide/images/network_occurrence_map_1.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/network_occurrence_map_1.png"><img alt="_images/network_occurrence_map_1.png" class="align-center" src="_images/network_occurrence_map_1.png" style="width: 600px;" /></a>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="plot.html" class="btn btn-neutral float-right" title="Plots" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="dataframe.html" class="btn btn-neutral float-left" title="DataFrame object" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,5 +1,5 @@
 .DS_Store
-guide/_*
+sphinx/_*
 guide/tutorial-old/*
 
 # Byte-compiled / optimized / DLL files
