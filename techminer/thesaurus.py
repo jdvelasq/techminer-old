@@ -622,7 +622,7 @@ class Thesaurus:
     def compile(self):
         self._dict = self.to_dict()
 
-    def appy_as_dict(self, x, sep=None):
+    def apply_as_dict(self, x, sep=None):
 
         if x is None:
             return None
