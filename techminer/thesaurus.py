@@ -6,6 +6,7 @@ Thesaurus
 import pandas as pd
 import json
 from techminer.strings import find_string, replace_string, fingerprint, steamming_all
+from tqdm import tqdm
 
 
 def text_clustering(
@@ -159,7 +160,10 @@ def text_clustering(
     counts = counts[counts > 1]
 
     result = {}
-    for z in counts.index.tolist():
+    # for z in counts.index.tolist():
+    for iter in tqdm(range(len(counts.index.tolist()))):
+
+        z = counts.index.tolist()[iter]
 
         w = x[y == z]
 
@@ -272,7 +276,10 @@ def text_nesting(
         sorted_x += texts
     x = sorted_x
 
-    for pattern in x:
+    # for pattern in x:
+    for iter in tqdm(range(len(x))):
+
+        pattern = x[iter]
 
         if pattern == "":
             continue
