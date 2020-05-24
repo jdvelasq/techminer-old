@@ -603,3 +603,10 @@ class Thesaurus:
     def change_key(self, current_key, new_key):
         self._thesaurus[new_key] = self._thesaurus[current_key]
         self._thesaurus.popkey(current_key)
+
+    def to_dict(self):
+        result = {}
+        for key in self._thesaurus.keys():
+            for value in self._thesaurus[key]:
+                result[value] = key
+        return result
