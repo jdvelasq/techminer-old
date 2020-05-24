@@ -258,47 +258,47 @@ object with specialized functions to summarize and query bibliographic data.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">autocorr</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
-<span class="go">         A         B         C         D</span>
-<span class="go">A  1.00000  0.670820  0.500000  0.000000</span>
-<span class="go">B  0.67082  1.000000  0.447214  0.447214</span>
-<span class="go">C  0.50000  0.447214  1.000000  0.000000</span>
-<span class="go">D  0.00000  0.447214  0.000000  1.000000</span>
+<span class="go">          A         B         C         D</span>
+<span class="go">A  1.000000 -0.316228  0.316228 -0.632456</span>
+<span class="go">B -0.316228  1.000000  0.200000  0.200000</span>
+<span class="go">C  0.316228  0.200000  1.000000 -0.200000</span>
+<span class="go">D -0.632456  0.200000 -0.200000  1.000000</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">autocorr</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="go">   Authors (IDX) Authors (COL)     value</span>
 <span class="go">0              A             A  1.000000</span>
-<span class="go">1              B             A  0.670820</span>
-<span class="go">2              C             A  0.500000</span>
-<span class="go">3              D             A  0.000000</span>
-<span class="go">4              A             B  0.670820</span>
+<span class="go">1              B             A -0.316228</span>
+<span class="go">2              C             A  0.316228</span>
+<span class="go">3              D             A -0.632456</span>
+<span class="go">4              A             B -0.316228</span>
 <span class="go">5              B             B  1.000000</span>
-<span class="go">6              C             B  0.447214</span>
-<span class="go">7              D             B  0.447214</span>
-<span class="go">8              A             C  0.500000</span>
-<span class="go">9              B             C  0.447214</span>
+<span class="go">6              C             B  0.200000</span>
+<span class="go">7              D             B  0.200000</span>
+<span class="go">8              A             C  0.316228</span>
+<span class="go">9              B             C  0.200000</span>
 <span class="go">10             C             C  1.000000</span>
-<span class="go">11             D             C  0.000000</span>
-<span class="go">12             A             D  0.000000</span>
-<span class="go">13             B             D  0.447214</span>
-<span class="go">14             C             D  0.000000</span>
+<span class="go">11             D             C -0.200000</span>
+<span class="go">12             A             D -0.632456</span>
+<span class="go">13             B             D  0.200000</span>
+<span class="go">14             C             D -0.200000</span>
 <span class="go">15             D             D  1.000000</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">autocorr</span><span class="p">(</span><span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
-<span class="go">     a    b    c    d</span>
-<span class="go">a  1.0  0.5  0.0  0.0</span>
-<span class="go">b  0.5  1.0  0.0  0.0</span>
-<span class="go">c  0.0  0.0  1.0  0.5</span>
-<span class="go">d  0.0  0.0  0.5  1.0</span>
+<span class="go">      a     b     c     d</span>
+<span class="go">a  1.00  0.25 -0.50 -0.50</span>
+<span class="go">b  0.25  1.00 -0.50 -0.50</span>
+<span class="go">c -0.50 -0.50  1.00  0.25</span>
+<span class="go">d -0.50 -0.50  0.25  1.00</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">autocorr</span><span class="p">(</span><span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
-<span class="go">     a    b    c    d</span>
-<span class="go">a  1.0  0.5  0.0  0.0</span>
-<span class="go">b  0.5  1.0  0.0  0.0</span>
-<span class="go">c  0.0  0.0  1.0  0.5</span>
-<span class="go">d  0.0  0.0  0.5  1.0</span>
+<span class="go">     a    b     c     d</span>
+<span class="go">a  1.0  0.0  0.00  0.00</span>
+<span class="go">b  0.0  1.0  0.00  0.00</span>
+<span class="go">c  0.0  0.0  1.00  0.25</span>
+<span class="go">d  0.0  0.0  0.25  1.00</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -351,15 +351,15 @@ object with specialized functions to summarize and query bibliographic data.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">autocorr</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
-<span class="go">          A         B         C    D</span>
-<span class="go">A  1.000000  0.447214  0.774597  0.0</span>
-<span class="go">B  0.447214  1.000000  0.288675  0.5</span>
-<span class="go">C  0.774597  0.288675  1.000000  0.0</span>
-<span class="go">D  0.000000  0.500000  0.000000  1.0</span>
+<span class="go">          A         B         C         D</span>
+<span class="go">A  1.000000 -0.547723  0.547723 -0.645497</span>
+<span class="go">B -0.547723  1.000000 -0.416667  0.353553</span>
+<span class="go">C  0.547723 -0.416667  1.000000 -0.353553</span>
+<span class="go">D -0.645497  0.353553 -0.353553  1.000000</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">autocorr_map</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
-<span class="go">{&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;edges_75&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_50&#39;: None, &#39;edges_25&#39;: [(&#39;A&#39;, &#39;B&#39;), (&#39;B&#39;, &#39;C&#39;), (&#39;B&#39;, &#39;D&#39;)], &#39;other_edges&#39;: [(&#39;A&#39;, &#39;D&#39;), (&#39;C&#39;, &#39;D&#39;)]}</span>
+<span class="go">{&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: [(&#39;B&#39;, &#39;D&#39;)], &#39;other_edges&#39;: None}</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -844,38 +844,37 @@ the number of documents by term between brackets.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
-<span class="go">          A         B         C         D</span>
-<span class="go">A  1.000000  1.000000  0.500000  0.707107</span>
-<span class="go">B  1.000000  1.000000  0.500000  0.707107</span>
-<span class="go">C  0.500000  0.500000  1.000000  0.707107</span>
-<span class="go">D  0.707107  0.707107  0.707107  1.000000</span>
+<span class="go">          A         B         C        D</span>
+<span class="go">A  1.000000 -1.000000 -0.333333 -0.57735</span>
+<span class="go">B -1.000000  1.000000  0.333333  0.57735</span>
+<span class="go">C -0.333333  0.333333  1.000000  0.57735</span>
+<span class="go">D -0.577350  0.577350  0.577350  1.00000</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">(</span><span class="mf">0.45</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">))</span>
-<span class="go">          A         B         C         D</span>
-<span class="go">A  0.000000  0.000000  0.500000  0.707107</span>
-<span class="go">B  0.000000  0.000000  0.500000  0.707107</span>
-<span class="go">C  0.500000  0.500000  0.000000  0.707107</span>
-<span class="go">D  0.707107  0.707107  0.707107  0.000000</span>
+<span class="go">         B        C        D</span>
+<span class="go">B  0.00000  0.00000  0.57735</span>
+<span class="go">C  0.00000  0.00000  0.57735</span>
+<span class="go">D  0.57735  0.57735  0.00000</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="go">   Authors Author Keywords     value</span>
 <span class="go">0        A               A  1.000000</span>
-<span class="go">1        B               A  1.000000</span>
-<span class="go">2        C               A  0.500000</span>
-<span class="go">3        D               A  0.707107</span>
-<span class="go">4        A               B  1.000000</span>
+<span class="go">1        B               A -1.000000</span>
+<span class="go">2        C               A -0.333333</span>
+<span class="go">3        D               A -0.577350</span>
+<span class="go">4        A               B -1.000000</span>
 <span class="go">5        B               B  1.000000</span>
-<span class="go">6        C               B  0.500000</span>
-<span class="go">7        D               B  0.707107</span>
-<span class="go">8        A               C  0.500000</span>
-<span class="go">9        B               C  0.500000</span>
+<span class="go">6        C               B  0.333333</span>
+<span class="go">7        D               B  0.577350</span>
+<span class="go">8        A               C -0.333333</span>
+<span class="go">9        B               C  0.333333</span>
 <span class="go">10       C               C  1.000000</span>
-<span class="go">11       D               C  0.707107</span>
-<span class="go">12       A               D  0.707107</span>
-<span class="go">13       B               D  0.707107</span>
-<span class="go">14       C               D  0.707107</span>
+<span class="go">11       D               C  0.577350</span>
+<span class="go">12       A               D -0.577350</span>
+<span class="go">13       B               D  0.577350</span>
+<span class="go">14       C               D  0.577350</span>
 <span class="go">15       D               D  1.000000</span>
 </pre></div>
 </div>
@@ -928,16 +927,32 @@ the number of documents by term between brackets.</p>
 <span class="go">6     A,C             c;d         6   6</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">co_occurrence</span><span class="p">(</span><span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">   A  B  C  D</span>
+<span class="go">a  2  0  1  0</span>
+<span class="go">b  1  1  1  0</span>
+<span class="go">c  2  2  2  1</span>
+<span class="go">d  2  2  1  1</span>
+</pre></div>
+</div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
 <span class="go">          A         B         C         D</span>
-<span class="go">A  1.000000  0.866025  1.000000  0.707107</span>
-<span class="go">B  0.866025  1.000000  0.866025  0.816497</span>
-<span class="go">C  1.000000  0.866025  1.000000  0.707107</span>
-<span class="go">D  0.707107  0.816497  0.707107  1.000000</span>
+<span class="go">A  1.000000  0.174078  0.333333  0.577350</span>
+<span class="go">B  0.174078  1.000000  0.522233  0.904534</span>
+<span class="go">C  0.333333  0.522233  1.000000  0.577350</span>
+<span class="go">D  0.577350  0.904534  0.577350  1.000000</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
+<span class="go">          A         B         C         D</span>
+<span class="go">A  1.000000  0.174078  0.333333  0.577350</span>
+<span class="go">B  0.174078  1.000000  0.522233  0.904534</span>
+<span class="go">C  0.333333  0.522233  1.000000  0.577350</span>
+<span class="go">D  0.577350  0.904534  0.577350  1.000000</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">corr_map</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
-<span class="go">{&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;edges_75&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_50&#39;: None, &#39;edges_25&#39;: [(&#39;A&#39;, &#39;B&#39;), (&#39;B&#39;, &#39;C&#39;), (&#39;B&#39;, &#39;D&#39;)], &#39;other_edges&#39;: [(&#39;A&#39;, &#39;D&#39;), (&#39;C&#39;, &#39;D&#39;)]}</span>
+<span class="go">{&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: [(&#39;B&#39;, &#39;D&#39;)], &#39;other_edges&#39;: None}</span>
 </pre></div>
 </div>
 </dd></dl>

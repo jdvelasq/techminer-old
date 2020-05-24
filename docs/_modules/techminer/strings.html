@@ -165,9 +165,11 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
+<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">geopandas</span>
 <span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">join</span>
+
 <span class="kn">from</span> <span class="nn">nltk.stem</span> <span class="kn">import</span> <span class="n">PorterStemmer</span>
 
 
@@ -522,11 +524,16 @@
     <span class="c1">#</span>
     <span class="c1"># lista generica de nombres de paises</span>
     <span class="c1">#</span>
-    <span class="n">country_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
-        <span class="n">geopandas</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span>
-            <span class="n">geopandas</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;naturalearth_lowres&quot;</span><span class="p">)</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="p">)</span>
+    <span class="n">module_path</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">module_path</span><span class="p">,</span> <span class="s2">&quot;data/worldmap.data&quot;</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">countries</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">country_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">countries</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="c1"># country_names = sorted(</span>
+    <span class="c1">#     geopandas.read_file(</span>
+    <span class="c1">#         geopandas.datasets.get_path(&quot;naturalearth_lowres&quot;)</span>
+    <span class="c1">#     ).name.tolist()</span>
+    <span class="c1"># )</span>
 
     <span class="c1"># paises faltantes</span>
     <span class="n">country_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Singapore&quot;</span><span class="p">)</span>
