@@ -96,7 +96,6 @@ import json
 import re
 import string
 
-import geopandas
 import pandas as pd
 
 from .strings import find_string, fingerprint, replace_string

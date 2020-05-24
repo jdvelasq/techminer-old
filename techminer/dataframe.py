@@ -2414,62 +2414,48 @@ class DataFrame(pd.DataFrame):
         5  1  1  0  0
 
         >>> DataFrame(df).autocorr('Authors')
-                 A         B         C         D
-        A  1.00000  0.670820  0.500000  0.000000
-        B  0.67082  1.000000  0.447214  0.447214
-        C  0.50000  0.447214  1.000000  0.000000
-        D  0.00000  0.447214  0.000000  1.000000
+                  A         B         C         D
+        A  1.000000 -0.316228  0.316228 -0.632456
+        B -0.316228  1.000000  0.200000  0.200000
+        C  0.316228  0.200000  1.000000 -0.200000
+        D -0.632456  0.200000 -0.200000  1.000000
         
         >>> DataFrame(df).autocorr('Authors', as_matrix=False)
            Authors (IDX) Authors (COL)     value
         0              A             A  1.000000
-        1              B             A  0.670820
-        2              C             A  0.500000
-        3              D             A  0.000000
-        4              A             B  0.670820
+        1              B             A -0.316228
+        2              C             A  0.316228
+        3              D             A -0.632456
+        4              A             B -0.316228
         5              B             B  1.000000
-        6              C             B  0.447214
-        7              D             B  0.447214
-        8              A             C  0.500000
-        9              B             C  0.447214
+        6              C             B  0.200000
+        7              D             B  0.200000
+        8              A             C  0.316228
+        9              B             C  0.200000
         10             C             C  1.000000
-        11             D             C  0.000000
-        12             A             D  0.000000
-        13             B             D  0.447214
-        14             C             D  0.000000
+        11             D             C -0.200000
+        12             A             D -0.632456
+        13             B             D  0.200000
+        14             C             D -0.200000
         15             D             D  1.000000
 
         >>> DataFrame(df).autocorr('Author Keywords')
-             a    b    c    d
-        a  1.0  0.5  0.0  0.0
-        b  0.5  1.0  0.0  0.0
-        c  0.0  0.0  1.0  0.5
-        d  0.0  0.0  0.5  1.0
+              a     b     c     d
+        a  1.00  0.25 -0.50 -0.50
+        b  0.25  1.00 -0.50 -0.50
+        c -0.50 -0.50  1.00  0.25
+        d -0.50 -0.50  0.25  1.00
 
         >>> DataFrame(df).autocorr('Author Keywords', minmax=(0.25, None))
-             a    b    c    d
-        a  1.0  0.5  0.0  0.0
-        b  0.5  1.0  0.0  0.0
-        c  0.0  0.0  1.0  0.5
-        d  0.0  0.0  0.5  1.0
+             a    b     c     d
+        a  1.0  0.0  0.00  0.00
+        b  0.0  1.0  0.00  0.00
+        c  0.0  0.0  1.00  0.25
+        d  0.0  0.0  0.25  1.00
 
         """
         tfm = self.compute_tfm(column=column, sep=sep)
-
-        result = pd.DataFrame(0.0, columns=tfm.columns, index=tfm.columns)
-        for term in tfm.columns:
-            result.at[term, term] = 1.0
-        for i in range(len(tfm.columns) - 1):
-            for j in range(i + 1, len(tfm.columns)):
-                d = pd.DataFrame({"x": tfm[tfm.columns[i]], "y": tfm[tfm.columns[j]]})
-                d = d[(d.x != 0) | (d.y != 0)]
-
-                if len(d) != 0 and sum(d.x * d.y) > 0:
-                    r = relationship(d.x, d.y)
-                    result.at[tfm.columns[i], tfm.columns[j]] = r
-                    result.at[tfm.columns[j], tfm.columns[i]] = r
-
-        # ---
+        result = tfm.corr(method=method)
 
         if as_matrix is False or minmax is not None:
             result = (
@@ -2547,15 +2533,16 @@ class DataFrame(pd.DataFrame):
 
         
         >>> DataFrame(df).autocorr('Authors')
-                  A         B         C    D
-        A  1.000000  0.447214  0.774597  0.0
-        B  0.447214  1.000000  0.288675  0.5
-        C  0.774597  0.288675  1.000000  0.0
-        D  0.000000  0.500000  0.000000  1.0
+                  A         B         C         D
+        A  1.000000 -0.547723  0.547723 -0.645497
+        B -0.547723  1.000000 -0.416667  0.353553
+        C  0.547723 -0.416667  1.000000 -0.353553
+        D -0.645497  0.353553 -0.353553  1.000000
         
 
         >>> DataFrame(df).autocorr_map('Authors')
-        {'terms': ['A', 'B', 'C', 'D'], 'edges_75': [('A', 'C')], 'edges_50': None, 'edges_25': [('A', 'B'), ('B', 'C'), ('B', 'D')], 'other_edges': [('A', 'D'), ('C', 'D')]}
+        {'terms': ['A', 'B', 'C', 'D'], 'edges_75': None, 'edges_50': [('A', 'C')], 'edges_25': [('B', 'D')], 'other_edges': None}
+
 
 
 
@@ -2596,7 +2583,7 @@ class DataFrame(pd.DataFrame):
                         edges_50.append((terms[icol], terms[irow]))
                     elif matrix[terms[icol]][terms[irow]] > 0.25:
                         edges_25.append((terms[icol], terms[irow]))
-                    else:
+                    elif matrix[terms[icol]][terms[irow]] > 0.0:
                         other_edges.append((terms[icol], terms[irow]))
 
         if len(edges_75) == 0:
@@ -2691,36 +2678,35 @@ class DataFrame(pd.DataFrame):
 
 
         >>> DataFrame(df).corr('Authors', 'Author Keywords')
-                  A         B         C         D
-        A  1.000000  1.000000  0.500000  0.707107
-        B  1.000000  1.000000  0.500000  0.707107
-        C  0.500000  0.500000  1.000000  0.707107
-        D  0.707107  0.707107  0.707107  1.000000
+                  A         B         C        D
+        A  1.000000 -1.000000 -0.333333 -0.57735
+        B -1.000000  1.000000  0.333333  0.57735
+        C -0.333333  0.333333  1.000000  0.57735
+        D -0.577350  0.577350  0.577350  1.00000
 
         >>> DataFrame(df).corr('Authors', 'Author Keywords', minmax=(0.45, 0.8))
-                  A         B         C         D
-        A  0.000000  0.000000  0.500000  0.707107
-        B  0.000000  0.000000  0.500000  0.707107
-        C  0.500000  0.500000  0.000000  0.707107
-        D  0.707107  0.707107  0.707107  0.000000
+                 B        C        D
+        B  0.00000  0.00000  0.57735
+        C  0.00000  0.00000  0.57735
+        D  0.57735  0.57735  0.00000
 
         >>> DataFrame(df).corr('Authors', 'Author Keywords', as_matrix=False)
            Authors Author Keywords     value
         0        A               A  1.000000
-        1        B               A  1.000000
-        2        C               A  0.500000
-        3        D               A  0.707107
-        4        A               B  1.000000
+        1        B               A -1.000000
+        2        C               A -0.333333
+        3        D               A -0.577350
+        4        A               B -1.000000
         5        B               B  1.000000
-        6        C               B  0.500000
-        7        D               B  0.707107
-        8        A               C  0.500000
-        9        B               C  0.500000
+        6        C               B  0.333333
+        7        D               B  0.577350
+        8        A               C -0.333333
+        9        B               C  0.333333
         10       C               C  1.000000
-        11       D               C  0.707107
-        12       A               D  0.707107
-        13       B               D  0.707107
-        14       C               D  0.707107
+        11       D               C  0.577350
+        12       A               D -0.577350
+        13       B               D  0.577350
+        14       C               D  0.577350
         15       D               D  1.000000
 
         """
@@ -2742,20 +2728,21 @@ class DataFrame(pd.DataFrame):
             minmax=None,
         )
 
-        tfm = tfm.applymap(lambda x: min(1.0, x))
+        #  tfm = tfm.applymap(lambda x: min(1.0, x))
+        result = tfm.corr(method=method)
 
-        result = pd.DataFrame(0.0, columns=tfm.columns, index=tfm.columns)
-        for term in tfm.columns:
-            result.at[term, term] = 1.0
-        for i in range(len(tfm.columns) - 1):
-            for j in range(i + 1, len(tfm.columns)):
-                d = pd.DataFrame({"x": tfm[tfm.columns[i]], "y": tfm[tfm.columns[j]]})
-                d = d[(d.x != 0) | (d.y != 0)]
+        # result = pd.DataFrame(0.0, columns=tfm.columns, index=tfm.columns)
+        # for term in tfm.columns:
+        #     result.at[term, term] = 1.0
+        # for i in range(len(tfm.columns) - 1):
+        #     for j in range(i + 1, len(tfm.columns)):
+        #         d = pd.DataFrame({"x": tfm[tfm.columns[i]], "y": tfm[tfm.columns[j]]})
+        #         d = d[(d.x != 0) | (d.y != 0)]
 
-                if len(d) != 0 and sum(d.x * d.y) > 0:
-                    r = relationship(d.x, d.y)
-                    result.at[tfm.columns[i], tfm.columns[j]] = r
-                    result.at[tfm.columns[j], tfm.columns[i]] = r
+        #         if len(d) != 0 and sum(d.x * d.y) > 0:
+        #             r = relationship(d.x, d.y)
+        #             result.at[tfm.columns[i], tfm.columns[j]] = r
+        #             result.at[tfm.columns[j], tfm.columns[i]] = r
 
         ## tfm_r = self.compute_tfm(column=column_IDX, sep=sep_IDX)
         ## tfm_c = self.compute_tfm(column=column_COL, sep=sep_COL)
@@ -2846,17 +2833,30 @@ class DataFrame(pd.DataFrame):
         5     A,B               d         5   5
         6     A,C             c;d         6   6
 
+
+        >>> DataFrame(df).co_occurrence('Author Keywords', 'Authors', as_matrix=True)
+           A  B  C  D
+        a  2  0  1  0
+        b  1  1  1  0
+        c  2  2  2  1
+        d  2  2  1  1
+
+        >>> DataFrame(df).corr('Authors', 'Author Keywords')
+                  A         B         C         D
+        A  1.000000  0.174078  0.333333  0.577350
+        B  0.174078  1.000000  0.522233  0.904534
+        C  0.333333  0.522233  1.000000  0.577350
+        D  0.577350  0.904534  0.577350  1.000000
         
         >>> DataFrame(df).corr('Authors', 'Author Keywords')
                   A         B         C         D
-        A  1.000000  0.866025  1.000000  0.707107
-        B  0.866025  1.000000  0.866025  0.816497
-        C  1.000000  0.866025  1.000000  0.707107
-        D  0.707107  0.816497  0.707107  1.000000
-        
+        A  1.000000  0.174078  0.333333  0.577350
+        B  0.174078  1.000000  0.522233  0.904534
+        C  0.333333  0.522233  1.000000  0.577350
+        D  0.577350  0.904534  0.577350  1.000000
 
         >>> DataFrame(df).corr_map('Authors', 'Author Keywords')
-        {'terms': ['A', 'B', 'C', 'D'], 'edges_75': [('A', 'C')], 'edges_50': None, 'edges_25': [('A', 'B'), ('B', 'C'), ('B', 'D')], 'other_edges': [('A', 'D'), ('C', 'D')]}
+        {'terms': ['A', 'B', 'C', 'D'], 'edges_75': None, 'edges_50': [('A', 'C')], 'edges_25': [('B', 'D')], 'other_edges': None}
 
 
 
@@ -2896,7 +2896,7 @@ class DataFrame(pd.DataFrame):
                         edges_50.append((terms[icol], terms[irow]))
                     elif matrix[terms[icol]][terms[irow]] > 0.25:
                         edges_25.append((terms[icol], terms[irow]))
-                    else:
+                    elif matrix[terms[icol]][terms[irow]] > 0.0:
                         other_edges.append((terms[icol], terms[irow]))
 
         if len(edges_75) == 0:

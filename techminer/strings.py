@@ -12,9 +12,11 @@ Functions in this module
 """
 
 
+import json
 import re
-import geopandas
 import string
+from os.path import dirname, join
+
 from nltk.stem import PorterStemmer
 
 
@@ -369,11 +371,16 @@ def extract_country(x, sep=";"):
     #
     # lista generica de nombres de paises
     #
-    country_names = sorted(
-        geopandas.read_file(
-            geopandas.datasets.get_path("naturalearth_lowres")
-        ).name.tolist()
-    )
+    module_path = dirname(__file__)
+    with open(join(module_path, "data/worldmap.data"), "r") as f:
+        countries = json.load(f)
+    country_names = list(countries.keys())
+
+    # country_names = sorted(
+    #     geopandas.read_file(
+    #         geopandas.datasets.get_path("naturalearth_lowres")
+    #     ).name.tolist()
+    # )
 
     # paises faltantes
     country_names.append("Singapore")
