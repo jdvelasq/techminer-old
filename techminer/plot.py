@@ -6,13 +6,17 @@ Plots
 
 
 """
-import pandas as pd
+import json
+from os.path import dirname, join
+
+# import geopandas
 import matplotlib.pyplot as plt
 import numpy as np
-from wordcloud import ImageColorGenerator, WordCloud
-import geopandas
-from mpl_toolkits.axes_grid1 import make_axes_locatable
+import pandas as pd
 import squarify
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+from wordcloud import ImageColorGenerator, WordCloud
+
 from .chord_diagram import ChordDiagram
 
 
@@ -59,14 +63,14 @@ class Plot:
         word 3     0.0     0.5     0.0     1.0     0.3
         word 4    -0.3     0.0     0.0     0.3     1.0
         >>> _ = Plot(df).heatmap()
-        >>> plt.savefig('guide/images/plotheatmap1.png')
+        >>> plt.savefig('sphinx/images/plotheatmap1.png')
         
         .. image:: images/plotheatmap1.png
             :width: 400px
             :align: center
         
         >>> _ = Plot(df).heatmap(cmap='Blues')
-        >>> plt.savefig('guide/images/plotheatmap2.png')
+        >>> plt.savefig('sphinx/images/plotheatmap2.png')
         
         .. image:: images/plotheatmap2.png
             :width: 400px
@@ -91,7 +95,7 @@ class Plot:
         word 3       0      50       0     100      30
         word 4      30       0       0       3     100
         >>> _ = Plot(df).heatmap(cmap='Greys')
-        >>> plt.savefig('guide/images/plotheatmap3.png')
+        >>> plt.savefig('sphinx/images/plotheatmap3.png')
         
         .. image:: images/plotheatmap3.png
             :width: 400px
@@ -119,7 +123,7 @@ class Plot:
         word 5       1       2       3       4       5
 
         >>> _ = Plot(df).heatmap(cmap='Greys')
-        >>> plt.savefig('guide/images/plotheatmap3.png')
+        >>> plt.savefig('sphinx/images/plotheatmap3.png')
         
         .. image:: images/plotheatmap3.png
             :width: 400px
@@ -196,21 +200,21 @@ class Plot:
         word 3     0.0     0.5     0.0     1.0     0.3
         word 4    -0.3     0.0     0.0     0.3     1.0
         >>> _ = Plot(df).chord_diagram()
-        >>> plt.savefig('guide/images/plotcd1.png')
+        >>> plt.savefig('sphinx/images/plotcd1.png')
         
         .. image:: images/plotcd1.png
             :width: 400px
             :align: center
 
         >>> _ = Plot(df).chord_diagram(top_n_links=5)
-        >>> plt.savefig('guide/images/plotcd2.png')
+        >>> plt.savefig('sphinx/images/plotcd2.png')
         
         .. image:: images/plotcd2.png
             :width: 400px
             :align: center
 
         >>> _ = Plot(df).chord_diagram(solid_lines=True)
-        >>> plt.savefig('guide/images/plotcd3.png')
+        >>> plt.savefig('sphinx/images/plotcd3.png')
         
         .. image:: images/plotcd3.png
             :width: 400px
@@ -315,7 +319,7 @@ class Plot:
         3  author 2              1   3
 
         >>> _ = Plot(df).tree()
-        >>> plt.savefig('guide/images/treeplot.png')
+        >>> plt.savefig('sphinx/images/treeplot.png')
         
         .. image:: images/treeplot.png
             :width: 400px
@@ -374,14 +378,14 @@ class Plot:
         2016         7         8         0         0         1
 
         >>> _ = Plot(df).bubble(axis=0, alpha=0.5, rmax=150)
-        >>> plt.savefig('guide/images/bubbleplot0.png')
+        >>> plt.savefig('sphinx/images/bubbleplot0.png')
         
         .. image:: images/bubbleplot0.png
             :width: 400px
             :align: center
 
         >>> _ = Plot(df).bubble(axis=1, alpha=0.5, rmax=150)
-        >>> plt.savefig('guide/images/bubbleplot1.png')
+        >>> plt.savefig('sphinx/images/bubbleplot1.png')
         
         .. image:: images/bubbleplot1.png
             :width: 400px
@@ -491,33 +495,46 @@ class Plot:
         5        Colombia           1000
 
 
-        >>> _ = plt.figure(figsize=(10, 6))
+        >>> _ = plt.figure(figsize=(15, 6))
         >>> _ = Plot(df).worldmap()
-        >>> plt.savefig('guide/images/worldmap.png')
+        >>> plt.savefig('sphinx/images/worldmap.png')
         
         .. image:: images/worldmap.png
-            :width: 600px
+            :width: 1500px
             :align: center
         
         
         """
-        plt.clf()
-        cmap = plt.cm.get_cmap(cmap)
+        module_path = dirname(__file__)
+
         x = self.df.copy()
-        x[x.columns[0]] = x[x.columns[0]].map(
-            lambda w: w.replace("United States", "United States of America")
-        )
-        world = geopandas.read_file(geopandas.datasets.get_path("naturalearth_lowres"))
-        world = world[world.name != "Antarctica"]
-        world["q"] = 0
-        world.index = world.name
-        for _, row in x.iterrows():
-            if row[0] in world.index:
-                world.at[row[0], "q"] = row[1]
-        axx = plt.gca()
-        divider = make_axes_locatable(plt.gca())
-        cax = divider.append_axes("right", size="5%", pad=0.1)
-        world.plot(column="q", cmap=cmap, legend=legend, ax=axx, cax=cax, **kwargs)
+        x["color"] = x[x.columns[1]].map(lambda w: w / x[x.columns[1]].max())
+        x = x.set_index("Country")
+        cmap = plt.cm.get_cmap(cmap)
+        with open(join(module_path, "data/worldmap.data"), "r") as f:
+            countries = json.load(f)
+        plt.clf()
+        for country in countries.keys():
+            data = countries[country]
+            for item in data:
+                plt.plot(item[0], item[1], "-k", linewidth=0.5)
+                if country in x.index.tolist():
+                    plt.fill(item[0], item[1], color=cmap(x.color[country]))
+        #
+        xmin, xmax = plt.xlim()
+        ymin, ymax = plt.ylim()
+        xleft = xmax - 0.02 * (xmax - xmin)
+        xright = xmax
+        xbar = np.linspace(xleft, xright, 10)
+        ybar = np.linspace(ymin, ymin + (ymax - ymin), 100)
+        xv, yv = np.meshgrid(xbar, ybar)
+        z = yv / (ymax - ymin) - ymin
+        plt.pcolormesh(xv, yv, z, cmap=cmap)
+        plt.text(xleft, ymin, "0", ha="right")
+        plt.text(xleft, ymax, str(x[x.columns[0]].max()), ha="right")
+        #
+        plt.gca().set_aspect("equal")
+        plt.axis("off")
         return plt.gca()
 
     def gant(self, hlines_lw=0.5, hlines_c="gray", hlines_ls=":", *args, **kwargs):
@@ -549,7 +566,7 @@ class Plot:
         2016         0         0         0         0         1
 
         >>> _ = Plot(pd).gant()
-        >>> plt.savefig('guide/images/gantplot.png')
+        >>> plt.savefig('sphinx/images/gantplot.png')
         
         .. image:: images/gantplot.png
             :width: 400px
@@ -623,7 +640,7 @@ class Plot:
         2  author 0              2   2
         3  author 2              1   3
         >>> _ = Plot(pd).pie(cmap=plt.cm.Blues)
-        >>> plt.savefig('guide/images/pieplot.png')
+        >>> plt.savefig('sphinx/images/pieplot.png')
         
         .. image:: images/pieplot.png
             :width: 400px
@@ -681,7 +698,7 @@ class Plot:
         2  author 0              2   2
         3  author 2              1   3
         >>> _ = Plot(pd).bar(cmap=plt.cm.Blues)
-        >>> plt.savefig('guide/images/barplot.png')
+        >>> plt.savefig('sphinx/images/barplot.png')
         
         .. image:: images/barplot.png
             :width: 400px
@@ -739,7 +756,7 @@ class Plot:
         2  author 0              2   2
         3  author 2              1   3
         >>> _ = Plot(pd).barh(cmap=plt.cm.Blues)
-        >>> plt.savefig('guide/images/barhplot.png')
+        >>> plt.savefig('sphinx/images/barhplot.png')
         
         .. image:: images/barhplot.png
             :width: 400px
@@ -796,7 +813,7 @@ class Plot:
         2  author 0              2   2
         3  author 2              1   3
         >>> _ = Plot(pd).plot()
-        >>> plt.savefig('guide/images/plotplot.png')
+        >>> plt.savefig('sphinx/images/plotplot.png')
         
         .. image:: images/plotplot.png
             :width: 400px
@@ -876,7 +893,7 @@ class Plot:
         2  author 0              2   2
         3  author 2              1   3
         >>> _ = Plot(pd).wordcloud()
-        >>> plt.savefig('guide/images/wordcloud.png')        
+        >>> plt.savefig('sphinx/images/wordcloud.png')        
         
         .. image:: images/wordcloud.png
             :width: 400px

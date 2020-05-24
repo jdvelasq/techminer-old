@@ -23,7 +23,7 @@ class ChordDiagram:
     >>> chord.add_edges_from([('a', 'b'), ('c', 'd'), ('e', 'f')])
     >>> _= plt.figure(figsize=(6, 6))
     >>> _ = chord.plot(R=1, dist=0.05, fontsize=20, color='red')
-    >>> plt.savefig('guide/images/chord_demo_1.png')
+    >>> plt.savefig('sphinx/images/chord_demo_1.png')
     
     .. image:: images/chord_demo_1.png
         :width: 400px
@@ -36,7 +36,7 @@ class ChordDiagram:
     >>> chord.add_edge('a', 'b', linestyle=':', color='red')
     >>> _ = plt.figure(figsize=(6, 6))
     >>> _ = chord.plot(R=1, dist=0.05, fontsize=20, color='red')
-    >>> plt.savefig('guide/images/chord_demo_2.png')
+    >>> plt.savefig('sphinx/images/chord_demo_2.png')
     
     .. image:: images/chord_demo_2.png
         :width: 400px

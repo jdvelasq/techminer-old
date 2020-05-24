@@ -38,7 +38,8 @@ def sphinx():
     """Document creation using Shinx"""
     sh("cd sphinx; make html; cd ..")
     sh("rm -rf docs/*")
-    sh("cp -R sphinx/_build/html/* docs/")
+    sh("mv  sphinx/_build/html/* docs/")
+    sh("rm -R sphinx/_build/doctrees/*")
 
 
 @needs("nosetests", "pylint", "sphinx")

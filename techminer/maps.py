@@ -116,10 +116,10 @@ class Map:
         ...     label_terms,
         ...     label_docs,
         ...     term_props={"node_color": "red"},
-        ...     label_docs_props={"font_color": "lightblue"},
+        ...     label_docs_props={"color": "lightblue"},
         ...     label_term_props=dict(ma="left", rotation=0, fontsize=10, disp=3, bbox=None),
         ... )        
-        >>> plt.savefig('guide/images/network_occurrence_map.png')
+        >>> plt.savefig('sphinx/images/network_occurrence_map.png')
         
         .. image:: images/network_occurrence_map.png
             :width: 600px
@@ -146,14 +146,14 @@ class Map:
         >>> dic1 = DataFrame(df).occurrence_map(column='Authors')
         >>> dic2 = dict(
         ...     term_props={"node_color": "red"}, 
-        ...     label_docs_props={"font_color": "lightblue"}, 
+        ...     label_docs_props={"color": "lightblue"}, 
         ...     label_term_props=dict(ma="left", rotation=0, fontsize=10, disp=3, bbox=None)
         ... )
         >>> kwargs = {**dic1, **dic2}
         >>> kwargs
-        {'terms': ['A', 'B', 'C', 'D'], 'docs': ['doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4', 'doc#5'], 'edges': [('A', 'doc#0'), ('A', 'doc#1'), ('B', 'doc#1'), ('A', 'doc#2'), ('B', 'doc#2'), ('C', 'doc#2'), ('B', 'doc#3'), ('B', 'doc#4'), ('D', 'doc#4'), ('D', 'doc#5')], 'label_terms': {'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D'}, 'label_docs': {'doc#0': 2, 'doc#1': 1, 'doc#2': 1, 'doc#3': 1, 'doc#4': 1, 'doc#5': 1}, 'term_props': {'node_color': 'red'}, 'label_docs_props': {'font_color': 'lightblue'}, 'label_term_props': {'ma': 'left', 'rotation': 0, 'fontsize': 10, 'disp': 3, 'bbox': None}}
+        {'terms': ['A', 'B', 'C', 'D'], 'docs': ['doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4', 'doc#5'], 'edges': [('A', 'doc#0'), ('A', 'doc#1'), ('B', 'doc#1'), ('A', 'doc#2'), ('B', 'doc#2'), ('C', 'doc#2'), ('B', 'doc#3'), ('B', 'doc#4'), ('D', 'doc#4'), ('D', 'doc#5')], 'label_terms': {'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D'}, 'label_docs': {'doc#0': 2, 'doc#1': 1, 'doc#2': 1, 'doc#3': 1, 'doc#4': 1, 'doc#5': 1}, 'term_props': {'node_color': 'red'}, 'label_docs_props': {'color': 'lightblue'}, 'label_term_props': {'ma': 'left', 'rotation': 0, 'fontsize': 10, 'disp': 3, 'bbox': None}}
         >>> nxmap.ocurrence_map(**kwargs)
-        >>> plt.savefig('guide/images/network_occurrence_map_1.png')
+        >>> plt.savefig('sphinx/images/network_occurrence_map_1.png')
 
         .. image:: images/network_occurrence_map_1.png
             :width: 600px
@@ -197,7 +197,7 @@ class Map:
         ... )
         >>> nxmap = Map()
         >>> nxmap.correlation_map(**kwargs)
-        >>> plt.savefig('guide/images/correlation_map.png')
+        >>> plt.savefig('sphinx/images/correlation_map.png')
 
         .. image:: images/correlation_map.png
             :width: 600px
@@ -227,7 +227,7 @@ class Map:
         >>> nxmap = Map()
         >>> kwargs = DataFrame(df).autocorr_map('Authors')
         >>> nxmap.correlation_map(**kwargs)
-        >>> plt.savefig('guide/images/correlation_map_1.png')
+        >>> plt.savefig('sphinx/images/correlation_map_1.png')
 
         .. image:: images/correlation_map_1.png
             :width: 600px
@@ -236,7 +236,7 @@ class Map:
         >>> nxmap = Map()
         >>> kwargs = DataFrame(df).autocorr_map('Authors',  top_n_links=4)
         >>> nxmap.correlation_map(**kwargs)
-        >>> plt.savefig('guide/images/correlation_map_2.png')
+        >>> plt.savefig('sphinx/images/correlation_map_2.png')
 
         .. image:: images/correlation_map_2.png
             :width: 600px
@@ -245,7 +245,7 @@ class Map:
         >>> nxmap = Map()
         >>> kwargs = DataFrame(df).corr_map('Authors', by='Author Keywords',  top_n_links=4)
         >>> nxmap.correlation_map(**kwargs)
-        >>> plt.savefig('guide/images/correlation_map_3.png')
+        >>> plt.savefig('sphinx/images/correlation_map_3.png')
 
         .. image:: images/correlation_map_3.png
             :width: 600px

@@ -269,10 +269,10 @@
 <span class="sd">        ...     label_terms,</span>
 <span class="sd">        ...     label_docs,</span>
 <span class="sd">        ...     term_props={&quot;node_color&quot;: &quot;red&quot;},</span>
-<span class="sd">        ...     label_docs_props={&quot;font_color&quot;: &quot;lightblue&quot;},</span>
+<span class="sd">        ...     label_docs_props={&quot;color&quot;: &quot;lightblue&quot;},</span>
 <span class="sd">        ...     label_term_props=dict(ma=&quot;left&quot;, rotation=0, fontsize=10, disp=3, bbox=None),</span>
 <span class="sd">        ... )        </span>
-<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;guide/images/network_occurrence_map.png&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/network_occurrence_map.png&#39;)</span>
 <span class="sd">        </span>
 <span class="sd">        .. image:: images/network_occurrence_map.png</span>
 <span class="sd">            :width: 600px</span>
@@ -299,14 +299,14 @@
 <span class="sd">        &gt;&gt;&gt; dic1 = DataFrame(df).occurrence_map(column=&#39;Authors&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; dic2 = dict(</span>
 <span class="sd">        ...     term_props={&quot;node_color&quot;: &quot;red&quot;}, </span>
-<span class="sd">        ...     label_docs_props={&quot;font_color&quot;: &quot;lightblue&quot;}, </span>
+<span class="sd">        ...     label_docs_props={&quot;color&quot;: &quot;lightblue&quot;}, </span>
 <span class="sd">        ...     label_term_props=dict(ma=&quot;left&quot;, rotation=0, fontsize=10, disp=3, bbox=None)</span>
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; kwargs = {**dic1, **dic2}</span>
 <span class="sd">        &gt;&gt;&gt; kwargs</span>
-<span class="sd">        {&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;docs&#39;: [&#39;doc#0&#39;, &#39;doc#1&#39;, &#39;doc#2&#39;, &#39;doc#3&#39;, &#39;doc#4&#39;, &#39;doc#5&#39;], &#39;edges&#39;: [(&#39;A&#39;, &#39;doc#0&#39;), (&#39;A&#39;, &#39;doc#1&#39;), (&#39;B&#39;, &#39;doc#1&#39;), (&#39;A&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#2&#39;), (&#39;C&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#3&#39;), (&#39;B&#39;, &#39;doc#4&#39;), (&#39;D&#39;, &#39;doc#4&#39;), (&#39;D&#39;, &#39;doc#5&#39;)], &#39;label_terms&#39;: {&#39;A&#39;: &#39;A&#39;, &#39;B&#39;: &#39;B&#39;, &#39;C&#39;: &#39;C&#39;, &#39;D&#39;: &#39;D&#39;}, &#39;label_docs&#39;: {&#39;doc#0&#39;: 2, &#39;doc#1&#39;: 1, &#39;doc#2&#39;: 1, &#39;doc#3&#39;: 1, &#39;doc#4&#39;: 1, &#39;doc#5&#39;: 1}, &#39;term_props&#39;: {&#39;node_color&#39;: &#39;red&#39;}, &#39;label_docs_props&#39;: {&#39;font_color&#39;: &#39;lightblue&#39;}, &#39;label_term_props&#39;: {&#39;ma&#39;: &#39;left&#39;, &#39;rotation&#39;: 0, &#39;fontsize&#39;: 10, &#39;disp&#39;: 3, &#39;bbox&#39;: None}}</span>
+<span class="sd">        {&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;docs&#39;: [&#39;doc#0&#39;, &#39;doc#1&#39;, &#39;doc#2&#39;, &#39;doc#3&#39;, &#39;doc#4&#39;, &#39;doc#5&#39;], &#39;edges&#39;: [(&#39;A&#39;, &#39;doc#0&#39;), (&#39;A&#39;, &#39;doc#1&#39;), (&#39;B&#39;, &#39;doc#1&#39;), (&#39;A&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#2&#39;), (&#39;C&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#3&#39;), (&#39;B&#39;, &#39;doc#4&#39;), (&#39;D&#39;, &#39;doc#4&#39;), (&#39;D&#39;, &#39;doc#5&#39;)], &#39;label_terms&#39;: {&#39;A&#39;: &#39;A&#39;, &#39;B&#39;: &#39;B&#39;, &#39;C&#39;: &#39;C&#39;, &#39;D&#39;: &#39;D&#39;}, &#39;label_docs&#39;: {&#39;doc#0&#39;: 2, &#39;doc#1&#39;: 1, &#39;doc#2&#39;: 1, &#39;doc#3&#39;: 1, &#39;doc#4&#39;: 1, &#39;doc#5&#39;: 1}, &#39;term_props&#39;: {&#39;node_color&#39;: &#39;red&#39;}, &#39;label_docs_props&#39;: {&#39;color&#39;: &#39;lightblue&#39;}, &#39;label_term_props&#39;: {&#39;ma&#39;: &#39;left&#39;, &#39;rotation&#39;: 0, &#39;fontsize&#39;: 10, &#39;disp&#39;: 3, &#39;bbox&#39;: None}}</span>
 <span class="sd">        &gt;&gt;&gt; nxmap.ocurrence_map(**kwargs)</span>
-<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;guide/images/network_occurrence_map_1.png&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/network_occurrence_map_1.png&#39;)</span>
 
 <span class="sd">        .. image:: images/network_occurrence_map_1.png</span>
 <span class="sd">            :width: 600px</span>
@@ -350,7 +350,7 @@
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; nxmap = Map()</span>
 <span class="sd">        &gt;&gt;&gt; nxmap.correlation_map(**kwargs)</span>
-<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;guide/images/correlation_map.png&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/correlation_map.png&#39;)</span>
 
 <span class="sd">        .. image:: images/correlation_map.png</span>
 <span class="sd">            :width: 600px</span>
@@ -380,7 +380,7 @@
 <span class="sd">        &gt;&gt;&gt; nxmap = Map()</span>
 <span class="sd">        &gt;&gt;&gt; kwargs = DataFrame(df).autocorr_map(&#39;Authors&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; nxmap.correlation_map(**kwargs)</span>
-<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;guide/images/correlation_map_1.png&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/correlation_map_1.png&#39;)</span>
 
 <span class="sd">        .. image:: images/correlation_map_1.png</span>
 <span class="sd">            :width: 600px</span>
@@ -389,7 +389,7 @@
 <span class="sd">        &gt;&gt;&gt; nxmap = Map()</span>
 <span class="sd">        &gt;&gt;&gt; kwargs = DataFrame(df).autocorr_map(&#39;Authors&#39;,  top_n_links=4)</span>
 <span class="sd">        &gt;&gt;&gt; nxmap.correlation_map(**kwargs)</span>
-<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;guide/images/correlation_map_2.png&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/correlation_map_2.png&#39;)</span>
 
 <span class="sd">        .. image:: images/correlation_map_2.png</span>
 <span class="sd">            :width: 600px</span>
@@ -398,7 +398,7 @@
 <span class="sd">        &gt;&gt;&gt; nxmap = Map()</span>
 <span class="sd">        &gt;&gt;&gt; kwargs = DataFrame(df).corr_map(&#39;Authors&#39;, by=&#39;Author Keywords&#39;,  top_n_links=4)</span>
 <span class="sd">        &gt;&gt;&gt; nxmap.correlation_map(**kwargs)</span>
-<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;guide/images/correlation_map_3.png&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/correlation_map_3.png&#39;)</span>
 
 <span class="sd">        .. image:: images/correlation_map_3.png</span>
 <span class="sd">            :width: 600px</span>

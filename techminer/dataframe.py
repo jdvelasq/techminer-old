@@ -2239,7 +2239,7 @@ class DataFrame(pd.DataFrame):
         4    Iosifidis A.
         Name: Authors, dtype: object
         >>> df.occurrence_map(column="Authors", include_only=top_authors)
-
+        {'terms': ['Arevalo A.', 'Gabbouj M.', 'Hernandez G.', 'Hussain A.J.', 'Iosifidis A.'], 'docs': ['doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4', 'doc#5', 'doc#6', 'doc#7'], 'edges': [('Arevalo A.', 'doc#0'), ('Hernandez G.', 'doc#0'), ('Hussain A.J.', 'doc#1'), ('Hussain A.J.', 'doc#2'), ('Hussain A.J.', 'doc#3'), ('Arevalo A.', 'doc#4'), ('Hernandez G.', 'doc#4'), ('Arevalo A.', 'doc#5'), ('Hernandez G.', 'doc#5'), ('Gabbouj M.', 'doc#6'), ('Iosifidis A.', 'doc#6'), ('Gabbouj M.', 'doc#7'), ('Iosifidis A.', 'doc#7')], 'label_terms': {'Arevalo A.': 'Arevalo A.', 'Gabbouj M.': 'Gabbouj M.', 'Hernandez G.': 'Hernandez G.', 'Hussain A.J.': 'Hussain A.J.', 'Iosifidis A.': 'Iosifidis A.'}, 'label_docs': {'doc#0': 1, 'doc#1': 1, 'doc#2': 1, 'doc#3': 1, 'doc#4': 1, 'doc#5': 1, 'doc#6': 1, 'doc#7': 2}}
 
         """
         if sep is None and column in SCOPUS_SEPS.keys():
