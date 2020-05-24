@@ -316,6 +316,7 @@ class Thesaurus:
         self._ignore_case = ignore_case
         self._full_match = full_match
         self._use_re = use_re
+        self._dict = None
 
     @property
     def thesaurus(self):
@@ -610,3 +611,23 @@ class Thesaurus:
             for value in self._thesaurus[key]:
                 result[value] = key
         return result
+
+    def compile(self):
+        self._dict = self.to_dict()
+
+    def appy_as_dict(self, x, sep=None):
+
+        if x is None:
+            return None
+
+        if sep is None:
+            x = [x]
+        else:
+            x = x.split(sep)
+
+        result = [self._dict[z] if z in self._dict.keys() else z for z in x]
+
+        if sep is None:
+            return result[0]
+
+        return sep.join(result)
