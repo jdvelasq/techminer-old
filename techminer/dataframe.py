@@ -809,13 +809,13 @@ class DataFrame(pd.DataFrame):
     ##
     ##
 
-    def summarize_by_term(self, column, sep=None, filter=None):
+    def summarize_by_term(self, column, sep=None, keywords=None):
         """Summarize the number of documents and citations by term in a dataframe.
         
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -845,9 +845,9 @@ class DataFrame(pd.DataFrame):
         2  author 2              1        10     [0]
         3  author 3              1        13     [3]
 
-        >>> filter = Keywords(['author 1', 'author 2'])
-        >>> filter = filter.compile()
-        >>> DataFrame(df).summarize_by_term('Authors', sep=',', filter=filter)
+        >>> keywords = Keywords(['author 1', 'author 2'])
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).summarize_by_term('Authors', sep=',', keywords=keywords)
             Authors  Num Documents  Cited by      ID
         0  author 1              2        22  [0, 2]
         1  author 2              1        10     [0]
@@ -862,10 +862,10 @@ class DataFrame(pd.DataFrame):
             ID=data.groupby(column).agg({"ID": list}).reset_index()["ID"]
         )
         result["Cited by"] = result["Cited by"].map(lambda x: int(x))
-        if filter is not None:
-            if filter._patterns is None:
-                filter = filter.compile()
-            result = result[result[column].map(lambda w: w in filter)]
+        if keywords is not None:
+            if keywords._patterns is None:
+                keywords = keywords.compile()
+            result = result[result[column].map(lambda w: w in keywords)]
         result.sort_values(
             [column, "Num Documents", "Cited by"],
             ascending=[True, False, False],
@@ -874,13 +874,13 @@ class DataFrame(pd.DataFrame):
         )
         return result
 
-    def documents_by_term(self, column, sep=None, filter=None):
+    def documents_by_term(self, column, sep=None, keywords=None):
         """Computes the number of documents per term in a given column.
 
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -910,9 +910,16 @@ class DataFrame(pd.DataFrame):
         2  author 2              1     [0]
         3  author 3              1     [3]
 
+        >>> keywords = Keywords(['author 1', 'author 2'])
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).documents_by_term('Authors', sep=',', keywords=keywords)
+            Authors  Num Documents      ID
+        0  author 1              2  [0, 2]
+        1  author 2              1     [0]
+
         """
 
-        result = self.summarize_by_term(column, sep)
+        result = self.summarize_by_term(column, sep, keywords)
         result.pop("Cited by")
         result.sort_values(
             ["Num Documents", column],
@@ -922,13 +929,13 @@ class DataFrame(pd.DataFrame):
         )
         return result
 
-    def citations_by_term(self, column, sep=None, filter=None):
+    def citations_by_term(self, column, sep=None, keywords=None):
         """Computes the number of citations by item in a column.
 
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -958,9 +965,15 @@ class DataFrame(pd.DataFrame):
         2  author 3        13     [3]
         3  author 2        10     [0]
 
+        >>> keywords = Keywords(['author 1', 'author 2'])
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).citations_by_term('Authors', keywords=keywords)
+            Authors  Cited by      ID
+        0  author 1        22  [0, 2]
+        1  author 2        10     [0]
 
         """
-        result = self.summarize_by_term(column, sep)
+        result = self.summarize_by_term(column, sep, keywords)
         result.pop("Num Documents")
         result.sort_values(
             ["Cited by", column],
@@ -1169,13 +1182,13 @@ class DataFrame(pd.DataFrame):
     #
     #
 
-    def summarize_by_term_per_year(self, column, sep=None, filter=None):
+    def summarize_by_term_per_year(self, column, sep=None, keywords=None):
         """Computes the number of documents and citations by term per year.
 
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1211,6 +1224,15 @@ class DataFrame(pd.DataFrame):
         5  author 4  2012        14              1     [4]
         6  author 4  2014        15              1     [5]
 
+        >>> keywords = Keywords(['author 1', 'author 2', 'author 3'])
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).summarize_by_term_per_year('Authors', keywords=keywords)
+            Authors  Year  Cited by  Num Documents   ID
+        0  author 1  2010        10              1  [0]
+        1  author 2  2010        10              1  [0]
+        2  author 1  2011        12              1  [2]
+        3  author 3  2011        13              1  [3]
+
         """
         data = DataFrame(self[["Year", column, "Cited by", "ID"]]).explode(column, sep)
         data["Num Documents"] = 1
@@ -1221,13 +1243,17 @@ class DataFrame(pd.DataFrame):
             ID=data.groupby([column, "Year"]).agg({"ID": list}).reset_index()["ID"]
         )
         result["Cited by"] = result["Cited by"].map(lambda x: int(x))
+        if keywords is not None:
+            if keywords._patterns is None:
+                keywords = keywords.compile()
+            result = result[result[column].map(lambda w: w in keywords)]
         result.sort_values(
             ["Year", column], ascending=True, inplace=True, ignore_index=True,
         )
         return result
 
     def documents_by_term_per_year(
-        self, column, sep=None, as_matrix=False, minmax=None, filter=None
+        self, column, sep=None, as_matrix=False, minmax=None, keywords=None
     ):
         """Computes the number of documents by term per year.
 
@@ -1236,7 +1262,7 @@ class DataFrame(pd.DataFrame):
             sep (str): Character used as internal separator for the elements in the column.
             as_matrix (bool): Results are returned as a matrix.
             minmax (pair(number,number)): filter values by >=min,<=max.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1290,10 +1316,17 @@ class DataFrame(pd.DataFrame):
         2011         1         0         1         0
         2012         0         0         0         1
         2014         0         0         0         1
+        
+        >>> keywords = Keywords(['author 1', 'author 2', 'author 3'])
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).documents_by_term_per_year('Authors', keywords=keywords, as_matrix=True)
+              author 1  author 2  author 3
+        2010         1         1         0
+        2011         1         0         1
 
         """
 
-        result = self.summarize_by_term_per_year(column, sep)
+        result = self.summarize_by_term_per_year(column, sep, keywords)
         result.pop("Cited by")
         if minmax is not None:
             min_value, max_value = minmax
@@ -1319,7 +1352,7 @@ class DataFrame(pd.DataFrame):
             result.index = result.index.tolist()
         return result
 
-    def gant(self, column, sep=None, minmax=None, filter=None):
+    def gant(self, column, sep=None, minmax=None, keywords=None):
         """Computes the number of documents by term per year.
 
         Args:
@@ -1327,7 +1360,7 @@ class DataFrame(pd.DataFrame):
             sep (str): Character used as internal separator for the elements in the column.
             as_matrix (bool): Results are returned as a matrix.
             minmax (pair(number,number)): filter values by >=min,<=max.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1363,9 +1396,20 @@ class DataFrame(pd.DataFrame):
         2015         0         0         0         1         1
         2016         0         0         0         0         1
 
+        >>> keywords = Keywords(['author 1', 'author 2', 'author 3'])
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).gant('Authors', keywords=keywords)
+              author 1  author 2  author 3
+        2010         1         1         0
+        2011         1         0         0
+        2012         0         0         1
+        2013         0         0         1
+        2014         0         0         1
+        2015         0         0         1
+
         """
         result = self.documents_by_term_per_year(
-            column=column, sep=sep, as_matrix=True, minmax=minmax
+            column=column, sep=sep, as_matrix=True, minmax=minmax, keywords=keywords
         )
         years = [year for year in range(result.index.min(), result.index.max() + 1)]
         result = result.reindex(years, fill_value=0)
@@ -1385,7 +1429,7 @@ class DataFrame(pd.DataFrame):
         return result
 
     def citations_by_term_per_year(
-        self, column, sep=None, as_matrix=False, minmax=None, filter=None
+        self, column, sep=None, as_matrix=False, minmax=None, keywords=None
     ):
         """Computes the number of citations by term by year in a column.
 
@@ -1394,7 +1438,7 @@ class DataFrame(pd.DataFrame):
             sep (str): Character used as internal separator for the elements in the column.
             as_matrix (bool): Results are returned as a matrix.
             minmax (pair(number,number)): filter values by >=min,<=max.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1444,9 +1488,17 @@ class DataFrame(pd.DataFrame):
         2012         0         0        14
         2014         0         0        15
 
+        >>> keywords = Keywords(['author 1', 'author 2', 'author 3'])
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).citations_by_term_per_year('Authors', keywords=keywords)
+            Authors  Year  Cited by   ID
+        0  author 2  2010        10  [0]
+        1  author 1  2010        10  [0]
+        2  author 3  2011        13  [3]
+        3  author 1  2011        12  [2]
 
         """
-        result = self.summarize_by_term_per_year(column, sep)
+        result = self.summarize_by_term_per_year(column, sep, keywords)
         result.pop("Num Documents")
         if minmax is not None:
             min_value, max_value = minmax
@@ -1473,7 +1525,7 @@ class DataFrame(pd.DataFrame):
     #
 
     def summarize_by_term_per_term_per_year(
-        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None, filter=None
+        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None, keywords=None
     ):
         """Computes the number of documents and citations by term per term by year.
 
@@ -1482,7 +1534,7 @@ class DataFrame(pd.DataFrame):
             sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
             column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
             sep_COL (str): Character used as internal separator for the elements in the column_COL.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1524,6 +1576,15 @@ class DataFrame(pd.DataFrame):
         10  author 4              w5  2012        14              1     [4]
         11  author 4              w3  2014        15              1     [5]
 
+        >>> keywords = Keywords(['author 1', 'author 2', 'author 3', 'w1', 'w3'])
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).summarize_by_term_per_term_per_year('Authors', 'Author Keywords', keywords=keywords)
+            Authors Author Keywords  Year  Cited by  Num Documents   ID
+        0  author 1              w1  2010        10              1  [0]
+        1  author 2              w1  2010        10              1  [0]
+        2  author 1              w1  2011        12              1  [2]
+        3  author 3              w3  2011        13              1  [3]
+
         """
 
         data = DataFrame(
@@ -1540,13 +1601,18 @@ class DataFrame(pd.DataFrame):
             .reset_index()["ID"]
         )
         result["Cited by"] = result["Cited by"].map(lambda x: int(x))
+        if keywords is not None:
+            if keywords._patterns is None:
+                keywords = keywords.compile()
+            result = result[result[column_IDX].map(lambda w: w in keywords)]
+            result = result[result[column_COL].map(lambda w: w in keywords)]
         result.sort_values(
             ["Year", column_IDX, column_COL,], ascending=True, inplace=True
         )
         return result.reset_index(drop=True)
 
     def documents_by_terms_per_terms_per_year(
-        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None, filter=None
+        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None, keywords=None
     ):
         """Computes the number of documents by term per term per year.
 
@@ -1555,7 +1621,7 @@ class DataFrame(pd.DataFrame):
             sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
             column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
             sep_COL (str): Character used as internal separator for the elements in the column_COL.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1597,11 +1663,19 @@ class DataFrame(pd.DataFrame):
         10  author 4              w5  2012              1     [4]
         11  author 4              w3  2014              1     [5]
 
+        >>> keywords = Keywords(['author 1', 'author 2', 'author 3', 'w1', 'w3'])
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).documents_by_terms_per_terms_per_year('Authors', 'Author Keywords', keywords=keywords)
+            Authors Author Keywords  Year  Num Documents   ID
+        0  author 1              w1  2010              1  [0]
+        1  author 2              w1  2010              1  [0]
+        2  author 1              w1  2011              1  [2]
+        3  author 3              w3  2011              1  [3]
 
         """
 
         result = self.summarize_by_term_per_term_per_year(
-            column_IDX, column_COL, sep_IDX, sep_COL
+            column_IDX, column_COL, sep_IDX, sep_COL, keywords
         )
         result.pop("Cited by")
         result.sort_values(
@@ -1612,7 +1686,7 @@ class DataFrame(pd.DataFrame):
         return result.reset_index(drop=True)
 
     def citations_by_terms_per_terms_per_year(
-        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None, filter=None
+        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None, keywords=None
     ):
         """Computes the number of citations by term per term per year.
 
@@ -1621,7 +1695,7 @@ class DataFrame(pd.DataFrame):
             sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
             column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
             sep_COL (str): Character used as internal separator for the elements in the column_COL.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1663,11 +1737,20 @@ class DataFrame(pd.DataFrame):
         10  author 4              w5  2012        14     [4]
         11  author 4              w3  2014        15     [5]
 
+        >>> keywords = Keywords(['author 1', 'author 2', 'author 3', 'w1', 'w3'])
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).citations_by_terms_per_terms_per_year('Authors', 'Author Keywords', keywords=keywords)
+            Authors Author Keywords  Year  Cited by   ID
+        0  author 1              w1  2010        10  [0]
+        1  author 2              w1  2010        10  [0]
+        2  author 1              w1  2011        12  [2]
+        3  author 3              w3  2011        13  [3]
+
 
         """
 
         result = self.summarize_by_term_per_term_per_year(
-            column_IDX, column_COL, sep_IDX, sep_COL
+            column_IDX, column_COL, sep_IDX, sep_COL, keywords
         )
         result.pop("Num Documents")
         result.sort_values(
@@ -1684,7 +1767,7 @@ class DataFrame(pd.DataFrame):
     #
 
     def summarize_co_occurrence(
-        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None, filter=None
+        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None, keywords=None
     ):
         """Summarize occurrence and citations by terms in two different columns.
 
@@ -1693,7 +1776,7 @@ class DataFrame(pd.DataFrame):
             sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
             column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
             sep_COL (str): Character used as internal separator for the elements in the column_COL.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1732,6 +1815,14 @@ class DataFrame(pd.DataFrame):
         7             C                     c              1         3     [3]
         8             D                     c              1         4     [4]
         9             D                     d              1         4     [4]
+
+        >>> keywords = Keywords(['B', 'C', 'a', 'b'], ignore_case=False)
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).summarize_co_occurrence('Authors', 'Author Keywords', keywords=keywords)
+          Authors (IDX) Author Keywords (COL)  Num Documents  Cited by      ID
+        0             B                     a              1         1     [1]
+        1             B                     b              2         3  [1, 2]
+
 
         """
 
@@ -1784,6 +1875,11 @@ class DataFrame(pd.DataFrame):
                 "ID",
             ]
         ]
+        if keywords is not None:
+            if keywords._patterns is None:
+                keywords = keywords.compile()
+            result = result[result[column_IDX + " (IDX)"].map(lambda w: w in keywords)]
+            result = result[result[column_COL + " (COL)"].map(lambda w: w in keywords)]
 
         result = result.sort_values(
             [column_IDX + " (IDX)", column_COL + " (COL)"], ignore_index=True,
@@ -1799,7 +1895,7 @@ class DataFrame(pd.DataFrame):
         sep_COL=None,
         as_matrix=False,
         minmax=None,
-        filter=None,
+        keywords=None,
     ):
         """Computes the co-occurrence of two terms in different colums. The report adds
         the number of documents by term between brackets.
@@ -1811,7 +1907,7 @@ class DataFrame(pd.DataFrame):
             sep_COL (str): Character used as internal separator for the elements in the column_COL.
             as_matrix (bool): Results are returned as a matrix.
             minmax (pair(number,number)): filter values by >=min,<=max.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1863,6 +1959,14 @@ class DataFrame(pd.DataFrame):
         A  2  0  0
         B  0  2  2
 
+        >>> keywords = Keywords(['A', 'B', 'c', 'd'], ignore_case=False)
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).co_occurrence('Authors', 'Author Keywords', as_matrix=True, keywords=keywords)
+           c  d
+        A  1  0
+        B  2  1
+
+
         """
 
         def generate_dic(column, sep):
@@ -1875,7 +1979,9 @@ class DataFrame(pd.DataFrame):
             }
             return new_names
 
-        result = self.summarize_co_occurrence(column_IDX, column_COL, sep_IDX, sep_COL)
+        result = self.summarize_co_occurrence(
+            column_IDX, column_COL, sep_IDX, sep_COL, keywords
+        )
         result.pop("Cited by")
         if minmax is not None:
             min_value, max_value = minmax
@@ -1913,7 +2019,7 @@ class DataFrame(pd.DataFrame):
         sep_COL=None,
         as_matrix=False,
         minmax=None,
-        filter=None,
+        keywords=None,
     ):
         """Computes the number of citations shared by two terms in different columns.
 
@@ -1924,7 +2030,7 @@ class DataFrame(pd.DataFrame):
             sep_COL (str): Character used as internal separator for the elements in the column_COL.
             as_matrix (bool): Results are returned as a matrix.
             minmax (pair(number,number)): filter values by >=min,<=max.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -1975,6 +2081,13 @@ class DataFrame(pd.DataFrame):
         C  0  3  0
         D  0  4  4
 
+        >>> keywords = Keywords(['A', 'B', 'c', 'd'], ignore_case=False)
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).co_citation('Authors', 'Author Keywords', as_matrix=True, keywords=keywords)        
+           c  d
+        A  3  0
+        B  7  4
+
         """
 
         def generate_dic(column, sep):
@@ -1987,7 +2100,9 @@ class DataFrame(pd.DataFrame):
             }
             return new_names
 
-        result = self.summarize_co_occurrence(column_IDX, column_COL, sep_IDX, sep_COL)
+        result = self.summarize_co_occurrence(
+            column_IDX, column_COL, sep_IDX, sep_COL, keywords
+        )
         result.pop("Num Documents")
         if minmax is not None:
             min_value, max_value = minmax
@@ -2019,13 +2134,13 @@ class DataFrame(pd.DataFrame):
     #
     #
 
-    def summarize_occurrence(self, column, sep=None, filter=None):
+    def summarize_occurrence(self, column, sep=None, keywords=None):
         """Summarize occurrence and citations by terms in a column of a dataframe.
 
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -2067,6 +2182,16 @@ class DataFrame(pd.DataFrame):
         10             D             B              1         6           [6]
         11             D             D              2        11        [5, 6]
         
+        >>> keywords = Keywords(['A', 'B'], ignore_case=False)
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).summarize_occurrence('Authors', keywords=keywords)
+          Authors (IDX) Authors (COL)  Num Documents  Cited by            ID
+        0             A             A              4         7  [0, 1, 2, 4]
+        1             A             B              2         6        [2, 4]
+        2             B             A              2         6        [2, 4]
+        3             B             B              4        15  [2, 3, 4, 6]
+
+
         """
 
         def generate_pairs(w):
@@ -2104,14 +2229,18 @@ class DataFrame(pd.DataFrame):
         result = result[
             [column + " (IDX)", column + " (COL)", "Num Documents", "Cited by", "ID"]
         ]
-
+        if keywords is not None:
+            if keywords._patterns is None:
+                keywords = keywords.compile()
+            result = result[result[column + " (IDX)"].map(lambda w: w in keywords)]
+            result = result[result[column + " (COL)"].map(lambda w: w in keywords)]
         result = result.sort_values(
             [column + " (IDX)", column + " (COL)"], ignore_index=True,
         )
 
         return result
 
-    def occurrence(self, column, sep=None, as_matrix=False, minmax=None, filter=None):
+    def occurrence(self, column, sep=None, as_matrix=False, minmax=None, keywords=None):
         """Computes the occurrence between the terms in a column.
 
         Args:
@@ -2119,7 +2248,7 @@ class DataFrame(pd.DataFrame):
             sep (str): Character used as internal separator for the elements in the column.
             as_matrix (bool): Results are returned as a matrix.
             minmax (pair(number,number)): filter values by >=min,<=max.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -2174,6 +2303,13 @@ class DataFrame(pd.DataFrame):
         B  2  0  0
         D  0  0  2
 
+        >>> keywords = Keywords(['A', 'B'], ignore_case=False)
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).occurrence('Authors', as_matrix=True, keywords=keywords)
+           A  B
+        A  4  2
+        B  2  4
+
         """
 
         def generate_dic(column, sep):
@@ -2197,6 +2333,11 @@ class DataFrame(pd.DataFrame):
                 result = result[result["Num Documents"] >= min_value]
             if max_value is not None:
                 result = result[result["Num Documents"] <= max_value]
+        if keywords is not None:
+            if keywords._patterns is None:
+                keywords = keywords.compile()
+            result = result[result[column_IDX].map(lambda w: w in keywords)]
+            result = result[result[column_COL].map(lambda w: w in keywords)]
         result.sort_values(
             ["Num Documents", column_IDX, column_COL],
             ascending=[False, True, True],
@@ -2215,16 +2356,14 @@ class DataFrame(pd.DataFrame):
             result.index = result.index.tolist()
         return result
 
-    def occurrence_map(
-        self, column, sep=None, minmax=None, include_only=None, filter=None
-    ):
+    def occurrence_map(self, column, sep=None, minmax=None, keywords=None):
         """Computes a occurrence between terms in a column.
 
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
             minmax (pair(number,number)): filter values by >=min,<=max.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             dictionary
@@ -2253,27 +2392,11 @@ class DataFrame(pd.DataFrame):
         >>> DataFrame(df).occurrence_map(column='Authors')
         {'terms': ['A', 'B', 'C', 'D'], 'docs': ['doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4', 'doc#5'], 'edges': [('A', 'doc#0'), ('A', 'doc#1'), ('B', 'doc#1'), ('A', 'doc#2'), ('B', 'doc#2'), ('C', 'doc#2'), ('B', 'doc#3'), ('B', 'doc#4'), ('D', 'doc#4'), ('D', 'doc#5')], 'label_terms': {'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D'}, 'label_docs': {'doc#0': 2, 'doc#1': 1, 'doc#2': 1, 'doc#3': 1, 'doc#4': 1, 'doc#5': 1}}
 
+        >>> keywords = Keywords(['A', 'B'])
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).occurrence_map('Authors', keywords=keywords)
+        {'terms': ['A', 'B'], 'docs': ['doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4'], 'edges': [('A', 'doc#0'), ('A', 'doc#1'), ('B', 'doc#1'), ('A', 'doc#2'), ('B', 'doc#2'), ('B', 'doc#3'), ('B', 'doc#4')], 'label_terms': {'A': 'A', 'B': 'B'}, 'label_docs': {'doc#0': 2, 'doc#1': 1, 'doc#2': 1, 'doc#3': 1, 'doc#4': 1}}
 
-
-        >>> import pandas as pd
-        >>> df = DataFrame(
-        ...     pd.read_json(
-        ...         "https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/"
-        ...         + "cleaned-data.json",
-        ...         orient="records",
-        ...         lines=True,
-        ...     )
-        ... )
-        >>> top_authors = df.documents_by_term("Authors").head(5).Authors
-        >>> top_authors
-        0      Arevalo A.
-        1      Gabbouj M.
-        2    Hernandez G.
-        3    Hussain A.J.
-        4    Iosifidis A.
-        Name: Authors, dtype: object
-        >>> df.occurrence_map(column="Authors", include_only=top_authors)
-        {'terms': ['Arevalo A.', 'Gabbouj M.', 'Hernandez G.', 'Hussain A.J.', 'Iosifidis A.'], 'docs': ['doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4', 'doc#5', 'doc#6', 'doc#7'], 'edges': [('Arevalo A.', 'doc#0'), ('Hernandez G.', 'doc#0'), ('Hussain A.J.', 'doc#1'), ('Hussain A.J.', 'doc#2'), ('Hussain A.J.', 'doc#3'), ('Arevalo A.', 'doc#4'), ('Hernandez G.', 'doc#4'), ('Arevalo A.', 'doc#5'), ('Hernandez G.', 'doc#5'), ('Gabbouj M.', 'doc#6'), ('Iosifidis A.', 'doc#6'), ('Gabbouj M.', 'doc#7'), ('Iosifidis A.', 'doc#7')], 'label_terms': {'Arevalo A.': 'Arevalo A.', 'Gabbouj M.': 'Gabbouj M.', 'Hernandez G.': 'Hernandez G.', 'Hussain A.J.': 'Hussain A.J.', 'Iosifidis A.': 'Iosifidis A.'}, 'label_docs': {'doc#0': 1, 'doc#1': 1, 'doc#2': 1, 'doc#3': 1, 'doc#4': 1, 'doc#5': 1, 'doc#6': 1, 'doc#7': 2}}
 
         """
         if sep is None and column in SCOPUS_SEPS.keys():
@@ -2281,20 +2404,18 @@ class DataFrame(pd.DataFrame):
 
         result = self[[column]].copy()
         result["count"] = 1
-
-        if include_only is not None and not isinstance(include_only, list):
-            include_only = include_only.tolist()
-
         result = result.groupby(column, as_index=False).agg({"count": np.sum})
-        if include_only is not None:
+        if keywords is not None:
+            if keywords._patterns is None:
+                keywords = keywords.compile()
             if sep is not None:
                 result = result[
                     result[column].map(
-                        lambda x: any([e in include_only for e in x.split(sep)])
+                        lambda x: any([e in keywords for e in x.split(sep)])
                     )
                 ]
             else:
-                result = result[result[column].map(lambda x: x in filter)]
+                result = result[result[column].map(lambda x: x in keywords)]
 
         if sep is not None:
             result[column] = result[column].map(
@@ -2306,19 +2427,16 @@ class DataFrame(pd.DataFrame):
         terms.explode(column)
         terms = [item for sublist in terms[column].tolist() for item in sublist]
         terms = sorted(set(terms))
-        if include_only is not None:
-            terms = [x for x in terms if x in include_only]
-
+        if keywords is not None:
+            terms = [x for x in terms if x in keywords]
         docs = result["doc-ID"].tolist()
         label_docs = {doc: label for doc, label in zip(docs, result["count"].tolist())}
         label_terms = {t: t for t in terms}
-
         edges = []
         for field, docID in zip(result[column], result["doc-ID"]):
             for item in field:
-                if include_only is None or item in include_only:
+                if keywords is None or item in keywords:
                     edges.append((item, docID))
-
         return dict(
             terms=terms,
             docs=docs,
@@ -2333,13 +2451,13 @@ class DataFrame(pd.DataFrame):
     #
     #
 
-    def compute_tfm(self, column, sep=None, filter=None):
+    def compute_tfm(self, column, sep=None, keywords=None):
         """Computes the term-frequency matrix for the terms in a column.
 
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -2382,18 +2500,29 @@ class DataFrame(pd.DataFrame):
         3  0  0  1  0
         4  0  0  1  1
         
+        >>> keywords = Keywords(['A', 'B'], ignore_case=False)
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).compute_tfm('Authors', keywords=keywords)
+           A  B
+        0  1  0
+        1  1  1
+        2  0  1
+        3  1  1
+        4  0  1
+
         """
         data = self[[column, "ID"]].copy()
         data["value"] = 1.0
         data = DataFrame(data).explode(column, sep)
-
+        if keywords is not None:
+            if keywords._patterns is None:
+                keywords = keywords.compile()
+            data = data[data[column].map(lambda w: w in keywords)]
         result = pd.pivot_table(
             data=data, index="ID", columns=column, margins=False, fill_value=0.0,
         )
         result.columns = [b for _, b in result.columns]
-
         result = result.reset_index(drop=True)
-
         return result
 
     def autocorr(
@@ -2403,7 +2532,7 @@ class DataFrame(pd.DataFrame):
         method="pearson",
         as_matrix=True,
         minmax=None,
-        filter=None,
+        keywords=None,
     ):
         """Computes the autocorrelation among items in a column of the dataframe.
 
@@ -2420,7 +2549,7 @@ class DataFrame(pd.DataFrame):
 
             as_matrix (bool): Results are returned as a matrix.
             minmax (pair(number,number)): filter values by >=min,<=max.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -2497,10 +2626,16 @@ class DataFrame(pd.DataFrame):
         c  0.0  0.0  1.00  0.25
         d  0.0  0.0  0.25  1.00
 
-        """
-        tfm = self.compute_tfm(column=column, sep=sep)
-        result = tfm.corr(method=method)
+        >>> keywords = Keywords(['A', 'B'], ignore_case=False)
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).autocorr('Authors', keywords=keywords)
+                  A         B
+        A  1.000000 -0.316228
+        B -0.316228  1.000000
 
+        """
+        tfm = self.compute_tfm(column=column, sep=sep, keywords=keywords)
+        result = tfm.corr(method=method)
         if as_matrix is False or minmax is not None:
             result = (
                 result.reset_index()
@@ -2536,7 +2671,7 @@ class DataFrame(pd.DataFrame):
         method="pearson",
         minval=None,
         top_n_links=None,
-        filter=None,
+        keywords=None,
     ):
         """Computes the autocorrelation map among items in a column of the dataframe.
 
@@ -2553,7 +2688,7 @@ class DataFrame(pd.DataFrame):
 
             minval (float): Minimum autocorrelation value to show links.
             top_n_links (int): Shows top n links.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -2594,14 +2729,27 @@ class DataFrame(pd.DataFrame):
         >>> DataFrame(df).autocorr_map('Authors')
         {'terms': ['A', 'B', 'C', 'D'], 'edges_75': None, 'edges_50': [('A', 'C')], 'edges_25': [('B', 'D')], 'other_edges': None}
 
+        >>> keywords = Keywords(['A', 'B', 'C'], ignore_case=False)
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).autocorr('Authors', keywords=keywords)
+                  A         B         C
+        A  1.000000 -0.547723  0.547723
+        B -0.547723  1.000000 -0.416667
+        C  0.547723 -0.416667  1.000000
 
-
+        >>> DataFrame(df).autocorr_map('Authors', keywords=keywords)
+        {'terms': ['A', 'B', 'C'], 'edges_75': None, 'edges_50': [('A', 'C')], 'edges_25': None, 'other_edges': None}
 
 
         """
 
         matrix = self.autocorr(
-            column=column, sep=sep, method=method, as_matrix=True, minmax=None
+            column=column,
+            sep=sep,
+            method=method,
+            as_matrix=True,
+            minmax=None,
+            keywords=keywords,
         )
 
         terms = matrix.columns.tolist()
@@ -2663,7 +2811,7 @@ class DataFrame(pd.DataFrame):
         method="pearson",
         as_matrix=True,
         minmax=None,
-        filter=None,
+        keywords=None,
     ):
         """Computes the cross-correlation among items in two different columns of the dataframe.
 
@@ -2682,7 +2830,7 @@ class DataFrame(pd.DataFrame):
 
             as_matrix (bool): the result is reshaped by melt or not.
             minmax (pair(number,number)): filter values by >=min,<=max.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -2762,6 +2910,14 @@ class DataFrame(pd.DataFrame):
         14       C               D  0.577350
         15       D               D  1.000000
 
+        >>> keywords = Keywords(['A', 'B', 'C'], ignore_case=False)
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).corr('Authors', 'Author Keywords', keywords=keywords)
+                  A         B         C
+        A  1.000000 -1.000000 -0.333333
+        B -1.000000  1.000000  0.333333
+        C -0.333333  0.333333  1.000000
+
         """
         if column == by:
             return self.autocorr(
@@ -2770,6 +2926,7 @@ class DataFrame(pd.DataFrame):
                 method=method,
                 as_matrix=as_matrix,
                 minmax=minmax,
+                keywords=keywords,
             )
 
         tfm = self.co_occurrence(
@@ -2779,34 +2936,17 @@ class DataFrame(pd.DataFrame):
             sep_COL=sep,
             as_matrix=True,
             minmax=None,
+            keywords=None,
         )
 
-        #  tfm = tfm.applymap(lambda x: min(1.0, x))
         result = tfm.corr(method=method)
 
-        # result = pd.DataFrame(0.0, columns=tfm.columns, index=tfm.columns)
-        # for term in tfm.columns:
-        #     result.at[term, term] = 1.0
-        # for i in range(len(tfm.columns) - 1):
-        #     for j in range(i + 1, len(tfm.columns)):
-        #         d = pd.DataFrame({"x": tfm[tfm.columns[i]], "y": tfm[tfm.columns[j]]})
-        #         d = d[(d.x != 0) | (d.y != 0)]
-
-        #         if len(d) != 0 and sum(d.x * d.y) > 0:
-        #             r = relationship(d.x, d.y)
-        #             result.at[tfm.columns[i], tfm.columns[j]] = r
-        #             result.at[tfm.columns[j], tfm.columns[i]] = r
-
-        ## tfm_r = self.compute_tfm(column=column_IDX, sep=sep_IDX)
-        ## tfm_c = self.compute_tfm(column=column_COL, sep=sep_COL)
-        ## result = pd.DataFrame(
-        ##     [
-        ##         [tfm_r[row].corr(tfm_c[col]) for row in tfm_r.columns]
-        ##         for col in tfm_c.columns
-        ##     ],
-        ##     columns=tfm_c.columns,
-        ##     index=tfm_r.columns,
-        ## )
+        if keywords is not None:
+            if keywords._patterns is None:
+                keywords = keywords.compile()
+            new_columns = [w for w in result.columns if w in keywords]
+            new_index = [w for w in result.index if w in keywords]
+            result = result.loc[new_index, new_columns]
 
         if as_matrix is False or minmax is not None:
             result = (
@@ -2842,7 +2982,7 @@ class DataFrame(pd.DataFrame):
         method="pearson",
         minval=None,
         top_n_links=None,
-        filter=None,
+        keywords=None,
     ):
         """Computes the correlation map among items in a column of the dataframe.
 
@@ -2859,7 +2999,7 @@ class DataFrame(pd.DataFrame):
 
             minval (float): Minimum autocorrelation value to show links.
             top_n_links (int): Shows top n links.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -2913,12 +3053,21 @@ class DataFrame(pd.DataFrame):
         >>> DataFrame(df).corr_map('Authors', 'Author Keywords')
         {'terms': ['A', 'B', 'C', 'D'], 'edges_75': None, 'edges_50': [('A', 'C')], 'edges_25': [('B', 'D')], 'other_edges': None}
 
+        >>> keywords = Keywords(['A', 'B', 'C'], ignore_case=False)
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).corr_map('Authors', 'Author Keywords', keywords=keywords)
+        {'terms': ['A', 'B', 'C'], 'edges_75': None, 'edges_50': [('A', 'C')], 'edges_25': None, 'other_edges': None}
 
 
         """
 
         matrix = self.autocorr(
-            column=column, sep=sep, method=method, as_matrix=True, minmax=None
+            column=column,
+            sep=sep,
+            method=method,
+            as_matrix=True,
+            minmax=None,
+            keywords=keywords,
         )
 
         terms = matrix.columns.tolist()
@@ -2972,7 +3121,7 @@ class DataFrame(pd.DataFrame):
         )
 
     def factor_analysis(
-        self, column, sep=None, n_components=None, as_matrix=True, filter=None
+        self, column, sep=None, n_components=None, as_matrix=True, keywords=None
     ):
         """Computes the matrix of factors for terms in a given column.
 
@@ -2982,7 +3131,7 @@ class DataFrame(pd.DataFrame):
             sep (str): Character used as internal separator for the elements in the column.
             n_components: Number of components to compute.
             as_matrix (bool): the result is reshaped by melt or not.
-            filter (Keywords): filter the result using the specified Keywords object.
+            keywords (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -3043,9 +3192,17 @@ class DataFrame(pd.DataFrame):
         10       C     F2  5.773503e-01
         11       D     F2  5.773503e-01
 
+        >>> keywords = Keywords(['A', 'B', 'C'], ignore_case=False)
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).factor_analysis('Authors', n_components=3, keywords=keywords)
+                 F0        F1        F2
+        A -0.888074  0.000000  0.459701
+        B  0.325058  0.707107  0.627963
+        C -0.325058  0.707107 -0.627963
+
         """
 
-        tfm = self.compute_tfm(column, sep)
+        tfm = self.compute_tfm(column, sep, keywords)
         terms = tfm.columns.tolist()
         if n_components is None:
             n_components = int(np.sqrt(len(set(terms))))
@@ -3054,6 +3211,13 @@ class DataFrame(pd.DataFrame):
         result = pd.DataFrame(
             result, columns=["F" + str(i) for i in range(n_components)], index=terms
         )
+
+        if keywords is not None:
+            if keywords._patterns is None:
+                keywords = keywords.compile()
+            new_index = [w for w in result.index if w in keywords]
+            result = result.loc[new_index, :]
+
         if as_matrix is True:
             return result
         return (
