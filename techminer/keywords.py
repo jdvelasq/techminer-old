@@ -98,8 +98,6 @@ import string
 
 import pandas as pd
 
-# from .strings import find_string, fingerprint, replace_string
-
 
 class Keywords:
     """Creates a Keywords object used to find, extract or remove terms of interest from a string.
@@ -430,6 +428,15 @@ class Keywords:
 
         """
         return self._keywords.copy()
+
+    def __add__(self, other):
+        keywords = set(self._keywords + other._keywords)
+        ignore_case = self._ignore_case or other._ignore_case
+        full_match = self._full_match or other._full_match
+        use_re = self._use_re or other._use_re
+        x = Keywords(
+            keywords, ignore_case=ignore_case, full_match=full_match, use_re=use_re
+        )
 
     # def delete_keyword(self, x):
     #     """Remove string x from the keywords list.
