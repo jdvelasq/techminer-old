@@ -3371,12 +3371,10 @@ class DataFrame(pd.DataFrame):
 
         >>> DataFrame(df).growth_indicators('Authors')
             Authors       AGR
-        0  author 0  0.333333
         1  author 3  0.666667
+        0  author 0  0.333333
         2  author 4  0.000000
 
-
-        
         >>> keywords = Keywords(['author 3', 'author 4'])
         >>> keywords = keywords.compile()
         >>> DataFrame(df).growth_indicators('Authors', keywords=keywords)
@@ -3402,6 +3400,7 @@ class DataFrame(pd.DataFrame):
         agr.pop(years_agr[1])
         agr = agr.reset_index()
         agr.columns = list(agr.columns)
+        agr = agr.sort_values(by=["AGR", column], ascending=False)
         return agr
 
 
