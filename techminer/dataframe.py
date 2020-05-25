@@ -11,8 +11,8 @@ import numpy as np
 from sklearn.decomposition import PCA
 import math
 
-from .keywords import Keywords
-from .strings import remove_accents
+from keywords import Keywords
+from strings import remove_accents
 
 SCOPUS_SEPS = {
     "Authors": ",",
@@ -319,6 +319,9 @@ class DataFrame(pd.DataFrame):
         sep_new_column=None,
     ):
         """Combines keywords columns.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
         >>> df = pd.DataFrame(
@@ -806,12 +809,13 @@ class DataFrame(pd.DataFrame):
     ##
     ##
 
-    def summarize_by_term(self, column, sep=None):
+    def summarize_by_term(self, column, sep=None, filter=None):
         """Summarize the number of documents and citations by term in a dataframe.
         
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -841,6 +845,13 @@ class DataFrame(pd.DataFrame):
         2  author 2              1        10     [0]
         3  author 3              1        13     [3]
 
+        >>> filter = Keywords(['author 1', 'author 2'])
+        >>> filter = filter.compile()
+        >>> DataFrame(df).summarize_by_term('Authors', sep=',', filter=filter)
+            Authors  Num Documents  Cited by      ID
+        0  author 1              2        22  [0, 2]
+        1  author 2              1        10     [0]
+        
         """
         data = DataFrame(self[[column, "Cited by", "ID"]]).explode(column, sep)
         data["Num Documents"] = 1
@@ -851,6 +862,10 @@ class DataFrame(pd.DataFrame):
             ID=data.groupby(column).agg({"ID": list}).reset_index()["ID"]
         )
         result["Cited by"] = result["Cited by"].map(lambda x: int(x))
+        if filter is not None:
+            if filter._patterns is None:
+                filter = filter.compile()
+            result = result[result[column].map(lambda w: w in filter)]
         result.sort_values(
             [column, "Num Documents", "Cited by"],
             ascending=[True, False, False],
