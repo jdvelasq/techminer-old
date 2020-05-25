@@ -417,6 +417,20 @@ class Keywords:
             use_re=self._use_re,
         )
 
+    def tolist(self):
+        """Converts keywords to list.
+
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
+        >>> keywords = Keywords([r"xxx", r"two", r"yyy"])
+        >>> keywords.tolist()
+        ['two', 'xxx', 'yyy']
+
+        """
+        return self._keywords.copy()
+
     # def delete_keyword(self, x):
     #     """Remove string x from the keywords list.
     #     """
