@@ -3098,7 +3098,7 @@ class DataFrame(pd.DataFrame):
 
         """
         top = self.citations_by_term(column, sep=sep)[column].head(top_n)
-        items = Keywords(x=top)
+        items = Keywords(keywords=top)
         colname = "top_{:d}_{:s}_cited_by".format(top_n, column.replace(" ", "_"))
         df = DataFrame(self.copy())
         if sep is None and column in SCOPUS_SEPS.keys():
@@ -3149,3 +3149,9 @@ class DataFrame(pd.DataFrame):
     #     """
 
     #     pass
+
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()

@@ -122,10 +122,10 @@ class Keywords:
             Keywords object
 
         """
-        self._compile = None
         self._ignore_case = ignore_case
         self._full_match = full_match
         self._keywords = None
+        self._patterns = None
         self._use_re = use_re
         self.add_keywords(keywords=keywords, sep=sep)
 
@@ -144,14 +144,15 @@ class Keywords:
           "Big data",
           "neural networks"
         ]
-        ignore_case=True, full_match=False, use_re=False
+        ignore_case=True, full_match=False, use_re=False, compiled=False
 
         """
         text = json.dumps(self._keywords, indent=2, sort_keys=True)
-        text += "\nignore_case={}, full_match={}, use_re={}".format(
+        text += "\nignore_case={}, full_match={}, use_re={}, compiled={}".format(
             self._ignore_case.__repr__(),
             self._full_match.__repr__(),
             self._use_re.__repr__(),
+            self._patterns is not None,
         )
         return text
 
@@ -177,14 +178,14 @@ class Keywords:
         [
           "ann"
         ]
-        ignore_case=True, full_match=False, use_re=False
+        ignore_case=True, full_match=False, use_re=False, compiled=False
         >>> keywords = keywords.add_keywords('RNN')
         >>> keywords
         [
           "RNN",
           "ann"
         ]
-        ignore_case=True, full_match=False, use_re=False
+        ignore_case=True, full_match=False, use_re=False, compiled=False
         >>> keywords = keywords.add_keywords(['deep learning', 'fuzzy'])
         >>> keywords
         [
@@ -193,7 +194,7 @@ class Keywords:
           "deep learning",
           "fuzzy"
         ]
-        ignore_case=True, full_match=False, use_re=False
+        ignore_case=True, full_match=False, use_re=False, compiled=False
         >>> other_keywords_list = Keywords().add_keywords(['a', 'b', 'c'])
         >>> keywords = keywords.add_keywords(other_keywords_list)
         >>> keywords
@@ -206,7 +207,7 @@ class Keywords:
           "deep learning",
           "fuzzy"
         ]
-        ignore_case=True, full_match=False, use_re=False
+        ignore_case=True, full_match=False, use_re=False, compiled=False
 
         """
         if keywords is None:
@@ -240,174 +241,186 @@ class Keywords:
             keywords.extend(self._keywords)
             self._keywords = sorted(list(set(keywords)))
 
+        self._patterns = None
         return self
 
-    # def __contains__(self, x):
-    #     """Implements in operator.
+    def __len__(self):
+        """Returns the number of keywords.
 
-    #     Examples
-    #     ----------------------------------------------------------------------------------------------
+        Examples
+        ----------------------------------------------------------------------------------------------
 
-    #     >>> x = ['Big data', 'neural networks']
-    #     >>> 'Big data' in Keywords(x)  # doctest: +NORMALIZE_WHITESPACE
-    #     True
-    #     >>> 'big data' in Keywords(x)  # doctest: +NORMALIZE_WHITESPACE
-    #     True
-    #     >>> 'deep learning' in Keywords(x)  # doctest: +NORMALIZE_WHITESPACE
-    #     False
-    #     >>> 'big data' in Keywords(x, ignore_case=False)  # doctest: +NORMALIZE_WHITESPACE
-    #     False
+        >>> len(Keywords(['Big data', 'neural networks']))  # doctest: +NORMALIZE_WHITESPACE
+        2
+        """
+        return len(self._keywords)
 
-    #     """
-    #     if self.extract_from_text(x) is None:
-    #         return False
-    #     return True
+    def compile(self):
+        """Compiles regular expressions.
 
-    # def __len__(self):
-    #     """Returns the number of keywords.
+        Examples
+        ----------------------------------------------------------------------------------------------
 
-    #     Examples
-    #     ----------------------------------------------------------------------------------------------
+        >>> x = Keywords(['Big data', 'neural networks'])
+        >>> x
+        [
+          "Big data",
+          "neural networks"
+        ]
+        ignore_case=True, full_match=False, use_re=False, compiled=False
+        >>> x = x.compile()
+        >>> x
+        [
+          "Big data",
+          "neural networks"
+        ]
+        ignore_case=True, full_match=False, use_re=False, compiled=True
 
-    #     >>> len(Keywords(['Big data', 'neural netoworks']))  # doctest: +NORMALIZE_WHITESPACE
-    #     2
-    #     """
-    #     return len(self._keywords)
+        """
+        patterns = self._keywords
+        if self._use_re is False:
+            patterns = [re.escape(pattern) for pattern in patterns]
+        if self._full_match is True:
+            patterns = ["^" + pattern + "$" for pattern in patterns]
+        if self._ignore_case is True:
+            self._patterns = [re.compile(pattern, re.I) for pattern in patterns]
+        else:
+            self._patterns = [re.compile(pattern) for pattern in patterns]
+        return self
 
-    # def extract_from_text(self, x, sep=";"):
-    #     r"""Returns a new string with the keywords in string x matching the list of keywords used to fit the model.
+    def extract_from_text(self, x, sep=";"):
+        r"""Returns a new string with the keywords in string x matching the list of 
+        keywords used to fit the model.
 
-    #     Examples
-    #     ----------------------------------------------------------------------------------------------
+        The funcion allows the extraction of complex patterns using regular expresions (regex).
+        Detail information about regex sintax in Python can be obtained at 
+        https://docs.python.org/3/library/re.html#re-syntax.
 
-    #     >>> Keywords([r"xxx", r"two", r"yyy"]).extract_from_text('one two three four five')
-    #     'two'
+        Args:
+            x (string): A string object.
 
-    #     The funcion allows the extraction of complex patterns using regular expresions (regex).
-    #     Detail information about regex sintax in Python can be obtained at https://docs.python.org/3/library/re.html#re-syntax.
+        Returns:
+            String.
 
-    #     Args:
-    #         x (string): A string object.
+        Examples
+        ----------------------------------------------------------------------------------------------
 
-    #     Returns:
-    #         String.
+        >>> keywords = Keywords([r"xxx", r"two", r"yyy"])
+        >>> keywords = keywords.compile()
+        >>> keywords.extract_from_text('one two three four five')
+        'two'
 
-    #     """
 
-    #     if x is None:
-    #         return None
+        """
+        if x is None:
+            return None
+        result = []
+        for pattern in self._patterns:
+            match = pattern.search(x)
+            if match is not None:
+                result.extend([match[0]])
+        if len(result):
+            return sep.join(sorted(list(set(result))))
+        return None
 
-    #     result = []
-    #     for keyword in self._keywords:
+    def __contains__(self, x):
+        """Implements in operator.
 
-    #         y = find_string(
-    #             pattern=keyword,
-    #             x=x,
-    #             ignore_case=self._ignore_case,
-    #             full_match=self._full_match,
-    #             use_re=self._use_re,
-    #         )
+        Examples
+        ----------------------------------------------------------------------------------------------
 
-    #         if y is not None:
-    #             result.extend([y])
+        >>> x = ['Big data', 'neural networks']
+        >>> 'Big data' in Keywords(x).compile()  # doctest: +NORMALIZE_WHITESPACE
+        True
+        >>> 'big data' in Keywords(x).compile()  # doctest: +NORMALIZE_WHITESPACE
+        True
+        >>> 'deep learning' in Keywords(x).compile()  # doctest: +NORMALIZE_WHITESPACE
+        False
+        >>> 'big data' in Keywords(x, ignore_case=False).compile()  # doctest: +NORMALIZE_WHITESPACE
+        False
 
-    #     if len(result):
-    #         return sep.join(sorted(list(set(result))))
+        """
+        if self._patterns is None:
+            self.compile()
+        if self.extract_from_text(x) is None:
+            return False
+        return True
 
-    #     return None
+    def remove_from_text(self, x):
+        """Returns a string removing the strings that match a
+        list of keywords from x.
 
-    # def remove_from_text(self, x):
-    #     """Returns a string removing the strings that match a
-    #     list of keywords from x.
+        Args:
+            x (string): A string object.
 
-    #     Args:
-    #         x (string): A string object.
+        Returns:
+            String.
 
-    #     Returns:
-    #         String.
+        Examples
+        ----------------------------------------------------------------------------------------------
 
-    #     Examples
-    #     ----------------------------------------------------------------------------------------------
+        >>> Keywords('aaa').compile().remove_from_text('1 aaa 2')
+        '1  2'
 
-    #     >>> Keywords('aaa').remove_from_text('1 aaa 2')
-    #     '1  2'
+        >>> Keywords('aaa').compile().remove_from_text('1 2')
+        '1 2'
 
-    #     >>> Keywords('aaa').remove_from_text('1 2')
-    #     '1 2'
+        >>> Keywords('aaa').compile().remove_from_text('1 aaa 2 1 2')
+        '1  2 1 2'
 
-    #     >>> Keywords('aaa').remove_from_text('1 aaa 2 1 2')
-    #     '1  2 1 2'
+        >>> Keywords(['aaa', 'bbb']).compile().remove_from_text('1 aaa bbb 2 1 aaa 2')
+        '1   2 1  2'
 
-    #     >>> Keywords(['aaa', 'bbb']).remove_from_text('1 aaa bbb 2 1 aaa 2')
-    #     '1   2 1  2'
+        """
+        if x is None:
+            return None
+        for pattern in self._patterns:
+            x = pattern.sub(repl="", string=x)
+        return x
 
-    #     """
+    def new_keywords(
+        self, x, sep=None,
+    ):
+        """Creates a new Keywords object by applying the current Keywords to x.
 
-    #     if x is None:
-    #         return None
+        Examples
+        ----------------------------------------------------------------------------------------------
 
-    #     for keyword in self._keywords:
+        >>> x = ['11', '111', '11 11 ', 'a', 'b', 'c']
+        >>> keywords = Keywords('1.*', use_re=True)
+        >>> keywords = keywords.compile()
+        >>> keywords.new_keywords(x)
+        [
+          "11",
+          "11 11",
+          "111"
+        ]
+        ignore_case=True, full_match=False, use_re=True, compiled=False
 
-    #         found_string = find_string(
-    #             pattern=keyword,
-    #             x=x,
-    #             ignore_case=self._ignore_case,
-    #             full_match=self._full_match,
-    #             use_re=self._use_re,
-    #         )
 
-    #         if found_string is not None:
-
-    #             x = replace_string(
-    #                 pattern=found_string,
-    #                 x=x,
-    #                 repl="",
-    #                 ignore_case=False,
-    #                 full_match=False,
-    #                 use_re=False,
-    #             )
-
-    #     return x
+        """
+        if sep is not None:
+            x = [
+                z.strip()
+                for y in x
+                if y is not None
+                for z in y.split(sep)
+                if z.strip() != ""
+            ]
+        else:
+            x = [y.strip() for y in x if y is not None and y.strip() != ""]
+        x = [self.extract_from_text(w) for w in x]
+        return Keywords(
+            keywords=x,
+            ignore_case=self._ignore_case,
+            full_match=self._full_match,
+            use_re=self._use_re,
+        )
 
     # def delete_keyword(self, x):
     #     """Remove string x from the keywords list.
     #     """
     #     self._keywords.remove(x)
-
-    # def common(self, x, sep=None):
-    #     """Returns True if x is in keywords list.
-
-    #     Args:
-    #         x (string): A string object.
-
-    #     Returns:
-    #         Boolean.
-
-    #     Examples
-    #     ----------------------------------------------------------------------------------------------
-
-    #     >>> kyw = Keywords(['ann', 'big data', 'deep learning'])
-    #     >>> kyw.common('Big Data')
-    #     True
-    #     >>> kyw.common('Python')
-    #     False
-    #     >>> kyw.common('Python|R', sep='|')
-    #     False
-    #     >>> kyw.common('Python|big data', sep='|')
-    #     True
-
-    #     """
-
-    #     def _common(x):
-    #         if self.extract_from_text(x) is None:
-    #             return False
-    #         else:
-    #             return True
-
-    #     if sep is None:
-    #         return _common(x)
-
-    #     return any([_common(y.strip()) for y in x.split(sep)])
 
 
 if __name__ == "__main__":
