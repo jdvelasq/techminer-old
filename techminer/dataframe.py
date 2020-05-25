@@ -851,7 +851,7 @@ class DataFrame(pd.DataFrame):
             Authors  Num Documents  Cited by      ID
         0  author 1              2        22  [0, 2]
         1  author 2              1        10     [0]
-        
+
         """
         data = DataFrame(self[[column, "Cited by", "ID"]]).explode(column, sep)
         data["Num Documents"] = 1
@@ -874,12 +874,13 @@ class DataFrame(pd.DataFrame):
         )
         return result
 
-    def documents_by_term(self, column, sep=None):
+    def documents_by_term(self, column, sep=None, filter=None):
         """Computes the number of documents per term in a given column.
 
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -921,12 +922,13 @@ class DataFrame(pd.DataFrame):
         )
         return result
 
-    def citations_by_term(self, column, sep=None):
+    def citations_by_term(self, column, sep=None, filter=None):
         """Computes the number of citations by item in a column.
 
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1167,12 +1169,13 @@ class DataFrame(pd.DataFrame):
     #
     #
 
-    def summarize_by_term_per_year(self, column, sep=None):
+    def summarize_by_term_per_year(self, column, sep=None, filter=None):
         """Computes the number of documents and citations by term per year.
 
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1224,7 +1227,7 @@ class DataFrame(pd.DataFrame):
         return result
 
     def documents_by_term_per_year(
-        self, column, sep=None, as_matrix=False, minmax=None
+        self, column, sep=None, as_matrix=False, minmax=None, filter=None
     ):
         """Computes the number of documents by term per year.
 
@@ -1233,6 +1236,7 @@ class DataFrame(pd.DataFrame):
             sep (str): Character used as internal separator for the elements in the column.
             as_matrix (bool): Results are returned as a matrix.
             minmax (pair(number,number)): filter values by >=min,<=max.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1315,7 +1319,7 @@ class DataFrame(pd.DataFrame):
             result.index = result.index.tolist()
         return result
 
-    def gant(self, column, sep=None, minmax=None):
+    def gant(self, column, sep=None, minmax=None, filter=None):
         """Computes the number of documents by term per year.
 
         Args:
@@ -1323,6 +1327,7 @@ class DataFrame(pd.DataFrame):
             sep (str): Character used as internal separator for the elements in the column.
             as_matrix (bool): Results are returned as a matrix.
             minmax (pair(number,number)): filter values by >=min,<=max.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1380,7 +1385,7 @@ class DataFrame(pd.DataFrame):
         return result
 
     def citations_by_term_per_year(
-        self, column, sep=None, as_matrix=False, minmax=None
+        self, column, sep=None, as_matrix=False, minmax=None, filter=None
     ):
         """Computes the number of citations by term by year in a column.
 
@@ -1389,6 +1394,7 @@ class DataFrame(pd.DataFrame):
             sep (str): Character used as internal separator for the elements in the column.
             as_matrix (bool): Results are returned as a matrix.
             minmax (pair(number,number)): filter values by >=min,<=max.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1467,7 +1473,7 @@ class DataFrame(pd.DataFrame):
     #
 
     def summarize_by_term_per_term_per_year(
-        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None
+        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None, filter=None
     ):
         """Computes the number of documents and citations by term per term by year.
 
@@ -1476,6 +1482,7 @@ class DataFrame(pd.DataFrame):
             sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
             column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
             sep_COL (str): Character used as internal separator for the elements in the column_COL.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1539,7 +1546,7 @@ class DataFrame(pd.DataFrame):
         return result.reset_index(drop=True)
 
     def documents_by_terms_per_terms_per_year(
-        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None
+        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None, filter=None
     ):
         """Computes the number of documents by term per term per year.
 
@@ -1548,6 +1555,7 @@ class DataFrame(pd.DataFrame):
             sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
             column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
             sep_COL (str): Character used as internal separator for the elements in the column_COL.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1604,7 +1612,7 @@ class DataFrame(pd.DataFrame):
         return result.reset_index(drop=True)
 
     def citations_by_terms_per_terms_per_year(
-        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None
+        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None, filter=None
     ):
         """Computes the number of citations by term per term per year.
 
@@ -1613,6 +1621,7 @@ class DataFrame(pd.DataFrame):
             sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
             column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
             sep_COL (str): Character used as internal separator for the elements in the column_COL.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1675,7 +1684,7 @@ class DataFrame(pd.DataFrame):
     #
 
     def summarize_co_occurrence(
-        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None
+        self, column_IDX, column_COL, sep_IDX=None, sep_COL=None, filter=None
     ):
         """Summarize occurrence and citations by terms in two different columns.
 
@@ -1684,6 +1693,7 @@ class DataFrame(pd.DataFrame):
             sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
             column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
             sep_COL (str): Character used as internal separator for the elements in the column_COL.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1789,6 +1799,7 @@ class DataFrame(pd.DataFrame):
         sep_COL=None,
         as_matrix=False,
         minmax=None,
+        filter=None,
     ):
         """Computes the co-occurrence of two terms in different colums. The report adds
         the number of documents by term between brackets.
@@ -1800,6 +1811,7 @@ class DataFrame(pd.DataFrame):
             sep_COL (str): Character used as internal separator for the elements in the column_COL.
             as_matrix (bool): Results are returned as a matrix.
             minmax (pair(number,number)): filter values by >=min,<=max.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -1901,6 +1913,7 @@ class DataFrame(pd.DataFrame):
         sep_COL=None,
         as_matrix=False,
         minmax=None,
+        filter=None,
     ):
         """Computes the number of citations shared by two terms in different columns.
 
@@ -1911,6 +1924,7 @@ class DataFrame(pd.DataFrame):
             sep_COL (str): Character used as internal separator for the elements in the column_COL.
             as_matrix (bool): Results are returned as a matrix.
             minmax (pair(number,number)): filter values by >=min,<=max.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -2005,12 +2019,13 @@ class DataFrame(pd.DataFrame):
     #
     #
 
-    def summarize_occurrence(self, column, sep=None):
+    def summarize_occurrence(self, column, sep=None, filter=None):
         """Summarize occurrence and citations by terms in a column of a dataframe.
 
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -2096,7 +2111,7 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def occurrence(self, column, sep=None, as_matrix=False, minmax=None):
+    def occurrence(self, column, sep=None, as_matrix=False, minmax=None, filter=None):
         """Computes the occurrence between the terms in a column.
 
         Args:
@@ -2104,6 +2119,7 @@ class DataFrame(pd.DataFrame):
             sep (str): Character used as internal separator for the elements in the column.
             as_matrix (bool): Results are returned as a matrix.
             minmax (pair(number,number)): filter values by >=min,<=max.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -2199,13 +2215,16 @@ class DataFrame(pd.DataFrame):
             result.index = result.index.tolist()
         return result
 
-    def occurrence_map(self, column, sep=None, minmax=None, include_only=None):
+    def occurrence_map(
+        self, column, sep=None, minmax=None, include_only=None, filter=None
+    ):
         """Computes a occurrence between terms in a column.
 
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
             minmax (pair(number,number)): filter values by >=min,<=max.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             dictionary
@@ -2314,12 +2333,13 @@ class DataFrame(pd.DataFrame):
     #
     #
 
-    def compute_tfm(self, column, sep=None):
+    def compute_tfm(self, column, sep=None, filter=None):
         """Computes the term-frequency matrix for the terms in a column.
 
         Args:
             column (str): the column to explode.
             sep (str): Character used as internal separator for the elements in the column.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -2376,7 +2396,15 @@ class DataFrame(pd.DataFrame):
 
         return result
 
-    def autocorr(self, column, sep=None, method="pearson", as_matrix=True, minmax=None):
+    def autocorr(
+        self,
+        column,
+        sep=None,
+        method="pearson",
+        as_matrix=True,
+        minmax=None,
+        filter=None,
+    ):
         """Computes the autocorrelation among items in a column of the dataframe.
 
         Args:
@@ -2392,6 +2420,7 @@ class DataFrame(pd.DataFrame):
 
             as_matrix (bool): Results are returned as a matrix.
             minmax (pair(number,number)): filter values by >=min,<=max.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -2501,7 +2530,13 @@ class DataFrame(pd.DataFrame):
         return result
 
     def autocorr_map(
-        self, column, sep=None, method="pearson", minval=None, top_n_links=None
+        self,
+        column,
+        sep=None,
+        method="pearson",
+        minval=None,
+        top_n_links=None,
+        filter=None,
     ):
         """Computes the autocorrelation map among items in a column of the dataframe.
 
@@ -2518,6 +2553,7 @@ class DataFrame(pd.DataFrame):
 
             minval (float): Minimum autocorrelation value to show links.
             top_n_links (int): Shows top n links.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -2627,6 +2663,7 @@ class DataFrame(pd.DataFrame):
         method="pearson",
         as_matrix=True,
         minmax=None,
+        filter=None,
     ):
         """Computes the cross-correlation among items in two different columns of the dataframe.
 
@@ -2645,6 +2682,7 @@ class DataFrame(pd.DataFrame):
 
             as_matrix (bool): the result is reshaped by melt or not.
             minmax (pair(number,number)): filter values by >=min,<=max.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -2804,6 +2842,7 @@ class DataFrame(pd.DataFrame):
         method="pearson",
         minval=None,
         top_n_links=None,
+        filter=None,
     ):
         """Computes the correlation map among items in a column of the dataframe.
 
@@ -2820,6 +2859,7 @@ class DataFrame(pd.DataFrame):
 
             minval (float): Minimum autocorrelation value to show links.
             top_n_links (int): Shows top n links.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
@@ -2931,7 +2971,9 @@ class DataFrame(pd.DataFrame):
             other_edges=other_edges,
         )
 
-    def factor_analysis(self, column, sep=None, n_components=None, as_matrix=True):
+    def factor_analysis(
+        self, column, sep=None, n_components=None, as_matrix=True, filter=None
+    ):
         """Computes the matrix of factors for terms in a given column.
 
 
@@ -2940,6 +2982,7 @@ class DataFrame(pd.DataFrame):
             sep (str): Character used as internal separator for the elements in the column.
             n_components: Number of components to compute.
             as_matrix (bool): the result is reshaped by melt or not.
+            filter (Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
