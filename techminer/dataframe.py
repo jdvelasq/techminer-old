@@ -3047,7 +3047,7 @@ class DataFrame(pd.DataFrame):
 
         """
         top = self.documents_by_term(column, sep=sep)[column].head(top_n)
-        items = Keywords(x=top)
+        items = Keywords().add_keywords(top)
         colname = "top_{:d}_{:s}_freq".format(top_n, column.replace(" ", "_"))
         df = DataFrame(self.copy())
         if sep is None and column in SCOPUS_SEPS.keys():
