@@ -3333,44 +3333,128 @@ class DataFrame(pd.DataFrame):
             df[colname] = self[column].map(lambda x: x in items)
         return DataFrame(df)
 
-    # def __getitem__(self, key):
-    #     return DataFrame(super().__getitem__(key))
+    def growth_indicators(self, column, sep=None, timewindow=2, keywords=None):
+        """Computes the average growth rate of a group of terms.
 
-    # def _getitem_bool_array(self, key):
-    #     return DataFrame(super()._getitem_bool_array(key))
+        Args:
+            column (str): the column to explode.
+            sep (str): Character used as internal separator for the elements in the column.
+            timewindow (int): time window for analysis
+            keywords (Keywords): filter the result using the specified Keywords object.
 
-    # def _getitem_multilevel(self, key):
-    #     return DataFrame(super()._getitem_multilevel(key))
+        Returns:
+            DataFrame.
 
-    # def _get_column_array(self, i):
-    #     return DataFrame(super()._get_column_array(i))
 
-    # def assign(self, **kwargs):
-    #     return DataFrame(super().assign(**kwargs))
+        Examples
+        ----------------------------------------------------------------------------------------------
 
-    # def test(self):
-    #     """
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     {
+        ...          "Year": [2010, 2010, 2011, 2011, 2012, 2013, 2014, 2014],
+        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4;author 0,author 3;author 3,author 4".split(";"),
+        ...          "Cited by": list(range(10,18)),
+        ...          "ID": list(range(8)),
+        ...     }
+        ... )
+        >>> df
+           Year                     Authors  Cited by  ID
+        0  2010  author 0,author 1,author 2        10   0
+        1  2010                    author 0        11   1
+        2  2011                    author 1        12   2
+        3  2011                    author 3        13   3
+        4  2012                    author 4        14   4
+        5  2013                    author 4        15   5
+        6  2014           author 0,author 3        16   6
+        7  2014           author 3,author 4        17   7
 
-    #     >>> import pandas as pd
-    #     >>> pd = pd.DataFrame(
-    #     ...     {
-    #     ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-    #     ...         "Num Documents": [10, 5, 2, 1],
-    #     ...         "ID": list(range(4)),
-    #     ...     }
-    #     ... )
-    #     >>> pd = DataFrame(pd)
-    #     >>> type(pd)
-    #     <class 'techminer.dataframe.DataFrame'>
+        >>> DataFrame(df).growth_indicators('Authors')
+            Authors       AGR
+        0  author 0  0.333333
+        1  author 3  0.666667
+        2  author 4  0.000000
 
-    #     >>> type(pd[[True, True, False, False]])
-    #     <class 'pandas.core.frame.DataFrame'>
 
-    #     # >>> pd[[True, True, False, False]]
+        
+        >>> keywords = Keywords(['author 3', 'author 4'])
+        >>> keywords = keywords.compile()
+        >>> DataFrame(df).growth_indicators('Authors', keywords=keywords)
+            Authors       AGR
+        0  author 3  0.666667
+        1  author 4  0.000000
 
-    #     """
+        """
+        result = self.documents_by_term_per_year(
+            column=column, sep=sep, keywords=keywords
+        )
+        years_ady = sorted(set(result.Year))[-timewindow:]
+        years_agr = sorted(set(result.Year))[-(timewindow + 1) :]
+        years_agr = [years_agr[0], years_agr[-1]]
+        agr = result[result.Year.map(lambda w: w in years_agr)]
+        agr.pop("ID")
+        agr = pd.pivot_table(
+            agr, columns="Year", index=column, values="Num Documents", fill_value=0
+        )
+        agr["AGR"] = 0.0
+        agr = agr.assign(AGR=(agr[years_agr[1]] - agr[years_agr[0]]) / (timewindow + 1))
+        agr.pop(years_agr[0])
+        agr.pop(years_agr[1])
+        agr = agr.reset_index()
+        agr.columns = list(agr.columns)
+        return agr
 
-    #     pass
+
+# result =
+#     Authors  Year  Num Documents      ID
+# 0  author 0  2010              2  [0, 1]
+# 1  author 1  2010              1     [0]
+# 2  author 2  2010              1     [0]
+# 3  author 1  2011              1     [2]
+# 4  author 3  2011              1     [3]
+# 5  author 4  2012              1     [4]
+# 6  author 4  2013              1     [5]
+# 7  author 3  2014              2  [6, 7]
+# 8  author 4  2014              1     [7]
+
+# def __getitem__(self, key):
+#     return DataFrame(super().__getitem__(key))
+
+# def _getitem_bool_array(self, key):
+#     return DataFrame(super()._getitem_bool_array(key))
+
+# def _getitem_multilevel(self, key):
+#     return DataFrame(super()._getitem_multilevel(key))
+
+# def _get_column_array(self, i):
+#     return DataFrame(super()._get_column_array(i))
+
+# def assign(self, **kwargs):
+#     return DataFrame(super().assign(**kwargs))
+
+# def test(self):
+#     """
+
+#     >>> import pandas as pd
+#     >>> pd = pd.DataFrame(
+#     ...     {
+#     ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+#     ...         "Num Documents": [10, 5, 2, 1],
+#     ...         "ID": list(range(4)),
+#     ...     }
+#     ... )
+#     >>> pd = DataFrame(pd)
+#     >>> type(pd)
+#     <class 'techminer.dataframe.DataFrame'>
+
+#     >>> type(pd[[True, True, False, False]])
+#     <class 'pandas.core.frame.DataFrame'>
+
+#     # >>> pd[[True, True, False, False]]
+
+#     """
+
+#     pass
 
 
 if __name__ == "__main__":
