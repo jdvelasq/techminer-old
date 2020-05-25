@@ -64,17 +64,19 @@ def text_clustering(
 
     >>> text_clustering(df.f) # doctest: +NORMALIZE_WHITESPACE
     {
-      "a b": [
-        "a B",
-        "a b"
-        ],
-      "a b c a b": [
+      "A C b": [
         "A C b",
         "a b c a b",
         "a b c a b a",
         "a, b, c, a"
-        ]
+      ],
+      "a B": [
+        "a B",
+        "a b"
+      ]
     }
+
+
 
     >>> text_clustering(df.f, name_strategy='shortest') # doctest: +NORMALIZE_WHITESPACE
     {
@@ -92,16 +94,16 @@ def text_clustering(
 
     >>> text_clustering(df.f, name_strategy='longest') # doctest: +NORMALIZE_WHITESPACE
     {
-      "a B": [
+      "a b": [
         "a B",
         "a b"
-        ],
+      ],
       "a b c a b a": [
         "A C b",
         "a b c a b",
         "a b c a b a",
         "a, b, c, a"
-        ]
+      ]
     }
 
     >>> df = pd.DataFrame({
@@ -127,13 +129,7 @@ def text_clustering(
 
     >>> text_clustering(df.f, sep=',', name_strategy='longest') # doctest: +NORMALIZE_WHITESPACE
     {
-      "A C": [
-        "A C",
-        "C A",
-        "c A",
-        "c a"
-      ],
-      "a B": [
+      "a b": [
         "A b",
         "a B",
         "a b",
@@ -142,54 +138,234 @@ def text_clustering(
       "b": [
         "B",
         "b"
+      ],
+      "c a": [
+        "A C",
+        "C A",
+        "c A",
+        "c a"
       ]
-    }
+    }    
 
 
     """
-
     x = x.dropna()
-
     if sep is not None:
-        x = pd.Series([z.strip() for y in x for z in y.split(sep)])
-
+        x = x.map(lambda w: w.split(sep))
+        x = x.explode()
+    x = x.map(lambda w: w.strip())
+    x = x.unique()
+    x = pd.DataFrame({"col": x.tolist()})
     if search_strategy == "fingerprint":
-        y = x.map(lambda w: fingerprint(w))
-    y = y.sort_values()
-    counts = y.value_counts()
-    counts = counts[counts > 1]
-
-    result = {}
-    # for z in counts.index.tolist():
-    for iter in tqdm(range(len(counts.index.tolist()))):
-
-        z = counts.index.tolist()[iter]
-
-        w = x[y == z]
-
-        if name_strategy is None or name_strategy == "mostfrequent":
-            m = w.value_counts().sort_values()
-            m = m[m == m[-1]].sort_index()
-            groupName = m.index[-1]
-
-        if name_strategy == "longest" or name_strategy == "shortest":
-            m = pd.Series([len(a) for a in w], index=w.index).sort_values()
-            if name_strategy == "longest":
-                groupName = w[m.index[-1]]
-            else:
-                groupName = w[m.index[0]]
-
-        if transformer is not None:
-            groupName = transformer(groupName)
-
-        z = w.sort_values().unique().tolist()
-        if len(z) > min_cluster_size:
-            if groupName in result.keys():
-                result[groupName] += z
-            else:
-                result[groupName] = z
-
+        x["key"] = x.col.map(fingerprint)
+    grp = x.groupby(by="key").agg({"col": list})
+    grp["listlen"] = grp.col.map(len)
+    grp = grp[grp.listlen.map(lambda w: w > 1)]
+    grp["col"] = grp.col.map(lambda w: pd.Series(w))
+    grp["groupname"] = None
+    if name_strategy is None:
+        name_strategy = "mostfrequent"
+    if name_strategy == "mostfrequent":
+        grp["groupname"] = grp.col.map(
+            lambda w: w.value_counts()[w.value_counts() == w.value_counts().max()]
+            .sort_index()
+            .index[0]
+        )
+    if name_strategy == "longest":
+        grp["groupname"] = grp.col.map(
+            lambda w: sorted(w.tolist(), key=len, reverse=True)[0]
+        )
+    if name_strategy == "shortest":
+        grp["groupname"] = grp.col.map(
+            lambda w: sorted(w.tolist(), key=len, reverse=False)[0]
+        )
+    if transformer is not None:
+        grp["groupname"] = grp.groupname.map(transformer)
+    result = {key: sorted(value.tolist()) for key, value in zip(grp.groupname, grp.col)}
     return Thesaurus(result, ignore_case=False, full_match=True, use_re=False)
+
+
+# def __text_clustering(
+#     x,
+#     name_strategy="mostfrequent",
+#     search_strategy="fingerprint",
+#     sep=None,
+#     transformer=None,
+#     min_cluster_size=1,
+# ):
+#     """Builds a thesaurus by clustering a list of strings.
+
+#     Args:
+#         x (list): list  of string to create thesaurus.
+
+#         name_strategy (string): method for assigning keys in thesaurus.
+
+#             * 'mostfrequent': Most frequent string in the cluster.
+
+#             * 'longest': Longest string in the cluster.
+
+#             * 'shortest': Shortest string in the cluster.
+
+#         search_strategy (string): cluster method.
+
+#             * 'fingerprint'.
+
+#         sep (string): separator character for elements in `x`.
+
+#     Returns:
+#         A Thesaurus object.
+
+#     Examples
+#     ----------------------------------------------------------------------------------------------
+
+#     >>> import pandas as pd
+#     >>> df = pd.DataFrame({
+#     ...    'f': ['a b c a b a',
+#     ...          'a b c a b',
+#     ...          'a b c a b',
+#     ...          'A C b',
+#     ...          'a b',
+#     ...          'a, b, c, a',
+#     ...          'a B'],
+#     ... })
+#     >>> df
+#                  f
+#     0  a b c a b a
+#     1    a b c a b
+#     2    a b c a b
+#     3        A C b
+#     4          a b
+#     5   a, b, c, a
+#     6          a B
+
+#     >>> text_clustering(df.f) # doctest: +NORMALIZE_WHITESPACE
+#     {
+#       "a b": [
+#         "a B",
+#         "a b"
+#         ],
+#       "a b c a b": [
+#         "A C b",
+#         "a b c a b",
+#         "a b c a b a",
+#         "a, b, c, a"
+#         ]
+#     }
+
+#     >>> text_clustering(df.f, name_strategy='shortest') # doctest: +NORMALIZE_WHITESPACE
+#     {
+#       "A C b": [
+#         "A C b",
+#         "a b c a b",
+#         "a b c a b a",
+#         "a, b, c, a"
+#         ],
+#       "a b": [
+#         "a B",
+#         "a b"
+#         ]
+#     }
+
+#     >>> text_clustering(df.f, name_strategy='longest') # doctest: +NORMALIZE_WHITESPACE
+#     {
+#       "a B": [
+#         "a B",
+#         "a b"
+#         ],
+#       "a b c a b a": [
+#         "A C b",
+#         "a b c a b",
+#         "a b c a b a",
+#         "a, b, c, a"
+#         ]
+#     }
+
+#     >>> df = pd.DataFrame({
+#     ...    'f': ['a b, c a, b a',
+#     ...          'A b, c A, b',
+#     ...          'a b, C A, B',
+#     ...          'A C, b',
+#     ...          None,
+#     ...          'a b',
+#     ...          'a, b, c, a',
+#     ...          'a B'],
+#     ... })
+#     >>> df
+#                    f
+#     0  a b, c a, b a
+#     1    A b, c A, b
+#     2    a b, C A, B
+#     3         A C, b
+#     4           None
+#     5            a b
+#     6     a, b, c, a
+#     7            a B
+
+#     >>> text_clustering(df.f, sep=',', name_strategy='longest') # doctest: +NORMALIZE_WHITESPACE
+#     {
+#       "A C": [
+#         "A C",
+#         "C A",
+#         "c A",
+#         "c a"
+#       ],
+#       "a B": [
+#         "A b",
+#         "a B",
+#         "a b",
+#         "b a"
+#       ],
+#       "b": [
+#         "B",
+#         "b"
+#       ]
+#     }
+
+
+#     """
+
+#     x = x.dropna()
+
+#     if sep is not None:
+#         x = pd.Series([z.strip() for y in x for z in y.split(sep)])
+
+#     if search_strategy == "fingerprint":
+#         y = x.map(lambda w: fingerprint(w))
+#     y = y.sort_values()
+#     counts = y.value_counts()
+#     counts = counts[counts > 1]
+
+#     result = {}
+#     # for z in counts.index.tolist():
+#     for iter in tqdm(range(len(counts.index.tolist()))):
+
+#         z = counts.index.tolist()[iter]
+
+#         w = x[y == z]
+
+#         if name_strategy is None or name_strategy == "mostfrequent":
+#             m = w.value_counts().sort_values()
+#             m = m[m == m[-1]].sort_index()
+#             groupName = m.index[-1]
+
+#         if name_strategy == "longest" or name_strategy == "shortest":
+#             m = pd.Series([len(a) for a in w], index=w.index).sort_values()
+#             if name_strategy == "longest":
+#                 groupName = w[m.index[-1]]
+#             else:
+#                 groupName = w[m.index[0]]
+
+#         if transformer is not None:
+#             groupName = transformer(groupName)
+
+#         z = w.sort_values().unique().tolist()
+#         if len(z) > min_cluster_size:
+#             if groupName in result.keys():
+#                 result[groupName] += z
+#             else:
+#                 result[groupName] = z
+
+#     return Thesaurus(result, ignore_case=False, full_match=True, use_re=False)
 
 
 def text_nesting(
