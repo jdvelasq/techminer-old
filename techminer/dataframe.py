@@ -3369,39 +3369,76 @@ class DataFrame(pd.DataFrame):
         6  2014           author 0,author 3        16   6
         7  2014           author 3,author 4        17   7
 
+        >>> DataFrame(df).documents_by_term_per_year('Authors', as_matrix=True)
+              author 0  author 1  author 2  author 3  author 4
+        2010         2         1         1         0         0
+        2011         0         1         0         1         0
+        2012         0         0         0         0         1
+        2013         0         0         0         0         1
+        2014         1         0         0         2         1
+    
         >>> DataFrame(df).growth_indicators('Authors')
-            Authors       AGR
-        1  author 3  0.666667
-        0  author 0  0.333333
-        2  author 4  0.000000
+            Authors       AGR  ADY   PDLY
+        0  author 3  0.666667  1.0  12.50
+        1  author 0  0.333333  0.5   6.25
+        2  author 4  0.000000  1.0  12.50
 
         >>> keywords = Keywords(['author 3', 'author 4'])
         >>> keywords = keywords.compile()
         >>> DataFrame(df).growth_indicators('Authors', keywords=keywords)
-            Authors       AGR
-        0  author 3  0.666667
-        1  author 4  0.000000
+            Authors       AGR  ADY  PDLY
+        0  author 3  0.666667  1.0  12.5
+        1  author 4  0.000000  1.0  12.5
 
         """
-        result = self.documents_by_term_per_year(
-            column=column, sep=sep, keywords=keywords
-        )
-        years_ady = sorted(set(result.Year))[-timewindow:]
-        years_agr = sorted(set(result.Year))[-(timewindow + 1) :]
-        years_agr = [years_agr[0], years_agr[-1]]
-        agr = result[result.Year.map(lambda w: w in years_agr)]
-        agr.pop("ID")
-        agr = pd.pivot_table(
-            agr, columns="Year", index=column, values="Num Documents", fill_value=0
-        )
-        agr["AGR"] = 0.0
-        agr = agr.assign(AGR=(agr[years_agr[1]] - agr[years_agr[0]]) / (timewindow + 1))
-        agr.pop(years_agr[0])
-        agr.pop(years_agr[1])
-        agr = agr.reset_index()
-        agr.columns = list(agr.columns)
-        agr = agr.sort_values(by=["AGR", column], ascending=False)
-        return agr
+
+        def compute_agr():
+            result = self.documents_by_term_per_year(
+                column=column, sep=sep, keywords=keywords
+            )
+            years_agr = sorted(set(result.Year))[-(timewindow + 1) :]
+            years_agr = [years_agr[0], years_agr[-1]]
+            result = result[result.Year.map(lambda w: w in years_agr)]
+            result.pop("ID")
+            result = pd.pivot_table(
+                result,
+                columns="Year",
+                index=column,
+                values="Num Documents",
+                fill_value=0,
+            )
+            result["AGR"] = 0.0
+            result = result.assign(
+                AGR=(result[years_agr[1]] - result[years_agr[0]]) / (timewindow + 1)
+            )
+            result.pop(years_agr[0])
+            result.pop(years_agr[1])
+            result = result.reset_index()
+            result.columns = list(result.columns)
+            result = result.sort_values(by=["AGR", column], ascending=False)
+            return result
+
+        def compute_ady():
+            result = self.documents_by_term_per_year(
+                column=column, sep=sep, keywords=keywords
+            )
+            years_ady = sorted(set(result.Year))[-timewindow:]
+            result = result[result.Year.map(lambda w: w in years_ady)]
+            result = result.groupby([column], as_index=False).agg(
+                {"Num Documents": np.sum}
+            )
+            result = result.set_index(column)
+            result = result.rename(columns={"Num Documents": "ADY"})
+            result["ADY"] = result.ADY.map(lambda w: w / timewindow)
+            return result.ADY
+
+        result = compute_agr()
+        result = result.set_index(column)
+        ady = compute_ady()
+        result.at[ady.index, "ADY"] = ady
+        result = result.assign(PDLY=round(result.ADY / len(self) * 100, 2))
+        result = result.reset_index()
+        return result
 
 
 # result =
