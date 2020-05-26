@@ -6,8 +6,12 @@ Chord Diagrams
 
 
 """
+import textwrap
+
 import matplotlib.pyplot as plt
 import numpy as np
+
+TEXTLEN = 20
 
 
 class ChordDiagram:
@@ -222,7 +226,7 @@ class ChordDiagram:
                 plt.text(
                     x,
                     y,
-                    label,
+                    textwrap.shorten(text=label, width=TEXTLEN),
                     rotation=rotation,
                     ha=ha,
                     va="center",
@@ -287,9 +291,6 @@ class ChordDiagram:
         node_properties = compute_node_properties()
         draw_points()
         draw_edges()
-
-        # plt.xlim(-6, 6)
-        # plt.ylim(-6, 6)
 
         plt.gca().axis("off")
         plt.gca().set_aspect("equal", "box")

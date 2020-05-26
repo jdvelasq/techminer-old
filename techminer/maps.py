@@ -6,10 +6,15 @@ Correlation Maps generation and manipulation
 
 
 """
+import textwrap
+
 import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
+
 from . import DataFrame
+
+TEXTLEN = 15
 
 
 class Map:
@@ -319,6 +324,11 @@ class Map:
             bbox=dict(boxstyle="square", ec="lightgray", fc="white",),
         )
         props = {**default, **kwargs}
+
+        labels = {
+            key: textwrap.shorten(text=str(labels[key]), width=TEXTLEN)
+            for key in labels.keys()
+        }
 
         for node in self._graph.nodes:
             if node in labels:
