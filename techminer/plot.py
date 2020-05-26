@@ -545,7 +545,7 @@ class Plot:
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> pd = pd.DataFrame(
+        >>> df = pd.DataFrame(
         ...     {
         ...         "author 0": [1, 1, 0, 0, 0, 0, 0],
         ...         "author 1": [0, 1, 1, 0, 0, 0, 0],
@@ -555,7 +555,7 @@ class Plot:
         ...     },
         ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
         ... )
-        >>> pd
+        >>> df
               author 0  author 1  author 2  author 3  author 4
         2010         1         0         1         0         0
         2011         1         1         0         0         0
@@ -565,7 +565,7 @@ class Plot:
         2015         0         0         0         0         0
         2016         0         0         0         0         1
 
-        >>> _ = Plot(pd).gant()
+        >>> _ = Plot(df).gant()
         >>> plt.savefig('sphinx/images/gantplot.png')
         
         .. image:: images/gantplot.png
@@ -626,20 +626,20 @@ class Plot:
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> pd = pd.DataFrame(
+        >>> df = pd.DataFrame(
         ...     {
         ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
         ...         "Num Documents": [3, 2, 2, 1],
         ...         "ID": list(range(4)),
         ...     }
         ... )
-        >>> pd
+        >>> df
             Authors  Num Documents  ID
         0  author 3              3   0
         1  author 1              2   1
         2  author 0              2   2
         3  author 2              1   3
-        >>> _ = Plot(pd).pie(cmap=plt.cm.Blues)
+        >>> _ = Plot(df).pie(cmap=plt.cm.Blues)
         >>> plt.savefig('sphinx/images/pieplot.png')
         
         .. image:: images/pieplot.png
@@ -651,7 +651,8 @@ class Plot:
         plt.clf()
         cmap = plt.cm.get_cmap(cmap)
         x = self.df.copy()
-        x.pop("ID")
+        if "ID" in x.columns:
+            x.pop("ID")
         colors = None
         if cmap is not None:
             colors = [
@@ -684,20 +685,20 @@ class Plot:
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> pd = pd.DataFrame(
+        >>> df = pd.DataFrame(
         ...     {
         ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
         ...         "Num Documents": [3, 2, 2, 1],
         ...         "ID": list(range(4)),
         ...     }
         ... )
-        >>> pd
+        >>> df
             Authors  Num Documents  ID
         0  author 3              3   0
         1  author 1              2   1
         2  author 0              2   2
         3  author 2              1   3
-        >>> _ = Plot(pd).bar(cmap=plt.cm.Blues)
+        >>> _ = Plot(df).bar(cmap=plt.cm.Blues)
         >>> plt.savefig('sphinx/images/barplot.png')
         
         .. image:: images/barplot.png
@@ -709,7 +710,8 @@ class Plot:
         plt.clf()
         cmap = plt.cm.get_cmap(cmap)
         x = self.df.copy()
-        x.pop("ID")
+        if "ID" in x.columns:
+            x.pop("ID")
         if cmap is not None:
             kwargs["color"] = [
                 cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
@@ -742,20 +744,20 @@ class Plot:
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> pd = pd.DataFrame(
+        >>> df = pd.DataFrame(
         ...     {
         ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
         ...         "Num Documents": [3, 2, 2, 1],
         ...         "ID": list(range(4)),
         ...     }
         ... )
-        >>> pd
+        >>> df
             Authors  Num Documents  ID
         0  author 3              3   0
         1  author 1              2   1
         2  author 0              2   2
         3  author 2              1   3
-        >>> _ = Plot(pd).barh(cmap=plt.cm.Blues)
+        >>> _ = Plot(df).barh(cmap=plt.cm.Blues)
         >>> plt.savefig('sphinx/images/barhplot.png')
         
         .. image:: images/barhplot.png
@@ -765,7 +767,8 @@ class Plot:
         """
         plt.clf()
         x = self.df.copy()
-        x.pop("ID")
+        if "ID" in x.columns:
+            x.pop("ID")
         if cmap is not None:
             cmap = plt.cm.get_cmap(cmap)
             kwargs["color"] = [
@@ -891,25 +894,26 @@ class Plot:
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> pd = pd.DataFrame(
+        >>> df = pd.DataFrame(
         ...     {
         ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
         ...         "Num Documents": [10, 5, 2, 1],
         ...         "ID": list(range(4)),
         ...     }
         ... )
-        >>> pd
+        >>> df
             Authors  Num Documents  ID
         0  author 3             10   0
         1  author 1              5   1
         2  author 0              2   2
         3  author 2              1   3
-        >>> _ = Plot(pd).wordcloud()
+        >>> _ = Plot(df).wordcloud()
         >>> plt.savefig('sphinx/images/wordcloud.png')        
         
         .. image:: images/wordcloud.png
             :width: 400px
-            :align: center     
+            :align: center  
+
         """
         plt.clf()
         x = self.df.copy()
@@ -947,4 +951,178 @@ class Plot:
         wordcloud.generate_from_frequencies(words)
         plt.gca().imshow(wordcloud, interpolation="bilinear")
         plt.gca().axis("off")
+        return plt.gca()
+
+    def stacked_bar(
+        self, width=0.8, bottom=None, align="center", cmap="Greys", **kwargs
+    ):
+        """Stacked vertical bar plot.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     {
+        ...         "Authors": "author 0,author 1,author 2,author 3,author 3,author 5".split(","),
+        ...         "col 0": [6, 5, 4, 3, 2, 1],
+        ...         "col 1": [0, 2, 5, 1, 5, 7],
+        ...         "ID": list(range(6)),
+        ...     }
+        ... )
+        >>> df
+            Authors  col 0  col 1  ID
+        0  author 0      6      0   0
+        1  author 1      5      2   1
+        2  author 2      4      5   2
+        3  author 3      3      1   3
+        4  author 3      2      5   4
+        5  author 5      1      7   5
+
+        >>> _ = Plot(df).stacked_bar(cmap='Blues')
+        >>> plt.savefig('sphinx/images/stakedbar0.png')        
+        
+        .. image:: images/stackedbar0.png
+            :width: 400px
+            :align: center   
+
+        >>> df = pd.DataFrame(
+        ...     {
+        ...         "Authors": "author 0,author 1,author 2,author 3,author 3,author 5".split(","),
+        ...         "col 0": [6, 5, 2, 3, 4, 1],
+        ...         "col 1": [0, 1, 2, 3, 4, 5],
+        ...         "col 2": [3, 2, 3, 1, 0, 1],
+        ...         "ID": list(range(6)),
+        ...     }
+        ... )
+        >>> df
+            Authors  col 0  col 1  col 2  ID
+        0  author 0      6      0      3   0
+        1  author 1      5      1      2   1
+        2  author 2      2      2      3   2
+        3  author 3      3      3      1   3
+        4  author 3      4      4      0   4
+        5  author 5      1      5      1   5
+
+        >>> _ = Plot(df).stacked_bar(cmap='Blues')
+        >>> plt.savefig('sphinx/images/stakedbar1.png')        
+        
+        .. image:: images/stackedbar1.png
+            :width: 400px
+            :align: center   
+
+        """
+        plt.clf()
+        cmap = plt.cm.get_cmap(cmap)
+        x = self.df.copy()
+        if "ID" in x.columns:
+            x.pop("ID")
+        if bottom is None:
+            bottom = x[x.columns[1]].map(lambda w: 0.0)
+        for icol, col in enumerate(x.columns[1:]):
+            if cmap is not None:
+                kwargs["color"] = cmap((0.2 + 0.75 * icol / (len(x.columns) - 1)))
+            plt.gca().bar(
+                x=range(len(x)),
+                height=x[col],
+                width=width,
+                bottom=bottom,
+                align=align,
+                **({}),
+                **kwargs,
+            )
+            bottom = bottom + x[col]
+        plt.xticks(
+            np.arange(len(x[x.columns[0]])), x[x.columns[0]], rotation="vertical"
+        )
+        plt.xlabel(x.columns[0])
+        # plt.ylabel(x.columns[1])
+        plt.gca().spines["top"].set_visible(False)
+        plt.gca().spines["right"].set_visible(False)
+        plt.gca().spines["left"].set_visible(False)
+        plt.gca().spines["bottom"].set_visible(False)
+        return plt.gca()
+
+    def stacked_barh(self, height=0.8, left=None, align="center", cmap=None, **kwargs):
+        """Stacked horzontal bar plot.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     {
+        ...         "Authors": "author 0,author 1,author 2,author 3,author 3,author 5".split(","),
+        ...         "col 0": [6, 5, 4, 3, 2, 1],
+        ...         "col 1": [0, 2, 5, 1, 5, 7],
+        ...         "ID": list(range(6)),
+        ...     }
+        ... )
+        >>> df
+            Authors  col 0  col 1  ID
+        0  author 0      6      0   0
+        1  author 1      5      2   1
+        2  author 2      4      5   2
+        3  author 3      3      1   3
+        4  author 3      2      5   4
+        5  author 5      1      7   5
+
+        >>> _ = Plot(df).stacked_barh(cmap='Blues')
+        >>> plt.savefig('sphinx/images/stakedbarh0.png')        
+        
+        .. image:: images/stackedbarh0.png
+            :width: 400px
+            :align: center   
+
+        >>> df = pd.DataFrame(
+        ...     {
+        ...         "Authors": "author 0,author 1,author 2,author 3,author 3,author 5".split(","),
+        ...         "col 0": [6, 5, 2, 3, 4, 1],
+        ...         "col 1": [0, 1, 2, 3, 4, 5],
+        ...         "col 2": [3, 2, 3, 1, 0, 1],
+        ...         "ID": list(range(6)),
+        ...     }
+        ... )
+        >>> df
+            Authors  col 0  col 1  col 2  ID
+        0  author 0      6      0      3   0
+        1  author 1      5      1      2   1
+        2  author 2      2      2      3   2
+        3  author 3      3      3      1   3
+        4  author 3      4      4      0   4
+        5  author 5      1      5      1   5
+
+        >>> _ = Plot(df).stacked_barh(cmap='Blues')
+        >>> plt.savefig('sphinx/images/stakedbarh1.png')        
+        
+        .. image:: images/stackedbarh1.png
+            :width: 400px
+            :align: center   
+
+        """
+        plt.clf()
+        cmap = plt.cm.get_cmap(cmap)
+        x = self.df.copy()
+        if "ID" in x.columns:
+            x.pop("ID")
+        if left is None:
+            left = x[x.columns[1]].map(lambda w: 0.0)
+        for icol, col in enumerate(x.columns[1:]):
+            if cmap is not None:
+                kwargs["color"] = cmap((0.2 + 0.75 * icol / (len(x.columns) - 1)))
+            plt.gca().barh(
+                y=range(len(x)),
+                width=x[col],
+                height=height,
+                left=left,
+                align=align,
+                **({}),
+                **kwargs,
+            )
+            left = left + x[col]
+        plt.yticks(np.arange(len(x[x.columns[0]])), x[x.columns[0]])
+        plt.gca().spines["top"].set_visible(False)
+        plt.gca().spines["right"].set_visible(False)
+        plt.gca().spines["left"].set_visible(False)
+        plt.gca().spines["bottom"].set_visible(False)
         return plt.gca()

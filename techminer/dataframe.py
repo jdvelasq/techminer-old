@@ -3471,17 +3471,7 @@ class DataFrame(pd.DataFrame):
         return result
 
 
-# result =
-#     Authors  Year  Num Documents      ID
-# 0  author 0  2010              2  [0, 1]
-# 1  author 1  2010              1     [0]
-# 2  author 2  2010              1     [0]
-# 3  author 1  2011              1     [2]
-# 4  author 3  2011              1     [3]
-# 5  author 4  2012              1     [4]
-# 6  author 4  2013              1     [5]
-# 7  author 3  2014              2  [6, 7]
-# 8  author 4  2014              1     [7]
+
 
 # def __getitem__(self, key):
 #     return DataFrame(super().__getitem__(key))

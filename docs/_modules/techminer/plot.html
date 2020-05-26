@@ -698,7 +698,7 @@
 <span class="sd">        ----------------------------------------------------------------------------------------------</span>
 
 <span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">        &gt;&gt;&gt; pd = pd.DataFrame(</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame(</span>
 <span class="sd">        ...     {</span>
 <span class="sd">        ...         &quot;author 0&quot;: [1, 1, 0, 0, 0, 0, 0],</span>
 <span class="sd">        ...         &quot;author 1&quot;: [0, 1, 1, 0, 0, 0, 0],</span>
@@ -708,7 +708,7 @@
 <span class="sd">        ...     },</span>
 <span class="sd">        ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; pd</span>
+<span class="sd">        &gt;&gt;&gt; df</span>
 <span class="sd">              author 0  author 1  author 2  author 3  author 4</span>
 <span class="sd">        2010         1         0         1         0         0</span>
 <span class="sd">        2011         1         1         0         0         0</span>
@@ -718,7 +718,7 @@
 <span class="sd">        2015         0         0         0         0         0</span>
 <span class="sd">        2016         0         0         0         0         1</span>
 
-<span class="sd">        &gt;&gt;&gt; _ = Plot(pd).gant()</span>
+<span class="sd">        &gt;&gt;&gt; _ = Plot(df).gant()</span>
 <span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/gantplot.png&#39;)</span>
 <span class="sd">        </span>
 <span class="sd">        .. image:: images/gantplot.png</span>
@@ -779,20 +779,20 @@
 <span class="sd">        ----------------------------------------------------------------------------------------------</span>
 
 <span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">        &gt;&gt;&gt; pd = pd.DataFrame(</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame(</span>
 <span class="sd">        ...     {</span>
 <span class="sd">        ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
 <span class="sd">        ...         &quot;Num Documents&quot;: [3, 2, 2, 1],</span>
 <span class="sd">        ...         &quot;ID&quot;: list(range(4)),</span>
 <span class="sd">        ...     }</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; pd</span>
+<span class="sd">        &gt;&gt;&gt; df</span>
 <span class="sd">            Authors  Num Documents  ID</span>
 <span class="sd">        0  author 3              3   0</span>
 <span class="sd">        1  author 1              2   1</span>
 <span class="sd">        2  author 0              2   2</span>
 <span class="sd">        3  author 2              1   3</span>
-<span class="sd">        &gt;&gt;&gt; _ = Plot(pd).pie(cmap=plt.cm.Blues)</span>
+<span class="sd">        &gt;&gt;&gt; _ = Plot(df).pie(cmap=plt.cm.Blues)</span>
 <span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/pieplot.png&#39;)</span>
 <span class="sd">        </span>
 <span class="sd">        .. image:: images/pieplot.png</span>
@@ -804,7 +804,8 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
         <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;ID&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
         <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span>
@@ -837,20 +838,20 @@
 <span class="sd">        ----------------------------------------------------------------------------------------------</span>
 
 <span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">        &gt;&gt;&gt; pd = pd.DataFrame(</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame(</span>
 <span class="sd">        ...     {</span>
 <span class="sd">        ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
 <span class="sd">        ...         &quot;Num Documents&quot;: [3, 2, 2, 1],</span>
 <span class="sd">        ...         &quot;ID&quot;: list(range(4)),</span>
 <span class="sd">        ...     }</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; pd</span>
+<span class="sd">        &gt;&gt;&gt; df</span>
 <span class="sd">            Authors  Num Documents  ID</span>
 <span class="sd">        0  author 3              3   0</span>
 <span class="sd">        1  author 1              2   1</span>
 <span class="sd">        2  author 0              2   2</span>
 <span class="sd">        3  author 2              1   3</span>
-<span class="sd">        &gt;&gt;&gt; _ = Plot(pd).bar(cmap=plt.cm.Blues)</span>
+<span class="sd">        &gt;&gt;&gt; _ = Plot(df).bar(cmap=plt.cm.Blues)</span>
 <span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/barplot.png&#39;)</span>
 <span class="sd">        </span>
 <span class="sd">        .. image:: images/barplot.png</span>
@@ -862,7 +863,8 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
         <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;ID&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">cmap</span><span class="p">((</span><span class="mf">0.2</span> <span class="o">+</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]])))</span>
@@ -895,20 +897,20 @@
 <span class="sd">        ----------------------------------------------------------------------------------------------</span>
 
 <span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">        &gt;&gt;&gt; pd = pd.DataFrame(</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame(</span>
 <span class="sd">        ...     {</span>
 <span class="sd">        ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
 <span class="sd">        ...         &quot;Num Documents&quot;: [3, 2, 2, 1],</span>
 <span class="sd">        ...         &quot;ID&quot;: list(range(4)),</span>
 <span class="sd">        ...     }</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; pd</span>
+<span class="sd">        &gt;&gt;&gt; df</span>
 <span class="sd">            Authors  Num Documents  ID</span>
 <span class="sd">        0  author 3              3   0</span>
 <span class="sd">        1  author 1              2   1</span>
 <span class="sd">        2  author 0              2   2</span>
 <span class="sd">        3  author 2              1   3</span>
-<span class="sd">        &gt;&gt;&gt; _ = Plot(pd).barh(cmap=plt.cm.Blues)</span>
+<span class="sd">        &gt;&gt;&gt; _ = Plot(df).barh(cmap=plt.cm.Blues)</span>
 <span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/barhplot.png&#39;)</span>
 <span class="sd">        </span>
 <span class="sd">        .. image:: images/barhplot.png</span>
@@ -918,7 +920,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;ID&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
@@ -1044,25 +1047,26 @@
 <span class="sd">        ----------------------------------------------------------------------------------------------</span>
 
 <span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">        &gt;&gt;&gt; pd = pd.DataFrame(</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame(</span>
 <span class="sd">        ...     {</span>
 <span class="sd">        ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
 <span class="sd">        ...         &quot;Num Documents&quot;: [10, 5, 2, 1],</span>
 <span class="sd">        ...         &quot;ID&quot;: list(range(4)),</span>
 <span class="sd">        ...     }</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; pd</span>
+<span class="sd">        &gt;&gt;&gt; df</span>
 <span class="sd">            Authors  Num Documents  ID</span>
 <span class="sd">        0  author 3             10   0</span>
 <span class="sd">        1  author 1              5   1</span>
 <span class="sd">        2  author 0              2   2</span>
 <span class="sd">        3  author 2              1   3</span>
-<span class="sd">        &gt;&gt;&gt; _ = Plot(pd).wordcloud()</span>
+<span class="sd">        &gt;&gt;&gt; _ = Plot(df).wordcloud()</span>
 <span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/wordcloud.png&#39;)        </span>
 <span class="sd">        </span>
 <span class="sd">        .. image:: images/wordcloud.png</span>
 <span class="sd">            :width: 400px</span>
-<span class="sd">            :align: center     </span>
+<span class="sd">            :align: center  </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -1100,6 +1104,180 @@
         <span class="n">wordcloud</span><span class="o">.</span><span class="n">generate_from_frequencies</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wordcloud</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;bilinear&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Plot.stacked_bar"><a class="viewcode-back" href="../../plot.html#techminer.plot.Plot.stacked_bar">[docs]</a>    <span class="k">def</span> <span class="nf">stacked_bar</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Stacked vertical bar plot.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">        ...     {</span>
+<span class="sd">        ...         &quot;Authors&quot;: &quot;author 0,author 1,author 2,author 3,author 3,author 5&quot;.split(&quot;,&quot;),</span>
+<span class="sd">        ...         &quot;col 0&quot;: [6, 5, 4, 3, 2, 1],</span>
+<span class="sd">        ...         &quot;col 1&quot;: [0, 2, 5, 1, 5, 7],</span>
+<span class="sd">        ...         &quot;ID&quot;: list(range(6)),</span>
+<span class="sd">        ...     }</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; df</span>
+<span class="sd">            Authors  col 0  col 1  ID</span>
+<span class="sd">        0  author 0      6      0   0</span>
+<span class="sd">        1  author 1      5      2   1</span>
+<span class="sd">        2  author 2      4      5   2</span>
+<span class="sd">        3  author 3      3      1   3</span>
+<span class="sd">        4  author 3      2      5   4</span>
+<span class="sd">        5  author 5      1      7   5</span>
+
+<span class="sd">        &gt;&gt;&gt; _ = Plot(df).stacked_bar(cmap=&#39;Blues&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/stakedbar0.png&#39;)        </span>
+<span class="sd">        </span>
+<span class="sd">        .. image:: images/stackedbar0.png</span>
+<span class="sd">            :width: 400px</span>
+<span class="sd">            :align: center   </span>
+
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">        ...     {</span>
+<span class="sd">        ...         &quot;Authors&quot;: &quot;author 0,author 1,author 2,author 3,author 3,author 5&quot;.split(&quot;,&quot;),</span>
+<span class="sd">        ...         &quot;col 0&quot;: [6, 5, 2, 3, 4, 1],</span>
+<span class="sd">        ...         &quot;col 1&quot;: [0, 1, 2, 3, 4, 5],</span>
+<span class="sd">        ...         &quot;col 2&quot;: [3, 2, 3, 1, 0, 1],</span>
+<span class="sd">        ...         &quot;ID&quot;: list(range(6)),</span>
+<span class="sd">        ...     }</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; df</span>
+<span class="sd">            Authors  col 0  col 1  col 2  ID</span>
+<span class="sd">        0  author 0      6      0      3   0</span>
+<span class="sd">        1  author 1      5      1      2   1</span>
+<span class="sd">        2  author 2      2      2      3   2</span>
+<span class="sd">        3  author 3      3      3      1   3</span>
+<span class="sd">        4  author 3      4      4      0   4</span>
+<span class="sd">        5  author 5      1      5      1   5</span>
+
+<span class="sd">        &gt;&gt;&gt; _ = Plot(df).stacked_bar(cmap=&#39;Blues&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/stakedbar1.png&#39;)        </span>
+<span class="sd">        </span>
+<span class="sd">        .. image:: images/stackedbar1.png</span>
+<span class="sd">            :width: 400px</span>
+<span class="sd">            :align: center   </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;ID&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">bottom</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bottom</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">icol</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+            <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">((</span><span class="mf">0.2</span> <span class="o">+</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">icol</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+                <span class="n">x</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
+                <span class="n">height</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">],</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+                <span class="n">bottom</span><span class="o">=</span><span class="n">bottom</span><span class="p">,</span>
+                <span class="n">align</span><span class="o">=</span><span class="n">align</span><span class="p">,</span>
+                <span class="o">**</span><span class="p">({}),</span>
+                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">bottom</span> <span class="o">=</span> <span class="n">bottom</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])),</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span>
+        <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="c1"># plt.ylabel(x.columns[1])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Plot.stacked_barh"><a class="viewcode-back" href="../../plot.html#techminer.plot.Plot.stacked_barh">[docs]</a>    <span class="k">def</span> <span class="nf">stacked_barh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Stacked horzontal bar plot.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">        ...     {</span>
+<span class="sd">        ...         &quot;Authors&quot;: &quot;author 0,author 1,author 2,author 3,author 3,author 5&quot;.split(&quot;,&quot;),</span>
+<span class="sd">        ...         &quot;col 0&quot;: [6, 5, 4, 3, 2, 1],</span>
+<span class="sd">        ...         &quot;col 1&quot;: [0, 2, 5, 1, 5, 7],</span>
+<span class="sd">        ...         &quot;ID&quot;: list(range(6)),</span>
+<span class="sd">        ...     }</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; df</span>
+<span class="sd">            Authors  col 0  col 1  ID</span>
+<span class="sd">        0  author 0      6      0   0</span>
+<span class="sd">        1  author 1      5      2   1</span>
+<span class="sd">        2  author 2      4      5   2</span>
+<span class="sd">        3  author 3      3      1   3</span>
+<span class="sd">        4  author 3      2      5   4</span>
+<span class="sd">        5  author 5      1      7   5</span>
+
+<span class="sd">        &gt;&gt;&gt; _ = Plot(df).stacked_barh(cmap=&#39;Blues&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/stakedbarh0.png&#39;)        </span>
+<span class="sd">        </span>
+<span class="sd">        .. image:: images/stackedbarh0.png</span>
+<span class="sd">            :width: 400px</span>
+<span class="sd">            :align: center   </span>
+
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">        ...     {</span>
+<span class="sd">        ...         &quot;Authors&quot;: &quot;author 0,author 1,author 2,author 3,author 3,author 5&quot;.split(&quot;,&quot;),</span>
+<span class="sd">        ...         &quot;col 0&quot;: [6, 5, 2, 3, 4, 1],</span>
+<span class="sd">        ...         &quot;col 1&quot;: [0, 1, 2, 3, 4, 5],</span>
+<span class="sd">        ...         &quot;col 2&quot;: [3, 2, 3, 1, 0, 1],</span>
+<span class="sd">        ...         &quot;ID&quot;: list(range(6)),</span>
+<span class="sd">        ...     }</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; df</span>
+<span class="sd">            Authors  col 0  col 1  col 2  ID</span>
+<span class="sd">        0  author 0      6      0      3   0</span>
+<span class="sd">        1  author 1      5      1      2   1</span>
+<span class="sd">        2  author 2      2      2      3   2</span>
+<span class="sd">        3  author 3      3      3      1   3</span>
+<span class="sd">        4  author 3      4      4      0   4</span>
+<span class="sd">        5  author 5      1      5      1   5</span>
+
+<span class="sd">        &gt;&gt;&gt; _ = Plot(df).stacked_barh(cmap=&#39;Blues&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/stakedbarh1.png&#39;)        </span>
+<span class="sd">        </span>
+<span class="sd">        .. image:: images/stackedbarh1.png</span>
+<span class="sd">            :width: 400px</span>
+<span class="sd">            :align: center   </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;ID&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">left</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">icol</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+            <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">((</span><span class="mf">0.2</span> <span class="o">+</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">icol</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span>
+                <span class="n">y</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">],</span>
+                <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+                <span class="n">left</span><span class="o">=</span><span class="n">left</span><span class="p">,</span>
+                <span class="n">align</span><span class="o">=</span><span class="n">align</span><span class="p">,</span>
+                <span class="o">**</span><span class="p">({}),</span>
+                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="n">left</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])),</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span></div></div>
 </pre></div>
 
