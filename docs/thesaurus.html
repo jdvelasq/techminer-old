@@ -325,8 +325,18 @@
 </dd></dl>
 
 <dl class="py method">
+<dt id="techminer.thesaurus.Thesaurus.apply_as_dict">
+<code class="sig-name descname">apply_as_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/thesaurus.html#Thesaurus.apply_as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.thesaurus.Thesaurus.apply_as_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt id="techminer.thesaurus.Thesaurus.change_key">
 <code class="sig-name descname">change_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">current_key</span></em>, <em class="sig-param"><span class="n">new_key</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/thesaurus.html#Thesaurus.change_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.thesaurus.Thesaurus.change_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="techminer.thesaurus.Thesaurus.compile">
+<code class="sig-name descname">compile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/thesaurus.html#Thesaurus.compile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.thesaurus.Thesaurus.compile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -405,6 +415,11 @@ matching the current pattern with the key.</p>
 <em class="property">property </em><code class="sig-name descname">thesaurus</code><a class="headerlink" href="#techminer.thesaurus.Thesaurus.thesaurus" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt id="techminer.thesaurus.Thesaurus.to_dict">
+<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/thesaurus.html#Thesaurus.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.thesaurus.Thesaurus.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -458,16 +473,16 @@ matching the current pattern with the key.</p>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">text_clustering</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="p">)</span> 
 <span class="go">{</span>
-<span class="go">  &quot;a b&quot;: [</span>
-<span class="go">    &quot;a B&quot;,</span>
-<span class="go">    &quot;a b&quot;</span>
-<span class="go">    ],</span>
-<span class="go">  &quot;a b c a b&quot;: [</span>
+<span class="go">  &quot;A C b&quot;: [</span>
 <span class="go">    &quot;A C b&quot;,</span>
 <span class="go">    &quot;a b c a b&quot;,</span>
 <span class="go">    &quot;a b c a b a&quot;,</span>
 <span class="go">    &quot;a, b, c, a&quot;</span>
-<span class="go">    ]</span>
+<span class="go">  ],</span>
+<span class="go">  &quot;a B&quot;: [</span>
+<span class="go">    &quot;a B&quot;,</span>
+<span class="go">    &quot;a b&quot;</span>
+<span class="go">  ]</span>
 <span class="go">}</span>
 </pre></div>
 </div>
@@ -488,16 +503,16 @@ matching the current pattern with the key.</p>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">text_clustering</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="n">name_strategy</span><span class="o">=</span><span class="s1">&#39;longest&#39;</span><span class="p">)</span> 
 <span class="go">{</span>
-<span class="go">  &quot;a B&quot;: [</span>
+<span class="go">  &quot;a b&quot;: [</span>
 <span class="go">    &quot;a B&quot;,</span>
 <span class="go">    &quot;a b&quot;</span>
-<span class="go">    ],</span>
+<span class="go">  ],</span>
 <span class="go">  &quot;a b c a b a&quot;: [</span>
 <span class="go">    &quot;A C b&quot;,</span>
 <span class="go">    &quot;a b c a b&quot;,</span>
 <span class="go">    &quot;a b c a b a&quot;,</span>
 <span class="go">    &quot;a, b, c, a&quot;</span>
-<span class="go">    ]</span>
+<span class="go">  ]</span>
 <span class="go">}</span>
 </pre></div>
 </div>
@@ -525,13 +540,7 @@ matching the current pattern with the key.</p>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">text_clustering</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">name_strategy</span><span class="o">=</span><span class="s1">&#39;longest&#39;</span><span class="p">)</span> 
 <span class="go">{</span>
-<span class="go">  &quot;A C&quot;: [</span>
-<span class="go">    &quot;A C&quot;,</span>
-<span class="go">    &quot;C A&quot;,</span>
-<span class="go">    &quot;c A&quot;,</span>
-<span class="go">    &quot;c a&quot;</span>
-<span class="go">  ],</span>
-<span class="go">  &quot;a B&quot;: [</span>
+<span class="go">  &quot;a b&quot;: [</span>
 <span class="go">    &quot;A b&quot;,</span>
 <span class="go">    &quot;a B&quot;,</span>
 <span class="go">    &quot;a b&quot;,</span>
@@ -540,6 +549,12 @@ matching the current pattern with the key.</p>
 <span class="go">  &quot;b&quot;: [</span>
 <span class="go">    &quot;B&quot;,</span>
 <span class="go">    &quot;b&quot;</span>
+<span class="go">  ],</span>
+<span class="go">  &quot;c a&quot;: [</span>
+<span class="go">    &quot;A C&quot;,</span>
+<span class="go">    &quot;C A&quot;,</span>
+<span class="go">    &quot;c A&quot;,</span>
+<span class="go">    &quot;c a&quot;</span>
 <span class="go">  ]</span>
 <span class="go">}</span>
 </pre></div>

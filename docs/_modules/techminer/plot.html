@@ -952,20 +952,26 @@
 <span class="sd">        ----------------------------------------------------------------------------------------------</span>
 
 <span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">        &gt;&gt;&gt; pd = pd.DataFrame(</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame(</span>
 <span class="sd">        ...     {</span>
-<span class="sd">        ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
-<span class="sd">        ...         &quot;Num Documents&quot;: [3, 2, 2, 1],</span>
-<span class="sd">        ...         &quot;ID&quot;: list(range(4)),</span>
-<span class="sd">        ...     }</span>
+<span class="sd">        ...         &quot;author 0&quot;: [ 1, 2, 3, 4, 5, 6, 7],</span>
+<span class="sd">        ...         &quot;author 1&quot;: [14, 13, 12, 11, 10, 9, 8],</span>
+<span class="sd">        ...         &quot;author 2&quot;: [1, 5, 8, 9, 0, 0, 0],</span>
+<span class="sd">        ...         &quot;author 3&quot;: [0, 0, 1, 1, 1, 0, 0],</span>
+<span class="sd">        ...         &quot;author 4&quot;: [0, 10, 0, 4, 2, 0, 1],</span>
+<span class="sd">        ...     },</span>
+<span class="sd">        ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; pd</span>
-<span class="sd">            Authors  Num Documents  ID</span>
-<span class="sd">        0  author 3              3   0</span>
-<span class="sd">        1  author 1              2   1</span>
-<span class="sd">        2  author 0              2   2</span>
-<span class="sd">        3  author 2              1   3</span>
-<span class="sd">        &gt;&gt;&gt; _ = Plot(pd).plot()</span>
+<span class="sd">        &gt;&gt;&gt; df</span>
+<span class="sd">              author 0  author 1  author 2  author 3  author 4</span>
+<span class="sd">        2010         1        14         1         0         0</span>
+<span class="sd">        2011         2        13         5         0        10</span>
+<span class="sd">        2012         3        12         8         1         0</span>
+<span class="sd">        2013         4        11         9         1         4</span>
+<span class="sd">        2014         5        10         0         1         2</span>
+<span class="sd">        2015         6         9         0         0         0</span>
+<span class="sd">        2016         7         8         0         0         1</span>
+<span class="sd">        &gt;&gt;&gt; _ = Plot(df).plot()</span>
 <span class="sd">        &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotplot.png&#39;)</span>
 <span class="sd">        </span>
 <span class="sd">        .. image:: images/plotplot.png</span>
@@ -976,20 +982,26 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
-            <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
-            <span class="o">*</span><span class="n">args</span><span class="p">,</span>
-            <span class="n">scalex</span><span class="o">=</span><span class="n">scalex</span><span class="p">,</span>
-            <span class="n">scaley</span><span class="o">=</span><span class="n">scaley</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])),</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span>
-        <span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s2">&quot;ID&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
+                <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+                <span class="n">scalex</span><span class="o">=</span><span class="n">scalex</span><span class="p">,</span>
+                <span class="n">scaley</span><span class="o">=</span><span class="n">scaley</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])),</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span>
+            <span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
         <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>

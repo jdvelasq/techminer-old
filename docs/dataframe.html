@@ -203,7 +203,7 @@
 object with specialized functions to summarize and query bibliographic data.</p>
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.autocorr">
-<code class="sig-name descname">autocorr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'pearson'</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.autocorr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.autocorr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">autocorr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'pearson'</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.autocorr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.autocorr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the autocorrelation among items in a column of the dataframe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -219,6 +219,7 @@ object with specialized functions to summarize and query bibliographic data.</p>
 </p></li>
 <li><p><strong>as_matrix</strong> (<em>bool</em>) – Results are returned as a matrix.</p></li>
 <li><p><strong>minmax</strong> (<em>pair</em><em>(</em><em>number</em><em>,</em><em>number</em><em>)</em>) – filter values by &gt;=min,&lt;=max.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -301,11 +302,19 @@ object with specialized functions to summarize and query bibliographic data.</p>
 <span class="go">d  0.0  0.0  0.25  1.00</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">autocorr</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">          A         B</span>
+<span class="go">A  1.000000 -0.316228</span>
+<span class="go">B -0.316228  1.000000</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.autocorr_map">
-<code class="sig-name descname">autocorr_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'pearson'</span></em>, <em class="sig-param"><span class="n">minval</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_n_links</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.autocorr_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.autocorr_map" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">autocorr_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'pearson'</span></em>, <em class="sig-param"><span class="n">minval</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_n_links</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.autocorr_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.autocorr_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the autocorrelation map among items in a column of the dataframe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -321,6 +330,7 @@ object with specialized functions to summarize and query bibliographic data.</p>
 </p></li>
 <li><p><strong>minval</strong> (<em>float</em>) – Minimum autocorrelation value to show links.</p></li>
 <li><p><strong>top_n_links</strong> (<em>int</em>) – Shows top n links.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -362,17 +372,31 @@ object with specialized functions to summarize and query bibliographic data.</p>
 <span class="go">{&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: [(&#39;B&#39;, &#39;D&#39;)], &#39;other_edges&#39;: None}</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">autocorr</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">          A         B         C</span>
+<span class="go">A  1.000000 -0.547723  0.547723</span>
+<span class="go">B -0.547723  1.000000 -0.416667</span>
+<span class="go">C  0.547723 -0.416667  1.000000</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">autocorr_map</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">{&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: None, &#39;other_edges&#39;: None}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.citations_by_term">
-<code class="sig-name descname">citations_by_term</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.citations_by_term"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.citations_by_term" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">citations_by_term</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.citations_by_term"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.citations_by_term" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the number of citations by item in a column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
 <li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -404,11 +428,19 @@ object with specialized functions to summarize and query bibliographic data.</p>
 <span class="go">3  author 2        10     [0]</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;author 1&#39;</span><span class="p">,</span> <span class="s1">&#39;author 2&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">citations_by_term</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">    Authors  Cited by      ID</span>
+<span class="go">0  author 1        22  [0, 2]</span>
+<span class="go">1  author 2        10     [0]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.citations_by_term_per_year">
-<code class="sig-name descname">citations_by_term_per_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.citations_by_term_per_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.citations_by_term_per_year" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">citations_by_term_per_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.citations_by_term_per_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.citations_by_term_per_year" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the number of citations by term by year in a column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -417,6 +449,7 @@ object with specialized functions to summarize and query bibliographic data.</p>
 <li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
 <li><p><strong>as_matrix</strong> (<em>bool</em>) – Results are returned as a matrix.</p></li>
 <li><p><strong>minmax</strong> (<em>pair</em><em>(</em><em>number</em><em>,</em><em>number</em><em>)</em>) – filter values by &gt;=min,&lt;=max.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -469,11 +502,21 @@ object with specialized functions to summarize and query bibliographic data.</p>
 <span class="go">2014         0         0        15</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;author 1&#39;</span><span class="p">,</span> <span class="s1">&#39;author 2&#39;</span><span class="p">,</span> <span class="s1">&#39;author 3&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">citations_by_term_per_year</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">    Authors  Year  Cited by   ID</span>
+<span class="go">0  author 2  2010        10  [0]</span>
+<span class="go">1  author 1  2010        10  [0]</span>
+<span class="go">2  author 3  2011        13  [3]</span>
+<span class="go">3  author 1  2011        12  [2]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.citations_by_terms_per_terms_per_year">
-<code class="sig-name descname">citations_by_terms_per_terms_per_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">sep_IDX</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_COL</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.citations_by_terms_per_terms_per_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.citations_by_terms_per_terms_per_year" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">citations_by_terms_per_terms_per_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">sep_IDX</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_COL</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.citations_by_terms_per_terms_per_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.citations_by_terms_per_terms_per_year" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the number of citations by term per term per year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -482,6 +525,7 @@ object with specialized functions to summarize and query bibliographic data.</p>
 <li><p><strong>sep_IDX</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_IDX.</p></li>
 <li><p><strong>column_COL</strong> (<em>str</em>) – the column to explode. Their terms are used in the columns of the result dataframe.</p></li>
 <li><p><strong>sep_COL</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_COL.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -523,6 +567,16 @@ object with specialized functions to summarize and query bibliographic data.</p>
 <span class="go">9   author 3              w5  2011        13     [3]</span>
 <span class="go">10  author 4              w5  2012        14     [4]</span>
 <span class="go">11  author 4              w3  2014        15     [5]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;author 1&#39;</span><span class="p">,</span> <span class="s1">&#39;author 2&#39;</span><span class="p">,</span> <span class="s1">&#39;author 3&#39;</span><span class="p">,</span> <span class="s1">&#39;w1&#39;</span><span class="p">,</span> <span class="s1">&#39;w3&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">citations_by_terms_per_terms_per_year</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">    Authors Author Keywords  Year  Cited by   ID</span>
+<span class="go">0  author 1              w1  2010        10  [0]</span>
+<span class="go">1  author 2              w1  2010        10  [0]</span>
+<span class="go">2  author 1              w1  2011        12  [2]</span>
+<span class="go">3  author 3              w3  2011        13  [3]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -581,7 +635,7 @@ This function adds the missing years in the sequence.</p>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.co_citation">
-<code class="sig-name descname">co_citation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">sep_IDX</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_COL</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.co_citation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.co_citation" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">co_citation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">sep_IDX</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_COL</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.co_citation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.co_citation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the number of citations shared by two terms in different columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -592,6 +646,7 @@ This function adds the missing years in the sequence.</p>
 <li><p><strong>sep_COL</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_COL.</p></li>
 <li><p><strong>as_matrix</strong> (<em>bool</em>) – Results are returned as a matrix.</p></li>
 <li><p><strong>minmax</strong> (<em>pair</em><em>(</em><em>number</em><em>,</em><em>number</em><em>)</em>) – filter values by &gt;=min,&lt;=max.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 </dl>
@@ -646,11 +701,19 @@ This function adds the missing years in the sequence.</p>
 <span class="go">D  0  4  4</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">co_citation</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">   c  d</span>
+<span class="go">A  3  0</span>
+<span class="go">B  7  4</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.co_occurrence">
-<code class="sig-name descname">co_occurrence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">sep_IDX</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_COL</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.co_occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.co_occurrence" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">co_occurrence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">sep_IDX</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_COL</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.co_occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.co_occurrence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the co-occurrence of two terms in different colums. The report adds
 the number of documents by term between brackets.</p>
 <dl class="field-list simple">
@@ -662,6 +725,7 @@ the number of documents by term between brackets.</p>
 <li><p><strong>sep_COL</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_COL.</p></li>
 <li><p><strong>as_matrix</strong> (<em>bool</em>) – Results are returned as a matrix.</p></li>
 <li><p><strong>minmax</strong> (<em>pair</em><em>(</em><em>number</em><em>,</em><em>number</em><em>)</em>) – filter values by &gt;=min,&lt;=max.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -717,17 +781,26 @@ the number of documents by term between brackets.</p>
 <span class="go">B  0  2  2</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">co_occurrence</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">   c  d</span>
+<span class="go">A  1  0</span>
+<span class="go">B  2  1</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.compute_tfm">
-<code class="sig-name descname">compute_tfm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.compute_tfm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.compute_tfm" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute_tfm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.compute_tfm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.compute_tfm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the term-frequency matrix for the terms in a column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
 <li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -773,11 +846,22 @@ the number of documents by term between brackets.</p>
 <span class="go">4  0  0  1  1</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">compute_tfm</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">   A  B</span>
+<span class="go">0  1  0</span>
+<span class="go">1  1  1</span>
+<span class="go">2  0  1</span>
+<span class="go">3  1  1</span>
+<span class="go">4  0  1</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.corr">
-<code class="sig-name descname">corr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'pearson'</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.corr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.corr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">corr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'pearson'</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.corr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.corr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the cross-correlation among items in two different columns of the dataframe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -795,6 +879,7 @@ the number of documents by term between brackets.</p>
 </p></li>
 <li><p><strong>as_matrix</strong> (<em>bool</em>) – the result is reshaped by melt or not.</p></li>
 <li><p><strong>minmax</strong> (<em>pair</em><em>(</em><em>number</em><em>,</em><em>number</em><em>)</em>) – filter values by &gt;=min,&lt;=max.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -878,11 +963,20 @@ the number of documents by term between brackets.</p>
 <span class="go">15       D               D  1.000000</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">          A         B         C</span>
+<span class="go">A  1.000000 -1.000000 -0.333333</span>
+<span class="go">B -1.000000  1.000000  0.333333</span>
+<span class="go">C -0.333333  0.333333  1.000000</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.corr_map">
-<code class="sig-name descname">corr_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">by</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'pearson'</span></em>, <em class="sig-param"><span class="n">minval</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_n_links</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.corr_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.corr_map" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">corr_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">by</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'pearson'</span></em>, <em class="sig-param"><span class="n">minval</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_n_links</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.corr_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.corr_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the correlation map among items in a column of the dataframe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -898,6 +992,7 @@ the number of documents by term between brackets.</p>
 </p></li>
 <li><p><strong>minval</strong> (<em>float</em>) – Minimum autocorrelation value to show links.</p></li>
 <li><p><strong>top_n_links</strong> (<em>int</em>) – Shows top n links.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -953,6 +1048,12 @@ the number of documents by term between brackets.</p>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">corr_map</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
 <span class="go">{&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: [(&#39;B&#39;, &#39;D&#39;)], &#39;other_edges&#39;: None}</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">corr_map</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">{&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: None, &#39;other_edges&#39;: None}</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1113,13 +1214,14 @@ adds a consecutive number to the name.</p>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.documents_by_term">
-<code class="sig-name descname">documents_by_term</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.documents_by_term"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.documents_by_term" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">documents_by_term</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.documents_by_term"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.documents_by_term" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the number of documents per term in a given column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
 <li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1151,11 +1253,19 @@ adds a consecutive number to the name.</p>
 <span class="go">3  author 3              1     [3]</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;author 1&#39;</span><span class="p">,</span> <span class="s1">&#39;author 2&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">documents_by_term</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">    Authors  Num Documents      ID</span>
+<span class="go">0  author 1              2  [0, 2]</span>
+<span class="go">1  author 2              1     [0]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.documents_by_term_per_year">
-<code class="sig-name descname">documents_by_term_per_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.documents_by_term_per_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.documents_by_term_per_year" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">documents_by_term_per_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.documents_by_term_per_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.documents_by_term_per_year" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the number of documents by term per year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1164,6 +1274,7 @@ adds a consecutive number to the name.</p>
 <li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
 <li><p><strong>as_matrix</strong> (<em>bool</em>) – Results are returned as a matrix.</p></li>
 <li><p><strong>minmax</strong> (<em>pair</em><em>(</em><em>number</em><em>,</em><em>number</em><em>)</em>) – filter values by &gt;=min,&lt;=max.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1222,11 +1333,19 @@ adds a consecutive number to the name.</p>
 <span class="go">2014         0         0         0         1</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;author 1&#39;</span><span class="p">,</span> <span class="s1">&#39;author 2&#39;</span><span class="p">,</span> <span class="s1">&#39;author 3&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">      author 1  author 2  author 3</span>
+<span class="go">2010         1         1         0</span>
+<span class="go">2011         1         0         1</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.documents_by_terms_per_terms_per_year">
-<code class="sig-name descname">documents_by_terms_per_terms_per_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">sep_IDX</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_COL</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.documents_by_terms_per_terms_per_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.documents_by_terms_per_terms_per_year" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">documents_by_terms_per_terms_per_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">sep_IDX</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_COL</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.documents_by_terms_per_terms_per_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.documents_by_terms_per_terms_per_year" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the number of documents by term per term per year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1235,6 +1354,7 @@ adds a consecutive number to the name.</p>
 <li><p><strong>sep_IDX</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_IDX.</p></li>
 <li><p><strong>column_COL</strong> (<em>str</em>) – the column to explode. Their terms are used in the columns of the result dataframe.</p></li>
 <li><p><strong>sep_COL</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_COL.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1276,6 +1396,16 @@ adds a consecutive number to the name.</p>
 <span class="go">9   author 3              w5  2011              1     [3]</span>
 <span class="go">10  author 4              w5  2012              1     [4]</span>
 <span class="go">11  author 4              w3  2014              1     [5]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;author 1&#39;</span><span class="p">,</span> <span class="s1">&#39;author 2&#39;</span><span class="p">,</span> <span class="s1">&#39;author 3&#39;</span><span class="p">,</span> <span class="s1">&#39;w1&#39;</span><span class="p">,</span> <span class="s1">&#39;w3&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">documents_by_terms_per_terms_per_year</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">    Authors Author Keywords  Year  Num Documents   ID</span>
+<span class="go">0  author 1              w1  2010              1  [0]</span>
+<span class="go">1  author 2              w1  2010              1  [0]</span>
+<span class="go">2  author 1              w1  2011              1  [2]</span>
+<span class="go">3  author 3              w3  2011              1  [3]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1425,7 +1555,7 @@ adds a consecutive number to the name.</p>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.factor_analysis">
-<code class="sig-name descname">factor_analysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">n_components</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.factor_analysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.factor_analysis" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">factor_analysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">n_components</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.factor_analysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.factor_analysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the matrix of factors for terms in a given column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1434,6 +1564,7 @@ adds a consecutive number to the name.</p>
 <li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
 <li><p><strong>n_components</strong> – Number of components to compute.</p></li>
 <li><p><strong>as_matrix</strong> (<em>bool</em>) – the result is reshaped by melt or not.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1496,11 +1627,20 @@ adds a consecutive number to the name.</p>
 <span class="go">11       D     F2  5.773503e-01</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">factor_analysis</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">         F0        F1        F2</span>
+<span class="go">A -0.888074  0.000000  0.459701</span>
+<span class="go">B  0.325058  0.707107  0.627963</span>
+<span class="go">C -0.325058  0.707107 -0.627963</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.gant">
-<code class="sig-name descname">gant</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.gant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.gant" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">gant</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.gant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.gant" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the number of documents by term per year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1509,6 +1649,7 @@ adds a consecutive number to the name.</p>
 <li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
 <li><p><strong>as_matrix</strong> (<em>bool</em>) – Results are returned as a matrix.</p></li>
 <li><p><strong>minmax</strong> (<em>pair</em><em>(</em><em>number</em><em>,</em><em>number</em><em>)</em>) – filter values by &gt;=min,&lt;=max.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1543,6 +1684,18 @@ adds a consecutive number to the name.</p>
 <span class="go">2014         0         0         0         1         1</span>
 <span class="go">2015         0         0         0         1         1</span>
 <span class="go">2016         0         0         0         0         1</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;author 1&#39;</span><span class="p">,</span> <span class="s1">&#39;author 2&#39;</span><span class="p">,</span> <span class="s1">&#39;author 3&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">gant</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">      author 1  author 2  author 3</span>
+<span class="go">2010         1         1         0</span>
+<span class="go">2011         1         0         0</span>
+<span class="go">2012         0         0         1</span>
+<span class="go">2013         0         0         1</span>
+<span class="go">2014         0         0         1</span>
+<span class="go">2015         0         0         1</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1589,6 +1742,71 @@ adds a consecutive number to the name.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="techminer.dataframe.DataFrame.growth_indicators">
+<code class="sig-name descname">growth_indicators</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">timewindow</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.growth_indicators"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.growth_indicators" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the average growth rate of a group of terms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
+<li><p><strong>timewindow</strong> (<em>int</em>) – time window for analysis</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span>
+<span class="gp">... </span>         <span class="s2">&quot;Year&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2010</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">2013</span><span class="p">,</span> <span class="mi">2014</span><span class="p">,</span> <span class="mi">2014</span><span class="p">],</span>
+<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4;author 0,author 3;author 3,author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">18</span><span class="p">)),</span>
+<span class="gp">... </span>         <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)),</span>
+<span class="gp">... </span>    <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">   Year                     Authors  Cited by  ID</span>
+<span class="go">0  2010  author 0,author 1,author 2        10   0</span>
+<span class="go">1  2010                    author 0        11   1</span>
+<span class="go">2  2011                    author 1        12   2</span>
+<span class="go">3  2011                    author 3        13   3</span>
+<span class="go">4  2012                    author 4        14   4</span>
+<span class="go">5  2013                    author 4        15   5</span>
+<span class="go">6  2014           author 0,author 3        16   6</span>
+<span class="go">7  2014           author 3,author 4        17   7</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">      author 0  author 1  author 2  author 3  author 4</span>
+<span class="go">2010         2         1         1         0         0</span>
+<span class="go">2011         0         1         0         1         0</span>
+<span class="go">2012         0         0         0         0         1</span>
+<span class="go">2013         0         0         0         0         1</span>
+<span class="go">2014         1         0         0         2         1</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">growth_indicators</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
+<span class="go">    Authors       AGR  ADY   PDLY  Before 2013  Between 2013-2014</span>
+<span class="go">0  author 3  0.666667  1.0  12.50            1                  2</span>
+<span class="go">1  author 0  0.333333  0.5   6.25            2                  1</span>
+<span class="go">2  author 4  0.000000  1.0  12.50            1                  2</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;author 3&#39;</span><span class="p">,</span> <span class="s1">&#39;author 4&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">growth_indicators</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">    Authors       AGR  ADY  PDLY  Before 2013  Between 2013-2014</span>
+<span class="go">0  author 3  0.666667  1.0  12.5            1                  2</span>
+<span class="go">1  author 4  0.000000  1.0  12.5            1                  2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt id="techminer.dataframe.DataFrame.keywords_completation">
 <code class="sig-name descname">keywords_completation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.keywords_completation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.keywords_completation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Complete keywords in ‘Keywords’ column (if exists) from title and abstract.</p>
@@ -1598,6 +1816,7 @@ adds a consecutive number to the name.</p>
 <dt id="techminer.dataframe.DataFrame.keywords_fusion">
 <code class="sig-name descname">keywords_fusion</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span><span class="o">=</span><span class="default_value">'Author Keywords'</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">other</span><span class="o">=</span><span class="default_value">'Index Keywords'</span></em>, <em class="sig-param"><span class="n">sep_other</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">new_column</span><span class="o">=</span><span class="default_value">'Keywords'</span></em>, <em class="sig-param"><span class="n">sep_new_column</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.keywords_fusion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.keywords_fusion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Combines keywords columns.</p>
+<p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>  <span class="p">{</span>
@@ -1721,7 +1940,7 @@ adds a consecutive number to the name.</p>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.occurrence">
-<code class="sig-name descname">occurrence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.occurrence" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">occurrence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.occurrence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the occurrence between the terms in a column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1730,6 +1949,7 @@ adds a consecutive number to the name.</p>
 <li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
 <li><p><strong>as_matrix</strong> (<em>bool</em>) – Results are returned as a matrix.</p></li>
 <li><p><strong>minmax</strong> (<em>pair</em><em>(</em><em>number</em><em>,</em><em>number</em><em>)</em>) – filter values by &gt;=min,&lt;=max.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1788,11 +2008,19 @@ adds a consecutive number to the name.</p>
 <span class="go">D  0  0  2</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">occurrence</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">   A  B</span>
+<span class="go">A  4  2</span>
+<span class="go">B  2  4</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.occurrence_map">
-<code class="sig-name descname">occurrence_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">include_only</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.occurrence_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.occurrence_map" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">occurrence_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.occurrence_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.occurrence_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes a occurrence between terms in a column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1800,6 +2028,7 @@ adds a consecutive number to the name.</p>
 <li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
 <li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
 <li><p><strong>minmax</strong> (<em>pair</em><em>(</em><em>number</em><em>,</em><em>number</em><em>)</em>) – filter values by &gt;=min,&lt;=max.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1830,25 +2059,10 @@ adds a consecutive number to the name.</p>
 <span class="go">{&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;docs&#39;: [&#39;doc#0&#39;, &#39;doc#1&#39;, &#39;doc#2&#39;, &#39;doc#3&#39;, &#39;doc#4&#39;, &#39;doc#5&#39;], &#39;edges&#39;: [(&#39;A&#39;, &#39;doc#0&#39;), (&#39;A&#39;, &#39;doc#1&#39;), (&#39;B&#39;, &#39;doc#1&#39;), (&#39;A&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#2&#39;), (&#39;C&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#3&#39;), (&#39;B&#39;, &#39;doc#4&#39;), (&#39;D&#39;, &#39;doc#4&#39;), (&#39;D&#39;, &#39;doc#5&#39;)], &#39;label_terms&#39;: {&#39;A&#39;: &#39;A&#39;, &#39;B&#39;: &#39;B&#39;, &#39;C&#39;: &#39;C&#39;, &#39;D&#39;: &#39;D&#39;}, &#39;label_docs&#39;: {&#39;doc#0&#39;: 2, &#39;doc#1&#39;: 1, &#39;doc#2&#39;: 1, &#39;doc#3&#39;: 1, &#39;doc#4&#39;: 1, &#39;doc#5&#39;: 1}}</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span>
-<span class="gp">... </span>        <span class="s2">&quot;https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/&quot;</span>
-<span class="gp">... </span>        <span class="o">+</span> <span class="s2">&quot;cleaned-data.json&quot;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="n">lines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="p">)</span>
-<span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">top_authors</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">documents_by_term</span><span class="p">(</span><span class="s2">&quot;Authors&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">Authors</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">top_authors</span>
-<span class="go">0      Arevalo A.</span>
-<span class="go">1      Gabbouj M.</span>
-<span class="go">2    Hernandez G.</span>
-<span class="go">3    Hussain A.J.</span>
-<span class="go">4    Iosifidis A.</span>
-<span class="go">Name: Authors, dtype: object</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">occurrence_map</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="n">include_only</span><span class="o">=</span><span class="n">top_authors</span><span class="p">)</span>
-<span class="go">{&#39;terms&#39;: [&#39;Arevalo A.&#39;, &#39;Gabbouj M.&#39;, &#39;Hernandez G.&#39;, &#39;Hussain A.J.&#39;, &#39;Iosifidis A.&#39;], &#39;docs&#39;: [&#39;doc#0&#39;, &#39;doc#1&#39;, &#39;doc#2&#39;, &#39;doc#3&#39;, &#39;doc#4&#39;, &#39;doc#5&#39;, &#39;doc#6&#39;, &#39;doc#7&#39;], &#39;edges&#39;: [(&#39;Arevalo A.&#39;, &#39;doc#0&#39;), (&#39;Hernandez G.&#39;, &#39;doc#0&#39;), (&#39;Hussain A.J.&#39;, &#39;doc#1&#39;), (&#39;Hussain A.J.&#39;, &#39;doc#2&#39;), (&#39;Hussain A.J.&#39;, &#39;doc#3&#39;), (&#39;Arevalo A.&#39;, &#39;doc#4&#39;), (&#39;Hernandez G.&#39;, &#39;doc#4&#39;), (&#39;Arevalo A.&#39;, &#39;doc#5&#39;), (&#39;Hernandez G.&#39;, &#39;doc#5&#39;), (&#39;Gabbouj M.&#39;, &#39;doc#6&#39;), (&#39;Iosifidis A.&#39;, &#39;doc#6&#39;), (&#39;Gabbouj M.&#39;, &#39;doc#7&#39;), (&#39;Iosifidis A.&#39;, &#39;doc#7&#39;)], &#39;label_terms&#39;: {&#39;Arevalo A.&#39;: &#39;Arevalo A.&#39;, &#39;Gabbouj M.&#39;: &#39;Gabbouj M.&#39;, &#39;Hernandez G.&#39;: &#39;Hernandez G.&#39;, &#39;Hussain A.J.&#39;: &#39;Hussain A.J.&#39;, &#39;Iosifidis A.&#39;: &#39;Iosifidis A.&#39;}, &#39;label_docs&#39;: {&#39;doc#0&#39;: 1, &#39;doc#1&#39;: 1, &#39;doc#2&#39;: 1, &#39;doc#3&#39;: 1, &#39;doc#4&#39;: 1, &#39;doc#5&#39;: 1, &#39;doc#6&#39;: 1, &#39;doc#7&#39;: 2}}</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">occurrence_map</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">{&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;], &#39;docs&#39;: [&#39;doc#0&#39;, &#39;doc#1&#39;, &#39;doc#2&#39;, &#39;doc#3&#39;, &#39;doc#4&#39;], &#39;edges&#39;: [(&#39;A&#39;, &#39;doc#0&#39;), (&#39;A&#39;, &#39;doc#1&#39;), (&#39;B&#39;, &#39;doc#1&#39;), (&#39;A&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#3&#39;), (&#39;B&#39;, &#39;doc#4&#39;)], &#39;label_terms&#39;: {&#39;A&#39;: &#39;A&#39;, &#39;B&#39;: &#39;B&#39;}, &#39;label_docs&#39;: {&#39;doc#0&#39;: 2, &#39;doc#1&#39;: 1, &#39;doc#2&#39;: 1, &#39;doc#3&#39;: 1, &#39;doc#4&#39;: 1}}</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1881,13 +2095,14 @@ adds a consecutive number to the name.</p>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.summarize_by_term">
-<code class="sig-name descname">summarize_by_term</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.summarize_by_term"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.summarize_by_term" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">summarize_by_term</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.summarize_by_term"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.summarize_by_term" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summarize the number of documents and citations by term in a dataframe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
 <li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1919,11 +2134,19 @@ adds a consecutive number to the name.</p>
 <span class="go">3  author 3              1        13     [3]</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;author 1&#39;</span><span class="p">,</span> <span class="s1">&#39;author 2&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">summarize_by_term</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">    Authors  Num Documents  Cited by      ID</span>
+<span class="go">0  author 1              2        22  [0, 2]</span>
+<span class="go">1  author 2              1        10     [0]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.summarize_by_term_per_term_per_year">
-<code class="sig-name descname">summarize_by_term_per_term_per_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">sep_IDX</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_COL</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.summarize_by_term_per_term_per_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.summarize_by_term_per_term_per_year" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">summarize_by_term_per_term_per_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">sep_IDX</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_COL</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.summarize_by_term_per_term_per_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.summarize_by_term_per_term_per_year" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the number of documents and citations by term per term by year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1932,6 +2155,7 @@ adds a consecutive number to the name.</p>
 <li><p><strong>sep_IDX</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_IDX.</p></li>
 <li><p><strong>column_COL</strong> (<em>str</em>) – the column to explode. Their terms are used in the columns of the result dataframe.</p></li>
 <li><p><strong>sep_COL</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_COL.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1975,17 +2199,28 @@ adds a consecutive number to the name.</p>
 <span class="go">11  author 4              w3  2014        15              1     [5]</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;author 1&#39;</span><span class="p">,</span> <span class="s1">&#39;author 2&#39;</span><span class="p">,</span> <span class="s1">&#39;author 3&#39;</span><span class="p">,</span> <span class="s1">&#39;w1&#39;</span><span class="p">,</span> <span class="s1">&#39;w3&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">summarize_by_term_per_term_per_year</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">    Authors Author Keywords  Year  Cited by  Num Documents   ID</span>
+<span class="go">0  author 1              w1  2010        10              1  [0]</span>
+<span class="go">1  author 2              w1  2010        10              1  [0]</span>
+<span class="go">2  author 1              w1  2011        12              1  [2]</span>
+<span class="go">3  author 3              w3  2011        13              1  [3]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.summarize_by_term_per_year">
-<code class="sig-name descname">summarize_by_term_per_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.summarize_by_term_per_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.summarize_by_term_per_year" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">summarize_by_term_per_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.summarize_by_term_per_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.summarize_by_term_per_year" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the number of documents and citations by term per year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
 <li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2021,6 +2256,16 @@ adds a consecutive number to the name.</p>
 <span class="go">4  author 3  2011        13              1     [3]</span>
 <span class="go">5  author 4  2012        14              1     [4]</span>
 <span class="go">6  author 4  2014        15              1     [5]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;author 1&#39;</span><span class="p">,</span> <span class="s1">&#39;author 2&#39;</span><span class="p">,</span> <span class="s1">&#39;author 3&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">summarize_by_term_per_year</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">    Authors  Year  Cited by  Num Documents   ID</span>
+<span class="go">0  author 1  2010        10              1  [0]</span>
+<span class="go">1  author 2  2010        10              1  [0]</span>
+<span class="go">2  author 1  2011        12              1  [2]</span>
+<span class="go">3  author 3  2011        13              1  [3]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -2092,7 +2337,7 @@ This funciton adds the missing years in the sequence.</p>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.summarize_co_occurrence">
-<code class="sig-name descname">summarize_co_occurrence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">sep_IDX</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_COL</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.summarize_co_occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.summarize_co_occurrence" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">summarize_co_occurrence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">sep_IDX</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_COL</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.summarize_co_occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.summarize_co_occurrence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summarize occurrence and citations by terms in two different columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2101,6 +2346,7 @@ This funciton adds the missing years in the sequence.</p>
 <li><p><strong>sep_IDX</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_IDX.</p></li>
 <li><p><strong>column_COL</strong> (<em>str</em>) – the column to explode. Their terms are used in the columns of the result dataframe.</p></li>
 <li><p><strong>sep_COL</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_COL.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2142,17 +2388,26 @@ This funciton adds the missing years in the sequence.</p>
 <span class="go">9             D                     d              1         4     [4]</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">summarize_co_occurrence</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">  Authors (IDX) Author Keywords (COL)  Num Documents  Cited by      ID</span>
+<span class="go">0             B                     a              1         1     [1]</span>
+<span class="go">1             B                     b              2         3  [1, 2]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.summarize_occurrence">
-<code class="sig-name descname">summarize_occurrence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.summarize_occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.summarize_occurrence" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">summarize_occurrence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.summarize_occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.summarize_occurrence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summarize occurrence and citations by terms in a column of a dataframe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
 <li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2194,6 +2449,16 @@ This funciton adds the missing years in the sequence.</p>
 <span class="go">9              C             C              1         4           [4]</span>
 <span class="go">10             D             B              1         6           [6]</span>
 <span class="go">11             D             D              2        11        [5, 6]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">summarize_occurrence</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">  Authors (IDX) Authors (COL)  Num Documents  Cited by            ID</span>
+<span class="go">0             A             A              4         7  [0, 1, 2, 4]</span>
+<span class="go">1             A             B              2         6        [2, 4]</span>
+<span class="go">2             B             A              2         6        [2, 4]</span>
+<span class="go">3             B             B              4        15  [2, 3, 4, 6]</span>
 </pre></div>
 </div>
 </dd></dl>
