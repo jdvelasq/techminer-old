@@ -752,12 +752,12 @@ class DataFrame(pd.DataFrame):
         """
         return len(self.extract_terms(column, sep))
 
-    def count_report(self):
+    def descriptive_stats(self):
         """
-        Reports the number of different items per column in dataframe.
+        Descriptive statistics of current dataframe.
 
         Returns:
-            DataFrame.        
+            pandas.Series        
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -770,38 +770,90 @@ class DataFrame(pd.DataFrame):
         ...          'Source title': ' s0,     s0,   s1,  s1, s2'.split(','),
         ...          'Author Keywords': 'k0;k1, k0;k2, k3;k2;k1, k4, k5'.split(','),
         ...          'Index Keywords': 'w0;w1, w0;w2, w3;k1;w1, w4, w5'.split(','),
+        ...          'Year': [1990, 1991, 1992, 1993, 1994],
+        ...          'Cited by': list(range(5)),
         ...     }
         ... )
-        >>> df
-            Authors Author(s) ID Source title Author Keywords Index Keywords
-        0   xxx,xxx          0;1           s0           k0;k1          w0;w1
-        1   zzz,yyy         3;4;           s0           k0;k2          w0;w2
-        2       xxx           4;           s1        k3;k2;k1       w3;k1;w1
-        3       yyy           5;           s1              k4             w4
-        4       zzz           6;           s2              k5             w5
-        
-        >>> DataFrame(df).count_report()
-                    Column  Number of items
-        0          Authors                3
-        1     Author(s) ID                7
-        2     Source title                3
-        3  Author Keywords                6
-        4   Index Keywords                7
+        >>> df # doctest: +NORMALIZE_WHITESPACE
+            Authors Author(s) ID Source title  ... Index Keywords  Year  Cited by
+        0   xxx,xxx          0;1           s0  ...          w0;w1  1990         0
+        1   zzz,yyy         3;4;           s0  ...          w0;w2  1991         1
+        2       xxx           4;           s1  ...       w3;k1;w1  1992         2
+        3       yyy           5;           s1  ...             w4  1993         3
+        4       zzz           6;           s2  ...             w5  1994         4
+        [5 rows x 7 columns]
+
+        >>> DataFrame(df).descriptive_stats()
+                                               Value
+        Description                                 
+        Articles                                5.00
+        First year                           1990.00
+        Last year                            1994.00
+        Average citations per article           2.00
+        Authors                                 3.00
+        Author(s) ID                            7.00
+        Authors of single authored articles     3.00
+        Authors of multi authored articles      2.00
+        Articles per author                     1.67
+        Authors per article                     0.60
+        Co-authors per article                  2.00
+        Author Keywords                         6.00
+        Index Keywords                          7.00
+        Source titles                           3.00
+        Average articles per Source title       2.00
 
         """
-        columns = [
+        descriptions = [
+            "Articles",
+            "First year",
+            "Last year",
+            "Average citations per article",
             "Authors",
             "Author(s) ID",
-            "Source title",
+            "Authors of single authored articles",
+            "Authors of multi authored articles",
+            "Articles per author",
+            "Authors per article",
+            "Co-authors per article",
             "Author Keywords",
             "Index Keywords",
+            "Source titles",
+            "Average articles per Source title",
         ]
-        return pd.DataFrame(
-            {
-                "Column": columns,
-                "Number of items": [self.count_terms(w) for w in columns],
-            }
+        result = pd.DataFrame({"Description": descriptions})
+        result["Value"] = 0.0
+        result = result.set_index("Description")
+        result.at["Articles", "Value"] = len(self)
+        result.at["First year", "Value"] = min(self.Year)
+        result.at["Last year", "Value"] = max(self.Year)
+        result.at["Average citations per article", "Value"] = self["Cited by"].mean()
+        result.at["Authors", "Value"] = self.count_terms("Authors")
+        result.at["Author(s) ID", "Value"] = self.count_terms("Author(s) ID")
+        result.at["Articles per author", "Value"] = round(
+            len(self) / self.count_terms("Authors"), 2
         )
+        result.at["Authors per article", "Value"] = round(
+            self.count_terms("Authors") / len(self), 2
+        )
+        result.at["Author Keywords", "Value"] = self.count_terms("Author Keywords")
+        result.at["Index Keywords", "Value"] = self.count_terms("Index Keywords")
+        num_authors = self["Authors"].map(
+            lambda w: len(w.split(",")) if w is not None else 0
+        )
+        result.at["Authors of single authored articles", "Value"] = len(
+            num_authors[num_authors == 1]
+        )
+        result.at["Authors of multi authored articles", "Value"] = len(
+            num_authors[num_authors > 1]
+        )
+        result.at["Co-authors per article", "Value"] = round(
+            num_authors[num_authors > 1].mean(), 2
+        )
+        result.at["Source titles", "Value"] = self.count_terms("Source title")
+        result.at["Average articles per Source title", "Value"] = round(
+            len(self) / self.count_terms("Source title")
+        )
+        return result
 
     ##
     ##
@@ -3469,8 +3521,6 @@ class DataFrame(pd.DataFrame):
         result = pd.merge(result, num_docs, on=column)
         result = result.reset_index()
         return result
-
-
 
 
 # def __getitem__(self, key):
