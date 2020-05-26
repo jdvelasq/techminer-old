@@ -3522,6 +3522,65 @@ class DataFrame(pd.DataFrame):
         result = result.reset_index()
         return result
 
+    def correspondence_matrix(
+        self,
+        column_IDX,
+        column_COL,
+        sep_IDX=None,
+        sep_COL=None,
+        as_matrix=False,
+        keywords=None,
+    ):
+        """
+
+
+
+
+        """
+        result = self.co_occurrence(
+            column_IDX=column_IDX,
+            column_COL=column_COL,
+            sep_IDX=sep_IDX,
+            sep_COL=sep_COL,
+            as_matrix=True,
+            minmax=None,
+            keywords=keywords,
+        )
+
+        matrix = result.transpose().values
+        grand_total = np.sum(matrix)
+        correspondence_matrix = np.divide(matrix, grand_total)
+        row_totals = np.sum(correspondence_matrix, axis=1)
+        col_totals = np.sum(correspondence_matrix, axis=0)
+        independence_model = np.outer(row_totals, col_totals)
+        norm_correspondence_matrix = np.divide(
+            correspondence_matrix, row_totals[:, None]
+        )
+        distances = np.zeros(
+            (correspondence_matrix.shape[0], correspondence_matrix.shape[0])
+        )
+        norm_col_totals = np.sum(norm_correspondence_matrix, axis=0)
+        for row in range(correspondence_matrix.shape[0]):
+            distances[row] = np.sqrt(
+                np.sum(
+                    np.square(
+                        norm_correspondence_matrix - norm_correspondence_matrix[row]
+                    )
+                    / col_totals,
+                    axis=1,
+                )
+            )
+        std_residuals = np.divide(
+            (correspondence_matrix - independence_model), np.sqrt(independence_model)
+        )
+        u, s, vh = np.linalg.svd(std_residuals, full_matrices=False)
+        deltaR = np.diag(np.divide(1.0, np.sqrt(row_totals)))
+        rowScores = np.dot(np.dot(deltaR, u), np.diag(s))
+
+        return pd.DataFrame(
+            data=rowScores, columns=result.columns, index=result.columns
+        )
+
 
 # def __getitem__(self, key):
 #     return DataFrame(super().__getitem__(key))

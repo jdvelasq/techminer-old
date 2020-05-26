@@ -15,6 +15,8 @@ import numpy as np
 import pandas as pd
 import squarify
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from scipy.spatial import ConvexHull
+from sklearn.cluster import AgglomerativeClustering
 from wordcloud import ImageColorGenerator, WordCloud
 
 from .chord_diagram import ChordDiagram
@@ -1119,3 +1121,38 @@ class Plot:
         plt.gca().spines["left"].set_visible(False)
         plt.gca().spines["bottom"].set_visible(False)
         return plt.gca()
+
+    def cma_cluster(self, n_clusters, **kwargs):
+        """Computes and plot clusters of data using correspondence analysis.
+
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
+        """
+
+        def encircle(x, y, ax=None, **kw):
+            p = np.c_[x, y]
+            hull = ConvexHull(p)
+            poly = plt.Polygon(p[hull.vertices, :], **kw)
+            plt.gca().add_patch(poly)
+            #
+
+        plt.clf()
+        plt.scatter(self.df[df.columns[0]], self.df[df.columns[1]], **kwargs)
+        for i, index in enumerate(self.df.index):
+            plt.text(df[df.columns[0]][index], df[df.columns[1]][index], df.index[i])
+
+        cluster = AgglomerativeClustering(
+            n_clusters=n_clusters, affinity="euclidean", linkage="ward"
+        )
+        df = df.copy()
+        cluster.fit_predict(df)
+
+        for icluster in range(n_clusters):
+            encircle(
+                df.loc[cluster.labels_ == icluster, df.columns[0]],
+                df.loc[cluster.labels_ == icluster, df.columns[1]],
+                alpha=0.2,
+                linewidth=0,
+            )
