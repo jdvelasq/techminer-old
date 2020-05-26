@@ -3378,17 +3378,17 @@ class DataFrame(pd.DataFrame):
         2014         1         0         0         2         1
     
         >>> DataFrame(df).growth_indicators('Authors')
-            Authors       AGR  ADY   PDLY
-        0  author 3  0.666667  1.0  12.50
-        1  author 0  0.333333  0.5   6.25
-        2  author 4  0.000000  1.0  12.50
+            Authors       AGR  ADY   PDLY  Before 2013  Between 2013-2014
+        0  author 3  0.666667  1.0  12.50            1                  2
+        1  author 0  0.333333  0.5   6.25            2                  1
+        2  author 4  0.000000  1.0  12.50            1                  2
 
         >>> keywords = Keywords(['author 3', 'author 4'])
         >>> keywords = keywords.compile()
         >>> DataFrame(df).growth_indicators('Authors', keywords=keywords)
-            Authors       AGR  ADY  PDLY
-        0  author 3  0.666667  1.0  12.5
-        1  author 4  0.000000  1.0  12.5
+            Authors       AGR  ADY  PDLY  Before 2013  Between 2013-2014
+        0  author 3  0.666667  1.0  12.5            1                  2
+        1  author 4  0.000000  1.0  12.5            1                  2
 
         """
 
@@ -3432,11 +3432,41 @@ class DataFrame(pd.DataFrame):
             result["ADY"] = result.ADY.map(lambda w: w / timewindow)
             return result.ADY
 
+        def compute_num_documents():
+            result = self.documents_by_term_per_year(
+                column=column, sep=sep, keywords=keywords
+            )
+            years_between = sorted(set(result.Year))[-timewindow:]
+            years_before = sorted(set(result.Year))[0:-timewindow]
+            between = result[result.Year.map(lambda w: w in years_between)]
+            before = result[result.Year.map(lambda w: w in years_before)]
+            between = between.groupby([column], as_index=False).agg(
+                {"Num Documents": np.sum}
+            )
+            between = between.rename(
+                columns={
+                    "Num Documents": "Between {}-{}".format(
+                        years_between[0], years_between[-1]
+                    )
+                }
+            )
+            before = before.groupby([column], as_index=False).agg(
+                {"Num Documents": np.sum}
+            )
+            before = before.rename(
+                columns={"Num Documents": "Before {}".format(years_between[0])}
+            )
+            result = pd.merge(before, between, on=column)
+            result = result.set_index(column)
+            return result
+
         result = compute_agr()
         result = result.set_index(column)
         ady = compute_ady()
         result.at[ady.index, "ADY"] = ady
         result = result.assign(PDLY=round(result.ADY / len(self) * 100, 2))
+        num_docs = compute_num_documents()
+        result = pd.merge(result, num_docs, on=column)
         result = result.reset_index()
         return result
 
