@@ -799,20 +799,26 @@ class Plot:
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> pd = pd.DataFrame(
+        >>> df = pd.DataFrame(
         ...     {
-        ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-        ...         "Num Documents": [3, 2, 2, 1],
-        ...         "ID": list(range(4)),
-        ...     }
+        ...         "author 0": [ 1, 2, 3, 4, 5, 6, 7],
+        ...         "author 1": [14, 13, 12, 11, 10, 9, 8],
+        ...         "author 2": [1, 5, 8, 9, 0, 0, 0],
+        ...         "author 3": [0, 0, 1, 1, 1, 0, 0],
+        ...         "author 4": [0, 10, 0, 4, 2, 0, 1],
+        ...     },
+        ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
         ... )
-        >>> pd
-            Authors  Num Documents  ID
-        0  author 3              3   0
-        1  author 1              2   1
-        2  author 0              2   2
-        3  author 2              1   3
-        >>> _ = Plot(pd).plot()
+        >>> df
+              author 0  author 1  author 2  author 3  author 4
+        2010         1        14         1         0         0
+        2011         2        13         5         0        10
+        2012         3        12         8         1         0
+        2013         4        11         9         1         4
+        2014         5        10         0         1         2
+        2015         6         9         0         0         0
+        2016         7         8         0         0         1
+        >>> _ = Plot(df).plot()
         >>> plt.savefig('sphinx/images/plotplot.png')
         
         .. image:: images/plotplot.png
@@ -823,20 +829,26 @@ class Plot:
         """
         plt.clf()
         x = self.df.copy()
-        x.pop("ID")
-        plt.gca().plot(
-            range(len(x)),
-            x[x.columns[1]],
-            *args,
-            scalex=scalex,
-            scaley=scaley,
-            **kwargs,
-        )
-        plt.xticks(
-            np.arange(len(x[x.columns[0]])), x[x.columns[0]], rotation="vertical"
-        )
-        plt.xlabel(x.columns[0])
-        plt.ylabel(x.columns[1])
+        if "ID" in x.columns:
+            x.pop("ID")
+            plt.gca().plot(
+                range(len(x)),
+                x[x.columns[1]],
+                *args,
+                scalex=scalex,
+                scaley=scaley,
+                **kwargs,
+            )
+            plt.xticks(
+                np.arange(len(x[x.columns[0]])), x[x.columns[0]], rotation="vertical"
+            )
+            plt.xlabel(x.columns[0])
+            plt.ylabel(x.columns[1])
+        else:
+            for col in x.columns:
+                plt.plot(x.index, x[col], label=col, **kwargs)
+            plt.legend()
+
         plt.gca().spines["top"].set_visible(False)
         plt.gca().spines["right"].set_visible(False)
         plt.gca().spines["left"].set_visible(False)

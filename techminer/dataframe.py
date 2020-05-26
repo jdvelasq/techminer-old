@@ -11,8 +11,8 @@ import numpy as np
 from sklearn.decomposition import PCA
 import math
 
-from keywords import Keywords
-from strings import remove_accents
+from .keywords import Keywords
+from .strings import remove_accents
 
 SCOPUS_SEPS = {
     "Authors": ",",
