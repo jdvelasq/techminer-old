@@ -980,9 +980,9 @@ class Plot:
         5  author 5      1      7   5
 
         >>> _ = Plot(df).stacked_bar(cmap='Blues')
-        >>> plt.savefig('sphinx/images/stakedbar0.png')        
+        >>> plt.savefig('sphinx/images/stkbar0.png')        
         
-        .. image:: images/stackedbar0.png
+        .. image:: images/stkbar0.png
             :width: 400px
             :align: center   
 
@@ -1005,9 +1005,9 @@ class Plot:
         5  author 5      1      5      1   5
 
         >>> _ = Plot(df).stacked_bar(cmap='Blues')
-        >>> plt.savefig('sphinx/images/stakedbar1.png')        
+        >>> plt.savefig('sphinx/images/stkbar1.png')        
         
-        .. image:: images/stackedbar1.png
+        .. image:: images/stkbar1.png
             :width: 400px
             :align: center   
 
@@ -1068,9 +1068,9 @@ class Plot:
         5  author 5      1      7   5
 
         >>> _ = Plot(df).stacked_barh(cmap='Blues')
-        >>> plt.savefig('sphinx/images/stakedbarh0.png')        
+        >>> plt.savefig('sphinx/images/stkbarh0.png')        
         
-        .. image:: images/stackedbarh0.png
+        .. image:: images/stkbarh0.png
             :width: 400px
             :align: center   
 
@@ -1093,9 +1093,9 @@ class Plot:
         5  author 5      1      5      1   5
 
         >>> _ = Plot(df).stacked_barh(cmap='Blues')
-        >>> plt.savefig('sphinx/images/stakedbarh1.png')        
+        >>> plt.savefig('sphinx/images/stkbarh1.png')        
         
-        .. image:: images/stackedbarh1.png
+        .. image:: images/stkbarh1.png
             :width: 400px
             :align: center   
 
