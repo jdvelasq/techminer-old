@@ -17,7 +17,66 @@ import re
 import string
 from os.path import dirname, join
 
-from nltk.stem import PorterStemmer
+from nltk.stem import PorterStemmer, SnowballStemmer
+
+
+def fingerprint(x, ngram=None, stemmer="Porter"):
+    """Computes 'fingerprint' representation of string x.
+
+    See https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth
+
+    Args:
+        x (string): string to convert.
+        ngram (None, 1, 2): fingerprint n-gram order
+        stemmer (None, 'Porter', 'Snowball'): Used stemmer for remove morphological affixes from words, leaving only the word stem.
+
+    Returns:
+        string.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> fingerprint('a A b')
+    'a b'
+    >>> fingerprint('b a a')
+    'a b'
+    >>> fingerprint(None) is None
+    True
+    >>> fingerprint('b c')
+    'b c'
+    >>> fingerprint(' c b ')
+    'b c'
+
+
+    """
+    if x is None:
+        return None
+    x = x.strip().lower()
+    x = re.sub("-", " ", x)
+    x = re.sub("[" + string.punctuation + "]", "", x)
+    x = remove_accents(x)
+    if stemmer == "Porter":
+        s = PorterStemmer()
+        x = " ".join(s.stem(w) for w in x.split())
+    elif stemmer == "Snowball":
+        s = SnowballStemmer("english")
+        x = " ".join(s.stem(w) for w in x.split())
+    #
+    if ngram is None:
+        x = " ".join({w for w in x.split()})
+        return " ".join(sorted(x.split(" ")))
+    if ngram == 1:
+        x = x.replace(" ", "")
+        x = sorted(list(set(x)))
+        return "".join(x)
+    if ngram == 2:
+        x = x.replace(" ", "")
+        x = list(x)
+        x = ["".join([x[i], x[i + 1]]) for i in range(len(x) - 1)]
+        x = sorted(x)
+        return "".join(x)
+
+    return x
 
 
 def find_string(pattern, x, ignore_case=True, full_match=False, use_re=False):
@@ -465,45 +524,6 @@ def steamming_any(pattern, text):
 
     """
     return any(steamming(pattern, text))
-
-
-def fingerprint(x):
-    """Computes 'fingerprint' representation of string x.
-
-    Args:
-        x (string): string to convert.
-
-    Returns:
-        string.
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> fingerprint('a A b')
-    'a b'
-    >>> fingerprint('b a a')
-    'a b'
-    >>> fingerprint(None) is None
-    True
-    >>> fingerprint('b c')
-    'b c'
-    >>> fingerprint(' c b ')
-    'b c'
-
-
-    """
-    porter = PorterStemmer()
-
-    if x is None:
-        return None
-    x = x.strip().lower()
-    x = re.sub("-", " ", x)
-    x = re.sub("[" + string.punctuation + "]", "", x)
-    x = remove_accents(x)
-    x = " ".join(porter.stem(w) for w in x.split())
-    x = " ".join({w for w in x.split()})
-    x = " ".join(sorted(x.split(" ")))
-    return x
 
 
 def remove_accents(text):
