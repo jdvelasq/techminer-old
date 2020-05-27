@@ -91,7 +91,10 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="modules.html#bibliographic-data-manipulation-and-analysis">Bibliographic data manipulation and analysis</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">DataFrame object</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">DataFrame object</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#column-names">Column names</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot.html">Plots</a></li>
 <li class="toctree-l3"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
@@ -195,6 +198,83 @@
 </style>
 <span class="target" id="module-techminer.dataframe"></span><div class="section" id="dataframe-object">
 <h1>DataFrame object<a class="headerlink" href="#dataframe-object" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="column-names">
+<h2>Column names<a class="headerlink" href="#column-names" title="Permalink to this headline">¶</a></h2>
+<p>The column names in the dataframe follows the convetion used in WoS.</p>
+<ul class="simple">
+<li><p><cite>FN</cite>: File Name.</p></li>
+<li><p><cite>VR</cite>: Version Number.</p></li>
+<li><p><cite>PT</cite>: Publication Type (J=Journal; B=Book; S=Series; P=Patent).</p></li>
+<li><p><cite>AU</cite>: Authors.</p></li>
+<li><p><cite>AF</cite>: Author full name.</p></li>
+<li><p><cite>BA</cite>: Book Authors.</p></li>
+<li><p><cite>BF</cite>: Book Authors Full Name.</p></li>
+<li><p><cite>CA</cite>: Group Authors.</p></li>
+<li><p><cite>GP</cite>: Book Group Authors.</p></li>
+<li><p><cite>BE</cite>: Editors.</p></li>
+<li><p><cite>TI</cite>: Document Title.</p></li>
+<li><p><cite>SO</cite>: Publication Name.</p></li>
+<li><p><cite>SE</cite>: Book Series Title.</p></li>
+<li><p><cite>BS</cite>: Book Series Subtitle.</p></li>
+<li><p><cite>LA</cite>: Language.</p></li>
+<li><p><cite>DT</cite>: Document Type.</p></li>
+<li><p><cite>CT</cite>: Conference Title.</p></li>
+<li><p><cite>CY</cite>: Conference Date.</p></li>
+<li><p><cite>CL</cite>: Conference Location.</p></li>
+<li><p><cite>SP</cite>: Conference Sponsors.</p></li>
+<li><p><cite>HO</cite>: Conference Host.</p></li>
+<li><p><cite>DE</cite>: Author keywords.</p></li>
+<li><p><cite>ID</cite>: Keyword plus.</p></li>
+<li><p><cite>AB</cite>: Abstract.</p></li>
+<li><p><cite>C1</cite>: Author Address.</p></li>
+<li><p><cite>PR</cite>: Reprint Address.</p></li>
+<li><p><cite>EM</cite>: E-mail Address.</p></li>
+<li><p><cite>RI</cite>: ResearcherID Number.</p></li>
+<li><p><cite>OI</cite>: ORCID Identifier (Open Researcher and Contributor ID).</p></li>
+<li><p><cite>FU</cite>: Funding Agency and Grant Number.</p></li>
+<li><p><cite>FX</cite>: Funding Text.</p></li>
+<li><p><cite>CR</cite>: Cited References.</p></li>
+<li><p><cite>NR</cite>: Cited Reference Count.</p></li>
+<li><p><cite>TC</cite>: Web of Science Core Collection Times Cited Count.</p></li>
+<li><p><cite>Z9</cite>: Total Times Cited Count.</p></li>
+<li><p><cite>U1</cite>: Usage Count (Last 180 Days).</p></li>
+<li><p><cite>U2</cite>: Usage Count (Since 2013).</p></li>
+<li><p><cite>PU</cite>: Publisher.</p></li>
+<li><p><cite>PI</cite>: Publisher City.</p></li>
+<li><p><cite>PA</cite>: Publisher Address.</p></li>
+<li><p><cite>SN</cite>: International Standard Serial Number (ISSN).</p></li>
+<li><p><cite>EI</cite>: Electronic International Standard Serial Number (eISSN).</p></li>
+<li><p><cite>BN</cite>: International Standard Book Number (ISBN).</p></li>
+<li><p><cite>J9</cite>: 29-Character Source Abbreviation.</p></li>
+<li><p><cite>JI</cite>: ISO Source Abbreviation</p></li>
+<li><p><cite>PY</cite>: Year Published.</p></li>
+<li><p><cite>VL</cite>: Volume.</p></li>
+<li><p><cite>IS</cite>: Issue.</p></li>
+<li><p><cite>SI</cite>: Special Issue.</p></li>
+<li><p><cite>PN</cite>: Part Number.</p></li>
+<li><p><cite>SU</cite>: Supplement.</p></li>
+<li><p><cite>MA</cite>: Meeting Abstract.</p></li>
+<li><p><cite>BP</cite>: Begining page.</p></li>
+<li><p><cite>EP</cite>: Ending page.</p></li>
+<li><p><cite>AR</cite>: Article Number.</p></li>
+<li><p><cite>DI</cite>: DOI</p></li>
+<li><p><cite>D2</cite>: Book DOI.</p></li>
+<li><p><cite>EA</cite>: Early access date.</p></li>
+<li><p><cite>EY</cite>: Early access year.</p></li>
+<li><p><cite>PG</cite>: Page count.</p></li>
+<li><p><cite>P2</cite>: Chapter Count (Book Citation Index).</p></li>
+<li><p><cite>WC</cite>: Web of Science Categories.</p></li>
+<li><p><cite>SC</cite>: Research Areas.</p></li>
+<li><p><cite>GA</cite>: Document Delivery Number.</p></li>
+<li><p><cite>PM</cite>: PubMed ID.</p></li>
+<li><p><cite>UT</cite>: Accession Number.</p></li>
+<li><p><cite>OA</cite>: Open Access Indicator.</p></li>
+<li><p><cite>HP</cite>: ESI Hot Paper. Note that this field is valued only for ESI subscribers.</p></li>
+<li><p><cite>HC</cite>: ESI Highly Cited Paper. Note that this field is valued only for ESI subscribers.</p></li>
+<li><p><cite>DA</cite>: Date this report was generated.</p></li>
+<li><p><cite>ER</cite>: End of Record.</p></li>
+<li><p><cite>EF</cite>: End of File.</p></li>
+</ul>
 <dl class="py class">
 <dt id="techminer.dataframe.DataFrame">
 <em class="property">class </em><code class="sig-prename descclassname">techminer.dataframe.</code><code class="sig-name descname">DataFrame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">index</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Collection<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">columns</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Collection<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dtype</span><span class="p">:</span> <span class="n">Union[str, numpy.dtype, ExtensionDtype, None]</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">copy</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame" title="Permalink to this definition">¶</a></dt>
@@ -1057,11 +1137,6 @@ the number of documents by term between brackets.</p>
 </pre></div>
 </div>
 </dd></dl>
-
-<dl class="py method">
-<dt id="techminer.dataframe.DataFrame.correspondence_matrix">
-<code class="sig-name descname">correspondence_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">sep_IDX</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_COL</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.correspondence_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.correspondence_matrix" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.count_terms">
@@ -2684,6 +2759,7 @@ This funciton adds the missing years in the sequence.</p>
 </div>
 </dd></dl>
 
+</div>
 </div>
 
 

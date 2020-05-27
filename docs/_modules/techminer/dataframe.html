@@ -155,7 +155,83 @@
 <span class="sd">DataFrame object</span>
 <span class="sd">==================================================================================================</span>
 
+<span class="sd">Column names</span>
+<span class="sd">-------------------------------------------------------------------------------</span>
 
+<span class="sd">The column names in the dataframe follows the convetion used in WoS.</span>
+
+<span class="sd">* `FN`: File Name.</span>
+<span class="sd">* `VR`: Version Number.</span>
+<span class="sd">* `PT`: Publication Type (J=Journal; B=Book; S=Series; P=Patent).</span>
+<span class="sd">* `AU`: Authors.</span>
+<span class="sd">* `AF`: Author full name.</span>
+<span class="sd">* `BA`: Book Authors.</span>
+<span class="sd">* `BF`: Book Authors Full Name.</span>
+<span class="sd">* `CA`: Group Authors.</span>
+<span class="sd">* `GP`: Book Group Authors.</span>
+<span class="sd">* `BE`: Editors.</span>
+<span class="sd">* `TI`: Document Title.</span>
+<span class="sd">* `SO`: Publication Name.</span>
+<span class="sd">* `SE`: Book Series Title.</span>
+<span class="sd">* `BS`: Book Series Subtitle.</span>
+<span class="sd">* `LA`: Language.</span>
+<span class="sd">* `DT`: Document Type.</span>
+<span class="sd">* `CT`: Conference Title.</span>
+<span class="sd">* `CY`: Conference Date.</span>
+<span class="sd">* `CL`: Conference Location.</span>
+<span class="sd">* `SP`: Conference Sponsors.</span>
+<span class="sd">* `HO`: Conference Host.</span>
+<span class="sd">* `DE`: Author keywords.</span>
+<span class="sd">* `ID`: Keyword plus.</span>
+<span class="sd">* `AB`: Abstract.</span>
+<span class="sd">* `C1`: Author Address.</span>
+<span class="sd">* `PR`: Reprint Address.</span>
+<span class="sd">* `EM`: E-mail Address.</span>
+<span class="sd">* `RI`: ResearcherID Number.</span>
+<span class="sd">* `OI`: ORCID Identifier (Open Researcher and Contributor ID).</span>
+<span class="sd">* `FU`: Funding Agency and Grant Number.</span>
+<span class="sd">* `FX`: Funding Text.</span>
+<span class="sd">* `CR`: Cited References.</span>
+<span class="sd">* `NR`: Cited Reference Count.</span>
+<span class="sd">* `TC`: Web of Science Core Collection Times Cited Count.</span>
+<span class="sd">* `Z9`: Total Times Cited Count.</span>
+<span class="sd">* `U1`: Usage Count (Last 180 Days).</span>
+<span class="sd">* `U2`: Usage Count (Since 2013).</span>
+<span class="sd">* `PU`: Publisher.</span>
+<span class="sd">* `PI`: Publisher City.</span>
+<span class="sd">* `PA`: Publisher Address.</span>
+<span class="sd">* `SN`: International Standard Serial Number (ISSN).</span>
+<span class="sd">* `EI`: Electronic International Standard Serial Number (eISSN).</span>
+<span class="sd">* `BN`: International Standard Book Number (ISBN).</span>
+<span class="sd">* `J9`: 29-Character Source Abbreviation.</span>
+<span class="sd">* `JI`: ISO Source Abbreviation</span>
+<span class="sd">* `PY`: Year Published.</span>
+<span class="sd">* `VL`: Volume.</span>
+<span class="sd">* `IS`: Issue.</span>
+<span class="sd">* `SI`: Special Issue.</span>
+<span class="sd">* `PN`: Part Number.</span>
+<span class="sd">* `SU`: Supplement.</span>
+<span class="sd">* `MA`: Meeting Abstract.</span>
+<span class="sd">* `BP`: Begining page.</span>
+<span class="sd">* `EP`: Ending page.</span>
+<span class="sd">* `AR`: Article Number.</span>
+<span class="sd">* `DI`: DOI</span>
+<span class="sd">* `D2`: Book DOI.</span>
+<span class="sd">* `EA`: Early access date.</span>
+<span class="sd">* `EY`: Early access year.</span>
+<span class="sd">* `PG`: Page count.</span>
+<span class="sd">* `P2`: Chapter Count (Book Citation Index).</span>
+<span class="sd">* `WC`: Web of Science Categories.</span>
+<span class="sd">* `SC`: Research Areas.</span>
+<span class="sd">* `GA`:	Document Delivery Number.</span>
+<span class="sd">* `PM`:	PubMed ID.</span>
+<span class="sd">* `UT`:	Accession Number.</span>
+<span class="sd">* `OA`:	Open Access Indicator.</span>
+<span class="sd">* `HP`:	ESI Hot Paper. Note that this field is valued only for ESI subscribers.</span>
+<span class="sd">* `HC`:	ESI Highly Cited Paper. Note that this field is valued only for ESI subscribers.</span>
+<span class="sd">* `DA`:	Date this report was generated.</span>
+<span class="sd">* `ER`:	End of Record.</span>
+<span class="sd">* `EF`:	End of File.</span>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -176,6 +252,10 @@
     <span class="s2">&quot;Keywords&quot;</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
+<span class="c1"># SCOPUS_COLS = {</span>
+<span class="c1">#     &#39;Authors&#39;: &#39;AU&#39;,</span>
+<span class="c1">#     &#39;&#39;</span>
+<span class="c1"># }</span>
 
 <div class="viewcode-block" id="relationship"><a class="viewcode-back" href="../../dataframe.html#techminer.dataframe.relationship">[docs]</a><span class="k">def</span> <span class="nf">relationship</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">sxy</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">*</span> <span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)])</span>
@@ -3673,66 +3753,64 @@
         <span class="n">num_docs</span> <span class="o">=</span> <span class="n">compute_num_documents</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">num_docs</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">column</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">result</span></div>
+        <span class="k">return</span> <span class="n">result</span></div></div>
 
-<div class="viewcode-block" id="DataFrame.correspondence_matrix"><a class="viewcode-back" href="../../dataframe.html#techminer.dataframe.DataFrame.correspondence_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">correspondence_matrix</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">column_IDX</span><span class="p">,</span>
-        <span class="n">column_COL</span><span class="p">,</span>
-        <span class="n">sep_IDX</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">sep_COL</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-
-
+    <span class="c1"># def correspondence_matrix(</span>
+    <span class="c1">#     self,</span>
+    <span class="c1">#     column_IDX,</span>
+    <span class="c1">#     column_COL,</span>
+    <span class="c1">#     sep_IDX=None,</span>
+    <span class="c1">#     sep_COL=None,</span>
+    <span class="c1">#     as_matrix=False,</span>
+    <span class="c1">#     keywords=None,</span>
+    <span class="c1"># ):</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
 
 
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">co_occurrence</span><span class="p">(</span>
-            <span class="n">column_IDX</span><span class="o">=</span><span class="n">column_IDX</span><span class="p">,</span>
-            <span class="n">column_COL</span><span class="o">=</span><span class="n">column_COL</span><span class="p">,</span>
-            <span class="n">sep_IDX</span><span class="o">=</span><span class="n">sep_IDX</span><span class="p">,</span>
-            <span class="n">sep_COL</span><span class="o">=</span><span class="n">sep_COL</span><span class="p">,</span>
-            <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">minmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">,</span>
-        <span class="p">)</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     result = self.co_occurrence(</span>
+    <span class="c1">#         column_IDX=column_IDX,</span>
+    <span class="c1">#         column_COL=column_COL,</span>
+    <span class="c1">#         sep_IDX=sep_IDX,</span>
+    <span class="c1">#         sep_COL=sep_COL,</span>
+    <span class="c1">#         as_matrix=True,</span>
+    <span class="c1">#         minmax=None,</span>
+    <span class="c1">#         keywords=keywords,</span>
+    <span class="c1">#     )</span>
 
-        <span class="n">matrix</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">grand_total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
-        <span class="n">correspondence_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">grand_total</span><span class="p">)</span>
-        <span class="n">row_totals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">correspondence_matrix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">col_totals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">correspondence_matrix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">independence_model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">row_totals</span><span class="p">,</span> <span class="n">col_totals</span><span class="p">)</span>
-        <span class="n">norm_correspondence_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span>
-            <span class="n">correspondence_matrix</span><span class="p">,</span> <span class="n">row_totals</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
-        <span class="p">)</span>
-        <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">correspondence_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">correspondence_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="p">)</span>
-        <span class="n">norm_col_totals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">norm_correspondence_matrix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">correspondence_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-            <span class="n">distances</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span>
-                        <span class="n">norm_correspondence_matrix</span> <span class="o">-</span> <span class="n">norm_correspondence_matrix</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
-                    <span class="p">)</span>
-                    <span class="o">/</span> <span class="n">col_totals</span><span class="p">,</span>
-                    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
-        <span class="n">std_residuals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">correspondence_matrix</span> <span class="o">-</span> <span class="n">independence_model</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">independence_model</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">std_residuals</span><span class="p">,</span> <span class="n">full_matrices</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">deltaR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">row_totals</span><span class="p">)))</span>
-        <span class="n">rowScores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">deltaR</span><span class="p">,</span> <span class="n">u</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+    <span class="c1">#     matrix = result.transpose().values</span>
+    <span class="c1">#     grand_total = np.sum(matrix)</span>
+    <span class="c1">#     correspondence_matrix = np.divide(matrix, grand_total)</span>
+    <span class="c1">#     row_totals = np.sum(correspondence_matrix, axis=1)</span>
+    <span class="c1">#     col_totals = np.sum(correspondence_matrix, axis=0)</span>
+    <span class="c1">#     independence_model = np.outer(row_totals, col_totals)</span>
+    <span class="c1">#     norm_correspondence_matrix = np.divide(</span>
+    <span class="c1">#         correspondence_matrix, row_totals[:, None]</span>
+    <span class="c1">#     )</span>
+    <span class="c1">#     distances = np.zeros(</span>
+    <span class="c1">#         (correspondence_matrix.shape[0], correspondence_matrix.shape[0])</span>
+    <span class="c1">#     )</span>
+    <span class="c1">#     norm_col_totals = np.sum(norm_correspondence_matrix, axis=0)</span>
+    <span class="c1">#     for row in range(correspondence_matrix.shape[0]):</span>
+    <span class="c1">#         distances[row] = np.sqrt(</span>
+    <span class="c1">#             np.sum(</span>
+    <span class="c1">#                 np.square(</span>
+    <span class="c1">#                     norm_correspondence_matrix - norm_correspondence_matrix[row]</span>
+    <span class="c1">#                 )</span>
+    <span class="c1">#                 / col_totals,</span>
+    <span class="c1">#                 axis=1,</span>
+    <span class="c1">#             )</span>
+    <span class="c1">#         )</span>
+    <span class="c1">#     std_residuals = np.divide(</span>
+    <span class="c1">#         (correspondence_matrix - independence_model), np.sqrt(independence_model)</span>
+    <span class="c1">#     )</span>
+    <span class="c1">#     u, s, vh = np.linalg.svd(std_residuals, full_matrices=False)</span>
+    <span class="c1">#     deltaR = np.diag(np.divide(1.0, np.sqrt(row_totals)))</span>
+    <span class="c1">#     rowScores = np.dot(np.dot(deltaR, u), np.diag(s))</span>
 
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-            <span class="n">data</span><span class="o">=</span><span class="n">rowScores</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">columns</span>
-        <span class="p">)</span></div></div>
+    <span class="c1">#     return pd.DataFrame(</span>
+    <span class="c1">#         data=rowScores, columns=result.columns, index=result.columns</span>
+    <span class="c1">#     )</span>
 
 
 <span class="c1"># def __getitem__(self, key):</span>
