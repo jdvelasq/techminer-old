@@ -905,12 +905,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extract_terms</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">sep</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="DataFrame.count_report"><a class="viewcode-back" href="../../dataframe.html#techminer.dataframe.DataFrame.count_report">[docs]</a>    <span class="k">def</span> <span class="nf">count_report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DataFrame.descriptive_stats"><a class="viewcode-back" href="../../dataframe.html#techminer.dataframe.DataFrame.descriptive_stats">[docs]</a>    <span class="k">def</span> <span class="nf">descriptive_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Reports the number of different items per column in dataframe.</span>
+<span class="sd">        Descriptive statistics of current dataframe.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            DataFrame.        </span>
+<span class="sd">            pandas.Series        </span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        ----------------------------------------------------------------------------------------------</span>
@@ -923,38 +923,90 @@
 <span class="sd">        ...          &#39;Source title&#39;: &#39; s0,     s0,   s1,  s1, s2&#39;.split(&#39;,&#39;),</span>
 <span class="sd">        ...          &#39;Author Keywords&#39;: &#39;k0;k1, k0;k2, k3;k2;k1, k4, k5&#39;.split(&#39;,&#39;),</span>
 <span class="sd">        ...          &#39;Index Keywords&#39;: &#39;w0;w1, w0;w2, w3;k1;w1, w4, w5&#39;.split(&#39;,&#39;),</span>
+<span class="sd">        ...          &#39;Year&#39;: [1990, 1991, 1992, 1993, 1994],</span>
+<span class="sd">        ...          &#39;Cited by&#39;: list(range(5)),</span>
 <span class="sd">        ...     }</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; df</span>
-<span class="sd">            Authors Author(s) ID Source title Author Keywords Index Keywords</span>
-<span class="sd">        0   xxx,xxx          0;1           s0           k0;k1          w0;w1</span>
-<span class="sd">        1   zzz,yyy         3;4;           s0           k0;k2          w0;w2</span>
-<span class="sd">        2       xxx           4;           s1        k3;k2;k1       w3;k1;w1</span>
-<span class="sd">        3       yyy           5;           s1              k4             w4</span>
-<span class="sd">        4       zzz           6;           s2              k5             w5</span>
-<span class="sd">        </span>
-<span class="sd">        &gt;&gt;&gt; DataFrame(df).count_report()</span>
-<span class="sd">                    Column  Number of items</span>
-<span class="sd">        0          Authors                3</span>
-<span class="sd">        1     Author(s) ID                7</span>
-<span class="sd">        2     Source title                3</span>
-<span class="sd">        3  Author Keywords                6</span>
-<span class="sd">        4   Index Keywords                7</span>
+<span class="sd">        &gt;&gt;&gt; df # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">            Authors Author(s) ID Source title  ... Index Keywords  Year  Cited by</span>
+<span class="sd">        0   xxx,xxx          0;1           s0  ...          w0;w1  1990         0</span>
+<span class="sd">        1   zzz,yyy         3;4;           s0  ...          w0;w2  1991         1</span>
+<span class="sd">        2       xxx           4;           s1  ...       w3;k1;w1  1992         2</span>
+<span class="sd">        3       yyy           5;           s1  ...             w4  1993         3</span>
+<span class="sd">        4       zzz           6;           s2  ...             w5  1994         4</span>
+<span class="sd">        [5 rows x 7 columns]</span>
+
+<span class="sd">        &gt;&gt;&gt; DataFrame(df).descriptive_stats()</span>
+<span class="sd">                                               Value</span>
+<span class="sd">        Description                                 </span>
+<span class="sd">        Articles                                5.00</span>
+<span class="sd">        First year                           1990.00</span>
+<span class="sd">        Last year                            1994.00</span>
+<span class="sd">        Average citations per article           2.00</span>
+<span class="sd">        Authors                                 3.00</span>
+<span class="sd">        Author(s) ID                            7.00</span>
+<span class="sd">        Authors of single authored articles     3.00</span>
+<span class="sd">        Authors of multi authored articles      2.00</span>
+<span class="sd">        Articles per author                     1.67</span>
+<span class="sd">        Authors per article                     0.60</span>
+<span class="sd">        Co-authors per article                  2.00</span>
+<span class="sd">        Author Keywords                         6.00</span>
+<span class="sd">        Index Keywords                          7.00</span>
+<span class="sd">        Source titles                           3.00</span>
+<span class="sd">        Average articles per Source title       2.00</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">descriptions</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;Articles&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;First year&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Last year&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Average citations per article&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Authors&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Author(s) ID&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Source title&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Authors of single authored articles&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Authors of multi authored articles&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Articles per author&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Authors per article&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Co-authors per article&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Author Keywords&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Index Keywords&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Source titles&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Average articles per Source title&quot;</span><span class="p">,</span>
         <span class="p">]</span>
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;Column&quot;</span><span class="p">:</span> <span class="n">columns</span><span class="p">,</span>
-                <span class="s2">&quot;Number of items&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">count_terms</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">],</span>
-            <span class="p">}</span>
-        <span class="p">)</span></div>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;Description&quot;</span><span class="p">:</span> <span class="n">descriptions</span><span class="p">})</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;Description&quot;</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s2">&quot;Articles&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s2">&quot;First year&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Year</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s2">&quot;Last year&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Year</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s2">&quot;Average citations per article&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_terms</span><span class="p">(</span><span class="s2">&quot;Authors&quot;</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s2">&quot;Author(s) ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_terms</span><span class="p">(</span><span class="s2">&quot;Author(s) ID&quot;</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s2">&quot;Articles per author&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_terms</span><span class="p">(</span><span class="s2">&quot;Authors&quot;</span><span class="p">),</span> <span class="mi">2</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s2">&quot;Authors per article&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">count_terms</span><span class="p">(</span><span class="s2">&quot;Authors&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="mi">2</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s2">&quot;Author Keywords&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_terms</span><span class="p">(</span><span class="s2">&quot;Author Keywords&quot;</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s2">&quot;Index Keywords&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_terms</span><span class="p">(</span><span class="s2">&quot;Index Keywords&quot;</span><span class="p">)</span>
+        <span class="n">num_authors</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">))</span> <span class="k">if</span> <span class="n">w</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s2">&quot;Authors of single authored articles&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="n">num_authors</span><span class="p">[</span><span class="n">num_authors</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s2">&quot;Authors of multi authored articles&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="n">num_authors</span><span class="p">[</span><span class="n">num_authors</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s2">&quot;Co-authors per article&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+            <span class="n">num_authors</span><span class="p">[</span><span class="n">num_authors</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s2">&quot;Source titles&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_terms</span><span class="p">(</span><span class="s2">&quot;Source title&quot;</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="s2">&quot;Average articles per Source title&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_terms</span><span class="p">(</span><span class="s2">&quot;Source title&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 
     <span class="c1">##</span>
     <span class="c1">##</span>
@@ -3621,9 +3673,66 @@
         <span class="n">num_docs</span> <span class="o">=</span> <span class="n">compute_num_documents</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">num_docs</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">column</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">result</span></div></div>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="DataFrame.correspondence_matrix"><a class="viewcode-back" href="../../dataframe.html#techminer.dataframe.DataFrame.correspondence_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">correspondence_matrix</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">column_IDX</span><span class="p">,</span>
+        <span class="n">column_COL</span><span class="p">,</span>
+        <span class="n">sep_IDX</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">sep_COL</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 
 
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">co_occurrence</span><span class="p">(</span>
+            <span class="n">column_IDX</span><span class="o">=</span><span class="n">column_IDX</span><span class="p">,</span>
+            <span class="n">column_COL</span><span class="o">=</span><span class="n">column_COL</span><span class="p">,</span>
+            <span class="n">sep_IDX</span><span class="o">=</span><span class="n">sep_IDX</span><span class="p">,</span>
+            <span class="n">sep_COL</span><span class="o">=</span><span class="n">sep_COL</span><span class="p">,</span>
+            <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">minmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">grand_total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="n">correspondence_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">grand_total</span><span class="p">)</span>
+        <span class="n">row_totals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">correspondence_matrix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">col_totals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">correspondence_matrix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">independence_model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">row_totals</span><span class="p">,</span> <span class="n">col_totals</span><span class="p">)</span>
+        <span class="n">norm_correspondence_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span>
+            <span class="n">correspondence_matrix</span><span class="p">,</span> <span class="n">row_totals</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">correspondence_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">correspondence_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="p">)</span>
+        <span class="n">norm_col_totals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">norm_correspondence_matrix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">correspondence_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">distances</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span>
+                        <span class="n">norm_correspondence_matrix</span> <span class="o">-</span> <span class="n">norm_correspondence_matrix</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="o">/</span> <span class="n">col_totals</span><span class="p">,</span>
+                    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="n">std_residuals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">correspondence_matrix</span> <span class="o">-</span> <span class="n">independence_model</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">independence_model</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">std_residuals</span><span class="p">,</span> <span class="n">full_matrices</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">deltaR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">row_totals</span><span class="p">)))</span>
+        <span class="n">rowScores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">deltaR</span><span class="p">,</span> <span class="n">u</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">rowScores</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">columns</span>
+        <span class="p">)</span></div></div>
 
 
 <span class="c1"># def __getitem__(self, key):</span>

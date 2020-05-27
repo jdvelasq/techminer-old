@@ -1059,44 +1059,9 @@ the number of documents by term between brackets.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="techminer.dataframe.DataFrame.count_report">
-<code class="sig-name descname">count_report</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.count_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.count_report" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reports the number of different items per column in dataframe.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>DataFrame.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">{</span>
-<span class="gp">... </span>         <span class="s1">&#39;Authors&#39;</span><span class="p">:</span>  <span class="s1">&#39;xxx,xxx; zzz,yyy; xxx; yyy; zzz&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">),</span>
-<span class="gp">... </span>         <span class="s1">&#39;Author(s) ID&#39;</span><span class="p">:</span> <span class="s1">&#39;0;1,    3;4;,  4;,  5;,  6;&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span>
-<span class="gp">... </span>         <span class="s1">&#39;Source title&#39;</span><span class="p">:</span> <span class="s1">&#39; s0,     s0,   s1,  s1, s2&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span>
-<span class="gp">... </span>         <span class="s1">&#39;Author Keywords&#39;</span><span class="p">:</span> <span class="s1">&#39;k0;k1, k0;k2, k3;k2;k1, k4, k5&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span>
-<span class="gp">... </span>         <span class="s1">&#39;Index Keywords&#39;</span><span class="p">:</span> <span class="s1">&#39;w0;w1, w0;w2, w3;k1;w1, w4, w5&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span>
-<span class="gp">... </span>    <span class="p">}</span>
-<span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
-<span class="go">    Authors Author(s) ID Source title Author Keywords Index Keywords</span>
-<span class="go">0   xxx,xxx          0;1           s0           k0;k1          w0;w1</span>
-<span class="go">1   zzz,yyy         3;4;           s0           k0;k2          w0;w2</span>
-<span class="go">2       xxx           4;           s1        k3;k2;k1       w3;k1;w1</span>
-<span class="go">3       yyy           5;           s1              k4             w4</span>
-<span class="go">4       zzz           6;           s2              k5             w5</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">count_report</span><span class="p">()</span>
-<span class="go">            Column  Number of items</span>
-<span class="go">0          Authors                3</span>
-<span class="go">1     Author(s) ID                7</span>
-<span class="go">2     Source title                3</span>
-<span class="go">3  Author Keywords                6</span>
-<span class="go">4   Index Keywords                7</span>
-</pre></div>
-</div>
-</dd></dl>
+<dt id="techminer.dataframe.DataFrame.correspondence_matrix">
+<code class="sig-name descname">correspondence_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">sep_IDX</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_COL</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.correspondence_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.correspondence_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt id="techminer.dataframe.DataFrame.count_terms">
@@ -1166,6 +1131,60 @@ the number of documents by term between brackets.</p>
 <span class="go">2            ID                6      100.00%</span>
 <span class="go">3  Source title                5       83.33%</span>
 <span class="go">4    None field                0        0.00%</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="techminer.dataframe.DataFrame.descriptive_stats">
+<code class="sig-name descname">descriptive_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.descriptive_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.descriptive_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Descriptive statistics of current dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pandas.Series</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span>
+<span class="gp">... </span>         <span class="s1">&#39;Authors&#39;</span><span class="p">:</span>  <span class="s1">&#39;xxx,xxx; zzz,yyy; xxx; yyy; zzz&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s1">&#39;Author(s) ID&#39;</span><span class="p">:</span> <span class="s1">&#39;0;1,    3;4;,  4;,  5;,  6;&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s1">&#39;Source title&#39;</span><span class="p">:</span> <span class="s1">&#39; s0,     s0,   s1,  s1, s2&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s1">&#39;Author Keywords&#39;</span><span class="p">:</span> <span class="s1">&#39;k0;k1, k0;k2, k3;k2;k1, k4, k5&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s1">&#39;Index Keywords&#39;</span><span class="p">:</span> <span class="s1">&#39;w0;w1, w0;w2, w3;k1;w1, w4, w5&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s1">&#39;Year&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1990</span><span class="p">,</span> <span class="mi">1991</span><span class="p">,</span> <span class="mi">1992</span><span class="p">,</span> <span class="mi">1993</span><span class="p">,</span> <span class="mi">1994</span><span class="p">],</span>
+<span class="gp">... </span>         <span class="s1">&#39;Cited by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)),</span>
+<span class="gp">... </span>    <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> 
+<span class="go">    Authors Author(s) ID Source title  ... Index Keywords  Year  Cited by</span>
+<span class="go">0   xxx,xxx          0;1           s0  ...          w0;w1  1990         0</span>
+<span class="go">1   zzz,yyy         3;4;           s0  ...          w0;w2  1991         1</span>
+<span class="go">2       xxx           4;           s1  ...       w3;k1;w1  1992         2</span>
+<span class="go">3       yyy           5;           s1  ...             w4  1993         3</span>
+<span class="go">4       zzz           6;           s2  ...             w5  1994         4</span>
+<span class="go">[5 rows x 7 columns]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">descriptive_stats</span><span class="p">()</span>
+<span class="go">                                       Value</span>
+<span class="go">Description</span>
+<span class="go">Articles                                5.00</span>
+<span class="go">First year                           1990.00</span>
+<span class="go">Last year                            1994.00</span>
+<span class="go">Average citations per article           2.00</span>
+<span class="go">Authors                                 3.00</span>
+<span class="go">Author(s) ID                            7.00</span>
+<span class="go">Authors of single authored articles     3.00</span>
+<span class="go">Authors of multi authored articles      2.00</span>
+<span class="go">Articles per author                     1.67</span>
+<span class="go">Authors per article                     0.60</span>
+<span class="go">Co-authors per article                  2.00</span>
+<span class="go">Author Keywords                         6.00</span>
+<span class="go">Index Keywords                          7.00</span>
+<span class="go">Source titles                           3.00</span>
+<span class="go">Average articles per Source title       2.00</span>
 </pre></div>
 </div>
 </dd></dl>

@@ -1122,37 +1122,117 @@ class Plot:
         plt.gca().spines["bottom"].set_visible(False)
         return plt.gca()
 
-    def cma_cluster(self, n_clusters, **kwargs):
+    def correspondence_plot(self):
         """Computes and plot clusters of data using correspondence analysis.
 
 
         Examples
         ----------------------------------------------------------------------------------------------
 
-        """
+        >>> import pandas as pd
+        >>> df = pd.DataFrame(
+        ...     [[3, 8, 6, 1],
+        ...      [3, 4, 7, 5],
+        ...      [9, 9, 2, 3],
+        ...      [0, 1, 0, 4],
+        ...      [4, 4, 8, 7],
+        ...      [2, 4, 4, 9],
+        ...      [4, 2, 4, 1],
+        ...      [0, 0, 9, 2],
+        ...      [9, 3, 9, 4],
+        ...      [2, 3, 2, 0]],
+        ...     columns=list('ABCD'), index=list('abcdefghij'))
+        >>> df
+           A  B  C  D
+        a  3  8  6  1
+        b  3  4  7  5
+        c  9  9  2  3
+        d  0  1  0  4
+        e  4  4  8  7
+        f  2  4  4  9
+        g  4  2  4  1
+        h  0  0  9  2
+        i  9  3  9  4
+        j  2  3  2  0
 
-        def encircle(x, y, ax=None, **kw):
-            p = np.c_[x, y]
-            hull = ConvexHull(p)
-            poly = plt.Polygon(p[hull.vertices, :], **kw)
-            plt.gca().add_patch(poly)
-            #
+        >>> _ = Plot(df).correspondence_plot()        
+        >>> plt.savefig('sphinx/images/corana0.png')        
+        
+        .. image:: images/corana0.png
+            :width: 500px
+            :align: center
+
+
+        """
+        n = self.df.values.sum()
+        P = self.df.values / n
+        column_masses = P.sum(axis=0)
+        row_masses = P.sum(axis=1)
+        E = np.outer(row_masses, column_masses)
+        R = P - E
+        I = R / E
+        Z = I * np.sqrt(E)
+        # u: left (rows),  s: singular values,  vh: right (columns)
+        u, d, v = np.linalg.svd(Z)
+        u = u[:, 0 : v.shape[0]]
+        std_coordinates_rows = u / np.sqrt(row_masses[:, None])
+        std_coordinates_cols = np.transpose(v) / np.sqrt(column_masses[None, :])
+        ppal_coordinates_rows = std_coordinates_rows * d[None, :]
+        ppal_coordinates_cols = std_coordinates_cols * d[:, None]
+        df_rows = pd.DataFrame(
+            ppal_coordinates_rows,
+            index=self.df.index,
+            columns=["f{:d}".format(i) for i in range(len(self.df.columns))],
+        )
+        df_columns = pd.DataFrame(
+            ppal_coordinates_cols,
+            index=self.df.columns,
+            columns=["f{:d}".format(i) for i in range(len(self.df.columns))],
+        )
+        result = pd.concat([df_columns, df_rows])
 
         plt.clf()
-        plt.scatter(self.df[df.columns[0]], self.df[df.columns[1]], **kwargs)
-        for i, index in enumerate(self.df.index):
-            plt.text(df[df.columns[0]][index], df[df.columns[1]][index], df.index[i])
-
-        cluster = AgglomerativeClustering(
-            n_clusters=n_clusters, affinity="euclidean", linkage="ward"
+        plt.gca().scatter(
+            result.f0[: len(self.df.columns)], result.f1[: len(self.df.columns)]
         )
-        df = df.copy()
-        cluster.fit_predict(df)
 
-        for icluster in range(n_clusters):
-            encircle(
-                df.loc[cluster.labels_ == icluster, df.columns[0]],
-                df.loc[cluster.labels_ == icluster, df.columns[1]],
-                alpha=0.2,
-                linewidth=0,
-            )
+        plt.gca().scatter(
+            result.f0[len(self.df.columns) :],
+            result.f1[len(self.df.columns) :],
+            marker=".",
+        )
+
+        for i in range(len(self.df.columns)):
+            plt.text(result.f0[i], result.f1[i], self.df.columns[i])
+
+        plt.gca().spines["top"].set_visible(False)
+        plt.gca().spines["right"].set_visible(False)
+        plt.gca().spines["left"].set_visible(False)
+        plt.gca().spines["bottom"].set_visible(False)
+        return plt.gca()
+
+        # def encircle(x, y, ax=None, **kw):
+        #     p = np.c_[x, y]
+        #     hull = ConvexHull(p)
+        #     poly = plt.Polygon(p[hull.vertices, :], **kw)
+        #     plt.gca().add_patch(poly)
+        #     #
+
+        # plt.clf()
+        # plt.scatter(self.df[df.columns[0]], self.df[df.columns[1]], **kwargs)
+        # for i, index in enumerate(self.df.index):
+        #     plt.text(df[df.columns[0]][index], df[df.columns[1]][index], df.index[i])
+
+        # cluster = AgglomerativeClustering(
+        #     n_clusters=n_clusters, affinity="euclidean", linkage="ward"
+        # )
+        # df = df.copy()
+        # cluster.fit_predict(df)
+
+        # for icluster in range(n_clusters):
+        #     encircle(
+        #         df.loc[cluster.labels_ == icluster, df.columns[0]],
+        #         df.loc[cluster.labels_ == icluster, df.columns[1]],
+        #         alpha=0.2,
+        #         linewidth=0,
+        #     )

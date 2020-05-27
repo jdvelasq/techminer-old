@@ -394,11 +394,16 @@ the keywords list.</p>
 
 <dl class="py function">
 <dt id="techminer.strings.fingerprint">
-<code class="sig-prename descclassname">techminer.strings.</code><code class="sig-name descname">fingerprint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/strings.html#fingerprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.strings.fingerprint" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">techminer.strings.</code><code class="sig-name descname">fingerprint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">ngram</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">stemmer</span><span class="o">=</span><span class="default_value">'Porter'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/strings.html#fingerprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.strings.fingerprint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes ‘fingerprint’ representation of string x.</p>
+<p>See <a class="reference external" href="https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth">https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>x</strong> (<em>string</em>) – string to convert.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>string</em>) – string to convert.</p></li>
+<li><p><strong>ngram</strong> (<em>None</em><em>, </em><em>1</em><em>, </em><em>2</em>) – fingerprint n-gram order</p></li>
+<li><p><strong>stemmer</strong> (<em>None</em><em>, </em><em>'Porter'</em><em>, </em><em>'Snowball'</em>) – Used stemmer for remove morphological affixes from words, leaving only the word stem.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>string.</p>
