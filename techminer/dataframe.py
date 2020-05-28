@@ -7,78 +7,79 @@ Column names
 
 The column names in the dataframe follows the convetion used in WoS.
 
-* `FN`: File Name.
-* `VR`: Version Number.
-* `PT`: Publication Type (J=Journal; B=Book; S=Series; P=Patent).
-* `AU`: Authors.
+* `AB`: Abstract.
 * `AF`: Author full name.
+* `AR`: Article Number.
+* `AU`: Authors.
+* `AI`: Authors Identifiers.
 * `BA`: Book Authors.
-* `BF`: Book Authors Full Name.
-* `CA`: Group Authors.
-* `GP`: Book Group Authors.
 * `BE`: Editors.
-* `TI`: Document Title.
-* `SO`: Publication Name.
-* `SE`: Book Series Title.
+* `BF`: Book Authors Full Name.
+* `BN`: International Standard Book Number (ISBN).
+* `BP`: Begining page.
 * `BS`: Book Series Subtitle.
-* `LA`: Language.
-* `DT`: Document Type.
+* `C1`: Author Address.
+* `CA`: Group Authors.
+* `CL`: Conference Location.
+* `CR`: Cited References.
 * `CT`: Conference Title.
 * `CY`: Conference Date.
-* `CL`: Conference Location.
-* `SP`: Conference Sponsors.
-* `HO`: Conference Host.
+* `D2`: Book DOI.
+* `DA`:	Date this report was generated.
 * `DE`: Author keywords.
-* `ID`: Keyword plus.
-* `AB`: Abstract.
-* `C1`: Author Address.
-* `PR`: Reprint Address.
+* `DI`: DOI
+* `DT`: Document Type.
+* `EA`: Early access date.
+* `EF`:	End of File.
+* `EI`: Electronic International Standard Serial Number (eISSN).
 * `EM`: E-mail Address.
-* `RI`: ResearcherID Number.
-* `OI`: ORCID Identifier (Open Researcher and Contributor ID).
+* `EP`: Ending page.
+* `ER`:	End of Record.
+* `EY`: Early access year.
+* `FN`: File Name.
 * `FU`: Funding Agency and Grant Number.
 * `FX`: Funding Text.
-* `CR`: Cited References.
-* `NR`: Cited Reference Count.
-* `TC`: Web of Science Core Collection Times Cited Count.
-* `Z9`: Total Times Cited Count.
-* `U1`: Usage Count (Last 180 Days).
-* `U2`: Usage Count (Since 2013).
-* `PU`: Publisher.
-* `PI`: Publisher City.
-* `PA`: Publisher Address.
-* `SN`: International Standard Serial Number (ISSN).
-* `EI`: Electronic International Standard Serial Number (eISSN).
-* `BN`: International Standard Book Number (ISBN).
+* `GA`:	Document Delivery Number.
+* `GP`: Book Group Authors.
+* `HC`:	ESI Highly Cited Paper. Note that this field is valued only for ESI subscribers.
+* `HO`: Conference Host.
+* `HP`:	ESI Hot Paper. Note that this field is valued only for ESI subscribers.
+* `ID`: Keyword plus.
+* `IS`: Issue.
 * `J9`: 29-Character Source Abbreviation.
 * `JI`: ISO Source Abbreviation
-* `PY`: Year Published.
-* `VL`: Volume.
-* `IS`: Issue.
-* `SI`: Special Issue.
-* `PN`: Part Number.
-* `SU`: Supplement.
+* `LA`: Language.
 * `MA`: Meeting Abstract.
-* `BP`: Begining page.
-* `EP`: Ending page.
-* `AR`: Article Number.
-* `DI`: DOI
-* `D2`: Book DOI.
-* `EA`: Early access date.
-* `EY`: Early access year.
-* `PG`: Page count.
-* `P2`: Chapter Count (Book Citation Index).
-* `WC`: Web of Science Categories.
-* `SC`: Research Areas.
-* `GA`:	Document Delivery Number.
-* `PM`:	PubMed ID.
-* `UT`:	Accession Number.
+* `NR`: Cited Reference Count.
 * `OA`:	Open Access Indicator.
-* `HP`:	ESI Hot Paper. Note that this field is valued only for ESI subscribers.
-* `HC`:	ESI Highly Cited Paper. Note that this field is valued only for ESI subscribers.
-* `DA`:	Date this report was generated.
-* `ER`:	End of Record.
-* `EF`:	End of File.
+* `OI`: ORCID Identifier (Open Researcher and Contributor ID).
+* `P2`: Chapter Count (Book Citation Index).
+* `PA`: Publisher Address.
+* `PG`: Page count.
+* `PI`: Publisher City.
+* `PM`:	PubMed ID.
+* `PN`: Part Number.
+* `PR`: Reprint Address.
+* `PT`: Publication Type (J=Journal; B=Book; S=Series; P=Patent).
+* `PU`: Publisher.
+* `PY`: Year Published.
+* `RI`: ResearcherID Number.
+* `SC`: Research Areas.
+* `SE`: Book Series Title.
+* `SI`: Special Issue.
+* `SN`: International Standard Serial Number (ISSN).
+* `SO`: Publication Name.
+* `SP`: Conference Sponsors.
+* `SU`: Supplement.
+* `TC`: Web of Science Core Collection Times Cited Count.
+* `TI`: Document Title.
+* `U1`: Usage Count (Last 180 Days).
+* `U2`: Usage Count (Since 2013).
+* `UT`:	Accession Number.
+* `VL`: Volume.
+* `VR`: Version Number.
+* `WC`: Web of Science Categories.
+* `Z9`: Total Times Cited Count.
 
 
 """
@@ -99,10 +100,55 @@ SCOPUS_SEPS = {
     "Keywords": ";",
 }
 
-# SCOPUS_COLS = {
-#     'Authors': 'AU',
-#     ''
-# }
+SCOPUS_TO_WOS = {
+    "Abbreviated Source Title": "J9",
+    "Abstract": "AB",
+    "Access Type": "OA",
+    "Affiliations": "C1",
+    "Art. No.": "AR",
+    "Author Keywords": "DE",
+    "Author(s) ID": "RI",
+    "Authors with affiliations": "AU_C1",
+    "Authors": "AU",
+    "Chemicals/CAS": "CHEMICAL_CAS",
+    "Cited by": "Z9",
+    "CODEN": "CODEN",
+    "Conference code": "CONFERENCE_CODE",
+    "Conference date": "CY",
+    "Conference location": "CL",
+    "Conference name": "CT",
+    "Correspondence Address": "EM",
+    "Document Type": "DT",
+    "DOI": "DI",
+    "Editors": "BE",
+    "EI": "UT",
+    "Funding Details": "FX",
+    "Funding Text 1": "FU",
+    "Index Keywords": "ID",
+    "ISBN": "BN",
+    "ISSN": "SN",
+    "Issue": "IS",
+    "Language of Original Document": "LA",
+    "Link": "LINK",
+    "Manufacturers": "MANUFACTURERS",
+    "Molecular Sequence Numbers": "MOLECULAR_SEQUENCE_NUMBERS",
+    "Page count": "PG",
+    "Page end": "EP",
+    "Page start": "BP",
+    "Publication Stage": "PUBLICATION_STAGE",
+    "Publisher": "PU",
+    "PubMed ID": "PM",
+    "References": "CR",
+    "Source title": "SO",
+    "Source": "FN",
+    "Sponsors": "SP",
+    "Subject": "SC",
+    "Title": "TI",
+    "Tradenames": "TRADENAMES",
+    "Volume": "VL",
+    "Year": "PY",
+}
+
 
 def relationship(x, y):
     sxy = sum([a * b * min(a, b) for a, b in zip(x, y)])
@@ -306,6 +352,16 @@ def sort_by_citations(
     if axis == "index":
         return matrix.loc[terms_sorted, :]
     return matrix.loc[:, terms_sorted]
+
+
+def read_csv(filepath_or_buffer, **kwargs):
+    """
+    >>> read_csv("https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/citations.csv")
+
+    """
+    df = pd.read_csv(filepath_or_buffer, **kwargs)
+    df = df.rename(columns=SCOPUS_TO_WOS)
+    return df
 
 
 class DataFrame(pd.DataFrame):
@@ -3612,7 +3668,6 @@ class DataFrame(pd.DataFrame):
     #     keywords=None,
     # ):
     #     """
-
 
     #     """
     #     result = self.co_occurrence(
