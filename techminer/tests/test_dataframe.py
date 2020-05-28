@@ -22,7 +22,7 @@ def test_disambiguate_authors():
 
     testdf = pd.DataFrame(
         {
-            "Authors": "author 0,author 0,author 0;author 0;author 0".split(";"),
+            "Authors": "author 0;author 0;author 0,author 0,author 0".split(","),
             "Author(s) ID": "0;1;2,3,4".split(","),
             "ID": list(range(3)),
         }
@@ -30,8 +30,8 @@ def test_disambiguate_authors():
 
     expected = pd.DataFrame(
         {
-            "Authors": "author 0,author 0(1),author 0(2);author 0(3);author 0(4)".split(
-                ";"
+            "Authors": "author 0;author 0(1);author 0(2),author 0(3),author 0(4)".split(
+                ","
             ),
             "Author(s) ID": "0;1;2,3,4".split(","),
             "ID": list(range(3)),

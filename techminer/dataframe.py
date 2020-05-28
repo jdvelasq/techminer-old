@@ -91,63 +91,73 @@ import math
 from .keywords import Keywords
 from .strings import remove_accents
 
-SCOPUS_SEPS = {
-    "Authors": ",",
-    "Author(s) ID": ";",
-    "Author Keywords": ";",
-    "Index Keywords": ";",
-    "ID": ";",
-    "Keywords": ";",
-}
+# SCOPUS_SEPS = {
+#     "Authors": ",",
+#     "Author(s) ID": ";",
+#     "Author Keywords": ";",
+#     "Index Keywords": ";",
+#     "ID": ";",
+#     "Keywords": ";",
+# }
 
-SCOPUS_TO_WOS = {
-    "Abbreviated Source Title": "J9",
-    "Abstract": "AB",
-    "Access Type": "OA",
-    "Affiliations": "C1",
-    "Art. No.": "AR",
-    "Author Keywords": "DE",
-    "Author(s) ID": "RI",
-    "Authors with affiliations": "AU_C1",
-    "Authors": "AU",
-    "Chemicals/CAS": "CHEMICAL_CAS",
-    "Cited by": "Z9",
-    "CODEN": "CODEN",
-    "Conference code": "CONFERENCE_CODE",
-    "Conference date": "CY",
-    "Conference location": "CL",
-    "Conference name": "CT",
-    "Correspondence Address": "EM",
-    "Document Type": "DT",
-    "DOI": "DI",
-    "Editors": "BE",
-    "EI": "UT",
-    "Funding Details": "FX",
-    "Funding Text 1": "FU",
-    "Index Keywords": "ID",
-    "ISBN": "BN",
-    "ISSN": "SN",
-    "Issue": "IS",
-    "Language of Original Document": "LA",
-    "Link": "LINK",
-    "Manufacturers": "MANUFACTURERS",
-    "Molecular Sequence Numbers": "MOLECULAR_SEQUENCE_NUMBERS",
-    "Page count": "PG",
-    "Page end": "EP",
-    "Page start": "BP",
-    "Publication Stage": "PUBLICATION_STAGE",
-    "Publisher": "PU",
-    "PubMed ID": "PM",
-    "References": "CR",
-    "Source title": "SO",
-    "Source": "FN",
-    "Sponsors": "SP",
-    "Subject": "SC",
-    "Title": "TI",
-    "Tradenames": "TRADENAMES",
-    "Volume": "VL",
-    "Year": "PY",
-}
+SCOPUS_COLS = [
+    "Authors",
+    "Author(s) ID",
+    "Author Keywords",
+    "Index Keywords",
+    "ID",
+    "Keywords",
+]
+
+
+# SCOPUS_TO_WOS = {
+#     "Abbreviated Source Title": "J9",
+#     "Abstract": "AB",
+#     "Access Type": "OA",
+#     "Affiliations": "C1",
+#     "Art. No.": "AR",
+#     "Author Keywords": "DE",
+#     "Author(s) ID": "RI",
+#     "Authors with affiliations": "AU_C1",
+#     "Authors": "AU",
+#     "Chemicals/CAS": "CHEMICAL_CAS",
+#     "Cited by": "Z9",
+#     "CODEN": "CODEN",
+#     "Conference code": "CONFERENCE_CODE",
+#     "Conference date": "CY",
+#     "Conference location": "CL",
+#     "Conference name": "CT",
+#     "Correspondence Address": "EM",
+#     "Document Type": "DT",
+#     "DOI": "DI",
+#     "Editors": "BE",
+#     "EI": "UT",
+#     "Funding Details": "FX",
+#     "Funding Text 1": "FU",
+#     "Index Keywords": "ID",
+#     "ISBN": "BN",
+#     "ISSN": "SN",
+#     "Issue": "IS",
+#     "Language of Original Document": "LA",
+#     "Link": "LINK",
+#     "Manufacturers": "MANUFACTURERS",
+#     "Molecular Sequence Numbers": "MOLECULAR_SEQUENCE_NUMBERS",
+#     "Page count": "PG",
+#     "Page end": "EP",
+#     "Page start": "BP",
+#     "Publication Stage": "PUBLICATION_STAGE",
+#     "Publisher": "PU",
+#     "PubMed ID": "PM",
+#     "References": "CR",
+#     "Source title": "SO",
+#     "Source": "FN",
+#     "Sponsors": "SP",
+#     "Subject": "SC",
+#     "Title": "TI",
+#     "Tradenames": "TRADENAMES",
+#     "Volume": "VL",
+#     "Year": "PY",
+# }
 
 
 def relationship(x, y):
@@ -354,14 +364,32 @@ def sort_by_citations(
     return matrix.loc[:, terms_sorted]
 
 
-def read_csv(filepath_or_buffer, **kwargs):
-    """
-    >>> read_csv("https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/citations.csv")
+def prepare_data(x):
 
-    """
-    df = pd.read_csv(filepath_or_buffer, **kwargs)
-    df = df.rename(columns=SCOPUS_TO_WOS)
-    return df
+    #
+    # Scopus preparation data
+    #
+    x = x.applymap(lambda w: remove_accents(w) if isinstance(w, str) else w)
+    if "Authors" in x.columns:
+        x["Authors"] = x.Authors.map(
+            lambda w: w.replace(",", ";").replace(".", "") if pd.isna(w) is False else w
+        )
+    if "Title" in x.columns:
+        x["Title"] = x.Title.map(
+            lambda w: w[0 : w.find("[")] if pd.isna(w) is False and w[-1] == "]" else w
+        )
+
+    return x
+
+
+# def read_csv(filepath_or_buffer, **kwargs):
+#     """
+#     >>> read_csv("https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/citations.csv")
+#
+#     """
+#     df = pd.read_csv(filepath_or_buffer, **kwargs)
+#     df = df.rename(columns=SCOPUS_TO_WOS)
+#     return df
 
 
 class DataFrame(pd.DataFrame):
@@ -404,13 +432,13 @@ class DataFrame(pd.DataFrame):
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...   {
-        ...     "Authors": "author 0,author 1,author 2;author 3;author 4".split(";"),
+        ...     "Authors": "author 0;author 1;author 2,author 3,author 4".split(","),
         ...     "ID": list(range(3)),
         ...   }
         ... )
         >>> df
                               Authors  ID
-        0  author 0,author 1,author 2   0
+        0  author 0;author 1;author 2   0
         1                    author 3   1
         2                    author 4   2
 
@@ -425,8 +453,7 @@ class DataFrame(pd.DataFrame):
         """
 
         result = self.copy()
-        if sep is None and column in SCOPUS_SEPS.keys():
-            sep = SCOPUS_SEPS[column]
+        sep = ";" if sep is None and column in SCOPUS_COLS else sep
         if sep is not None:
             result[column] = result[column].map(
                 lambda x: sorted(list(set(x.split(sep)))) if isinstance(x, str) else x
@@ -483,14 +510,13 @@ class DataFrame(pd.DataFrame):
 
         """
 
-        if sep is None and column in SCOPUS_SEPS.keys():
-            sep = SCOPUS_SEPS[column]
-
-        if sep_other is None and other in SCOPUS_SEPS.keys():
-            sep_other = SCOPUS_SEPS[other]
-
-        if sep_new_column is None and new_column in SCOPUS_SEPS.keys():
-            sep_new_column = SCOPUS_SEPS[new_column]
+        sep = ";" if sep is None and column in SCOPUS_COLS else sep
+        sep_other = ";" if sep_other is None and column in SCOPUS_COLS else sep_other
+        sep_new_column = (
+            ";"
+            if sep_new_column is None and new_column in SCOPUS_COLS
+            else sep_new_column
+        )
 
         df = self.copy()
         author_keywords = df[column].map(
@@ -599,19 +625,19 @@ class DataFrame(pd.DataFrame):
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...   {
-        ...      "Authors": "author 0,author 0,author 0;author 0;author 0".split(";"),
+        ...      "Authors": "author 0;author 0;author 0,author 0,author 0".split(","),
         ...      "Author(s) ID": "0;1;2;,3;,4;".split(','),
         ...   }
         ... )
         >>> df
                               Authors Author(s) ID
-        0  author 0,author 0,author 0       0;1;2;
+        0  author 0;author 0;author 0       0;1;2;
         1                    author 0           3;
         2                    author 0           4;
 
         >>> DataFrame(df).disambiguate_authors()
                                     Authors Author(s) ID
-        0  author 0,author 0(1),author 0(2)        0;1;2
+        0  author 0;author 0(1);author 0(2)        0;1;2
         1                       author 0(3)            3
         2                       author 0(4)            4
 
@@ -619,14 +645,14 @@ class DataFrame(pd.DataFrame):
         """
 
         if sep_Authors is None:
-            sep_Authors = SCOPUS_SEPS[col_Authors]
+            sep_Authors = ";"
 
         self[col_Authors] = self[col_Authors].map(
             lambda x: x[:-1] if x is not None and x[-1] == sep_Authors else x
         )
 
         if sep_AuthorsID is None:
-            sep_AuthorsID = SCOPUS_SEPS[col_AuthorsID]
+            sep_AuthorsID = ";"
 
         self[col_AuthorsID] = self[col_AuthorsID].map(
             lambda x: x[:-1] if x is not None and x[-1] == sep_AuthorsID else x
@@ -684,33 +710,32 @@ class DataFrame(pd.DataFrame):
 
         return DataFrame(result)
 
-    def remove_accents(self):
-        """Remove accents for all strings on a DataFrame
+    # def remove_accents(self):
+    #     """Remove accents for all strings on a DataFrame
 
-        Returns:
-            A dataframe.
+    #     Returns:
+    #         A dataframe.
 
-        Examples
-        ----------------------------------------------------------------------------------------------
+    #     Examples
+    #     ----------------------------------------------------------------------------------------------
 
-        >>> import pandas as pd
-        >>> df = pd.DataFrame(
-        ...   {
-        ...      "Authors": "áàÁÀ;éèÉÈ;íìÌÍ;ÑÑÑñññ".split(";"),
-        ...   }
-        ... )
-        >>> DataFrame(df).remove_accents()
-          Authors
-        0    aaAA
-        1    eeEE
-        2    iiII
-        3  NNNnnn
+    #     >>> import pandas as pd
+    #     >>> df = pd.DataFrame(
+    #     ...   {
+    #     ...      "Authors": "áàÁÀ;éèÉÈ;íìÌÍ;ÑÑÑñññ".split(";"),
+    #     ...   }
+    #     ... )
+    #     >>> DataFrame(df).remove_accents()
+    #       Authors
+    #     0    aaAA
+    #     1    eeEE
+    #     2    iiII
+    #     3  NNNnnn
 
-
-        """
-        return DataFrame(
-            self.applymap(lambda x: remove_accents(x) if isinstance(x, str) else x)
-        )
+    #     """
+    #     return DataFrame(
+    #         self.applymap(lambda x: remove_accents(x) if isinstance(x, str) else x)
+    #     )
 
     ##
     ##
@@ -838,13 +863,13 @@ class DataFrame(pd.DataFrame):
         3  4
         4  5
 
-        >>> pdf = pd.DataFrame({'Authors': ['xxx', 'xxx, zzz', 'yyy', 'xxx, yyy, zzz']})
+        >>> pdf = pd.DataFrame({'Authors': ['xxx', 'xxx; zzz', 'yyy', 'xxx; yyy; zzz']})
         >>> pdf
                  Authors
         0            xxx
-        1       xxx, zzz
+        1       xxx; zzz
         2            yyy
-        3  xxx, yyy, zzz
+        3  xxx; yyy; zzz
         
         >>> DataFrame(pdf).extract_terms(column='Authors')
           Authors
@@ -874,13 +899,13 @@ class DataFrame(pd.DataFrame):
         Examples
         ----------------------------------------------------------------------------------------------
 
-        >>> pdf = pd.DataFrame({'Authors': ['xxx', 'xxx, zzz', 'yyy', 'xxx, yyy, zzz']})
+        >>> pdf = pd.DataFrame({'Authors': ['xxx', 'xxx; zzz', 'yyy', 'xxx; yyy; zzz']})
         >>> pdf
                  Authors
         0            xxx
-        1       xxx, zzz
+        1       xxx; zzz
         2            yyy
-        3  xxx, yyy, zzz
+        3  xxx; yyy; zzz
         
         >>> DataFrame(pdf).count_terms(column='Authors')
         3
@@ -901,7 +926,7 @@ class DataFrame(pd.DataFrame):
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...     {
-        ...          'Authors':  'xxx,xxx; zzz,yyy; xxx; yyy; zzz'.split(';'),
+        ...          'Authors':  'xxx;xxx, zzz;yyy, xxx, yyy, zzz'.split(','),
         ...          'Author(s) ID': '0;1,    3;4;,  4;,  5;,  6;'.split(','),
         ...          'Source title': ' s0,     s0,   s1,  s1, s2'.split(','),
         ...          'Author Keywords': 'k0;k1, k0;k2, k3;k2;k1, k4, k5'.split(','),
@@ -912,8 +937,8 @@ class DataFrame(pd.DataFrame):
         ... )
         >>> df # doctest: +NORMALIZE_WHITESPACE
             Authors Author(s) ID Source title  ... Index Keywords  Year  Cited by
-        0   xxx,xxx          0;1           s0  ...          w0;w1  1990         0
-        1   zzz,yyy         3;4;           s0  ...          w0;w2  1991         1
+        0   xxx;xxx          0;1           s0  ...          w0;w1  1990         0
+        1   zzz;yyy         3;4;           s0  ...          w0;w2  1991         1
         2       xxx           4;           s1  ...       w3;k1;w1  1992         2
         3       yyy           5;           s1  ...             w4  1993         3
         4       zzz           6;           s2  ...             w5  1994         4
@@ -974,7 +999,7 @@ class DataFrame(pd.DataFrame):
         result.at["Author Keywords", "Value"] = self.count_terms("Author Keywords")
         result.at["Index Keywords", "Value"] = self.count_terms("Index Keywords")
         num_authors = self["Authors"].map(
-            lambda w: len(w.split(",")) if w is not None else 0
+            lambda w: len(w.split(";")) if w is not None else 0
         )
         result.at["Authors of single authored articles", "Value"] = len(
             num_authors[num_authors == 1]
@@ -1079,14 +1104,14 @@ class DataFrame(pd.DataFrame):
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...     {
-        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3".split(";"),
+        ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3".split(","),
         ...          "Cited by": list(range(10,14)),
         ...          "ID": list(range(4)),
         ...     }
         ... )
         >>> df
                               Authors  Cited by  ID
-        0  author 0,author 1,author 2        10   0
+        0  author 0;author 1;author 2        10   0
         1                    author 0        11   1
         2                    author 1        12   2
         3                    author 3        13   3
@@ -1100,7 +1125,7 @@ class DataFrame(pd.DataFrame):
 
         >>> keywords = Keywords(['author 1', 'author 2'])
         >>> keywords = keywords.compile()
-        >>> DataFrame(df).documents_by_term('Authors', sep=',', keywords=keywords)
+        >>> DataFrame(df).documents_by_term('Authors', keywords=keywords)
             Authors  Num Documents      ID
         0  author 1              2  [0, 2]
         1  author 2              1     [0]
@@ -1134,14 +1159,14 @@ class DataFrame(pd.DataFrame):
         >>> import pandas as pd
         >>> df = pd.DataFrame(
         ...     {
-        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3".split(";"),
+        ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3".split(","),
         ...          "Cited by": list(range(10,14)),
         ...          "ID": list(range(4)),
         ...     }
         ... )
         >>> df
                               Authors  Cited by  ID
-        0  author 0,author 1,author 2        10   0
+        0  author 0;author 1;author 2        10   0
         1                    author 0        11   1
         2                    author 1        12   2
         3                    author 3        13   3
@@ -1388,14 +1413,14 @@ class DataFrame(pd.DataFrame):
         >>> df = pd.DataFrame(
         ...     {
         ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
-        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4".split(";"),
+        ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
         ...          "Cited by": list(range(10,16)),
         ...          "ID": list(range(6)),
         ...     }
         ... )
         >>> df
            Year                     Authors  Cited by  ID
-        0  2010  author 0,author 1,author 2        10   0
+        0  2010  author 0;author 1;author 2        10   0
         1  2010                    author 0        11   1
         2  2011                    author 1        12   2
         3  2011                    author 3        13   3
@@ -1463,14 +1488,14 @@ class DataFrame(pd.DataFrame):
         >>> df = pd.DataFrame(
         ...     {
         ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
-        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4".split(";"),
+        ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
         ...          "Cited by": list(range(10,16)),
         ...          "ID": list(range(6)),
         ...     }
         ... )
         >>> df
            Year                     Authors  Cited by  ID
-        0  2010  author 0,author 1,author 2        10   0
+        0  2010  author 0;author 1;author 2        10   0
         1  2010                    author 0        11   1
         2  2011                    author 1        12   2
         3  2011                    author 3        13   3
@@ -1561,7 +1586,7 @@ class DataFrame(pd.DataFrame):
         >>> df = pd.DataFrame(
         ...     {
         ...          "Year": [2010, 2011, 2011, 2012, 2015, 2012, 2016],
-        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3;author 3;author 4;author 4".split(";"),
+        ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 3,author 4,author 4".split(","),
         ...          "Cited by": list(range(10,17)),
         ...          "ID": list(range(7)),
         ...     }
@@ -1639,14 +1664,14 @@ class DataFrame(pd.DataFrame):
         >>> df = pd.DataFrame(
         ...     {
         ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
-        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4".split(";"),
+        ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
         ...          "Cited by": list(range(10,16)),
         ...          "ID": list(range(6)),
         ...     }
         ... )
         >>> df
            Year                     Authors  Cited by  ID
-        0  2010  author 0,author 1,author 2        10   0
+        0  2010  author 0;author 1;author 2        10   0
         1  2010                    author 0        11   1
         2  2011                    author 1        12   2
         3  2011                    author 3        13   3
@@ -1734,7 +1759,7 @@ class DataFrame(pd.DataFrame):
         >>> df = pd.DataFrame(
         ...     {
         ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
-        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4".split(";"),
+        ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
         ...          "Author Keywords": "w0;w1,w0,w1,w5;w3;w4,w5,w3".split(','),
         ...          "Cited by": list(range(10,16)),
         ...          "ID": list(range(6)),
@@ -1742,7 +1767,7 @@ class DataFrame(pd.DataFrame):
         ... )
         >>> df
            Year                     Authors Author Keywords  Cited by  ID
-        0  2010  author 0,author 1,author 2           w0;w1        10   0
+        0  2010  author 0;author 1;author 2           w0;w1        10   0
         1  2010                    author 0              w0        11   1
         2  2011                    author 1              w1        12   2
         3  2011                    author 3        w5;w3;w4        13   3
@@ -1821,7 +1846,7 @@ class DataFrame(pd.DataFrame):
         >>> df = pd.DataFrame(
         ...     {
         ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
-        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4".split(";"),
+        ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
         ...          "Author Keywords": "w0;w1,w0,w1,w5;w3;w4,w5,w3".split(','),
         ...          "Cited by": list(range(10,16)),
         ...          "ID": list(range(6)),
@@ -1829,7 +1854,7 @@ class DataFrame(pd.DataFrame):
         ... )
         >>> df
            Year                     Authors Author Keywords  Cited by  ID
-        0  2010  author 0,author 1,author 2           w0;w1        10   0
+        0  2010  author 0;author 1;author 2           w0;w1        10   0
         1  2010                    author 0              w0        11   1
         2  2011                    author 1              w1        12   2
         3  2011                    author 3        w5;w3;w4        13   3
@@ -1895,7 +1920,7 @@ class DataFrame(pd.DataFrame):
         >>> df = pd.DataFrame(
         ...     {
         ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
-        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4".split(";"),
+        ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
         ...          "Author Keywords": "w0;w1,w0,w1,w5;w3;w4,w5,w3".split(','),
         ...          "Cited by": list(range(10,16)),
         ...          "ID": list(range(6)),
@@ -1903,7 +1928,7 @@ class DataFrame(pd.DataFrame):
         ... )
         >>> df
            Year                     Authors Author Keywords  Cited by  ID
-        0  2010  author 0,author 1,author 2           w0;w1        10   0
+        0  2010  author 0;author 1;author 2           w0;w1        10   0
         1  2010                    author 0              w0        11   1
         2  2011                    author 1              w1        12   2
         3  2011                    author 3        w5;w3;w4        13   3
@@ -1973,7 +1998,7 @@ class DataFrame(pd.DataFrame):
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D']
+        >>> x = [ 'A', 'A;B', 'B', 'A;B;C', 'B;D']
         >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d']
         >>> df = pd.DataFrame(
         ...    {
@@ -1986,10 +2011,10 @@ class DataFrame(pd.DataFrame):
         >>> df
           Authors Author Keywords  Cited by  ID
         0       A               a         0   0
-        1     A,B             a;b         1   1
+        1     A;B             a;b         1   1
         2       B               b         2   2
-        3   A,B,C               c         3   3
-        4     B,D             c;d         4   4
+        3   A;B;C               c         3   3
+        4     B;D             c;d         4   4
 
         >>> DataFrame(df).summarize_co_occurrence(column_IDX='Authors', column_COL='Author Keywords')
           Authors (IDX) Author Keywords (COL)  Num Documents  Cited by      ID
@@ -2029,11 +2054,8 @@ class DataFrame(pd.DataFrame):
                     result.append((w[idx0], v[idx1]))
             return result
 
-        if sep_IDX is None and column_IDX in SCOPUS_SEPS:
-            sep_IDX = SCOPUS_SEPS[column_IDX]
-
-        if sep_COL is None and column_COL in SCOPUS_SEPS:
-            sep_COL = SCOPUS_SEPS[column_COL]
+        sep_IDX = ";" if sep_IDX is None and column_IDX in SCOPUS_COLS else sep_IDX
+        sep_COL = ";" if sep_COL is None and column_COL in SCOPUS_COLS else sep_COL
 
         data = self.copy()
         data = data[[column_IDX, column_COL, "Cited by", "ID"]]
@@ -2104,7 +2126,7 @@ class DataFrame(pd.DataFrame):
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D']
+        >>> x = [ 'A', 'A;B', 'B', 'A;B;C', 'B;D']
         >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d']
         >>> df = pd.DataFrame(
         ...    {
@@ -2117,10 +2139,10 @@ class DataFrame(pd.DataFrame):
         >>> df
           Authors Author Keywords  Cited by  ID
         0       A               a         0   0
-        1     A,B             a;b         1   1
+        1     A;B             a;b         1   1
         2       B               b         2   2
-        3   A,B,C               c         3   3
-        4     B,D             c;d         4   4
+        3   A;B;C               c         3   3
+        4     B;D             c;d         4   4
 
         >>> DataFrame(df).co_occurrence(column_IDX='Authors', column_COL='Author Keywords')
           Authors (IDX) Author Keywords (COL)  Num Documents      ID
@@ -2224,7 +2246,7 @@ class DataFrame(pd.DataFrame):
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D']
+        >>> x = [ 'A', 'A;B', 'B', 'A;B;C', 'B;D']
         >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d']
         >>> df = pd.DataFrame(
         ...    {
@@ -2237,10 +2259,10 @@ class DataFrame(pd.DataFrame):
         >>> df
           Authors Author Keywords  Cited by  ID
         0       A               a         0   0
-        1     A,B             a;b         1   1
+        1     A;B             a;b         1   1
         2       B               b         2   2
-        3   A,B,C               c         3   3
-        4     B,D             c;d         4   4
+        3   A;B;C               c         3   3
+        4     B;D             c;d         4   4
 
         >>> DataFrame(df).co_citation(column_IDX='Authors', column_COL='Author Keywords')
           Authors (IDX) Author Keywords (COL)  Cited by      ID
@@ -2337,7 +2359,7 @@ class DataFrame(pd.DataFrame):
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A', 'A,B', 'B', 'A,B,C', 'D', 'B,D']
+        >>> x = [ 'A', 'A', 'A;B', 'B', 'A;B;C', 'D', 'B;D']
         >>> df = pd.DataFrame(
         ...    {
         ...       'Authors': x,
@@ -2349,11 +2371,11 @@ class DataFrame(pd.DataFrame):
           Authors  Cited by  ID
         0       A         0   0
         1       A         1   1
-        2     A,B         2   2
+        2     A;B         2   2
         3       B         3   3
-        4   A,B,C         4   4
+        4   A;B;C         4   4
         5       D         5   5
-        6     B,D         6   6
+        6     B;D         6   6
 
         >>> DataFrame(df).summarize_occurrence(column='Authors')
            Authors (IDX) Authors (COL)  Num Documents  Cited by            ID
@@ -2391,8 +2413,7 @@ class DataFrame(pd.DataFrame):
                     result.append((w[idx0], w[idx1]))
             return result
 
-        if sep is None and column in SCOPUS_SEPS:
-            sep = SCOPUS_SEPS[column]
+        sep = ";" if sep is None and column in SCOPUS_COLS else sep
 
         data = self.copy()
         data = data[[column, "Cited by", "ID"]]
@@ -2445,7 +2466,7 @@ class DataFrame(pd.DataFrame):
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A', 'A,B', 'B', 'A,B,C', 'D', 'B,D']
+        >>> x = [ 'A', 'A', 'A;B', 'B', 'A;B;C', 'D', 'B;D']
         >>> df = pd.DataFrame(
         ...    {
         ...       'Authors': x,
@@ -2457,11 +2478,11 @@ class DataFrame(pd.DataFrame):
           Authors  Cited by  ID
         0       A         0   0
         1       A         1   1
-        2     A,B         2   2
+        2     A;B         2   2
         3       B         3   3
-        4   A,B,C         4   4
+        4   A;B;C         4   4
         5       D         5   5
-        6     B,D         6   6
+        6     B;D         6   6
 
         >>> DataFrame(df).occurrence(column='Authors')
            Authors (IDX) Authors (COL)  Num Documents            ID
@@ -2560,7 +2581,7 @@ class DataFrame(pd.DataFrame):
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A', 'A,B', 'B', 'A,B,C', 'D', 'B,D']
+        >>> x = [ 'A', 'A', 'A;B', 'B', 'A;B;C', 'D', 'B;D']
         >>> df = pd.DataFrame(
         ...    {
         ...       'Authors': x,
@@ -2571,11 +2592,11 @@ class DataFrame(pd.DataFrame):
           Authors  ID
         0       A   0
         1       A   1
-        2     A,B   2
+        2     A;B   2
         3       B   3
-        4   A,B,C   4
+        4   A;B;C   4
         5       D   5
-        6     B,D   6
+        6     B;D   6
 
         >>> DataFrame(df).occurrence_map(column='Authors')
         {'terms': ['A', 'B', 'C', 'D'], 'docs': ['doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4', 'doc#5'], 'edges': [('A', 'doc#0'), ('A', 'doc#1'), ('B', 'doc#1'), ('A', 'doc#2'), ('B', 'doc#2'), ('C', 'doc#2'), ('B', 'doc#3'), ('B', 'doc#4'), ('D', 'doc#4'), ('D', 'doc#5')], 'label_terms': {'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D'}, 'label_docs': {'doc#0': 2, 'doc#1': 1, 'doc#2': 1, 'doc#3': 1, 'doc#4': 1, 'doc#5': 1}}
@@ -2587,8 +2608,7 @@ class DataFrame(pd.DataFrame):
 
 
         """
-        if sep is None and column in SCOPUS_SEPS.keys():
-            sep = SCOPUS_SEPS[column]
+        sep = ";" if sep is None and column in SCOPUS_COLS else sep
 
         result = self[[column]].copy()
         result["count"] = 1
@@ -2654,7 +2674,7 @@ class DataFrame(pd.DataFrame):
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D']
+        >>> x = [ 'A', 'A;B', 'B', 'A;B;C', 'B;D']
         >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d']
         >>> df = pd.DataFrame(
         ...    {
@@ -2667,10 +2687,10 @@ class DataFrame(pd.DataFrame):
         >>> df
           Authors Author Keywords  Cited by  ID
         0       A               a         0   0
-        1     A,B             a;b         1   1
+        1     A;B             a;b         1   1
         2       B               b         2   2
-        3   A,B,C               c         3   3
-        4     B,D             c;d         4   4
+        3   A;B;C               c         3   3
+        4     B;D             c;d         4   4
 
         >>> DataFrame(df).compute_tfm('Authors')
            A  B  C  D
@@ -2746,7 +2766,7 @@ class DataFrame(pd.DataFrame):
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D', 'A,B']
+        >>> x = [ 'A', 'A;B', 'B', 'A;B;C', 'B;D', 'A;B']
         >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd']
         >>> df = pd.DataFrame(
         ...    {
@@ -2759,11 +2779,11 @@ class DataFrame(pd.DataFrame):
         >>> df
           Authors Author Keywords  Cited by  ID
         0       A               a         0   0
-        1     A,B             a;b         1   1
+        1     A;B             a;b         1   1
         2       B               b         2   2
-        3   A,B,C               c         3   3
-        4     B,D             c;d         4   4
-        5     A,B               d         5   5
+        3   A;B;C               c         3   3
+        4     B;D             c;d         4   4
+        5     A;B               d         5   5
 
         >>> DataFrame(df).compute_tfm(column='Authors')
            A  B  C  D
@@ -2885,7 +2905,7 @@ class DataFrame(pd.DataFrame):
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A,C', 'B', 'A,B,C', 'B,D', 'A,B', 'A,C']
+        >>> x = [ 'A', 'A;C', 'B', 'A;B;C', 'B;D', 'A;B', 'A;C']
         >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd', 'c;d']
         >>> df = pd.DataFrame(
         ...    {
@@ -2898,12 +2918,12 @@ class DataFrame(pd.DataFrame):
         >>> df
           Authors Author Keywords  Cited by  ID
         0       A               a         0   0
-        1     A,C             a;b         1   1
+        1     A;C             a;b         1   1
         2       B               b         2   2
-        3   A,B,C               c         3   3
-        4     B,D             c;d         4   4
-        5     A,B               d         5   5
-        6     A,C             c;d         6   6
+        3   A;B;C               c         3   3
+        4     B;D             c;d         4   4
+        5     A;B               d         5   5
+        6     A;C             c;d         6   6
 
         
         >>> DataFrame(df).autocorr('Authors')
@@ -3027,7 +3047,7 @@ class DataFrame(pd.DataFrame):
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D', 'A,B']
+        >>> x = [ 'A', 'A;B', 'B', 'A;B;C', 'B;D', 'A;B']
         >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd']
         >>> df = pd.DataFrame(
         ...    {
@@ -3040,11 +3060,11 @@ class DataFrame(pd.DataFrame):
         >>> df
           Authors Author Keywords  Cited by  ID
         0       A               a         0   0
-        1     A,B             a;b         1   1
+        1     A;B             a;b         1   1
         2       B               b         2   2
-        3   A,B,C               c         3   3
-        4     B,D             c;d         4   4
-        5     A,B               d         5   5
+        3   A;B;C               c         3   3
+        4     B;D             c;d         4   4
+        5     A;B               d         5   5
 
 
         >>> DataFrame(df).compute_tfm('Authors')
@@ -3196,7 +3216,7 @@ class DataFrame(pd.DataFrame):
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A,C', 'B', 'A,B,C', 'B,D', 'A,B', 'A,C']
+        >>> x = [ 'A', 'A;C', 'B', 'A;B;C', 'B;D', 'A;B', 'A;C']
         >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd', 'c;d']
         >>> df = pd.DataFrame(
         ...    {
@@ -3209,12 +3229,12 @@ class DataFrame(pd.DataFrame):
         >>> df
           Authors Author Keywords  Cited by  ID
         0       A               a         0   0
-        1     A,C             a;b         1   1
+        1     A;C             a;b         1   1
         2       B               b         2   2
-        3   A,B,C               c         3   3
-        4     B,D             c;d         4   4
-        5     A,B               d         5   5
-        6     A,C             c;d         6   6
+        3   A;B;C               c         3   3
+        4     B;D             c;d         4   4
+        5     A;B               d         5   5
+        6     A;C             c;d         6   6
 
 
         >>> DataFrame(df).co_occurrence('Author Keywords', 'Authors', as_matrix=True)
@@ -3328,7 +3348,7 @@ class DataFrame(pd.DataFrame):
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D', 'A,B']
+        >>> x = [ 'A', 'A;B', 'B', 'A;B;C', 'B;D', 'A;B']
         >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd']
         >>> df = pd.DataFrame(
         ...    {
@@ -3341,11 +3361,11 @@ class DataFrame(pd.DataFrame):
         >>> df
           Authors Author Keywords  Cited by  ID
         0       A               a         0   0
-        1     A,B             a;b         1   1
+        1     A;B             a;b         1   1
         2       B               b         2   2
-        3   A,B,C               c         3   3
-        4     B,D             c;d         4   4
-        5     A,B               d         5   5
+        3   A;B;C               c         3   3
+        4     B;D             c;d         4   4
+        5     A;B               d         5   5
 
 
         >>> DataFrame(df).compute_tfm('Authors')
@@ -3427,7 +3447,7 @@ class DataFrame(pd.DataFrame):
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D', 'A,B']
+        >>> x = [ 'A', 'A;B', 'B', 'A;B;C', 'B;D', 'A;B']
         >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd']
         >>> df = pd.DataFrame(
         ...    {
@@ -3440,28 +3460,27 @@ class DataFrame(pd.DataFrame):
         >>> df
           Authors Author Keywords  Cited by  ID
         0       A               a         0   0
-        1     A,B             a;b         1   1
+        1     A;B             a;b         1   1
         2       B               b         2   2
-        3   A,B,C               c         3   3
-        4     B,D             c;d         4   4
-        5     A,B               d         5   5
+        3   A;B;C               c         3   3
+        4     B;D             c;d         4   4
+        5     A;B               d         5   5
 
         >>> DataFrame(df).most_frequent('Authors', top_n=1)
           Authors Author Keywords  Cited by  ID  top_1_Authors_freq
         0       A               a         0   0               False
-        1     A,B             a;b         1   1                True
+        1     A;B             a;b         1   1                True
         2       B               b         2   2                True
-        3   A,B,C               c         3   3                True
-        4     B,D             c;d         4   4                True
-        5     A,B               d         5   5                True
+        3   A;B;C               c         3   3                True
+        4     B;D             c;d         4   4                True
+        5     A;B               d         5   5                True
 
         """
         top = self.documents_by_term(column, sep=sep)[column].head(top_n)
         items = Keywords().add_keywords(top)
         colname = "top_{:d}_{:s}_freq".format(top_n, column.replace(" ", "_"))
         df = DataFrame(self.copy())
-        if sep is None and column in SCOPUS_SEPS.keys():
-            sep = SCOPUS_SEPS[column]
+        sep = ";" if sep is None and column in SCOPUS_COLS else sep
         if sep is not None:
             df[colname] = self[column].map(
                 lambda x: any([e in items for e in x.split(sep)])
@@ -3477,7 +3496,7 @@ class DataFrame(pd.DataFrame):
         ----------------------------------------------------------------------------------------------
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A,B', 'B', 'A,B,C', 'B,D', 'A,B']
+        >>> x = [ 'A', 'A;B', 'B', 'A;B;C', 'B;D', 'A;B']
         >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd']
         >>> df = pd.DataFrame(
         ...    {
@@ -3490,20 +3509,20 @@ class DataFrame(pd.DataFrame):
         >>> df
           Authors Author Keywords  Cited by  ID
         0       A               a         0   0
-        1     A,B             a;b         1   1
+        1     A;B             a;b         1   1
         2       B               b         2   2
-        3   A,B,C               c         3   3
-        4     B,D             c;d         4   4
-        5     A,B               d         5   5
+        3   A;B;C               c         3   3
+        4     B;D             c;d         4   4
+        5     A;B               d         5   5
 
         >>> DataFrame(df).most_cited_by('Authors', top_n=1)
           Authors Author Keywords  Cited by  ID  top_1_Authors_cited_by
         0       A               a         0   0                   False
-        1     A,B             a;b         1   1                    True
+        1     A;B             a;b         1   1                    True
         2       B               b         2   2                    True
-        3   A,B,C               c         3   3                    True
-        4     B,D             c;d         4   4                    True
-        5     A,B               d         5   5                    True
+        3   A;B;C               c         3   3                    True
+        4     B;D             c;d         4   4                    True
+        5     A;B               d         5   5                    True
 
 
         """
@@ -3511,8 +3530,7 @@ class DataFrame(pd.DataFrame):
         items = Keywords(keywords=top)
         colname = "top_{:d}_{:s}_cited_by".format(top_n, column.replace(" ", "_"))
         df = DataFrame(self.copy())
-        if sep is None and column in SCOPUS_SEPS.keys():
-            sep = SCOPUS_SEPS[column]
+        sep = ";" if sep is None and column in SCOPUS_COLS else sep
         if sep is not None:
             df[colname] = self[column].map(
                 lambda x: any([e in items for e in x.split(sep)])
@@ -3541,21 +3559,21 @@ class DataFrame(pd.DataFrame):
         >>> df = pd.DataFrame(
         ...     {
         ...          "Year": [2010, 2010, 2011, 2011, 2012, 2013, 2014, 2014],
-        ...          "Authors": "author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4;author 0,author 3;author 3,author 4".split(";"),
+        ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4,author 0;author 3,author 3;author 4".split(","),
         ...          "Cited by": list(range(10,18)),
         ...          "ID": list(range(8)),
         ...     }
         ... )
         >>> df
            Year                     Authors  Cited by  ID
-        0  2010  author 0,author 1,author 2        10   0
+        0  2010  author 0;author 1;author 2        10   0
         1  2010                    author 0        11   1
         2  2011                    author 1        12   2
         3  2011                    author 3        13   3
         4  2012                    author 4        14   4
         5  2013                    author 4        15   5
-        6  2014           author 0,author 3        16   6
-        7  2014           author 3,author 4        17   7
+        6  2014           author 0;author 3        16   6
+        7  2014           author 3;author 4        17   7
 
         >>> DataFrame(df).documents_by_term_per_year('Authors', as_matrix=True)
               author 0  author 1  author 2  author 3  author 4

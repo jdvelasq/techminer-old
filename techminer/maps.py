@@ -131,7 +131,7 @@ class Map:
             :align: center
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A', 'A,B', 'B', 'A,B,C', 'D', 'B,D']
+        >>> x = [ 'A', 'A', 'A;B', 'B', 'A;B;C', 'D', 'B;D']
         >>> df = pd.DataFrame(
         ...    {
         ...       'Authors': x,
@@ -142,11 +142,11 @@ class Map:
           Authors  ID
         0       A   0
         1       A   1
-        2     A,B   2
+        2     A;B   2
         3       B   3
-        4   A,B,C   4
+        4   A;B;C   4
         5       D   5
-        6     B,D   6
+        6     B;D   6
         >>> nxmap = Map()
         >>> dic1 = DataFrame(df).occurrence_map(column='Authors')
         >>> dic2 = dict(
@@ -210,7 +210,7 @@ class Map:
         
 
         >>> import pandas as pd
-        >>> x = [ 'A', 'A,C', 'B', 'A,B,C', 'B,D', 'A,B', 'A,C']
+        >>> x = [ 'A', 'A;C', 'B', 'A;B;C', 'B;D', 'A;B', 'A;C']
         >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd', 'c;d']
         >>> df = pd.DataFrame(
         ...    {
@@ -223,12 +223,12 @@ class Map:
         >>> df
           Authors Author Keywords  Cited by  ID
         0       A               a         0   0
-        1     A,C             a;b         1   1
+        1     A;C             a;b         1   1
         2       B               b         2   2
-        3   A,B,C               c         3   3
-        4     B,D             c;d         4   4
-        5     A,B               d         5   5
-        6     A,C             c;d         6   6
+        3   A;B;C               c         3   3
+        4     B;D             c;d         4   4
+        5     A;B               d         5   5
+        6     A;C             c;d         6   6
         >>> nxmap = Map()
         >>> kwargs = DataFrame(df).autocorr_map('Authors')
         >>> nxmap.correlation_map(**kwargs)
