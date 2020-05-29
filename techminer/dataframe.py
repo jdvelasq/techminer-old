@@ -2580,7 +2580,7 @@ class DataFrame(pd.DataFrame):
             sep (str): Character used as internal separator for the elements in the column.
             as_matrix (bool): Results are returned as a matrix.
             minmax (pair(number,number)): filter values by >=min,<=max.
-            keywords (Keywords): filter the result using the specified Keywords object.
+            keywords (list, Keywords): filter the result using the specified Keywords object.
 
         Returns:
             DataFrame.
