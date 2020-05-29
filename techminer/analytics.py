@@ -7,6 +7,98 @@ Analytics
 
 import pandas as pd
 import numpy as np
+from techminer.text import remove_acents, extract_country, extract_institution
+
+scopus_to_wos_names = {
+    "Abbreviated Source Title": "J9",
+    "Abstract": "AB",
+    "Access Type": "OA",
+    "Affiliations": "C1",
+    "Art. No.": "AR",
+    "Author Keywords": "DE",
+    "Author(s) ID": "RI",
+    "Authors with affiliations": "AU_C1",
+    "Authors": 'AU",
+    "Cited by": "TC",
+    "Cited references": "CR",
+    "Author(s) Country": "AU_CO",
+    "Author(s) Institution": "AU_IN",
+    "DI": "DOI",
+    "Document type": "DT",
+    "Editors": "BE",
+    "EID": "UT",
+    "Index Keywords": "ID",
+    "ISBN": "BN",
+    "ISSN": "SN",
+    "Issue": "IS",
+    "Keywords": "KW",
+    "Language of the Original Document": "LA",
+    "Page count": "PG",
+    "Page end": "EP",
+    "Page start": "BP",
+    "Publisher": "PU",
+    "PubMed ID": "PM",
+    "Source title": "SO",
+    "Source": "FN",
+    "Subject": "SC",
+    "Title": "TI",
+    "Volume": "VL",
+    "Year": "PY",
+}
+
+
+
+
+def load_scopus(x):
+    """Import filter for Scopus data.
+    """
+    #
+    # 1. Rename and seleect columns
+    #
+    x = x.copy()
+    x = x.rename(columns=scopus_to_wos_names)
+    x = x[[w for w in x.columns if w in scopus_to_wos_names]]
+    #
+    # 2. Change ',' by ';' and remove '.' in author names
+    #
+    x = x.applymap(lambda w: remove_accents(w) if isinstance(w, str) else w)
+    if "AU" in x.columns:
+        x["AU"] = x.Authors.map(
+            lambda w: w.replace(",", ";").replace(".", "") if pd.isna(w) is False else w
+        )
+    #
+    # Remove part of title in foreign language
+    #
+    if "TI" in x.columns:
+        x["TI"] = x.TI.map(
+            lambda w: w[0 : w.find("[")] if pd.isna(w) is False and w[-1] == "]" else w
+        )
+    #
+    # Keywords fusion
+    #
+    author_keywords = x["DE"].map(
+        lambda x: x.split(";") if x is not None else []
+    )
+    index_keywords = x["ID"].map(
+        lambda x: x.split(";") if x is not None else []
+    )
+    keywords = author_keywords + index_keywords
+    keywords = keywords.map(lambda w: [e for e in w if e != ""])
+    keywords = keywords.map(lambda w: [e.strip() for e in w])
+    keywords = keywords.map(lambda w: sorted(set(w)))
+    keywords = keywords.map(lambda w: ";".join(w))
+    keywords = keywords.map(lambda w: None if w == "" else w)
+    x["KW"] = keywords
+    #
+    # Extract country and affiliation
+    #
+    if "C1" in x.columns:
+        x["AU_CO"] = x.C1.map(lambda w: extract_country(w))
+        x["AU_IN"] = x.C1.map(lambda w: extract_institution(w))
+    #
+    return x
+
+
 
 
 def summary_by_year(df):

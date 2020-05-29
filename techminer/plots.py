@@ -6,11 +6,13 @@ Plots
 
 
 """
+import matplotlib.pyplot as plt
+
 # import json
 # import textwrap
 # from os.path import dirname, join
 
-# import matplotlib.pyplot as plt
+
 # import numpy as np
 # import pandas as pd
 # import squarify
@@ -24,68 +26,68 @@ Plots
 # TEXTLEN = 30
 
 
-# def bar(
-#     x, width=0.8, bottom=None, align="center", cmap="Greys", figsize=(10, 5), **kwargs
-# ):
-#     """Creates a bar plot from a dataframe.
+def bar(
+    x, width=0.8, bottom=None, align="center", cmap="Greys", figsize=(10, 5), **kwargs
+):
+    """Creates a bar plot from a dataframe.
 
-#     Examples
-#     ----------------------------------------------------------------------------------------------
+    Examples
+    ----------------------------------------------------------------------------------------------
 
-#     >>> import pandas as pd
-#     >>> df = pd.DataFrame(
-#     ...     {
-#     ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-#     ...         "Num Documents": [3, 2, 2, 1],
-#     ...         "ID": list(range(4)),
-#     ...     }
-#     ... )
-#     >>> df
-#         Authors  Num Documents  ID
-#     0  author 3              3   0
-#     1  author 1              2   1
-#     2  author 0              2   2
-#     3  author 2              1   3
-#     >>> _ = Plot(df).bar(cmap=plt.cm.Blues)
-#     >>> plt.savefig('sphinx/images/barplot.png')
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+    ...         "Num Documents": [3, 2, 2, 1],
+    ...         "ID": list(range(4)),
+    ...     }
+    ... )
+    >>> df
+        Authors  Num Documents  ID
+    0  author 3              3   0
+    1  author 1              2   1
+    2  author 0              2   2
+    3  author 2              1   3
+    >>> _ = Plot(df).bar(cmap=plt.cm.Blues)
+    >>> plt.savefig('sphinx/images/barplot.png')
 
-#     .. image:: images/barplot.png
-#         :width: 400px
-#         :align: center
+    .. image:: images/barplot.png
+        :width: 400px
+        :align: center
 
 
-#     """
-#     # plt.clf()
-#     fig = plt.Figure(figsize=figsize)
-#     ax = fig.subplots()
-#     cmap = plt.cm.get_cmap(cmap)
-#     if "ID" in x.columns:
-#         x.pop("ID")
-#     if cmap is not None:
-#         kwargs["color"] = [
-#             cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
-#             for i in range(len(x[x.columns[1]]))
-#         ]
-#     result = ax.bar(
-#         x=range(len(x)),
-#         height=x[x.columns[1]],
-#         width=width,
-#         bottom=bottom,
-#         align=align,
-#         **({}),
-#         **kwargs,
-#     )
-#     ax.set_xticks(np.arange(len(x[x.columns[0]])))
-#     ax.set_xticklabels(x[x.columns[0]])
-#     ax.tick_params(axis="x", labelrotation=90)
+    """
+    # plt.clf()
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+    cmap = plt.cm.get_cmap(cmap)
+    if "ID" in x.columns:
+        x.pop("ID")
+    if cmap is not None:
+        kwargs["color"] = [
+            cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
+            for i in range(len(x[x.columns[1]]))
+        ]
+    result = ax.bar(
+        x=range(len(x)),
+        height=x[x.columns[1]],
+        width=width,
+        bottom=bottom,
+        align=align,
+        **({}),
+        **kwargs,
+    )
+    ax.set_xticks(np.arange(len(x[x.columns[0]])))
+    ax.set_xticklabels(x[x.columns[0]])
+    ax.tick_params(axis="x", labelrotation=90)
 
-#     ax.set_xlabel(x.columns[0])
-#     ax.set_ylabel(x.columns[1])
-#     ax.spines["top"].set_visible(False)
-#     ax.spines["right"].set_visible(False)
-#     ax.spines["left"].set_visible(False)
-#     ax.spines["bottom"].set_visible(False)
-#     return fig
+    ax.set_xlabel(x.columns[0])
+    ax.set_ylabel(x.columns[1])
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
+    return fig
 
 
 # #############################################################################################################
