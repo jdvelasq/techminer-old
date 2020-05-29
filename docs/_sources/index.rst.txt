@@ -85,7 +85,7 @@ Table of Contents
 .. toctree::
    :maxdepth: 3
 
-   tutorial/index
+tutorial/index
 
 .. toctree::
    :maxdepth: 2
