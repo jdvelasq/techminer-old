@@ -90,17 +90,15 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="modules.html#bibliographic-data-manipulation-and-analysis">Bibliographic data manipulation and analysis</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="dataframe.html">DataFrame object</a></li>
-<li class="toctree-l3"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot.html">Plots</a></li>
-<li class="toctree-l3"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="strings.html">String manipulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="keywords.html">Keywords manipulation</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Thesaurus</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#base-clases-for-plotting">Base clases for plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataframe.html">DataFrame object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text.html">Text manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keywords.html">Keywords manipulation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Thesaurus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sankey_plot.html">Sankey plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chord_diagram.html">Chord Diagrams</a></li>
 </ul>
 </li>
 </ul>
@@ -219,8 +217,25 @@
 <span class="go">7      zzz</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;aaa&#39;</span><span class="p">:[</span><span class="s1">&#39;aaa&#39;</span><span class="p">,</span> <span class="s1">&#39;bbb&#39;</span><span class="p">,</span> <span class="s1">&#39;eee&#39;</span><span class="p">,</span> <span class="s1">&#39;fff&#39;</span><span class="p">],</span>  <span class="s1">&#39;1&#39;</span><span class="p">:[</span><span class="s1">&#39;000&#39;</span><span class="p">]}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Thesaurus</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">patterns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;aaa&#39;</span><span class="p">:[</span><span class="s1">&#39;aaa&#39;</span><span class="p">,</span> <span class="s1">&#39;bbb&#39;</span><span class="p">,</span> <span class="s1">&#39;eee&#39;</span><span class="p">,</span> <span class="s1">&#39;fff&#39;</span><span class="p">],</span>  <span class="s1">&#39;1&#39;</span><span class="p">:[</span><span class="s1">&#39;000&#39;</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">thesaurus</span> <span class="o">=</span> <span class="n">Thesaurus</span><span class="p">(</span><span class="n">patterns</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">thesaurus</span> <span class="o">=</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">thesaurus</span>
+<span class="go">{</span>
+<span class="go">  &quot;1&quot;: [</span>
+<span class="go">    &quot;000&quot;</span>
+<span class="go">  ],</span>
+<span class="go">  &quot;aaa&quot;: [</span>
+<span class="go">    &quot;aaa&quot;,</span>
+<span class="go">    &quot;bbb&quot;,</span>
+<span class="go">    &quot;eee&quot;,</span>
+<span class="go">    &quot;fff&quot;</span>
+<span class="go">  ]</span>
+<span class="go">}</span>
+<span class="go">ignore_case=True, full_match=False, use_re=False, compiled=True</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 <span class="go">0     aaa</span>
 <span class="go">1     aaa</span>
 <span class="go">2     aaa</span>
@@ -245,7 +260,7 @@
 <span class="go">5      ddd fff</span>
 <span class="go">6         None</span>
 <span class="go">7          zzz</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Thesaurus</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="p">))</span>
 <span class="go">0    aaa|aaa</span>
 <span class="go">1    aaa|aaa</span>
 <span class="go">2        aaa</span>
@@ -276,12 +291,14 @@
 <span class="go">10     9</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">],</span>
-<span class="gp">... </span>     <span class="s1">&#39;b&#39;</span><span class="p">:[</span><span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">],</span>
-<span class="gp">... </span>     <span class="s1">&#39;c&#39;</span><span class="p">:[</span><span class="s1">&#39;7&#39;</span><span class="p">,</span> <span class="s1">&#39;8&#39;</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">]}</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Thesaurus</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">full_match</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> 
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">patterns</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;b&#39;</span><span class="p">:[</span><span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;c&#39;</span><span class="p">:[</span><span class="s1">&#39;7&#39;</span><span class="p">,</span> <span class="s1">&#39;8&#39;</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">thesaurus</span> <span class="o">=</span> <span class="n">Thesaurus</span><span class="p">(</span><span class="n">patterns</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">full_match</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">thesaurus</span> <span class="o">=</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> 
 <span class="go">0        a</span>
 <span class="go">1        a</span>
 <span class="go">2        a</span>
@@ -308,10 +325,14 @@
 <span class="go">4    b, B A</span>
 <span class="go">5   b, a, c</span>
 <span class="go">6      A, B</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;0&#39;</span><span class="p">:[</span><span class="s1">&#39;a b&#39;</span><span class="p">,</span> <span class="s1">&#39;A B&#39;</span><span class="p">,</span> <span class="s1">&#39;B A&#39;</span><span class="p">],</span>
-<span class="gp">... </span>     <span class="s1">&#39;1&#39;</span><span class="p">:[</span><span class="s1">&#39;b c&#39;</span><span class="p">],</span>
-<span class="gp">... </span>     <span class="s1">&#39;2&#39;</span><span class="p">:[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Thesaurus</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">full_match</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">patterns</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s1">&#39;0&#39;</span><span class="p">:[</span><span class="s1">&#39;a b&#39;</span><span class="p">,</span> <span class="s1">&#39;A B&#39;</span><span class="p">,</span> <span class="s1">&#39;B A&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;1&#39;</span><span class="p">:[</span><span class="s1">&#39;b c&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;2&#39;</span><span class="p">:[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">thesaurus</span> <span class="o">=</span> <span class="n">Thesaurus</span><span class="p">(</span><span class="n">patterns</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">full_match</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">thesaurus</span> <span class="o">=</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
 <span class="go">0      0,0</span>
 <span class="go">1    A b,0</span>
 <span class="go">2     None</span>
@@ -358,8 +379,10 @@ matching the current pattern with the key.</p>
 <span class="go">5  ddd FFF</span>
 <span class="go">6     None</span>
 <span class="go">7      zzz</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;aaa&#39;</span><span class="p">:[</span><span class="s1">&#39;AAA&#39;</span><span class="p">,</span> <span class="s1">&#39;BBB&#39;</span><span class="p">,</span> <span class="s1">&#39;EEE&#39;</span><span class="p">,</span> <span class="s1">&#39;FFF&#39;</span><span class="p">],</span>  <span class="s1">&#39;1&#39;</span><span class="p">:[</span><span class="s1">&#39;000&#39;</span><span class="p">]}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Thesaurus</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">.</span><span class="n">find_and_replace</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">patterns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;aaa&#39;</span><span class="p">:[</span><span class="s1">&#39;AAA&#39;</span><span class="p">,</span> <span class="s1">&#39;BBB&#39;</span><span class="p">,</span> <span class="s1">&#39;EEE&#39;</span><span class="p">,</span> <span class="s1">&#39;FFF&#39;</span><span class="p">],</span>  <span class="s1">&#39;1&#39;</span><span class="p">:[</span><span class="s1">&#39;000&#39;</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">thesaurus</span> <span class="o">=</span> <span class="n">Thesaurus</span><span class="p">(</span><span class="n">patterns</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">thesaurus</span> <span class="o">=</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">find_and_replace</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 <span class="go">0        aaa</span>
 <span class="go">1        aaa</span>
 <span class="go">2    ccc aaa</span>
@@ -384,7 +407,7 @@ matching the current pattern with the key.</p>
 <span class="go">5      ddd FFF</span>
 <span class="go">6         None</span>
 <span class="go">7          zzz</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Thesaurus</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">.</span><span class="n">find_and_replace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">find_and_replace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="p">))</span>
 <span class="go">0    aaa|ccc aaa</span>
 <span class="go">1    aaa ccc|ccc</span>
 <span class="go">2        ccc aaa</span>
@@ -424,7 +447,7 @@ matching the current pattern with the key.</p>
 
 <dl class="py function">
 <dt id="techminer.thesaurus.text_clustering">
-<code class="sig-prename descclassname">techminer.thesaurus.</code><code class="sig-name descname">text_clustering</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">name_strategy</span><span class="o">=</span><span class="default_value">'mostfrequent'</span></em>, <em class="sig-param"><span class="n">search_strategy</span><span class="o">=</span><span class="default_value">'fingerprint'</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">transformer</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min_cluster_size</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/thesaurus.html#text_clustering"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.thesaurus.text_clustering" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">techminer.thesaurus.</code><code class="sig-name descname">text_clustering</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">name_strategy</span><span class="o">=</span><span class="default_value">'mostfrequent'</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">'porter'</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">transformer</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/thesaurus.html#text_clustering"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.thesaurus.text_clustering" title="Permalink to this definition">¶</a></dt>
 <dd><p>Builds a thesaurus by clustering a list of strings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -437,12 +460,9 @@ matching the current pattern with the key.</p>
 <li><p>’shortest’: Shortest string in the cluster.</p></li>
 </ul>
 </p></li>
-<li><p><strong>search_strategy</strong> (<em>string</em>) – <p>cluster method.</p>
-<ul>
-<li><p>’fingerprint’.</p></li>
-</ul>
-</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – ‘fingerprint’, ‘1-gram’, ‘2-gram’, ‘snowball’, ‘porter’</p></li>
 <li><p><strong>sep</strong> (<em>string</em>) – separator character for elements in <cite>x</cite>.</p></li>
+<li><p><strong>transformer</strong> (<em>function</em>) – function applyed to each group name.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -484,6 +504,7 @@ matching the current pattern with the key.</p>
 <span class="go">    &quot;a b&quot;</span>
 <span class="go">  ]</span>
 <span class="go">}</span>
+<span class="go">ignore_case=False, full_match=True, use_re=False, compiled=False</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">text_clustering</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="n">name_strategy</span><span class="o">=</span><span class="s1">&#39;shortest&#39;</span><span class="p">)</span> 
@@ -499,6 +520,7 @@ matching the current pattern with the key.</p>
 <span class="go">    &quot;a b&quot;</span>
 <span class="go">    ]</span>
 <span class="go">}</span>
+<span class="go">ignore_case=False, full_match=True, use_re=False, compiled=False</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">text_clustering</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="n">name_strategy</span><span class="o">=</span><span class="s1">&#39;longest&#39;</span><span class="p">)</span> 
@@ -514,6 +536,7 @@ matching the current pattern with the key.</p>
 <span class="go">    &quot;a, b, c, a&quot;</span>
 <span class="go">  ]</span>
 <span class="go">}</span>
+<span class="go">ignore_case=False, full_match=True, use_re=False, compiled=False</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
@@ -557,74 +580,7 @@ matching the current pattern with the key.</p>
 <span class="go">    &quot;c a&quot;</span>
 <span class="go">  ]</span>
 <span class="go">}</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt id="techminer.thesaurus.text_nesting">
-<code class="sig-prename descclassname">techminer.thesaurus.</code><code class="sig-name descname">text_nesting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">search_strategy</span><span class="o">=</span><span class="default_value">'fingerprint'</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">transformer</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_distance</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/thesaurus.html#text_nesting"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.thesaurus.text_nesting" title="Permalink to this definition">¶</a></dt>
-<dd><p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-<span class="gp">... </span>   <span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span>
-<span class="gp">... </span>         <span class="s1">&#39;a b&#39;</span><span class="p">,</span>
-<span class="gp">... </span>         <span class="s1">&#39;a b c&#39;</span><span class="p">,</span>
-<span class="gp">... </span>         <span class="s1">&#39;a b c d&#39;</span><span class="p">,</span>
-<span class="gp">... </span>         <span class="s1">&#39;a e&#39;</span><span class="p">,</span>
-<span class="gp">... </span>         <span class="s1">&#39;a f&#39;</span><span class="p">,</span>
-<span class="gp">... </span>         <span class="s1">&#39;a b e&#39;</span><span class="p">,</span>
-<span class="gp">... </span>         <span class="s1">&#39;a b e f&#39;</span><span class="p">,</span>
-<span class="gp">... </span>         <span class="s1">&#39;a b e f g&#39;</span><span class="p">],</span>
-<span class="gp">... </span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> 
-<span class="go">           f</span>
-<span class="go">0          a</span>
-<span class="go">1        a b</span>
-<span class="go">2      a b c</span>
-<span class="go">3    a b c d</span>
-<span class="go">4        a e</span>
-<span class="go">5        a f</span>
-<span class="go">6      a b e</span>
-<span class="go">7    a b e f</span>
-<span class="go">8  a b e f g</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">text_nesting</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> 
-<span class="go">{</span>
-<span class="go">  &quot;a&quot;: [</span>
-<span class="go">    &quot;a&quot;,</span>
-<span class="go">    &quot;a e&quot;,</span>
-<span class="go">    &quot;a f&quot;</span>
-<span class="go">  ],</span>
-<span class="go">  &quot;a b&quot;: [</span>
-<span class="go">    &quot;a b&quot;,</span>
-<span class="go">    &quot;a b e&quot;</span>
-<span class="go">  ],</span>
-<span class="go">  &quot;a b c&quot;: [</span>
-<span class="go">    &quot;a b c&quot;,</span>
-<span class="go">    &quot;a b c d&quot;</span>
-<span class="go">  ],</span>
-<span class="go">  &quot;a b e f&quot;: [</span>
-<span class="go">    &quot;a b e f&quot;,</span>
-<span class="go">    &quot;a b e f g&quot;</span>
-<span class="go">  ]</span>
-<span class="go">}</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-<span class="gp">... </span>   <span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;neural networks; Artificial Neural Networks&#39;</span><span class="p">]</span>
-<span class="gp">... </span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> 
-<span class="go">                                             f</span>
-<span class="go">0  neural networks; Artificial Neural Networks</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">text_nesting</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="n">max_distance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> 
-<span class="go">{</span>
-<span class="go">  &quot;neural networks&quot;: [</span>
-<span class="go">    &quot;Artificial Neural Networks&quot;,</span>
-<span class="go">    &quot;neural networks&quot;</span>
-<span class="go">  ]</span>
-<span class="go">}</span>
+<span class="go">ignore_case=False, full_match=True, use_re=False, compiled=False</span>
 </pre></div>
 </div>
 </dd></dl>

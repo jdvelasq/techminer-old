@@ -3,7 +3,7 @@ DataFrame object
 ==================================================================================================
 
 Column names
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
 
 The column names in the dataframe follows the convetion used in WoS.
 
@@ -93,7 +93,7 @@ import pandas as pd
 from sklearn.decomposition import PCA
 
 from .keywords import Keywords
-from .strings import remove_accents
+from .text import remove_accents
 
 # SCOPUS_SEPS = {
 #     "Authors": ",",

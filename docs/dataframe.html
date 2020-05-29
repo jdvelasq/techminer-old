@@ -90,20 +90,18 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="modules.html#bibliographic-data-manipulation-and-analysis">Bibliographic data manipulation and analysis</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">DataFrame object</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#column-names">Column names</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">DataFrame object</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#column-names">Column names</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot.html">Plots</a></li>
-<li class="toctree-l3"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="strings.html">String manipulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="keywords.html">Keywords manipulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="thesaurus.html">Thesaurus</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#base-clases-for-plotting">Base clases for plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text.html">Text manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keywords.html">Keywords manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thesaurus.html">Thesaurus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sankey_plot.html">Sankey plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chord_diagram.html">Chord Diagrams</a></li>
 </ul>
 </li>
 </ul>
@@ -202,78 +200,79 @@
 <h2>Column names<a class="headerlink" href="#column-names" title="Permalink to this headline">¶</a></h2>
 <p>The column names in the dataframe follows the convetion used in WoS.</p>
 <ul class="simple">
-<li><p><cite>FN</cite>: File Name.</p></li>
-<li><p><cite>VR</cite>: Version Number.</p></li>
-<li><p><cite>PT</cite>: Publication Type (J=Journal; B=Book; S=Series; P=Patent).</p></li>
-<li><p><cite>AU</cite>: Authors.</p></li>
+<li><p><cite>AB</cite>: Abstract.</p></li>
 <li><p><cite>AF</cite>: Author full name.</p></li>
+<li><p><cite>AR</cite>: Article Number.</p></li>
+<li><p><cite>AU</cite>: Authors.</p></li>
+<li><p><cite>AI</cite>: Authors Identifiers.</p></li>
 <li><p><cite>BA</cite>: Book Authors.</p></li>
-<li><p><cite>BF</cite>: Book Authors Full Name.</p></li>
-<li><p><cite>CA</cite>: Group Authors.</p></li>
-<li><p><cite>GP</cite>: Book Group Authors.</p></li>
 <li><p><cite>BE</cite>: Editors.</p></li>
-<li><p><cite>TI</cite>: Document Title.</p></li>
-<li><p><cite>SO</cite>: Publication Name.</p></li>
-<li><p><cite>SE</cite>: Book Series Title.</p></li>
+<li><p><cite>BF</cite>: Book Authors Full Name.</p></li>
+<li><p><cite>BN</cite>: International Standard Book Number (ISBN).</p></li>
+<li><p><cite>BP</cite>: Begining page.</p></li>
 <li><p><cite>BS</cite>: Book Series Subtitle.</p></li>
-<li><p><cite>LA</cite>: Language.</p></li>
-<li><p><cite>DT</cite>: Document Type.</p></li>
+<li><p><cite>C1</cite>: Author Address.</p></li>
+<li><p><cite>CA</cite>: Group Authors.</p></li>
+<li><p><cite>CL</cite>: Conference Location.</p></li>
+<li><p><cite>CR</cite>: Cited References.</p></li>
 <li><p><cite>CT</cite>: Conference Title.</p></li>
 <li><p><cite>CY</cite>: Conference Date.</p></li>
-<li><p><cite>CL</cite>: Conference Location.</p></li>
-<li><p><cite>SP</cite>: Conference Sponsors.</p></li>
-<li><p><cite>HO</cite>: Conference Host.</p></li>
+<li><p><cite>D2</cite>: Book DOI.</p></li>
+<li><p><cite>DA</cite>: Date this report was generated.</p></li>
 <li><p><cite>DE</cite>: Author keywords.</p></li>
-<li><p><cite>ID</cite>: Keyword plus.</p></li>
-<li><p><cite>AB</cite>: Abstract.</p></li>
-<li><p><cite>C1</cite>: Author Address.</p></li>
-<li><p><cite>PR</cite>: Reprint Address.</p></li>
+<li><p><cite>DI</cite>: DOI</p></li>
+<li><p><cite>DT</cite>: Document Type.</p></li>
+<li><p><cite>EA</cite>: Early access date.</p></li>
+<li><p><cite>EF</cite>: End of File.</p></li>
+<li><p><cite>EI</cite>: Electronic International Standard Serial Number (eISSN).</p></li>
 <li><p><cite>EM</cite>: E-mail Address.</p></li>
-<li><p><cite>RI</cite>: ResearcherID Number.</p></li>
-<li><p><cite>OI</cite>: ORCID Identifier (Open Researcher and Contributor ID).</p></li>
+<li><p><cite>EP</cite>: Ending page.</p></li>
+<li><p><cite>ER</cite>: End of Record.</p></li>
+<li><p><cite>EY</cite>: Early access year.</p></li>
+<li><p><cite>FN</cite>: File Name.</p></li>
 <li><p><cite>FU</cite>: Funding Agency and Grant Number.</p></li>
 <li><p><cite>FX</cite>: Funding Text.</p></li>
-<li><p><cite>CR</cite>: Cited References.</p></li>
-<li><p><cite>NR</cite>: Cited Reference Count.</p></li>
-<li><p><cite>TC</cite>: Web of Science Core Collection Times Cited Count.</p></li>
-<li><p><cite>Z9</cite>: Total Times Cited Count.</p></li>
-<li><p><cite>U1</cite>: Usage Count (Last 180 Days).</p></li>
-<li><p><cite>U2</cite>: Usage Count (Since 2013).</p></li>
-<li><p><cite>PU</cite>: Publisher.</p></li>
-<li><p><cite>PI</cite>: Publisher City.</p></li>
-<li><p><cite>PA</cite>: Publisher Address.</p></li>
-<li><p><cite>SN</cite>: International Standard Serial Number (ISSN).</p></li>
-<li><p><cite>EI</cite>: Electronic International Standard Serial Number (eISSN).</p></li>
-<li><p><cite>BN</cite>: International Standard Book Number (ISBN).</p></li>
+<li><p><cite>GA</cite>: Document Delivery Number.</p></li>
+<li><p><cite>GP</cite>: Book Group Authors.</p></li>
+<li><p><cite>HC</cite>: ESI Highly Cited Paper. Note that this field is valued only for ESI subscribers.</p></li>
+<li><p><cite>HO</cite>: Conference Host.</p></li>
+<li><p><cite>HP</cite>: ESI Hot Paper. Note that this field is valued only for ESI subscribers.</p></li>
+<li><p><cite>ID</cite>: Keyword plus.</p></li>
+<li><p><cite>IS</cite>: Issue.</p></li>
 <li><p><cite>J9</cite>: 29-Character Source Abbreviation.</p></li>
 <li><p><cite>JI</cite>: ISO Source Abbreviation</p></li>
-<li><p><cite>PY</cite>: Year Published.</p></li>
-<li><p><cite>VL</cite>: Volume.</p></li>
-<li><p><cite>IS</cite>: Issue.</p></li>
-<li><p><cite>SI</cite>: Special Issue.</p></li>
-<li><p><cite>PN</cite>: Part Number.</p></li>
-<li><p><cite>SU</cite>: Supplement.</p></li>
+<li><p><cite>LA</cite>: Language.</p></li>
 <li><p><cite>MA</cite>: Meeting Abstract.</p></li>
-<li><p><cite>BP</cite>: Begining page.</p></li>
-<li><p><cite>EP</cite>: Ending page.</p></li>
-<li><p><cite>AR</cite>: Article Number.</p></li>
-<li><p><cite>DI</cite>: DOI</p></li>
-<li><p><cite>D2</cite>: Book DOI.</p></li>
-<li><p><cite>EA</cite>: Early access date.</p></li>
-<li><p><cite>EY</cite>: Early access year.</p></li>
-<li><p><cite>PG</cite>: Page count.</p></li>
-<li><p><cite>P2</cite>: Chapter Count (Book Citation Index).</p></li>
-<li><p><cite>WC</cite>: Web of Science Categories.</p></li>
-<li><p><cite>SC</cite>: Research Areas.</p></li>
-<li><p><cite>GA</cite>: Document Delivery Number.</p></li>
-<li><p><cite>PM</cite>: PubMed ID.</p></li>
-<li><p><cite>UT</cite>: Accession Number.</p></li>
+<li><p><cite>NR</cite>: Cited Reference Count.</p></li>
 <li><p><cite>OA</cite>: Open Access Indicator.</p></li>
-<li><p><cite>HP</cite>: ESI Hot Paper. Note that this field is valued only for ESI subscribers.</p></li>
-<li><p><cite>HC</cite>: ESI Highly Cited Paper. Note that this field is valued only for ESI subscribers.</p></li>
-<li><p><cite>DA</cite>: Date this report was generated.</p></li>
-<li><p><cite>ER</cite>: End of Record.</p></li>
-<li><p><cite>EF</cite>: End of File.</p></li>
+<li><p><cite>OI</cite>: ORCID Identifier (Open Researcher and Contributor ID).</p></li>
+<li><p><cite>P2</cite>: Chapter Count (Book Citation Index).</p></li>
+<li><p><cite>PA</cite>: Publisher Address.</p></li>
+<li><p><cite>PG</cite>: Page count.</p></li>
+<li><p><cite>PI</cite>: Publisher City.</p></li>
+<li><p><cite>PM</cite>: PubMed ID.</p></li>
+<li><p><cite>PN</cite>: Part Number.</p></li>
+<li><p><cite>PR</cite>: Reprint Address.</p></li>
+<li><p><cite>PT</cite>: Publication Type (J=Journal; B=Book; S=Series; P=Patent).</p></li>
+<li><p><cite>PU</cite>: Publisher.</p></li>
+<li><p><cite>PY</cite>: Year Published.</p></li>
+<li><p><cite>RI</cite>: ResearcherID Number.</p></li>
+<li><p><cite>SC</cite>: Research Areas.</p></li>
+<li><p><cite>SE</cite>: Book Series Title.</p></li>
+<li><p><cite>SI</cite>: Special Issue.</p></li>
+<li><p><cite>SN</cite>: International Standard Serial Number (ISSN).</p></li>
+<li><p><cite>SO</cite>: Publication Name.</p></li>
+<li><p><cite>SP</cite>: Conference Sponsors.</p></li>
+<li><p><cite>SU</cite>: Supplement.</p></li>
+<li><p><cite>TC</cite>: Web of Science Core Collection Times Cited Count.</p></li>
+<li><p><cite>TI</cite>: Document Title.</p></li>
+<li><p><cite>U1</cite>: Usage Count (Last 180 Days).</p></li>
+<li><p><cite>U2</cite>: Usage Count (Since 2013).</p></li>
+<li><p><cite>UT</cite>: Accession Number.</p></li>
+<li><p><cite>VL</cite>: Volume.</p></li>
+<li><p><cite>VR</cite>: Version Number.</p></li>
+<li><p><cite>WC</cite>: Web of Science Categories.</p></li>
+<li><p><cite>Z9</cite>: Total Times Cited Count.</p></li>
 </ul>
 <dl class="py class">
 <dt id="techminer.dataframe.DataFrame">
@@ -308,7 +307,7 @@ object with specialized functions to summarize and query bibliographic data.</p>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="p">{</span>
@@ -321,11 +320,11 @@ object with specialized functions to summarize and query bibliographic data.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">  Authors Author Keywords  Cited by  ID</span>
 <span class="go">0       A               a         0   0</span>
-<span class="go">1     A,B             a;b         1   1</span>
+<span class="go">1     A;B             a;b         1   1</span>
 <span class="go">2       B               b         2   2</span>
-<span class="go">3   A,B,C               c         3   3</span>
-<span class="go">4     B,D             c;d         4   4</span>
-<span class="go">5     A,B               d         5   5</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
+<span class="go">5     A;B               d         5   5</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">compute_tfm</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
@@ -419,7 +418,7 @@ object with specialized functions to summarize and query bibliographic data.</p>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,C&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;C&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="p">{</span>
@@ -432,12 +431,12 @@ object with specialized functions to summarize and query bibliographic data.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">  Authors Author Keywords  Cited by  ID</span>
 <span class="go">0       A               a         0   0</span>
-<span class="go">1     A,C             a;b         1   1</span>
+<span class="go">1     A;C             a;b         1   1</span>
 <span class="go">2       B               b         2   2</span>
-<span class="go">3   A,B,C               c         3   3</span>
-<span class="go">4     B,D             c;d         4   4</span>
-<span class="go">5     A,B               d         5   5</span>
-<span class="go">6     A,C             c;d         6   6</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
+<span class="go">5     A;B               d         5   5</span>
+<span class="go">6     A;C             c;d         6   6</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">autocorr</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
@@ -487,14 +486,14 @@ object with specialized functions to summarize and query bibliographic data.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">{</span>
-<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0,author 1,author 2;author 0;author 1;author 3&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0;author 1;author 2,author 0,author 1,author 3&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">14</span><span class="p">)),</span>
 <span class="gp">... </span>         <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)),</span>
 <span class="gp">... </span>    <span class="p">}</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">                      Authors  Cited by  ID</span>
-<span class="go">0  author 0,author 1,author 2        10   0</span>
+<span class="go">0  author 0;author 1;author 2        10   0</span>
 <span class="go">1                    author 0        11   1</span>
 <span class="go">2                    author 1        12   2</span>
 <span class="go">3                    author 3        13   3</span>
@@ -541,14 +540,14 @@ object with specialized functions to summarize and query bibliographic data.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">{</span>
 <span class="gp">... </span>         <span class="s2">&quot;Year&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2010</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">2014</span><span class="p">],</span>
-<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">)),</span>
 <span class="gp">... </span>         <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)),</span>
 <span class="gp">... </span>    <span class="p">}</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">   Year                     Authors  Cited by  ID</span>
-<span class="go">0  2010  author 0,author 1,author 2        10   0</span>
+<span class="go">0  2010  author 0;author 1;author 2        10   0</span>
 <span class="go">1  2010                    author 0        11   1</span>
 <span class="go">2  2011                    author 1        12   2</span>
 <span class="go">3  2011                    author 3        13   3</span>
@@ -617,7 +616,7 @@ object with specialized functions to summarize and query bibliographic data.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">{</span>
 <span class="gp">... </span>         <span class="s2">&quot;Year&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2010</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">2014</span><span class="p">],</span>
-<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="s2">&quot;Author Keywords&quot;</span><span class="p">:</span> <span class="s2">&quot;w0;w1,w0,w1,w5;w3;w4,w5,w3&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">)),</span>
 <span class="gp">... </span>         <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)),</span>
@@ -625,7 +624,7 @@ object with specialized functions to summarize and query bibliographic data.</p>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">   Year                     Authors Author Keywords  Cited by  ID</span>
-<span class="go">0  2010  author 0,author 1,author 2           w0;w1        10   0</span>
+<span class="go">0  2010  author 0;author 1;author 2           w0;w1        10   0</span>
 <span class="go">1  2010                    author 0              w0        11   1</span>
 <span class="go">2  2011                    author 1              w1        12   2</span>
 <span class="go">3  2011                    author 3        w5;w3;w4        13   3</span>
@@ -732,7 +731,7 @@ This function adds the missing years in the sequence.</p>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="p">{</span>
@@ -745,10 +744,10 @@ This function adds the missing years in the sequence.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">  Authors Author Keywords  Cited by  ID</span>
 <span class="go">0       A               a         0   0</span>
-<span class="go">1     A,B             a;b         1   1</span>
+<span class="go">1     A;B             a;b         1   1</span>
 <span class="go">2       B               b         2   2</span>
-<span class="go">3   A,B,C               c         3   3</span>
-<span class="go">4     B,D             c;d         4   4</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">co_citation</span><span class="p">(</span><span class="n">column_IDX</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">column_COL</span><span class="o">=</span><span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
@@ -814,7 +813,7 @@ the number of documents by term between brackets.</p>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="p">{</span>
@@ -827,10 +826,10 @@ the number of documents by term between brackets.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">  Authors Author Keywords  Cited by  ID</span>
 <span class="go">0       A               a         0   0</span>
-<span class="go">1     A,B             a;b         1   1</span>
+<span class="go">1     A;B             a;b         1   1</span>
 <span class="go">2       B               b         2   2</span>
-<span class="go">3   A,B,C               c         3   3</span>
-<span class="go">4     B,D             c;d         4   4</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">co_occurrence</span><span class="p">(</span><span class="n">column_IDX</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">column_COL</span><span class="o">=</span><span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
@@ -889,7 +888,7 @@ the number of documents by term between brackets.</p>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="p">{</span>
@@ -902,10 +901,10 @@ the number of documents by term between brackets.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">  Authors Author Keywords  Cited by  ID</span>
 <span class="go">0       A               a         0   0</span>
-<span class="go">1     A,B             a;b         1   1</span>
+<span class="go">1     A;B             a;b         1   1</span>
 <span class="go">2       B               b         2   2</span>
-<span class="go">3   A,B,C               c         3   3</span>
-<span class="go">4     B,D             c;d         4   4</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">compute_tfm</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
@@ -968,7 +967,7 @@ the number of documents by term between brackets.</p>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="p">{</span>
@@ -981,11 +980,11 @@ the number of documents by term between brackets.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">  Authors Author Keywords  Cited by  ID</span>
 <span class="go">0       A               a         0   0</span>
-<span class="go">1     A,B             a;b         1   1</span>
+<span class="go">1     A;B             a;b         1   1</span>
 <span class="go">2       B               b         2   2</span>
-<span class="go">3   A,B,C               c         3   3</span>
-<span class="go">4     B,D             c;d         4   4</span>
-<span class="go">5     A,B               d         5   5</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
+<span class="go">5     A;B               d         5   5</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">compute_tfm</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
@@ -1081,7 +1080,7 @@ the number of documents by term between brackets.</p>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,C&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;C&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="p">{</span>
@@ -1094,12 +1093,12 @@ the number of documents by term between brackets.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">  Authors Author Keywords  Cited by  ID</span>
 <span class="go">0       A               a         0   0</span>
-<span class="go">1     A,C             a;b         1   1</span>
+<span class="go">1     A;C             a;b         1   1</span>
 <span class="go">2       B               b         2   2</span>
-<span class="go">3   A,B,C               c         3   3</span>
-<span class="go">4     B,D             c;d         4   4</span>
-<span class="go">5     A,B               d         5   5</span>
-<span class="go">6     A,C             c;d         6   6</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
+<span class="go">5     A;B               d         5   5</span>
+<span class="go">6     A;C             c;d         6   6</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">co_occurrence</span><span class="p">(</span><span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1154,13 +1153,13 @@ the number of documents by term between brackets.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;xxx&#39;</span><span class="p">,</span> <span class="s1">&#39;xxx, zzz&#39;</span><span class="p">,</span> <span class="s1">&#39;yyy&#39;</span><span class="p">,</span> <span class="s1">&#39;xxx, yyy, zzz&#39;</span><span class="p">]})</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;xxx&#39;</span><span class="p">,</span> <span class="s1">&#39;xxx; zzz&#39;</span><span class="p">,</span> <span class="s1">&#39;yyy&#39;</span><span class="p">,</span> <span class="s1">&#39;xxx; yyy; zzz&#39;</span><span class="p">]})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pdf</span>
 <span class="go">         Authors</span>
 <span class="go">0            xxx</span>
-<span class="go">1       xxx, zzz</span>
+<span class="go">1       xxx; zzz</span>
 <span class="go">2            yyy</span>
-<span class="go">3  xxx, yyy, zzz</span>
+<span class="go">3  xxx; yyy; zzz</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">pdf</span><span class="p">)</span><span class="o">.</span><span class="n">count_terms</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
@@ -1223,7 +1222,7 @@ the number of documents by term between brackets.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">{</span>
-<span class="gp">... </span>         <span class="s1">&#39;Authors&#39;</span><span class="p">:</span>  <span class="s1">&#39;xxx,xxx; zzz,yyy; xxx; yyy; zzz&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s1">&#39;Authors&#39;</span><span class="p">:</span>  <span class="s1">&#39;xxx;xxx, zzz;yyy, xxx, yyy, zzz&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="s1">&#39;Author(s) ID&#39;</span><span class="p">:</span> <span class="s1">&#39;0;1,    3;4;,  4;,  5;,  6;&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="s1">&#39;Source title&#39;</span><span class="p">:</span> <span class="s1">&#39; s0,     s0,   s1,  s1, s2&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="s1">&#39;Author Keywords&#39;</span><span class="p">:</span> <span class="s1">&#39;k0;k1, k0;k2, k3;k2;k1, k4, k5&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span>
@@ -1234,8 +1233,8 @@ the number of documents by term between brackets.</p>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> 
 <span class="go">    Authors Author(s) ID Source title  ... Index Keywords  Year  Cited by</span>
-<span class="go">0   xxx,xxx          0;1           s0  ...          w0;w1  1990         0</span>
-<span class="go">1   zzz,yyy         3;4;           s0  ...          w0;w2  1991         1</span>
+<span class="go">0   xxx;xxx          0;1           s0  ...          w0;w1  1990         0</span>
+<span class="go">1   zzz;yyy         3;4;           s0  ...          w0;w2  1991         1</span>
 <span class="go">2       xxx           4;           s1  ...       w3;k1;w1  1992         2</span>
 <span class="go">3       yyy           5;           s1  ...             w4  1993         3</span>
 <span class="go">4       zzz           6;           s2  ...             w5  1994         4</span>
@@ -1286,20 +1285,20 @@ adds a consecutive number to the name.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>  <span class="p">{</span>
-<span class="gp">... </span>     <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0,author 0,author 0;author 0;author 0&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span>
+<span class="gp">... </span>     <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0;author 0;author 0,author 0,author 0&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
 <span class="gp">... </span>     <span class="s2">&quot;Author(s) ID&quot;</span><span class="p">:</span> <span class="s2">&quot;0;1;2;,3;,4;&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span>
 <span class="gp">... </span>  <span class="p">}</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">                      Authors Author(s) ID</span>
-<span class="go">0  author 0,author 0,author 0       0;1;2;</span>
+<span class="go">0  author 0;author 0;author 0       0;1;2;</span>
 <span class="go">1                    author 0           3;</span>
 <span class="go">2                    author 0           4;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">disambiguate_authors</span><span class="p">()</span>
 <span class="go">                            Authors Author(s) ID</span>
-<span class="go">0  author 0,author 0(1),author 0(2)        0;1;2</span>
+<span class="go">0  author 0;author 0(1);author 0(2)        0;1;2</span>
 <span class="go">1                       author 0(3)            3</span>
 <span class="go">2                       author 0(4)            4</span>
 </pre></div>
@@ -1326,14 +1325,14 @@ adds a consecutive number to the name.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">{</span>
-<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0,author 1,author 2;author 0;author 1;author 3&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0;author 1;author 2,author 0,author 1,author 3&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">14</span><span class="p">)),</span>
 <span class="gp">... </span>         <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)),</span>
 <span class="gp">... </span>    <span class="p">}</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">                      Authors  Cited by  ID</span>
-<span class="go">0  author 0,author 1,author 2        10   0</span>
+<span class="go">0  author 0;author 1;author 2        10   0</span>
 <span class="go">1                    author 0        11   1</span>
 <span class="go">2                    author 1        12   2</span>
 <span class="go">3                    author 3        13   3</span>
@@ -1349,7 +1348,7 @@ adds a consecutive number to the name.</p>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;author 1&#39;</span><span class="p">,</span> <span class="s1">&#39;author 2&#39;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">documents_by_term</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">documents_by_term</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
 <span class="go">    Authors  Num Documents      ID</span>
 <span class="go">0  author 1              2  [0, 2]</span>
 <span class="go">1  author 2              1     [0]</span>
@@ -1380,14 +1379,14 @@ adds a consecutive number to the name.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">{</span>
 <span class="gp">... </span>         <span class="s2">&quot;Year&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2010</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">2014</span><span class="p">],</span>
-<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">)),</span>
 <span class="gp">... </span>         <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)),</span>
 <span class="gp">... </span>    <span class="p">}</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">   Year                     Authors  Cited by  ID</span>
-<span class="go">0  2010  author 0,author 1,author 2        10   0</span>
+<span class="go">0  2010  author 0;author 1;author 2        10   0</span>
 <span class="go">1  2010                    author 0        11   1</span>
 <span class="go">2  2011                    author 1        12   2</span>
 <span class="go">3  2011                    author 3        13   3</span>
@@ -1460,7 +1459,7 @@ adds a consecutive number to the name.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">{</span>
 <span class="gp">... </span>         <span class="s2">&quot;Year&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2010</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">2014</span><span class="p">],</span>
-<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="s2">&quot;Author Keywords&quot;</span><span class="p">:</span> <span class="s2">&quot;w0;w1,w0,w1,w5;w3;w4,w5,w3&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">)),</span>
 <span class="gp">... </span>         <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)),</span>
@@ -1468,7 +1467,7 @@ adds a consecutive number to the name.</p>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">   Year                     Authors Author Keywords  Cited by  ID</span>
-<span class="go">0  2010  author 0,author 1,author 2           w0;w1        10   0</span>
+<span class="go">0  2010  author 0;author 1;author 2           w0;w1        10   0</span>
 <span class="go">1  2010                    author 0              w0        11   1</span>
 <span class="go">2  2011                    author 1              w1        12   2</span>
 <span class="go">3  2011                    author 3        w5;w3;w4        13   3</span>
@@ -1580,13 +1579,13 @@ adds a consecutive number to the name.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>  <span class="p">{</span>
-<span class="gp">... </span>    <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0,author 1,author 2;author 3;author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0;author 1;author 2,author 3,author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
 <span class="gp">... </span>    <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span>
 <span class="gp">... </span>  <span class="p">}</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">                      Authors  ID</span>
-<span class="go">0  author 0,author 1,author 2   0</span>
+<span class="go">0  author 0;author 1;author 2   0</span>
 <span class="go">1                    author 3   1</span>
 <span class="go">2                    author 4   2</span>
 </pre></div>
@@ -1629,13 +1628,13 @@ adds a consecutive number to the name.</p>
 <span class="go">4  5</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;xxx&#39;</span><span class="p">,</span> <span class="s1">&#39;xxx, zzz&#39;</span><span class="p">,</span> <span class="s1">&#39;yyy&#39;</span><span class="p">,</span> <span class="s1">&#39;xxx, yyy, zzz&#39;</span><span class="p">]})</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;xxx&#39;</span><span class="p">,</span> <span class="s1">&#39;xxx; zzz&#39;</span><span class="p">,</span> <span class="s1">&#39;yyy&#39;</span><span class="p">,</span> <span class="s1">&#39;xxx; yyy; zzz&#39;</span><span class="p">]})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pdf</span>
 <span class="go">         Authors</span>
 <span class="go">0            xxx</span>
-<span class="go">1       xxx, zzz</span>
+<span class="go">1       xxx; zzz</span>
 <span class="go">2            yyy</span>
-<span class="go">3  xxx, yyy, zzz</span>
+<span class="go">3  xxx; yyy; zzz</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">pdf</span><span class="p">)</span><span class="o">.</span><span class="n">extract_terms</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
@@ -1667,7 +1666,7 @@ adds a consecutive number to the name.</p>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="p">{</span>
@@ -1680,11 +1679,11 @@ adds a consecutive number to the name.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">  Authors Author Keywords  Cited by  ID</span>
 <span class="go">0       A               a         0   0</span>
-<span class="go">1     A,B             a;b         1   1</span>
+<span class="go">1     A;B             a;b         1   1</span>
 <span class="go">2       B               b         2   2</span>
-<span class="go">3   A,B,C               c         3   3</span>
-<span class="go">4     B,D             c;d         4   4</span>
-<span class="go">5     A,B               d         5   5</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
+<span class="go">5     A;B               d         5   5</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">compute_tfm</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
@@ -1755,7 +1754,7 @@ adds a consecutive number to the name.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">{</span>
 <span class="gp">... </span>         <span class="s2">&quot;Year&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">2015</span><span class="p">,</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">2016</span><span class="p">],</span>
-<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0,author 1,author 2;author 0;author 1;author 3;author 3;author 4;author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0;author 1;author 2,author 0,author 1,author 3,author 3,author 4,author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">17</span><span class="p">)),</span>
 <span class="gp">... </span>         <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">)),</span>
 <span class="gp">... </span>    <span class="p">}</span>
@@ -1857,21 +1856,21 @@ adds a consecutive number to the name.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">{</span>
 <span class="gp">... </span>         <span class="s2">&quot;Year&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2010</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">2013</span><span class="p">,</span> <span class="mi">2014</span><span class="p">,</span> <span class="mi">2014</span><span class="p">],</span>
-<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4;author 0,author 3;author 3,author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4,author 0;author 3,author 3;author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">18</span><span class="p">)),</span>
 <span class="gp">... </span>         <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)),</span>
 <span class="gp">... </span>    <span class="p">}</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">   Year                     Authors  Cited by  ID</span>
-<span class="go">0  2010  author 0,author 1,author 2        10   0</span>
+<span class="go">0  2010  author 0;author 1;author 2        10   0</span>
 <span class="go">1  2010                    author 0        11   1</span>
 <span class="go">2  2011                    author 1        12   2</span>
 <span class="go">3  2011                    author 3        13   3</span>
 <span class="go">4  2012                    author 4        14   4</span>
 <span class="go">5  2013                    author 4        15   5</span>
-<span class="go">6  2014           author 0,author 3        16   6</span>
-<span class="go">7  2014           author 3,author 4        17   7</span>
+<span class="go">6  2014           author 0;author 3        16   6</span>
+<span class="go">7  2014           author 3;author 4        17   7</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1952,7 +1951,7 @@ adds a consecutive number to the name.</p>
 <dd><p>Creates a group for most items cited by</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="p">{</span>
@@ -1965,21 +1964,21 @@ adds a consecutive number to the name.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">  Authors Author Keywords  Cited by  ID</span>
 <span class="go">0       A               a         0   0</span>
-<span class="go">1     A,B             a;b         1   1</span>
+<span class="go">1     A;B             a;b         1   1</span>
 <span class="go">2       B               b         2   2</span>
-<span class="go">3   A,B,C               c         3   3</span>
-<span class="go">4     B,D             c;d         4   4</span>
-<span class="go">5     A,B               d         5   5</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
+<span class="go">5     A;B               d         5   5</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">most_cited_by</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">  Authors Author Keywords  Cited by  ID  top_1_Authors_cited_by</span>
 <span class="go">0       A               a         0   0                   False</span>
-<span class="go">1     A,B             a;b         1   1                    True</span>
+<span class="go">1     A;B             a;b         1   1                    True</span>
 <span class="go">2       B               b         2   2                    True</span>
-<span class="go">3   A,B,C               c         3   3                    True</span>
-<span class="go">4     B,D             c;d         4   4                    True</span>
-<span class="go">5     A,B               d         5   5                    True</span>
+<span class="go">3   A;B;C               c         3   3                    True</span>
+<span class="go">4     B;D             c;d         4   4                    True</span>
+<span class="go">5     A;B               d         5   5                    True</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -2000,7 +1999,7 @@ adds a consecutive number to the name.</p>
 <dd><p>Creates a group for most frequent items</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="p">{</span>
@@ -2013,21 +2012,21 @@ adds a consecutive number to the name.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">  Authors Author Keywords  Cited by  ID</span>
 <span class="go">0       A               a         0   0</span>
-<span class="go">1     A,B             a;b         1   1</span>
+<span class="go">1     A;B             a;b         1   1</span>
 <span class="go">2       B               b         2   2</span>
-<span class="go">3   A,B,C               c         3   3</span>
-<span class="go">4     B,D             c;d         4   4</span>
-<span class="go">5     A,B               d         5   5</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
+<span class="go">5     A;B               d         5   5</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">most_frequent</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">  Authors Author Keywords  Cited by  ID  top_1_Authors_freq</span>
 <span class="go">0       A               a         0   0               False</span>
-<span class="go">1     A,B             a;b         1   1                True</span>
+<span class="go">1     A;B             a;b         1   1                True</span>
 <span class="go">2       B               b         2   2                True</span>
-<span class="go">3   A,B,C               c         3   3                True</span>
-<span class="go">4     B,D             c;d         4   4                True</span>
-<span class="go">5     A,B               d         5   5                True</span>
+<span class="go">3   A;B;C               c         3   3                True</span>
+<span class="go">4     B;D             c;d         4   4                True</span>
+<span class="go">5     A;B               d         5   5                True</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -2052,7 +2051,7 @@ adds a consecutive number to the name.</p>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="p">{</span>
 <span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
@@ -2064,11 +2063,11 @@ adds a consecutive number to the name.</p>
 <span class="go">  Authors  Cited by  ID</span>
 <span class="go">0       A         0   0</span>
 <span class="go">1       A         1   1</span>
-<span class="go">2     A,B         2   2</span>
+<span class="go">2     A;B         2   2</span>
 <span class="go">3       B         3   3</span>
-<span class="go">4   A,B,C         4   4</span>
+<span class="go">4   A;B;C         4   4</span>
 <span class="go">5       D         5   5</span>
-<span class="go">6     B,D         6   6</span>
+<span class="go">6     B;D         6   6</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">occurrence</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
@@ -2131,7 +2130,7 @@ adds a consecutive number to the name.</p>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="p">{</span>
 <span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
@@ -2142,11 +2141,11 @@ adds a consecutive number to the name.</p>
 <span class="go">  Authors  ID</span>
 <span class="go">0       A   0</span>
 <span class="go">1       A   1</span>
-<span class="go">2     A,B   2</span>
+<span class="go">2     A;B   2</span>
 <span class="go">3       B   3</span>
-<span class="go">4   A,B,C   4</span>
+<span class="go">4   A;B;C   4</span>
 <span class="go">5       D   5</span>
-<span class="go">6     B,D   6</span>
+<span class="go">6     B;D   6</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">occurrence_map</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
@@ -2157,32 +2156,6 @@ adds a consecutive number to the name.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">occurrence_map</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
 <span class="go">{&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;], &#39;docs&#39;: [&#39;doc#0&#39;, &#39;doc#1&#39;, &#39;doc#2&#39;, &#39;doc#3&#39;, &#39;doc#4&#39;], &#39;edges&#39;: [(&#39;A&#39;, &#39;doc#0&#39;), (&#39;A&#39;, &#39;doc#1&#39;), (&#39;B&#39;, &#39;doc#1&#39;), (&#39;A&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#3&#39;), (&#39;B&#39;, &#39;doc#4&#39;)], &#39;label_terms&#39;: {&#39;A&#39;: &#39;A&#39;, &#39;B&#39;: &#39;B&#39;}, &#39;label_docs&#39;: {&#39;doc#0&#39;: 2, &#39;doc#1&#39;: 1, &#39;doc#2&#39;: 1, &#39;doc#3&#39;: 1, &#39;doc#4&#39;: 1}}</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt id="techminer.dataframe.DataFrame.remove_accents">
-<code class="sig-name descname">remove_accents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#DataFrame.remove_accents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.DataFrame.remove_accents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove accents for all strings on a DataFrame</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A dataframe.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-<span class="gp">... </span>  <span class="p">{</span>
-<span class="gp">... </span>     <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;áàÁÀ;éèÉÈ;íìÌÍ;ÑÑÑñññ&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span>
-<span class="gp">... </span>  <span class="p">}</span>
-<span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">remove_accents</span><span class="p">()</span>
-<span class="go">  Authors</span>
-<span class="go">0    aaAA</span>
-<span class="go">1    eeEE</span>
-<span class="go">2    iiII</span>
-<span class="go">3  NNNnnn</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -2261,7 +2234,7 @@ adds a consecutive number to the name.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">{</span>
 <span class="gp">... </span>         <span class="s2">&quot;Year&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2010</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">2014</span><span class="p">],</span>
-<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="s2">&quot;Author Keywords&quot;</span><span class="p">:</span> <span class="s2">&quot;w0;w1,w0,w1,w5;w3;w4,w5,w3&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">)),</span>
 <span class="gp">... </span>         <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)),</span>
@@ -2269,7 +2242,7 @@ adds a consecutive number to the name.</p>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">   Year                     Authors Author Keywords  Cited by  ID</span>
-<span class="go">0  2010  author 0,author 1,author 2           w0;w1        10   0</span>
+<span class="go">0  2010  author 0;author 1;author 2           w0;w1        10   0</span>
 <span class="go">1  2010                    author 0              w0        11   1</span>
 <span class="go">2  2011                    author 1              w1        12   2</span>
 <span class="go">3  2011                    author 3        w5;w3;w4        13   3</span>
@@ -2326,14 +2299,14 @@ adds a consecutive number to the name.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">{</span>
 <span class="gp">... </span>         <span class="s2">&quot;Year&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2010</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">2014</span><span class="p">],</span>
-<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0,author 1,author 2;author 0;author 1;author 3;author 4;author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span>
+<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">)),</span>
 <span class="gp">... </span>         <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)),</span>
 <span class="gp">... </span>    <span class="p">}</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">   Year                     Authors  Cited by  ID</span>
-<span class="go">0  2010  author 0,author 1,author 2        10   0</span>
+<span class="go">0  2010  author 0;author 1;author 2        10   0</span>
 <span class="go">1  2010                    author 0        11   1</span>
 <span class="go">2  2011                    author 1        12   2</span>
 <span class="go">3  2011                    author 3        13   3</span>
@@ -2449,7 +2422,7 @@ This funciton adds the missing years in the sequence.</p>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="p">{</span>
@@ -2462,10 +2435,10 @@ This funciton adds the missing years in the sequence.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">  Authors Author Keywords  Cited by  ID</span>
 <span class="go">0       A               a         0   0</span>
-<span class="go">1     A,B             a;b         1   1</span>
+<span class="go">1     A;B             a;b         1   1</span>
 <span class="go">2       B               b         2   2</span>
-<span class="go">3   A,B,C               c         3   3</span>
-<span class="go">4     B,D             c;d         4   4</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">summarize_co_occurrence</span><span class="p">(</span><span class="n">column_IDX</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">column_COL</span><span class="o">=</span><span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
@@ -2510,7 +2483,7 @@ This funciton adds the missing years in the sequence.</p>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="p">{</span>
 <span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
@@ -2522,11 +2495,11 @@ This funciton adds the missing years in the sequence.</p>
 <span class="go">  Authors  Cited by  ID</span>
 <span class="go">0       A         0   0</span>
 <span class="go">1       A         1   1</span>
-<span class="go">2     A,B         2   2</span>
+<span class="go">2     A;B         2   2</span>
 <span class="go">3       B         3   3</span>
-<span class="go">4   A,B,C         4   4</span>
+<span class="go">4   A;B;C         4   4</span>
 <span class="go">5       D         5   5</span>
-<span class="go">6     B,D         6   6</span>
+<span class="go">6     B;D         6   6</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">summarize_occurrence</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
@@ -2560,6 +2533,39 @@ This funciton adds the missing years in the sequence.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="techminer.dataframe.extract_country">
+<code class="sig-prename descclassname">techminer.dataframe.</code><code class="sig-name descname">extract_country</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">';'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#extract_country"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.extract_country" title="Permalink to this definition">¶</a></dt>
+<dd><p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;Affiliations&#39;</span><span class="p">:</span> <span class="p">[</span>
+<span class="gp">... </span>        <span class="s1">&#39;University, Cuba; University, Venezuela&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;University, United States; Univesrity, Singapore&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;University;&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;University; Univesity&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;University,&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;University&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="kc">None</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;Affiliations&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">extract_country</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="go">0             Cuba;Venezuela</span>
+<span class="go">1    United States;Singapore</span>
+<span class="go">2                       None</span>
+<span class="go">3                       None</span>
+<span class="go">4                       None</span>
+<span class="go">5                       None</span>
+<span class="go">6                       None</span>
+<span class="go">Name: Affiliations, dtype: object</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.dataframe.extract_institution">
+<code class="sig-prename descclassname">techminer.dataframe.</code><code class="sig-name descname">extract_institution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#extract_institution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.extract_institution" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt id="techminer.dataframe.heatmap">
 <code class="sig-prename descclassname">techminer.dataframe.</code><code class="sig-name descname">heatmap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">cmap</span><span class="o">=</span><span class="default_value">'Blues'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#heatmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.heatmap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display the dataframe as a heatmap in Jupyter.</p>
@@ -2574,6 +2580,12 @@ This funciton adds the missing years in the sequence.</p>
 <dd class="field-even"><p>DataFrame. Exploded dataframe.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.dataframe.prepare_scopus_data">
+<code class="sig-prename descclassname">techminer.dataframe.</code><code class="sig-name descname">prepare_scopus_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/dataframe.html#prepare_scopus_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.dataframe.prepare_scopus_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare Scopus datasets.</p>
 </dd></dl>
 
 <dl class="py function">

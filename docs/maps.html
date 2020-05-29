@@ -90,17 +90,15 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="modules.html#bibliographic-data-manipulation-and-analysis">Bibliographic data manipulation and analysis</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="dataframe.html">DataFrame object</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Correlation Maps generation and manipulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot.html">Plots</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Correlation Maps generation and manipulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="strings.html">String manipulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="keywords.html">Keywords manipulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="thesaurus.html">Thesaurus</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#base-clases-for-plotting">Base clases for plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataframe.html">DataFrame object</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Correlation Maps generation and manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Plots</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Correlation Maps generation and manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text.html">Text manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keywords.html">Keywords manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thesaurus.html">Thesaurus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sankey_plot.html">Sankey plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chord_diagram.html">Chord Diagrams</a></li>
 </ul>
 </li>
 </ul>
@@ -245,7 +243,7 @@
 </div>
 <a class="reference internal image-reference" href="_images/correlation_map.png"><img alt="_images/correlation_map.png" class="align-center" src="_images/correlation_map.png" style="width: 600px;" /></a>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,C&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;C&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="p">{</span>
@@ -258,12 +256,12 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">  Authors Author Keywords  Cited by  ID</span>
 <span class="go">0       A               a         0   0</span>
-<span class="go">1     A,C             a;b         1   1</span>
+<span class="go">1     A;C             a;b         1   1</span>
 <span class="go">2       B               b         2   2</span>
-<span class="go">3   A,B,C               c         3   3</span>
-<span class="go">4     B,D             c;d         4   4</span>
-<span class="go">5     A,B               d         5   5</span>
-<span class="go">6     A,C             c;d         6   6</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
+<span class="go">5     A;B               d         5   5</span>
+<span class="go">6     A;C             c;d         6   6</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">nxmap</span> <span class="o">=</span> <span class="n">Map</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">autocorr_map</span><span class="p">(</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">nxmap</span><span class="o">.</span><span class="n">correlation_map</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -341,7 +339,7 @@
 </div>
 <a class="reference internal image-reference" href="_images/network_occurrence_map.png"><img alt="_images/network_occurrence_map.png" class="align-center" src="_images/network_occurrence_map.png" style="width: 600px;" /></a>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A,B,C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;B,D&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="p">{</span>
 <span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
@@ -352,11 +350,11 @@
 <span class="go">  Authors  ID</span>
 <span class="go">0       A   0</span>
 <span class="go">1       A   1</span>
-<span class="go">2     A,B   2</span>
+<span class="go">2     A;B   2</span>
 <span class="go">3       B   3</span>
-<span class="go">4   A,B,C   4</span>
+<span class="go">4   A;B;C   4</span>
 <span class="go">5       D   5</span>
-<span class="go">6     B,D   6</span>
+<span class="go">6     B;D   6</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">nxmap</span> <span class="o">=</span> <span class="n">Map</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dic1</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">occurrence_map</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dic2</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>

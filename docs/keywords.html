@@ -37,7 +37,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Thesaurus" href="thesaurus.html" />
-    <link rel="prev" title="String manipulation" href="strings.html" /> 
+    <link rel="prev" title="Text manipulation" href="text.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -90,20 +90,18 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="modules.html#bibliographic-data-manipulation-and-analysis">Bibliographic data manipulation and analysis</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="dataframe.html">DataFrame object</a></li>
-<li class="toctree-l3"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot.html">Plots</a></li>
-<li class="toctree-l3"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="strings.html">String manipulation</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Keywords manipulation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#functions-in-this-module">Functions in this module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataframe.html">DataFrame object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text.html">Text manipulation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Keywords manipulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#functions-in-this-module">Functions in this module</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="thesaurus.html">Thesaurus</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#base-clases-for-plotting">Base clases for plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thesaurus.html">Thesaurus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sankey_plot.html">Sankey plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chord_diagram.html">Chord Diagrams</a></li>
 </ul>
 </li>
 </ul>
@@ -333,6 +331,53 @@
 </dd></dl>
 
 <dl class="py method">
+<dt id="techminer.keywords.Keywords.extract_after_first">
+<code class="sig-name descname">extract_after_first</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/keywords.html#Keywords.extract_after_first"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.keywords.Keywords.extract_after_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the string from the first ocurrence of the keyword to the end of string x.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – string</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span><span class="o">.</span><span class="n">extract_after_first</span><span class="p">(</span><span class="s1">&#39;1 aaa 4 aaa 5&#39;</span><span class="p">)</span>
+<span class="go">&#39;aaa 4 aaa 5&#39;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">(</span><span class="s1">&#39;bbb&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span><span class="o">.</span><span class="n">extract_after_first</span><span class="p">(</span><span class="s1">&#39;1 aaa 4 aaa 5&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="techminer.keywords.Keywords.extract_after_last">
+<code class="sig-name descname">extract_after_last</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/keywords.html#Keywords.extract_after_last"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.keywords.Keywords.extract_after_last" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the string from last ocurrence of a keyword to the end of string x.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – string</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span><span class="o">.</span><span class="n">extract_after_last</span><span class="p">(</span><span class="s1">&#39;1 aaa 4 aaa 5&#39;</span><span class="p">)</span>
+<span class="go">&#39;aaa 5&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt id="techminer.keywords.Keywords.extract_from_text">
 <code class="sig-name descname">extract_from_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">';'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/keywords.html#Keywords.extract_from_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.keywords.Keywords.extract_from_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a new string with the keywords in string x matching the list of
@@ -358,28 +403,108 @@ Detail information about regex sintax in Python can be obtained at
 </dd></dl>
 
 <dl class="py method">
-<dt id="techminer.keywords.Keywords.keywords">
-<em class="property">property </em><code class="sig-name descname">keywords</code><a class="headerlink" href="#techminer.keywords.Keywords.keywords" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="techminer.keywords.Keywords.new_keywords">
-<code class="sig-name descname">new_keywords</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/keywords.html#Keywords.new_keywords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.keywords.Keywords.new_keywords" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new Keywords object by applying the current Keywords to x.</p>
+<dt id="techminer.keywords.Keywords.extract_nearby">
+<code class="sig-name descname">extract_nearby</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">n_phrases</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/keywords.html#Keywords.extract_nearby"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.keywords.Keywords.extract_nearby" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the words of string x in the proximity of the terms matching
+the keywords list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>string</em>) – A string object.</p></li>
+<li><p><strong>n_phrases</strong> (<em>integer</em>) – number of phrases around term.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String.</p>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;11&#39;</span><span class="p">,</span> <span class="s1">&#39;111&#39;</span><span class="p">,</span> <span class="s1">&#39;11 11 &#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">(</span><span class="s1">&#39;1.*&#39;</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>   <span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1. 2. 3. 4. 5. 6.&#39;</span><span class="p">,</span>
+<span class="gp">... </span>         <span class="s1">&#39;aaa. 1. 2. 3. 4. 5.&#39;</span><span class="p">,</span>
+<span class="gp">... </span>         <span class="s1">&#39;1. aaa. 2. 3. 4. 5.&#39;</span><span class="p">,</span>
+<span class="gp">... </span>         <span class="s1">&#39;1. 2. 3. aaa. 4. 5.&#39;</span><span class="p">,</span>
+<span class="gp">... </span>         <span class="s1">&#39;1. 2. 3. 4. aaa. 5.&#39;</span><span class="p">,</span>
+<span class="gp">... </span>         <span class="s1">&#39;1. 2. 3. 4. 5. aaa.&#39;</span><span class="p">,</span>
+<span class="gp">... </span>         <span class="s1">&#39;bbb. 1. 2. 3. 4. 5.&#39;</span><span class="p">,</span>
+<span class="gp">... </span>         <span class="s1">&#39;1. 2. 3. 4. 5. bbb.&#39;</span><span class="p">,</span>
+<span class="gp">... </span>         <span class="s1">&#39;1. 2. 3. ccc. 4. 5.&#39;</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">                     f</span>
+<span class="go">0    1. 2. 3. 4. 5. 6.</span>
+<span class="go">1  aaa. 1. 2. 3. 4. 5.</span>
+<span class="go">2  1. aaa. 2. 3. 4. 5.</span>
+<span class="go">3  1. 2. 3. aaa. 4. 5.</span>
+<span class="go">4  1. 2. 3. 4. aaa. 5.</span>
+<span class="go">5  1. 2. 3. 4. 5. aaa.</span>
+<span class="go">6  bbb. 1. 2. 3. 4. 5.</span>
+<span class="go">7  1. 2. 3. 4. 5. bbb.</span>
+<span class="go">8  1. 2. 3. ccc. 4. 5.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;aaa&#39;</span><span class="p">,</span> <span class="s1">&#39;bbb&#39;</span><span class="p">,</span> <span class="s1">&#39;ccc&#39;</span><span class="p">],</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span><span class="o">.</span><span class="n">new_keywords</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="go">[</span>
-<span class="go">  &quot;11&quot;,</span>
-<span class="go">  &quot;11 11&quot;,</span>
-<span class="go">  &quot;111&quot;</span>
-<span class="go">]</span>
-<span class="go">ignore_case=True, full_match=False, use_re=True, compiled=False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">keywords</span><span class="o">.</span><span class="n">extract_nearby</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n_phrases</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span> 
+<span class="go">0                None</span>
+<span class="go">1          aaa. 1. 2.</span>
+<span class="go">2          aaa. 2. 3.</span>
+<span class="go">3    2. 3. aaa. 4. 5.</span>
+<span class="go">4          3. 4. aaa.</span>
+<span class="go">5          4. 5. aaa.</span>
+<span class="go">6          bbb. 1. 2.</span>
+<span class="go">7          4. 5. bbb.</span>
+<span class="go">8    2. 3. ccc. 4. 5.</span>
+<span class="go">Name: f, dtype: object</span>
 </pre></div>
 </div>
 </dd></dl>
+
+<dl class="py method">
+<dt id="techminer.keywords.Keywords.extract_until_first">
+<code class="sig-name descname">extract_until_first</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/keywords.html#Keywords.extract_until_first"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.keywords.Keywords.extract_until_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the string from begining of x to the first ocurrence of a keyword.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – string</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span><span class="o">.</span><span class="n">extract_until_first</span><span class="p">(</span><span class="s1">&#39;1 aaa 4 aaa 5&#39;</span><span class="p">)</span>
+<span class="go">&#39;1 aaa&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="techminer.keywords.Keywords.extract_until_last">
+<code class="sig-name descname">extract_until_last</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/keywords.html#Keywords.extract_until_last"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.keywords.Keywords.extract_until_last" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the string from begining of x to the last ocurrence of a keyword.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – string</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span><span class="o">.</span><span class="n">extract_until_last</span><span class="p">(</span><span class="s1">&#39;1 aaa 4 aaa 5&#39;</span><span class="p">)</span>
+<span class="go">&#39;1 aaa 4 aaa&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="techminer.keywords.Keywords.keywords">
+<em class="property">property </em><code class="sig-name descname">keywords</code><a class="headerlink" href="#techminer.keywords.Keywords.keywords" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt id="techminer.keywords.Keywords.remove_from_text">
@@ -425,6 +550,33 @@ list of keywords from x.</p>
 </div>
 </dd></dl>
 
+<dl class="py method">
+<dt id="techminer.keywords.Keywords.transform">
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/keywords.html#Keywords.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.keywords.Keywords.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new Keywords object by applying the current Keywords to x.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>string</em>) – A string object.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – character separator.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;11&#39;</span><span class="p">,</span> <span class="s1">&#39;111&#39;</span><span class="p">,</span> <span class="s1">&#39;11 11 &#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">(</span><span class="s1">&#39;1.*&#39;</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">[</span>
+<span class="go">  &quot;11&quot;,</span>
+<span class="go">  &quot;11 11&quot;,</span>
+<span class="go">  &quot;111&quot;</span>
+<span class="go">]</span>
+<span class="go">ignore_case=True, full_match=False, use_re=True, compiled=False</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -441,7 +593,7 @@ list of keywords from x.</p>
         <a href="thesaurus.html" class="btn btn-neutral float-right" title="Thesaurus" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="strings.html" class="btn btn-neutral float-left" title="String manipulation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="text.html" class="btn btn-neutral float-left" title="Text manipulation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
