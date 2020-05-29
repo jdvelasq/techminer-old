@@ -364,32 +364,151 @@ def sort_by_citations(
     return matrix.loc[:, terms_sorted]
 
 
-def prepare_data(x):
+def extract_country(x, sep=";"):
+    """
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+    
+    >>> import pandas as pd
+    >>> x = pd.DataFrame({
+    ...     'Affiliations': [
+    ...         'University, Cuba; University, Venezuela',
+    ...         'University, United States; Univesrity, Singapore',
+    ...         'University;',
+    ...         'University; Univesity',
+    ...         'University,',
+    ...         'University',
+    ...         None]
+    ... })
+    >>> x['Affiliations'].map(lambda x: extract_country(x))
+    0             Cuba;Venezuela
+    1    United States;Singapore
+    2                       None
+    3                       None
+    4                       None
+    5                       None
+    6                       None
+    Name: Affiliations, dtype: object
+    """
+
+    if x is None:
+        return None
 
     #
-    # Scopus preparation data
+    # lista generica de nombres de paises
+    #
+    module_path = dirname(__file__)
+    with open(join(module_path, "data/worldmap.data"), "r") as f:
+        countries = json.load(f)
+    country_names = list(countries.keys())
+
+    # country_names = sorted(
+    #     geopandas.read_file(
+    #         geopandas.datasets.get_path("naturalearth_lowres")
+    #     ).name.tolist()
+    # )
+
+    # paises faltantes
+    country_names.append("Singapore")
+    country_names.append("Malta")
+    country_names.append("United States")
+
+    #
+    # Reemplazo de nombres de regiones administrativas
+    # por nombres de paises
+    #
+    x = re.sub("Bosnia and Herzegovina", "Bosnia and Herz.", x)
+    x = re.sub("Czech Republic", "Czechia", x)
+    x = re.sub("Russian Federation", "Russia", x)
+    x = re.sub("Hong Kong", "China", x)
+    x = re.sub("Macau", "China", x)
+    x = re.sub("Macao", "China", x)
+
+    countries = [affiliation.split(",")[-1].strip() for affiliation in x.split(sep)]
+
+    countries = ";".join(
+        [country if country in country_names else "" for country in countries]
+    )
+
+    if countries == "" or countries == ";":
+        return None
+    else:
+        return countries
+
+
+def extract_institution(x):
+    """
+    """
+    if x is pd.isna(x) is True or x is None:
+        return None
+    x = x.split(";")
+    institutions = []
+    for item in x:
+        institution = None
+        if len(item.split(",")) == 1:
+            institution = item
+        if institution is None:
+            if len(item.split(",")) == 2:
+                institution = item.split(",")[0]
+        if institution is None:
+            for elem in item.split(","):
+                if "Univesi" in elem or "Univ." in elem:
+                    institution = elem
+        if institution is None:
+            for elem in item.split(","):
+                if "Institut" in elem:
+                    institution = elem
+
+        if institution is not None:
+            institutions.append(institution)
+    if institutions is not None:
+        institutions = ";".join(institutions)
+    return institutions
+
+
+def prepare_scopus_data(x):
+    """Prepare Scopus datasets.
+    """
+    #
+    # Change ',' by ';' and remove '.' in author names
     #
     x = x.applymap(lambda w: remove_accents(w) if isinstance(w, str) else w)
     if "Authors" in x.columns:
         x["Authors"] = x.Authors.map(
             lambda w: w.replace(",", ";").replace(".", "") if pd.isna(w) is False else w
         )
+    #
+    # Remove part of title in foreign language
+    #
     if "Title" in x.columns:
         x["Title"] = x.Title.map(
             lambda w: w[0 : w.find("[")] if pd.isna(w) is False and w[-1] == "]" else w
         )
-
+    #
+    # Keywords fusion
+    #
+    author_keywords = x["Author Keywords"].map(
+        lambda x: x.split(";") if x is not None else []
+    )
+    index_keywords = df["Inde Keywords"].map(
+        lambda x: x.split(";") if x is not None else []
+    )
+    keywords = author_keywords + index_keywords
+    keywords = keywords.map(lambda w: [e for w in x if e != ""])
+    keywords = keywords.map(lambda w: [e.strip() for e in w])
+    keywords = keywords.map(lambda w: sorted(set(w)))
+    keywords = keywords.map(lambda w: ";".join(w))
+    keywords = keywords.map(lambda w: None if w == "" else w)
+    x["Keywords"] = keywords
+    #
+    # Extract country and affiliation
+    #
+    if "Affiliations" in x.columns:
+        x["Country"] = x.Affiliations.map(lambda w: extract_country(w))
+        x["Institution"] = x.Affiliation.map(lambda w: extract_institution(w))
+    #
     return x
-
-
-# def read_csv(filepath_or_buffer, **kwargs):
-#     """
-#     >>> read_csv("https://raw.githubusercontent.com/jdvelasq/techminer/master/data/tutorial/citations.csv")
-#
-#     """
-#     df = pd.read_csv(filepath_or_buffer, **kwargs)
-#     df = df.rename(columns=SCOPUS_TO_WOS)
-#     return df
 
 
 class DataFrame(pd.DataFrame):

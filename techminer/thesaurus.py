@@ -3,19 +3,24 @@ Thesaurus
 ==================================================================================================
 
 """
-import pandas as pd
 import json
-from techminer.strings import find_string, replace_string, fingerprint, steamming_all
+import re
+
+import pandas as pd
 from tqdm import tqdm
+
+if __name__ == "__main__":
+    from text import fingerprint, one_gram, two_gram, stemmer_porter, stemmer_snowball
+else:
+    from .text import fingerprint, one_gram, two_gram, stemmer_porter, stemmer_snowball
+
+#
+#
+#
 
 
 def text_clustering(
-    x,
-    name_strategy="mostfrequent",
-    search_strategy="fingerprint",
-    sep=None,
-    transformer=None,
-    min_cluster_size=1,
+    x, name_strategy="mostfrequent", key="porter", sep=None, transformer=None
 ):
     """Builds a thesaurus by clustering a list of strings.
 
@@ -30,11 +35,11 @@ def text_clustering(
 
             * 'shortest': Shortest string in the cluster.
 
-        search_strategy (string): cluster method.
-
-            * 'fingerprint'.
+        key (str): 'fingerprint', '1-gram', '2-gram', 'snowball', 'porter'
 
         sep (string): separator character for elements in `x`.
+
+        transformer (function): function applyed to each group name.
 
     Returns:
         A Thesaurus object.
@@ -75,7 +80,7 @@ def text_clustering(
         "a b"
       ]
     }
-
+    ignore_case=False, full_match=True, use_re=False, compiled=False
 
 
     >>> text_clustering(df.f, name_strategy='shortest') # doctest: +NORMALIZE_WHITESPACE
@@ -91,6 +96,7 @@ def text_clustering(
         "a b"
         ]
     }
+    ignore_case=False, full_match=True, use_re=False, compiled=False
 
     >>> text_clustering(df.f, name_strategy='longest') # doctest: +NORMALIZE_WHITESPACE
     {
@@ -105,6 +111,7 @@ def text_clustering(
         "a, b, c, a"
       ]
     }
+    ignore_case=False, full_match=True, use_re=False, compiled=False
 
     >>> df = pd.DataFrame({
     ...    'f': ['a b, c a, b a',
@@ -146,6 +153,7 @@ def text_clustering(
         "c a"
       ]
     }    
+    ignore_case=False, full_match=True, use_re=False, compiled=False
 
 
     """
@@ -156,8 +164,17 @@ def text_clustering(
     x = x.map(lambda w: w.strip())
     x = x.unique()
     x = pd.DataFrame({"col": x.tolist()})
-    if search_strategy == "fingerprint":
-        x["key"] = x.col.map(fingerprint)
+    if key == "fingerprint":
+        f = fingerprint
+    elif key == "1-gram":
+        f = one_gram
+    elif key == "2-gram":
+        f = two_gram
+    elif key == "porter":
+        f = stemmer_porter
+    else:
+        f = stemmer_snowball
+    x["key"] = x.col.map(f)
     grp = x.groupby(by="key").agg({"col": list})
     grp["listlen"] = grp.col.map(len)
     grp = grp[grp.listlen.map(lambda w: w > 1)]
@@ -185,129 +202,7 @@ def text_clustering(
     return Thesaurus(result, ignore_case=False, full_match=True, use_re=False)
 
 
-def text_nesting(
-    x, search_strategy="fingerprint", sep=None, transformer=None, max_distance=None
-):
-    """
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> import pandas as pd
-    >>> df = pd.DataFrame({
-    ...    'f': ['a',
-    ...          'a b',
-    ...          'a b c',
-    ...          'a b c d',
-    ...          'a e',
-    ...          'a f',
-    ...          'a b e',
-    ...          'a b e f',
-    ...          'a b e f g'],
-    ... })
-    >>> df # doctest: +NORMALIZE_WHITESPACE
-               f
-    0          a
-    1        a b
-    2      a b c
-    3    a b c d
-    4        a e
-    5        a f
-    6      a b e
-    7    a b e f
-    8  a b e f g
-
-    >>> text_nesting(df.f, sep=',') # doctest: +NORMALIZE_WHITESPACE
-    {
-      "a": [
-        "a",
-        "a e",
-        "a f"
-      ],
-      "a b": [
-        "a b",
-        "a b e"
-      ],
-      "a b c": [
-        "a b c",
-        "a b c d"
-      ],
-      "a b e f": [
-        "a b e f",
-        "a b e f g"
-      ]
-    }
-
-    >>> df = pd.DataFrame({
-    ...    'f': ['neural networks; Artificial Neural Networks']
-    ... })
-    >>> df # doctest: +NORMALIZE_WHITESPACE
-                                                 f
-    0  neural networks; Artificial Neural Networks
-    >>> text_nesting(df.f, sep=';', max_distance=1) # doctest: +NORMALIZE_WHITESPACE
-    {
-      "neural networks": [
-        "Artificial Neural Networks",
-        "neural networks"
-      ]
-    }
-    """
-
-    x = x.dropna()
-
-    if sep is not None:
-        x = pd.Series([z.strip() for y in x for z in y.split(sep)])
-
-    result = {}
-    selected = {text: False for text in x.tolist()}
-
-    max_text_len = max([len(text) for text in x])
-    sorted_x = []
-    for text_len in range(max_text_len, -1, -1):
-        texts = x[[True if len(w) == text_len else False for w in x]]
-        texts = sorted(texts)
-        sorted_x += texts
-    x = sorted_x
-
-    # for pattern in x:
-    for iter in tqdm(range(len(x))):
-
-        pattern = x[iter]
-
-        if pattern == "":
-            continue
-
-        if selected[pattern] is True:
-            continue
-
-        nested_texts = [
-            text
-            for text in x
-            if selected[text] is False and steamming_all(pattern, text)
-        ]
-
-        if max_distance is not None:
-            nested_texts = [
-                z
-                for z in nested_texts
-                if abs(len(pattern.split()) - len(z.split())) <= max_distance
-            ]
-
-        if len(nested_texts) > 1:
-            nested_texts = sorted(list(set(nested_texts)))
-
-        if len(nested_texts) > 1:
-
-            if transformer is not None:
-                pattern = transformer(pattern)
-            if pattern in result.keys():
-                result[pattern] += nested_texts
-            else:
-                result[pattern] = nested_texts
-            for txt in nested_texts:
-                selected[txt] = True
-
-    return Thesaurus(result, ignore_case=False, full_match=True, use_re=False)
+#
 
 
 class Thesaurus:
@@ -317,10 +212,42 @@ class Thesaurus:
         self._full_match = full_match
         self._use_re = use_re
         self._dict = None
+        self._compiled = None
 
-    @property
-    def thesaurus(self):
-        return self._thesaurus
+    # @property
+    #  def thesaurus(self):
+    #      return self._thesaurus
+
+    def __repr__(self):
+        """Returns a json representation of the Thesaurus.
+        """
+        text = json.dumps(self._thesaurus, indent=2, sort_keys=True)
+        text += "\nignore_case={}, full_match={}, use_re={}, compiled={}".format(
+            self._ignore_case.__repr__(),
+            self._full_match.__repr__(),
+            self._use_re.__repr__(),
+            self._compiled is not None,
+        )
+        return text
+
+    def __str__(self):
+        return self.__repr__()
+
+    def compile(self):
+        self._compiled = {}
+        for key in self._thesaurus:
+            patterns = self._thesaurus[key]
+            if self._use_re is False:
+                patterns = [re.escape(pattern) for pattern in patterns]
+            if self._full_match is True:
+                patterns = ["^" + pattern + "$" for pattern in patterns]
+            if self._ignore_case is True:
+                patterns = [re.compile(pattern, re.I) for pattern in patterns]
+            else:
+                patterns = [re.compile(pattern) for pattern in patterns]
+            self._compiled[key] = patterns
+
+        return self
 
     def apply(self, x, sep=None):
         """Apply a thesaurus to a string x.
@@ -342,8 +269,24 @@ class Thesaurus:
         6     None
         7      zzz
 
-        >>> d = {'aaa':['aaa', 'bbb', 'eee', 'fff'],  '1':['000']}
-        >>> df.f.map(lambda x: Thesaurus(d).apply(x))
+        >>> patterns = {'aaa':['aaa', 'bbb', 'eee', 'fff'],  '1':['000']}
+        >>> thesaurus = Thesaurus(patterns)
+        >>> thesaurus = thesaurus.compile()
+        >>> thesaurus 
+        {
+          "1": [
+            "000"
+          ],
+          "aaa": [
+            "aaa",
+            "bbb",
+            "eee",
+            "fff"
+          ]
+        }
+        ignore_case=True, full_match=False, use_re=False, compiled=True
+
+        >>> df.f.map(lambda x: thesaurus.apply(x))
         0     aaa
         1     aaa
         2     aaa
@@ -367,7 +310,7 @@ class Thesaurus:
         5      ddd fff
         6         None
         7          zzz
-        >>> df.f.map(lambda x: Thesaurus(d).apply(x, sep='|'))
+        >>> df.f.map(lambda x: thesaurus.apply(x, sep='|'))
         0    aaa|aaa
         1    aaa|aaa
         2        aaa
@@ -396,11 +339,14 @@ class Thesaurus:
         9      8
         10     9
 
-        >>> d = {'a':['0', '1', '2'],
-        ...      'b':['4', '5', '6'],
-        ...      'c':['7', '8', '9']}
-
-        >>> df.f.map(lambda x: Thesaurus(d, ignore_case=False, full_match=True).apply(x)) # doctest: +NORMALIZE_WHITESPACE
+        >>> patterns = {
+        ...     'a':['0', '1', '2'],
+        ...     'b':['4', '5', '6'],
+        ...     'c':['7', '8', '9']
+        ... }
+        >>> thesaurus = Thesaurus(patterns, ignore_case=False, full_match=True)
+        >>> thesaurus = thesaurus.compile()
+        >>> df.f.map(lambda x: thesaurus.apply(x)) # doctest: +NORMALIZE_WHITESPACE
         0        a
         1        a
         2        a
@@ -427,10 +373,14 @@ class Thesaurus:
         4    b, B A
         5   b, a, c
         6      A, B
-        >>> d = {'0':['a b', 'A B', 'B A'],
-        ...      '1':['b c'],
-        ...      '2':['a', 'b']}
-        >>> df.f.map(lambda x: Thesaurus(d, ignore_case=False, full_match=True).apply(x, sep=','))
+        >>> patterns = {
+        ...     '0':['a b', 'A B', 'B A'],
+        ...     '1':['b c'],
+        ...     '2':['a', 'b']
+        ... }
+        >>> thesaurus = Thesaurus(patterns, ignore_case=False, full_match=True)
+        >>> thesaurus = thesaurus.compile()
+        >>> df.f.map(lambda x: thesaurus.apply(x, sep=','))
         0      0,0
         1    A b,0
         2     None
@@ -443,44 +393,26 @@ class Thesaurus:
 
         """
 
-        def _apply(z):
-            """Transform the string z using the thesaurus. Returns when there is a match.
-            """
-
+        def f(z):
             z = z.strip()
-
-            for key in self._thesaurus.keys():
-                for pattern in self._thesaurus[key]:
-
-                    y = find_string(
-                        pattern=pattern,
-                        x=z,
-                        ignore_case=self._ignore_case,
-                        full_match=self._full_match,
-                        use_re=self._use_re,
-                    )
-
-                    if y is not None:
+            for key in self._compiled:
+                for pattern in self._compiled[key]:
+                    if len(pattern.findall(z)):
                         return key
             return z
 
-        ##
-        ## main body
-        ##
-
+        #
+        # Main body
+        #
         if x is None:
             return None
-
         if sep is None:
             x = [x]
         else:
             x = x.split(sep)
-
-        result = [_apply(z) for z in x]
-
+        result = [f(z) for z in x]
         if sep is None:
             return result[0]
-
         return sep.join(result)
 
     def find_and_replace(self, x, sep=None):
@@ -503,8 +435,10 @@ class Thesaurus:
         5  ddd FFF
         6     None
         7      zzz
-        >>> d = {'aaa':['AAA', 'BBB', 'EEE', 'FFF'],  '1':['000']}
-        >>> df.f.map(lambda x: Thesaurus(d).find_and_replace(x))
+        >>> patterns = {'aaa':['AAA', 'BBB', 'EEE', 'FFF'],  '1':['000']}
+        >>> thesaurus = Thesaurus(patterns)
+        >>> thesaurus = thesaurus.compile()
+        >>> df.f.map(lambda x: thesaurus.find_and_replace(x))
         0        aaa
         1        aaa
         2    ccc aaa
@@ -528,7 +462,7 @@ class Thesaurus:
         5      ddd FFF
         6         None
         7          zzz
-        >>> df.f.map(lambda x: Thesaurus(d).find_and_replace(x, sep='|'))
+        >>> df.f.map(lambda x: thesaurus.find_and_replace(x, sep='|'))
         0    aaa|ccc aaa
         1    aaa ccc|ccc
         2        ccc aaa
@@ -540,50 +474,28 @@ class Thesaurus:
         Name: f, dtype: object
         """
 
-        def _apply_and_replace(z):
-
+        def f(z):
             z = z.strip()
-
-            for key in self._thesaurus.keys():
-
-                for pattern in self._thesaurus[key]:
-
-                    w = replace_string(
-                        pattern=pattern,
-                        x=z,
-                        repl=key,
-                        ignore_case=self._ignore_case,
-                        full_match=self._full_match,
-                        use_re=self._use_re,
-                    )
-
+            for key in self._compiled:
+                for pattern in self._compiled[key]:
+                    w = pattern.sub(key, z)
                     if z != w:
                         return w
-
             return z
 
+        #
+        # Main body
+        #
         if x is None:
             return None
-
         if sep is None:
             x = [x]
         else:
             x = x.split(sep)
-
-        result = [_apply_and_replace(z) for z in x]
-
+        result = [f(z) for z in x]
         if sep is None:
             return result[0]
-
         return sep.join(result)
-
-    def __repr__(self):
-        """Returns a json representation of the Thesaurus.
-        """
-        return json.dumps(self._thesaurus, indent=2, sort_keys=True)
-
-    def __str__(self):
-        return self.__repr__()
 
     def merge_keys(self, key, popkey):
         """Adds the strings associated to popkey to key and delete popkey.
@@ -612,9 +524,6 @@ class Thesaurus:
                 result[value] = key
         return result
 
-    def compile(self):
-        self._dict = self.to_dict()
-
     def apply_as_dict(self, x, sep=None):
 
         if x is None:
@@ -631,3 +540,137 @@ class Thesaurus:
             return result[0]
 
         return sep.join(result)
+
+
+#  def text_nesting(
+#     x, search_strategy="fingerprint", sep=None, transformer=None, max_distance=None
+# ):
+#     """
+
+#     Examples
+#     ----------------------------------------------------------------------------------------------
+
+#     >>> import pandas as pd
+#     >>> df = pd.DataFrame({
+#     ...    'f': ['a',
+#     ...          'a b',
+#     ...          'a b c',
+#     ...          'a b c d',
+#     ...          'a e',
+#     ...          'a f',
+#     ...          'a b e',
+#     ...          'a b e f',
+#     ...          'a b e f g'],
+#     ... })
+#     >>> df # doctest: +NORMALIZE_WHITESPACE
+#                f
+#     0          a
+#     1        a b
+#     2      a b c
+#     3    a b c d
+#     4        a e
+#     5        a f
+#     6      a b e
+#     7    a b e f
+#     8  a b e f g
+
+#     >>> text_nesting(df.f, sep=',') # doctest: +NORMALIZE_WHITESPACE
+#     {
+#       "a": [
+#         "a",
+#         "a e",
+#         "a f"
+#       ],
+#       "a b": [
+#         "a b",
+#         "a b e"
+#       ],
+#       "a b c": [
+#         "a b c",
+#         "a b c d"
+#       ],
+#       "a b e f": [
+#         "a b e f",
+#         "a b e f g"
+#       ]
+#     }
+#     ignore_case=False, full_match=True, use_re=False, compiled=False
+
+#     >>> df = pd.DataFrame({
+#     ...    'f': ['neural networks; Artificial Neural Networks']
+#     ... })
+#     >>> df # doctest: +NORMALIZE_WHITESPACE
+#                                                  f
+#     0  neural networks; Artificial Neural Networks
+#     >>> text_nesting(df.f, sep=';', max_distance=1) # doctest: +NORMALIZE_WHITESPACE
+#     {
+#       "neural networks": [
+#         "Artificial Neural Networks",
+#         "neural networks"
+#       ]
+#     }
+#     ignore_case=False, full_match=True, use_re=False, compiled=False
+
+#     """
+
+#     x = x.dropna()
+
+#     if sep is not None:
+#         x = pd.Series([z.strip() for y in x for z in y.split(sep)])
+
+#     result = {}
+#     selected = {text: False for text in x.tolist()}
+
+#     max_text_len = max([len(text) for text in x])
+#     sorted_x = []
+#     for text_len in range(max_text_len, -1, -1):
+#         texts = x[[True if len(w) == text_len else False for w in x]]
+#         texts = sorted(texts)
+#         sorted_x += texts
+#     x = sorted_x
+
+#     # for pattern in x:
+#     for iter in tqdm(range(len(x))):
+
+#         pattern = x[iter]
+
+#         if pattern == "":
+#             continue
+
+#         if selected[pattern] is True:
+#             continue
+
+#         nested_texts = [
+#             text
+#             for text in x
+#             if selected[text] is False and steamming_all(pattern, text)
+#         ]
+
+#         if max_distance is not None:
+#             nested_texts = [
+#                 z
+#                 for z in nested_texts
+#                 if abs(len(pattern.split()) - len(z.split())) <= max_distance
+#             ]
+
+#         if len(nested_texts) > 1:
+#             nested_texts = sorted(list(set(nested_texts)))
+
+#         if len(nested_texts) > 1:
+
+#             if transformer is not None:
+#                 pattern = transformer(pattern)
+#             if pattern in result.keys():
+#                 result[pattern] += nested_texts
+#             else:
+#                 result[pattern] = nested_texts
+#             for txt in nested_texts:
+#                 selected[txt] = True
+
+#     return Thesaurus(result, ignore_case=False, full_match=True, use_re=False)
+
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()

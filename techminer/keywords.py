@@ -376,10 +376,12 @@ class Keywords:
             x = pattern.sub(repl="", string=x)
         return x
 
-    def new_keywords(
-        self, x, sep=None,
-    ):
+    def transform(self, x, sep=None):
         """Creates a new Keywords object by applying the current Keywords to x.
+
+        Args:
+            x (string): A string object.
+            sep (str): character separator.
 
         Examples
         ----------------------------------------------------------------------------------------------
@@ -387,7 +389,7 @@ class Keywords:
         >>> x = ['11', '111', '11 11 ', 'a', 'b', 'c']
         >>> keywords = Keywords('1.*', use_re=True)
         >>> keywords = keywords.compile()
-        >>> keywords.new_keywords(x)
+        >>> keywords.transform(x)
         [
           "11",
           "11 11",
@@ -438,13 +440,225 @@ class Keywords:
             keywords, ignore_case=ignore_case, full_match=full_match, use_re=use_re
         )
 
-    # def delete_keyword(self, x):
-    #     """Remove string x from the keywords list.
-    #     """
-    #     self._keywords.remove(x)
+    #
+    # NLP
+    #
+
+    def extract_after_first(self, x):
+        """Returns the string from the first ocurrence of the keyword to the end of string x.
+
+        Args:
+            x : string
+
+        Returns:
+            String
+        
+        Examples
+        ----------------------------------------------------------------------------------------------
+        
+        >>> keywords = Keywords('aaa')
+        >>> keywords = keywords.compile()
+        >>> keywords.extract_after_first('1 aaa 4 aaa 5')
+        'aaa 4 aaa 5'
+
+        >>> keywords = Keywords('bbb')
+        >>> keywords = keywords.compile()
+        >>> keywords.extract_after_first('1 aaa 4 aaa 5')
+
+        """
+        for pattern in self._patterns:
+            z = pattern.search(x)
+            if z:
+                return x[z.start() :]
+        return None
+
+    def extract_after_last(self, x):
+        """Returns the string from last ocurrence of a keyword to the end of string x.
+
+        Args:
+            x: string
+
+        Returns:
+            String
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+
+        >>> keywords = Keywords('aaa')
+        >>> keywords = keywords.compile()
+        >>> keywords.extract_after_last('1 aaa 4 aaa 5')
+        'aaa 5'
+
+        """
+        for pattern in self._patterns:
+            z = pattern.findall(x)
+            result = x
+            for w in z[:-1]:
+                y = pattern.search(result)
+                result = result[y.end() :]
+            y = pattern.search(result)
+            return result[y.start() :]
+        return None
+
+        # y = find_string(pattern, x, ignore_case, full_match, use_re)
+
+        # if y is not None:
+
+        #     if ignore_case is True:
+        #         c = re.compile(y, re.I)
+        #     else:
+        #         c = re.compile(y)
+
+        #     z = c.findall(x)
+
+        #     result = x
+        #     for w in z[:-1]:
+        #         y = c.search(result)
+        #         result = result[y.end() :]
+        #     y = c.search(result)
+        #     return result[y.start() :]
+
+        # return None
+
+    def extract_nearby(self, x, n_phrases=0):
+        """Extracts the words of string x in the proximity of the terms matching
+        the keywords list.
+
+        Args:
+            x (string): A string object.
+            n_phrases (integer): number of phrases around term.
+
+        Returns:
+            String.
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+        
+
+        >>> import pandas as pd
+        >>> df = pd.DataFrame({
+        ...    'f': ['1. 2. 3. 4. 5. 6.', 
+        ...          'aaa. 1. 2. 3. 4. 5.', 
+        ...          '1. aaa. 2. 3. 4. 5.', 
+        ...          '1. 2. 3. aaa. 4. 5.',
+        ...          '1. 2. 3. 4. aaa. 5.',
+        ...          '1. 2. 3. 4. 5. aaa.',
+        ...          'bbb. 1. 2. 3. 4. 5.', 
+        ...          '1. 2. 3. 4. 5. bbb.', 
+        ...          '1. 2. 3. ccc. 4. 5.'],
+        ... })
+        >>> df
+                             f
+        0    1. 2. 3. 4. 5. 6.
+        1  aaa. 1. 2. 3. 4. 5.
+        2  1. aaa. 2. 3. 4. 5.
+        3  1. 2. 3. aaa. 4. 5.
+        4  1. 2. 3. 4. aaa. 5.
+        5  1. 2. 3. 4. 5. aaa.
+        6  bbb. 1. 2. 3. 4. 5.
+        7  1. 2. 3. 4. 5. bbb.
+        8  1. 2. 3. ccc. 4. 5.
+        >>> keywords = Keywords(['aaa', 'bbb', 'ccc'], use_re=True)
+        >>> keywords = keywords.compile()
+        >>> df.f.map(lambda x: keywords.extract_nearby(x, n_phrases=2)) # doctest: +NORMALIZE_WHITESPACE
+        0                None
+        1          aaa. 1. 2.
+        2          aaa. 2. 3.
+        3    2. 3. aaa. 4. 5.
+        4          3. 4. aaa.
+        5          4. 5. aaa.
+        6          bbb. 1. 2.
+        7          4. 5. bbb.
+        8    2. 3. ccc. 4. 5.
+        Name: f, dtype: object
+
+        """
+        result = []
+        x = x.split(".")
+        x = [w.strip() for w in x]
+        x = [w for w in x if w != ""]
+        for index, phrase in enumerate(x):
+            for pattern in self._patterns:
+                z = pattern.findall(phrase)
+                if len(z):
+                    if n_phrases != 0:
+                        #
+                        # Left side
+                        #
+                        pos = index - n_phrases
+                        if pos >= 0:
+                            result.extend(x[pos:index])
+                        #
+                        # Current phrase
+                        #
+                        result.append(phrase)
+                        #
+                        # Right side
+                        #
+                        pos = index + n_phrases
+                        if pos < len(x):
+                            result.extend(x[index + 1 : pos + 1])
+                    else:
+                        #
+                        # Only the current phrase
+                        #
+                        result.append(phrase)
+        #
+        if len(result):
+            return ". ".join(result) + "."
+        return None
+
+    def extract_until_first(self, x):
+        """Returns the string from begining of x to the first ocurrence of a keyword.
+
+        Args:
+            x: string
+
+        Returns:
+            String
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+        
+        >>> keywords = Keywords('aaa')
+        >>> keywords = keywords.compile()
+        >>> keywords.extract_until_first('1 aaa 4 aaa 5')
+        '1 aaa'
+
+        """
+        for pattern in self._patterns:
+            z = pattern.search(x)
+            if z:
+                return x[: z.end()]
+        return None
+
+    def extract_until_last(self, x):
+        """Returns the string from begining of x to the last ocurrence of a keyword.
+
+        Args:
+            x: string
+
+        Returns:
+            String
+
+        Examples
+        ----------------------------------------------------------------------------------------------
+        
+        >>> keywords = Keywords('aaa')
+        >>> keywords = keywords.compile()
+        >>> keywords.extract_until_last('1 aaa 4 aaa 5')
+        '1 aaa 4 aaa'
+
+        """
+        for pattern in self._patterns:
+            z = list(pattern.finditer(x))
+            if z:
+                return x[0 : z[-1].end(0)]
+        return None
 
 
 if __name__ == "__main__":
+
     import doctest
 
     doctest.testmod()
