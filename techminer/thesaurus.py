@@ -214,9 +214,9 @@ class Thesaurus:
         self._dict = None
         self._compiled = None
 
-    # @property
-    #  def thesaurus(self):
-    #      return self._thesaurus
+    @property
+    def thesaurus(self):
+        return self._thesaurus
 
     def __repr__(self):
         """Returns a json representation of the Thesaurus.

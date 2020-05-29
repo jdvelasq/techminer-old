@@ -83,10 +83,14 @@ The column names in the dataframe follows the convetion used in WoS.
 
 
 """
-import pandas as pd
-import numpy as np
-from sklearn.decomposition import PCA
+import json
 import math
+import re
+from os.path import dirname, join
+
+import numpy as np
+import pandas as pd
+from sklearn.decomposition import PCA
 
 from .keywords import Keywords
 from .strings import remove_accents
@@ -491,11 +495,11 @@ def prepare_scopus_data(x):
     author_keywords = x["Author Keywords"].map(
         lambda x: x.split(";") if x is not None else []
     )
-    index_keywords = df["Inde Keywords"].map(
+    index_keywords = x["Index Keywords"].map(
         lambda x: x.split(";") if x is not None else []
     )
     keywords = author_keywords + index_keywords
-    keywords = keywords.map(lambda w: [e for w in x if e != ""])
+    keywords = keywords.map(lambda w: [e for e in w if e != ""])
     keywords = keywords.map(lambda w: [e.strip() for e in w])
     keywords = keywords.map(lambda w: sorted(set(w)))
     keywords = keywords.map(lambda w: ";".join(w))
@@ -506,7 +510,7 @@ def prepare_scopus_data(x):
     #
     if "Affiliations" in x.columns:
         x["Country"] = x.Affiliations.map(lambda w: extract_country(w))
-        x["Institution"] = x.Affiliation.map(lambda w: extract_institution(w))
+        x["Institution"] = x.Affiliations.map(lambda w: extract_institution(w))
     #
     return x
 
