@@ -7,6 +7,8 @@ Plots
 
 """
 import matplotlib.pyplot as plt
+import numpy as np
+
 
 # import json
 # import textwrap
@@ -48,7 +50,7 @@ def bar(
     1  author 1              2   1
     2  author 0              2   2
     3  author 2              1   3
-    >>> _ = Plot(df).bar(cmap=plt.cm.Blues)
+    >>> _ = bar(df, cmap=plt.cm.Blues)
     >>> plt.savefig('sphinx/images/barplot.png')
 
     .. image:: images/barplot.png

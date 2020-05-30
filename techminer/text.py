@@ -1,14 +1,14 @@
-# """
-# Text manipulation
-# ==================================================================================================
+"""
+Text manipulation
+==================================================================================================
 
-# This module contains functions for manipulating texts.
+This module contains functions for manipulating texts.
 
 
-# Functions in this module
-# ----------------------------------------------------------------------------------------
+Functions in this module
+----------------------------------------------------------------------------------------
 
-# """
+"""
 
 import json
 import re

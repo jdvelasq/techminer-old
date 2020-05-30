@@ -1,4 +1,4 @@
-.. automodule:: techminer.plot
+.. automodule:: techminer.analytics
     :members:
     :undoc-members:
     :show-inheritance:

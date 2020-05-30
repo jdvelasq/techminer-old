@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Modules &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
+  <title>Jupyter Lab Interface &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
   
 
   
@@ -36,8 +36,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Jupyter Lab Interface" href="jupyter.html" />
-    <link rel="prev" title="TechMiner: A Tool for Analyzing Bibliographic Data using Python" href="index.html" /> 
+    <link rel="next" title="Analytics" href="analytics.html" />
+    <link rel="prev" title="Modules" href="modules.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -86,8 +86,8 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Modules</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="jupyter.html">Jupyter Lab Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Jupyter Lab Interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="analytics.html">Analytics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plots.html">Plots</a></li>
 <li class="toctree-l2"><a class="reference internal" href="text.html">Text manipulation</a></li>
@@ -138,13 +138,15 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Modules</li>
+          <li><a href="modules.html">Modules</a> &raquo;</li>
+        
+      <li>Jupyter Lab Interface</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/jupyter.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -181,28 +183,23 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="modules">
-<h1>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="jupyter.html">Jupyter Lab Interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="analytics.html">Analytics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="plots.html">Plots</a></li>
-<li class="toctree-l1"><a class="reference internal" href="text.html">Text manipulation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="text.html#functions-in-this-module">Functions in this module</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<p>dataframe
-maps
-plot
-maps
-text
-keywords
-thesaurus
-sankey_plot
-chord_diagram</p>
+<span class="target" id="module-techminer.jupyter"></span><div class="section" id="jupyter-lab-interface">
+<h1>Jupyter Lab Interface<a class="headerlink" href="#jupyter-lab-interface" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="techminer.jupyter.summary_by_year">
+<code class="sig-prename descclassname">techminer.jupyter.</code><code class="sig-name descname">summary_by_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/jupyter.html#summary_by_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.jupyter.summary_by_year" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the number of document and the number of total citations per year.
+This funciton adds the missing years in the sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>pandas.DataFrame</em>) – bibliographic dataframe.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pandas.DataFrame.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 
 
@@ -213,10 +210,10 @@ chord_diagram</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="jupyter.html" class="btn btn-neutral float-right" title="Jupyter Lab Interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="analytics.html" class="btn btn-neutral float-right" title="Analytics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral float-left" title="TechMiner: A Tool for Analyzing Bibliographic Data using Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-left" title="Modules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

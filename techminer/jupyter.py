@@ -25,25 +25,21 @@ def summary_by_year(x, **kwargs):
         pandas.DataFrame.
     """
     df = tc.summary_by_year(x)
-
-    #
-    # Documents by year tab
-    #
-    docs_by_year = widgets.Output()
-    with docs_by_year:
-        display(plt.bar(df[["Year", "Num Documents"]], **kwargs))
-    #
-    # Citations by year tab
-    #
-    citations_by_year = widgets.Output()
-    with citations_by_year:
-        display(plt.bar(df[["Year", "Cited by"]], **kwargs))
-
-    #
-    # Jupyter Lab interface
-    #
+    data = [
+        (["Year", "Num Documents"], "Documents by Year"),
+        (["Year", "Num Documents (Cum)"], "Cum. Documents by Year"),
+        (["Year", "Times Cited"], "Times Cited by Year"),
+        (["Year", "Times Cited (Cum)"], "Cum. Times Cited by Year"),
+        (["Year", "Avg. Times Cited"], "Avg. Times Cited by Year"),
+    ]
+    widget_list = []
+    for i in range(len(data)):
+        w = widgets.Output()
+        with w:
+            display(plt.bar(df[data[i][0]], **kwargs))
+        widget_list.append(w)
     widget = widgets.Tab()
-    widget.children = [docs_by_year, citations_by_year]
-    widget.set_title(0, "Documents by year")
-    widget.set_title(1, "Citations by year")
+    widget.children = widget_list
+    for i in range(len(data)):
+        widget.set_title(i, data[i][1])
     return widget

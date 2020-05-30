@@ -1,0 +1,1499 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>techminer.plots &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TechMiner - A Package for Bibliographical Analysis using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TechMiner - A Package for Bibliographical Analysis using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>techminer.plots</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for techminer.plots</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Plots</span>
+<span class="sd">==================================================================================================</span>
+
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="c1"># import json</span>
+<span class="c1"># import textwrap</span>
+<span class="c1"># from os.path import dirname, join</span>
+
+
+<span class="c1"># import numpy as np</span>
+<span class="c1"># import pandas as pd</span>
+<span class="c1"># import squarify</span>
+<span class="c1"># from mpl_toolkits.axes_grid1 import make_axes_locatable</span>
+<span class="c1"># from scipy.spatial import ConvexHull</span>
+<span class="c1"># from sklearn.cluster import AgglomerativeClustering</span>
+<span class="c1"># from wordcloud import ImageColorGenerator, WordCloud</span>
+
+<span class="c1"># from .chord_diagram import ChordDiagram</span>
+
+<span class="c1"># TEXTLEN = 30</span>
+
+
+<div class="viewcode-block" id="bar"><a class="viewcode-back" href="../../plots.html#techminer.plots.bar">[docs]</a><span class="k">def</span> <span class="nf">bar</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates a bar plot from a dataframe.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
+<span class="sd">    ...         &quot;Num Documents&quot;: [3, 2, 2, 1],</span>
+<span class="sd">    ...         &quot;ID&quot;: list(range(4)),</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">        Authors  Num Documents  ID</span>
+<span class="sd">    0  author 3              3   0</span>
+<span class="sd">    1  author 1              2   1</span>
+<span class="sd">    2  author 0              2   2</span>
+<span class="sd">    3  author 2              1   3</span>
+<span class="sd">    &gt;&gt;&gt; _ = bar(df, cmap=plt.cm.Blues)</span>
+<span class="sd">    &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/barplot.png&#39;)</span>
+
+<span class="sd">    .. image:: images/barplot.png</span>
+<span class="sd">        :width: 400px</span>
+<span class="sd">        :align: center</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># plt.clf()</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;ID&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">cmap</span><span class="p">((</span><span class="mf">0.2</span> <span class="o">+</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]])))</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]))</span>
+        <span class="p">]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
+        <span class="n">height</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+        <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+        <span class="n">bottom</span><span class="o">=</span><span class="n">bottom</span><span class="p">,</span>
+        <span class="n">align</span><span class="o">=</span><span class="n">align</span><span class="p">,</span>
+        <span class="o">**</span><span class="p">({}),</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">labelrotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+<span class="c1"># #############################################################################################################</span>
+
+
+<span class="c1"># class Plot:</span>
+<span class="c1">#     def __init__(self, df):</span>
+<span class="c1">#         self.df = df</span>
+
+<span class="c1">#     def heatmap(self, **kwargs):</span>
+<span class="c1">#         &quot;&quot;&quot;Plots a heatmap from a matrix.</span>
+
+<span class="c1">#         Colormap availables are:</span>
+<span class="c1">#             &#39;Greys&#39;, &#39;Purples&#39;, &#39;Blues&#39;, &#39;Greens&#39;, &#39;Oranges&#39;, &#39;Reds&#39;,</span>
+<span class="c1">#             &#39;YlOrBr&#39;, &#39;YlOrRd&#39;, &#39;OrRd&#39;, &#39;PuRd&#39;, &#39;RdPu&#39;, &#39;BuPu&#39;,</span>
+<span class="c1">#             &#39;GnBu&#39;, &#39;PuBu&#39;, &#39;YlGnBu&#39;, &#39;PuBuGn&#39;, &#39;BuGn&#39;, &#39;YlGn&#39;</span>
+
+
+<span class="c1">#         See more info in:</span>
+<span class="c1">#         https://matplotlib.org/3.1.0/tutorials/colors/colormaps.html</span>
+
+<span class="c1">#         Examples</span>
+<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
+
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &#39;word 0&#39;: [1.00, 0.80, 0.70, 0.00,-0.30],</span>
+<span class="c1">#         ...         &#39;word 1&#39;: [0.80, 1.00, 0.70, 0.50, 0.00],</span>
+<span class="c1">#         ...         &#39;word 2&#39;: [0.70, 0.70, 1.00, 0.00, 0.00],</span>
+<span class="c1">#         ...         &#39;word 3&#39;: [0.00, 0.50, 0.00, 1.00, 0.30],</span>
+<span class="c1">#         ...         &#39;word 4&#39;: [-0.30, 0.00, 0.00, 0.30, 1.00],</span>
+<span class="c1">#         ...     },</span>
+<span class="c1">#         ...     index=[&#39;word {:d}&#39;.format(i) for i in range(5)]</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#                 word 0  word 1  word 2  word 3  word 4</span>
+<span class="c1">#         word 0     1.0     0.8     0.7     0.0    -0.3</span>
+<span class="c1">#         word 1     0.8     1.0     0.7     0.5     0.0</span>
+<span class="c1">#         word 2     0.7     0.7     1.0     0.0     0.0</span>
+<span class="c1">#         word 3     0.0     0.5     0.0     1.0     0.3</span>
+<span class="c1">#         word 4    -0.3     0.0     0.0     0.3     1.0</span>
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).heatmap()</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotheatmap1.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/plotheatmap1.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).heatmap(cmap=&#39;Blues&#39;)</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotheatmap2.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/plotheatmap2.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &#39;word 0&#39;: [100, 80, 70, 0,30],</span>
+<span class="c1">#         ...         &#39;word 1&#39;: [80, 100, 70, 50, 0],</span>
+<span class="c1">#         ...         &#39;word 2&#39;: [70, 70, 100, 0, 0],</span>
+<span class="c1">#         ...         &#39;word 3&#39;: [0, 50, 0, 100, 3],</span>
+<span class="c1">#         ...         &#39;word 4&#39;: [30, 0, 0, 30, 100],</span>
+<span class="c1">#         ...     },</span>
+<span class="c1">#         ...     index=[&#39;word {:d}&#39;.format(i) for i in range(5)]</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#                 word 0  word 1  word 2  word 3  word 4</span>
+<span class="c1">#         word 0     100      80      70       0      30</span>
+<span class="c1">#         word 1      80     100      70      50       0</span>
+<span class="c1">#         word 2      70      70     100       0       0</span>
+<span class="c1">#         word 3       0      50       0     100      30</span>
+<span class="c1">#         word 4      30       0       0       3     100</span>
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).heatmap(cmap=&#39;Greys&#39;)</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotheatmap3.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/plotheatmap3.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &#39;word 0&#39;: [100, 80, 70, 0,30, 1],</span>
+<span class="c1">#         ...         &#39;word 1&#39;: [80, 100, 70, 50, 0, 2],</span>
+<span class="c1">#         ...         &#39;word 2&#39;: [70, 70, 100, 0, 0, 3],</span>
+<span class="c1">#         ...         &#39;word 3&#39;: [0, 50, 0, 100, 3, 4],</span>
+<span class="c1">#         ...         &#39;word 4&#39;: [30, 0, 0, 30, 100, 5],</span>
+<span class="c1">#         ...     },</span>
+<span class="c1">#         ...     index=[&#39;word {:d}&#39;.format(i) for i in range(6)]</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#                 word 0  word 1  word 2  word 3  word 4</span>
+<span class="c1">#         word 0     100      80      70       0      30</span>
+<span class="c1">#         word 1      80     100      70      50       0</span>
+<span class="c1">#         word 2      70      70     100       0       0</span>
+<span class="c1">#         word 3       0      50       0     100      30</span>
+<span class="c1">#         word 4      30       0       0       3     100</span>
+<span class="c1">#         word 5       1       2       3       4       5</span>
+
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).heatmap(cmap=&#39;Greys&#39;)</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotheatmap3.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/plotheatmap3.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         plt.clf()</span>
+<span class="c1">#         x = self.df.copy()</span>
+<span class="c1">#         result = plt.gca().pcolor(np.transpose(x.values), **kwargs,)</span>
+<span class="c1">#         x.columns = [textwrap.shorten(text=w, width=TEXTLEN) for w in x.columns]</span>
+<span class="c1">#         x.index = [textwrap.shorten(text=w, width=TEXTLEN) for w in x.index]</span>
+<span class="c1">#         plt.xticks(np.arange(len(x.index)) + 0.5, x.index, rotation=&quot;vertical&quot;)</span>
+<span class="c1">#         plt.yticks(np.arange(len(x.columns)) + 0.5, x.columns)</span>
+<span class="c1">#         plt.gca().invert_yaxis()</span>
+
+<span class="c1">#         if &quot;cmap&quot; in kwargs:</span>
+<span class="c1">#             cmap = plt.cm.get_cmap(kwargs[&quot;cmap&quot;])</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             cmap = plt.cm.get_cmap()</span>
+
+<span class="c1">#         if all(x.dtypes == &quot;int64&quot;):</span>
+<span class="c1">#             fmt = &quot;{:3.0f}&quot;</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             fmt = &quot;{:3.2f}&quot;</span>
+
+<span class="c1">#         # if x.values.max().max() &lt;= 1.0 and x.values.min().min() &gt;= -1:</span>
+<span class="c1">#         #      fmt = &quot;{:3.2f}&quot;</span>
+<span class="c1">#         #  else:</span>
+<span class="c1">#         #      fmt = &quot;{:3.0f}&quot;</span>
+
+<span class="c1">#         for idx_row, row in enumerate(x.index):</span>
+<span class="c1">#             for idx_col, col in enumerate(x.columns):</span>
+<span class="c1">#                 if abs(x.at[row, col]) &gt; x.values.max().max() / 2.0:</span>
+<span class="c1">#                     color = cmap(0.0)</span>
+<span class="c1">#                 else:</span>
+<span class="c1">#                     color = cmap(1.0)</span>
+<span class="c1">#                 plt.text(</span>
+<span class="c1">#                     idx_row + 0.5,</span>
+<span class="c1">#                     idx_col + 0.5,</span>
+<span class="c1">#                     fmt.format(x.at[row, col]),</span>
+<span class="c1">#                     ha=&quot;center&quot;,</span>
+<span class="c1">#                     va=&quot;center&quot;,</span>
+<span class="c1">#                     color=color,</span>
+<span class="c1">#                 )</span>
+<span class="c1">#         plt.gca().xaxis.tick_top()</span>
+
+<span class="c1">#         return plt.gca()</span>
+
+<span class="c1">#     def chord_diagram(self, alpha=1.0, minval=0.0, top_n_links=None, solid_lines=False):</span>
+<span class="c1">#         &quot;&quot;&quot;Creates a chord diagram from a correlation or an auto-correlation matrix.</span>
+
+
+<span class="c1">#         Examples</span>
+<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
+
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &#39;word 0&#39;: [1.00, 0.80, 0.70, 0.00,-0.30],</span>
+<span class="c1">#         ...         &#39;word 1&#39;: [0.80, 1.00, 0.70, 0.50, 0.00],</span>
+<span class="c1">#         ...         &#39;word 2&#39;: [0.70, 0.70, 1.00, 0.00, 0.00],</span>
+<span class="c1">#         ...         &#39;word 3&#39;: [0.00, 0.50, 0.00, 1.00, 0.30],</span>
+<span class="c1">#         ...         &#39;word 4&#39;: [-0.30, 0.00, 0.00, 0.30, 1.00],</span>
+<span class="c1">#         ...     },</span>
+<span class="c1">#         ...     index=[&#39;word {:d}&#39;.format(i) for i in range(5)]</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#                 word 0  word 1  word 2  word 3  word 4</span>
+<span class="c1">#         word 0     1.0     0.8     0.7     0.0    -0.3</span>
+<span class="c1">#         word 1     0.8     1.0     0.7     0.5     0.0</span>
+<span class="c1">#         word 2     0.7     0.7     1.0     0.0     0.0</span>
+<span class="c1">#         word 3     0.0     0.5     0.0     1.0     0.3</span>
+<span class="c1">#         word 4    -0.3     0.0     0.0     0.3     1.0</span>
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).chord_diagram()</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotcd1.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/plotcd1.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).chord_diagram(top_n_links=5)</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotcd2.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/plotcd2.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).chord_diagram(solid_lines=True)</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotcd3.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/plotcd3.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         plt.clf()</span>
+
+<span class="c1">#         x = self.df.copy()</span>
+
+<span class="c1">#         cd = ChordDiagram()</span>
+<span class="c1">#         cd.add_nodes_from(x.columns, color=&quot;black&quot;, s=40)</span>
+
+<span class="c1">#         if top_n_links is not None and top_n_links &lt;= len(x.columns):</span>
+<span class="c1">#             values = []</span>
+<span class="c1">#             for idx_col in range(len(x.columns) - 1):</span>
+<span class="c1">#                 for idx_row in range(idx_col + 1, len(x.columns)):</span>
+<span class="c1">#                     node_a = x.index[idx_row]</span>
+<span class="c1">#                     node_b = x.columns[idx_col]</span>
+<span class="c1">#                     value = x[node_b][node_a]</span>
+<span class="c1">#                     values.append(value)</span>
+<span class="c1">#             values = sorted(values, reverse=True)</span>
+<span class="c1">#             minval = values[top_n_links - 1]</span>
+
+<span class="c1">#         style = list(&quot;--::&quot;)</span>
+<span class="c1">#         if solid_lines is True:</span>
+<span class="c1">#             style = list(&quot;----&quot;)</span>
+
+<span class="c1">#         width = [2.5, 1, 1, 1]</span>
+<span class="c1">#         if solid_lines is True:</span>
+<span class="c1">#             width = [4, 2, 1, 1]</span>
+
+<span class="c1">#         links = 0</span>
+<span class="c1">#         for idx_col in range(len(x.columns) - 1):</span>
+<span class="c1">#             for idx_row in range(idx_col + 1, len(x.columns)):</span>
+
+<span class="c1">#                 node_a = x.index[idx_row]</span>
+<span class="c1">#                 node_b = x.columns[idx_col]</span>
+<span class="c1">#                 value = x[node_b][node_a]</span>
+
+<span class="c1">#                 if value &gt; 0.75 and value &gt;= minval:</span>
+<span class="c1">#                     cd.add_edge(</span>
+<span class="c1">#                         node_a,</span>
+<span class="c1">#                         node_b,</span>
+<span class="c1">#                         linestyle=style[0],</span>
+<span class="c1">#                         linewidth=width[0],</span>
+<span class="c1">#                         color=&quot;black&quot;,</span>
+<span class="c1">#                     )</span>
+<span class="c1">#                     links += 1</span>
+<span class="c1">#                 elif value &gt; 0.50 and value &gt;= minval:</span>
+<span class="c1">#                     cd.add_edge(</span>
+<span class="c1">#                         node_a,</span>
+<span class="c1">#                         node_b,</span>
+<span class="c1">#                         linestyle=style[1],</span>
+<span class="c1">#                         linewidth=width[1],</span>
+<span class="c1">#                         color=&quot;black&quot;,</span>
+<span class="c1">#                     )</span>
+<span class="c1">#                     links += 1</span>
+<span class="c1">#                 elif value &gt; 0.25 and value &gt;= minval:</span>
+<span class="c1">#                     cd.add_edge(</span>
+<span class="c1">#                         node_a,</span>
+<span class="c1">#                         node_b,</span>
+<span class="c1">#                         linestyle=style[2],</span>
+<span class="c1">#                         linewidth=width[2],</span>
+<span class="c1">#                         color=&quot;black&quot;,</span>
+<span class="c1">#                     )</span>
+<span class="c1">#                     links += 1</span>
+<span class="c1">#                 elif value &lt;= 0.25 and value &gt;= minval and value &gt; 0.0:</span>
+<span class="c1">#                     cd.add_edge(</span>
+<span class="c1">#                         node_a,</span>
+<span class="c1">#                         node_b,</span>
+<span class="c1">#                         linestyle=style[3],</span>
+<span class="c1">#                         linewidth=width[3],</span>
+<span class="c1">#                         color=&quot;red&quot;,</span>
+<span class="c1">#                     )</span>
+<span class="c1">#                     links += 1</span>
+
+<span class="c1">#                 if top_n_links is not None and links &gt;= top_n_links:</span>
+<span class="c1">#                     continue</span>
+
+<span class="c1">#         return cd.plot()</span>
+
+<span class="c1">#     def tree(self, cmap=&quot;Blues&quot;, alpha=0.9):</span>
+<span class="c1">#         &quot;&quot;&quot;Creates a classification plot from a dataframe.</span>
+
+<span class="c1">#         Examples</span>
+<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
+
+<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
+<span class="c1">#         ...         &quot;Num Documents&quot;: [10, 5, 2, 1],</span>
+<span class="c1">#         ...         &quot;ID&quot;: list(range(4)),</span>
+<span class="c1">#         ...     }</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#             Authors  Num Documents  ID</span>
+<span class="c1">#         0  author 3             10   0</span>
+<span class="c1">#         1  author 1              5   1</span>
+<span class="c1">#         2  author 0              2   2</span>
+<span class="c1">#         3  author 2              1   3</span>
+
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).tree()</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/treeplot.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/treeplot.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         plt.clf()</span>
+<span class="c1">#         x = self.df.copy()</span>
+<span class="c1">#         cmap = plt.cm.get_cmap(cmap)</span>
+<span class="c1">#         colors = [</span>
+<span class="c1">#             cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))</span>
+<span class="c1">#             for i in range(len(x[x.columns[1]]))</span>
+<span class="c1">#         ]</span>
+<span class="c1">#         squarify.plot(</span>
+<span class="c1">#             sizes=x[x.columns[1]], label=x[x.columns[0]], color=colors, alpha=alpha</span>
+<span class="c1">#         )</span>
+<span class="c1">#         plt.gca().axis(&quot;off&quot;)</span>
+<span class="c1">#         return plt.gca()</span>
+
+<span class="c1">#     def bubble(</span>
+<span class="c1">#         self,</span>
+<span class="c1">#         axis=0,</span>
+<span class="c1">#         rmax=80,</span>
+<span class="c1">#         cmap=&quot;Blues&quot;,</span>
+<span class="c1">#         grid_lw=1.0,</span>
+<span class="c1">#         grid_c=&quot;gray&quot;,</span>
+<span class="c1">#         grid_ls=&quot;:&quot;,</span>
+<span class="c1">#         **kwargs</span>
+<span class="c1">#     ):</span>
+
+<span class="c1">#         &quot;&quot;&quot;Creates a gant activity plot from a dataframe.</span>
+
+<span class="c1">#         Examples</span>
+<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
+
+<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &quot;author 0&quot;: [ 1, 2, 3, 4, 5, 6, 7],</span>
+<span class="c1">#         ...         &quot;author 1&quot;: [14, 13, 12, 11, 10, 9, 8],</span>
+<span class="c1">#         ...         &quot;author 2&quot;: [1, 5, 8, 9, 0, 0, 0],</span>
+<span class="c1">#         ...         &quot;author 3&quot;: [0, 0, 1, 1, 1, 0, 0],</span>
+<span class="c1">#         ...         &quot;author 4&quot;: [0, 10, 0, 4, 2, 0, 1],</span>
+<span class="c1">#         ...     },</span>
+<span class="c1">#         ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#               author 0  author 1  author 2  author 3  author 4</span>
+<span class="c1">#         2010         1        14         1         0         0</span>
+<span class="c1">#         2011         2        13         5         0        10</span>
+<span class="c1">#         2012         3        12         8         1         0</span>
+<span class="c1">#         2013         4        11         9         1         4</span>
+<span class="c1">#         2014         5        10         0         1         2</span>
+<span class="c1">#         2015         6         9         0         0         0</span>
+<span class="c1">#         2016         7         8         0         0         1</span>
+
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).bubble(axis=0, alpha=0.5, rmax=150)</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/bubbleplot0.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/bubbleplot0.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).bubble(axis=1, alpha=0.5, rmax=150)</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/bubbleplot1.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/bubbleplot1.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         plt.clf()</span>
+<span class="c1">#         cmap = plt.cm.get_cmap(cmap)</span>
+<span class="c1">#         x = self.df.copy()</span>
+<span class="c1">#         if axis == &quot;index&quot;:</span>
+<span class="c1">#             axis == 0</span>
+<span class="c1">#         if axis == &quot;columns&quot;:</span>
+<span class="c1">#             axis == 1</span>
+
+<span class="c1">#         vmax = x.max().max()</span>
+<span class="c1">#         vmin = x.min().min()</span>
+
+<span class="c1">#         rmin = 0</span>
+
+<span class="c1">#         if axis == 0:</span>
+<span class="c1">#             for idx, row in enumerate(x.iterrows()):</span>
+<span class="c1">#                 values = [</span>
+<span class="c1">#                     10 * (rmin + (rmax - rmin) * w / (vmax - vmin))</span>
+<span class="c1">#                     for w in row[1].tolist()</span>
+<span class="c1">#                 ]</span>
+<span class="c1">#                 plt.gca().scatter(</span>
+<span class="c1">#                     range(len(x.columns)),</span>
+<span class="c1">#                     [idx] * len(x.columns),</span>
+<span class="c1">#                     marker=&quot;o&quot;,</span>
+<span class="c1">#                     s=values,</span>
+<span class="c1">#                     **kwargs,</span>
+<span class="c1">#                 )</span>
+<span class="c1">#                 plt.hlines(</span>
+<span class="c1">#                     idx,</span>
+<span class="c1">#                     -1,</span>
+<span class="c1">#                     len(x.columns),</span>
+<span class="c1">#                     linewidth=grid_lw,</span>
+<span class="c1">#                     color=grid_c,</span>
+<span class="c1">#                     linestyle=grid_ls,</span>
+<span class="c1">#                 )</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             for idx, col in enumerate(x.columns):</span>
+<span class="c1">#                 values = [</span>
+<span class="c1">#                     10 * (rmin + (rmax - rmin) * w / (vmax - vmin)) for w in x[col]</span>
+<span class="c1">#                 ]</span>
+<span class="c1">#                 plt.gca().scatter(</span>
+<span class="c1">#                     [idx] * len(x.index),</span>
+<span class="c1">#                     range(len(x.index)),</span>
+<span class="c1">#                     marker=&quot;o&quot;,</span>
+<span class="c1">#                     s=values,</span>
+<span class="c1">#                     **kwargs,</span>
+<span class="c1">#                 )</span>
+<span class="c1">#                 plt.vlines(</span>
+<span class="c1">#                     idx,</span>
+<span class="c1">#                     -1,</span>
+<span class="c1">#                     len(x.index),</span>
+<span class="c1">#                     linewidth=grid_lw,</span>
+<span class="c1">#                     color=grid_c,</span>
+<span class="c1">#                     linestyle=grid_ls,</span>
+<span class="c1">#                 )</span>
+
+<span class="c1">#         for idx_col, col in enumerate(x.columns):</span>
+<span class="c1">#             for idx_row, row in enumerate(x.index):</span>
+
+<span class="c1">#                 if x[col][row] != 0:</span>
+<span class="c1">#                     plt.text(idx_col, idx_row, x[col][row], va=&quot;center&quot;, ha=&quot;center&quot;)</span>
+
+<span class="c1">#         plt.xlim(-1, len(x.columns))</span>
+<span class="c1">#         plt.ylim(-1, len(x.index) + 1)</span>
+
+<span class="c1">#         plt.xticks(</span>
+<span class="c1">#             np.arange(len(x.columns)),</span>
+<span class="c1">#             x.columns,</span>
+<span class="c1">#             rotation=&quot;vertical&quot;,</span>
+<span class="c1">#             horizontalalignment=&quot;center&quot;,</span>
+<span class="c1">#         )</span>
+<span class="c1">#         plt.yticks(np.arange(len(x.index)), x.index)</span>
+
+<span class="c1">#         plt.gca().spines[&quot;top&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;right&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;left&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;bottom&quot;].set_visible(False)</span>
+
+<span class="c1">#         return plt.gca()</span>
+
+<span class="c1">#     def worldmap(self, cmap=&quot;Pastel2&quot;, legend=True, *args, **kwargs):</span>
+<span class="c1">#         &quot;&quot;&quot;Worldmap plot with the number of documents per country.</span>
+
+<span class="c1">#         Examples</span>
+<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
+
+<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &quot;Country&quot;: [&quot;China&quot;, &quot;Taiwan&quot;, &quot;United States&quot;, &quot;United Kingdom&quot;, &quot;India&quot;, &quot;Colombia&quot;],</span>
+<span class="c1">#         ...         &quot;Num Documents&quot;: [1000, 900, 800, 700, 600, 1000],</span>
+<span class="c1">#         ...     },</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#                   Country  Num Documents</span>
+<span class="c1">#         0           China           1000</span>
+<span class="c1">#         1          Taiwan            900</span>
+<span class="c1">#         2   United States            800</span>
+<span class="c1">#         3  United Kingdom            700</span>
+<span class="c1">#         4           India            600</span>
+<span class="c1">#         5        Colombia           1000</span>
+
+
+<span class="c1">#         &gt;&gt;&gt; _ = plt.figure(figsize=(15, 6))</span>
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).worldmap()</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/worldmap.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/worldmap.png</span>
+<span class="c1">#             :width: 1500px</span>
+<span class="c1">#             :align: center</span>
+
+
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         module_path = dirname(__file__)</span>
+
+<span class="c1">#         x = self.df.copy()</span>
+<span class="c1">#         x[&quot;color&quot;] = x[x.columns[1]].map(lambda w: w / x[x.columns[1]].max())</span>
+<span class="c1">#         x = x.set_index(&quot;Country&quot;)</span>
+<span class="c1">#         cmap = plt.cm.get_cmap(cmap)</span>
+<span class="c1">#         with open(join(module_path, &quot;data/worldmap.data&quot;), &quot;r&quot;) as f:</span>
+<span class="c1">#             countries = json.load(f)</span>
+<span class="c1">#         plt.clf()</span>
+<span class="c1">#         for country in countries.keys():</span>
+<span class="c1">#             data = countries[country]</span>
+<span class="c1">#             for item in data:</span>
+<span class="c1">#                 plt.plot(item[0], item[1], &quot;-k&quot;, linewidth=0.5)</span>
+<span class="c1">#                 if country in x.index.tolist():</span>
+<span class="c1">#                     plt.fill(item[0], item[1], color=cmap(x.color[country]))</span>
+<span class="c1">#         #</span>
+<span class="c1">#         xmin, xmax = plt.xlim()</span>
+<span class="c1">#         ymin, ymax = plt.ylim()</span>
+<span class="c1">#         xleft = xmax - 0.02 * (xmax - xmin)</span>
+<span class="c1">#         xright = xmax</span>
+<span class="c1">#         xbar = np.linspace(xleft, xright, 10)</span>
+<span class="c1">#         ybar = np.linspace(ymin, ymin + (ymax - ymin), 100)</span>
+<span class="c1">#         xv, yv = np.meshgrid(xbar, ybar)</span>
+<span class="c1">#         z = yv / (ymax - ymin) - ymin</span>
+<span class="c1">#         plt.pcolormesh(xv, yv, z, cmap=cmap)</span>
+<span class="c1">#         plt.text(xleft, ymin, &quot;0&quot;, ha=&quot;right&quot;)</span>
+<span class="c1">#         plt.text(xleft, ymax, str(x[x.columns[0]].max()), ha=&quot;right&quot;)</span>
+<span class="c1">#         #</span>
+<span class="c1">#         plt.gca().set_aspect(&quot;equal&quot;)</span>
+<span class="c1">#         plt.axis(&quot;off&quot;)</span>
+<span class="c1">#         return plt.gca()</span>
+
+<span class="c1">#     def gant(self, hlines_lw=0.5, hlines_c=&quot;gray&quot;, hlines_ls=&quot;:&quot;, *args, **kwargs):</span>
+
+<span class="c1">#         &quot;&quot;&quot;Creates a gant activity plot from a dataframe.</span>
+
+<span class="c1">#         Examples</span>
+<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
+
+<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &quot;author 0&quot;: [1, 1, 0, 0, 0, 0, 0],</span>
+<span class="c1">#         ...         &quot;author 1&quot;: [0, 1, 1, 0, 0, 0, 0],</span>
+<span class="c1">#         ...         &quot;author 2&quot;: [1, 0, 0, 0, 0, 0, 0],</span>
+<span class="c1">#         ...         &quot;author 3&quot;: [0, 0, 1, 1, 1, 0, 0],</span>
+<span class="c1">#         ...         &quot;author 4&quot;: [0, 0, 0, 0, 0, 0, 1],</span>
+<span class="c1">#         ...     },</span>
+<span class="c1">#         ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#               author 0  author 1  author 2  author 3  author 4</span>
+<span class="c1">#         2010         1         0         1         0         0</span>
+<span class="c1">#         2011         1         1         0         0         0</span>
+<span class="c1">#         2012         0         1         0         1         0</span>
+<span class="c1">#         2013         0         0         0         1         0</span>
+<span class="c1">#         2014         0         0         0         1         0</span>
+<span class="c1">#         2015         0         0         0         0         0</span>
+<span class="c1">#         2016         0         0         0         0         1</span>
+
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).gant()</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/gantplot.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/gantplot.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         plt.clf()</span>
+<span class="c1">#         x = self.df.copy()</span>
+<span class="c1">#         if &quot;linewidth&quot; not in kwargs.keys() and &quot;lw&quot; not in kwargs.keys():</span>
+<span class="c1">#             kwargs[&quot;linewidth&quot;] = 4</span>
+<span class="c1">#         if &quot;marker&quot; not in kwargs.keys():</span>
+<span class="c1">#             kwargs[&quot;marker&quot;] = &quot;o&quot;</span>
+<span class="c1">#         if &quot;markersize&quot; not in kwargs.keys() and &quot;ms&quot; not in kwargs.keys():</span>
+<span class="c1">#             kwargs[&quot;markersize&quot;] = 10</span>
+<span class="c1">#         if &quot;color&quot; not in kwargs.keys() and &quot;c&quot; not in kwargs.keys():</span>
+<span class="c1">#             kwargs[&quot;color&quot;] = &quot;k&quot;</span>
+<span class="c1">#         for idx, col in enumerate(x.columns):</span>
+<span class="c1">#             w = x[col]</span>
+<span class="c1">#             w = w[w &gt; 0]</span>
+<span class="c1">#             plt.gca().plot(w.index, [idx] * len(w.index), **kwargs)</span>
+<span class="c1">#         plt.hlines(</span>
+<span class="c1">#             range(len(x.columns)),</span>
+<span class="c1">#             x.index.min(),</span>
+<span class="c1">#             x.index.max(),</span>
+<span class="c1">#             linewidth=hlines_lw,</span>
+<span class="c1">#             color=hlines_c,</span>
+<span class="c1">#             linestyle=hlines_ls,</span>
+<span class="c1">#         )</span>
+<span class="c1">#         plt.yticks(np.arange(len(x.columns)), x.columns)</span>
+<span class="c1">#         plt.gca().spines[&quot;top&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;right&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;left&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;bottom&quot;].set_visible(False)</span>
+<span class="c1">#         return plt.gca()</span>
+
+<span class="c1">#     def pie(</span>
+<span class="c1">#         self,</span>
+<span class="c1">#         cmap=&quot;Greys&quot;,</span>
+<span class="c1">#         explode=None,</span>
+<span class="c1">#         autopct=None,</span>
+<span class="c1">#         pctdistance=0.6,</span>
+<span class="c1">#         shadow=False,</span>
+<span class="c1">#         labeldistance=1.1,</span>
+<span class="c1">#         startangle=None,</span>
+<span class="c1">#         radius=None,</span>
+<span class="c1">#         counterclock=True,</span>
+<span class="c1">#         wedgeprops=None,</span>
+<span class="c1">#         textprops=None,</span>
+<span class="c1">#         center=(0, 0),</span>
+<span class="c1">#         frame=False,</span>
+<span class="c1">#         rotatelabels=False,</span>
+<span class="c1">#     ):</span>
+<span class="c1">#         &quot;&quot;&quot;Creates a pie plot from a dataframe.</span>
+
+<span class="c1">#         Examples</span>
+<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
+
+<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
+<span class="c1">#         ...         &quot;Num Documents&quot;: [3, 2, 2, 1],</span>
+<span class="c1">#         ...         &quot;ID&quot;: list(range(4)),</span>
+<span class="c1">#         ...     }</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#             Authors  Num Documents  ID</span>
+<span class="c1">#         0  author 3              3   0</span>
+<span class="c1">#         1  author 1              2   1</span>
+<span class="c1">#         2  author 0              2   2</span>
+<span class="c1">#         3  author 2              1   3</span>
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).pie(cmap=plt.cm.Blues)</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/pieplot.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/pieplot.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         plt.clf()</span>
+<span class="c1">#         cmap = plt.cm.get_cmap(cmap)</span>
+<span class="c1">#         x = self.df.copy()</span>
+<span class="c1">#         if &quot;ID&quot; in x.columns:</span>
+<span class="c1">#             x.pop(&quot;ID&quot;)</span>
+<span class="c1">#         colors = None</span>
+<span class="c1">#         if cmap is not None:</span>
+<span class="c1">#             colors = [</span>
+<span class="c1">#                 cmap(1.0 - 0.9 * (i / len(x))) for i in range(len(x[x.columns[1]]))</span>
+<span class="c1">#             ]</span>
+<span class="c1">#         plt.gca().pie(</span>
+<span class="c1">#             x=x[x.columns[1]],</span>
+<span class="c1">#             explode=explode,</span>
+<span class="c1">#             labels=x[x.columns[0]],</span>
+<span class="c1">#             colors=colors,</span>
+<span class="c1">#             autopct=autopct,</span>
+<span class="c1">#             pctdistance=pctdistance,</span>
+<span class="c1">#             shadow=shadow,</span>
+<span class="c1">#             labeldistance=labeldistance,</span>
+<span class="c1">#             startangle=startangle,</span>
+<span class="c1">#             radius=radius,</span>
+<span class="c1">#             counterclock=counterclock,</span>
+<span class="c1">#             wedgeprops=wedgeprops,</span>
+<span class="c1">#             textprops=textprops,</span>
+<span class="c1">#             center=center,</span>
+<span class="c1">#             frame=frame,</span>
+<span class="c1">#             rotatelabels=rotatelabels,</span>
+<span class="c1">#         )</span>
+<span class="c1">#         return plt.gca()</span>
+
+<span class="c1">#     def bar(self, width=0.8, bottom=None, align=&quot;center&quot;, cmap=&quot;Greys&quot;, **kwargs):</span>
+<span class="c1">#         &quot;&quot;&quot;Creates a bar plot from a dataframe.</span>
+
+<span class="c1">#         Examples</span>
+<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
+
+<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
+<span class="c1">#         ...         &quot;Num Documents&quot;: [3, 2, 2, 1],</span>
+<span class="c1">#         ...         &quot;ID&quot;: list(range(4)),</span>
+<span class="c1">#         ...     }</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#             Authors  Num Documents  ID</span>
+<span class="c1">#         0  author 3              3   0</span>
+<span class="c1">#         1  author 1              2   1</span>
+<span class="c1">#         2  author 0              2   2</span>
+<span class="c1">#         3  author 2              1   3</span>
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).bar(cmap=plt.cm.Blues)</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/barplot.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/barplot.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         plt.clf()</span>
+<span class="c1">#         cmap = plt.cm.get_cmap(cmap)</span>
+<span class="c1">#         x = self.df.copy()</span>
+<span class="c1">#         if &quot;ID&quot; in x.columns:</span>
+<span class="c1">#             x.pop(&quot;ID&quot;)</span>
+<span class="c1">#         if cmap is not None:</span>
+<span class="c1">#             kwargs[&quot;color&quot;] = [</span>
+<span class="c1">#                 cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))</span>
+<span class="c1">#                 for i in range(len(x[x.columns[1]]))</span>
+<span class="c1">#             ]</span>
+<span class="c1">#         result = plt.gca().bar(</span>
+<span class="c1">#             x=range(len(x)),</span>
+<span class="c1">#             height=x[x.columns[1]],</span>
+<span class="c1">#             width=width,</span>
+<span class="c1">#             bottom=bottom,</span>
+<span class="c1">#             align=align,</span>
+<span class="c1">#             **({}),</span>
+<span class="c1">#             **kwargs,</span>
+<span class="c1">#         )</span>
+<span class="c1">#         plt.xticks(</span>
+<span class="c1">#             np.arange(len(x[x.columns[0]])), x[x.columns[0]], rotation=&quot;vertical&quot;</span>
+<span class="c1">#         )</span>
+<span class="c1">#         plt.xlabel(x.columns[0])</span>
+<span class="c1">#         plt.ylabel(x.columns[1])</span>
+<span class="c1">#         plt.gca().spines[&quot;top&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;right&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;left&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;bottom&quot;].set_visible(False)</span>
+<span class="c1">#         return plt.gca()</span>
+
+<span class="c1">#     def barh(self, height=0.8, left=None, align=&quot;center&quot;, cmap=None, **kwargs):</span>
+<span class="c1">#         &quot;&quot;&quot;Make a pie chart from a dataframe.</span>
+
+<span class="c1">#         Examples</span>
+<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
+
+<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
+<span class="c1">#         ...         &quot;Num Documents&quot;: [3, 2, 2, 1],</span>
+<span class="c1">#         ...         &quot;ID&quot;: list(range(4)),</span>
+<span class="c1">#         ...     }</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#             Authors  Num Documents  ID</span>
+<span class="c1">#         0  author 3              3   0</span>
+<span class="c1">#         1  author 1              2   1</span>
+<span class="c1">#         2  author 0              2   2</span>
+<span class="c1">#         3  author 2              1   3</span>
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).barh(cmap=plt.cm.Blues)</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/barhplot.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/barhplot.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         plt.clf()</span>
+<span class="c1">#         x = self.df.copy()</span>
+<span class="c1">#         if &quot;ID&quot; in x.columns:</span>
+<span class="c1">#             x.pop(&quot;ID&quot;)</span>
+<span class="c1">#         if cmap is not None:</span>
+<span class="c1">#             cmap = plt.cm.get_cmap(cmap)</span>
+<span class="c1">#             kwargs[&quot;color&quot;] = [</span>
+<span class="c1">#                 cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))</span>
+<span class="c1">#                 for i in range(len(x[x.columns[1]]))</span>
+<span class="c1">#             ]</span>
+<span class="c1">#         plt.gca().barh(</span>
+<span class="c1">#             y=range(len(x)),</span>
+<span class="c1">#             width=x[x.columns[1]],</span>
+<span class="c1">#             height=height,</span>
+<span class="c1">#             left=left,</span>
+<span class="c1">#             align=align,</span>
+<span class="c1">#             **kwargs,</span>
+<span class="c1">#         )</span>
+<span class="c1">#         plt.gca().invert_yaxis()</span>
+<span class="c1">#         plt.yticks(np.arange(len(x[x.columns[0]])), x[x.columns[0]])</span>
+<span class="c1">#         plt.xlabel(x.columns[1])</span>
+<span class="c1">#         plt.ylabel(x.columns[0])</span>
+<span class="c1">#         #</span>
+<span class="c1">#         plt.gca().spines[&quot;top&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;right&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;left&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;bottom&quot;].set_visible(False)</span>
+<span class="c1">#         #</span>
+<span class="c1">#         return plt.gca()</span>
+
+<span class="c1">#     def plot(self, *args, scalex=True, scaley=True, **kwargs):</span>
+<span class="c1">#         &quot;&quot;&quot;Creates a plot from a dataframe.</span>
+
+<span class="c1">#         Examples</span>
+<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
+
+<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &quot;author 0&quot;: [ 1, 2, 3, 4, 5, 6, 7],</span>
+<span class="c1">#         ...         &quot;author 1&quot;: [14, 13, 12, 11, 10, 9, 8],</span>
+<span class="c1">#         ...         &quot;author 2&quot;: [1, 5, 8, 9, 0, 0, 0],</span>
+<span class="c1">#         ...         &quot;author 3&quot;: [0, 0, 1, 1, 1, 0, 0],</span>
+<span class="c1">#         ...         &quot;author 4&quot;: [0, 10, 0, 4, 2, 0, 1],</span>
+<span class="c1">#         ...     },</span>
+<span class="c1">#         ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#               author 0  author 1  author 2  author 3  author 4</span>
+<span class="c1">#         2010         1        14         1         0         0</span>
+<span class="c1">#         2011         2        13         5         0        10</span>
+<span class="c1">#         2012         3        12         8         1         0</span>
+<span class="c1">#         2013         4        11         9         1         4</span>
+<span class="c1">#         2014         5        10         0         1         2</span>
+<span class="c1">#         2015         6         9         0         0         0</span>
+<span class="c1">#         2016         7         8         0         0         1</span>
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).plot()</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotplot.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/plotplot.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         plt.clf()</span>
+<span class="c1">#         x = self.df.copy()</span>
+<span class="c1">#         if &quot;ID&quot; in x.columns:</span>
+<span class="c1">#             x.pop(&quot;ID&quot;)</span>
+<span class="c1">#             plt.gca().plot(</span>
+<span class="c1">#                 range(len(x)),</span>
+<span class="c1">#                 x[x.columns[1]],</span>
+<span class="c1">#                 *args,</span>
+<span class="c1">#                 scalex=scalex,</span>
+<span class="c1">#                 scaley=scaley,</span>
+<span class="c1">#                 **kwargs,</span>
+<span class="c1">#             )</span>
+<span class="c1">#             plt.xticks(</span>
+<span class="c1">#                 np.arange(len(x[x.columns[0]])), x[x.columns[0]], rotation=&quot;vertical&quot;</span>
+<span class="c1">#             )</span>
+<span class="c1">#             plt.xlabel(x.columns[0])</span>
+<span class="c1">#             plt.ylabel(x.columns[1])</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             for col in x.columns:</span>
+<span class="c1">#                 plt.plot(x.index, x[col], label=col, **kwargs)</span>
+<span class="c1">#             plt.legend()</span>
+
+<span class="c1">#         plt.gca().spines[&quot;top&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;right&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;left&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;bottom&quot;].set_visible(False)</span>
+<span class="c1">#         return plt.gca()</span>
+
+<span class="c1">#     def wordcloud(</span>
+<span class="c1">#         self,</span>
+<span class="c1">#         font_path=None,</span>
+<span class="c1">#         width=400,</span>
+<span class="c1">#         height=200,</span>
+<span class="c1">#         margin=2,</span>
+<span class="c1">#         ranks_only=None,</span>
+<span class="c1">#         prefer_horizontal=0.9,</span>
+<span class="c1">#         mask=None,</span>
+<span class="c1">#         scale=1,</span>
+<span class="c1">#         color_func=None,</span>
+<span class="c1">#         max_words=200,</span>
+<span class="c1">#         min_font_size=4,</span>
+<span class="c1">#         stopwords=None,</span>
+<span class="c1">#         random_state=None,</span>
+<span class="c1">#         background_color=&quot;black&quot;,</span>
+<span class="c1">#         max_font_size=None,</span>
+<span class="c1">#         font_step=1,</span>
+<span class="c1">#         mode=&quot;RGB&quot;,</span>
+<span class="c1">#         relative_scaling=&quot;auto&quot;,</span>
+<span class="c1">#         regexp=None,</span>
+<span class="c1">#         collocations=True,</span>
+<span class="c1">#         colormap=None,</span>
+<span class="c1">#         normalize_plurals=True,</span>
+<span class="c1">#         contour_width=0,</span>
+<span class="c1">#         contour_color=&quot;black&quot;,</span>
+<span class="c1">#         repeat=False,</span>
+<span class="c1">#         include_numbers=False,</span>
+<span class="c1">#         min_word_length=0,</span>
+<span class="c1">#     ):</span>
+<span class="c1">#         &quot;&quot;&quot;Plots a wordcloud from a dataframe.</span>
+
+<span class="c1">#         Examples</span>
+<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
+
+<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
+<span class="c1">#         ...         &quot;Num Documents&quot;: [10, 5, 2, 1],</span>
+<span class="c1">#         ...         &quot;ID&quot;: list(range(4)),</span>
+<span class="c1">#         ...     }</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#             Authors  Num Documents  ID</span>
+<span class="c1">#         0  author 3             10   0</span>
+<span class="c1">#         1  author 1              5   1</span>
+<span class="c1">#         2  author 0              2   2</span>
+<span class="c1">#         3  author 2              1   3</span>
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).wordcloud()</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/wordcloud.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/wordcloud.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         plt.clf()</span>
+<span class="c1">#         x = self.df.copy()</span>
+<span class="c1">#         x.pop(&quot;ID&quot;)</span>
+<span class="c1">#         words = {row[0]: row[1] for _, row in x.iterrows()}</span>
+<span class="c1">#         wordcloud = WordCloud(</span>
+<span class="c1">#             font_path=font_path,</span>
+<span class="c1">#             width=width,</span>
+<span class="c1">#             height=height,</span>
+<span class="c1">#             margin=margin,</span>
+<span class="c1">#             ranks_only=ranks_only,</span>
+<span class="c1">#             prefer_horizontal=prefer_horizontal,</span>
+<span class="c1">#             mask=mask,</span>
+<span class="c1">#             scale=scale,</span>
+<span class="c1">#             color_func=color_func,</span>
+<span class="c1">#             max_words=max_words,</span>
+<span class="c1">#             min_font_size=min_font_size,</span>
+<span class="c1">#             stopwords=stopwords,</span>
+<span class="c1">#             random_state=random_state,</span>
+<span class="c1">#             background_color=background_color,</span>
+<span class="c1">#             max_font_size=max_font_size,</span>
+<span class="c1">#             font_step=font_step,</span>
+<span class="c1">#             mode=mode,</span>
+<span class="c1">#             relative_scaling=relative_scaling,</span>
+<span class="c1">#             regexp=regexp,</span>
+<span class="c1">#             collocations=collocations,</span>
+<span class="c1">#             colormap=colormap,</span>
+<span class="c1">#             normalize_plurals=normalize_plurals,</span>
+<span class="c1">#             contour_width=contour_width,</span>
+<span class="c1">#             contour_color=contour_color,</span>
+<span class="c1">#             repeat=repeat,</span>
+<span class="c1">#             include_numbers=include_numbers,</span>
+<span class="c1">#             min_word_length=min_word_length,</span>
+<span class="c1">#         )</span>
+<span class="c1">#         wordcloud.generate_from_frequencies(words)</span>
+<span class="c1">#         plt.gca().imshow(wordcloud, interpolation=&quot;bilinear&quot;)</span>
+<span class="c1">#         plt.gca().axis(&quot;off&quot;)</span>
+<span class="c1">#         return plt.gca()</span>
+
+<span class="c1">#     def stacked_bar(</span>
+<span class="c1">#         self, width=0.8, bottom=None, align=&quot;center&quot;, cmap=&quot;Greys&quot;, **kwargs</span>
+<span class="c1">#     ):</span>
+<span class="c1">#         &quot;&quot;&quot;Stacked vertical bar plot.</span>
+
+<span class="c1">#         Examples</span>
+<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
+
+<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &quot;Authors&quot;: &quot;author 0,author 1,author 2,author 3,author 3,author 5&quot;.split(&quot;,&quot;),</span>
+<span class="c1">#         ...         &quot;col 0&quot;: [6, 5, 4, 3, 2, 1],</span>
+<span class="c1">#         ...         &quot;col 1&quot;: [0, 2, 5, 1, 5, 7],</span>
+<span class="c1">#         ...         &quot;ID&quot;: list(range(6)),</span>
+<span class="c1">#         ...     }</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#             Authors  col 0  col 1  ID</span>
+<span class="c1">#         0  author 0      6      0   0</span>
+<span class="c1">#         1  author 1      5      2   1</span>
+<span class="c1">#         2  author 2      4      5   2</span>
+<span class="c1">#         3  author 3      3      1   3</span>
+<span class="c1">#         4  author 3      2      5   4</span>
+<span class="c1">#         5  author 5      1      7   5</span>
+
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).stacked_bar(cmap=&#39;Blues&#39;)</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/stkbar0.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/stkbar0.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &quot;Authors&quot;: &quot;author 0,author 1,author 2,author 3,author 3,author 5&quot;.split(&quot;,&quot;),</span>
+<span class="c1">#         ...         &quot;col 0&quot;: [6, 5, 2, 3, 4, 1],</span>
+<span class="c1">#         ...         &quot;col 1&quot;: [0, 1, 2, 3, 4, 5],</span>
+<span class="c1">#         ...         &quot;col 2&quot;: [3, 2, 3, 1, 0, 1],</span>
+<span class="c1">#         ...         &quot;ID&quot;: list(range(6)),</span>
+<span class="c1">#         ...     }</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#             Authors  col 0  col 1  col 2  ID</span>
+<span class="c1">#         0  author 0      6      0      3   0</span>
+<span class="c1">#         1  author 1      5      1      2   1</span>
+<span class="c1">#         2  author 2      2      2      3   2</span>
+<span class="c1">#         3  author 3      3      3      1   3</span>
+<span class="c1">#         4  author 3      4      4      0   4</span>
+<span class="c1">#         5  author 5      1      5      1   5</span>
+
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).stacked_bar(cmap=&#39;Blues&#39;)</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/stkbar1.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/stkbar1.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         plt.clf()</span>
+<span class="c1">#         cmap = plt.cm.get_cmap(cmap)</span>
+<span class="c1">#         x = self.df.copy()</span>
+<span class="c1">#         if &quot;ID&quot; in x.columns:</span>
+<span class="c1">#             x.pop(&quot;ID&quot;)</span>
+<span class="c1">#         if bottom is None:</span>
+<span class="c1">#             bottom = x[x.columns[1]].map(lambda w: 0.0)</span>
+<span class="c1">#         for icol, col in enumerate(x.columns[1:]):</span>
+<span class="c1">#             if cmap is not None:</span>
+<span class="c1">#                 kwargs[&quot;color&quot;] = cmap((0.2 + 0.75 * icol / (len(x.columns) - 1)))</span>
+<span class="c1">#             plt.gca().bar(</span>
+<span class="c1">#                 x=range(len(x)),</span>
+<span class="c1">#                 height=x[col],</span>
+<span class="c1">#                 width=width,</span>
+<span class="c1">#                 bottom=bottom,</span>
+<span class="c1">#                 align=align,</span>
+<span class="c1">#                 **({}),</span>
+<span class="c1">#                 **kwargs,</span>
+<span class="c1">#             )</span>
+<span class="c1">#             bottom = bottom + x[col]</span>
+<span class="c1">#         plt.xticks(</span>
+<span class="c1">#             np.arange(len(x[x.columns[0]])), x[x.columns[0]], rotation=&quot;vertical&quot;</span>
+<span class="c1">#         )</span>
+<span class="c1">#         plt.xlabel(x.columns[0])</span>
+<span class="c1">#         # plt.ylabel(x.columns[1])</span>
+<span class="c1">#         plt.gca().spines[&quot;top&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;right&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;left&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;bottom&quot;].set_visible(False)</span>
+<span class="c1">#         return plt.gca()</span>
+
+<span class="c1">#     def stacked_barh(self, height=0.8, left=None, align=&quot;center&quot;, cmap=None, **kwargs):</span>
+<span class="c1">#         &quot;&quot;&quot;Stacked horzontal bar plot.</span>
+
+<span class="c1">#         Examples</span>
+<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
+
+<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &quot;Authors&quot;: &quot;author 0,author 1,author 2,author 3,author 3,author 5&quot;.split(&quot;,&quot;),</span>
+<span class="c1">#         ...         &quot;col 0&quot;: [6, 5, 4, 3, 2, 1],</span>
+<span class="c1">#         ...         &quot;col 1&quot;: [0, 2, 5, 1, 5, 7],</span>
+<span class="c1">#         ...         &quot;ID&quot;: list(range(6)),</span>
+<span class="c1">#         ...     }</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#             Authors  col 0  col 1  ID</span>
+<span class="c1">#         0  author 0      6      0   0</span>
+<span class="c1">#         1  author 1      5      2   1</span>
+<span class="c1">#         2  author 2      4      5   2</span>
+<span class="c1">#         3  author 3      3      1   3</span>
+<span class="c1">#         4  author 3      2      5   4</span>
+<span class="c1">#         5  author 5      1      7   5</span>
+
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).stacked_barh(cmap=&#39;Blues&#39;)</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/stkbarh0.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/stkbarh0.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     {</span>
+<span class="c1">#         ...         &quot;Authors&quot;: &quot;author 0,author 1,author 2,author 3,author 3,author 5&quot;.split(&quot;,&quot;),</span>
+<span class="c1">#         ...         &quot;col 0&quot;: [6, 5, 2, 3, 4, 1],</span>
+<span class="c1">#         ...         &quot;col 1&quot;: [0, 1, 2, 3, 4, 5],</span>
+<span class="c1">#         ...         &quot;col 2&quot;: [3, 2, 3, 1, 0, 1],</span>
+<span class="c1">#         ...         &quot;ID&quot;: list(range(6)),</span>
+<span class="c1">#         ...     }</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#             Authors  col 0  col 1  col 2  ID</span>
+<span class="c1">#         0  author 0      6      0      3   0</span>
+<span class="c1">#         1  author 1      5      1      2   1</span>
+<span class="c1">#         2  author 2      2      2      3   2</span>
+<span class="c1">#         3  author 3      3      3      1   3</span>
+<span class="c1">#         4  author 3      4      4      0   4</span>
+<span class="c1">#         5  author 5      1      5      1   5</span>
+
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).stacked_barh(cmap=&#39;Blues&#39;)</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/stkbarh1.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/stkbarh1.png</span>
+<span class="c1">#             :width: 400px</span>
+<span class="c1">#             :align: center</span>
+
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         plt.clf()</span>
+<span class="c1">#         cmap = plt.cm.get_cmap(cmap)</span>
+<span class="c1">#         x = self.df.copy()</span>
+<span class="c1">#         if &quot;ID&quot; in x.columns:</span>
+<span class="c1">#             x.pop(&quot;ID&quot;)</span>
+<span class="c1">#         if left is None:</span>
+<span class="c1">#             left = x[x.columns[1]].map(lambda w: 0.0)</span>
+<span class="c1">#         for icol, col in enumerate(x.columns[1:]):</span>
+<span class="c1">#             if cmap is not None:</span>
+<span class="c1">#                 kwargs[&quot;color&quot;] = cmap((0.2 + 0.75 * icol / (len(x.columns) - 1)))</span>
+<span class="c1">#             plt.gca().barh(</span>
+<span class="c1">#                 y=range(len(x)),</span>
+<span class="c1">#                 width=x[col],</span>
+<span class="c1">#                 height=height,</span>
+<span class="c1">#                 left=left,</span>
+<span class="c1">#                 align=align,</span>
+<span class="c1">#                 **({}),</span>
+<span class="c1">#                 **kwargs,</span>
+<span class="c1">#             )</span>
+<span class="c1">#             left = left + x[col]</span>
+<span class="c1">#         plt.yticks(np.arange(len(x[x.columns[0]])), x[x.columns[0]])</span>
+<span class="c1">#         plt.gca().spines[&quot;top&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;right&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;left&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;bottom&quot;].set_visible(False)</span>
+<span class="c1">#         return plt.gca()</span>
+
+<span class="c1">#     def correspondence_plot(self):</span>
+<span class="c1">#         &quot;&quot;&quot;Computes and plot clusters of data using correspondence analysis.</span>
+
+
+<span class="c1">#         Examples</span>
+<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
+
+<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...     [[3, 8, 6, 1],</span>
+<span class="c1">#         ...      [3, 4, 7, 5],</span>
+<span class="c1">#         ...      [9, 9, 2, 3],</span>
+<span class="c1">#         ...      [0, 1, 0, 4],</span>
+<span class="c1">#         ...      [4, 4, 8, 7],</span>
+<span class="c1">#         ...      [2, 4, 4, 9],</span>
+<span class="c1">#         ...      [4, 2, 4, 1],</span>
+<span class="c1">#         ...      [0, 0, 9, 2],</span>
+<span class="c1">#         ...      [9, 3, 9, 4],</span>
+<span class="c1">#         ...      [2, 3, 2, 0]],</span>
+<span class="c1">#         ...     columns=list(&#39;ABCD&#39;), index=list(&#39;abcdefghij&#39;))</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#            A  B  C  D</span>
+<span class="c1">#         a  3  8  6  1</span>
+<span class="c1">#         b  3  4  7  5</span>
+<span class="c1">#         c  9  9  2  3</span>
+<span class="c1">#         d  0  1  0  4</span>
+<span class="c1">#         e  4  4  8  7</span>
+<span class="c1">#         f  2  4  4  9</span>
+<span class="c1">#         g  4  2  4  1</span>
+<span class="c1">#         h  0  0  9  2</span>
+<span class="c1">#         i  9  3  9  4</span>
+<span class="c1">#         j  2  3  2  0</span>
+
+<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).correspondence_plot()</span>
+<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/corana0.png&#39;)</span>
+
+<span class="c1">#         .. image:: images/corana0.png</span>
+<span class="c1">#             :width: 500px</span>
+<span class="c1">#             :align: center</span>
+
+
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         n = self.df.values.sum()</span>
+<span class="c1">#         P = self.df.values / n</span>
+<span class="c1">#         column_masses = P.sum(axis=0)</span>
+<span class="c1">#         row_masses = P.sum(axis=1)</span>
+<span class="c1">#         E = np.outer(row_masses, column_masses)</span>
+<span class="c1">#         R = P - E</span>
+<span class="c1">#         I = R / E</span>
+<span class="c1">#         Z = I * np.sqrt(E)</span>
+<span class="c1">#         # u: left (rows),  s: singular values,  vh: right (columns)</span>
+<span class="c1">#         u, d, v = np.linalg.svd(Z)</span>
+<span class="c1">#         u = u[:, 0 : v.shape[0]]</span>
+<span class="c1">#         std_coordinates_rows = u / np.sqrt(row_masses[:, None])</span>
+<span class="c1">#         std_coordinates_cols = np.transpose(v) / np.sqrt(column_masses[None, :])</span>
+<span class="c1">#         ppal_coordinates_rows = std_coordinates_rows * d[None, :]</span>
+<span class="c1">#         ppal_coordinates_cols = std_coordinates_cols * d[:, None]</span>
+<span class="c1">#         df_rows = pd.DataFrame(</span>
+<span class="c1">#             ppal_coordinates_rows,</span>
+<span class="c1">#             index=self.df.index,</span>
+<span class="c1">#             columns=[&quot;f{:d}&quot;.format(i) for i in range(len(self.df.columns))],</span>
+<span class="c1">#         )</span>
+<span class="c1">#         df_columns = pd.DataFrame(</span>
+<span class="c1">#             ppal_coordinates_cols,</span>
+<span class="c1">#             index=self.df.columns,</span>
+<span class="c1">#             columns=[&quot;f{:d}&quot;.format(i) for i in range(len(self.df.columns))],</span>
+<span class="c1">#         )</span>
+<span class="c1">#         result = pd.concat([df_columns, df_rows])</span>
+
+<span class="c1">#         plt.clf()</span>
+<span class="c1">#         plt.gca().scatter(</span>
+<span class="c1">#             result.f0[: len(self.df.columns)], result.f1[: len(self.df.columns)]</span>
+<span class="c1">#         )</span>
+
+<span class="c1">#         plt.gca().scatter(</span>
+<span class="c1">#             result.f0[len(self.df.columns) :],</span>
+<span class="c1">#             result.f1[len(self.df.columns) :],</span>
+<span class="c1">#             marker=&quot;.&quot;,</span>
+<span class="c1">#         )</span>
+
+<span class="c1">#         for i in range(len(self.df.columns)):</span>
+<span class="c1">#             plt.text(result.f0[i], result.f1[i], self.df.columns[i])</span>
+
+<span class="c1">#         plt.gca().spines[&quot;top&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;right&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;left&quot;].set_visible(False)</span>
+<span class="c1">#         plt.gca().spines[&quot;bottom&quot;].set_visible(False)</span>
+<span class="c1">#         return plt.gca()</span>
+
+<span class="c1">#         # def encircle(x, y, ax=None, **kw):</span>
+<span class="c1">#         #     p = np.c_[x, y]</span>
+<span class="c1">#         #     hull = ConvexHull(p)</span>
+<span class="c1">#         #     poly = plt.Polygon(p[hull.vertices, :], **kw)</span>
+<span class="c1">#         #     plt.gca().add_patch(poly)</span>
+<span class="c1">#         #     #</span>
+
+<span class="c1">#         # plt.clf()</span>
+<span class="c1">#         # plt.scatter(self.df[df.columns[0]], self.df[df.columns[1]], **kwargs)</span>
+<span class="c1">#         # for i, index in enumerate(self.df.index):</span>
+<span class="c1">#         #     plt.text(df[df.columns[0]][index], df[df.columns[1]][index], df.index[i])</span>
+
+<span class="c1">#         # cluster = AgglomerativeClustering(</span>
+<span class="c1">#         #     n_clusters=n_clusters, affinity=&quot;euclidean&quot;, linkage=&quot;ward&quot;</span>
+<span class="c1">#         # )</span>
+<span class="c1">#         # df = df.copy()</span>
+<span class="c1">#         # cluster.fit_predict(df)</span>
+
+<span class="c1">#         # for icluster in range(n_clusters):</span>
+<span class="c1">#         #     encircle(</span>
+<span class="c1">#         #         df.loc[cluster.labels_ == icluster, df.columns[0]],</span>
+<span class="c1">#         #         df.loc[cluster.labels_ == icluster, df.columns[1]],</span>
+<span class="c1">#         #         alpha=0.2,</span>
+<span class="c1">#         #         linewidth=0,</span>
+<span class="c1">#         #     )</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

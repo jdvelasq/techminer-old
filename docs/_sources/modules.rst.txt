@@ -4,7 +4,11 @@ Modules
 .. toctree::
     :maxdepth: 2
     
-    
+    jupyter
+    analytics
+    plots
+    text
+
 dataframe
 maps
 plot
