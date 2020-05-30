@@ -9,9 +9,9 @@ import pandas as pd
 import numpy as np
 from techminer.text import remove_accents, extract_country, extract_institution
 from tqdm import tqdm
+from techminer.keywords import Keywords
 
-
-scopus_to_wos_names = {
+SCOPUS_TO_WOS_NAMES = {
     "Abbreviated Source Title": "J9",
     "Abstract": "AB",
     "Access Type": "OA",
@@ -48,7 +48,7 @@ scopus_to_wos_names = {
     "Year": "PY",
 }
 
-column_names_for_tables = {
+ABBR_TO_NAMES = {
     "AU": "Authors",
     "DE": "Author Keywords",
     "ID": "Index Keywords",
@@ -57,6 +57,57 @@ column_names_for_tables = {
 }
 
 MULTIVALUED_COLS = ["AU", "DE", "ID", "RI", "C1", "AU_CO", "AU_IN", "AU_C1"]
+
+##
+##
+## Auxiliary Functions
+##
+##
+def __explode(x, column):
+    """Transform each element of a field to a row, reseting index values.
+
+    Args:
+        column (str): the column to explode.
+        sep (str): Character used as internal separator for the elements in the column.
+
+    Returns:
+        DataFrame. Exploded dataframe.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = pd.DataFrame(
+    ...     {
+    ...         "AU": "author 0;author 1;author 2,author 3,author 4".split(","),
+    ...         "RecID": list(range(3)),
+    ...      }
+    ... )
+    >>> x
+                               AU  RecID
+    0  author 0;author 1;author 2      0
+    1                    author 3      1
+    2                    author 4      2
+
+    >>> __explode(x, 'AU')
+             AU  RecID
+    0  author 0      0
+    1  author 1      0
+    2  author 2      0
+    3  author 3      1
+    4  author 4      2
+
+    """
+    if column in MULTIVALUED_COLS:
+        x = x.copy()
+        x[column] = x[column].map(
+            lambda w: sorted(list(set(w.split(";")))) if isinstance(w, str) else w
+        )
+        x = x.explode(column)
+        x[column] = x[column].map(lambda w: w.strip() if isinstance(w, str) else w)
+        x = x.reset_index(drop=True)
+    return x
+
 
 ##
 ##
@@ -71,8 +122,8 @@ def load_scopus(x):
         # 1. Rename and seleect columns
         #
         x = x.copy()
-        x = x.rename(columns=scopus_to_wos_names)
-        x = x[[w for w in x.columns if w in scopus_to_wos_names.values()]]
+        x = x.rename(columns=SCOPUS_TO_WOS_NAMES)
+        x = x[[w for w in x.columns if w in SCOPUS_TO_WOS_NAMES.values()]]
         pbar.update(1)
         #
         # 2. Change ',' by ';' and remove '.' in author names
@@ -147,6 +198,66 @@ def load_scopus(x):
         x["N_AU"] = x["AU"].map(lambda w: len(w.split(";")) if not pd.isna(w) else 0)
         pbar.update(1)
     return x
+
+
+##
+##
+##  Data coverage
+##
+##
+
+
+def coverage(x):
+    """Reports the number of not `None` elements for column in a dataframe.
+
+    Returns:
+        Pandas DataFrame.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+
+    >>> import pandas as pd
+    >>> x = pd.DataFrame(
+    ...   {
+    ...      "Authors": "author 0,author 0,author 0;author 0;author 0;author 1;author 2;author 0".split(";"),
+    ...      "Author(s) ID": "0;1;2;,3;,4;,5;,6;,7:".split(','),
+    ...      "ID": list(range(6)),
+    ...      "Source title": ['source {:d}'.format(w) for w in range(5)] + [pd.NA],
+    ...      "None field": [pd.NA] * 6,
+    ...   }
+    ... )
+    >>> x
+                          Authors Author(s) ID  ID Source title None field
+    0  author 0,author 0,author 0       0;1;2;   0     source 0       <NA>
+    1                    author 0           3;   1     source 1       <NA>
+    2                    author 0           4;   2     source 2       <NA>
+    3                    author 1           5;   3     source 3       <NA>
+    4                    author 2           6;   4     source 4       <NA>
+    5                    author 0           7:   5         <NA>       <NA>
+
+    >>> coverage(x)
+               Column  Number of items Coverage (%)
+    0         Authors                6      100.00%
+    1    Author(s) ID                6      100.00%
+    2  Index Keywords                6      100.00%
+    3    Source title                5       83.33%
+    4      None field                0        0.00%
+
+    """
+
+    return pd.DataFrame(
+        {
+            "Column": [
+                ABBR_TO_NAMES[w] if w in ABBR_TO_NAMES else w for w in x.columns
+            ],
+            "Number of items": [len(x) - x[col].isnull().sum() for col in x.columns],
+            "Coverage (%)": [
+                "{:5.2%}".format((len(x) - x[col].isnull().sum()) / len(x))
+                for col in x.columns
+            ],
+        }
+    )
 
 
 ##
@@ -272,7 +383,7 @@ def descriptive_stats(x):
     Authors of multi authored articles           2
     Co-authors per article                     1.4
     Average articles per Source title            1
-    Compound annual growth rate              0.0 %                                             
+    Compound annual growth rate              0.0 %
 
     """
     descriptions = [
@@ -352,19 +463,26 @@ def summary_by_year(df):
     4  2012  14      4
     5  2016  15      5
 
-    >>> summary_by_year(df)
-       Year  Times Cited  ...  Times Cited (Cum) Avg. Times Cited
-    0  2010           21  ...                 21             10.5
-    1  2011           25  ...                 46             12.5
-    2  2012           14  ...                 60             14.0
-    3  2013            0  ...                 60              0.0
-    4  2014            0  ...                 60              0.0
-    5  2015            0  ...                 60              0.0
-    6  2016           15  ...                 75             15.0
-    <BLANKLINE>
-    [7 rows x 7 columns]
+    >>> summary_by_year(df)[['Year', 'Times Cited', 'Num Documents', 'RecID']]
+       Year  Times Cited  Num Documents   RecID
+    0  2010           21              2  [0, 1]
+    1  2011           25              2  [2, 3]
+    2  2012           14              1     [4]
+    3  2013            0              0      []
+    4  2014            0              0      []
+    5  2015            0              0      []
+    6  2016           15              1     [5]
 
-    
+    >>> summary_by_year(df)[['Num Documents (Cum)', 'Times Cited (Cum)', 'Avg. Times Cited']]
+       Num Documents (Cum)  Times Cited (Cum)  Avg. Times Cited
+    0                    2                 21              10.5
+    1                    4                 46              12.5
+    2                    5                 60              14.0
+    3                    5                 60               0.0
+    4                    5                 60               0.0
+    5                    5                 60               0.0
+    6                    6                 75              15.0
+
     """
     data = df[["PY", "TC", "RecID"]].explode("PY")
     data["Num Documents"] = 1
@@ -389,7 +507,192 @@ def summary_by_year(df):
         lambda x: 0 if pd.isna(x) else x
     )
     result = result.reset_index()
-    result = result.rename(columns=column_names_for_tables)
+    result = result.rename(columns=ABBR_TO_NAMES)
+    return result
+
+
+##
+##
+##  Analysis by term
+##
+##
+
+
+def summarize_by_term(x, column, keywords=None):
+    """Summarize the number of documents and citations by term in a dataframe.
+
+    Args:
+        column (str): the column to explode.
+        keywords (int, list): filter the results.
+
+    Returns:
+        DataFrame.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = pd.DataFrame(
+    ...     {
+    ...          "AU": "author 0;author 1;author 2,author 0,author 1,author 3".split(","),
+    ...          "TC": list(range(10,14)),
+    ...          "RecID": list(range(4)),
+    ...     }
+    ... )
+    >>> x
+                               AU  TC  RecID
+    0  author 0;author 1;author 2  10      0
+    1                    author 0  11      1
+    2                    author 1  12      2
+    3                    author 3  13      3
+
+    >>> summarize_by_term(x, 'AU')
+        Authors  Num Documents  Times Cited   RecID
+    0  author 0              2           21  [0, 1]
+    1  author 1              2           22  [0, 2]
+    2  author 2              1           10     [0]
+    3  author 3              1           13     [3]
+
+    >>> keywords = Keywords(['author 1', 'author 2'])
+    >>> keywords = keywords.compile()
+    >>> summarize_by_term(x, 'AU', keywords=keywords)
+        Authors  Num Documents  Times Cited   RecID
+    0  author 1              2           22  [0, 2]
+    1  author 2              1           10     [0]
+
+    """
+    x = __explode(x[[column, "TC", "RecID"]], column)
+    x["Num Documents"] = 1
+    result = x.groupby(column, as_index=False).agg(
+        {"Num Documents": np.size, "TC": np.sum}
+    )
+    result = result.assign(
+        RecID=x.groupby(column).agg({"RecID": list}).reset_index()["RecID"]
+    )
+    result["TC"] = result["TC"].map(lambda x: int(x))
+    if keywords is not None:
+        result = result[result[column].map(lambda w: w in keywords)]
+    result.sort_values(
+        [column, "Num Documents", "TC"],
+        ascending=[True, False, False],
+        inplace=True,
+        ignore_index=True,
+    )
+    result = result.rename(columns=ABBR_TO_NAMES)
+    return result
+
+
+def documents_by_term(x, column, sep=None, keywords=None):
+    """Computes the number of documents per term in a given column.
+
+    Args:
+        column (str): the column to explode.
+        sep (str): Character used as internal separator for the elements in the column.
+        keywords (Keywords): filter the result using the specified Keywords object.
+
+    Returns:
+        DataFrame.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = pd.DataFrame(
+    ...     {
+    ...          "AU": "author 0;author 1;author 2,author 0,author 1,author 3".split(","),
+    ...          "TC": list(range(10,14)),
+    ...          "RecID": list(range(4)),
+    ...     }
+    ... )
+    >>> x
+                               AU  TC  RecID
+    0  author 0;author 1;author 2  10      0
+    1                    author 0  11      1
+    2                    author 1  12      2
+    3                    author 3  13      3
+
+    >>> documents_by_term(x, 'AU')
+        Authors  Num Documents   RecID
+    0  author 0              2  [0, 1]
+    1  author 1              2  [0, 2]
+    2  author 2              1     [0]
+    3  author 3              1     [3]
+
+    >>> keywords = Keywords(['author 1', 'author 2'])
+    >>> keywords = keywords.compile()
+    >>> documents_by_term(x, 'AU', keywords=keywords)
+        Authors  Num Documents   RecID
+    0  author 1              2  [0, 2]
+    1  author 2              1     [0]
+
+    """
+
+    result = summarize_by_term(x, column, keywords)
+    column = ABBR_TO_NAMES[column]
+    result.pop("Times Cited")
+    result.sort_values(
+        ["Num Documents", column],
+        ascending=[False, True],
+        inplace=True,
+        ignore_index=True,
+    )
+    return result
+
+
+def citations_by_term(x, column, keywords=None):
+    """Computes the number of citations by item in a column.
+
+    Args:
+        column (str): the column to explode.
+        sep (str): Character used as internal separator for the elements in the column.
+        keywords (Keywords): filter the result using the specified Keywords object.
+
+    Returns:
+        DataFrame.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = pd.DataFrame(
+    ...     {
+    ...          "AU": "author 0;author 1;author 2,author 0,author 1,author 3".split(","),
+    ...          "TC": list(range(10,14)),
+    ...          "RecID": list(range(4)),
+    ...     }
+    ... )
+    >>> x
+                               AU  TC  RecID
+    0  author 0;author 1;author 2  10      0
+    1                    author 0  11      1
+    2                    author 1  12      2
+    3                    author 3  13      3
+
+    >>> citations_by_term(x, 'AU')
+        Authors  Times Cited   RecID
+    0  author 1           22  [0, 2]
+    1  author 0           21  [0, 1]
+    2  author 3           13     [3]
+    3  author 2           10     [0]
+
+    >>> keywords = Keywords(['author 1', 'author 2'])
+    >>> keywords = keywords.compile()
+    >>> citations_by_term(x, 'AU', keywords=keywords)
+        Authors  Times Cited   RecID
+    0  author 1           22  [0, 2]
+    1  author 2           10     [0]
+
+
+    """
+    result = summarize_by_term(x, column, keywords)
+    column = ABBR_TO_NAMES[column]
+    result.pop("Num Documents")
+    result.sort_values(
+        ["Times Cited", column],
+        ascending=[False, True],
+        inplace=True,
+        ignore_index=True,
+    )
     return result
 
 
