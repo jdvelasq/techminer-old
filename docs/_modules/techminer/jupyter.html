@@ -193,6 +193,54 @@
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
         <span class="n">widget</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">widget</span></div>
+
+
+<div class="viewcode-block" id="summary_by_term"><a class="viewcode-back" href="../../jupyter.html#techminer.jupyter.summary_by_term">[docs]</a><span class="k">def</span> <span class="nf">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;AU&quot;</span><span class="p">,</span> <span class="s2">&quot;Authors&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;SO&quot;</span><span class="p">,</span> <span class="s2">&quot;Source titles&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Index Keywords &quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;DE&quot;</span><span class="p">,</span> <span class="s2">&quot;Author Keywords&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;DE_ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Keywords&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;AU_CO&quot;</span><span class="p">,</span> <span class="s2">&quot;Country&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;AU_IN&quot;</span><span class="p">,</span> <span class="s2">&quot;Institution&quot;</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="n">widget_tab0_children</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">documents_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">columns</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">y</span><span class="p">[[</span><span class="n">y</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">w</span><span class="p">:</span>
+            <span class="n">display</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="n">widget_tab0_children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="c1">#</span>
+    <span class="n">widget_tab0</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Tab</span><span class="p">()</span>
+    <span class="n">widget_tab0</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">widget_tab0_children</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)):</span>
+        <span class="n">widget_tab0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">columns</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+    <span class="c1">#</span>
+    <span class="n">widget_tab1_children</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">citations_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">columns</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">y</span><span class="p">[[</span><span class="n">y</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;Times Cited&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">w</span><span class="p">:</span>
+            <span class="n">display</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="n">widget_tab1_children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="c1">#</span>
+    <span class="n">widget_tab1</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Tab</span><span class="p">()</span>
+    <span class="n">widget_tab1</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">widget_tab1_children</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)):</span>
+        <span class="n">widget_tab1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">columns</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+    <span class="c1">#</span>
+    <span class="n">accordion</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Accordion</span><span class="p">()</span>
+    <span class="n">accordion</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">widget_tab0</span><span class="p">,</span> <span class="n">widget_tab1</span><span class="p">]</span>
+    <span class="n">accordion</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Documents by term&quot;</span><span class="p">)</span>
+    <span class="n">accordion</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Citations by term&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">accordion</span></div>
 </pre></div>
 
            </div>

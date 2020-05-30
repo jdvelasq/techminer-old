@@ -54,9 +54,14 @@ ABBR_TO_NAMES = {
     "ID": "Index Keywords",
     "PY": "Year",
     "TC": "Times Cited",
+    "SO": "Source title",
+    "DE_ID": "Keywords",
+    "AU_CO": "Country",
+    "AU_IN": "Institution",
+    "AU_CO1": "Authors with affiliations",
 }
 
-MULTIVALUED_COLS = ["AU", "DE", "ID", "RI", "C1", "AU_CO", "AU_IN", "AU_C1"]
+MULTIVALUED_COLS = ["AU", "DE", "ID", "RI", "C1", "DE_ID", "AU_CO", "AU_IN", "AU_C1"]
 
 ##
 ##
@@ -518,7 +523,7 @@ def summary_by_year(df):
 ##
 
 
-def summarize_by_term(x, column, keywords=None):
+def summary_by_term(x, column, keywords=None):
     """Summarize the number of documents and citations by term in a dataframe.
 
     Args:
@@ -546,7 +551,7 @@ def summarize_by_term(x, column, keywords=None):
     2                    author 1  12      2
     3                    author 3  13      3
 
-    >>> summarize_by_term(x, 'AU')
+    >>> summary_by_term(x, 'AU')
         Authors  Num Documents  Times Cited   RecID
     0  author 0              2           21  [0, 1]
     1  author 1              2           22  [0, 2]
@@ -555,12 +560,13 @@ def summarize_by_term(x, column, keywords=None):
 
     >>> keywords = Keywords(['author 1', 'author 2'])
     >>> keywords = keywords.compile()
-    >>> summarize_by_term(x, 'AU', keywords=keywords)
+    >>> summary_by_term(x, 'AU', keywords=keywords)
         Authors  Num Documents  Times Cited   RecID
     0  author 1              2           22  [0, 2]
     1  author 2              1           10     [0]
 
     """
+    x = x.copy()
     x = __explode(x[[column, "TC", "RecID"]], column)
     x["Num Documents"] = 1
     result = x.groupby(column, as_index=False).agg(
@@ -582,7 +588,7 @@ def summarize_by_term(x, column, keywords=None):
     return result
 
 
-def documents_by_term(x, column, sep=None, keywords=None):
+def documents_by_term(x, column, keywords=None):
     """Computes the number of documents per term in a given column.
 
     Args:
@@ -627,7 +633,7 @@ def documents_by_term(x, column, sep=None, keywords=None):
 
     """
 
-    result = summarize_by_term(x, column, keywords)
+    result = summary_by_term(x, column, keywords)
     column = ABBR_TO_NAMES[column]
     result.pop("Times Cited")
     result.sort_values(
@@ -684,7 +690,7 @@ def citations_by_term(x, column, keywords=None):
 
 
     """
-    result = summarize_by_term(x, column, keywords)
+    result = summary_by_term(x, column, keywords)
     column = ABBR_TO_NAMES[column]
     result.pop("Num Documents")
     result.sort_values(

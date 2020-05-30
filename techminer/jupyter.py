@@ -43,3 +43,51 @@ def summary_by_year(x, **kwargs):
     for i in range(len(data)):
         widget.set_title(i, data[i][1])
     return widget
+
+
+def summary_by_term(x, top_n=10, **kwargs):
+    """
+    """
+    columns = [
+        ("AU", "Authors"),
+        ("SO", "Source titles"),
+        ("ID", "Index Keywords "),
+        ("DE", "Author Keywords"),
+        ("DE_ID", "Keywords"),
+        ("AU_CO", "Country"),
+        ("AU_IN", "Institution"),
+    ]
+
+    widget_tab0_children = []
+    for i in range(len(columns)):
+        y = tc.documents_by_term(x, columns[i][0])
+        z = y[[y.columns[0], "Num Documents"]].head(top_n)
+        w = widgets.Output()
+        with w:
+            display(plt.bar(z, **kwargs))
+        widget_tab0_children.append(w)
+        #
+    widget_tab0 = widgets.Tab()
+    widget_tab0.children = widget_tab0_children
+    for i in range(len(columns)):
+        widget_tab0.set_title(i, columns[i][1])
+    #
+    widget_tab1_children = []
+    for i in range(len(columns)):
+        y = tc.citations_by_term(x, columns[i][0])
+        z = y[[y.columns[0], "Times Cited"]].head(top_n)
+        w = widgets.Output()
+        with w:
+            display(plt.bar(z, **kwargs))
+        widget_tab1_children.append(w)
+        #
+    widget_tab1 = widgets.Tab()
+    widget_tab1.children = widget_tab1_children
+    for i in range(len(columns)):
+        widget_tab1.set_title(i, columns[i][1])
+    #
+    accordion = widgets.Accordion()
+    accordion.children = [widget_tab0, widget_tab1]
+    accordion.set_title(0, "Documents by term")
+    accordion.set_title(1, "Citations by term")
+    return accordion
