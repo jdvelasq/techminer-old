@@ -10,9 +10,11 @@
 
 # """
 
-from os.path import dirname, join
 import json
 import re
+from os.path import dirname, join
+
+import pandas as pd
 
 
 def extract_country(x):
@@ -81,26 +83,56 @@ def extract_country(x):
 def extract_institution(x):
     """
     """
+
+    def search_name(affiliation):
+        if len(affiliation.split(",")) == 1:
+            return item
+        affiliation = affiliation.lower()
+        for elem in affiliation.split(","):
+            for name in names:
+                if name in elem:
+                    return elem
+        return None
+
+    #
+    names = [
+        "univ",
+        "institut",
+        "centre",
+        "center",
+        "centro",
+        "agency",
+        "council",
+        "commission",
+        "college",
+        "politec",
+        "inc.",
+        "ltd.",
+        "office",
+        "department",
+        "direction" "laboratory",
+        "laboratoire",
+        "colegio",
+        "school",
+        "scuola",
+        "ecole",
+        "hospital",
+        "association",
+        "asociacion",
+        "company",
+        "organization",
+        "academy",
+    ]
+
     if x is pd.isna(x) is True or x is None:
         return None
-    x = x.split(";")
     institutions = []
+    x = x.split(";")
     for item in x:
-        institution = None
-        if len(item.split(",")) == 1:
-            institution = item
+        institution = search_name(item)
         if institution is None:
             if len(item.split(",")) == 2:
                 institution = item.split(",")[0]
-        if institution is None:
-            for elem in item.split(","):
-                if "Univesi" in elem or "Univ." in elem:
-                    institution = elem
-        if institution is None:
-            for elem in item.split(","):
-                if "Institut" in elem:
-                    institution = elem
-
         if institution is not None:
             institutions.append(institution)
     if institutions is not None:

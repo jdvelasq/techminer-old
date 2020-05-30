@@ -7,7 +7,9 @@ Analytics
 
 import pandas as pd
 import numpy as np
-from techminer.text import remove_acents, extract_country, extract_institution
+from techminer.text import remove_accents, extract_country, extract_institution
+from tqdm import tqdm
+
 
 scopus_to_wos_names = {
     "Abbreviated Source Title": "J9",
@@ -16,13 +18,13 @@ scopus_to_wos_names = {
     "Affiliations": "C1",
     "Art. No.": "AR",
     "Author Keywords": "DE",
+    "Author(s) Country": "AU_CO",
     "Author(s) ID": "RI",
+    "Author(s) Institution": "AU_IN",
     "Authors with affiliations": "AU_C1",
-    "Authors": 'AU",
+    "Authors": "AU",
     "Cited by": "TC",
     "Cited references": "CR",
-    "Author(s) Country": "AU_CO",
-    "Author(s) Institution": "AU_IN",
     "DI": "DOI",
     "Document type": "DT",
     "Editors": "BE",
@@ -32,7 +34,7 @@ scopus_to_wos_names = {
     "ISSN": "SN",
     "Issue": "IS",
     "Keywords": "KW",
-    "Language of the Original Document": "LA",
+    "Language of Original Document": "LA",
     "Page count": "PG",
     "Page end": "EP",
     "Page start": "BP",
@@ -47,58 +49,70 @@ scopus_to_wos_names = {
 }
 
 
-
-
 def load_scopus(x):
     """Import filter for Scopus data.
     """
-    #
-    # 1. Rename and seleect columns
-    #
-    x = x.copy()
-    x = x.rename(columns=scopus_to_wos_names)
-    x = x[[w for w in x.columns if w in scopus_to_wos_names]]
-    #
-    # 2. Change ',' by ';' and remove '.' in author names
-    #
-    x = x.applymap(lambda w: remove_accents(w) if isinstance(w, str) else w)
-    if "AU" in x.columns:
-        x["AU"] = x.Authors.map(
-            lambda w: w.replace(",", ";").replace(".", "") if pd.isna(w) is False else w
-        )
-    #
-    # Remove part of title in foreign language
-    #
-    if "TI" in x.columns:
-        x["TI"] = x.TI.map(
-            lambda w: w[0 : w.find("[")] if pd.isna(w) is False and w[-1] == "]" else w
-        )
-    #
-    # Keywords fusion
-    #
-    author_keywords = x["DE"].map(
-        lambda x: x.split(";") if x is not None else []
-    )
-    index_keywords = x["ID"].map(
-        lambda x: x.split(";") if x is not None else []
-    )
-    keywords = author_keywords + index_keywords
-    keywords = keywords.map(lambda w: [e for e in w if e != ""])
-    keywords = keywords.map(lambda w: [e.strip() for e in w])
-    keywords = keywords.map(lambda w: sorted(set(w)))
-    keywords = keywords.map(lambda w: ";".join(w))
-    keywords = keywords.map(lambda w: None if w == "" else w)
-    x["KW"] = keywords
-    #
-    # Extract country and affiliation
-    #
-    if "C1" in x.columns:
-        x["AU_CO"] = x.C1.map(lambda w: extract_country(w))
-        x["AU_IN"] = x.C1.map(lambda w: extract_institution(w))
-    #
+    with tqdm(total=5) as pbar:
+        #
+        # 1. Rename and seleect columns
+        #
+        x = x.copy()
+        x = x.rename(columns=scopus_to_wos_names)
+        x = x[[w for w in x.columns if w in scopus_to_wos_names.values()]]
+        pbar.update(1)
+        #
+        # 2. Change ',' by ';' and remove '.' in author names
+        #
+        x = x.applymap(lambda w: remove_accents(w) if isinstance(w, str) else w)
+        if "AU" in x.columns:
+            x["AU"] = x.AU.map(
+                lambda w: w.replace(",", ";").replace(".", "")
+                if pd.isna(w) is False
+                else w
+            )
+        pbar.update(1)
+        #
+        # 3. Remove part of title in foreign language
+        #
+        if "TI" in x.columns:
+            x["TI"] = x.TI.map(
+                lambda w: w[0 : w.find("[")]
+                if pd.isna(w) is False and w[-1] == "]"
+                else w
+            )
+        pbar.update(1)
+        #
+        # 4. Keywords fusion
+        #
+        if "DE" in x.columns.tolist() and "ID" in x.columns.tolist():
+            author_keywords = x["DE"].map(
+                lambda x: x.split(";") if pd.isna(x) is False else []
+            )
+            index_keywords = x["ID"].map(
+                lambda x: x.split(";") if pd.isna(x) is False else []
+            )
+            keywords = author_keywords + index_keywords
+            keywords = keywords.map(lambda w: [e for e in w if e != ""])
+            keywords = keywords.map(lambda w: [e.strip() for e in w])
+            keywords = keywords.map(lambda w: sorted(set(w)))
+            keywords = keywords.map(lambda w: ";".join(w))
+            keywords = keywords.map(lambda w: None if w == "" else w)
+            x["DE_ID"] = keywords
+        pbar.update(1)
+        #
+        # 5. Extract country and affiliation
+        #
+        if "C1" in x.columns:
+
+            x["AU_CO"] = x.C1.map(
+                lambda w: extract_country(w) if pd.isna(w) is False else w
+            )
+            x["AU_IN"] = x.C1.map(
+                lambda w: extract_institution(w) if pd.isna(w) is False else w
+            )
+        #
+        pbar.update(1)
     return x
-
-
 
 
 def summary_by_year(df):
