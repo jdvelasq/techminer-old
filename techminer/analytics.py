@@ -33,7 +33,7 @@ scopus_to_wos_names = {
     "ISBN": "BN",
     "ISSN": "SN",
     "Issue": "IS",
-    "Keywords": "KW",
+    "Keywords": "AU_ID",
     "Language of Original Document": "LA",
     "Page count": "PG",
     "Page end": "EP",
@@ -56,11 +56,17 @@ column_names_for_tables = {
     "TC": "Times Cited",
 }
 
+MULTIVALUED_COLS = ["AU", "DE", "ID", "RI", "C1", "AU_CO", "AU_IN", "AU_C1"]
 
+##
+##
+##  Data importation
+##
+##
 def load_scopus(x):
     """Import filter for Scopus data.
     """
-    with tqdm(total=5) as pbar:
+    with tqdm(total=8) as pbar:
         #
         # 1. Rename and seleect columns
         #
@@ -118,12 +124,200 @@ def load_scopus(x):
             x["AU_IN"] = x.C1.map(
                 lambda w: extract_institution(w) if pd.isna(w) is False else w
             )
+        pbar.update(1)
         #
-        # 6. Adds RecID
+        # 6. Country and institution of first author
+        #
+        if "AU_CO" in x.columns:
+            x["AU_CO1"] = x["AU_CO"].map(
+                lambda w: w.split(";")[0] if not pd.isna(w) else w
+            )
+            x["AU_IN1"] = x["AU_IN"].map(
+                lambda w: w.split(";")[0] if not pd.isna(w) else w
+            )
+        pbar.update(1)
+        #
+        # 7. Adds RecID
         #
         x["RecID"] = range(len(x))
         pbar.update(1)
+        #
+        # 8. Number of authors per document
+        #
+        x["N_AU"] = x["AU"].map(lambda w: len(w.split(";")) if not pd.isna(w) else 0)
+        pbar.update(1)
     return x
+
+
+##
+##
+## Term extraction and count
+##
+##
+
+
+def extract_terms(x, column):
+    """Extracts unique terms in a column, exploding multvalued columns.
+
+    Args:
+        column (str): the column to explode.
+
+    Returns:
+        DataFrame.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = pd.DataFrame({'AU': ['xxx', 'xxx; zzz', 'yyy', 'xxx; yyy; zzz']})
+    >>> x
+                  AU
+    0            xxx
+    1       xxx; zzz
+    2            yyy
+    3  xxx; yyy; zzz
+
+    >>> extract_terms(x, column='AU')
+        AU
+    0  xxx
+    1  yyy
+    2  zzz
+
+    """
+    if column in MULTIVALUED_COLS:
+        x = x.copy()
+        x[column] = x[column].map(lambda w: w.split(";") if not pd.isna(w) else w)
+        x = x.explode(column)
+        x[column] = x[column].map(lambda w: w.strip() if isinstance(w, str) else w)
+    else:
+        x = x[[column]].copy()
+    x = pd.unique(x[column].dropna())
+    x = np.sort(x)
+    return pd.DataFrame({column: x})
+
+
+def count_terms(x, column):
+    """Counts the number of different terms in a column.
+
+    Args:
+        x (pandas.DataFrame): Biblographic dataframe.
+        column (str): the column to explode.
+        sep (str): Character used as internal separator for the elements in the column.
+
+    Returns:
+        DataFrame.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> x = pd.DataFrame({'AU': ['xxx', 'xxx; zzz', 'yyy', 'xxx; yyy; zzz']})
+    >>> x
+                  AU
+    0            xxx
+    1       xxx; zzz
+    2            yyy
+    3  xxx; yyy; zzz
+
+    >>> count_terms(x, column='AU')
+    3
+
+    """
+    return len(extract_terms(x, column))
+
+
+def descriptive_stats(x):
+    """
+    Descriptive statistics of current dataframe.
+
+    Returns:
+        pandas.Series
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = pd.DataFrame(
+    ...     {
+    ...          'AU':  'xxx;xxx, zzz;yyy, xxx, yyy, zzz'.split(','),
+    ...          'RI': '0;1,    3;4;,  4;,  5;,  6;'.split(','),
+    ...          'SO': ' s0,     s0,   s1,  s1, s2'.split(','),
+    ...          'DE': 'k0;k1, k0;k2, k3;k2;k1, k4, k5'.split(','),
+    ...          'ID': 'w0;w1, w0;w2, w3;k1;w1, w4, w5'.split(','),
+    ...          'PY': [1990, 1991, 1992, 1993, 1994],
+    ...          'TC': list(range(5)),
+    ...          'N_AU': [2, 2, 1, 1, 1],
+    ...     }
+    ... )
+    >>> x # doctest: +NORMALIZE_WHITESPACE
+             AU        RI       SO         DE         ID    PY  TC  N_AU
+    0   xxx;xxx       0;1       s0      k0;k1      w0;w1  1990   0     2
+    1   zzz;yyy      3;4;       s0      k0;k2      w0;w2  1991   1     2
+    2       xxx        4;       s1   k3;k2;k1   w3;k1;w1  1992   2     1
+    3       yyy        5;       s1         k4         w4  1993   3     1
+    4       zzz        6;       s2         k5         w5  1994   4     1
+
+    >>> descriptive_stats(x)
+                                             value
+    Articles                                     5
+    Years                                1990-1994
+    Average citations per article             2.00
+    Authors                                      3
+    Author(s) ID                                 7
+    Articles per author                       1.67
+    Authors per article                        0.6
+    Author Keywords                              6
+    Index Keywords                               7
+    Source titles                                5
+    Authors of single authored articles          3
+    Authors of multi authored articles           2
+    Co-authors per article                     1.4
+    Average articles per Source title            1
+    Compound annual growth rate              0.0 %                                             
+
+    """
+    descriptions = [
+        "Articles",
+        "Years",
+        "Average citations per article",
+        "Authors",
+        "Author(s) ID",
+        "Authors of single authored articles",
+        "Authors of multi authored articles",
+        "Articles per author",
+        "Authors per article",
+        "Co-authors per article",
+        "Author Keywords",
+        "Index Keywords",
+        "Source titles",
+        "Average articles per Source title",
+        "Compound Annual Growth Rate",
+    ]
+    y = {}
+    y["Articles"] = str(len(x))
+    y["Years"] = str(min(x.PY)) + "-" + str(max(x.PY))
+    y["Average citations per article"] = "{:4.2f}".format(x["TC"].mean())
+    y["Authors"] = count_terms(x, "AU")
+    y["Author(s) ID"] = count_terms(x, "RI")
+    y["Articles per author"] = round(len(x) / count_terms(x, "AU"), 2)
+    y["Authors per article"] = round(count_terms(x, "AU") / len(x), 2)
+    y["Author Keywords"] = count_terms(x, "DE")
+    y["Index Keywords"] = count_terms(x, "ID")
+    y["Source titles"] = count_terms(x, "SO")
+
+    y["Authors of single authored articles"] = len(x[x["N_AU"] == 1])
+    y["Authors of multi authored articles"] = len(x[x["N_AU"] > 1])
+    y["Co-authors per article"] = round(x["N_AU"].mean(), 2)
+    y["Average articles per Source title"] = round(len(x) / count_terms(x, "SO"))
+    # CAGR
+    n = max(x.PY) - min(x.PY) + 1
+    Po = len(x.PY[x.PY == min(x.PY)])
+    Pn = len(x.PY[x.PY == max(x.PY)])
+    cagr = str(round(100 * (np.power(Pn / Po, n) - 1), 2)) + " %"
+    y["Compound annual growth rate"] = cagr
+    #
+    d = [key for key in y.keys()]
+    v = [y[key] for key in y.keys()]
+    return pd.DataFrame(v, columns=["value"], index=d)
 
 
 def summary_by_year(df):
