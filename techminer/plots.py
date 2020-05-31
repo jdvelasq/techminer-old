@@ -27,7 +27,7 @@ TEXTLEN = 30
 
 
 def bar(
-    x, width=0.8, bottom=None, align="center", cmap="Greys", figsize=(10, 5), **kwargs
+    x, width=0.8, bottom=None, align="center", cmap="Greys", figsize=(10, 6), **kwargs
 ):
     """Creates a bar plot from a dataframe.
 
@@ -86,6 +86,143 @@ def bar(
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)
     ax.spines["bottom"].set_visible(False)
+    return fig
+
+
+def barh(x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **kwargs):
+    """Make a pie chart from a dataframe.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = pd.DataFrame(
+    ...     {
+    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+    ...         "Num Documents": [3, 2, 2, 1],
+    ...         "ID": list(range(4)),
+    ...     }
+    ... )
+    >>> x
+        Authors  Num Documents  ID
+    0  author 3              3   0
+    1  author 1              2   1
+    2  author 0              2   2
+    3  author 2              1   3
+    >>> fig = barh(x, cmap='Blues')
+    >>> fig.savefig('sphinx/images/barhplot.png')
+
+    .. image:: images/barhplot.png
+        :width: 400px
+        :align: center
+
+    """
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+    x = x.copy()
+    if "ID" in x.columns:
+        x.pop("ID")
+    if cmap is not None:
+        cmap = plt.cm.get_cmap(cmap)
+        kwargs["color"] = [
+            cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
+            for i in range(len(x[x.columns[1]]))
+        ]
+    ax.barh(
+        y=range(len(x)),
+        width=x[x.columns[1]],
+        height=height,
+        left=left,
+        align=align,
+        **kwargs,
+    )
+    ax.invert_yaxis()
+    ax.set_yticks(np.arange(len(x[x.columns[0]])))
+    ax.set_yticklabels(x[x.columns[0]])
+    ax.set_xlabel(x.columns[1])
+    ax.set_ylabel(x.columns[0])
+    #
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
+    #
+    return fig
+
+
+def pie(
+    x,
+    figsize=(8, 8),
+    cmap="Greys",
+    explode=None,
+    autopct=None,
+    pctdistance=0.6,
+    shadow=False,
+    labeldistance=1.1,
+    startangle=None,
+    radius=None,
+    counterclock=True,
+    wedgeprops=None,
+    textprops=None,
+    center=(0, 0),
+    frame=False,
+    rotatelabels=False,
+):
+    """Creates a pie plot from a dataframe.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+    ...         "Num Documents": [3, 2, 2, 1],
+    ...         "ID": list(range(4)),
+    ...     }
+    ... )
+    >>> df
+        Authors  Num Documents  ID
+    0  author 3              3   0
+    1  author 1              2   1
+    2  author 0              2   2
+    3  author 2              1   3
+    >>> fig = pie(df, cmap="Blues")
+    >>> fig.savefig('sphinx/images/pieplot.png')
+
+    .. image:: images/pieplot.png
+        :width: 400px
+        :align: center
+
+
+    """
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+    cmap = plt.cm.get_cmap(cmap)
+    x = x.copy()
+    if "ID" in x.columns:
+        x.pop("ID")
+    colors = None
+    if cmap is not None:
+        colors = [cmap(1.0 - 0.9 * (i / len(x))) for i in range(len(x[x.columns[1]]))]
+    ax.pie(
+        x=x[x.columns[1]],
+        explode=explode,
+        labels=x[x.columns[0]],
+        colors=colors,
+        autopct=autopct,
+        pctdistance=pctdistance,
+        shadow=shadow,
+        labeldistance=labeldistance,
+        startangle=startangle,
+        radius=radius,
+        counterclock=counterclock,
+        wedgeprops=wedgeprops,
+        textprops=textprops,
+        center=center,
+        frame=frame,
+        rotatelabels=rotatelabels,
+    )
     return fig
 
 
@@ -665,198 +802,6 @@ def heatmap(x, figsize=(8, 8), **kwargs):
 
 #         return plt.gca()
 
-
-#     def pie(
-#         self,
-#         cmap="Greys",
-#         explode=None,
-#         autopct=None,
-#         pctdistance=0.6,
-#         shadow=False,
-#         labeldistance=1.1,
-#         startangle=None,
-#         radius=None,
-#         counterclock=True,
-#         wedgeprops=None,
-#         textprops=None,
-#         center=(0, 0),
-#         frame=False,
-#         rotatelabels=False,
-#     ):
-#         """Creates a pie plot from a dataframe.
-
-#         Examples
-#         ----------------------------------------------------------------------------------------------
-
-#         >>> import pandas as pd
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-#         ...         "Num Documents": [3, 2, 2, 1],
-#         ...         "ID": list(range(4)),
-#         ...     }
-#         ... )
-#         >>> df
-#             Authors  Num Documents  ID
-#         0  author 3              3   0
-#         1  author 1              2   1
-#         2  author 0              2   2
-#         3  author 2              1   3
-#         >>> _ = Plot(df).pie(cmap=plt.cm.Blues)
-#         >>> plt.savefig('sphinx/images/pieplot.png')
-
-#         .. image:: images/pieplot.png
-#             :width: 400px
-#             :align: center
-
-
-#         """
-#         plt.clf()
-#         cmap = plt.cm.get_cmap(cmap)
-#         x = self.df.copy()
-#         if "ID" in x.columns:
-#             x.pop("ID")
-#         colors = None
-#         if cmap is not None:
-#             colors = [
-#                 cmap(1.0 - 0.9 * (i / len(x))) for i in range(len(x[x.columns[1]]))
-#             ]
-#         plt.gca().pie(
-#             x=x[x.columns[1]],
-#             explode=explode,
-#             labels=x[x.columns[0]],
-#             colors=colors,
-#             autopct=autopct,
-#             pctdistance=pctdistance,
-#             shadow=shadow,
-#             labeldistance=labeldistance,
-#             startangle=startangle,
-#             radius=radius,
-#             counterclock=counterclock,
-#             wedgeprops=wedgeprops,
-#             textprops=textprops,
-#             center=center,
-#             frame=frame,
-#             rotatelabels=rotatelabels,
-#         )
-#         return plt.gca()
-
-#     def bar(self, width=0.8, bottom=None, align="center", cmap="Greys", **kwargs):
-#         """Creates a bar plot from a dataframe.
-
-#         Examples
-#         ----------------------------------------------------------------------------------------------
-
-#         >>> import pandas as pd
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-#         ...         "Num Documents": [3, 2, 2, 1],
-#         ...         "ID": list(range(4)),
-#         ...     }
-#         ... )
-#         >>> df
-#             Authors  Num Documents  ID
-#         0  author 3              3   0
-#         1  author 1              2   1
-#         2  author 0              2   2
-#         3  author 2              1   3
-#         >>> _ = Plot(df).bar(cmap=plt.cm.Blues)
-#         >>> plt.savefig('sphinx/images/barplot.png')
-
-#         .. image:: images/barplot.png
-#             :width: 400px
-#             :align: center
-
-
-#         """
-#         plt.clf()
-#         cmap = plt.cm.get_cmap(cmap)
-#         x = self.df.copy()
-#         if "ID" in x.columns:
-#             x.pop("ID")
-#         if cmap is not None:
-#             kwargs["color"] = [
-#                 cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
-#                 for i in range(len(x[x.columns[1]]))
-#             ]
-#         result = plt.gca().bar(
-#             x=range(len(x)),
-#             height=x[x.columns[1]],
-#             width=width,
-#             bottom=bottom,
-#             align=align,
-#             **({}),
-#             **kwargs,
-#         )
-#         plt.xticks(
-#             np.arange(len(x[x.columns[0]])), x[x.columns[0]], rotation="vertical"
-#         )
-#         plt.xlabel(x.columns[0])
-#         plt.ylabel(x.columns[1])
-#         plt.gca().spines["top"].set_visible(False)
-#         plt.gca().spines["right"].set_visible(False)
-#         plt.gca().spines["left"].set_visible(False)
-#         plt.gca().spines["bottom"].set_visible(False)
-#         return plt.gca()
-
-#     def barh(self, height=0.8, left=None, align="center", cmap=None, **kwargs):
-#         """Make a pie chart from a dataframe.
-
-#         Examples
-#         ----------------------------------------------------------------------------------------------
-
-#         >>> import pandas as pd
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-#         ...         "Num Documents": [3, 2, 2, 1],
-#         ...         "ID": list(range(4)),
-#         ...     }
-#         ... )
-#         >>> df
-#             Authors  Num Documents  ID
-#         0  author 3              3   0
-#         1  author 1              2   1
-#         2  author 0              2   2
-#         3  author 2              1   3
-#         >>> _ = Plot(df).barh(cmap=plt.cm.Blues)
-#         >>> plt.savefig('sphinx/images/barhplot.png')
-
-#         .. image:: images/barhplot.png
-#             :width: 400px
-#             :align: center
-
-#         """
-#         plt.clf()
-#         x = self.df.copy()
-#         if "ID" in x.columns:
-#             x.pop("ID")
-#         if cmap is not None:
-#             cmap = plt.cm.get_cmap(cmap)
-#             kwargs["color"] = [
-#                 cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
-#                 for i in range(len(x[x.columns[1]]))
-#             ]
-#         plt.gca().barh(
-#             y=range(len(x)),
-#             width=x[x.columns[1]],
-#             height=height,
-#             left=left,
-#             align=align,
-#             **kwargs,
-#         )
-#         plt.gca().invert_yaxis()
-#         plt.yticks(np.arange(len(x[x.columns[0]])), x[x.columns[0]])
-#         plt.xlabel(x.columns[1])
-#         plt.ylabel(x.columns[0])
-#         #
-#         plt.gca().spines["top"].set_visible(False)
-#         plt.gca().spines["right"].set_visible(False)
-#         plt.gca().spines["left"].set_visible(False)
-#         plt.gca().spines["bottom"].set_visible(False)
-#         #
-#         return plt.gca()
 
 #     def plot(self, *args, scalex=True, scaley=True, **kwargs):
 #         """Creates a plot from a dataframe.
