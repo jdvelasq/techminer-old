@@ -213,6 +213,40 @@
 </dd></dl>
 
 <dl class="py function">
+<dt id="techminer.plots.gant">
+<code class="sig-prename descclassname">techminer.plots.</code><code class="sig-name descname">gant</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">8, 8</span></em>, <em class="sig-param"><span class="n">hlines_lw</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">hlines_c</span><span class="o">=</span><span class="default_value">'gray'</span></em>, <em class="sig-param"><span class="n">hlines_ls</span><span class="o">=</span><span class="default_value">':'</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/plots.html#gant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.plots.gant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a gant activity plot from a dataframe.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span>
+<span class="gp">... </span>        <span class="s2">&quot;author 0&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s2">&quot;author 1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s2">&quot;author 2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s2">&quot;author 3&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s2">&quot;author 4&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">},</span>
+<span class="gp">... </span>    <span class="n">index</span> <span class="o">=</span><span class="p">[</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">2013</span><span class="p">,</span> <span class="mi">2014</span><span class="p">,</span> <span class="mi">2015</span><span class="p">,</span> <span class="mi">2016</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">      author 0  author 1  author 2  author 3  author 4</span>
+<span class="go">2010         1         0         1         0         0</span>
+<span class="go">2011         1         1         0         0         0</span>
+<span class="go">2012         0         1         0         1         0</span>
+<span class="go">2013         0         0         0         1         0</span>
+<span class="go">2014         0         0         0         1         0</span>
+<span class="go">2015         0         0         0         0         0</span>
+<span class="go">2016         0         0         0         0         1</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">gant</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sphinx/images/gantplot.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/gantplot.png"><img alt="_images/gantplot.png" class="align-center" src="_images/gantplot.png" style="width: 400px;" /></a>
+</dd></dl>
+
+<dl class="py function">
 <dt id="techminer.plots.worldmap">
 <code class="sig-prename descclassname">techminer.plots.</code><code class="sig-name descname">worldmap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">10, 5</span></em>, <em class="sig-param"><span class="n">cmap</span><span class="o">=</span><span class="default_value">'Pastel2'</span></em>, <em class="sig-param"><span class="n">legend</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/plots.html#worldmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.plots.worldmap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Worldmap plot with the number of documents per country.</p>

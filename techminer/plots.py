@@ -153,6 +153,76 @@ def worldmap(x, figsize=(10, 5), cmap="Pastel2", legend=True, *args, **kwargs):
     return fig
 
 
+def gant(
+    x, figsize=(8, 8), hlines_lw=0.5, hlines_c="gray", hlines_ls=":", *args, **kwargs
+):
+    """Creates a gant activity plot from a dataframe.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         "author 0": [1, 1, 0, 0, 0, 0, 0],
+    ...         "author 1": [0, 1, 1, 0, 0, 0, 0],
+    ...         "author 2": [1, 0, 0, 0, 0, 0, 0],
+    ...         "author 3": [0, 0, 1, 1, 1, 0, 0],
+    ...         "author 4": [0, 0, 0, 0, 0, 0, 1],
+    ...     },
+    ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
+    ... )
+    >>> df
+          author 0  author 1  author 2  author 3  author 4
+    2010         1         0         1         0         0
+    2011         1         1         0         0         0
+    2012         0         1         0         1         0
+    2013         0         0         0         1         0
+    2014         0         0         0         1         0
+    2015         0         0         0         0         0
+    2016         0         0         0         0         1
+
+    >>> fig = gant(df)
+    >>> fig.savefig('sphinx/images/gantplot.png')
+
+    .. image:: images/gantplot.png
+        :width: 400px
+        :align: center
+
+
+    """
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+    x = x.copy()
+    if "linewidth" not in kwargs.keys() and "lw" not in kwargs.keys():
+        kwargs["linewidth"] = 4
+    if "marker" not in kwargs.keys():
+        kwargs["marker"] = "o"
+    if "markersize" not in kwargs.keys() and "ms" not in kwargs.keys():
+        kwargs["markersize"] = 10
+    if "color" not in kwargs.keys() and "c" not in kwargs.keys():
+        kwargs["color"] = "k"
+    for idx, col in enumerate(x.columns):
+        w = x[col]
+        w = w[w > 0]
+        ax.plot(w.index, [idx] * len(w.index), **kwargs)
+    ax.hlines(
+        range(len(x.columns)),
+        x.index.min(),
+        x.index.max(),
+        linewidth=hlines_lw,
+        color=hlines_c,
+        linestyle=hlines_ls,
+    )
+    ax.set_yticks(np.arange(len(x.columns)))
+    ax.set_yticklabels(x.columns)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
+    return fig
+
+
 # #############################################################################################################
 
 
@@ -598,72 +668,6 @@ def worldmap(x, figsize=(10, 5), cmap="Pastel2", legend=True, *args, **kwargs):
 
 #         return plt.gca()
 
-
-#     def gant(self, hlines_lw=0.5, hlines_c="gray", hlines_ls=":", *args, **kwargs):
-
-#         """Creates a gant activity plot from a dataframe.
-
-#         Examples
-#         ----------------------------------------------------------------------------------------------
-
-#         >>> import pandas as pd
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         "author 0": [1, 1, 0, 0, 0, 0, 0],
-#         ...         "author 1": [0, 1, 1, 0, 0, 0, 0],
-#         ...         "author 2": [1, 0, 0, 0, 0, 0, 0],
-#         ...         "author 3": [0, 0, 1, 1, 1, 0, 0],
-#         ...         "author 4": [0, 0, 0, 0, 0, 0, 1],
-#         ...     },
-#         ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
-#         ... )
-#         >>> df
-#               author 0  author 1  author 2  author 3  author 4
-#         2010         1         0         1         0         0
-#         2011         1         1         0         0         0
-#         2012         0         1         0         1         0
-#         2013         0         0         0         1         0
-#         2014         0         0         0         1         0
-#         2015         0         0         0         0         0
-#         2016         0         0         0         0         1
-
-#         >>> _ = Plot(df).gant()
-#         >>> plt.savefig('sphinx/images/gantplot.png')
-
-#         .. image:: images/gantplot.png
-#             :width: 400px
-#             :align: center
-
-
-#         """
-#         plt.clf()
-#         x = self.df.copy()
-#         if "linewidth" not in kwargs.keys() and "lw" not in kwargs.keys():
-#             kwargs["linewidth"] = 4
-#         if "marker" not in kwargs.keys():
-#             kwargs["marker"] = "o"
-#         if "markersize" not in kwargs.keys() and "ms" not in kwargs.keys():
-#             kwargs["markersize"] = 10
-#         if "color" not in kwargs.keys() and "c" not in kwargs.keys():
-#             kwargs["color"] = "k"
-#         for idx, col in enumerate(x.columns):
-#             w = x[col]
-#             w = w[w > 0]
-#             plt.gca().plot(w.index, [idx] * len(w.index), **kwargs)
-#         plt.hlines(
-#             range(len(x.columns)),
-#             x.index.min(),
-#             x.index.max(),
-#             linewidth=hlines_lw,
-#             color=hlines_c,
-#             linestyle=hlines_ls,
-#         )
-#         plt.yticks(np.arange(len(x.columns)), x.columns)
-#         plt.gca().spines["top"].set_visible(False)
-#         plt.gca().spines["right"].set_visible(False)
-#         plt.gca().spines["left"].set_visible(False)
-#         plt.gca().spines["bottom"].set_visible(False)
-#         return plt.gca()
 
 #     def pie(
 #         self,

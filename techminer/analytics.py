@@ -11,17 +11,55 @@ from techminer.text import remove_accents, extract_country, extract_institution
 from tqdm import tqdm
 from techminer.keywords import Keywords
 
+NORMALIZED_NAMES = {
+    "J9": "Abbreviated Source Title",
+    "AB": "Abstract",
+    "OA": "Access Type",
+    "C1": "Affiliations",
+    "AR": "Art. No.",
+    "DE": "Author Keywords",
+    "AU_CO": "Countries",
+    "RI": "Author(s) ID",
+    "AU_IN": "Institutions",
+    "AU_C1": "Authors with affiliations",
+    "AU": "Authors",
+    "TC": "Cited by",
+    "CR": "Cited references",
+    "DOI": "DI",
+    "DT": "Document type",
+    "BE": "Editors",
+    "UT": "EID",
+    "ID": "Index Keywords",
+    "BN": "ISBN",
+    "SN": "ISSN",
+    "IS": "Issue",
+    "DE_ID": "Keywords",
+    "LA": "Language of Original Document",
+    "PG": "Page count",
+    "EP": "Page end",
+    "BP": "Page start",
+    "PU": "Publisher",
+    "PM": "PubMed ID",
+    "SO": "Source title",
+    "FN": "Source",
+    "SC": "Subject",
+    "TI": "Title",
+    "VL": "Volume",
+    "PT": "Year",
+}
 
 MULTIVALUED_COLS = [
-    "Authors",
-    "Author Keywords",
-    "Index Keywords",
-    "Author(s) ID",
     "Affiliations",
-    "Keywords",
+    "Author Keywords",
     "Author(s) Country",
+    "Author(s) ID",
     "Author(s) Institution",
     "Authors with affiliations",
+    "Authors",
+    "Countries",
+    "Index Keywords",
+    "Institutions",
+    "Keywords",
 ]
 
 ##
@@ -106,7 +144,7 @@ def load_scopus(x):
         # 3. Remove the part of title in foreign language
         #
         if "Title" in x.columns:
-            x["Title"] = x.TI.map(
+            x["Title"] = x.Title.map(
                 lambda w: w[0 : w.find("[")]
                 if pd.isna(w) is False and w[-1] == "]"
                 else w
@@ -136,12 +174,12 @@ def load_scopus(x):
         #
         # 5. Extract country and affiliation
         #
-        if "Affiliation" in x.columns:
+        if "Affiliations" in x.columns:
 
-            x["Countries"] = x.C1.map(
+            x["Countries"] = x.Affiliations.map(
                 lambda w: extract_country(w) if pd.isna(w) is False else w
             )
-            x["Institutions"] = x.C1.map(
+            x["Institutions"] = x.Affiliations.map(
                 lambda w: extract_institution(w) if pd.isna(w) is False else w
             )
         pbar.update(1)
@@ -215,7 +253,7 @@ def coverage(x):
     3  Source title                5       83.33%
     4    None field                0        0.00%
 
-    
+
     """
 
     return pd.DataFrame(
@@ -474,6 +512,40 @@ def summary_by_year(df):
     return result
 
 
+def documents_by_year(x, cumulative=False):
+    """Computes the number of documents per year. 
+    This function adds the missing years in the sequence.
+
+    Args:
+        cumulative (bool): cumulate values per year.
+
+    Returns:
+        DataFrame.
+
+    """
+    result = summary_by_year(x, cumulative)
+    result.pop("Cited by")
+    result = result.reset_index(drop=True)
+    return result
+
+
+def citations_by_year(x, cumulative=False):
+    """Computes the number of citations by year.
+    This function adds the missing years in the sequence.
+
+    Args:
+        cumulative (bool): cumulate values per year.
+
+    Returns:
+        DataFrame.
+
+    """
+    result = summary_by_year(x, cumulative)
+    result.pop("Num Documents")
+    result = result.reset_index(drop=True)
+    return result
+
+
 ##
 ##
 ##  Analysis by term
@@ -649,6 +721,332 @@ def citations_by_term(x, column, keywords=None):
     result.sort_values(
         ["Cited by", column], ascending=[False, True], inplace=True, ignore_index=True,
     )
+    return result
+
+
+def summary_by_term_per_year(x, column, keywords=None):
+    """Computes the number of documents and citations by term per year.
+
+    Args:
+        column (str): the column to explode.
+        sep (str): Character used as internal separator for the elements in the column.
+        keywords (Keywords): filter the result using the specified Keywords object.
+
+    Returns:
+        DataFrame.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
+    ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
+    ...          "Cited by": list(range(10,16)),
+    ...          "ID": list(range(6)),
+    ...     }
+    ... )
+    >>> df
+       Year                     Authors  Cited by  ID
+    0  2010  author 0;author 1;author 2        10   0
+    1  2010                    author 0        11   1
+    2  2011                    author 1        12   2
+    3  2011                    author 3        13   3
+    4  2012                    author 4        14   4
+    5  2014                    author 4        15   5
+
+    >>> summary_by_term_per_year(df, 'Authors')
+        Authors  Year  Cited by  Num Documents      ID
+    0  author 0  2010        21              2  [0, 1]
+    1  author 1  2010        10              1     [0]
+    2  author 2  2010        10              1     [0]
+    3  author 1  2011        12              1     [2]
+    4  author 3  2011        13              1     [3]
+    5  author 4  2012        14              1     [4]
+    6  author 4  2014        15              1     [5]
+
+    >>> keywords = Keywords(['author 1', 'author 2', 'author 3'])
+    >>> keywords = keywords.compile()
+    >>> summary_by_term_per_year(df, 'Authors', keywords=keywords)
+        Authors  Year  Cited by  Num Documents   ID
+    0  author 1  2010        10              1  [0]
+    1  author 2  2010        10              1  [0]
+    2  author 1  2011        12              1  [2]
+    3  author 3  2011        13              1  [3]
+
+    """
+    data = __explode(x[["Year", column, "Cited by", "ID"]], column)
+    data["Num Documents"] = 1
+    result = data.groupby([column, "Year"], as_index=False).agg(
+        {"Cited by": np.sum, "Num Documents": np.size}
+    )
+    result = result.assign(
+        ID=data.groupby([column, "Year"]).agg({"ID": list}).reset_index()["ID"]
+    )
+    result["Cited by"] = result["Cited by"].map(lambda x: int(x))
+    if keywords is not None:
+        if keywords._patterns is None:
+            keywords = keywords.compile()
+        result = result[result[column].map(lambda w: w in keywords)]
+    result.sort_values(
+        ["Year", column], ascending=True, inplace=True, ignore_index=True,
+    )
+    return result
+
+
+def documents_by_term_per_year(x, column, as_matrix=False, minmax=None, keywords=None):
+    """Computes the number of documents by term per year.
+
+    Args:
+        column (str): the column to explode.
+        sep (str): Character used as internal separator for the elements in the column.
+        as_matrix (bool): Results are returned as a matrix.
+        minmax (pair(number,number)): filter values by >=min,<=max.
+        keywords (Keywords): filter the result using the specified Keywords object.
+
+    Returns:
+        DataFrame.
+
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
+    ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
+    ...          "Cited by": list(range(10,16)),
+    ...          "ID": list(range(6)),
+    ...     }
+    ... )
+    >>> df
+       Year                     Authors  Cited by  ID
+    0  2010  author 0;author 1;author 2        10   0
+    1  2010                    author 0        11   1
+    2  2011                    author 1        12   2
+    3  2011                    author 3        13   3
+    4  2012                    author 4        14   4
+    5  2014                    author 4        15   5
+
+    >>> documents_by_term_per_year(df, 'Authors')
+        Authors  Year  Num Documents      ID
+    0  author 0  2010              2  [0, 1]
+    1  author 1  2010              1     [0]
+    2  author 2  2010              1     [0]
+    3  author 1  2011              1     [2]
+    4  author 3  2011              1     [3]
+    5  author 4  2012              1     [4]
+    6  author 4  2014              1     [5]
+
+    >>> documents_by_term_per_year(df, 'Authors', as_matrix=True)
+          author 0  author 1  author 2  author 3  author 4
+    2010         2         1         1         0         0
+    2011         0         1         0         1         0
+    2012         0         0         0         0         1
+    2014         0         0         0         0         1
+
+    >>> documents_by_term_per_year(df, 'Authors', as_matrix=True, minmax=(2, None))
+          author 0
+    2010         2
+
+    >>> documents_by_term_per_year(df, 'Authors', as_matrix=True, minmax=(0, 1))
+          author 1  author 2  author 3  author 4
+    2010         1         1         0         0
+    2011         1         0         1         0
+    2012         0         0         0         1
+    2014         0         0         0         1
+
+    >>> keywords = Keywords(['author 1', 'author 2', 'author 3'])
+    >>> keywords = keywords.compile()
+    >>> documents_by_term_per_year(df, 'Authors', keywords=keywords, as_matrix=True)
+          author 1  author 2  author 3
+    2010         1         1         0
+    2011         1         0         1
+
+    """
+
+    result = summary_by_term_per_year(x, column, keywords)
+    result.pop("Cited by")
+    if minmax is not None:
+        min_value, max_value = minmax
+        if min_value is not None:
+            result = result[result["Num Documents"] >= min_value]
+        if max_value is not None:
+            result = result[result["Num Documents"] <= max_value]
+    result.sort_values(
+        ["Year", "Num Documents", column], ascending=[True, False, True], inplace=True,
+    )
+    result.reset_index(drop=True)
+    if as_matrix == True:
+        result = pd.pivot_table(
+            result, values="Num Documents", index="Year", columns=column, fill_value=0,
+        )
+        result.columns = result.columns.tolist()
+        result.index = result.index.tolist()
+    return result
+
+
+def gant(x, column, minmax=None, keywords=None):
+    """Computes the number of documents by term per year.
+
+    Args:
+        column (str): the column to explode.
+        sep (str): Character used as internal separator for the elements in the column.
+        as_matrix (bool): Results are returned as a matrix.
+        minmax (pair(number,number)): filter values by >=min,<=max.
+        keywords (Keywords): filter the result using the specified Keywords object.
+
+    Returns:
+        DataFrame.
+
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...          "Year": [2010, 2011, 2011, 2012, 2015, 2012, 2016],
+    ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 3,author 4,author 4".split(","),
+    ...          "Cited by": list(range(10,17)),
+    ...          "ID": list(range(7)),
+    ...     }
+    ... )
+    >>> documents_by_term_per_year(df, 'Authors', as_matrix=True)
+          author 0  author 1  author 2  author 3  author 4
+    2010         1         1         1         0         0
+    2011         1         1         0         0         0
+    2012         0         0         0         1         1
+    2015         0         0         0         1         0
+    2016         0         0         0         0         1
+
+    >>> gant(df, 'Authors')
+          author 0  author 1  author 2  author 3  author 4
+    2010         1         1         1         0         0
+    2011         1         1         0         0         0
+    2012         0         0         0         1         1
+    2013         0         0         0         1         1
+    2014         0         0         0         1         1
+    2015         0         0         0         1         1
+    2016         0         0         0         0         1
+
+    >>> keywords = Keywords(['author 1', 'author 2', 'author 3'])
+    >>> keywords = keywords.compile()
+    >>> gant(df, 'Authors', keywords=keywords)
+          author 1  author 2  author 3
+    2010         1         1         0
+    2011         1         0         0
+    2012         0         0         1
+    2013         0         0         1
+    2014         0         0         1
+    2015         0         0         1
+
+    """
+    result = documents_by_term_per_year(
+        x, column=column, as_matrix=True, minmax=minmax, keywords=keywords
+    )
+    years = [year for year in range(result.index.min(), result.index.max() + 1)]
+    result = result.reindex(years, fill_value=0)
+    matrix1 = result.copy()
+    matrix1 = matrix1.cumsum()
+    matrix1 = matrix1.applymap(lambda x: True if x > 0 else False)
+    matrix2 = result.copy()
+    matrix2 = matrix2.sort_index(ascending=False)
+    matrix2 = matrix2.cumsum()
+    matrix2 = matrix2.applymap(lambda x: True if x > 0 else False)
+    matrix2 = matrix2.sort_index(ascending=True)
+    result = matrix1.eq(matrix2)
+    result = result.applymap(lambda x: 1 if x is True else 0)
+    return result
+
+
+def citations_by_term_per_year(x, column, as_matrix=False, minmax=None, keywords=None):
+    """Computes the number of citations by term by year in a column.
+
+    Args:
+        column (str): the column to explode.
+        as_matrix (bool): Results are returned as a matrix.
+        minmax (pair(number,number)): filter values by >=min,<=max.
+        keywords (Keywords): filter the result using the specified Keywords object.
+
+    Returns:
+        DataFrame.
+
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
+    ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
+    ...          "Cited by": list(range(10,16)),
+    ...          "ID": list(range(6)),
+    ...     }
+    ... )
+    >>> df
+       Year                     Authors  Cited by  ID
+    0  2010  author 0;author 1;author 2        10   0
+    1  2010                    author 0        11   1
+    2  2011                    author 1        12   2
+    3  2011                    author 3        13   3
+    4  2012                    author 4        14   4
+    5  2014                    author 4        15   5
+
+    >>> citations_by_term_per_year(df, 'Authors')
+        Authors  Year  Cited by      ID
+    0  author 0  2010        21  [0, 1]
+    1  author 2  2010        10     [0]
+    2  author 1  2010        10     [0]
+    3  author 3  2011        13     [3]
+    4  author 1  2011        12     [2]
+    5  author 4  2012        14     [4]
+    6  author 4  2014        15     [5]
+
+    >>> citations_by_term_per_year(df, 'Authors', as_matrix=True)
+          author 0  author 1  author 2  author 3  author 4
+    2010        21        10        10         0         0
+    2011         0        12         0        13         0
+    2012         0         0         0         0        14
+    2014         0         0         0         0        15
+
+    >>> citations_by_term_per_year(df, 'Authors', as_matrix=True, minmax=(12, 15))
+          author 1  author 3  author 4
+    2011        12        13         0
+    2012         0         0        14
+    2014         0         0        15
+
+    >>> keywords = Keywords(['author 1', 'author 2', 'author 3'])
+    >>> keywords = keywords.compile()
+    >>> citations_by_term_per_year(df, 'Authors', keywords=keywords)
+        Authors  Year  Cited by   ID
+    0  author 2  2010        10  [0]
+    1  author 1  2010        10  [0]
+    2  author 3  2011        13  [3]
+    3  author 1  2011        12  [2]
+
+    """
+    result = summary_by_term_per_year(x, column, keywords)
+    result.pop("Num Documents")
+    if minmax is not None:
+        min_value, max_value = minmax
+        if min_value is not None:
+            result = result[result["Cited by"] >= min_value]
+        if max_value is not None:
+            result = result[result["Cited by"] <= max_value]
+    result.sort_values(
+        ["Year", "Cited by", column], ascending=[True, False, False], inplace=True,
+    )
+    result = result.reset_index(drop=True)
+    if as_matrix == True:
+        result = pd.pivot_table(
+            result, values="Cited by", index="Year", columns=column, fill_value=0,
+        )
+        result.columns = result.columns.tolist()
+        result.index = result.index.tolist()
     return result
 
 
