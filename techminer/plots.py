@@ -319,8 +319,14 @@ def heatmap(x, figsize=(8, 8), **kwargs):
     ax = fig.subplots()
     x = x.copy()
     result = ax.pcolor(np.transpose(x.values), **kwargs,)
-    x.columns = [textwrap.shorten(text=w, width=TEXTLEN) for w in x.columns]
-    x.index = [textwrap.shorten(text=w, width=TEXTLEN) for w in x.index]
+    x.columns = [
+        textwrap.shorten(text=w, width=TEXTLEN) if isinstance(w, str) else w
+        for w in x.columns
+    ]
+    x.index = [
+        textwrap.shorten(text=w, width=TEXTLEN) if isinstance(w, str) else w
+        for w in x.index
+    ]
     ax.set_xticks(np.arange(len(x.index)) + 0.5)
     ax.set_xticklabels(x.index)
     ax.tick_params(axis="x", labelrotation=90)
