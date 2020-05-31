@@ -57,7 +57,9 @@ def summary_by_term(x, top_n=10, **kwargs):
         ("AU_CO", "Country"),
         ("AU_IN", "Institution"),
     ]
-
+    #
+    # Documents by term
+    #
     widget_tab0_children = []
     for i in range(len(columns)):
         y = tc.documents_by_term(x, columns[i][0])
@@ -71,6 +73,8 @@ def summary_by_term(x, top_n=10, **kwargs):
     widget_tab0.children = widget_tab0_children
     for i in range(len(columns)):
         widget_tab0.set_title(i, columns[i][1])
+    #
+    # Citations by term
     #
     widget_tab1_children = []
     for i in range(len(columns)):
@@ -86,8 +90,32 @@ def summary_by_term(x, top_n=10, **kwargs):
     for i in range(len(columns)):
         widget_tab1.set_title(i, columns[i][1])
     #
+    # Worldmaps
+    #
+    widget_tab2_children = []
+    y = tc.documents_by_term(x, "AU_CO")
+    y = y[["Country", "Num Documents"]]
+    w = widgets.Output()
+    with w:
+        display(plt.worldmap(y, **kwargs))
+    widget_tab2_children.append(w)
+    #
+    y = tc.citations_by_term(x, "AU_CO")
+    y = y[["Country", "Times Cited"]]
+    w = widgets.Output()
+    with w:
+        display(plt.worldmap(y, **kwargs))
+    widget_tab2_children.append(w)
+    widget_tab2 = widgets.Tab()
+    widget_tab2.children = widget_tab2_children
+    widget_tab2.set_title(0, "Documents by country")
+    widget_tab2.set_title(1, "Citations by country")
+    #
+    # Accordion Widget
+    #
     accordion = widgets.Accordion()
-    accordion.children = [widget_tab0, widget_tab1]
+    accordion.children = [widget_tab0, widget_tab1, widget_tab2]
     accordion.set_title(0, "Documents by term")
     accordion.set_title(1, "Citations by term")
+    accordion.set_title(2, "Worldmaps")
     return accordion

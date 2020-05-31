@@ -8,13 +8,11 @@ Plots
 """
 import matplotlib.pyplot as plt
 import numpy as np
+import json
 
+from os.path import dirname, join
 
-# import json
 # import textwrap
-# from os.path import dirname, join
-
-
 # import numpy as np
 # import pandas as pd
 # import squarify
@@ -50,8 +48,8 @@ def bar(
     1  author 1              2   1
     2  author 0              2   2
     3  author 2              1   3
-    >>> _ = bar(df, cmap=plt.cm.Blues)
-    >>> plt.savefig('sphinx/images/barplot.png')
+    >>> fig = bar(df, cmap=plt.cm.Blues)
+    >>> fig.savefig('sphinx/images/barplot.png')
 
     .. image:: images/barplot.png
         :width: 400px
@@ -59,7 +57,6 @@ def bar(
 
 
     """
-    # plt.clf()
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
     cmap = plt.cm.get_cmap(cmap)
@@ -70,7 +67,7 @@ def bar(
             cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
             for i in range(len(x[x.columns[1]]))
         ]
-    result = ax.bar(
+    ax.bar(
         x=range(len(x)),
         height=x[x.columns[1]],
         width=width,
@@ -82,13 +79,77 @@ def bar(
     ax.set_xticks(np.arange(len(x[x.columns[0]])))
     ax.set_xticklabels(x[x.columns[0]])
     ax.tick_params(axis="x", labelrotation=90)
-
+    #
     ax.set_xlabel(x.columns[0])
     ax.set_ylabel(x.columns[1])
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)
     ax.spines["bottom"].set_visible(False)
+    return fig
+
+
+def worldmap(x, figsize=(10, 5), cmap="Pastel2", legend=True, *args, **kwargs):
+    """Worldmap plot with the number of documents per country.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = pd.DataFrame(
+    ...     {
+    ...         "AU_CO": ["China", "Taiwan", "United States", "United Kingdom", "India", "Colombia"],
+    ...         "Num Documents": [1000, 900, 800, 700, 600, 1000],
+    ...     },
+    ... )
+    >>> x
+                AU_CO  Num Documents
+    0           China           1000
+    1          Taiwan            900
+    2   United States            800
+    3  United Kingdom            700
+    4           India            600
+    5        Colombia           1000
+
+
+    >>> fig = worldmap(x, figsize=(15, 6))
+    >>> fig.savefig('sphinx/images/worldmap.png')
+
+    .. image:: images/worldmap.png
+        :width: 2000px
+        :align: center
+
+
+    """
+    module_path = dirname(__file__)
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+    x = x.copy()
+    x["color"] = x[x.columns[1]].map(lambda w: w / x[x.columns[1]].max())
+    x = x.set_index(x.columns[0])
+    cmap = plt.cm.get_cmap(cmap)
+    with open(join(module_path, "data/worldmap.data"), "r") as f:
+        countries = json.load(f)
+    for country in countries.keys():
+        data = countries[country]
+        for item in data:
+            ax.plot(item[0], item[1], "-k", linewidth=0.5)
+            if country in x.index.tolist():
+                ax.fill(item[0], item[1], color=cmap(x.color[country]))
+    #
+    xmin, xmax = ax.get_xlim()
+    ymin, ymax = ax.get_ylim()
+    xleft = xmax - 0.02 * (xmax - xmin)
+    xright = xmax
+    xbar = np.linspace(xleft, xright, 10)
+    ybar = np.linspace(ymin, ymin + (ymax - ymin), 100)
+    xv, yv = np.meshgrid(xbar, ybar)
+    z = yv / (ymax - ymin) - ymin
+    ax.pcolormesh(xv, yv, z, cmap=cmap)
+    ax.text(xleft, ymin, "0", ha="right")
+    ax.text(xleft, ymax, str(x[x.columns[0]].max()), ha="right")
+    ax.set_aspect("equal")
+    ax.axis("off")
     return fig
 
 
@@ -537,70 +598,6 @@ def bar(
 
 #         return plt.gca()
 
-#     def worldmap(self, cmap="Pastel2", legend=True, *args, **kwargs):
-#         """Worldmap plot with the number of documents per country.
-
-#         Examples
-#         ----------------------------------------------------------------------------------------------
-
-#         >>> import pandas as pd
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         "Country": ["China", "Taiwan", "United States", "United Kingdom", "India", "Colombia"],
-#         ...         "Num Documents": [1000, 900, 800, 700, 600, 1000],
-#         ...     },
-#         ... )
-#         >>> df
-#                   Country  Num Documents
-#         0           China           1000
-#         1          Taiwan            900
-#         2   United States            800
-#         3  United Kingdom            700
-#         4           India            600
-#         5        Colombia           1000
-
-
-#         >>> _ = plt.figure(figsize=(15, 6))
-#         >>> _ = Plot(df).worldmap()
-#         >>> plt.savefig('sphinx/images/worldmap.png')
-
-#         .. image:: images/worldmap.png
-#             :width: 1500px
-#             :align: center
-
-
-#         """
-#         module_path = dirname(__file__)
-
-#         x = self.df.copy()
-#         x["color"] = x[x.columns[1]].map(lambda w: w / x[x.columns[1]].max())
-#         x = x.set_index("Country")
-#         cmap = plt.cm.get_cmap(cmap)
-#         with open(join(module_path, "data/worldmap.data"), "r") as f:
-#             countries = json.load(f)
-#         plt.clf()
-#         for country in countries.keys():
-#             data = countries[country]
-#             for item in data:
-#                 plt.plot(item[0], item[1], "-k", linewidth=0.5)
-#                 if country in x.index.tolist():
-#                     plt.fill(item[0], item[1], color=cmap(x.color[country]))
-#         #
-#         xmin, xmax = plt.xlim()
-#         ymin, ymax = plt.ylim()
-#         xleft = xmax - 0.02 * (xmax - xmin)
-#         xright = xmax
-#         xbar = np.linspace(xleft, xright, 10)
-#         ybar = np.linspace(ymin, ymin + (ymax - ymin), 100)
-#         xv, yv = np.meshgrid(xbar, ybar)
-#         z = yv / (ymax - ymin) - ymin
-#         plt.pcolormesh(xv, yv, z, cmap=cmap)
-#         plt.text(xleft, ymin, "0", ha="right")
-#         plt.text(xleft, ymax, str(x[x.columns[0]].max()), ha="right")
-#         #
-#         plt.gca().set_aspect("equal")
-#         plt.axis("off")
-#         return plt.gca()
 
 #     def gant(self, hlines_lw=0.5, hlines_c="gray", hlines_ls=":", *args, **kwargs):
 
