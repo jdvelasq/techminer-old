@@ -84,3 +84,137 @@ def summary_by_year(x):
         pane_widths=[2, 5, 0],
         pane_heights=["85px", 5, 0],
     )
+
+
+def summary_by_term(x):
+    """ Summary by Term dashboard.
+    
+    Args:
+        df (pandas.DataFrame): bibliographic dataframe.
+    
+    """
+
+    def tab_term_plots():
+        def compute_by_term(term, top_n, analysis_type, plot_type, cmap):
+            df = tc.summary_by_term(x, term)
+            if analysis_type == "Frequency":
+                df = df.sort_values(
+                    ["Num Documents", "Cited by", term], ascending=False
+                )
+                df = df[[term, "Num Documents"]].head(top_n)
+            else:
+                df = df.sort_values(
+                    ["Cited by", "Num Documents", term], ascending=False
+                )
+                df = df[[term, "Cited by"]].head(top_n)
+            df = df.reset_index(drop=True)
+            plot = plots[plot_type]
+            output.clear_output()
+            with output:
+                display(plot(df, figsize=FIGSIZE, cmap=cmap))
+
+        columns = [z for z in COLUMNS if z in x.columns]
+        term = widgets.Select(options=columns, ensure_option=True, disabled=False,)
+
+        analysis_type = widgets.Dropdown(
+            options=["Frequency", "Citation"], value="Frequency", disable=False,
+        )
+        #
+        plots = {"bar": plt.bar, "barh": plt.barh, "pie": plt.pie}
+        plot_type = widgets.Dropdown(options=list(plots.keys()), disable=False,)
+        cmap = widgets.Dropdown(options=COLORMAPS, disable=False,)
+        #
+        top_n = widgets.IntSlider(
+            value=10,
+            min=10,
+            max=50,
+            step=1,
+            disabled=False,
+            continuous_update=False,
+            orientation="horizontal",
+            readout=True,
+            readout_format="d",
+        )
+        #
+        output = widgets.Output()
+        with output:
+            display(
+                widgets.interactive_output(
+                    compute_by_term,
+                    {
+                        "term": term,
+                        "top_n": top_n,
+                        "analysis_type": analysis_type,
+                        "plot_type": plot_type,
+                        "cmap": cmap,
+                    },
+                )
+            )
+        #
+        left_box = widgets.VBox(
+            [
+                widgets.VBox([widgets.Label(value="Term to analyze:"), term]),
+                widgets.VBox([widgets.Label(value="Analysis type:"), analysis_type]),
+                widgets.VBox([widgets.Label(value="Top n terms:"), top_n]),
+                widgets.VBox([widgets.Label(value="Plot type:"), plot_type]),
+                widgets.VBox([widgets.Label(value="Colormap:"), cmap]),
+            ],
+            layout=Layout(height="400px", border="1px solid gray"),
+        )
+        right_box = widgets.VBox([output])
+        return widgets.HBox([left_box, right_box])
+
+    def tab_worldmap():
+        def compute_worldmap(term, analysis_type, cmap):
+            df = tc.summary_by_term(x, term)
+            if analysis_type == "Frequency":
+                df = df[[term, "Num Documents"]]
+            else:
+                df = df[[term, "Cited by"]]
+            df = df.reset_index(drop=True)
+            output.clear_output()
+            with output:
+                display(plt.worldmap(df, figsize=FIGSIZE, cmap=cmap))
+
+        term = widgets.Select(
+            options=["Countries", "Country 1st"], ensure_option=True, disabled=False,
+        )
+        analysis_type = widgets.Dropdown(
+            options=["Frequency", "Citation"], value="Frequency", disable=False,
+        )
+        cmap = widgets.Dropdown(options=COLORMAPS, disable=False,)
+        #
+        output = widgets.Output()
+        with output:
+            display(
+                widgets.interactive_output(
+                    compute_worldmap,
+                    {"term": term, "analysis_type": analysis_type, "cmap": cmap,},
+                )
+            )
+        #
+        left_box = widgets.VBox(
+            [
+                widgets.VBox([widgets.Label(value="Term to analyze:"), term]),
+                widgets.VBox([widgets.Label(value="Analysis type:"), analysis_type]),
+                widgets.VBox([widgets.Label(value="Colormap:"), cmap]),
+            ],
+            layout=Layout(height=PANEL_HEIGHT, border="1px solid gray"),
+        )
+        right_box = widgets.VBox([output])
+        return widgets.HBox([left_box, right_box])
+
+    #
+    tab_nest = widgets.Tab()
+    tab_nest.children = [tab_term_plots(), tab_worldmap()]
+    tab_nest.set_title(0, "Term analysis")
+    tab_nest.set_title(1, "Worldmap")
+
+    return AppLayout(
+        header=widgets.HTML(value=html_title("Summary by Term")),
+        left_sidebar=None,
+        center=tab_nest,
+        right_sidebar=None,
+        pane_widths=[0, 5, 0],
+        pane_heights=["85px", 5, 0],
+    )

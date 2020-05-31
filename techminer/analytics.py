@@ -542,66 +542,66 @@ def summary_by_year(df):
 ##
 
 
-# def summary_by_term(x, column, keywords=None):
-#     """Summarize the number of documents and citations by term in a dataframe.
+def summary_by_term(x, column, keywords=None):
+    """Summarize the number of documents and citations by term in a dataframe.
 
-#     Args:
-#         column (str): the column to explode.
-#         keywords (int, list): filter the results.
+    Args:
+        column (str): the column to explode.
+        keywords (int, list): filter the results.
 
-#     Returns:
-#         DataFrame.
+    Returns:
+        DataFrame.
 
-#     Examples
-#     ----------------------------------------------------------------------------------------------
+    Examples
+    ----------------------------------------------------------------------------------------------
 
-#     >>> import pandas as pd
-#     >>> x = pd.DataFrame(
-#     ...     {
-#     ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3".split(","),
-#     ...          "Cited by": list(range(10,14)),
-#     ...          "ID": list(range(4)),
-#     ...     }
-#     ... )
-#     >>> x
-#                           Authors  Cited by  ID
-#     0  author 0;author 1;author 2        10   0
-#     1                    author 0        11   1
-#     2                    author 1        12   2
-#     3                    author 3        13   3
+    >>> import pandas as pd
+    >>> x = pd.DataFrame(
+    ...     {
+    ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3".split(","),
+    ...          "Cited by": list(range(10,14)),
+    ...          "ID": list(range(4)),
+    ...     }
+    ... )
+    >>> x
+                          Authors  Cited by  ID
+    0  author 0;author 1;author 2        10   0
+    1                    author 0        11   1
+    2                    author 1        12   2
+    3                    author 3        13   3
 
-#     >>> summary_by_term(x, 'Authors')
-#         Authors  Num Documents  Cited by      ID
-#     0  author 0              2        21  [0, 1]
-#     1  author 1              2        22  [0, 2]
-#     2  author 2              1        10     [0]
-#     3  author 3              1        13     [3]
+    >>> summary_by_term(x, 'Authors')
+        Authors  Num Documents  Cited by      ID
+    0  author 0              2        21  [0, 1]
+    1  author 1              2        22  [0, 2]
+    2  author 2              1        10     [0]
+    3  author 3              1        13     [3]
 
-#     >>> keywords = Keywords(['author 1', 'author 2'])
-#     >>> keywords = keywords.compile()
-#     >>> summary_by_term(x, 'Authors', keywords=keywords)
-#         Authors  Num Documents  Cited by      ID
-#     0  author 1              2        22  [0, 2]
-#     1  author 2              1        10     [0]
+    >>> keywords = Keywords(['author 1', 'author 2'])
+    >>> keywords = keywords.compile()
+    >>> summary_by_term(x, 'Authors', keywords=keywords)
+        Authors  Num Documents  Cited by      ID
+    0  author 1              2        22  [0, 2]
+    1  author 2              1        10     [0]
 
-#     """
-#     x = x.copy()
-#     x = __explode(x[[column, "Cited by", "ID"]], column)
-#     x["Num Documents"] = 1
-#     result = x.groupby(column, as_index=False).agg(
-#         {"Num Documents": np.size, "Cited by": np.sum}
-#     )
-#     result = result.assign(ID=x.groupby(column).agg({"ID": list}).reset_index()["ID"])
-#     result["Cited by"] = result["Cited by"].map(lambda x: int(x))
-#     if keywords is not None:
-#         result = result[result[column].map(lambda w: w in keywords)]
-#     result.sort_values(
-#         [column, "Num Documents", "Cited by"],
-#         ascending=[True, False, False],
-#         inplace=True,
-#         ignore_index=True,
-#     )
-#     return result
+    """
+    x = x.copy()
+    x = __explode(x[[column, "Cited by", "ID"]], column)
+    x["Num Documents"] = 1
+    result = x.groupby(column, as_index=False).agg(
+        {"Num Documents": np.size, "Cited by": np.sum}
+    )
+    result = result.assign(ID=x.groupby(column).agg({"ID": list}).reset_index()["ID"])
+    result["Cited by"] = result["Cited by"].map(lambda x: int(x))
+    if keywords is not None:
+        result = result[result[column].map(lambda w: w in keywords)]
+    result.sort_values(
+        [column, "Num Documents", "Cited by"],
+        ascending=[True, False, False],
+        inplace=True,
+        ignore_index=True,
+    )
+    return result
 
 
 # def documents_by_term(x, column, keywords=None):
