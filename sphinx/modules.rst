@@ -4,7 +4,7 @@ Modules
 .. toctree::
     :maxdepth: 2
     
-    jupyter
+    dashboards
     analytics
     plots
     text
