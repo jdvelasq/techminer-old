@@ -156,13 +156,13 @@
 
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">json</span>
-
+<span class="kn">import</span> <span class="nn">textwrap</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">join</span>
 
-<span class="c1"># import textwrap</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
 <span class="c1"># import numpy as np</span>
 <span class="c1"># import pandas as pd</span>
 <span class="c1"># import squarify</span>
@@ -173,7 +173,7 @@
 
 <span class="c1"># from .chord_diagram import ChordDiagram</span>
 
-<span class="c1"># TEXTLEN = 30</span>
+<span class="n">TEXTLEN</span> <span class="o">=</span> <span class="mi">30</span>
 
 
 <div class="viewcode-block" id="bar"><a class="viewcode-back" href="../../plots.html#techminer.plots.bar">[docs]</a><span class="k">def</span> <span class="nf">bar</span><span class="p">(</span>
@@ -373,6 +373,137 @@
     <span class="k">return</span> <span class="n">fig</span></div>
 
 
+<div class="viewcode-block" id="heatmap"><a class="viewcode-back" href="../../plots.html#techminer.plots.heatmap">[docs]</a><span class="k">def</span> <span class="nf">heatmap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plots a heatmap from a matrix.</span>
+
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &#39;word 0&#39;: [1.00, 0.80, 0.70, 0.00,-0.30],</span>
+<span class="sd">    ...         &#39;word 1&#39;: [0.80, 1.00, 0.70, 0.50, 0.00],</span>
+<span class="sd">    ...         &#39;word 2&#39;: [0.70, 0.70, 1.00, 0.00, 0.00],</span>
+<span class="sd">    ...         &#39;word 3&#39;: [0.00, 0.50, 0.00, 1.00, 0.30],</span>
+<span class="sd">    ...         &#39;word 4&#39;: [-0.30, 0.00, 0.00, 0.30, 1.00],</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ...     index=[&#39;word {:d}&#39;.format(i) for i in range(5)]</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">            word 0  word 1  word 2  word 3  word 4</span>
+<span class="sd">    word 0     1.0     0.8     0.7     0.0    -0.3</span>
+<span class="sd">    word 1     0.8     1.0     0.7     0.5     0.0</span>
+<span class="sd">    word 2     0.7     0.7     1.0     0.0     0.0</span>
+<span class="sd">    word 3     0.0     0.5     0.0     1.0     0.3</span>
+<span class="sd">    word 4    -0.3     0.0     0.0     0.3     1.0</span>
+<span class="sd">    &gt;&gt;&gt; fig = heatmap(df)</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/plotheatmap1.png&#39;)</span>
+
+<span class="sd">    .. image:: images/plotheatmap1.png</span>
+<span class="sd">        :width: 400px</span>
+<span class="sd">        :align: center</span>
+
+<span class="sd">    &gt;&gt;&gt; fig = heatmap(df, cmap=&#39;Blues&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/plotheatmap2.png&#39;)</span>
+
+<span class="sd">    .. image:: images/plotheatmap2.png</span>
+<span class="sd">        :width: 400px</span>
+<span class="sd">        :align: center</span>
+
+
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &#39;word 0&#39;: [100, 80, 70, 0,30],</span>
+<span class="sd">    ...         &#39;word 1&#39;: [80, 100, 70, 50, 0],</span>
+<span class="sd">    ...         &#39;word 2&#39;: [70, 70, 100, 0, 0],</span>
+<span class="sd">    ...         &#39;word 3&#39;: [0, 50, 0, 100, 3],</span>
+<span class="sd">    ...         &#39;word 4&#39;: [30, 0, 0, 30, 100],</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ...     index=[&#39;word {:d}&#39;.format(i) for i in range(5)]</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">            word 0  word 1  word 2  word 3  word 4</span>
+<span class="sd">    word 0     100      80      70       0      30</span>
+<span class="sd">    word 1      80     100      70      50       0</span>
+<span class="sd">    word 2      70      70     100       0       0</span>
+<span class="sd">    word 3       0      50       0     100      30</span>
+<span class="sd">    word 4      30       0       0       3     100</span>
+<span class="sd">    &gt;&gt;&gt; fig = heatmap(df, cmap=&#39;Greys&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/plotheatmap3.png&#39;)</span>
+
+<span class="sd">    .. image:: images/plotheatmap3.png</span>
+<span class="sd">        :width: 400px</span>
+<span class="sd">        :align: center</span>
+
+
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &#39;word 0&#39;: [100, 80, 70, 0,30, 1],</span>
+<span class="sd">    ...         &#39;word 1&#39;: [80, 100, 70, 50, 0, 2],</span>
+<span class="sd">    ...         &#39;word 2&#39;: [70, 70, 100, 0, 0, 3],</span>
+<span class="sd">    ...         &#39;word 3&#39;: [0, 50, 0, 100, 3, 4],</span>
+<span class="sd">    ...         &#39;word 4&#39;: [30, 0, 0, 30, 100, 5],</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ...     index=[&#39;word {:d}&#39;.format(i) for i in range(6)]</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">            word 0  word 1  word 2  word 3  word 4</span>
+<span class="sd">    word 0     100      80      70       0      30</span>
+<span class="sd">    word 1      80     100      70      50       0</span>
+<span class="sd">    word 2      70      70     100       0       0</span>
+<span class="sd">    word 3       0      50       0     100      30</span>
+<span class="sd">    word 4      30       0       0       3     100</span>
+<span class="sd">    word 5       1       2       3       4       5</span>
+
+<span class="sd">    &gt;&gt;&gt; fig = heatmap(df, cmap=&#39;Greys&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/plotheatmap3.png&#39;)</span>
+
+<span class="sd">    .. image:: images/plotheatmap3.png</span>
+<span class="sd">        :width: 400px</span>
+<span class="sd">        :align: center</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,)</span>
+    <span class="n">x</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">textwrap</span><span class="o">.</span><span class="n">shorten</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">TEXTLEN</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">x</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">textwrap</span><span class="o">.</span><span class="n">shorten</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">TEXTLEN</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">labelrotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s2">&quot;cmap&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cmap&quot;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dtypes</span> <span class="o">==</span> <span class="s2">&quot;int64&quot;</span><span class="p">):</span>
+        <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:3.0f}</span><span class="s2">&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:3.2f}</span><span class="s2">&quot;</span>
+    <span class="k">for</span> <span class="n">idx_row</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">idx_col</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">:</span>
+                <span class="n">color</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">color</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                <span class="n">idx_row</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span>
+                <span class="n">idx_col</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span>
+                <span class="n">fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]),</span>
+                <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+            <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">tick_top</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
 <span class="c1"># #############################################################################################################</span>
 
 
@@ -380,146 +511,6 @@
 <span class="c1">#     def __init__(self, df):</span>
 <span class="c1">#         self.df = df</span>
 
-<span class="c1">#     def heatmap(self, **kwargs):</span>
-<span class="c1">#         &quot;&quot;&quot;Plots a heatmap from a matrix.</span>
-
-<span class="c1">#         Colormap availables are:</span>
-<span class="c1">#             &#39;Greys&#39;, &#39;Purples&#39;, &#39;Blues&#39;, &#39;Greens&#39;, &#39;Oranges&#39;, &#39;Reds&#39;,</span>
-<span class="c1">#             &#39;YlOrBr&#39;, &#39;YlOrRd&#39;, &#39;OrRd&#39;, &#39;PuRd&#39;, &#39;RdPu&#39;, &#39;BuPu&#39;,</span>
-<span class="c1">#             &#39;GnBu&#39;, &#39;PuBu&#39;, &#39;YlGnBu&#39;, &#39;PuBuGn&#39;, &#39;BuGn&#39;, &#39;YlGn&#39;</span>
-
-
-<span class="c1">#         See more info in:</span>
-<span class="c1">#         https://matplotlib.org/3.1.0/tutorials/colors/colormaps.html</span>
-
-<span class="c1">#         Examples</span>
-<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1">#         ...     {</span>
-<span class="c1">#         ...         &#39;word 0&#39;: [1.00, 0.80, 0.70, 0.00,-0.30],</span>
-<span class="c1">#         ...         &#39;word 1&#39;: [0.80, 1.00, 0.70, 0.50, 0.00],</span>
-<span class="c1">#         ...         &#39;word 2&#39;: [0.70, 0.70, 1.00, 0.00, 0.00],</span>
-<span class="c1">#         ...         &#39;word 3&#39;: [0.00, 0.50, 0.00, 1.00, 0.30],</span>
-<span class="c1">#         ...         &#39;word 4&#39;: [-0.30, 0.00, 0.00, 0.30, 1.00],</span>
-<span class="c1">#         ...     },</span>
-<span class="c1">#         ...     index=[&#39;word {:d}&#39;.format(i) for i in range(5)]</span>
-<span class="c1">#         ... )</span>
-<span class="c1">#         &gt;&gt;&gt; df</span>
-<span class="c1">#                 word 0  word 1  word 2  word 3  word 4</span>
-<span class="c1">#         word 0     1.0     0.8     0.7     0.0    -0.3</span>
-<span class="c1">#         word 1     0.8     1.0     0.7     0.5     0.0</span>
-<span class="c1">#         word 2     0.7     0.7     1.0     0.0     0.0</span>
-<span class="c1">#         word 3     0.0     0.5     0.0     1.0     0.3</span>
-<span class="c1">#         word 4    -0.3     0.0     0.0     0.3     1.0</span>
-<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).heatmap()</span>
-<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotheatmap1.png&#39;)</span>
-
-<span class="c1">#         .. image:: images/plotheatmap1.png</span>
-<span class="c1">#             :width: 400px</span>
-<span class="c1">#             :align: center</span>
-
-<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).heatmap(cmap=&#39;Blues&#39;)</span>
-<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotheatmap2.png&#39;)</span>
-
-<span class="c1">#         .. image:: images/plotheatmap2.png</span>
-<span class="c1">#             :width: 400px</span>
-<span class="c1">#             :align: center</span>
-
-
-<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1">#         ...     {</span>
-<span class="c1">#         ...         &#39;word 0&#39;: [100, 80, 70, 0,30],</span>
-<span class="c1">#         ...         &#39;word 1&#39;: [80, 100, 70, 50, 0],</span>
-<span class="c1">#         ...         &#39;word 2&#39;: [70, 70, 100, 0, 0],</span>
-<span class="c1">#         ...         &#39;word 3&#39;: [0, 50, 0, 100, 3],</span>
-<span class="c1">#         ...         &#39;word 4&#39;: [30, 0, 0, 30, 100],</span>
-<span class="c1">#         ...     },</span>
-<span class="c1">#         ...     index=[&#39;word {:d}&#39;.format(i) for i in range(5)]</span>
-<span class="c1">#         ... )</span>
-<span class="c1">#         &gt;&gt;&gt; df</span>
-<span class="c1">#                 word 0  word 1  word 2  word 3  word 4</span>
-<span class="c1">#         word 0     100      80      70       0      30</span>
-<span class="c1">#         word 1      80     100      70      50       0</span>
-<span class="c1">#         word 2      70      70     100       0       0</span>
-<span class="c1">#         word 3       0      50       0     100      30</span>
-<span class="c1">#         word 4      30       0       0       3     100</span>
-<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).heatmap(cmap=&#39;Greys&#39;)</span>
-<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotheatmap3.png&#39;)</span>
-
-<span class="c1">#         .. image:: images/plotheatmap3.png</span>
-<span class="c1">#             :width: 400px</span>
-<span class="c1">#             :align: center</span>
-
-
-<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1">#         ...     {</span>
-<span class="c1">#         ...         &#39;word 0&#39;: [100, 80, 70, 0,30, 1],</span>
-<span class="c1">#         ...         &#39;word 1&#39;: [80, 100, 70, 50, 0, 2],</span>
-<span class="c1">#         ...         &#39;word 2&#39;: [70, 70, 100, 0, 0, 3],</span>
-<span class="c1">#         ...         &#39;word 3&#39;: [0, 50, 0, 100, 3, 4],</span>
-<span class="c1">#         ...         &#39;word 4&#39;: [30, 0, 0, 30, 100, 5],</span>
-<span class="c1">#         ...     },</span>
-<span class="c1">#         ...     index=[&#39;word {:d}&#39;.format(i) for i in range(6)]</span>
-<span class="c1">#         ... )</span>
-<span class="c1">#         &gt;&gt;&gt; df</span>
-<span class="c1">#                 word 0  word 1  word 2  word 3  word 4</span>
-<span class="c1">#         word 0     100      80      70       0      30</span>
-<span class="c1">#         word 1      80     100      70      50       0</span>
-<span class="c1">#         word 2      70      70     100       0       0</span>
-<span class="c1">#         word 3       0      50       0     100      30</span>
-<span class="c1">#         word 4      30       0       0       3     100</span>
-<span class="c1">#         word 5       1       2       3       4       5</span>
-
-<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).heatmap(cmap=&#39;Greys&#39;)</span>
-<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotheatmap3.png&#39;)</span>
-
-<span class="c1">#         .. image:: images/plotheatmap3.png</span>
-<span class="c1">#             :width: 400px</span>
-<span class="c1">#             :align: center</span>
-
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         plt.clf()</span>
-<span class="c1">#         x = self.df.copy()</span>
-<span class="c1">#         result = plt.gca().pcolor(np.transpose(x.values), **kwargs,)</span>
-<span class="c1">#         x.columns = [textwrap.shorten(text=w, width=TEXTLEN) for w in x.columns]</span>
-<span class="c1">#         x.index = [textwrap.shorten(text=w, width=TEXTLEN) for w in x.index]</span>
-<span class="c1">#         plt.xticks(np.arange(len(x.index)) + 0.5, x.index, rotation=&quot;vertical&quot;)</span>
-<span class="c1">#         plt.yticks(np.arange(len(x.columns)) + 0.5, x.columns)</span>
-<span class="c1">#         plt.gca().invert_yaxis()</span>
-
-<span class="c1">#         if &quot;cmap&quot; in kwargs:</span>
-<span class="c1">#             cmap = plt.cm.get_cmap(kwargs[&quot;cmap&quot;])</span>
-<span class="c1">#         else:</span>
-<span class="c1">#             cmap = plt.cm.get_cmap()</span>
-
-<span class="c1">#         if all(x.dtypes == &quot;int64&quot;):</span>
-<span class="c1">#             fmt = &quot;{:3.0f}&quot;</span>
-<span class="c1">#         else:</span>
-<span class="c1">#             fmt = &quot;{:3.2f}&quot;</span>
-
-<span class="c1">#         # if x.values.max().max() &lt;= 1.0 and x.values.min().min() &gt;= -1:</span>
-<span class="c1">#         #      fmt = &quot;{:3.2f}&quot;</span>
-<span class="c1">#         #  else:</span>
-<span class="c1">#         #      fmt = &quot;{:3.0f}&quot;</span>
-
-<span class="c1">#         for idx_row, row in enumerate(x.index):</span>
-<span class="c1">#             for idx_col, col in enumerate(x.columns):</span>
-<span class="c1">#                 if abs(x.at[row, col]) &gt; x.values.max().max() / 2.0:</span>
-<span class="c1">#                     color = cmap(0.0)</span>
-<span class="c1">#                 else:</span>
-<span class="c1">#                     color = cmap(1.0)</span>
-<span class="c1">#                 plt.text(</span>
-<span class="c1">#                     idx_row + 0.5,</span>
-<span class="c1">#                     idx_col + 0.5,</span>
-<span class="c1">#                     fmt.format(x.at[row, col]),</span>
-<span class="c1">#                     ha=&quot;center&quot;,</span>
-<span class="c1">#                     va=&quot;center&quot;,</span>
-<span class="c1">#                     color=color,</span>
-<span class="c1">#                 )</span>
-<span class="c1">#         plt.gca().xaxis.tick_top()</span>
-
-<span class="c1">#         return plt.gca()</span>
 
 <span class="c1">#     def chord_diagram(self, alpha=1.0, minval=0.0, top_n_links=None, solid_lines=False):</span>
 <span class="c1">#         &quot;&quot;&quot;Creates a chord diagram from a correlation or an auto-correlation matrix.</span>

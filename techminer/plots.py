@@ -6,13 +6,13 @@ Plots
 
 
 """
-import matplotlib.pyplot as plt
-import numpy as np
 import json
-
+import textwrap
 from os.path import dirname, join
 
-# import textwrap
+import matplotlib.pyplot as plt
+import numpy as np
+
 # import numpy as np
 # import pandas as pd
 # import squarify
@@ -23,7 +23,7 @@ from os.path import dirname, join
 
 # from .chord_diagram import ChordDiagram
 
-# TEXTLEN = 30
+TEXTLEN = 30
 
 
 def bar(
@@ -223,6 +223,137 @@ def gant(
     return fig
 
 
+def heatmap(x, figsize=(8, 8), **kwargs):
+    """Plots a heatmap from a matrix.
+
+    
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         'word 0': [1.00, 0.80, 0.70, 0.00,-0.30],
+    ...         'word 1': [0.80, 1.00, 0.70, 0.50, 0.00],
+    ...         'word 2': [0.70, 0.70, 1.00, 0.00, 0.00],
+    ...         'word 3': [0.00, 0.50, 0.00, 1.00, 0.30],
+    ...         'word 4': [-0.30, 0.00, 0.00, 0.30, 1.00],
+    ...     },
+    ...     index=['word {:d}'.format(i) for i in range(5)]
+    ... )
+    >>> df
+            word 0  word 1  word 2  word 3  word 4
+    word 0     1.0     0.8     0.7     0.0    -0.3
+    word 1     0.8     1.0     0.7     0.5     0.0
+    word 2     0.7     0.7     1.0     0.0     0.0
+    word 3     0.0     0.5     0.0     1.0     0.3
+    word 4    -0.3     0.0     0.0     0.3     1.0
+    >>> fig = heatmap(df)
+    >>> fig.savefig('sphinx/images/plotheatmap1.png')
+
+    .. image:: images/plotheatmap1.png
+        :width: 400px
+        :align: center
+
+    >>> fig = heatmap(df, cmap='Blues')
+    >>> fig.savefig('sphinx/images/plotheatmap2.png')
+
+    .. image:: images/plotheatmap2.png
+        :width: 400px
+        :align: center
+
+
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         'word 0': [100, 80, 70, 0,30],
+    ...         'word 1': [80, 100, 70, 50, 0],
+    ...         'word 2': [70, 70, 100, 0, 0],
+    ...         'word 3': [0, 50, 0, 100, 3],
+    ...         'word 4': [30, 0, 0, 30, 100],
+    ...     },
+    ...     index=['word {:d}'.format(i) for i in range(5)]
+    ... )
+    >>> df
+            word 0  word 1  word 2  word 3  word 4
+    word 0     100      80      70       0      30
+    word 1      80     100      70      50       0
+    word 2      70      70     100       0       0
+    word 3       0      50       0     100      30
+    word 4      30       0       0       3     100
+    >>> fig = heatmap(df, cmap='Greys')
+    >>> fig.savefig('sphinx/images/plotheatmap3.png')
+
+    .. image:: images/plotheatmap3.png
+        :width: 400px
+        :align: center
+
+
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         'word 0': [100, 80, 70, 0,30, 1],
+    ...         'word 1': [80, 100, 70, 50, 0, 2],
+    ...         'word 2': [70, 70, 100, 0, 0, 3],
+    ...         'word 3': [0, 50, 0, 100, 3, 4],
+    ...         'word 4': [30, 0, 0, 30, 100, 5],
+    ...     },
+    ...     index=['word {:d}'.format(i) for i in range(6)]
+    ... )
+    >>> df
+            word 0  word 1  word 2  word 3  word 4
+    word 0     100      80      70       0      30
+    word 1      80     100      70      50       0
+    word 2      70      70     100       0       0
+    word 3       0      50       0     100      30
+    word 4      30       0       0       3     100
+    word 5       1       2       3       4       5
+
+    >>> fig = heatmap(df, cmap='Greys')
+    >>> fig.savefig('sphinx/images/plotheatmap3.png')
+
+    .. image:: images/plotheatmap3.png
+        :width: 400px
+        :align: center
+
+    """
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+    x = x.copy()
+    result = ax.pcolor(np.transpose(x.values), **kwargs,)
+    x.columns = [textwrap.shorten(text=w, width=TEXTLEN) for w in x.columns]
+    x.index = [textwrap.shorten(text=w, width=TEXTLEN) for w in x.index]
+    ax.set_xticks(np.arange(len(x.index)) + 0.5)
+    ax.set_xticklabels(x.index)
+    ax.tick_params(axis="x", labelrotation=90)
+    ax.set_yticks(np.arange(len(x.columns)) + 0.5)
+    ax.set_yticklabels(x.columns)
+    ax.invert_yaxis()
+    if "cmap" in kwargs:
+        cmap = plt.cm.get_cmap(kwargs["cmap"])
+    else:
+        cmap = plt.cm.get_cmap()
+
+    if all(x.dtypes == "int64"):
+        fmt = "{:3.0f}"
+    else:
+        fmt = "{:3.2f}"
+    for idx_row, row in enumerate(x.index):
+        for idx_col, col in enumerate(x.columns):
+            if abs(x.at[row, col]) > x.values.max().max() / 2.0:
+                color = cmap(0.0)
+            else:
+                color = cmap(1.0)
+            ax.text(
+                idx_row + 0.5,
+                idx_col + 0.5,
+                fmt.format(x.at[row, col]),
+                ha="center",
+                va="center",
+                color=color,
+            )
+    ax.xaxis.tick_top()
+    return fig
+
+
 # #############################################################################################################
 
 
@@ -230,146 +361,6 @@ def gant(
 #     def __init__(self, df):
 #         self.df = df
 
-#     def heatmap(self, **kwargs):
-#         """Plots a heatmap from a matrix.
-
-#         Colormap availables are:
-#             'Greys', 'Purples', 'Blues', 'Greens', 'Oranges', 'Reds',
-#             'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd', 'RdPu', 'BuPu',
-#             'GnBu', 'PuBu', 'YlGnBu', 'PuBuGn', 'BuGn', 'YlGn'
-
-
-#         See more info in:
-#         https://matplotlib.org/3.1.0/tutorials/colors/colormaps.html
-
-#         Examples
-#         ----------------------------------------------------------------------------------------------
-
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         'word 0': [1.00, 0.80, 0.70, 0.00,-0.30],
-#         ...         'word 1': [0.80, 1.00, 0.70, 0.50, 0.00],
-#         ...         'word 2': [0.70, 0.70, 1.00, 0.00, 0.00],
-#         ...         'word 3': [0.00, 0.50, 0.00, 1.00, 0.30],
-#         ...         'word 4': [-0.30, 0.00, 0.00, 0.30, 1.00],
-#         ...     },
-#         ...     index=['word {:d}'.format(i) for i in range(5)]
-#         ... )
-#         >>> df
-#                 word 0  word 1  word 2  word 3  word 4
-#         word 0     1.0     0.8     0.7     0.0    -0.3
-#         word 1     0.8     1.0     0.7     0.5     0.0
-#         word 2     0.7     0.7     1.0     0.0     0.0
-#         word 3     0.0     0.5     0.0     1.0     0.3
-#         word 4    -0.3     0.0     0.0     0.3     1.0
-#         >>> _ = Plot(df).heatmap()
-#         >>> plt.savefig('sphinx/images/plotheatmap1.png')
-
-#         .. image:: images/plotheatmap1.png
-#             :width: 400px
-#             :align: center
-
-#         >>> _ = Plot(df).heatmap(cmap='Blues')
-#         >>> plt.savefig('sphinx/images/plotheatmap2.png')
-
-#         .. image:: images/plotheatmap2.png
-#             :width: 400px
-#             :align: center
-
-
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         'word 0': [100, 80, 70, 0,30],
-#         ...         'word 1': [80, 100, 70, 50, 0],
-#         ...         'word 2': [70, 70, 100, 0, 0],
-#         ...         'word 3': [0, 50, 0, 100, 3],
-#         ...         'word 4': [30, 0, 0, 30, 100],
-#         ...     },
-#         ...     index=['word {:d}'.format(i) for i in range(5)]
-#         ... )
-#         >>> df
-#                 word 0  word 1  word 2  word 3  word 4
-#         word 0     100      80      70       0      30
-#         word 1      80     100      70      50       0
-#         word 2      70      70     100       0       0
-#         word 3       0      50       0     100      30
-#         word 4      30       0       0       3     100
-#         >>> _ = Plot(df).heatmap(cmap='Greys')
-#         >>> plt.savefig('sphinx/images/plotheatmap3.png')
-
-#         .. image:: images/plotheatmap3.png
-#             :width: 400px
-#             :align: center
-
-
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         'word 0': [100, 80, 70, 0,30, 1],
-#         ...         'word 1': [80, 100, 70, 50, 0, 2],
-#         ...         'word 2': [70, 70, 100, 0, 0, 3],
-#         ...         'word 3': [0, 50, 0, 100, 3, 4],
-#         ...         'word 4': [30, 0, 0, 30, 100, 5],
-#         ...     },
-#         ...     index=['word {:d}'.format(i) for i in range(6)]
-#         ... )
-#         >>> df
-#                 word 0  word 1  word 2  word 3  word 4
-#         word 0     100      80      70       0      30
-#         word 1      80     100      70      50       0
-#         word 2      70      70     100       0       0
-#         word 3       0      50       0     100      30
-#         word 4      30       0       0       3     100
-#         word 5       1       2       3       4       5
-
-#         >>> _ = Plot(df).heatmap(cmap='Greys')
-#         >>> plt.savefig('sphinx/images/plotheatmap3.png')
-
-#         .. image:: images/plotheatmap3.png
-#             :width: 400px
-#             :align: center
-
-#         """
-#         plt.clf()
-#         x = self.df.copy()
-#         result = plt.gca().pcolor(np.transpose(x.values), **kwargs,)
-#         x.columns = [textwrap.shorten(text=w, width=TEXTLEN) for w in x.columns]
-#         x.index = [textwrap.shorten(text=w, width=TEXTLEN) for w in x.index]
-#         plt.xticks(np.arange(len(x.index)) + 0.5, x.index, rotation="vertical")
-#         plt.yticks(np.arange(len(x.columns)) + 0.5, x.columns)
-#         plt.gca().invert_yaxis()
-
-#         if "cmap" in kwargs:
-#             cmap = plt.cm.get_cmap(kwargs["cmap"])
-#         else:
-#             cmap = plt.cm.get_cmap()
-
-#         if all(x.dtypes == "int64"):
-#             fmt = "{:3.0f}"
-#         else:
-#             fmt = "{:3.2f}"
-
-#         # if x.values.max().max() <= 1.0 and x.values.min().min() >= -1:
-#         #      fmt = "{:3.2f}"
-#         #  else:
-#         #      fmt = "{:3.0f}"
-
-#         for idx_row, row in enumerate(x.index):
-#             for idx_col, col in enumerate(x.columns):
-#                 if abs(x.at[row, col]) > x.values.max().max() / 2.0:
-#                     color = cmap(0.0)
-#                 else:
-#                     color = cmap(1.0)
-#                 plt.text(
-#                     idx_row + 0.5,
-#                     idx_col + 0.5,
-#                     fmt.format(x.at[row, col]),
-#                     ha="center",
-#                     va="center",
-#                     color=color,
-#                 )
-#         plt.gca().xaxis.tick_top()
-
-#         return plt.gca()
 
 #     def chord_diagram(self, alpha=1.0, minval=0.0, top_n_links=None, solid_lines=False):
 #         """Creates a chord diagram from a correlation or an auto-correlation matrix.
