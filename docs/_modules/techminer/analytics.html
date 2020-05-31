@@ -754,439 +754,439 @@
     <span class="k">return</span> <span class="n">result</span></div>
 
 
-<span class="c1"># def documents_by_term(x, column, keywords=None):</span>
-<span class="c1">#     &quot;&quot;&quot;Computes the number of documents per term in a given column.</span>
+<div class="viewcode-block" id="documents_by_term"><a class="viewcode-back" href="../../analytics.html#techminer.analytics.documents_by_term">[docs]</a><span class="k">def</span> <span class="nf">documents_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the number of documents per term in a given column.</span>
 
-<span class="c1">#     Args:</span>
-<span class="c1">#         column (str): the column to explode.</span>
-<span class="c1">#         sep (str): Character used as internal separator for the elements in the column.</span>
-<span class="c1">#         keywords (Keywords): filter the result using the specified Keywords object.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        column (str): the column to explode.</span>
+<span class="sd">        sep (str): Character used as internal separator for the elements in the column.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
 
-<span class="c1">#     Returns:</span>
-<span class="c1">#         DataFrame.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
 
-<span class="c1">#     Examples</span>
-<span class="c1">#     ----------------------------------------------------------------------------------------------</span>
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
 
-<span class="c1">#     &gt;&gt;&gt; import pandas as pd</span>
-<span class="c1">#     &gt;&gt;&gt; x = pd.DataFrame(</span>
-<span class="c1">#     ...     {</span>
-<span class="c1">#     ...          &quot;Authors&quot;: &quot;author 0;author 1;author 2,author 0,author 1,author 3&quot;.split(&quot;,&quot;),</span>
-<span class="c1">#     ...          &quot;Cited by&quot;: list(range(10,14)),</span>
-<span class="c1">#     ...          &quot;ID&quot;: list(range(4)),</span>
-<span class="c1">#     ...     }</span>
-<span class="c1">#     ... )</span>
-<span class="c1">#     &gt;&gt;&gt; x</span>
-<span class="c1">#                           Authors  Cited by  ID</span>
-<span class="c1">#     0  author 0;author 1;author 2        10   0</span>
-<span class="c1">#     1                    author 0        11   1</span>
-<span class="c1">#     2                    author 1        12   2</span>
-<span class="c1">#     3                    author 3        13   3</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...          &quot;Authors&quot;: &quot;author 0;author 1;author 2,author 0,author 1,author 3&quot;.split(&quot;,&quot;),</span>
+<span class="sd">    ...          &quot;Cited by&quot;: list(range(10,14)),</span>
+<span class="sd">    ...          &quot;ID&quot;: list(range(4)),</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; x</span>
+<span class="sd">                          Authors  Cited by  ID</span>
+<span class="sd">    0  author 0;author 1;author 2        10   0</span>
+<span class="sd">    1                    author 0        11   1</span>
+<span class="sd">    2                    author 1        12   2</span>
+<span class="sd">    3                    author 3        13   3</span>
 
-<span class="c1">#     &gt;&gt;&gt; documents_by_term(x, &#39;Authors&#39;)</span>
-<span class="c1">#         Authors  Num Documents      ID</span>
-<span class="c1">#     0  author 0              2  [0, 1]</span>
-<span class="c1">#     1  author 1              2  [0, 2]</span>
-<span class="c1">#     2  author 2              1     [0]</span>
-<span class="c1">#     3  author 3              1     [3]</span>
+<span class="sd">    &gt;&gt;&gt; documents_by_term(x, &#39;Authors&#39;)</span>
+<span class="sd">        Authors  Num Documents      ID</span>
+<span class="sd">    0  author 0              2  [0, 1]</span>
+<span class="sd">    1  author 1              2  [0, 2]</span>
+<span class="sd">    2  author 2              1     [0]</span>
+<span class="sd">    3  author 3              1     [3]</span>
 
-<span class="c1">#     &gt;&gt;&gt; keywords = Keywords([&#39;author 1&#39;, &#39;author 2&#39;])</span>
-<span class="c1">#     &gt;&gt;&gt; keywords = keywords.compile()</span>
-<span class="c1">#     &gt;&gt;&gt; documents_by_term(x, &#39;Authors&#39;, keywords=keywords)</span>
-<span class="c1">#         Authors  Num Documents      ID</span>
-<span class="c1">#     0  author 1              2  [0, 2]</span>
-<span class="c1">#     1  author 2              1     [0]</span>
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;author 1&#39;, &#39;author 2&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; documents_by_term(x, &#39;Authors&#39;, keywords=keywords)</span>
+<span class="sd">        Authors  Num Documents      ID</span>
+<span class="sd">    0  author 1              2  [0, 2]</span>
+<span class="sd">    1  author 2              1     [0]</span>
 
-<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-<span class="c1">#     result = summary_by_term(x, column, keywords)</span>
-<span class="c1">#     result.pop(&quot;Cited by&quot;)</span>
-<span class="c1">#     result.sort_values(</span>
-<span class="c1">#         [&quot;Num Documents&quot;, column],</span>
-<span class="c1">#         ascending=[False, True],</span>
-<span class="c1">#         inplace=True,</span>
-<span class="c1">#         ignore_index=True,</span>
-<span class="c1">#     )</span>
-<span class="c1">#     return result</span>
-
-
-<span class="c1"># def citations_by_term(x, column, keywords=None):</span>
-<span class="c1">#     &quot;&quot;&quot;Computes the number of citations by item in a column.</span>
-
-<span class="c1">#     Args:</span>
-<span class="c1">#         column (str): the column to explode.</span>
-<span class="c1">#         sep (str): Character used as internal separator for the elements in the column.</span>
-<span class="c1">#         keywords (Keywords): filter the result using the specified Keywords object.</span>
-
-<span class="c1">#     Returns:</span>
-<span class="c1">#         DataFrame.</span>
-
-<span class="c1">#     Examples</span>
-<span class="c1">#     ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1">#     &gt;&gt;&gt; import pandas as pd</span>
-<span class="c1">#     &gt;&gt;&gt; x = pd.DataFrame(</span>
-<span class="c1">#     ...     {</span>
-<span class="c1">#     ...          &quot;Authors&quot;: &quot;author 0;author 1;author 2,author 0,author 1,author 3&quot;.split(&quot;,&quot;),</span>
-<span class="c1">#     ...          &quot;Cited by&quot;: list(range(10,14)),</span>
-<span class="c1">#     ...          &quot;ID&quot;: list(range(4)),</span>
-<span class="c1">#     ...     }</span>
-<span class="c1">#     ... )</span>
-<span class="c1">#     &gt;&gt;&gt; x</span>
-<span class="c1">#                           Authors  Cited by  ID</span>
-<span class="c1">#     0  author 0;author 1;author 2        10   0</span>
-<span class="c1">#     1                    author 0        11   1</span>
-<span class="c1">#     2                    author 1        12   2</span>
-<span class="c1">#     3                    author 3        13   3</span>
-
-<span class="c1">#     &gt;&gt;&gt; citations_by_term(x, &#39;Authors&#39;)</span>
-<span class="c1">#         Authors  Cited by      ID</span>
-<span class="c1">#     0  author 1        22  [0, 2]</span>
-<span class="c1">#     1  author 0        21  [0, 1]</span>
-<span class="c1">#     2  author 3        13     [3]</span>
-<span class="c1">#     3  author 2        10     [0]</span>
-
-<span class="c1">#     &gt;&gt;&gt; keywords = Keywords([&#39;author 1&#39;, &#39;author 2&#39;])</span>
-<span class="c1">#     &gt;&gt;&gt; keywords = keywords.compile()</span>
-<span class="c1">#     &gt;&gt;&gt; citations_by_term(x, &#39;Authors&#39;, keywords=keywords)</span>
-<span class="c1">#         Authors  Cited by      ID</span>
-<span class="c1">#     0  author 1        22  [0, 2]</span>
-<span class="c1">#     1  author 2        10     [0]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;Cited by&quot;</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span>
+        <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+        <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
 
 
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     result = summary_by_term(x, column, keywords)</span>
-<span class="c1">#     result.pop(&quot;Num Documents&quot;)</span>
-<span class="c1">#     result.sort_values(</span>
-<span class="c1">#         [&quot;Cited by&quot;, column], ascending=[False, True], inplace=True, ignore_index=True,</span>
-<span class="c1">#     )</span>
-<span class="c1">#     return result</span>
+<div class="viewcode-block" id="citations_by_term"><a class="viewcode-back" href="../../analytics.html#techminer.analytics.citations_by_term">[docs]</a><span class="k">def</span> <span class="nf">citations_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the number of citations by item in a column.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        column (str): the column to explode.</span>
+<span class="sd">        sep (str): Character used as internal separator for the elements in the column.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...          &quot;Authors&quot;: &quot;author 0;author 1;author 2,author 0,author 1,author 3&quot;.split(&quot;,&quot;),</span>
+<span class="sd">    ...          &quot;Cited by&quot;: list(range(10,14)),</span>
+<span class="sd">    ...          &quot;ID&quot;: list(range(4)),</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; x</span>
+<span class="sd">                          Authors  Cited by  ID</span>
+<span class="sd">    0  author 0;author 1;author 2        10   0</span>
+<span class="sd">    1                    author 0        11   1</span>
+<span class="sd">    2                    author 1        12   2</span>
+<span class="sd">    3                    author 3        13   3</span>
+
+<span class="sd">    &gt;&gt;&gt; citations_by_term(x, &#39;Authors&#39;)</span>
+<span class="sd">        Authors  Cited by      ID</span>
+<span class="sd">    0  author 1        22  [0, 2]</span>
+<span class="sd">    1  author 0        21  [0, 1]</span>
+<span class="sd">    2  author 3        13     [3]</span>
+<span class="sd">    3  author 2        10     [0]</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;author 1&#39;, &#39;author 2&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; citations_by_term(x, &#39;Authors&#39;, keywords=keywords)</span>
+<span class="sd">        Authors  Cited by      ID</span>
+<span class="sd">    0  author 1        22  [0, 2]</span>
+<span class="sd">    1  author 2        10     [0]</span>
 
 
-<span class="c1"># def summary_by_term_per_year(x, column, keywords=None):</span>
-<span class="c1">#     &quot;&quot;&quot;Computes the number of documents and citations by term per year.</span>
-
-<span class="c1">#     Args:</span>
-<span class="c1">#         column (str): the column to explode.</span>
-<span class="c1">#         sep (str): Character used as internal separator for the elements in the column.</span>
-<span class="c1">#         keywords (Keywords): filter the result using the specified Keywords object.</span>
-
-<span class="c1">#     Returns:</span>
-<span class="c1">#         DataFrame.</span>
-
-<span class="c1">#     Examples</span>
-<span class="c1">#     ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1">#     &gt;&gt;&gt; import pandas as pd</span>
-<span class="c1">#     &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1">#     ...     {</span>
-<span class="c1">#     ...          &quot;Year&quot;: [2010, 2010, 2011, 2011, 2012, 2014],</span>
-<span class="c1">#     ...          &quot;Authors&quot;: &quot;author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4&quot;.split(&quot;,&quot;),</span>
-<span class="c1">#     ...          &quot;Cited by&quot;: list(range(10,16)),</span>
-<span class="c1">#     ...          &quot;ID&quot;: list(range(6)),</span>
-<span class="c1">#     ...     }</span>
-<span class="c1">#     ... )</span>
-<span class="c1">#     &gt;&gt;&gt; df</span>
-<span class="c1">#        Year                     Authors  Cited by  ID</span>
-<span class="c1">#     0  2010  author 0;author 1;author 2        10   0</span>
-<span class="c1">#     1  2010                    author 0        11   1</span>
-<span class="c1">#     2  2011                    author 1        12   2</span>
-<span class="c1">#     3  2011                    author 3        13   3</span>
-<span class="c1">#     4  2012                    author 4        14   4</span>
-<span class="c1">#     5  2014                    author 4        15   5</span>
-
-<span class="c1">#     &gt;&gt;&gt; summary_by_term_per_year(df, &#39;Authors&#39;)</span>
-<span class="c1">#         Authors  Year  Cited by  Num Documents      ID</span>
-<span class="c1">#     0  author 0  2010        21              2  [0, 1]</span>
-<span class="c1">#     1  author 1  2010        10              1     [0]</span>
-<span class="c1">#     2  author 2  2010        10              1     [0]</span>
-<span class="c1">#     3  author 1  2011        12              1     [2]</span>
-<span class="c1">#     4  author 3  2011        13              1     [3]</span>
-<span class="c1">#     5  author 4  2012        14              1     [4]</span>
-<span class="c1">#     6  author 4  2014        15              1     [5]</span>
-
-<span class="c1">#     &gt;&gt;&gt; keywords = Keywords([&#39;author 1&#39;, &#39;author 2&#39;, &#39;author 3&#39;])</span>
-<span class="c1">#     &gt;&gt;&gt; keywords = keywords.compile()</span>
-<span class="c1">#     &gt;&gt;&gt; summary_by_term_per_year(df, &#39;Authors&#39;, keywords=keywords)</span>
-<span class="c1">#         Authors  Year  Cited by  Num Documents   ID</span>
-<span class="c1">#     0  author 1  2010        10              1  [0]</span>
-<span class="c1">#     1  author 2  2010        10              1  [0]</span>
-<span class="c1">#     2  author 1  2011        12              1  [2]</span>
-<span class="c1">#     3  author 3  2011        13              1  [3]</span>
-
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     data = __explode(x[[&quot;Year&quot;, column, &quot;Cited by&quot;, &quot;ID&quot;]], column)</span>
-<span class="c1">#     data[&quot;Num Documents&quot;] = 1</span>
-<span class="c1">#     result = data.groupby([column, &quot;Year&quot;], as_index=False).agg(</span>
-<span class="c1">#         {&quot;Cited by&quot;: np.sum, &quot;Num Documents&quot;: np.size}</span>
-<span class="c1">#     )</span>
-<span class="c1">#     result = result.assign(</span>
-<span class="c1">#         ID=data.groupby([column, &quot;Year&quot;]).agg({&quot;ID&quot;: list}).reset_index()[&quot;ID&quot;]</span>
-<span class="c1">#     )</span>
-<span class="c1">#     result[&quot;Cited by&quot;] = result[&quot;Cited by&quot;].map(lambda x: int(x))</span>
-<span class="c1">#     if keywords is not None:</span>
-<span class="c1">#         if keywords._patterns is None:</span>
-<span class="c1">#             keywords = keywords.compile()</span>
-<span class="c1">#         result = result[result[column].map(lambda w: w in keywords)]</span>
-<span class="c1">#     result.sort_values(</span>
-<span class="c1">#         [&quot;Year&quot;, column], ascending=True, inplace=True, ignore_index=True,</span>
-<span class="c1">#     )</span>
-<span class="c1">#     return result</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
 
 
-<span class="c1"># def documents_by_term_per_year(x, column, as_matrix=False, minmax=None, keywords=None):</span>
-<span class="c1">#     &quot;&quot;&quot;Computes the number of documents by term per year.</span>
+<div class="viewcode-block" id="summary_by_term_per_year"><a class="viewcode-back" href="../../analytics.html#techminer.analytics.summary_by_term_per_year">[docs]</a><span class="k">def</span> <span class="nf">summary_by_term_per_year</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the number of documents and citations by term per year.</span>
 
-<span class="c1">#     Args:</span>
-<span class="c1">#         column (str): the column to explode.</span>
-<span class="c1">#         sep (str): Character used as internal separator for the elements in the column.</span>
-<span class="c1">#         as_matrix (bool): Results are returned as a matrix.</span>
-<span class="c1">#         minmax (pair(number,number)): filter values by &gt;=min,&lt;=max.</span>
-<span class="c1">#         keywords (Keywords): filter the result using the specified Keywords object.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        column (str): the column to explode.</span>
+<span class="sd">        sep (str): Character used as internal separator for the elements in the column.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
 
-<span class="c1">#     Returns:</span>
-<span class="c1">#         DataFrame.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
 
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
 
-<span class="c1">#     Examples</span>
-<span class="c1">#     ----------------------------------------------------------------------------------------------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...          &quot;Year&quot;: [2010, 2010, 2011, 2011, 2012, 2014],</span>
+<span class="sd">    ...          &quot;Authors&quot;: &quot;author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4&quot;.split(&quot;,&quot;),</span>
+<span class="sd">    ...          &quot;Cited by&quot;: list(range(10,16)),</span>
+<span class="sd">    ...          &quot;ID&quot;: list(range(6)),</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">       Year                     Authors  Cited by  ID</span>
+<span class="sd">    0  2010  author 0;author 1;author 2        10   0</span>
+<span class="sd">    1  2010                    author 0        11   1</span>
+<span class="sd">    2  2011                    author 1        12   2</span>
+<span class="sd">    3  2011                    author 3        13   3</span>
+<span class="sd">    4  2012                    author 4        14   4</span>
+<span class="sd">    5  2014                    author 4        15   5</span>
 
-<span class="c1">#     &gt;&gt;&gt; import pandas as pd</span>
-<span class="c1">#     &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1">#     ...     {</span>
-<span class="c1">#     ...          &quot;Year&quot;: [2010, 2010, 2011, 2011, 2012, 2014],</span>
-<span class="c1">#     ...          &quot;Authors&quot;: &quot;author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4&quot;.split(&quot;,&quot;),</span>
-<span class="c1">#     ...          &quot;Cited by&quot;: list(range(10,16)),</span>
-<span class="c1">#     ...          &quot;ID&quot;: list(range(6)),</span>
-<span class="c1">#     ...     }</span>
-<span class="c1">#     ... )</span>
-<span class="c1">#     &gt;&gt;&gt; df</span>
-<span class="c1">#        Year                     Authors  Cited by  ID</span>
-<span class="c1">#     0  2010  author 0;author 1;author 2        10   0</span>
-<span class="c1">#     1  2010                    author 0        11   1</span>
-<span class="c1">#     2  2011                    author 1        12   2</span>
-<span class="c1">#     3  2011                    author 3        13   3</span>
-<span class="c1">#     4  2012                    author 4        14   4</span>
-<span class="c1">#     5  2014                    author 4        15   5</span>
+<span class="sd">    &gt;&gt;&gt; summary_by_term_per_year(df, &#39;Authors&#39;)</span>
+<span class="sd">        Authors  Year  Cited by  Num Documents      ID</span>
+<span class="sd">    0  author 0  2010        21              2  [0, 1]</span>
+<span class="sd">    1  author 1  2010        10              1     [0]</span>
+<span class="sd">    2  author 2  2010        10              1     [0]</span>
+<span class="sd">    3  author 1  2011        12              1     [2]</span>
+<span class="sd">    4  author 3  2011        13              1     [3]</span>
+<span class="sd">    5  author 4  2012        14              1     [4]</span>
+<span class="sd">    6  author 4  2014        15              1     [5]</span>
 
-<span class="c1">#     &gt;&gt;&gt; documents_by_term_per_year(df, &#39;Authors&#39;)</span>
-<span class="c1">#         Authors  Year  Num Documents      ID</span>
-<span class="c1">#     0  author 0  2010              2  [0, 1]</span>
-<span class="c1">#     1  author 1  2010              1     [0]</span>
-<span class="c1">#     2  author 2  2010              1     [0]</span>
-<span class="c1">#     3  author 1  2011              1     [2]</span>
-<span class="c1">#     4  author 3  2011              1     [3]</span>
-<span class="c1">#     5  author 4  2012              1     [4]</span>
-<span class="c1">#     6  author 4  2014              1     [5]</span>
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;author 1&#39;, &#39;author 2&#39;, &#39;author 3&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; summary_by_term_per_year(df, &#39;Authors&#39;, keywords=keywords)</span>
+<span class="sd">        Authors  Year  Cited by  Num Documents   ID</span>
+<span class="sd">    0  author 1  2010        10              1  [0]</span>
+<span class="sd">    1  author 2  2010        10              1  [0]</span>
+<span class="sd">    2  author 1  2011        12              1  [2]</span>
+<span class="sd">    3  author 3  2011        13              1  [3]</span>
 
-<span class="c1">#     &gt;&gt;&gt; documents_by_term_per_year(df, &#39;Authors&#39;, as_matrix=True)</span>
-<span class="c1">#           author 0  author 1  author 2  author 3  author 4</span>
-<span class="c1">#     2010         2         1         1         0         0</span>
-<span class="c1">#     2011         0         1         0         1         0</span>
-<span class="c1">#     2012         0         0         0         0         1</span>
-<span class="c1">#     2014         0         0         0         0         1</span>
-
-<span class="c1">#     &gt;&gt;&gt; documents_by_term_per_year(df, &#39;Authors&#39;, as_matrix=True, minmax=(2, None))</span>
-<span class="c1">#           author 0</span>
-<span class="c1">#     2010         2</span>
-
-<span class="c1">#     &gt;&gt;&gt; documents_by_term_per_year(df, &#39;Authors&#39;, as_matrix=True, minmax=(0, 1))</span>
-<span class="c1">#           author 1  author 2  author 3  author 4</span>
-<span class="c1">#     2010         1         1         0         0</span>
-<span class="c1">#     2011         1         0         1         0</span>
-<span class="c1">#     2012         0         0         0         1</span>
-<span class="c1">#     2014         0         0         0         1</span>
-
-<span class="c1">#     &gt;&gt;&gt; keywords = Keywords([&#39;author 1&#39;, &#39;author 2&#39;, &#39;author 3&#39;])</span>
-<span class="c1">#     &gt;&gt;&gt; keywords = keywords.compile()</span>
-<span class="c1">#     &gt;&gt;&gt; documents_by_term_per_year(df, &#39;Authors&#39;, keywords=keywords, as_matrix=True)</span>
-<span class="c1">#           author 1  author 2  author 3</span>
-<span class="c1">#     2010         1         1         0</span>
-<span class="c1">#     2011         1         0         1</span>
-
-<span class="c1">#     &quot;&quot;&quot;</span>
-
-<span class="c1">#     result = summary_by_term_per_year(x, column, keywords)</span>
-<span class="c1">#     result.pop(&quot;Cited by&quot;)</span>
-<span class="c1">#     if minmax is not None:</span>
-<span class="c1">#         min_value, max_value = minmax</span>
-<span class="c1">#         if min_value is not None:</span>
-<span class="c1">#             result = result[result[&quot;Num Documents&quot;] &gt;= min_value]</span>
-<span class="c1">#         if max_value is not None:</span>
-<span class="c1">#             result = result[result[&quot;Num Documents&quot;] &lt;= max_value]</span>
-<span class="c1">#     result.sort_values(</span>
-<span class="c1">#         [&quot;Year&quot;, &quot;Num Documents&quot;, column], ascending=[True, False, True], inplace=True,</span>
-<span class="c1">#     )</span>
-<span class="c1">#     result.reset_index(drop=True)</span>
-<span class="c1">#     if as_matrix == True:</span>
-<span class="c1">#         result = pd.pivot_table(</span>
-<span class="c1">#             result, values=&quot;Num Documents&quot;, index=&quot;Year&quot;, columns=column, fill_value=0,</span>
-<span class="c1">#         )</span>
-<span class="c1">#         result.columns = result.columns.tolist()</span>
-<span class="c1">#         result.index = result.index.tolist()</span>
-<span class="c1">#     return result</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">__explode</span><span class="p">(</span><span class="n">x</span><span class="p">[[</span><span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="s2">&quot;Cited by&quot;</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">]],</span> <span class="n">column</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;Year&quot;</span><span class="p">],</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">,</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+        <span class="n">ID</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;Year&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">})</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()[</span><span class="s2">&quot;ID&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">keywords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">keywords</span><span class="o">.</span><span class="n">_patterns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
 
 
-<span class="c1"># def gant(x, column, minmax=None, keywords=None):</span>
-<span class="c1">#     &quot;&quot;&quot;Computes the number of documents by term per year.</span>
+<div class="viewcode-block" id="documents_by_term_per_year"><a class="viewcode-back" href="../../analytics.html#techminer.analytics.documents_by_term_per_year">[docs]</a><span class="k">def</span> <span class="nf">documents_by_term_per_year</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the number of documents by term per year.</span>
 
-<span class="c1">#     Args:</span>
-<span class="c1">#         column (str): the column to explode.</span>
-<span class="c1">#         sep (str): Character used as internal separator for the elements in the column.</span>
-<span class="c1">#         as_matrix (bool): Results are returned as a matrix.</span>
-<span class="c1">#         minmax (pair(number,number)): filter values by &gt;=min,&lt;=max.</span>
-<span class="c1">#         keywords (Keywords): filter the result using the specified Keywords object.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        column (str): the column to explode.</span>
+<span class="sd">        sep (str): Character used as internal separator for the elements in the column.</span>
+<span class="sd">        as_matrix (bool): Results are returned as a matrix.</span>
+<span class="sd">        minmax (pair(number,number)): filter values by &gt;=min,&lt;=max.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
 
-<span class="c1">#     Returns:</span>
-<span class="c1">#         DataFrame.</span>
-
-
-<span class="c1">#     Examples</span>
-<span class="c1">#     ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1">#     &gt;&gt;&gt; import pandas as pd</span>
-<span class="c1">#     &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1">#     ...     {</span>
-<span class="c1">#     ...          &quot;Year&quot;: [2010, 2011, 2011, 2012, 2015, 2012, 2016],</span>
-<span class="c1">#     ...          &quot;Authors&quot;: &quot;author 0;author 1;author 2,author 0,author 1,author 3,author 3,author 4,author 4&quot;.split(&quot;,&quot;),</span>
-<span class="c1">#     ...          &quot;Cited by&quot;: list(range(10,17)),</span>
-<span class="c1">#     ...          &quot;ID&quot;: list(range(7)),</span>
-<span class="c1">#     ...     }</span>
-<span class="c1">#     ... )</span>
-<span class="c1">#     &gt;&gt;&gt; documents_by_term_per_year(df, &#39;Authors&#39;, as_matrix=True)</span>
-<span class="c1">#           author 0  author 1  author 2  author 3  author 4</span>
-<span class="c1">#     2010         1         1         1         0         0</span>
-<span class="c1">#     2011         1         1         0         0         0</span>
-<span class="c1">#     2012         0         0         0         1         1</span>
-<span class="c1">#     2015         0         0         0         1         0</span>
-<span class="c1">#     2016         0         0         0         0         1</span>
-
-<span class="c1">#     &gt;&gt;&gt; gant(df, &#39;Authors&#39;)</span>
-<span class="c1">#           author 0  author 1  author 2  author 3  author 4</span>
-<span class="c1">#     2010         1         1         1         0         0</span>
-<span class="c1">#     2011         1         1         0         0         0</span>
-<span class="c1">#     2012         0         0         0         1         1</span>
-<span class="c1">#     2013         0         0         0         1         1</span>
-<span class="c1">#     2014         0         0         0         1         1</span>
-<span class="c1">#     2015         0         0         0         1         1</span>
-<span class="c1">#     2016         0         0         0         0         1</span>
-
-<span class="c1">#     &gt;&gt;&gt; keywords = Keywords([&#39;author 1&#39;, &#39;author 2&#39;, &#39;author 3&#39;])</span>
-<span class="c1">#     &gt;&gt;&gt; keywords = keywords.compile()</span>
-<span class="c1">#     &gt;&gt;&gt; gant(df, &#39;Authors&#39;, keywords=keywords)</span>
-<span class="c1">#           author 1  author 2  author 3</span>
-<span class="c1">#     2010         1         1         0</span>
-<span class="c1">#     2011         1         0         0</span>
-<span class="c1">#     2012         0         0         1</span>
-<span class="c1">#     2013         0         0         1</span>
-<span class="c1">#     2014         0         0         1</span>
-<span class="c1">#     2015         0         0         1</span>
-
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     result = documents_by_term_per_year(</span>
-<span class="c1">#         x, column=column, as_matrix=True, minmax=minmax, keywords=keywords</span>
-<span class="c1">#     )</span>
-<span class="c1">#     years = [year for year in range(result.index.min(), result.index.max() + 1)]</span>
-<span class="c1">#     result = result.reindex(years, fill_value=0)</span>
-<span class="c1">#     matrix1 = result.copy()</span>
-<span class="c1">#     matrix1 = matrix1.cumsum()</span>
-<span class="c1">#     matrix1 = matrix1.applymap(lambda x: True if x &gt; 0 else False)</span>
-<span class="c1">#     matrix2 = result.copy()</span>
-<span class="c1">#     matrix2 = matrix2.sort_index(ascending=False)</span>
-<span class="c1">#     matrix2 = matrix2.cumsum()</span>
-<span class="c1">#     matrix2 = matrix2.applymap(lambda x: True if x &gt; 0 else False)</span>
-<span class="c1">#     matrix2 = matrix2.sort_index(ascending=True)</span>
-<span class="c1">#     result = matrix1.eq(matrix2)</span>
-<span class="c1">#     result = result.applymap(lambda x: 1 if x is True else 0)</span>
-<span class="c1">#     return result</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
 
 
-<span class="c1"># def citations_by_term_per_year(x, column, as_matrix=False, minmax=None, keywords=None):</span>
-<span class="c1">#     &quot;&quot;&quot;Computes the number of citations by term by year in a column.</span>
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
 
-<span class="c1">#     Args:</span>
-<span class="c1">#         column (str): the column to explode.</span>
-<span class="c1">#         as_matrix (bool): Results are returned as a matrix.</span>
-<span class="c1">#         minmax (pair(number,number)): filter values by &gt;=min,&lt;=max.</span>
-<span class="c1">#         keywords (Keywords): filter the result using the specified Keywords object.</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...          &quot;Year&quot;: [2010, 2010, 2011, 2011, 2012, 2014],</span>
+<span class="sd">    ...          &quot;Authors&quot;: &quot;author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4&quot;.split(&quot;,&quot;),</span>
+<span class="sd">    ...          &quot;Cited by&quot;: list(range(10,16)),</span>
+<span class="sd">    ...          &quot;ID&quot;: list(range(6)),</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">       Year                     Authors  Cited by  ID</span>
+<span class="sd">    0  2010  author 0;author 1;author 2        10   0</span>
+<span class="sd">    1  2010                    author 0        11   1</span>
+<span class="sd">    2  2011                    author 1        12   2</span>
+<span class="sd">    3  2011                    author 3        13   3</span>
+<span class="sd">    4  2012                    author 4        14   4</span>
+<span class="sd">    5  2014                    author 4        15   5</span>
 
-<span class="c1">#     Returns:</span>
-<span class="c1">#         DataFrame.</span>
+<span class="sd">    &gt;&gt;&gt; documents_by_term_per_year(df, &#39;Authors&#39;)</span>
+<span class="sd">        Authors  Year  Num Documents      ID</span>
+<span class="sd">    0  author 0  2010              2  [0, 1]</span>
+<span class="sd">    1  author 1  2010              1     [0]</span>
+<span class="sd">    2  author 2  2010              1     [0]</span>
+<span class="sd">    3  author 1  2011              1     [2]</span>
+<span class="sd">    4  author 3  2011              1     [3]</span>
+<span class="sd">    5  author 4  2012              1     [4]</span>
+<span class="sd">    6  author 4  2014              1     [5]</span>
+
+<span class="sd">    &gt;&gt;&gt; documents_by_term_per_year(df, &#39;Authors&#39;, as_matrix=True)</span>
+<span class="sd">          author 0  author 1  author 2  author 3  author 4</span>
+<span class="sd">    2010         2         1         1         0         0</span>
+<span class="sd">    2011         0         1         0         1         0</span>
+<span class="sd">    2012         0         0         0         0         1</span>
+<span class="sd">    2014         0         0         0         0         1</span>
+
+<span class="sd">    &gt;&gt;&gt; documents_by_term_per_year(df, &#39;Authors&#39;, as_matrix=True, minmax=(2, None))</span>
+<span class="sd">          author 0</span>
+<span class="sd">    2010         2</span>
+
+<span class="sd">    &gt;&gt;&gt; documents_by_term_per_year(df, &#39;Authors&#39;, as_matrix=True, minmax=(0, 1))</span>
+<span class="sd">          author 1  author 2  author 3  author 4</span>
+<span class="sd">    2010         1         1         0         0</span>
+<span class="sd">    2011         1         0         1         0</span>
+<span class="sd">    2012         0         0         0         1</span>
+<span class="sd">    2014         0         0         0         1</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;author 1&#39;, &#39;author 2&#39;, &#39;author 3&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; documents_by_term_per_year(df, &#39;Authors&#39;, keywords=keywords, as_matrix=True)</span>
+<span class="sd">          author 1  author 2  author 3</span>
+<span class="sd">    2010         1         1         0</span>
+<span class="sd">    2011         1         0         1</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">summary_by_term_per_year</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;Cited by&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">minmax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span> <span class="o">=</span> <span class="n">minmax</span>
+        <span class="k">if</span> <span class="n">min_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">max_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">max_value</span><span class="p">]</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">as_matrix</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+            <span class="n">result</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">column</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span></div>
 
 
-<span class="c1">#     Examples</span>
-<span class="c1">#     ----------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="gant"><a class="viewcode-back" href="../../analytics.html#techminer.analytics.gant">[docs]</a><span class="k">def</span> <span class="nf">gant</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the number of documents by term per year.</span>
 
-<span class="c1">#     &gt;&gt;&gt; import pandas as pd</span>
-<span class="c1">#     &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1">#     ...     {</span>
-<span class="c1">#     ...          &quot;Year&quot;: [2010, 2010, 2011, 2011, 2012, 2014],</span>
-<span class="c1">#     ...          &quot;Authors&quot;: &quot;author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4&quot;.split(&quot;,&quot;),</span>
-<span class="c1">#     ...          &quot;Cited by&quot;: list(range(10,16)),</span>
-<span class="c1">#     ...          &quot;ID&quot;: list(range(6)),</span>
-<span class="c1">#     ...     }</span>
-<span class="c1">#     ... )</span>
-<span class="c1">#     &gt;&gt;&gt; df</span>
-<span class="c1">#        Year                     Authors  Cited by  ID</span>
-<span class="c1">#     0  2010  author 0;author 1;author 2        10   0</span>
-<span class="c1">#     1  2010                    author 0        11   1</span>
-<span class="c1">#     2  2011                    author 1        12   2</span>
-<span class="c1">#     3  2011                    author 3        13   3</span>
-<span class="c1">#     4  2012                    author 4        14   4</span>
-<span class="c1">#     5  2014                    author 4        15   5</span>
+<span class="sd">    Args:</span>
+<span class="sd">        column (str): the column to explode.</span>
+<span class="sd">        sep (str): Character used as internal separator for the elements in the column.</span>
+<span class="sd">        as_matrix (bool): Results are returned as a matrix.</span>
+<span class="sd">        minmax (pair(number,number)): filter values by &gt;=min,&lt;=max.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
 
-<span class="c1">#     &gt;&gt;&gt; citations_by_term_per_year(df, &#39;Authors&#39;)</span>
-<span class="c1">#         Authors  Year  Cited by      ID</span>
-<span class="c1">#     0  author 0  2010        21  [0, 1]</span>
-<span class="c1">#     1  author 2  2010        10     [0]</span>
-<span class="c1">#     2  author 1  2010        10     [0]</span>
-<span class="c1">#     3  author 3  2011        13     [3]</span>
-<span class="c1">#     4  author 1  2011        12     [2]</span>
-<span class="c1">#     5  author 4  2012        14     [4]</span>
-<span class="c1">#     6  author 4  2014        15     [5]</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
 
-<span class="c1">#     &gt;&gt;&gt; citations_by_term_per_year(df, &#39;Authors&#39;, as_matrix=True)</span>
-<span class="c1">#           author 0  author 1  author 2  author 3  author 4</span>
-<span class="c1">#     2010        21        10        10         0         0</span>
-<span class="c1">#     2011         0        12         0        13         0</span>
-<span class="c1">#     2012         0         0         0         0        14</span>
-<span class="c1">#     2014         0         0         0         0        15</span>
 
-<span class="c1">#     &gt;&gt;&gt; citations_by_term_per_year(df, &#39;Authors&#39;, as_matrix=True, minmax=(12, 15))</span>
-<span class="c1">#           author 1  author 3  author 4</span>
-<span class="c1">#     2011        12        13         0</span>
-<span class="c1">#     2012         0         0        14</span>
-<span class="c1">#     2014         0         0        15</span>
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
 
-<span class="c1">#     &gt;&gt;&gt; keywords = Keywords([&#39;author 1&#39;, &#39;author 2&#39;, &#39;author 3&#39;])</span>
-<span class="c1">#     &gt;&gt;&gt; keywords = keywords.compile()</span>
-<span class="c1">#     &gt;&gt;&gt; citations_by_term_per_year(df, &#39;Authors&#39;, keywords=keywords)</span>
-<span class="c1">#         Authors  Year  Cited by   ID</span>
-<span class="c1">#     0  author 2  2010        10  [0]</span>
-<span class="c1">#     1  author 1  2010        10  [0]</span>
-<span class="c1">#     2  author 3  2011        13  [3]</span>
-<span class="c1">#     3  author 1  2011        12  [2]</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...          &quot;Year&quot;: [2010, 2011, 2011, 2012, 2015, 2012, 2016],</span>
+<span class="sd">    ...          &quot;Authors&quot;: &quot;author 0;author 1;author 2,author 0,author 1,author 3,author 3,author 4,author 4&quot;.split(&quot;,&quot;),</span>
+<span class="sd">    ...          &quot;Cited by&quot;: list(range(10,17)),</span>
+<span class="sd">    ...          &quot;ID&quot;: list(range(7)),</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; documents_by_term_per_year(df, &#39;Authors&#39;, as_matrix=True)</span>
+<span class="sd">          author 0  author 1  author 2  author 3  author 4</span>
+<span class="sd">    2010         1         1         1         0         0</span>
+<span class="sd">    2011         1         1         0         0         0</span>
+<span class="sd">    2012         0         0         0         1         1</span>
+<span class="sd">    2015         0         0         0         1         0</span>
+<span class="sd">    2016         0         0         0         0         1</span>
 
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     result = summary_by_term_per_year(x, column, keywords)</span>
-<span class="c1">#     result.pop(&quot;Num Documents&quot;)</span>
-<span class="c1">#     if minmax is not None:</span>
-<span class="c1">#         min_value, max_value = minmax</span>
-<span class="c1">#         if min_value is not None:</span>
-<span class="c1">#             result = result[result[&quot;Cited by&quot;] &gt;= min_value]</span>
-<span class="c1">#         if max_value is not None:</span>
-<span class="c1">#             result = result[result[&quot;Cited by&quot;] &lt;= max_value]</span>
-<span class="c1">#     result.sort_values(</span>
-<span class="c1">#         [&quot;Year&quot;, &quot;Cited by&quot;, column], ascending=[True, False, False], inplace=True,</span>
-<span class="c1">#     )</span>
-<span class="c1">#     result = result.reset_index(drop=True)</span>
-<span class="c1">#     if as_matrix == True:</span>
-<span class="c1">#         result = pd.pivot_table(</span>
-<span class="c1">#             result, values=&quot;Cited by&quot;, index=&quot;Year&quot;, columns=column, fill_value=0,</span>
-<span class="c1">#         )</span>
-<span class="c1">#         result.columns = result.columns.tolist()</span>
-<span class="c1">#         result.index = result.index.tolist()</span>
-<span class="c1">#     return result</span>
+<span class="sd">    &gt;&gt;&gt; gant(df, &#39;Authors&#39;)</span>
+<span class="sd">          author 0  author 1  author 2  author 3  author 4</span>
+<span class="sd">    2010         1         1         1         0         0</span>
+<span class="sd">    2011         1         1         0         0         0</span>
+<span class="sd">    2012         0         0         0         1         1</span>
+<span class="sd">    2013         0         0         0         1         1</span>
+<span class="sd">    2014         0         0         0         1         1</span>
+<span class="sd">    2015         0         0         0         1         1</span>
+<span class="sd">    2016         0         0         0         0         1</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;author 1&#39;, &#39;author 2&#39;, &#39;author 3&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; gant(df, &#39;Authors&#39;, keywords=keywords)</span>
+<span class="sd">          author 1  author 2  author 3</span>
+<span class="sd">    2010         1         1         0</span>
+<span class="sd">    2011         1         0         0</span>
+<span class="sd">    2012         0         0         1</span>
+<span class="sd">    2013         0         0         1</span>
+<span class="sd">    2014         0         0         1</span>
+<span class="sd">    2015         0         0         1</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">documents_by_term_per_year</span><span class="p">(</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="n">minmax</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span>
+    <span class="p">)</span>
+    <span class="n">years</span> <span class="o">=</span> <span class="p">[</span><span class="n">year</span> <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">result</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">years</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">matrix1</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">matrix1</span> <span class="o">=</span> <span class="n">matrix1</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+    <span class="n">matrix1</span> <span class="o">=</span> <span class="n">matrix1</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">matrix2</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">matrix2</span> <span class="o">=</span> <span class="n">matrix2</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">matrix2</span> <span class="o">=</span> <span class="n">matrix2</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+    <span class="n">matrix2</span> <span class="o">=</span> <span class="n">matrix2</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">matrix2</span> <span class="o">=</span> <span class="n">matrix2</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">matrix1</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">matrix2</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="citations_by_term_per_year"><a class="viewcode-back" href="../../analytics.html#techminer.analytics.citations_by_term_per_year">[docs]</a><span class="k">def</span> <span class="nf">citations_by_term_per_year</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the number of citations by term by year in a column.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        column (str): the column to explode.</span>
+<span class="sd">        as_matrix (bool): Results are returned as a matrix.</span>
+<span class="sd">        minmax (pair(number,number)): filter values by &gt;=min,&lt;=max.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...          &quot;Year&quot;: [2010, 2010, 2011, 2011, 2012, 2014],</span>
+<span class="sd">    ...          &quot;Authors&quot;: &quot;author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4&quot;.split(&quot;,&quot;),</span>
+<span class="sd">    ...          &quot;Cited by&quot;: list(range(10,16)),</span>
+<span class="sd">    ...          &quot;ID&quot;: list(range(6)),</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">       Year                     Authors  Cited by  ID</span>
+<span class="sd">    0  2010  author 0;author 1;author 2        10   0</span>
+<span class="sd">    1  2010                    author 0        11   1</span>
+<span class="sd">    2  2011                    author 1        12   2</span>
+<span class="sd">    3  2011                    author 3        13   3</span>
+<span class="sd">    4  2012                    author 4        14   4</span>
+<span class="sd">    5  2014                    author 4        15   5</span>
+
+<span class="sd">    &gt;&gt;&gt; citations_by_term_per_year(df, &#39;Authors&#39;)</span>
+<span class="sd">        Authors  Year  Cited by      ID</span>
+<span class="sd">    0  author 0  2010        21  [0, 1]</span>
+<span class="sd">    1  author 2  2010        10     [0]</span>
+<span class="sd">    2  author 1  2010        10     [0]</span>
+<span class="sd">    3  author 3  2011        13     [3]</span>
+<span class="sd">    4  author 1  2011        12     [2]</span>
+<span class="sd">    5  author 4  2012        14     [4]</span>
+<span class="sd">    6  author 4  2014        15     [5]</span>
+
+<span class="sd">    &gt;&gt;&gt; citations_by_term_per_year(df, &#39;Authors&#39;, as_matrix=True)</span>
+<span class="sd">          author 0  author 1  author 2  author 3  author 4</span>
+<span class="sd">    2010        21        10        10         0         0</span>
+<span class="sd">    2011         0        12         0        13         0</span>
+<span class="sd">    2012         0         0         0         0        14</span>
+<span class="sd">    2014         0         0         0         0        15</span>
+
+<span class="sd">    &gt;&gt;&gt; citations_by_term_per_year(df, &#39;Authors&#39;, as_matrix=True, minmax=(12, 15))</span>
+<span class="sd">          author 1  author 3  author 4</span>
+<span class="sd">    2011        12        13         0</span>
+<span class="sd">    2012         0         0        14</span>
+<span class="sd">    2014         0         0        15</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;author 1&#39;, &#39;author 2&#39;, &#39;author 3&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; citations_by_term_per_year(df, &#39;Authors&#39;, keywords=keywords)</span>
+<span class="sd">        Authors  Year  Cited by   ID</span>
+<span class="sd">    0  author 2  2010        10  [0]</span>
+<span class="sd">    1  author 1  2010        10  [0]</span>
+<span class="sd">    2  author 3  2011        13  [3]</span>
+<span class="sd">    3  author 1  2011        12  [2]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">summary_by_term_per_year</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">minmax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span> <span class="o">=</span> <span class="n">minmax</span>
+        <span class="k">if</span> <span class="n">min_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">max_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">max_value</span><span class="p">]</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Cited by&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">as_matrix</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+            <span class="n">result</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;Cited by&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">column</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span></div>
 
 
 <span class="c1">#</span>

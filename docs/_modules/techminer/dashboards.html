@@ -1,0 +1,533 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>techminer.dashboards &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TechMiner - A Package for Bibliographical Analysis using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TechMiner - A Package for Bibliographical Analysis using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>techminer.dashboards</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for techminer.dashboards</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Jupyter Lab Interface</span>
+<span class="sd">==================================================================================================</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">widgets</span>
+<span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">Layout</span><span class="p">,</span> <span class="n">AppLayout</span>
+
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">clear_output</span>
+
+<span class="kn">import</span> <span class="nn">techminer.analytics</span> <span class="k">as</span> <span class="nn">tc</span>
+<span class="kn">import</span> <span class="nn">techminer.plots</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">FIGSIZE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="n">PANEL_HEIGHT</span> <span class="o">=</span> <span class="s2">&quot;400px&quot;</span>
+
+<span class="n">COLORMAPS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Greys&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Purples&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Blues&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Greens&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Oranges&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Reds&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;YlOrBr&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;YlOrRd&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;OrRd&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PuRd&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RdPu&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BuPu&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GnBu&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PuBu&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;YlGnBu&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PuBuGn&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BuGn&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;YlGn&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Pastel1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Pastel2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Paired&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Accent&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Dark2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Set1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Set2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Set3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tab10&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tab20&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tab20b&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tab20c&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">COLUMNS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Author Keywords&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Authors&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Countries&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Country 1st&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Document type&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Index Keywords&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Institution 1st&quot;</span> <span class="s2">&quot;Institutions&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Keywords&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Source title&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="html_title"><a class="viewcode-back" href="../../dashboards.html#techminer.dashboards.html_title">[docs]</a><span class="k">def</span> <span class="nf">html_title</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="s2">&quot;&lt;h1&gt;</span><span class="si">{}</span><span class="s2">&lt;/h1&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="o">+</span> <span class="s2">&quot;&lt;hr style=&#39;height:2px;border-width:0;color:gray;background-color:gray&#39;&gt;&quot;</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="summary_by_year"><a class="viewcode-back" href="../../dashboards.html#techminer.dashboards.summary_by_year">[docs]</a><span class="k">def</span> <span class="nf">summary_by_year</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Summary by year dashboard.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        df (pandas.DataFrame): bibliographic dataframe.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="n">selected</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">,</span> <span class="n">cmap</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">summary_by_year</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">selected</span><span class="p">]]</span>
+        <span class="n">plot</span> <span class="o">=</span> <span class="n">plots</span><span class="p">[</span><span class="n">plot_type</span><span class="p">]</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">display</span><span class="p">(</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">FIGSIZE</span><span class="p">))</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Options</span>
+    <span class="c1">#</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Documents by Year&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;Cum. Documents by Year&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Num Documents (Cum)&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;Times Cited by Year&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Cited by&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;Cum. Times Cited by Year&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Cited by (Cum)&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;Avg. Times Cited by Year&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Avg. Cited by&quot;</span><span class="p">],</span>
+    <span class="p">}</span>
+    <span class="n">plots</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">,</span> <span class="s2">&quot;barh&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">}</span>
+    <span class="c1">#</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+        <span class="n">options</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">value</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">],</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">plot_type</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="s2">&quot;barh&quot;</span><span class="p">],</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">COLORMAPS</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+    <span class="c1">#</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">display</span><span class="p">(</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">interactive_output</span><span class="p">(</span>
+                <span class="n">compute</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;selected&quot;</span><span class="p">:</span> <span class="n">selected</span><span class="p">,</span> <span class="s2">&quot;plot_type&quot;</span><span class="p">:</span> <span class="n">plot_type</span><span class="p">,</span> <span class="s2">&quot;cmap&quot;</span><span class="p">:</span> <span class="n">cmap</span><span class="p">}</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="n">left_box</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Plot&quot;</span><span class="p">),</span> <span class="n">selected</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Plot type:&quot;</span><span class="p">),</span> <span class="n">plot_type</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Colormap:&quot;</span><span class="p">),</span> <span class="n">cmap</span><span class="p">]),</span>
+        <span class="p">],</span>
+        <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="n">PANEL_HEIGHT</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="s2">&quot;1px solid gray&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">right_box</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">output</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">AppLayout</span><span class="p">(</span>
+        <span class="n">header</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">html_title</span><span class="p">(</span><span class="s2">&quot;Summary by Year&quot;</span><span class="p">)),</span>
+        <span class="n">left_sidebar</span><span class="o">=</span><span class="n">left_box</span><span class="p">,</span>
+        <span class="n">center</span><span class="o">=</span><span class="n">right_box</span><span class="p">,</span>
+        <span class="n">right_sidebar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">pane_widths</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="n">pane_heights</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;85px&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="summary_by_term"><a class="viewcode-back" href="../../dashboards.html#techminer.dashboards.summary_by_term">[docs]</a><span class="k">def</span> <span class="nf">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Summary by Term dashboard.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        df (pandas.DataFrame): bibliographic dataframe.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">tab_term_plots</span><span class="p">():</span>
+        <span class="k">def</span> <span class="nf">compute_by_term</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">top_n</span><span class="p">,</span> <span class="n">analysis_type</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">,</span> <span class="n">cmap</span><span class="p">):</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">term</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">analysis_type</span> <span class="o">==</span> <span class="s2">&quot;Frequency&quot;</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+                    <span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Cited by&quot;</span><span class="p">,</span> <span class="n">term</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
+                <span class="p">)</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">term</span><span class="p">,</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+                    <span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">,</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span> <span class="n">term</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
+                <span class="p">)</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">term</span><span class="p">,</span> <span class="s2">&quot;Cited by&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">plot</span> <span class="o">=</span> <span class="n">plots</span><span class="p">[</span><span class="n">plot_type</span><span class="p">]</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+            <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+                <span class="n">display</span><span class="p">(</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">FIGSIZE</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">))</span>
+
+        <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">z</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">COLUMNS</span> <span class="k">if</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+        <span class="n">term</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Select</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">disabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+
+        <span class="n">analysis_type</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Frequency&quot;</span><span class="p">,</span> <span class="s2">&quot;Citation&quot;</span><span class="p">],</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;Frequency&quot;</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">plots</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">,</span> <span class="s2">&quot;barh&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">,</span> <span class="s2">&quot;pie&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">pie</span><span class="p">}</span>
+        <span class="n">plot_type</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">plots</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">COLORMAPS</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+        <span class="c1">#</span>
+        <span class="n">top_n</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">IntSlider</span><span class="p">(</span>
+            <span class="n">value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="nb">min</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="nb">max</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+            <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">disabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">continuous_update</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span>
+            <span class="n">readout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">readout_format</span><span class="o">=</span><span class="s2">&quot;d&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">display</span><span class="p">(</span>
+                <span class="n">widgets</span><span class="o">.</span><span class="n">interactive_output</span><span class="p">(</span>
+                    <span class="n">compute_by_term</span><span class="p">,</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;term&quot;</span><span class="p">:</span> <span class="n">term</span><span class="p">,</span>
+                        <span class="s2">&quot;top_n&quot;</span><span class="p">:</span> <span class="n">top_n</span><span class="p">,</span>
+                        <span class="s2">&quot;analysis_type&quot;</span><span class="p">:</span> <span class="n">analysis_type</span><span class="p">,</span>
+                        <span class="s2">&quot;plot_type&quot;</span><span class="p">:</span> <span class="n">plot_type</span><span class="p">,</span>
+                        <span class="s2">&quot;cmap&quot;</span><span class="p">:</span> <span class="n">cmap</span><span class="p">,</span>
+                    <span class="p">},</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">left_box</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Term to analyze:&quot;</span><span class="p">),</span> <span class="n">term</span><span class="p">]),</span>
+                <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Analysis type:&quot;</span><span class="p">),</span> <span class="n">analysis_type</span><span class="p">]),</span>
+                <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Top n terms:&quot;</span><span class="p">),</span> <span class="n">top_n</span><span class="p">]),</span>
+                <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Plot type:&quot;</span><span class="p">),</span> <span class="n">plot_type</span><span class="p">]),</span>
+                <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Colormap:&quot;</span><span class="p">),</span> <span class="n">cmap</span><span class="p">]),</span>
+            <span class="p">],</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="s2">&quot;400px&quot;</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="s2">&quot;1px solid gray&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">right_box</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">output</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">left_box</span><span class="p">,</span> <span class="n">right_box</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">tab_worldmap</span><span class="p">():</span>
+        <span class="k">def</span> <span class="nf">compute_worldmap</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">analysis_type</span><span class="p">,</span> <span class="n">cmap</span><span class="p">):</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">term</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">analysis_type</span> <span class="o">==</span> <span class="s2">&quot;Frequency&quot;</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">term</span><span class="p">,</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">]]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">term</span><span class="p">,</span> <span class="s2">&quot;Cited by&quot;</span><span class="p">]]</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+            <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+                <span class="n">display</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">worldmap</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">FIGSIZE</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">))</span>
+
+        <span class="n">term</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Select</span><span class="p">(</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Countries&quot;</span><span class="p">,</span> <span class="s2">&quot;Country 1st&quot;</span><span class="p">],</span> <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">disabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">analysis_type</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Frequency&quot;</span><span class="p">,</span> <span class="s2">&quot;Citation&quot;</span><span class="p">],</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;Frequency&quot;</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">COLORMAPS</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+        <span class="c1">#</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">display</span><span class="p">(</span>
+                <span class="n">widgets</span><span class="o">.</span><span class="n">interactive_output</span><span class="p">(</span>
+                    <span class="n">compute_worldmap</span><span class="p">,</span>
+                    <span class="p">{</span><span class="s2">&quot;term&quot;</span><span class="p">:</span> <span class="n">term</span><span class="p">,</span> <span class="s2">&quot;analysis_type&quot;</span><span class="p">:</span> <span class="n">analysis_type</span><span class="p">,</span> <span class="s2">&quot;cmap&quot;</span><span class="p">:</span> <span class="n">cmap</span><span class="p">,},</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">left_box</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Term to analyze:&quot;</span><span class="p">),</span> <span class="n">term</span><span class="p">]),</span>
+                <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Analysis type:&quot;</span><span class="p">),</span> <span class="n">analysis_type</span><span class="p">]),</span>
+                <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Colormap:&quot;</span><span class="p">),</span> <span class="n">cmap</span><span class="p">]),</span>
+            <span class="p">],</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="n">PANEL_HEIGHT</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="s2">&quot;1px solid gray&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">right_box</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">output</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">left_box</span><span class="p">,</span> <span class="n">right_box</span><span class="p">])</span>
+
+    <span class="c1">#</span>
+    <span class="n">tab_nest</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Tab</span><span class="p">()</span>
+    <span class="n">tab_nest</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">tab_term_plots</span><span class="p">(),</span> <span class="n">tab_worldmap</span><span class="p">()]</span>
+    <span class="n">tab_nest</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Term analysis&quot;</span><span class="p">)</span>
+    <span class="n">tab_nest</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Worldmap&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">AppLayout</span><span class="p">(</span>
+        <span class="n">header</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">html_title</span><span class="p">(</span><span class="s2">&quot;Summary by Term&quot;</span><span class="p">)),</span>
+        <span class="n">left_sidebar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">center</span><span class="o">=</span><span class="n">tab_nest</span><span class="p">,</span>
+        <span class="n">right_sidebar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">pane_widths</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="n">pane_heights</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;85px&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="summary_by_term_per_year"><a class="viewcode-back" href="../../dashboards.html#techminer.dashboards.summary_by_term_per_year">[docs]</a><span class="k">def</span> <span class="nf">summary_by_term_per_year</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">compute_by_term</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">top_n</span><span class="p">,</span> <span class="n">analysis_type</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">,</span> <span class="n">cmap</span><span class="p">):</span>
+        <span class="n">plot</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">heatmap</span> <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s2">&quot;Heatmap&quot;</span> <span class="k">else</span> <span class="n">plt</span><span class="o">.</span><span class="n">gant</span>
+        <span class="k">if</span> <span class="n">analysis_type</span> <span class="o">==</span> <span class="s2">&quot;Frequency&quot;</span><span class="p">:</span>
+            <span class="n">top</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">documents_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">term</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)[</span><span class="n">term</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">documents_by_term_per_year</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">top</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">citations_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">term</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)[</span><span class="n">term</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">citations_by_term_per_year</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="n">top</span><span class="p">]</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s2">&quot;Heatmap&quot;</span><span class="p">:</span>
+                <span class="n">display</span><span class="p">(</span><span class="n">plot</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">FIGSIZE</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">display</span><span class="p">(</span><span class="n">plot</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">FIGSIZE</span><span class="p">))</span>
+
+    <span class="c1">#</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">z</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">COLUMNS</span> <span class="k">if</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">term</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Select</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">disabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+    <span class="n">analysis_type</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Frequency&quot;</span><span class="p">,</span> <span class="s2">&quot;Citation&quot;</span><span class="p">],</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;Frequency&quot;</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">plots</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Heatmap&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">heatmap</span><span class="p">,</span> <span class="s2">&quot;Gant&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">gant</span><span class="p">}</span>
+    <span class="n">plot_type</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">plots</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">COLORMAPS</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+    <span class="c1">#</span>
+    <span class="n">top_n</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">IntSlider</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">disabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">continuous_update</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span>
+        <span class="n">readout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">readout_format</span><span class="o">=</span><span class="s2">&quot;d&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">display</span><span class="p">(</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">interactive_output</span><span class="p">(</span>
+                <span class="n">compute_by_term</span><span class="p">,</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;term&quot;</span><span class="p">:</span> <span class="n">term</span><span class="p">,</span>
+                    <span class="s2">&quot;top_n&quot;</span><span class="p">:</span> <span class="n">top_n</span><span class="p">,</span>
+                    <span class="s2">&quot;analysis_type&quot;</span><span class="p">:</span> <span class="n">analysis_type</span><span class="p">,</span>
+                    <span class="s2">&quot;plot_type&quot;</span><span class="p">:</span> <span class="n">plot_type</span><span class="p">,</span>
+                    <span class="s2">&quot;cmap&quot;</span><span class="p">:</span> <span class="n">cmap</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="n">left_box</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Term to analyze:&quot;</span><span class="p">),</span> <span class="n">term</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Analysis type:&quot;</span><span class="p">),</span> <span class="n">analysis_type</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Top n terms:&quot;</span><span class="p">),</span> <span class="n">top_n</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Plot type:&quot;</span><span class="p">),</span> <span class="n">plot_type</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Colormap:&quot;</span><span class="p">),</span> <span class="n">cmap</span><span class="p">]),</span>
+        <span class="p">],</span>
+        <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="n">PANEL_HEIGHT</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="s2">&quot;1px solid gray&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">right_box</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">output</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">AppLayout</span><span class="p">(</span>
+        <span class="n">header</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">html_title</span><span class="p">(</span><span class="s2">&quot;Summary by Term per Year&quot;</span><span class="p">)),</span>
+        <span class="n">left_sidebar</span><span class="o">=</span><span class="n">left_box</span><span class="p">,</span>
+        <span class="n">center</span><span class="o">=</span><span class="n">right_box</span><span class="p">,</span>
+        <span class="n">right_sidebar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">pane_widths</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="n">pane_heights</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;85px&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

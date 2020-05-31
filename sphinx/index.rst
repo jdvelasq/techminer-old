@@ -82,10 +82,6 @@ Release Information
 Table of Contents
 ------------------------------------------------------------------------------------------
 
-.. toctree::
-   :maxdepth: 3
-
-tutorial/index
 
 .. toctree::
    :maxdepth: 2

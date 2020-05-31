@@ -1,4 +1,4 @@
-.. automodule:: techminer.jupyter
+.. automodule:: techminer.dashboards
     :members:
     :undoc-members:
     :show-inheritance:
