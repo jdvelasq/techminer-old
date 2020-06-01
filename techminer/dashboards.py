@@ -459,3 +459,111 @@ def co_occurrence_analysis(x):
         pane_widths=[2, 5, 0],
         pane_heights=["85px", 5, 0],
     )
+
+
+def correlation_analysis(x):
+    def compute_by_term(column, by, method, minmax, cmap, filter_type, top_n):
+        #
+        minmax = (minmax[0], minmax[1])
+        #
+        matrix, limit_values = tc.corr(
+            x,
+            column=column,
+            by=by,
+            method=method.lower(),
+            show_between=minmax,
+            cmap=cmap,
+            filter_by=filter_type,
+            top_n=top_n,
+            as_matrix=True,
+            get_minmax=True,
+        )
+        output.clear_output()
+        with output:
+            if len(matrix.columns) < 51 and len(matrix.index) < 51:
+                display(matrix.style.format("{:.3f}").background_gradient(cmap=cmap))
+            else:
+                display(matrix.style.format("{:.3f}"))
+
+    #
+    PANEL_HEIGHT = "580px"
+    #
+    column = widgets.Select(
+        options=[z for z in COLUMNS if z in x.columns],
+        ensure_option=True,
+        disabled=False,
+    )
+    by = widgets.Select(
+        options=[z for z in COLUMNS if z in x.columns],
+        ensure_option=True,
+        disabled=False,
+    )
+    method = widgets.Dropdown(
+        options=["Pearson", "Kendall", "Spearman"], value="Pearson", disable=False,
+    )
+    selection_range = widgets.FloatRangeSlider(
+        value=[-1.0, 1.0],
+        min=-1.0,
+        max=1.0,
+        step=0.1,
+        disabled=False,
+        continuous_update=False,
+        orientation="horizontal",
+        readout=True,
+        readout_format="+.1f",
+    )
+    filter_type = widgets.Dropdown(
+        options=["Frequency", "Citation"], value="Frequency", disable=False,
+    )
+    top_n = widgets.IntSlider(
+        value=10,
+        min=10,
+        max=50,
+        step=1,
+        disabled=False,
+        continuous_update=False,
+        orientation="horizontal",
+        readout=True,
+        readout_format="d",
+    )
+    cmap = widgets.Dropdown(options=COLORMAPS, disable=False,)
+    #
+    output = widgets.Output()
+    with output:
+        display(
+            widgets.interactive_output(
+                compute_by_term,
+                {
+                    "column": column,
+                    "by": by,
+                    "method": method,
+                    "minmax": selection_range,
+                    "cmap": cmap,
+                    "filter_type": filter_type,
+                    "top_n": top_n,
+                },
+            )
+        )
+    #
+    left_box = widgets.VBox(
+        [
+            widgets.VBox([widgets.Label(value="Term:"), column]),
+            widgets.VBox([widgets.Label(value="By term:"), by]),
+            widgets.VBox([widgets.Label(value="Method:"), method]),
+            widgets.VBox([widgets.Label(value="Filter type:"), filter_type]),
+            widgets.VBox([widgets.Label(value="Top n:"), top_n]),
+            widgets.VBox([widgets.Label(value="Range:"), selection_range]),
+            widgets.VBox([widgets.Label(value="Colormap:"), cmap]),
+        ],
+        layout=Layout(height=PANEL_HEIGHT, border="1px solid gray"),
+    )
+    right_box = widgets.VBox([output])
+
+    return AppLayout(
+        header=widgets.HTML(value=html_title("Correlation analysis")),
+        left_sidebar=left_box,
+        center=right_box,
+        right_sidebar=None,
+        pane_widths=[2, 5, 0],
+        pane_heights=["85px", 5, 0],
+    )

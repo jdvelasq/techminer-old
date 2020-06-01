@@ -309,7 +309,7 @@ class Keywords:
 
 
         """
-        if x is None:
+        if x is None or not isinstance(x, str):
             return None
         result = []
         for pattern in self._patterns:
