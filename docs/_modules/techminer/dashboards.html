@@ -424,7 +424,6 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">top</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">citations_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">term</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)[</span><span class="n">term</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
             <span class="n">matrix</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">citations_by_term_per_year</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
         <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="n">top</span><span class="p">]</span>
         <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
         <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
@@ -484,6 +483,234 @@
 
     <span class="k">return</span> <span class="n">AppLayout</span><span class="p">(</span>
         <span class="n">header</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">html_title</span><span class="p">(</span><span class="s2">&quot;Summary by Term per Year&quot;</span><span class="p">)),</span>
+        <span class="n">left_sidebar</span><span class="o">=</span><span class="n">left_box</span><span class="p">,</span>
+        <span class="n">center</span><span class="o">=</span><span class="n">right_box</span><span class="p">,</span>
+        <span class="n">right_sidebar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">pane_widths</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="n">pane_heights</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;85px&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="co_occurrence_analysis"><a class="viewcode-back" href="../../dashboards.html#techminer.dashboards.co_occurrence_analysis">[docs]</a><span class="k">def</span> <span class="nf">co_occurrence_analysis</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">compute_by_term</span><span class="p">(</span>
+        <span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">analysis_type</span><span class="p">,</span> <span class="n">row_order</span><span class="p">,</span> <span class="n">column_order</span><span class="p">,</span> <span class="n">cmap</span><span class="p">,</span> <span class="n">minmax</span>
+    <span class="p">):</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">analysis_type</span> <span class="o">==</span> <span class="s2">&quot;Frequency&quot;</span><span class="p">:</span>
+            <span class="n">matrix</span><span class="p">,</span> <span class="n">limit_value</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">co_occurrence</span><span class="p">(</span>
+                <span class="n">x</span><span class="p">,</span>
+                <span class="n">rows</span><span class="p">,</span>
+                <span class="n">columns</span><span class="p">,</span>
+                <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">minmax</span><span class="o">=</span><span class="p">(</span><span class="n">selection_range</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">selection_range</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">retmaxval</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">matrix</span><span class="p">,</span> <span class="n">limit_value</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">co_citation</span><span class="p">(</span>
+                <span class="n">x</span><span class="p">,</span>
+                <span class="n">rows</span><span class="p">,</span>
+                <span class="n">columns</span><span class="p">,</span>
+                <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">minmax</span><span class="o">=</span><span class="p">(</span><span class="n">selection_range</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">selection_range</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">retmaxval</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">selection_range</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">if</span> <span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">limit_value</span> <span class="ow">or</span> <span class="n">selection_range</span><span class="o">.</span><span class="n">max</span> <span class="o">&lt;</span> <span class="n">limit_value</span><span class="p">:</span>
+            <span class="n">selection_range</span><span class="o">.</span><span class="n">max</span> <span class="o">=</span> <span class="n">limit_value</span>
+            <span class="k">if</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">limit_value</span><span class="p">:</span>
+                <span class="n">selection_range</span><span class="o">.</span><span class="n">min</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1"># selection_range.value = [0, limit_value]</span>
+        <span class="c1">#</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">21</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">21</span><span class="p">:</span>
+                <span class="n">display</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">display</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>  <span class="c1"># .style.background_gradient(cmap=cmap)</span>
+
+    <span class="c1">#</span>
+    <span class="n">PANEL_HEIGHT</span> <span class="o">=</span> <span class="s2">&quot;570px&quot;</span>
+    <span class="c1">#</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Select</span><span class="p">(</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="n">z</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">COLUMNS</span> <span class="k">if</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span>
+        <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">disabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Select</span><span class="p">(</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="n">z</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">COLUMNS</span> <span class="k">if</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span>
+        <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">disabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">analysis_type</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Frequency&quot;</span><span class="p">,</span> <span class="s2">&quot;Citation&quot;</span><span class="p">],</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;Frequency&quot;</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">selection_range</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">IntRangeSlider</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">],</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">disabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">continuous_update</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span>
+        <span class="n">readout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">readout_format</span><span class="o">=</span><span class="s2">&quot;d&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">row_order</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Alphabetic asc.&quot;</span><span class="p">,</span> <span class="s2">&quot;Alphabetic desc.&quot;</span><span class="p">,</span> <span class="s2">&quot;F/C asc.&quot;</span><span class="p">,</span> <span class="s2">&quot;F/C desc.&quot;</span><span class="p">],</span>
+        <span class="n">value</span><span class="o">=</span><span class="s2">&quot;F/C desc.&quot;</span><span class="p">,</span>
+        <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">column_order</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Alphabetic asc.&quot;</span><span class="p">,</span> <span class="s2">&quot;Alphabetic desc.&quot;</span><span class="p">,</span> <span class="s2">&quot;F/C asc.&quot;</span><span class="p">,</span> <span class="s2">&quot;F/C desc.&quot;</span><span class="p">],</span>
+        <span class="n">value</span><span class="o">=</span><span class="s2">&quot;F/C desc.&quot;</span><span class="p">,</span>
+        <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">COLORMAPS</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+    <span class="c1">#</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">display</span><span class="p">(</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">interactive_output</span><span class="p">(</span>
+                <span class="n">compute_by_term</span><span class="p">,</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="n">rows</span><span class="p">,</span>
+                    <span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="n">columns</span><span class="p">,</span>
+                    <span class="s2">&quot;analysis_type&quot;</span><span class="p">:</span> <span class="n">analysis_type</span><span class="p">,</span>
+                    <span class="s2">&quot;row_order&quot;</span><span class="p">:</span> <span class="n">row_order</span><span class="p">,</span>
+                    <span class="s2">&quot;column_order&quot;</span><span class="p">:</span> <span class="n">column_order</span><span class="p">,</span>
+                    <span class="s2">&quot;cmap&quot;</span><span class="p">:</span> <span class="n">cmap</span><span class="p">,</span>
+                    <span class="s2">&quot;minmax&quot;</span><span class="p">:</span> <span class="n">selection_range</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="n">left_box</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Rows:&quot;</span><span class="p">),</span> <span class="n">rows</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Columns:&quot;</span><span class="p">),</span> <span class="n">columns</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Analysis type:&quot;</span><span class="p">),</span> <span class="n">analysis_type</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Range:&quot;</span><span class="p">),</span> <span class="n">selection_range</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Row order:&quot;</span><span class="p">),</span> <span class="n">row_order</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Column order:&quot;</span><span class="p">),</span> <span class="n">column_order</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Colormap:&quot;</span><span class="p">),</span> <span class="n">cmap</span><span class="p">]),</span>
+        <span class="p">],</span>
+        <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="n">PANEL_HEIGHT</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="s2">&quot;1px solid gray&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">right_box</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">output</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">AppLayout</span><span class="p">(</span>
+        <span class="n">header</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">html_title</span><span class="p">(</span><span class="s2">&quot;Co-occurrence analysis&quot;</span><span class="p">)),</span>
+        <span class="n">left_sidebar</span><span class="o">=</span><span class="n">left_box</span><span class="p">,</span>
+        <span class="n">center</span><span class="o">=</span><span class="n">right_box</span><span class="p">,</span>
+        <span class="n">right_sidebar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">pane_widths</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="n">pane_heights</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;85px&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="correlation_analysis"><a class="viewcode-back" href="../../dashboards.html#techminer.dashboards.correlation_analysis">[docs]</a><span class="k">def</span> <span class="nf">correlation_analysis</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">compute_by_term</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">minmax</span><span class="p">,</span> <span class="n">cmap</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">,</span> <span class="n">top_n</span><span class="p">):</span>
+        <span class="c1">#</span>
+        <span class="n">minmax</span> <span class="o">=</span> <span class="p">(</span><span class="n">minmax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">minmax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="c1">#</span>
+        <span class="n">matrix</span><span class="p">,</span> <span class="n">limit_values</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span>
+            <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+            <span class="n">by</span><span class="o">=</span><span class="n">by</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="n">show_between</span><span class="o">=</span><span class="n">minmax</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+            <span class="n">filter_by</span><span class="o">=</span><span class="n">filter_type</span><span class="p">,</span>
+            <span class="n">top_n</span><span class="o">=</span><span class="n">top_n</span><span class="p">,</span>
+            <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">get_minmax</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">51</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">51</span><span class="p">:</span>
+                <span class="n">display</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">display</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="p">))</span>
+
+    <span class="c1">#</span>
+    <span class="n">PANEL_HEIGHT</span> <span class="o">=</span> <span class="s2">&quot;580px&quot;</span>
+    <span class="c1">#</span>
+    <span class="n">column</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Select</span><span class="p">(</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="n">z</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">COLUMNS</span> <span class="k">if</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span>
+        <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">disabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">by</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Select</span><span class="p">(</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="n">z</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">COLUMNS</span> <span class="k">if</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span>
+        <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">disabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Pearson&quot;</span><span class="p">,</span> <span class="s2">&quot;Kendall&quot;</span><span class="p">,</span> <span class="s2">&quot;Spearman&quot;</span><span class="p">],</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;Pearson&quot;</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">selection_range</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">FloatRangeSlider</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+        <span class="nb">min</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">step</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">disabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">continuous_update</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span>
+        <span class="n">readout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">readout_format</span><span class="o">=</span><span class="s2">&quot;+.1f&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">filter_type</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Frequency&quot;</span><span class="p">,</span> <span class="s2">&quot;Citation&quot;</span><span class="p">],</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;Frequency&quot;</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">top_n</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">IntSlider</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">disabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">continuous_update</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span>
+        <span class="n">readout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">readout_format</span><span class="o">=</span><span class="s2">&quot;d&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">COLORMAPS</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
+    <span class="c1">#</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">display</span><span class="p">(</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">interactive_output</span><span class="p">(</span>
+                <span class="n">compute_by_term</span><span class="p">,</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">column</span><span class="p">,</span>
+                    <span class="s2">&quot;by&quot;</span><span class="p">:</span> <span class="n">by</span><span class="p">,</span>
+                    <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="n">method</span><span class="p">,</span>
+                    <span class="s2">&quot;minmax&quot;</span><span class="p">:</span> <span class="n">selection_range</span><span class="p">,</span>
+                    <span class="s2">&quot;cmap&quot;</span><span class="p">:</span> <span class="n">cmap</span><span class="p">,</span>
+                    <span class="s2">&quot;filter_type&quot;</span><span class="p">:</span> <span class="n">filter_type</span><span class="p">,</span>
+                    <span class="s2">&quot;top_n&quot;</span><span class="p">:</span> <span class="n">top_n</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="n">left_box</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Term:&quot;</span><span class="p">),</span> <span class="n">column</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;By term:&quot;</span><span class="p">),</span> <span class="n">by</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Method:&quot;</span><span class="p">),</span> <span class="n">method</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Filter type:&quot;</span><span class="p">),</span> <span class="n">filter_type</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Top n:&quot;</span><span class="p">),</span> <span class="n">top_n</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Range:&quot;</span><span class="p">),</span> <span class="n">selection_range</span><span class="p">]),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Colormap:&quot;</span><span class="p">),</span> <span class="n">cmap</span><span class="p">]),</span>
+        <span class="p">],</span>
+        <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="n">PANEL_HEIGHT</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="s2">&quot;1px solid gray&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">right_box</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">output</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">AppLayout</span><span class="p">(</span>
+        <span class="n">header</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">html_title</span><span class="p">(</span><span class="s2">&quot;Correlation analysis&quot;</span><span class="p">)),</span>
         <span class="n">left_sidebar</span><span class="o">=</span><span class="n">left_box</span><span class="p">,</span>
         <span class="n">center</span><span class="o">=</span><span class="n">right_box</span><span class="p">,</span>
         <span class="n">right_sidebar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>

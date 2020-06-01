@@ -268,6 +268,102 @@
     <span class="k">return</span> <span class="n">x</span>
 
 
+<span class="k">def</span> <span class="nf">__disambiguate_authors</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Verify if author&#39;s names are unique. For duplicated names, based on `Author(s) ID` column,</span>
+<span class="sd">    adds a consecutive number to the name.</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        col_Authors (str): Author&#39;s name column.</span>
+<span class="sd">        sep_Authors (str): Character used as internal separator for the elements in the column with the author&#39;s name.</span>
+<span class="sd">        col_AuthorsID (str): Author&#39;s ID column.</span>
+<span class="sd">        sep_AuthorsID (str): Character used as internal separator for the elements in the column with the author&#39;s ID.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...   {</span>
+<span class="sd">    ...      &quot;Authors&quot;: &quot;author 0;author 0;author 0,author 0,author 0&quot;.split(&quot;,&quot;),</span>
+<span class="sd">    ...      &quot;Author(s) ID&quot;: &quot;0;1;2;,3;,4;&quot;.split(&#39;,&#39;),</span>
+<span class="sd">    ...   }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">                          Authors Author(s) ID</span>
+<span class="sd">    0  author 0;author 0;author 0       0;1;2;</span>
+<span class="sd">    1                    author 0           3;</span>
+<span class="sd">    2                    author 0           4;</span>
+
+<span class="sd">    &gt;&gt;&gt; __disambiguate_authors(df)</span>
+<span class="sd">                                Authors Author(s) ID</span>
+<span class="sd">    0  author 0;author 0(1);author 0(2)        0;1;2</span>
+<span class="sd">    1                       author 0(3)            3</span>
+<span class="sd">    2                       author 0(4)            4</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="ow">and</span> <span class="n">w</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;;&quot;</span> <span class="k">else</span> <span class="n">w</span>
+    <span class="p">)</span>
+
+    <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Author(s) ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Author(s) ID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="ow">and</span> <span class="n">w</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;;&quot;</span> <span class="k">else</span> <span class="n">w</span>
+    <span class="p">)</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">x</span><span class="p">[[</span><span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="s2">&quot;Author(s) ID&quot;</span><span class="p">]]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;*info*&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Author(s) ID&quot;</span><span class="p">])]</span>
+
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;*info*&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;*info*&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">))</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s2">&quot;*info*&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;*info*&quot;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">names_ids</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
+
+        <span class="n">author_name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">&quot;*info*&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">author_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">&quot;*info*&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">author_name</span> <span class="ow">in</span> <span class="n">names_ids</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+            <span class="k">if</span> <span class="n">author_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names_ids</span><span class="p">[</span><span class="n">author_name</span><span class="p">]:</span>
+                <span class="n">names_ids</span><span class="p">[</span><span class="n">author_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">names_ids</span><span class="p">[</span><span class="n">author_name</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">author_id</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">names_ids</span><span class="p">[</span><span class="n">author_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">author_id</span><span class="p">]</span>
+
+    <span class="n">ids_names</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">author_name</span> <span class="ow">in</span> <span class="n">names_ids</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">author_id</span> <span class="ow">in</span> <span class="n">names_ids</span><span class="p">[</span><span class="n">author_name</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">suffix</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">ids_names</span><span class="p">[</span><span class="n">author_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">author_name</span> <span class="o">+</span> <span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ids_names</span><span class="p">[</span><span class="n">author_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">author_name</span>
+            <span class="n">suffix</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Author(s) ID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">ids_names</span><span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">z</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="k">else</span> <span class="n">z</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+
+
 <span class="c1">##</span>
 <span class="c1">##</span>
 <span class="c1">##  Data importation</span>
@@ -282,24 +378,42 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">NORMALIZED_NAMES</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">NORMALIZED_NAMES</span><span class="o">.</span><span class="n">values</span><span class="p">()]]</span>
     <span class="c1">#</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Formatting author names ...&quot;</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">remove_accents</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;Authors&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Formatting author names ...&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
         <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Authors</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span> <span class="k">else</span> <span class="n">w</span>
         <span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Authors</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span> <span class="k">if</span> <span class="n">w</span> <span class="o">==</span> <span class="s2">&quot;[No author name available]&quot;</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Author(s) ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Author(s) ID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span> <span class="k">if</span> <span class="n">w</span> <span class="o">==</span> <span class="s2">&quot;[No author id available]&quot;</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
     <span class="c1">#</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Removing part of titles in foreing languages ...&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;Authors&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Disambiguating author names ...&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">__disambiguate_authors</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="c1">#</span>
     <span class="k">if</span> <span class="s2">&quot;Title&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Removing part of titles in foreing languages ...&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
         <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">w</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;]&quot;</span> <span class="k">else</span> <span class="n">w</span>
         <span class="p">)</span>
     <span class="c1">#</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Fusioning author and index keywords ...&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span>
         <span class="s2">&quot;Author Keywords&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
         <span class="ow">and</span> <span class="s2">&quot;Index Keywords&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
     <span class="p">):</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Fusioning author and index keywords ...&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
         <span class="n">author_keywords</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Author Keywords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span> <span class="k">else</span> <span class="p">[]</span>
         <span class="p">)</span>
@@ -314,37 +428,48 @@
         <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">w</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
         <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Keywords&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">keywords</span>
     <span class="c1">#</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting countries from affiliations ...&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;Affiliations&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting countries from affiliations ...&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
         <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Countries&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Affiliations</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">extract_country</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span> <span class="k">else</span> <span class="n">w</span>
         <span class="p">)</span>
     <span class="c1">#</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting institutions from affiliations ...&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;Affiliations&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting institutions from affiliations ...&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
         <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Institutions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Affiliations</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">extract_institution</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span> <span class="k">else</span> <span class="n">w</span>
         <span class="p">)</span>
     <span class="c1">#</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting country of 1st author ...&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;Countries&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting country of 1st author ...&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
         <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Country 1st&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Countries&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span>
         <span class="p">)</span>
     <span class="c1">#</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting affiliation of 1st author ...&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;Institutions&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting affiliation of 1st author ...&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
         <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Institution 1st&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Institutions&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span>
         <span class="p">)</span>
     <span class="c1">#</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Counting number of authors ...&quot;</span><span class="p">)</span>
-    <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Num Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
-        <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">))</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
-    <span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;Authors&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Counting number of authors ...&quot;</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Num Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">))</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="p">)</span>
     <span class="c1">#</span>
     <span class="n">x</span><span class="p">[</span><span class="s2">&quot;ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="c1">#</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">w</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
     <span class="c1">#</span>
     <span class="k">return</span> <span class="n">x</span></div>
 
@@ -1187,6 +1312,1378 @@
         <span class="n">result</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
         <span class="n">result</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="summary_occurrence"><a class="viewcode-back" href="../../analytics.html#techminer.analytics.summary_occurrence">[docs]</a><span class="k">def</span> <span class="nf">summary_occurrence</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Summarize occurrence and citations by terms in a column of a dataframe.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        column (str): the column to explode.</span>
+<span class="sd">        sep (str): Character used as internal separator for the elements in the column.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;D&#39;, &#39;B;D&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Cited by&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors  Cited by  ID</span>
+<span class="sd">    0       A         0   0</span>
+<span class="sd">    1       A         1   1</span>
+<span class="sd">    2     A;B         2   2</span>
+<span class="sd">    3       B         3   3</span>
+<span class="sd">    4   A;B;C         4   4</span>
+<span class="sd">    5       D         5   5</span>
+<span class="sd">    6     B;D         6   6</span>
+
+<span class="sd">    &gt;&gt;&gt; summary_occurrence(df, column=&#39;Authors&#39;)</span>
+<span class="sd">       Authors (IDX) Authors (COL)  Num Documents  Cited by            ID</span>
+<span class="sd">    0              A             A              4         7  [0, 1, 2, 4]</span>
+<span class="sd">    1              A             B              2         6        [2, 4]</span>
+<span class="sd">    2              A             C              1         4           [4]</span>
+<span class="sd">    3              B             A              2         6        [2, 4]</span>
+<span class="sd">    4              B             B              4        15  [2, 3, 4, 6]</span>
+<span class="sd">    5              B             C              1         4           [4]</span>
+<span class="sd">    6              B             D              1         6           [6]</span>
+<span class="sd">    7              C             A              1         4           [4]</span>
+<span class="sd">    8              C             B              1         4           [4]</span>
+<span class="sd">    9              C             C              1         4           [4]</span>
+<span class="sd">    10             D             B              1         6           [6]</span>
+<span class="sd">    11             D             D              2        11        [5, 6]</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;], ignore_case=False)</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; summary_occurrence(df, &#39;Authors&#39;, keywords=keywords)</span>
+<span class="sd">      Authors (IDX) Authors (COL)  Num Documents  Cited by            ID</span>
+<span class="sd">    0             A             A              4         7  [0, 1, 2, 4]</span>
+<span class="sd">    1             A             B              2         6        [2, 4]</span>
+<span class="sd">    2             B             A              2         6        [2, 4]</span>
+<span class="sd">    3             B             B              4        15  [2, 3, 4, 6]</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">generate_pairs</span><span class="p">(</span><span class="n">w</span><span class="p">):</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">)]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">idx0</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">idx1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)):</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">w</span><span class="p">[</span><span class="n">idx0</span><span class="p">],</span> <span class="n">w</span><span class="p">[</span><span class="n">idx1</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span> <span class="k">if</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">MULTIVALUED_COLS</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;Cited by&quot;</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">]]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;pairs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">generate_pairs</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s2">&quot;pairs&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="s2">&quot;Cited by&quot;</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">]]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;pairs&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;pairs&quot;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">})</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">})</span>
+    <span class="p">)</span>
+    <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">result</span><span class="p">[</span><span class="n">column</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;pairs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">result</span><span class="p">[</span><span class="n">column</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;pairs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;pairs&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span>
+        <span class="p">[</span><span class="n">column</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span><span class="p">,</span> <span class="n">column</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span><span class="p">,</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Cited by&quot;</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">]</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="n">keywords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">keywords</span><span class="o">.</span><span class="n">_patterns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">column</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">column</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">column</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span><span class="p">,</span> <span class="n">column</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="occurrence"><a class="viewcode-back" href="../../analytics.html#techminer.analytics.occurrence">[docs]</a><span class="k">def</span> <span class="nf">occurrence</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">retmaxval</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the occurrence between the terms in a column.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        column (str): the column to explode.</span>
+<span class="sd">        sep (str): Character used as internal separator for the elements in the column.</span>
+<span class="sd">        as_matrix (bool): Results are returned as a matrix.</span>
+<span class="sd">        minmax (pair(number,number)): filter values by &gt;=min,&lt;=max.</span>
+<span class="sd">        keywords (list, Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;D&#39;, &#39;B;D&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Cited by&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors  Cited by  ID</span>
+<span class="sd">    0       A         0   0</span>
+<span class="sd">    1       A         1   1</span>
+<span class="sd">    2     A;B         2   2</span>
+<span class="sd">    3       B         3   3</span>
+<span class="sd">    4   A;B;C         4   4</span>
+<span class="sd">    5       D         5   5</span>
+<span class="sd">    6     B;D         6   6</span>
+
+<span class="sd">    &gt;&gt;&gt; occurrence(df, column=&#39;Authors&#39;)</span>
+<span class="sd">       Authors (IDX) Authors (COL)  Num Documents            ID</span>
+<span class="sd">    0              A             A              4  [0, 1, 2, 4]</span>
+<span class="sd">    1              B             B              4  [2, 3, 4, 6]</span>
+<span class="sd">    2              A             B              2        [2, 4]</span>
+<span class="sd">    3              B             A              2        [2, 4]</span>
+<span class="sd">    4              D             D              2        [5, 6]</span>
+<span class="sd">    5              A             C              1           [4]</span>
+<span class="sd">    6              B             C              1           [4]</span>
+<span class="sd">    7              B             D              1           [6]</span>
+<span class="sd">    8              C             A              1           [4]</span>
+<span class="sd">    9              C             B              1           [4]</span>
+<span class="sd">    10             C             C              1           [4]</span>
+<span class="sd">    11             D             B              1           [6]</span>
+
+<span class="sd">    &gt;&gt;&gt; occurrence(df, column=&#39;Authors&#39;, as_matrix=True)</span>
+<span class="sd">       A  B  C  D</span>
+<span class="sd">    A  4  2  1  0</span>
+<span class="sd">    B  2  4  1  1</span>
+<span class="sd">    C  1  1  1  0</span>
+<span class="sd">    D  0  1  0  2</span>
+
+<span class="sd">    &gt;&gt;&gt; occurrence(df, column=&#39;Authors&#39;, as_matrix=True, minmax=(2,3))</span>
+<span class="sd">       A  B  D</span>
+<span class="sd">    A  0  2  0</span>
+<span class="sd">    B  2  0  0</span>
+<span class="sd">    D  0  0  2</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;], ignore_case=False)</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; occurrence(df, &#39;Authors&#39;, as_matrix=True, keywords=keywords)</span>
+<span class="sd">       A  B</span>
+<span class="sd">    A  4  2</span>
+<span class="sd">    B  2  4</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">generate_dic</span><span class="p">(</span><span class="n">column</span><span class="p">):</span>
+        <span class="n">new_names</span> <span class="o">=</span> <span class="n">documents_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
+        <span class="n">new_names</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">term</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{:s}</span><span class="s2"> [</span><span class="si">{:d}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">docs_per_term</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">term</span><span class="p">,</span> <span class="n">docs_per_term</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="n">new_names</span><span class="p">[</span><span class="n">column</span><span class="p">],</span> <span class="n">new_names</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">new_names</span>
+
+    <span class="n">column_IDX</span> <span class="o">=</span> <span class="n">column</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span>
+    <span class="n">column_COL</span> <span class="o">=</span> <span class="n">column</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">summary_occurrence</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;Cited by&quot;</span><span class="p">)</span>
+    <span class="n">maxval</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">minmax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span> <span class="o">=</span> <span class="n">minmax</span>
+        <span class="k">if</span> <span class="n">min_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">min_value</span> <span class="o">&gt;</span> <span class="n">maxval</span><span class="p">:</span>
+                <span class="n">min_value</span> <span class="o">=</span> <span class="n">maxval</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">max_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">max_value</span> <span class="o">&gt;</span> <span class="n">maxval</span><span class="p">:</span>
+                <span class="n">max_value</span> <span class="o">=</span> <span class="n">maxval</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">max_value</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">keywords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">keywords</span><span class="o">.</span><span class="n">_patterns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">column_IDX</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">column_COL</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span> <span class="n">column_IDX</span><span class="p">,</span> <span class="n">column_COL</span><span class="p">],</span>
+        <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+        <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">as_matrix</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+            <span class="n">result</span><span class="p">,</span>
+            <span class="n">values</span><span class="o">=</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">column_IDX</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">column_COL</span><span class="p">,</span>
+            <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">retmaxval</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">maxval</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="self_citation"><a class="viewcode-back" href="../../analytics.html#techminer.analytics.self_citation">[docs]</a><span class="k">def</span> <span class="nf">self_citation</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">retmaxval</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the cocitation between the terms in a column.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        column (str): the column to explode.</span>
+<span class="sd">        sep (str): Character used as internal separator for the elements in the column.</span>
+<span class="sd">        as_matrix (bool): Results are returned as a matrix.</span>
+<span class="sd">        minmax (pair(number,number)): filter values by &gt;=min,&lt;=max.</span>
+<span class="sd">        keywords (list, Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;D&#39;, &#39;B;D&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Cited by&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors  Cited by  ID</span>
+<span class="sd">    0       A         0   0</span>
+<span class="sd">    1       A         1   1</span>
+<span class="sd">    2     A;B         2   2</span>
+<span class="sd">    3       B         3   3</span>
+<span class="sd">    4   A;B;C         4   4</span>
+<span class="sd">    5       D         5   5</span>
+<span class="sd">    6     B;D         6   6</span>
+
+<span class="sd">    &gt;&gt;&gt; self_citation(df, column=&#39;Authors&#39;)</span>
+<span class="sd">       Authors (IDX) Authors (COL)  Cited by            ID</span>
+<span class="sd">    0              B             B        15  [2, 3, 4, 6]</span>
+<span class="sd">    1              D             D        11        [5, 6]</span>
+<span class="sd">    2              A             A         7  [0, 1, 2, 4]</span>
+<span class="sd">    3              A             B         6        [2, 4]</span>
+<span class="sd">    4              B             A         6        [2, 4]</span>
+<span class="sd">    5              B             D         6           [6]</span>
+<span class="sd">    6              D             B         6           [6]</span>
+<span class="sd">    7              A             C         4           [4]</span>
+<span class="sd">    8              B             C         4           [4]</span>
+<span class="sd">    9              C             A         4           [4]</span>
+<span class="sd">    10             C             B         4           [4]</span>
+<span class="sd">    11             C             C         4           [4]</span>
+
+<span class="sd">    &gt;&gt;&gt; self_citation(df, column=&#39;Authors&#39;, as_matrix=True)</span>
+<span class="sd">       A   B  C   D</span>
+<span class="sd">    A  7   6  4   0</span>
+<span class="sd">    B  6  15  4   6</span>
+<span class="sd">    C  4   4  4   0</span>
+<span class="sd">    D  0   6  0  11</span>
+
+<span class="sd">    &gt;&gt;&gt; self_citation(df, column=&#39;Authors&#39;, as_matrix=True, minmax=(6,15))</span>
+<span class="sd">       A   B   D</span>
+<span class="sd">    A  7   6   0</span>
+<span class="sd">    B  6  15   6</span>
+<span class="sd">    D  0   6  11</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;], ignore_case=False)</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; self_citation(df, &#39;Authors&#39;, as_matrix=True, keywords=keywords)</span>
+<span class="sd">       A   B</span>
+<span class="sd">    A  7   6</span>
+<span class="sd">    B  6  15</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">generate_dic</span><span class="p">(</span><span class="n">column</span><span class="p">):</span>
+        <span class="n">new_names</span> <span class="o">=</span> <span class="n">citations_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
+        <span class="n">new_names</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">term</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{:s}</span><span class="s2"> [</span><span class="si">{:d}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">docs_per_term</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">term</span><span class="p">,</span> <span class="n">docs_per_term</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">new_names</span><span class="p">[</span><span class="n">column</span><span class="p">],</span> <span class="n">new_names</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">],)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">new_names</span>
+
+    <span class="n">column_IDX</span> <span class="o">=</span> <span class="n">column</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span>
+    <span class="n">column_COL</span> <span class="o">=</span> <span class="n">column</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">summary_occurrence</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">)</span>
+    <span class="n">maxval</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">minmax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span> <span class="o">=</span> <span class="n">minmax</span>
+        <span class="k">if</span> <span class="n">min_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">min_value</span> <span class="o">&gt;</span> <span class="n">maxval</span><span class="p">:</span>
+                <span class="n">min_value</span> <span class="o">=</span> <span class="n">maxval</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">max_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">max_value</span> <span class="o">&gt;</span> <span class="n">maxval</span><span class="p">:</span>
+                <span class="n">max_value</span> <span class="o">=</span> <span class="n">maxval</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">max_value</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">keywords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">keywords</span><span class="o">.</span><span class="n">_patterns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">column_IDX</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">column_COL</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">,</span> <span class="n">column_IDX</span><span class="p">,</span> <span class="n">column_COL</span><span class="p">],</span>
+        <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+        <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">as_matrix</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+            <span class="n">result</span><span class="p">,</span>
+            <span class="n">values</span><span class="o">=</span><span class="s2">&quot;Cited by&quot;</span><span class="p">,</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">column_IDX</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">column_COL</span><span class="p">,</span>
+            <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">retmaxval</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">maxval</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#  Co-occurrence</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+
+
+<div class="viewcode-block" id="summary_co_occurrence"><a class="viewcode-back" href="../../analytics.html#techminer.analytics.summary_co_occurrence">[docs]</a><span class="k">def</span> <span class="nf">summary_co_occurrence</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column_IDX</span><span class="p">,</span> <span class="n">column_COL</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Summary occurrence and citations by terms in two different columns.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        column_IDX (str): the column to explode. Their terms are used in the index of the result dataframe.</span>
+<span class="sd">        sep_IDX (str): Character used as internal separator for the elements in the column_IDX.</span>
+<span class="sd">        column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.</span>
+<span class="sd">        sep_COL (str): Character used as internal separator for the elements in the column_COL.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;B;D&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; y = [ &#39;a&#39;, &#39;a;b&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c;d&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Author Keywords&#39;: y,</span>
+<span class="sd">    ...       &#39;Cited by&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors Author Keywords  Cited by  ID</span>
+<span class="sd">    0       A               a         0   0</span>
+<span class="sd">    1     A;B             a;b         1   1</span>
+<span class="sd">    2       B               b         2   2</span>
+<span class="sd">    3   A;B;C               c         3   3</span>
+<span class="sd">    4     B;D             c;d         4   4</span>
+
+<span class="sd">    &gt;&gt;&gt; summary_co_occurrence(df, column_IDX=&#39;Authors&#39;, column_COL=&#39;Author Keywords&#39;)</span>
+<span class="sd">      Authors (IDX) Author Keywords (COL)  Num Documents  Cited by      ID</span>
+<span class="sd">    0             A                     a              2         1  [0, 1]</span>
+<span class="sd">    1             A                     b              1         1     [1]</span>
+<span class="sd">    2             A                     c              1         3     [3]</span>
+<span class="sd">    3             B                     a              1         1     [1]</span>
+<span class="sd">    4             B                     b              2         3  [1, 2]</span>
+<span class="sd">    5             B                     c              2         7  [3, 4]</span>
+<span class="sd">    6             B                     d              1         4     [4]</span>
+<span class="sd">    7             C                     c              1         3     [3]</span>
+<span class="sd">    8             D                     c              1         4     [4]</span>
+<span class="sd">    9             D                     d              1         4     [4]</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;B&#39;, &#39;C&#39;, &#39;a&#39;, &#39;b&#39;], ignore_case=False)</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; summary_co_occurrence(df, &#39;Authors&#39;, &#39;Author Keywords&#39;, keywords=keywords)</span>
+<span class="sd">      Authors (IDX) Author Keywords (COL)  Num Documents  Cited by      ID</span>
+<span class="sd">    0             B                     a              1         1     [1]</span>
+<span class="sd">    1             B                     b              2         3  [1, 2]</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">generate_pairs</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">column_IDX</span> <span class="ow">in</span> <span class="n">MULTIVALUED_COLS</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">column_COL</span> <span class="ow">in</span> <span class="n">MULTIVALUED_COLS</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">idx0</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">idx1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)):</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">w</span><span class="p">[</span><span class="n">idx0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="n">idx1</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">if</span> <span class="n">column_IDX</span> <span class="o">==</span> <span class="n">column_COL</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">summary_occurrence</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column_IDX</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="n">column_IDX</span><span class="p">,</span> <span class="n">column_COL</span><span class="p">,</span> <span class="s2">&quot;Cited by&quot;</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">]]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;pairs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">generate_pairs</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">column_IDX</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="n">column_COL</span><span class="p">])</span>
+    <span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s2">&quot;pairs&quot;</span><span class="p">,</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Cited by&quot;</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">]]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;pairs&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;pairs&quot;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">,</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">result</span><span class="p">[</span><span class="n">column_IDX</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;pairs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">result</span><span class="p">[</span><span class="n">column_COL</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;pairs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;pairs&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span>
+        <span class="p">[</span>
+            <span class="n">column_IDX</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span><span class="p">,</span>
+            <span class="n">column_COL</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Cited by&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ID&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="n">keywords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">keywords</span><span class="o">.</span><span class="n">_patterns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">column_IDX</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">column_COL</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">column_IDX</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span><span class="p">,</span> <span class="n">column_COL</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="co_occurrence"><a class="viewcode-back" href="../../analytics.html#techminer.analytics.co_occurrence">[docs]</a><span class="k">def</span> <span class="nf">co_occurrence</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">column_IDX</span><span class="p">,</span>
+    <span class="n">column_COL</span><span class="p">,</span>
+    <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">minmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">retmaxval</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the co-occurrence of two terms in different colums. The report adds</span>
+<span class="sd">    the number of documents by term between brackets.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        column_IDX (str): the column to explode. Their terms are used in the index of the result dataframe.</span>
+<span class="sd">        sep_IDX (str): Character used as internal separator for the elements in the column_IDX.</span>
+<span class="sd">        column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.</span>
+<span class="sd">        sep_COL (str): Character used as internal separator for the elements in the column_COL.</span>
+<span class="sd">        as_matrix (bool): Results are returned as a matrix.</span>
+<span class="sd">        minmax (pair(number,number)): filter values by &gt;=min,&lt;=max.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;B;D&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; y = [ &#39;a&#39;, &#39;a;b&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c;d&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Author Keywords&#39;: y,</span>
+<span class="sd">    ...       &#39;Cited by&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors Author Keywords  Cited by  ID</span>
+<span class="sd">    0       A               a         0   0</span>
+<span class="sd">    1     A;B             a;b         1   1</span>
+<span class="sd">    2       B               b         2   2</span>
+<span class="sd">    3   A;B;C               c         3   3</span>
+<span class="sd">    4     B;D             c;d         4   4</span>
+
+<span class="sd">    &gt;&gt;&gt; co_occurrence(df, column_IDX=&#39;Authors&#39;, column_COL=&#39;Author Keywords&#39;)</span>
+<span class="sd">      Authors (IDX) Author Keywords (COL)  Num Documents      ID</span>
+<span class="sd">    0             A                     a              2  [0, 1]</span>
+<span class="sd">    1             B                     b              2  [1, 2]</span>
+<span class="sd">    2             B                     c              2  [3, 4]</span>
+<span class="sd">    3             A                     b              1     [1]</span>
+<span class="sd">    4             A                     c              1     [3]</span>
+<span class="sd">    5             B                     a              1     [1]</span>
+<span class="sd">    6             B                     d              1     [4]</span>
+<span class="sd">    7             C                     c              1     [3]</span>
+<span class="sd">    8             D                     c              1     [4]</span>
+<span class="sd">    9             D                     d              1     [4]</span>
+
+<span class="sd">    &gt;&gt;&gt; co_occurrence(df, column_IDX=&#39;Authors&#39;, column_COL=&#39;Author Keywords&#39;, as_matrix=True)</span>
+<span class="sd">       a  b  c  d</span>
+<span class="sd">    A  2  1  1  0</span>
+<span class="sd">    B  1  2  2  1</span>
+<span class="sd">    C  0  0  1  0</span>
+<span class="sd">    D  0  0  1  1</span>
+
+<span class="sd">    &gt;&gt;&gt; co_occurrence(df, column_IDX=&#39;Authors&#39;, column_COL=&#39;Author Keywords&#39;, as_matrix=True, minmax=(2,2))</span>
+<span class="sd">       a  b  c</span>
+<span class="sd">    A  2  0  0</span>
+<span class="sd">    B  0  2  2</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;, &#39;c&#39;, &#39;d&#39;], ignore_case=False)</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; co_occurrence(df, &#39;Authors&#39;, &#39;Author Keywords&#39;, as_matrix=True, keywords=keywords)</span>
+<span class="sd">       c  d</span>
+<span class="sd">    A  1  0</span>
+<span class="sd">    B  2  1</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">generate_dic</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">sep</span><span class="p">):</span>
+        <span class="n">new_names</span> <span class="o">=</span> <span class="n">documents_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
+        <span class="n">new_names</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">term</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{:s}</span><span class="s2"> [</span><span class="si">{:d}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">docs_per_term</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">term</span><span class="p">,</span> <span class="n">docs_per_term</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="n">new_names</span><span class="p">[</span><span class="n">column</span><span class="p">],</span> <span class="n">new_names</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">new_names</span>
+
+    <span class="k">if</span> <span class="n">column_IDX</span> <span class="o">==</span> <span class="n">column_COL</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">occurrence</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span>
+            <span class="n">column_IDX</span><span class="p">,</span>
+            <span class="n">as_matrix</span><span class="o">=</span><span class="n">as_matrix</span><span class="p">,</span>
+            <span class="n">minmax</span><span class="o">=</span><span class="n">minmax</span><span class="p">,</span>
+            <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">,</span>
+            <span class="n">retmaxval</span><span class="o">=</span><span class="n">retmaxval</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">summary_co_occurrence</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column_IDX</span><span class="p">,</span> <span class="n">column_COL</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;Cited by&quot;</span><span class="p">)</span>
+    <span class="n">maxval</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">minmax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span> <span class="o">=</span> <span class="n">minmax</span>
+        <span class="k">if</span> <span class="n">min_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">min_value</span> <span class="o">&gt;</span> <span class="n">maxval</span><span class="p">:</span>
+                <span class="n">min_value</span> <span class="o">=</span> <span class="n">maxval</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">max_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">max_value</span> <span class="o">&gt;</span> <span class="n">maxval</span><span class="p">:</span>
+                <span class="n">max_value</span> <span class="o">=</span> <span class="n">maxval</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">max_value</span><span class="p">]</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">column_IDX</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span><span class="p">,</span> <span class="n">column_COL</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span><span class="p">,</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">,],</span>
+        <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
+        <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span> <span class="n">column_IDX</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span><span class="p">,</span> <span class="n">column_COL</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span><span class="p">],</span>
+        <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">as_matrix</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+            <span class="n">result</span><span class="p">,</span>
+            <span class="n">values</span><span class="o">=</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">column_IDX</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">column_COL</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span><span class="p">,</span>
+            <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">retmaxval</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">maxval</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="co_citation"><a class="viewcode-back" href="../../analytics.html#techminer.analytics.co_citation">[docs]</a><span class="k">def</span> <span class="nf">co_citation</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">column_IDX</span><span class="p">,</span>
+    <span class="n">column_COL</span><span class="p">,</span>
+    <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">minmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">retmaxval</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the number of citations shared by two terms in different columns.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        column_IDX (str): the column to explode. Their terms are used in the index of the result dataframe.</span>
+<span class="sd">        sep_IDX (str): Character used as internal separator for the elements in the column_IDX.</span>
+<span class="sd">        column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.</span>
+<span class="sd">        sep_COL (str): Character used as internal separator for the elements in the column_COL.</span>
+<span class="sd">        as_matrix (bool): Results are returned as a matrix.</span>
+<span class="sd">        minmax (pair(number,number)): filter values by &gt;=min,&lt;=max.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;B;D&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; y = [ &#39;a&#39;, &#39;a;b&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c;d&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Author Keywords&#39;: y,</span>
+<span class="sd">    ...       &#39;Cited by&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors Author Keywords  Cited by  ID</span>
+<span class="sd">    0       A               a         0   0</span>
+<span class="sd">    1     A;B             a;b         1   1</span>
+<span class="sd">    2       B               b         2   2</span>
+<span class="sd">    3   A;B;C               c         3   3</span>
+<span class="sd">    4     B;D             c;d         4   4</span>
+
+<span class="sd">    &gt;&gt;&gt; co_citation(df, column_IDX=&#39;Authors&#39;, column_COL=&#39;Author Keywords&#39;)</span>
+<span class="sd">      Authors (IDX) Author Keywords (COL)  Cited by      ID</span>
+<span class="sd">    0             B                     c         7  [3, 4]</span>
+<span class="sd">    1             B                     d         4     [4]</span>
+<span class="sd">    2             D                     c         4     [4]</span>
+<span class="sd">    3             D                     d         4     [4]</span>
+<span class="sd">    4             A                     c         3     [3]</span>
+<span class="sd">    5             B                     b         3  [1, 2]</span>
+<span class="sd">    6             C                     c         3     [3]</span>
+<span class="sd">    7             A                     a         1  [0, 1]</span>
+<span class="sd">    8             A                     b         1     [1]</span>
+<span class="sd">    9             B                     a         1     [1]</span>
+
+<span class="sd">    &gt;&gt;&gt; co_citation(df, column_IDX=&#39;Authors&#39;, column_COL=&#39;Author Keywords&#39;, as_matrix=True)</span>
+<span class="sd">       a  b  c  d</span>
+<span class="sd">    A  1  1  3  0</span>
+<span class="sd">    B  1  3  7  4</span>
+<span class="sd">    C  0  0  3  0</span>
+<span class="sd">    D  0  0  4  4</span>
+
+<span class="sd">    &gt;&gt;&gt; co_citation(df, column_IDX=&#39;Authors&#39;, column_COL=&#39;Author Keywords&#39;, as_matrix=True, minmax=(3,4))</span>
+<span class="sd">       b  c  d</span>
+<span class="sd">    A  0  3  0</span>
+<span class="sd">    B  3  0  4</span>
+<span class="sd">    C  0  3  0</span>
+<span class="sd">    D  0  4  4</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;, &#39;c&#39;, &#39;d&#39;], ignore_case=False)</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; co_citation(df, &#39;Authors&#39;, &#39;Author Keywords&#39;, as_matrix=True, keywords=keywords)</span>
+<span class="sd">       c  d</span>
+<span class="sd">    A  3  0</span>
+<span class="sd">    B  7  4</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">generate_dic</span><span class="p">(</span><span class="n">column</span><span class="p">):</span>
+        <span class="n">new_names</span> <span class="o">=</span> <span class="n">citations_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
+        <span class="n">new_names</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">term</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{:s}</span><span class="s2"> [</span><span class="si">{:d}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">docs_per_term</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">term</span><span class="p">,</span> <span class="n">docs_per_term</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">new_names</span><span class="p">[</span><span class="n">column</span><span class="p">],</span> <span class="n">new_names</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">],)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">new_names</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">summary_co_occurrence</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column_IDX</span><span class="p">,</span> <span class="n">column_COL</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">)</span>
+    <span class="n">maxval</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">minmax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span> <span class="o">=</span> <span class="n">minmax</span>
+        <span class="k">if</span> <span class="n">min_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">max_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">max_value</span><span class="p">]</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">,</span> <span class="n">column_IDX</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span><span class="p">,</span> <span class="n">column_COL</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span><span class="p">,],</span>
+        <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,],</span>
+        <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">as_matrix</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+            <span class="n">result</span><span class="p">,</span>
+            <span class="n">values</span><span class="o">=</span><span class="s2">&quot;Cited by&quot;</span><span class="p">,</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">column_IDX</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">column_COL</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span><span class="p">,</span>
+            <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">retmaxval</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">retmaxval</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#  Analytical functions</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+
+
+<div class="viewcode-block" id="compute_tfm"><a class="viewcode-back" href="../../analytics.html#techminer.analytics.compute_tfm">[docs]</a><span class="k">def</span> <span class="nf">compute_tfm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the term-frequency matrix for the terms in a column.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        column (str): the column to explode.</span>
+<span class="sd">        sep (str): Character used as internal separator for the elements in the column.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;B;D&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; y = [ &#39;a&#39;, &#39;a;b&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c;d&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Author Keywords&#39;: y,</span>
+<span class="sd">    ...       &#39;Cited by&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors Author Keywords  Cited by  ID</span>
+<span class="sd">    0       A               a         0   0</span>
+<span class="sd">    1     A;B             a;b         1   1</span>
+<span class="sd">    2       B               b         2   2</span>
+<span class="sd">    3   A;B;C               c         3   3</span>
+<span class="sd">    4     B;D             c;d         4   4</span>
+
+<span class="sd">    &gt;&gt;&gt; compute_tfm(df, &#39;Authors&#39;)</span>
+<span class="sd">       A  B  C  D</span>
+<span class="sd">    0  1  0  0  0</span>
+<span class="sd">    1  1  1  0  0</span>
+<span class="sd">    2  0  1  0  0</span>
+<span class="sd">    3  1  1  1  0</span>
+<span class="sd">    4  0  1  0  1</span>
+
+<span class="sd">    &gt;&gt;&gt; compute_tfm(df, &#39;Author Keywords&#39;)</span>
+<span class="sd">       a  b  c  d</span>
+<span class="sd">    0  1  0  0  0</span>
+<span class="sd">    1  1  1  0  0</span>
+<span class="sd">    2  0  1  0  0</span>
+<span class="sd">    3  0  0  1  0</span>
+<span class="sd">    4  0  0  1  1</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;], ignore_case=False)</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; compute_tfm(df, &#39;Authors&#39;, keywords=keywords)</span>
+<span class="sd">       A  B</span>
+<span class="sd">    0  1  0</span>
+<span class="sd">    1  1  1</span>
+<span class="sd">    2  0  1</span>
+<span class="sd">    3  1  1</span>
+<span class="sd">    4  0  1</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">x</span><span class="p">[[</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">__explode</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">keywords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">full_match</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">keywords</span><span class="o">.</span><span class="n">_patterns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;ID&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">column</span><span class="p">,</span> <span class="n">margins</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="corr"><a class="viewcode-back" href="../../analytics.html#techminer.analytics.corr">[docs]</a><span class="k">def</span> <span class="nf">corr</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">column</span><span class="p">,</span>
+    <span class="n">by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;pearson&quot;</span><span class="p">,</span>
+    <span class="n">show_between</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">filter_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">top_n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">get_minmax</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes cross-correlation among items in two different columns of the dataframe.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        column_IDX (str): the first column.</span>
+<span class="sd">        sep_IDX (str): Character used as internal separator for the elements in the column_IDX.</span>
+<span class="sd">        column_COL (str): the second column.</span>
+<span class="sd">        sep_COL (str): Character used as internal separator for the elements in the column_COL.</span>
+<span class="sd">        method (str): Available methods are:</span>
+
+<span class="sd">            - pearson : Standard correlation coefficient.</span>
+
+<span class="sd">            - kendall : Kendall Tau correlation coefficient.</span>
+
+<span class="sd">            - spearman : Spearman rank correlation.</span>
+
+<span class="sd">        as_matrix (bool): the result is reshaped by melt or not.</span>
+<span class="sd">        minmax (pair(number,number)): filter values by &gt;=min,&lt;=max.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;B;D&#39;, &#39;A;B&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; y = [ &#39;a&#39;, &#39;a;b&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c;d&#39;, &#39;d&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Author Keywords&#39;: y,</span>
+<span class="sd">    ...       &#39;Cited by&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors Author Keywords  Cited by  ID</span>
+<span class="sd">    0       A               a         0   0</span>
+<span class="sd">    1     A;B             a;b         1   1</span>
+<span class="sd">    2       B               b         2   2</span>
+<span class="sd">    3   A;B;C               c         3   3</span>
+<span class="sd">    4     B;D             c;d         4   4</span>
+<span class="sd">    5     A;B               d         5   5</span>
+
+
+<span class="sd">    &gt;&gt;&gt; compute_tfm(df, &#39;Authors&#39;)</span>
+<span class="sd">       A  B  C  D</span>
+<span class="sd">    0  1  0  0  0</span>
+<span class="sd">    1  1  1  0  0</span>
+<span class="sd">    2  0  1  0  0</span>
+<span class="sd">    3  1  1  1  0</span>
+<span class="sd">    4  0  1  0  1</span>
+<span class="sd">    5  1  1  0  0</span>
+
+<span class="sd">    &gt;&gt;&gt; compute_tfm(df, &#39;Author Keywords&#39;)</span>
+<span class="sd">       a  b  c  d</span>
+<span class="sd">    0  1  0  0  0</span>
+<span class="sd">    1  1  1  0  0</span>
+<span class="sd">    2  0  1  0  0</span>
+<span class="sd">    3  0  0  1  0</span>
+<span class="sd">    4  0  0  1  1</span>
+<span class="sd">    5  0  0  0  1</span>
+
+
+<span class="sd">    &gt;&gt;&gt; corr(df, &#39;Authors&#39;, &#39;Author Keywords&#39;)</span>
+<span class="sd">              A         B         C        D</span>
+<span class="sd">    A  1.000000 -1.000000 -0.333333 -0.57735</span>
+<span class="sd">    B -1.000000  1.000000  0.333333  0.57735</span>
+<span class="sd">    C -0.333333  0.333333  1.000000  0.57735</span>
+<span class="sd">    D -0.577350  0.577350  0.577350  1.00000</span>
+
+<span class="sd">    &gt;&gt;&gt; corr(df, &#39;Authors&#39;, &#39;Author Keywords&#39;, show_between=(0.45, 0.8))</span>
+<span class="sd">             B        C        D</span>
+<span class="sd">    B  0.00000  0.00000  0.57735</span>
+<span class="sd">    C  0.00000  0.00000  0.57735</span>
+<span class="sd">    D  0.57735  0.57735  0.00000</span>
+
+<span class="sd">    &gt;&gt;&gt; corr(df, &#39;Authors&#39;, &#39;Author Keywords&#39;, as_matrix=False)</span>
+<span class="sd">       Authors Author Keywords     value</span>
+<span class="sd">    0        A               A  1.000000</span>
+<span class="sd">    1        B               A -1.000000</span>
+<span class="sd">    2        C               A -0.333333</span>
+<span class="sd">    3        D               A -0.577350</span>
+<span class="sd">    4        A               B -1.000000</span>
+<span class="sd">    5        B               B  1.000000</span>
+<span class="sd">    6        C               B  0.333333</span>
+<span class="sd">    7        D               B  0.577350</span>
+<span class="sd">    8        A               C -0.333333</span>
+<span class="sd">    9        B               C  0.333333</span>
+<span class="sd">    10       C               C  1.000000</span>
+<span class="sd">    11       D               C  0.577350</span>
+<span class="sd">    12       A               D -0.577350</span>
+<span class="sd">    13       B               D  0.577350</span>
+<span class="sd">    14       C               D  0.577350</span>
+<span class="sd">    15       D               D  1.000000</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], ignore_case=False)</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; corr(df, &#39;Authors&#39;, &#39;Author Keywords&#39;, filter_by=keywords)</span>
+<span class="sd">              A         B         C</span>
+<span class="sd">    A  1.000000 -1.000000 -0.333333</span>
+<span class="sd">    B -1.000000  1.000000  0.333333</span>
+<span class="sd">    C -0.333333  0.333333  1.000000</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;B;D&#39;, &#39;A;B&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; y = [ &#39;a&#39;, &#39;a;b&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c;d&#39;, &#39;d&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Author Keywords&#39;: y,</span>
+<span class="sd">    ...       &#39;Cited by&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors Author Keywords  Cited by  ID</span>
+<span class="sd">    0       A               a         0   0</span>
+<span class="sd">    1     A;B             a;b         1   1</span>
+<span class="sd">    2       B               b         2   2</span>
+<span class="sd">    3   A;B;C               c         3   3</span>
+<span class="sd">    4     B;D             c;d         4   4</span>
+<span class="sd">    5     A;B               d         5   5</span>
+
+<span class="sd">    &gt;&gt;&gt; compute_tfm(df, column=&#39;Authors&#39;)</span>
+<span class="sd">       A  B  C  D</span>
+<span class="sd">    0  1  0  0  0</span>
+<span class="sd">    1  1  1  0  0</span>
+<span class="sd">    2  0  1  0  0</span>
+<span class="sd">    3  1  1  1  0</span>
+<span class="sd">    4  0  1  0  1</span>
+<span class="sd">    5  1  1  0  0</span>
+
+<span class="sd">    &gt;&gt;&gt; corr(df, &#39;Authors&#39;)</span>
+<span class="sd">              A         B         C         D</span>
+<span class="sd">    A  1.000000 -0.316228  0.316228 -0.632456</span>
+<span class="sd">    B -0.316228  1.000000  0.200000  0.200000</span>
+<span class="sd">    C  0.316228  0.200000  1.000000 -0.200000</span>
+<span class="sd">    D -0.632456  0.200000 -0.200000  1.000000</span>
+
+<span class="sd">    &gt;&gt;&gt; corr(df, &#39;Authors&#39;, as_matrix=False)</span>
+<span class="sd">       Authors (IDX) Authors (COL)     value</span>
+<span class="sd">    0              A             A  1.000000</span>
+<span class="sd">    1              B             A -0.316228</span>
+<span class="sd">    2              C             A  0.316228</span>
+<span class="sd">    3              D             A -0.632456</span>
+<span class="sd">    4              A             B -0.316228</span>
+<span class="sd">    5              B             B  1.000000</span>
+<span class="sd">    6              C             B  0.200000</span>
+<span class="sd">    7              D             B  0.200000</span>
+<span class="sd">    8              A             C  0.316228</span>
+<span class="sd">    9              B             C  0.200000</span>
+<span class="sd">    10             C             C  1.000000</span>
+<span class="sd">    11             D             C -0.200000</span>
+<span class="sd">    12             A             D -0.632456</span>
+<span class="sd">    13             B             D  0.200000</span>
+<span class="sd">    14             C             D -0.200000</span>
+<span class="sd">    15             D             D  1.000000</span>
+
+<span class="sd">    &gt;&gt;&gt; corr(df, &#39;Author Keywords&#39;)</span>
+<span class="sd">          a     b     c     d</span>
+<span class="sd">    a  1.00  0.25 -0.50 -0.50</span>
+<span class="sd">    b  0.25  1.00 -0.50 -0.50</span>
+<span class="sd">    c -0.50 -0.50  1.00  0.25</span>
+<span class="sd">    d -0.50 -0.50  0.25  1.00</span>
+
+<span class="sd">    &gt;&gt;&gt; corr(df, &#39;Author Keywords&#39;, show_between=(0.25, None))</span>
+<span class="sd">         a    b     c     d</span>
+<span class="sd">    a  1.0  0.0  0.00  0.00</span>
+<span class="sd">    b  0.0  1.0  0.00  0.00</span>
+<span class="sd">    c  0.0  0.0  1.00  0.25</span>
+<span class="sd">    d  0.0  0.0  0.25  1.00</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;], ignore_case=False)</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; corr(df, &#39;Authors&#39;, filter_by=keywords)</span>
+<span class="sd">              A         B</span>
+<span class="sd">    A  1.000000 -0.316228</span>
+<span class="sd">    B -0.316228  1.000000</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">by</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">by</span> <span class="o">=</span> <span class="n">column</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="n">filter_by</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filter_by</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">top_n</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">filter_by</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">filter_by</span> <span class="o">==</span> <span class="s2">&quot;Frequency&quot;</span> <span class="ow">or</span> <span class="n">filter_by</span> <span class="o">==</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span>
+            <span class="n">filter_by</span> <span class="o">=</span> <span class="n">documents_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">)[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">filter_by</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">filter_by</span> <span class="o">==</span> <span class="s2">&quot;Citation&quot;</span> <span class="ow">or</span> <span class="n">filter_by</span> <span class="o">==</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span>
+            <span class="n">filter_by</span> <span class="o">=</span> <span class="n">citations_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">)[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">filter_by</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">(</span><span class="n">filter_by</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">full_match</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="n">by</span><span class="p">:</span>
+        <span class="n">tfm</span> <span class="o">=</span> <span class="n">compute_tfm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">filter_by</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tfm</span> <span class="o">=</span> <span class="n">co_occurrence</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span>
+            <span class="n">column_IDX</span><span class="o">=</span><span class="n">by</span><span class="p">,</span>
+            <span class="n">column_COL</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+            <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">minmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">tfm</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="n">filter_by</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">filter_by</span> <span class="o">=</span> <span class="n">filter_by</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+        <span class="n">new_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">filter_by</span><span class="p">]</span>
+        <span class="n">new_index</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">index</span> <span class="k">if</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">filter_by</span><span class="p">]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">new_index</span><span class="p">,</span> <span class="n">new_columns</span><span class="p">]</span>
+    <span class="c1">#</span>
+    <span class="n">minmax</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">result</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="n">as_matrix</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">or</span> <span class="n">get_minmax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="n">by</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+                <span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+                    <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">column</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span><span class="p">,</span> <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="n">column</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span><span class="p">}</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+                <span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">column</span><span class="p">,</span> <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="n">by</span><span class="p">})</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">show_between</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span> <span class="o">=</span> <span class="n">show_between</span>
+            <span class="k">if</span> <span class="n">min_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nb">float</span><span class="p">(</span><span class="n">min_value</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="n">max_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">float</span><span class="p">(</span><span class="n">max_value</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="n">by</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">]</span>
+                    <span class="n">w</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+                    <span class="n">z</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                        <span class="p">{</span>
+                            <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">w</span><span class="p">,</span>
+                            <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">w</span><span class="p">,</span>
+                            <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">),</span>
+                        <span class="p">}</span>
+                    <span class="p">)</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">result</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">as_matrix</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="n">by</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+                    <span class="n">result</span><span class="p">,</span>
+                    <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+                    <span class="n">index</span><span class="o">=</span><span class="n">column</span> <span class="o">+</span> <span class="s2">&quot; (IDX)&quot;</span><span class="p">,</span>
+                    <span class="n">columns</span><span class="o">=</span><span class="n">column</span> <span class="o">+</span> <span class="s2">&quot; (COL)&quot;</span><span class="p">,</span>
+                    <span class="n">fill_value</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+                    <span class="n">result</span><span class="p">,</span>
+                    <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+                    <span class="n">index</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+                    <span class="n">columns</span><span class="o">=</span><span class="n">by</span><span class="p">,</span>
+                    <span class="n">fill_value</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="n">get_minmax</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">minmax</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="autocorr_map"><a class="viewcode-back" href="../../analytics.html#techminer.analytics.autocorr_map">[docs]</a><span class="k">def</span> <span class="nf">autocorr_map</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;pearson&quot;</span><span class="p">,</span> <span class="n">minval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top_n_links</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the autocorrelation map among items in a column of the dataframe.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        column (str): the column to explode.</span>
+<span class="sd">        sep (str): Character used as internal separator for the elements in the column.</span>
+<span class="sd">        method (str): Available methods are:</span>
+
+<span class="sd">            * pearson : Standard correlation coefficient.</span>
+
+<span class="sd">            * kendall : Kendall Tau correlation coefficient.</span>
+
+<span class="sd">            * spearman : Spearman rank correlation.</span>
+
+<span class="sd">        minval (float): Minimum autocorrelation value to show links.</span>
+<span class="sd">        top_n_links (int): Shows top n links.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A;C&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;B;D&#39;, &#39;A;B&#39;, &#39;A;C&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; y = [ &#39;a&#39;, &#39;a;b&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c;d&#39;, &#39;d&#39;, &#39;c;d&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Author Keywords&#39;: y,</span>
+<span class="sd">    ...       &#39;Cited by&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors Author Keywords  Cited by  ID</span>
+<span class="sd">    0       A               a         0   0</span>
+<span class="sd">    1     A;C             a;b         1   1</span>
+<span class="sd">    2       B               b         2   2</span>
+<span class="sd">    3   A;B;C               c         3   3</span>
+<span class="sd">    4     B;D             c;d         4   4</span>
+<span class="sd">    5     A;B               d         5   5</span>
+<span class="sd">    6     A;C             c;d         6   6</span>
+
+
+<span class="sd">    &gt;&gt;&gt; corr(df, &#39;Authors&#39;)</span>
+<span class="sd">              A         B         C         D</span>
+<span class="sd">    A  1.000000 -0.547723  0.547723 -0.645497</span>
+<span class="sd">    B -0.547723  1.000000 -0.416667  0.353553</span>
+<span class="sd">    C  0.547723 -0.416667  1.000000 -0.353553</span>
+<span class="sd">    D -0.645497  0.353553 -0.353553  1.000000</span>
+
+
+<span class="sd">    &gt;&gt;&gt; autocorr_map(df, &#39;Authors&#39;)</span>
+<span class="sd">    {&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: [(&#39;B&#39;, &#39;D&#39;)], &#39;other_edges&#39;: None}</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], ignore_case=False)</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; corr(df, &#39;Authors&#39;, filter_by=keywords)</span>
+<span class="sd">              A         B         C</span>
+<span class="sd">    A  1.000000 -0.547723  0.547723</span>
+<span class="sd">    B -0.547723  1.000000 -0.416667</span>
+<span class="sd">    C  0.547723 -0.416667  1.000000</span>
+
+<span class="sd">    &gt;&gt;&gt; autocorr_map(df, &#39;Authors&#39;, keywords=keywords)</span>
+<span class="sd">    {&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: None, &#39;other_edges&#39;: None}</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">matrix</span> <span class="o">=</span> <span class="n">corr</span><span class="p">(</span>
+        <span class="n">x</span><span class="p">,</span>
+        <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+        <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">show_between</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">filter_by</span><span class="o">=</span><span class="n">keywords</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">terms</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">edges_75</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">edges_50</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">edges_25</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">other_edges</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">top_n_links</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="n">top_value</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">icol</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">irow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">icol</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+                <span class="n">top_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">irow</span><span class="p">,</span> <span class="n">icol</span><span class="p">])</span>
+        <span class="n">top_value</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">top_value</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">top_value</span> <span class="o">=</span> <span class="n">top_value</span><span class="p">[</span><span class="n">top_n_links</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">minval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">minval</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">minval</span><span class="p">,</span> <span class="n">top_value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">minval</span> <span class="o">=</span> <span class="n">top_value</span>
+
+    <span class="k">for</span> <span class="n">icol</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">irow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">icol</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">minval</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">matrix</span><span class="p">[</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">]][</span><span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]]</span> <span class="o">&gt;=</span> <span class="n">minval</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">matrix</span><span class="p">[</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">]][</span><span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="mf">0.75</span><span class="p">:</span>
+                    <span class="n">edges_75</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">],</span> <span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]))</span>
+                <span class="k">elif</span> <span class="n">matrix</span><span class="p">[</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">]][</span><span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="mf">0.50</span><span class="p">:</span>
+                    <span class="n">edges_50</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">],</span> <span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]))</span>
+                <span class="k">elif</span> <span class="n">matrix</span><span class="p">[</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">]][</span><span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="mf">0.25</span><span class="p">:</span>
+                    <span class="n">edges_25</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">],</span> <span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]))</span>
+                <span class="k">elif</span> <span class="n">matrix</span><span class="p">[</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">]][</span><span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="n">other_edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">],</span> <span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">edges_75</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">edges_75</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">edges_50</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">edges_50</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">edges_25</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">edges_25</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">other_edges</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">other_edges</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">terms</span><span class="o">=</span><span class="n">terms</span><span class="p">,</span>
+        <span class="n">edges_75</span><span class="o">=</span><span class="n">edges_75</span><span class="p">,</span>
+        <span class="n">edges_50</span><span class="o">=</span><span class="n">edges_50</span><span class="p">,</span>
+        <span class="n">edges_25</span><span class="o">=</span><span class="n">edges_25</span><span class="p">,</span>
+        <span class="n">other_edges</span><span class="o">=</span><span class="n">other_edges</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="corr_map"><a class="viewcode-back" href="../../analytics.html#techminer.analytics.corr_map">[docs]</a><span class="k">def</span> <span class="nf">corr_map</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">column</span><span class="p">,</span>
+    <span class="n">by</span><span class="p">,</span>
+    <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">sep_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;pearson&quot;</span><span class="p">,</span>
+    <span class="n">minval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">top_n_links</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the correlation map among items in a column of the dataframe.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        column (str): the column to explode.</span>
+<span class="sd">        sep (str): Character used as internal separator for the elements in the column.</span>
+<span class="sd">        method (str): Available methods are:</span>
+
+<span class="sd">            * pearson : Standard correlation coefficient.</span>
+
+<span class="sd">            * kendall : Kendall Tau correlation coefficient.</span>
+
+<span class="sd">            * spearman : Spearman rank correlation.</span>
+
+<span class="sd">        minval (float): Minimum autocorrelation value to show links.</span>
+<span class="sd">        top_n_links (int): Shows top n links.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A;C&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;B;D&#39;, &#39;A;B&#39;, &#39;A;C&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; y = [ &#39;a&#39;, &#39;a;b&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c;d&#39;, &#39;d&#39;, &#39;c;d&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Author Keywords&#39;: y,</span>
+<span class="sd">    ...       &#39;Cited by&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors Author Keywords  Cited by  ID</span>
+<span class="sd">    0       A               a         0   0</span>
+<span class="sd">    1     A;C             a;b         1   1</span>
+<span class="sd">    2       B               b         2   2</span>
+<span class="sd">    3   A;B;C               c         3   3</span>
+<span class="sd">    4     B;D             c;d         4   4</span>
+<span class="sd">    5     A;B               d         5   5</span>
+<span class="sd">    6     A;C             c;d         6   6</span>
+
+
+<span class="sd">    &gt;&gt;&gt; co_occurrence(df, &#39;Author Keywords&#39;, &#39;Authors&#39;, as_matrix=True)</span>
+<span class="sd">       A  B  C  D</span>
+<span class="sd">    a  2  0  1  0</span>
+<span class="sd">    b  1  1  1  0</span>
+<span class="sd">    c  2  2  2  1</span>
+<span class="sd">    d  2  2  1  1</span>
+
+<span class="sd">    &gt;&gt;&gt; corr(df, &#39;Authors&#39;, &#39;Author Keywords&#39;)</span>
+<span class="sd">              A         B         C         D</span>
+<span class="sd">    A  1.000000  0.174078  0.333333  0.577350</span>
+<span class="sd">    B  0.174078  1.000000  0.522233  0.904534</span>
+<span class="sd">    C  0.333333  0.522233  1.000000  0.577350</span>
+<span class="sd">    D  0.577350  0.904534  0.577350  1.000000</span>
+
+<span class="sd">    &gt;&gt;&gt; corr(df, &#39;Authors&#39;, &#39;Author Keywords&#39;)</span>
+<span class="sd">              A         B         C         D</span>
+<span class="sd">    A  1.000000  0.174078  0.333333  0.577350</span>
+<span class="sd">    B  0.174078  1.000000  0.522233  0.904534</span>
+<span class="sd">    C  0.333333  0.522233  1.000000  0.577350</span>
+<span class="sd">    D  0.577350  0.904534  0.577350  1.000000</span>
+
+<span class="sd">    &gt;&gt;&gt; corr_map(df, &#39;Authors&#39;, &#39;Author Keywords&#39;)</span>
+<span class="sd">    {&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: [(&#39;B&#39;, &#39;D&#39;)], &#39;other_edges&#39;: None}</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], ignore_case=False)</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; corr_map(df, &#39;Authors&#39;, &#39;Author Keywords&#39;, keywords=keywords)</span>
+<span class="sd">    {&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: None, &#39;other_edges&#39;: None}</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">matrix</span> <span class="o">=</span> <span class="n">corr</span><span class="p">(</span>
+        <span class="n">x</span><span class="p">,</span>
+        <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+        <span class="n">by</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+        <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">show_between</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">filter_by</span><span class="o">=</span><span class="n">keywords</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">terms</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">edges_75</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">edges_50</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">edges_25</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">other_edges</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">top_n_links</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="n">top_value</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">icol</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">irow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">icol</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+                <span class="n">top_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">irow</span><span class="p">,</span> <span class="n">icol</span><span class="p">])</span>
+        <span class="n">top_value</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">top_value</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">top_value</span> <span class="o">=</span> <span class="n">top_value</span><span class="p">[</span><span class="n">top_n_links</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">minval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">minval</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">minval</span><span class="p">,</span> <span class="n">top_value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">minval</span> <span class="o">=</span> <span class="n">top_value</span>
+
+    <span class="k">for</span> <span class="n">icol</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">irow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">icol</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">minval</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">matrix</span><span class="p">[</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">]][</span><span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]]</span> <span class="o">&gt;=</span> <span class="n">minval</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">matrix</span><span class="p">[</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">]][</span><span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="mf">0.75</span><span class="p">:</span>
+                    <span class="n">edges_75</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">],</span> <span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]))</span>
+                <span class="k">elif</span> <span class="n">matrix</span><span class="p">[</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">]][</span><span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="mf">0.50</span><span class="p">:</span>
+                    <span class="n">edges_50</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">],</span> <span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]))</span>
+                <span class="k">elif</span> <span class="n">matrix</span><span class="p">[</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">]][</span><span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="mf">0.25</span><span class="p">:</span>
+                    <span class="n">edges_25</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">],</span> <span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]))</span>
+                <span class="k">elif</span> <span class="n">matrix</span><span class="p">[</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">]][</span><span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="n">other_edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">],</span> <span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">edges_75</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">edges_75</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">edges_50</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">edges_50</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">edges_25</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">edges_25</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">other_edges</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">other_edges</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">terms</span><span class="o">=</span><span class="n">terms</span><span class="p">,</span>
+        <span class="n">edges_75</span><span class="o">=</span><span class="n">edges_75</span><span class="p">,</span>
+        <span class="n">edges_50</span><span class="o">=</span><span class="n">edges_50</span><span class="p">,</span>
+        <span class="n">edges_25</span><span class="o">=</span><span class="n">edges_25</span><span class="p">,</span>
+        <span class="n">other_edges</span><span class="o">=</span><span class="n">other_edges</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 
 <span class="c1">#</span>

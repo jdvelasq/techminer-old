@@ -187,6 +187,81 @@
 <span class="target" id="module-techminer.analytics"></span><div class="section" id="analytics">
 <h1>Analytics<a class="headerlink" href="#analytics" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
+<dt id="techminer.analytics.autocorr_map">
+<code class="sig-prename descclassname">techminer.analytics.</code><code class="sig-name descname">autocorr_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'pearson'</span></em>, <em class="sig-param"><span class="n">minval</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_n_links</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/analytics.html#autocorr_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.analytics.autocorr_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the autocorrelation map among items in a column of the dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – <p>Available methods are:</p>
+<ul>
+<li><p>pearson : Standard correlation coefficient.</p></li>
+<li><p>kendall : Kendall Tau correlation coefficient.</p></li>
+<li><p>spearman : Spearman rank correlation.</p></li>
+</ul>
+</p></li>
+<li><p><strong>minval</strong> (<em>float</em>) – Minimum autocorrelation value to show links.</p></li>
+<li><p><strong>top_n_links</strong> (<em>int</em>) – Shows top n links.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;C&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="p">{</span>
+<span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Author Keywords&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Cited by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>   <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">  Authors Author Keywords  Cited by  ID</span>
+<span class="go">0       A               a         0   0</span>
+<span class="go">1     A;C             a;b         1   1</span>
+<span class="go">2       B               b         2   2</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
+<span class="go">5     A;B               d         5   5</span>
+<span class="go">6     A;C             c;d         6   6</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">corr</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
+<span class="go">          A         B         C         D</span>
+<span class="go">A  1.000000 -0.547723  0.547723 -0.645497</span>
+<span class="go">B -0.547723  1.000000 -0.416667  0.353553</span>
+<span class="go">C  0.547723 -0.416667  1.000000 -0.353553</span>
+<span class="go">D -0.645497  0.353553 -0.353553  1.000000</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">autocorr_map</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
+<span class="go">{&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: [(&#39;B&#39;, &#39;D&#39;)], &#39;other_edges&#39;: None}</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">corr</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">filter_by</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">          A         B         C</span>
+<span class="go">A  1.000000 -0.547723  0.547723</span>
+<span class="go">B -0.547723  1.000000 -0.416667</span>
+<span class="go">C  0.547723 -0.416667  1.000000</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">autocorr_map</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">{&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: None, &#39;other_edges&#39;: None}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt id="techminer.analytics.citations_by_term">
 <code class="sig-prename descclassname">techminer.analytics.</code><code class="sig-name descname">citations_by_term</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/analytics.html#citations_by_term"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.analytics.citations_by_term" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the number of citations by item in a column.</p>
@@ -308,6 +383,514 @@
 <span class="go">1  author 1  2010        10  [0]</span>
 <span class="go">2  author 3  2011        13  [3]</span>
 <span class="go">3  author 1  2011        12  [2]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.analytics.co_citation">
+<code class="sig-prename descclassname">techminer.analytics.</code><code class="sig-name descname">co_citation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">retmaxval</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/analytics.html#co_citation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.analytics.co_citation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the number of citations shared by two terms in different columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>column_IDX</strong> (<em>str</em>) – the column to explode. Their terms are used in the index of the result dataframe.</p></li>
+<li><p><strong>sep_IDX</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_IDX.</p></li>
+<li><p><strong>column_COL</strong> (<em>str</em>) – the column to explode. Their terms are used in the columns of the result dataframe.</p></li>
+<li><p><strong>sep_COL</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_COL.</p></li>
+<li><p><strong>as_matrix</strong> (<em>bool</em>) – Results are returned as a matrix.</p></li>
+<li><p><strong>minmax</strong> (<em>pair</em><em>(</em><em>number</em><em>,</em><em>number</em><em>)</em>) – filter values by &gt;=min,&lt;=max.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="p">{</span>
+<span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Author Keywords&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Cited by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>   <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">  Authors Author Keywords  Cited by  ID</span>
+<span class="go">0       A               a         0   0</span>
+<span class="go">1     A;B             a;b         1   1</span>
+<span class="go">2       B               b         2   2</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">co_citation</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column_IDX</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">column_COL</span><span class="o">=</span><span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
+<span class="go">  Authors (IDX) Author Keywords (COL)  Cited by      ID</span>
+<span class="go">0             B                     c         7  [3, 4]</span>
+<span class="go">1             B                     d         4     [4]</span>
+<span class="go">2             D                     c         4     [4]</span>
+<span class="go">3             D                     d         4     [4]</span>
+<span class="go">4             A                     c         3     [3]</span>
+<span class="go">5             B                     b         3  [1, 2]</span>
+<span class="go">6             C                     c         3     [3]</span>
+<span class="go">7             A                     a         1  [0, 1]</span>
+<span class="go">8             A                     b         1     [1]</span>
+<span class="go">9             B                     a         1     [1]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">co_citation</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column_IDX</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">column_COL</span><span class="o">=</span><span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">   a  b  c  d</span>
+<span class="go">A  1  1  3  0</span>
+<span class="go">B  1  3  7  4</span>
+<span class="go">C  0  0  3  0</span>
+<span class="go">D  0  0  4  4</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">co_citation</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column_IDX</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">column_COL</span><span class="o">=</span><span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">   b  c  d</span>
+<span class="go">A  0  3  0</span>
+<span class="go">B  3  0  4</span>
+<span class="go">C  0  3  0</span>
+<span class="go">D  0  4  4</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">co_citation</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">   c  d</span>
+<span class="go">A  3  0</span>
+<span class="go">B  7  4</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.analytics.co_occurrence">
+<code class="sig-prename descclassname">techminer.analytics.</code><code class="sig-name descname">co_occurrence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">retmaxval</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/analytics.html#co_occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.analytics.co_occurrence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the co-occurrence of two terms in different colums. The report adds
+the number of documents by term between brackets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>column_IDX</strong> (<em>str</em>) – the column to explode. Their terms are used in the index of the result dataframe.</p></li>
+<li><p><strong>sep_IDX</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_IDX.</p></li>
+<li><p><strong>column_COL</strong> (<em>str</em>) – the column to explode. Their terms are used in the columns of the result dataframe.</p></li>
+<li><p><strong>sep_COL</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_COL.</p></li>
+<li><p><strong>as_matrix</strong> (<em>bool</em>) – Results are returned as a matrix.</p></li>
+<li><p><strong>minmax</strong> (<em>pair</em><em>(</em><em>number</em><em>,</em><em>number</em><em>)</em>) – filter values by &gt;=min,&lt;=max.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="p">{</span>
+<span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Author Keywords&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Cited by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>   <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">  Authors Author Keywords  Cited by  ID</span>
+<span class="go">0       A               a         0   0</span>
+<span class="go">1     A;B             a;b         1   1</span>
+<span class="go">2       B               b         2   2</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">co_occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column_IDX</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">column_COL</span><span class="o">=</span><span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
+<span class="go">  Authors (IDX) Author Keywords (COL)  Num Documents      ID</span>
+<span class="go">0             A                     a              2  [0, 1]</span>
+<span class="go">1             B                     b              2  [1, 2]</span>
+<span class="go">2             B                     c              2  [3, 4]</span>
+<span class="go">3             A                     b              1     [1]</span>
+<span class="go">4             A                     c              1     [3]</span>
+<span class="go">5             B                     a              1     [1]</span>
+<span class="go">6             B                     d              1     [4]</span>
+<span class="go">7             C                     c              1     [3]</span>
+<span class="go">8             D                     c              1     [4]</span>
+<span class="go">9             D                     d              1     [4]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">co_occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column_IDX</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">column_COL</span><span class="o">=</span><span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">   a  b  c  d</span>
+<span class="go">A  2  1  1  0</span>
+<span class="go">B  1  2  2  1</span>
+<span class="go">C  0  0  1  0</span>
+<span class="go">D  0  0  1  1</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">co_occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column_IDX</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">column_COL</span><span class="o">=</span><span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="go">   a  b  c</span>
+<span class="go">A  2  0  0</span>
+<span class="go">B  0  2  2</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">co_occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">   c  d</span>
+<span class="go">A  1  0</span>
+<span class="go">B  2  1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.analytics.compute_tfm">
+<code class="sig-prename descclassname">techminer.analytics.</code><code class="sig-name descname">compute_tfm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/analytics.html#compute_tfm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.analytics.compute_tfm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the term-frequency matrix for the terms in a column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="p">{</span>
+<span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Author Keywords&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Cited by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>   <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">  Authors Author Keywords  Cited by  ID</span>
+<span class="go">0       A               a         0   0</span>
+<span class="go">1     A;B             a;b         1   1</span>
+<span class="go">2       B               b         2   2</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">compute_tfm</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
+<span class="go">   A  B  C  D</span>
+<span class="go">0  1  0  0  0</span>
+<span class="go">1  1  1  0  0</span>
+<span class="go">2  0  1  0  0</span>
+<span class="go">3  1  1  1  0</span>
+<span class="go">4  0  1  0  1</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">compute_tfm</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
+<span class="go">   a  b  c  d</span>
+<span class="go">0  1  0  0  0</span>
+<span class="go">1  1  1  0  0</span>
+<span class="go">2  0  1  0  0</span>
+<span class="go">3  0  0  1  0</span>
+<span class="go">4  0  0  1  1</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">compute_tfm</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">   A  B</span>
+<span class="go">0  1  0</span>
+<span class="go">1  1  1</span>
+<span class="go">2  0  1</span>
+<span class="go">3  1  1</span>
+<span class="go">4  0  1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.analytics.corr">
+<code class="sig-prename descclassname">techminer.analytics.</code><code class="sig-name descname">corr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'pearson'</span></em>, <em class="sig-param"><span class="n">show_between</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cmap</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filter_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_n</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">get_minmax</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/analytics.html#corr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.analytics.corr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes cross-correlation among items in two different columns of the dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>column_IDX</strong> (<em>str</em>) – the first column.</p></li>
+<li><p><strong>sep_IDX</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_IDX.</p></li>
+<li><p><strong>column_COL</strong> (<em>str</em>) – the second column.</p></li>
+<li><p><strong>sep_COL</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_COL.</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – <p>Available methods are:</p>
+<ul>
+<li><p>pearson : Standard correlation coefficient.</p></li>
+<li><p>kendall : Kendall Tau correlation coefficient.</p></li>
+<li><p>spearman : Spearman rank correlation.</p></li>
+</ul>
+</p></li>
+<li><p><strong>as_matrix</strong> (<em>bool</em>) – the result is reshaped by melt or not.</p></li>
+<li><p><strong>minmax</strong> (<em>pair</em><em>(</em><em>number</em><em>,</em><em>number</em><em>)</em>) – filter values by &gt;=min,&lt;=max.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="p">{</span>
+<span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Author Keywords&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Cited by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>   <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">  Authors Author Keywords  Cited by  ID</span>
+<span class="go">0       A               a         0   0</span>
+<span class="go">1     A;B             a;b         1   1</span>
+<span class="go">2       B               b         2   2</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
+<span class="go">5     A;B               d         5   5</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">compute_tfm</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
+<span class="go">   A  B  C  D</span>
+<span class="go">0  1  0  0  0</span>
+<span class="go">1  1  1  0  0</span>
+<span class="go">2  0  1  0  0</span>
+<span class="go">3  1  1  1  0</span>
+<span class="go">4  0  1  0  1</span>
+<span class="go">5  1  1  0  0</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">compute_tfm</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
+<span class="go">   a  b  c  d</span>
+<span class="go">0  1  0  0  0</span>
+<span class="go">1  1  1  0  0</span>
+<span class="go">2  0  1  0  0</span>
+<span class="go">3  0  0  1  0</span>
+<span class="go">4  0  0  1  1</span>
+<span class="go">5  0  0  0  1</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">corr</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
+<span class="go">          A         B         C        D</span>
+<span class="go">A  1.000000 -1.000000 -0.333333 -0.57735</span>
+<span class="go">B -1.000000  1.000000  0.333333  0.57735</span>
+<span class="go">C -0.333333  0.333333  1.000000  0.57735</span>
+<span class="go">D -0.577350  0.577350  0.577350  1.00000</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">corr</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">show_between</span><span class="o">=</span><span class="p">(</span><span class="mf">0.45</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">))</span>
+<span class="go">         B        C        D</span>
+<span class="go">B  0.00000  0.00000  0.57735</span>
+<span class="go">C  0.00000  0.00000  0.57735</span>
+<span class="go">D  0.57735  0.57735  0.00000</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">corr</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">   Authors Author Keywords     value</span>
+<span class="go">0        A               A  1.000000</span>
+<span class="go">1        B               A -1.000000</span>
+<span class="go">2        C               A -0.333333</span>
+<span class="go">3        D               A -0.577350</span>
+<span class="go">4        A               B -1.000000</span>
+<span class="go">5        B               B  1.000000</span>
+<span class="go">6        C               B  0.333333</span>
+<span class="go">7        D               B  0.577350</span>
+<span class="go">8        A               C -0.333333</span>
+<span class="go">9        B               C  0.333333</span>
+<span class="go">10       C               C  1.000000</span>
+<span class="go">11       D               C  0.577350</span>
+<span class="go">12       A               D -0.577350</span>
+<span class="go">13       B               D  0.577350</span>
+<span class="go">14       C               D  0.577350</span>
+<span class="go">15       D               D  1.000000</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">corr</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">filter_by</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">          A         B         C</span>
+<span class="go">A  1.000000 -1.000000 -0.333333</span>
+<span class="go">B -1.000000  1.000000  0.333333</span>
+<span class="go">C -0.333333  0.333333  1.000000</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="p">{</span>
+<span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Author Keywords&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Cited by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>   <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">  Authors Author Keywords  Cited by  ID</span>
+<span class="go">0       A               a         0   0</span>
+<span class="go">1     A;B             a;b         1   1</span>
+<span class="go">2       B               b         2   2</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
+<span class="go">5     A;B               d         5   5</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">compute_tfm</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
+<span class="go">   A  B  C  D</span>
+<span class="go">0  1  0  0  0</span>
+<span class="go">1  1  1  0  0</span>
+<span class="go">2  0  1  0  0</span>
+<span class="go">3  1  1  1  0</span>
+<span class="go">4  0  1  0  1</span>
+<span class="go">5  1  1  0  0</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">corr</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
+<span class="go">          A         B         C         D</span>
+<span class="go">A  1.000000 -0.316228  0.316228 -0.632456</span>
+<span class="go">B -0.316228  1.000000  0.200000  0.200000</span>
+<span class="go">C  0.316228  0.200000  1.000000 -0.200000</span>
+<span class="go">D -0.632456  0.200000 -0.200000  1.000000</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">corr</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">   Authors (IDX) Authors (COL)     value</span>
+<span class="go">0              A             A  1.000000</span>
+<span class="go">1              B             A -0.316228</span>
+<span class="go">2              C             A  0.316228</span>
+<span class="go">3              D             A -0.632456</span>
+<span class="go">4              A             B -0.316228</span>
+<span class="go">5              B             B  1.000000</span>
+<span class="go">6              C             B  0.200000</span>
+<span class="go">7              D             B  0.200000</span>
+<span class="go">8              A             C  0.316228</span>
+<span class="go">9              B             C  0.200000</span>
+<span class="go">10             C             C  1.000000</span>
+<span class="go">11             D             C -0.200000</span>
+<span class="go">12             A             D -0.632456</span>
+<span class="go">13             B             D  0.200000</span>
+<span class="go">14             C             D -0.200000</span>
+<span class="go">15             D             D  1.000000</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">corr</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
+<span class="go">      a     b     c     d</span>
+<span class="go">a  1.00  0.25 -0.50 -0.50</span>
+<span class="go">b  0.25  1.00 -0.50 -0.50</span>
+<span class="go">c -0.50 -0.50  1.00  0.25</span>
+<span class="go">d -0.50 -0.50  0.25  1.00</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">corr</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">show_between</span><span class="o">=</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+<span class="go">     a    b     c     d</span>
+<span class="go">a  1.0  0.0  0.00  0.00</span>
+<span class="go">b  0.0  1.0  0.00  0.00</span>
+<span class="go">c  0.0  0.0  1.00  0.25</span>
+<span class="go">d  0.0  0.0  0.25  1.00</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">corr</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">filter_by</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">          A         B</span>
+<span class="go">A  1.000000 -0.316228</span>
+<span class="go">B -0.316228  1.000000</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.analytics.corr_map">
+<code class="sig-prename descclassname">techminer.analytics.</code><code class="sig-name descname">corr_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">by</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'pearson'</span></em>, <em class="sig-param"><span class="n">minval</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_n_links</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/analytics.html#corr_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.analytics.corr_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the correlation map among items in a column of the dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – <p>Available methods are:</p>
+<ul>
+<li><p>pearson : Standard correlation coefficient.</p></li>
+<li><p>kendall : Kendall Tau correlation coefficient.</p></li>
+<li><p>spearman : Spearman rank correlation.</p></li>
+</ul>
+</p></li>
+<li><p><strong>minval</strong> (<em>float</em>) – Minimum autocorrelation value to show links.</p></li>
+<li><p><strong>top_n_links</strong> (<em>int</em>) – Shows top n links.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;C&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="p">{</span>
+<span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Author Keywords&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Cited by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>   <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">  Authors Author Keywords  Cited by  ID</span>
+<span class="go">0       A               a         0   0</span>
+<span class="go">1     A;C             a;b         1   1</span>
+<span class="go">2       B               b         2   2</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
+<span class="go">5     A;B               d         5   5</span>
+<span class="go">6     A;C             c;d         6   6</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">co_occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">   A  B  C  D</span>
+<span class="go">a  2  0  1  0</span>
+<span class="go">b  1  1  1  0</span>
+<span class="go">c  2  2  2  1</span>
+<span class="go">d  2  2  1  1</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">corr</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
+<span class="go">          A         B         C         D</span>
+<span class="go">A  1.000000  0.174078  0.333333  0.577350</span>
+<span class="go">B  0.174078  1.000000  0.522233  0.904534</span>
+<span class="go">C  0.333333  0.522233  1.000000  0.577350</span>
+<span class="go">D  0.577350  0.904534  0.577350  1.000000</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">corr</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
+<span class="go">          A         B         C         D</span>
+<span class="go">A  1.000000  0.174078  0.333333  0.577350</span>
+<span class="go">B  0.174078  1.000000  0.522233  0.904534</span>
+<span class="go">C  0.333333  0.522233  1.000000  0.577350</span>
+<span class="go">D  0.577350  0.904534  0.577350  1.000000</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">corr_map</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
+<span class="go">{&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: [(&#39;B&#39;, &#39;D&#39;)], &#39;other_edges&#39;: None}</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">corr_map</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">{&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: None, &#39;other_edges&#39;: None}</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -661,6 +1244,166 @@
 </dd></dl>
 
 <dl class="py function">
+<dt id="techminer.analytics.occurrence">
+<code class="sig-prename descclassname">techminer.analytics.</code><code class="sig-name descname">occurrence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">retmaxval</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/analytics.html#occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.analytics.occurrence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the occurrence between the terms in a column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
+<li><p><strong>as_matrix</strong> (<em>bool</em>) – Results are returned as a matrix.</p></li>
+<li><p><strong>minmax</strong> (<em>pair</em><em>(</em><em>number</em><em>,</em><em>number</em><em>)</em>) – filter values by &gt;=min,&lt;=max.</p></li>
+<li><p><strong>keywords</strong> (<em>list</em><em>, </em><a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="p">{</span>
+<span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Cited by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>   <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">  Authors  Cited by  ID</span>
+<span class="go">0       A         0   0</span>
+<span class="go">1       A         1   1</span>
+<span class="go">2     A;B         2   2</span>
+<span class="go">3       B         3   3</span>
+<span class="go">4   A;B;C         4   4</span>
+<span class="go">5       D         5   5</span>
+<span class="go">6     B;D         6   6</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
+<span class="go">   Authors (IDX) Authors (COL)  Num Documents            ID</span>
+<span class="go">0              A             A              4  [0, 1, 2, 4]</span>
+<span class="go">1              B             B              4  [2, 3, 4, 6]</span>
+<span class="go">2              A             B              2        [2, 4]</span>
+<span class="go">3              B             A              2        [2, 4]</span>
+<span class="go">4              D             D              2        [5, 6]</span>
+<span class="go">5              A             C              1           [4]</span>
+<span class="go">6              B             C              1           [4]</span>
+<span class="go">7              B             D              1           [6]</span>
+<span class="go">8              C             A              1           [4]</span>
+<span class="go">9              C             B              1           [4]</span>
+<span class="go">10             C             C              1           [4]</span>
+<span class="go">11             D             B              1           [6]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">   A  B  C  D</span>
+<span class="go">A  4  2  1  0</span>
+<span class="go">B  2  4  1  1</span>
+<span class="go">C  1  1  1  0</span>
+<span class="go">D  0  1  0  2</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="go">   A  B  D</span>
+<span class="go">A  0  2  0</span>
+<span class="go">B  2  0  0</span>
+<span class="go">D  0  0  2</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">   A  B</span>
+<span class="go">A  4  2</span>
+<span class="go">B  2  4</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.analytics.self_citation">
+<code class="sig-prename descclassname">techminer.analytics.</code><code class="sig-name descname">self_citation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">minmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">retmaxval</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/analytics.html#self_citation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.analytics.self_citation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the cocitation between the terms in a column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
+<li><p><strong>as_matrix</strong> (<em>bool</em>) – Results are returned as a matrix.</p></li>
+<li><p><strong>minmax</strong> (<em>pair</em><em>(</em><em>number</em><em>,</em><em>number</em><em>)</em>) – filter values by &gt;=min,&lt;=max.</p></li>
+<li><p><strong>keywords</strong> (<em>list</em><em>, </em><a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="p">{</span>
+<span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Cited by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>   <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">  Authors  Cited by  ID</span>
+<span class="go">0       A         0   0</span>
+<span class="go">1       A         1   1</span>
+<span class="go">2     A;B         2   2</span>
+<span class="go">3       B         3   3</span>
+<span class="go">4   A;B;C         4   4</span>
+<span class="go">5       D         5   5</span>
+<span class="go">6     B;D         6   6</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">self_citation</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
+<span class="go">   Authors (IDX) Authors (COL)  Cited by            ID</span>
+<span class="go">0              B             B        15  [2, 3, 4, 6]</span>
+<span class="go">1              D             D        11        [5, 6]</span>
+<span class="go">2              A             A         7  [0, 1, 2, 4]</span>
+<span class="go">3              A             B         6        [2, 4]</span>
+<span class="go">4              B             A         6        [2, 4]</span>
+<span class="go">5              B             D         6           [6]</span>
+<span class="go">6              D             B         6           [6]</span>
+<span class="go">7              A             C         4           [4]</span>
+<span class="go">8              B             C         4           [4]</span>
+<span class="go">9              C             A         4           [4]</span>
+<span class="go">10             C             B         4           [4]</span>
+<span class="go">11             C             C         4           [4]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">self_citation</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">   A   B  C   D</span>
+<span class="go">A  7   6  4   0</span>
+<span class="go">B  6  15  4   6</span>
+<span class="go">C  4   4  4   0</span>
+<span class="go">D  0   6  0  11</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">self_citation</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
+<span class="go">   A   B   D</span>
+<span class="go">A  7   6   0</span>
+<span class="go">B  6  15   6</span>
+<span class="go">D  0   6  11</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">self_citation</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">   A   B</span>
+<span class="go">A  7   6</span>
+<span class="go">B  6  15</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt id="techminer.analytics.summary_by_term">
 <code class="sig-prename descclassname">techminer.analytics.</code><code class="sig-name descname">summary_by_term</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/analytics.html#summary_by_term"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.analytics.summary_by_term" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summarize the number of documents and citations by term in a dataframe.</p>
@@ -821,6 +1564,134 @@ This funciton adds the missing years in the sequence.</p>
 <span class="go">4                    5              60            0.0</span>
 <span class="go">5                    5              60            0.0</span>
 <span class="go">6                    6              75           15.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.analytics.summary_co_occurrence">
+<code class="sig-prename descclassname">techminer.analytics.</code><code class="sig-name descname">summary_co_occurrence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/analytics.html#summary_co_occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.analytics.summary_co_occurrence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summary occurrence and citations by terms in two different columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>column_IDX</strong> (<em>str</em>) – the column to explode. Their terms are used in the index of the result dataframe.</p></li>
+<li><p><strong>sep_IDX</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_IDX.</p></li>
+<li><p><strong>column_COL</strong> (<em>str</em>) – the column to explode. Their terms are used in the columns of the result dataframe.</p></li>
+<li><p><strong>sep_COL</strong> (<em>str</em>) – Character used as internal separator for the elements in the column_COL.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="p">{</span>
+<span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Author Keywords&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Cited by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>   <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">  Authors Author Keywords  Cited by  ID</span>
+<span class="go">0       A               a         0   0</span>
+<span class="go">1     A;B             a;b         1   1</span>
+<span class="go">2       B               b         2   2</span>
+<span class="go">3   A;B;C               c         3   3</span>
+<span class="go">4     B;D             c;d         4   4</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">summary_co_occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column_IDX</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">column_COL</span><span class="o">=</span><span class="s1">&#39;Author Keywords&#39;</span><span class="p">)</span>
+<span class="go">  Authors (IDX) Author Keywords (COL)  Num Documents  Cited by      ID</span>
+<span class="go">0             A                     a              2         1  [0, 1]</span>
+<span class="go">1             A                     b              1         1     [1]</span>
+<span class="go">2             A                     c              1         3     [3]</span>
+<span class="go">3             B                     a              1         1     [1]</span>
+<span class="go">4             B                     b              2         3  [1, 2]</span>
+<span class="go">5             B                     c              2         7  [3, 4]</span>
+<span class="go">6             B                     d              1         4     [4]</span>
+<span class="go">7             C                     c              1         3     [3]</span>
+<span class="go">8             D                     c              1         4     [4]</span>
+<span class="go">9             D                     d              1         4     [4]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">summary_co_occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="s1">&#39;Author Keywords&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">  Authors (IDX) Author Keywords (COL)  Num Documents  Cited by      ID</span>
+<span class="go">0             B                     a              1         1     [1]</span>
+<span class="go">1             B                     b              2         3  [1, 2]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.analytics.summary_occurrence">
+<code class="sig-prename descclassname">techminer.analytics.</code><code class="sig-name descname">summary_occurrence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/analytics.html#summary_occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.analytics.summary_occurrence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summarize occurrence and citations by terms in a column of a dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="p">{</span>
+<span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="s1">&#39;Cited by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>   <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">  Authors  Cited by  ID</span>
+<span class="go">0       A         0   0</span>
+<span class="go">1       A         1   1</span>
+<span class="go">2     A;B         2   2</span>
+<span class="go">3       B         3   3</span>
+<span class="go">4   A;B;C         4   4</span>
+<span class="go">5       D         5   5</span>
+<span class="go">6     B;D         6   6</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">summary_occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
+<span class="go">   Authors (IDX) Authors (COL)  Num Documents  Cited by            ID</span>
+<span class="go">0              A             A              4         7  [0, 1, 2, 4]</span>
+<span class="go">1              A             B              2         6        [2, 4]</span>
+<span class="go">2              A             C              1         4           [4]</span>
+<span class="go">3              B             A              2         6        [2, 4]</span>
+<span class="go">4              B             B              4        15  [2, 3, 4, 6]</span>
+<span class="go">5              B             C              1         4           [4]</span>
+<span class="go">6              B             D              1         6           [6]</span>
+<span class="go">7              C             A              1         4           [4]</span>
+<span class="go">8              C             B              1         4           [4]</span>
+<span class="go">9              C             C              1         4           [4]</span>
+<span class="go">10             D             B              1         6           [6]</span>
+<span class="go">11             D             D              2        11        [5, 6]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">],</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">summary_occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+<span class="go">  Authors (IDX) Authors (COL)  Num Documents  Cited by            ID</span>
+<span class="go">0             A             A              4         7  [0, 1, 2, 4]</span>
+<span class="go">1             A             B              2         6        [2, 4]</span>
+<span class="go">2             B             A              2         6        [2, 4]</span>
+<span class="go">3             B             B              4        15  [2, 3, 4, 6]</span>
 </pre></div>
 </div>
 </dd></dl>

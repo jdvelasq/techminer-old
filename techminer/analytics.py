@@ -118,6 +118,102 @@ def __explode(x, column):
     return x
 
 
+def __disambiguate_authors(x):
+    """Verify if author's names are unique. For duplicated names, based on `Author(s) ID` column,
+    adds a consecutive number to the name.
+
+
+    Args:
+        col_Authors (str): Author's name column.
+        sep_Authors (str): Character used as internal separator for the elements in the column with the author's name.
+        col_AuthorsID (str): Author's ID column.
+        sep_AuthorsID (str): Character used as internal separator for the elements in the column with the author's ID.
+
+    Returns:
+        DataFrame.
+
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...   {
+    ...      "Authors": "author 0;author 0;author 0,author 0,author 0".split(","),
+    ...      "Author(s) ID": "0;1;2;,3;,4;".split(','),
+    ...   }
+    ... )
+    >>> df
+                          Authors Author(s) ID
+    0  author 0;author 0;author 0       0;1;2;
+    1                    author 0           3;
+    2                    author 0           4;
+
+    >>> __disambiguate_authors(df)
+                                Authors Author(s) ID
+    0  author 0;author 0(1);author 0(2)        0;1;2
+    1                       author 0(3)            3
+    2                       author 0(4)            4
+
+
+    """
+
+    x["Authors"] = x["Authors"].map(
+        lambda w: w[:-1] if not pd.isna(w) and w[-1] == ";" else w
+    )
+
+    x["Author(s) ID"] = x["Author(s) ID"].map(
+        lambda w: w[:-1] if not pd.isna(w) and w[-1] == ";" else w
+    )
+
+    data = x[["Authors", "Author(s) ID"]]
+    data = data.dropna()
+
+    data["*info*"] = [(a, b) for (a, b) in zip(data["Authors"], data["Author(s) ID"])]
+
+    data["*info*"] = data["*info*"].map(
+        lambda x: [
+            (u.strip(), v.strip()) for u, v in zip(x[0].split(";"), x[1].split(";"))
+        ]
+    )
+
+    data = data[["*info*"]].explode("*info*")
+    data = data.reset_index(drop=True)
+
+    names_ids = {}
+    for idx in range(len(data)):
+
+        author_name = data.at[idx, "*info*"][0]
+        author_id = data.at[idx, "*info*"][1]
+
+        if author_name in names_ids.keys():
+
+            if author_id not in names_ids[author_name]:
+                names_ids[author_name] = names_ids[author_name] + [author_id]
+        else:
+            names_ids[author_name] = [author_id]
+
+    ids_names = {}
+    for author_name in names_ids.keys():
+        suffix = 0
+        for author_id in names_ids[author_name]:
+            if suffix > 0:
+                ids_names[author_id] = author_name + "(" + str(suffix) + ")"
+            else:
+                ids_names[author_id] = author_name
+            suffix += 1
+
+    result = x.copy()
+
+    result["Authors"] = result["Author(s) ID"].map(
+        lambda z: ";".join([ids_names[w.strip()] for w in z.split(";")])
+        if not pd.isna(z)
+        else z
+    )
+
+    return result
+
+
 ##
 ##
 ##  Data importation
@@ -132,27 +228,42 @@ def load_scopus(x):
     x = x.rename(columns=NORMALIZED_NAMES)
     x = x[[w for w in x.columns if w in NORMALIZED_NAMES.values()]]
     #
-    logging.info("Formatting author names ...")
     x = x.applymap(lambda w: remove_accents(w) if isinstance(w, str) else w)
     if "Authors" in x.columns:
+        #
+        logging.info("Formatting author names ...")
+        #
         x["Authors"] = x.Authors.map(
             lambda w: w.replace(",", ";").replace(".", "") if pd.isna(w) is False else w
         )
         x["Authors"] = x.Authors.map(
             lambda w: pd.NA if w == "[No author name available]" else w
         )
+        x["Author(s) ID"] = x["Author(s) ID"].map(
+            lambda w: pd.NA if w == "[No author id available]" else w
+        )
     #
-    logging.info("Removing part of titles in foreing languages ...")
+    if "Authors" in x.columns:
+        #
+        logging.info("Disambiguating author names ...")
+        #
+        x = __disambiguate_authors(x)
+    #
     if "Title" in x.columns:
+        #
+        logging.info("Removing part of titles in foreing languages ...")
+        #
         x["Title"] = x.Title.map(
             lambda w: w[0 : w.find("[")] if pd.isna(w) is False and w[-1] == "]" else w
         )
     #
-    logging.info("Fusioning author and index keywords ...")
     if (
         "Author Keywords" in x.columns.tolist()
         and "Index Keywords" in x.columns.tolist()
     ):
+        #
+        logging.info("Fusioning author and index keywords ...")
+        #
         author_keywords = x["Author Keywords"].map(
             lambda x: x.split(";") if pd.isna(x) is False else []
         )
@@ -167,35 +278,44 @@ def load_scopus(x):
         keywords = keywords.map(lambda w: None if w == "" else w)
         x["Keywords"] = keywords
     #
-    logging.info("Extracting countries from affiliations ...")
     if "Affiliations" in x.columns:
-
+        #
+        logging.info("Extracting countries from affiliations ...")
+        #
         x["Countries"] = x.Affiliations.map(
             lambda w: extract_country(w) if pd.isna(w) is False else w
         )
     #
-    logging.info("Extracting institutions from affiliations ...")
     if "Affiliations" in x.columns:
+        #
+        logging.info("Extracting institutions from affiliations ...")
+        #
         x["Institutions"] = x.Affiliations.map(
             lambda w: extract_institution(w) if pd.isna(w) is False else w
         )
     #
-    logging.info("Extracting country of 1st author ...")
     if "Countries" in x.columns:
+        #
+        logging.info("Extracting country of 1st author ...")
+        #
         x["Country 1st"] = x["Countries"].map(
             lambda w: w.split(";")[0] if not pd.isna(w) else w
         )
     #
-    logging.info("Extracting affiliation of 1st author ...")
     if "Institutions" in x.columns:
+        #
+        logging.info("Extracting affiliation of 1st author ...")
+        #
         x["Institution 1st"] = x["Institutions"].map(
             lambda w: w.split(";")[0] if not pd.isna(w) else w
         )
     #
-    logging.info("Counting number of authors ...")
-    x["Num Authors"] = x["Authors"].map(
-        lambda w: len(w.split(";")) if not pd.isna(w) else 0
-    )
+    if "Authors" in x.columns:
+        #
+        logging.info("Counting number of authors ...")
+        x["Num Authors"] = x["Authors"].map(
+            lambda w: len(w.split(";")) if not pd.isna(w) else 0
+        )
     #
     x["ID"] = range(len(x))
     #
