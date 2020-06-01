@@ -1,0 +1,867 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>techminer.thesaurus &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TechMiner - A Package for Bibliographical Analysis using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TechMiner - A Package for Bibliographical Analysis using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>techminer.thesaurus</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for techminer.thesaurus</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Thesaurus</span>
+<span class="sd">==================================================================================================</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">techminer.text</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">fingerprint</span><span class="p">,</span>
+    <span class="n">one_gram</span><span class="p">,</span>
+    <span class="n">two_gram</span><span class="p">,</span>
+    <span class="n">stemmer_porter</span><span class="p">,</span>
+    <span class="n">stemmer_snowball</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="text_clustering"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.text_clustering">[docs]</a><span class="k">def</span> <span class="nf">text_clustering</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name_strategy</span><span class="o">=</span><span class="s2">&quot;mostfrequent&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;porter&quot;</span><span class="p">,</span> <span class="n">transformer</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Builds a thesaurus by clustering a list of strings.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (list): list  of string to create thesaurus.</span>
+
+<span class="sd">        name_strategy (string): method for assigning keys in thesaurus.</span>
+
+<span class="sd">            * &#39;mostfrequent&#39;: Most frequent string in the cluster.</span>
+
+<span class="sd">            * &#39;longest&#39;: Longest string in the cluster.</span>
+
+<span class="sd">            * &#39;shortest&#39;: Shortest string in the cluster.</span>
+
+<span class="sd">        key (str): &#39;fingerprint&#39;, &#39;1-gram&#39;, &#39;2-gram&#39;, &#39;snowball&#39;, &#39;porter&#39;</span>
+
+<span class="sd">        sep (string): separator character for elements in `x`.</span>
+
+<span class="sd">        transformer (function): function applyed to each group name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Thesaurus object.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame({</span>
+<span class="sd">    ...    &#39;f&#39;: [&#39;a b c a b a&#39;,</span>
+<span class="sd">    ...          &#39;a b c a b&#39;,</span>
+<span class="sd">    ...          &#39;a b c a b&#39;,</span>
+<span class="sd">    ...          &#39;A C b&#39;,</span>
+<span class="sd">    ...          &#39;a b&#39;,</span>
+<span class="sd">    ...          &#39;a, b, c, a&#39;,</span>
+<span class="sd">    ...          &#39;a B&#39;],</span>
+<span class="sd">    ... })</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">                 f</span>
+<span class="sd">    0  a b c a b a</span>
+<span class="sd">    1    a b c a b</span>
+<span class="sd">    2    a b c a b</span>
+<span class="sd">    3        A C b</span>
+<span class="sd">    4          a b</span>
+<span class="sd">    5   a, b, c, a</span>
+<span class="sd">    6          a B</span>
+
+<span class="sd">    &gt;&gt;&gt; text_clustering(df.f) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    {</span>
+<span class="sd">      &quot;A C b&quot;: [</span>
+<span class="sd">        &quot;A C b&quot;,</span>
+<span class="sd">        &quot;a b c a b&quot;,</span>
+<span class="sd">        &quot;a b c a b a&quot;,</span>
+<span class="sd">        &quot;a, b, c, a&quot;</span>
+<span class="sd">      ],</span>
+<span class="sd">      &quot;a B&quot;: [</span>
+<span class="sd">        &quot;a B&quot;,</span>
+<span class="sd">        &quot;a b&quot;</span>
+<span class="sd">      ]</span>
+<span class="sd">    }</span>
+<span class="sd">    ignore_case=False, full_match=True, use_re=False, compiled=False</span>
+
+
+<span class="sd">    &gt;&gt;&gt; text_clustering(df.f, name_strategy=&#39;shortest&#39;) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    {</span>
+<span class="sd">      &quot;A C b&quot;: [</span>
+<span class="sd">        &quot;A C b&quot;,</span>
+<span class="sd">        &quot;a b c a b&quot;,</span>
+<span class="sd">        &quot;a b c a b a&quot;,</span>
+<span class="sd">        &quot;a, b, c, a&quot;</span>
+<span class="sd">        ],</span>
+<span class="sd">      &quot;a b&quot;: [</span>
+<span class="sd">        &quot;a B&quot;,</span>
+<span class="sd">        &quot;a b&quot;</span>
+<span class="sd">        ]</span>
+<span class="sd">    }</span>
+<span class="sd">    ignore_case=False, full_match=True, use_re=False, compiled=False</span>
+
+<span class="sd">    &gt;&gt;&gt; text_clustering(df.f, name_strategy=&#39;longest&#39;) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    {</span>
+<span class="sd">      &quot;a b&quot;: [</span>
+<span class="sd">        &quot;a B&quot;,</span>
+<span class="sd">        &quot;a b&quot;</span>
+<span class="sd">      ],</span>
+<span class="sd">      &quot;a b c a b a&quot;: [</span>
+<span class="sd">        &quot;A C b&quot;,</span>
+<span class="sd">        &quot;a b c a b&quot;,</span>
+<span class="sd">        &quot;a b c a b a&quot;,</span>
+<span class="sd">        &quot;a, b, c, a&quot;</span>
+<span class="sd">      ]</span>
+<span class="sd">    }</span>
+<span class="sd">    ignore_case=False, full_match=True, use_re=False, compiled=False</span>
+
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame({</span>
+<span class="sd">    ...    &#39;f&#39;: [&#39;a b; c a; b a&#39;,</span>
+<span class="sd">    ...          &#39;A b; c A; b&#39;,</span>
+<span class="sd">    ...          &#39;a b; C A; B&#39;,</span>
+<span class="sd">    ...          &#39;A C; b&#39;,</span>
+<span class="sd">    ...          None,</span>
+<span class="sd">    ...          &#39;a b&#39;,</span>
+<span class="sd">    ...          &#39;a; b; c; a&#39;,</span>
+<span class="sd">    ...          &#39;a B&#39;],</span>
+<span class="sd">    ... })</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">                   f</span>
+<span class="sd">    0  a b; c a; b a</span>
+<span class="sd">    1    A b; c A; b</span>
+<span class="sd">    2    a b; C A; B</span>
+<span class="sd">    3         A C; b</span>
+<span class="sd">    4           None</span>
+<span class="sd">    5            a b</span>
+<span class="sd">    6     a; b; c; a</span>
+<span class="sd">    7            a B</span>
+
+<span class="sd">    &gt;&gt;&gt; text_clustering(df.f, sep=&#39;;&#39;, name_strategy=&#39;longest&#39;) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    {</span>
+<span class="sd">      &quot;a b&quot;: [</span>
+<span class="sd">        &quot;A b&quot;,</span>
+<span class="sd">        &quot;a B&quot;,</span>
+<span class="sd">        &quot;a b&quot;,</span>
+<span class="sd">        &quot;b a&quot;</span>
+<span class="sd">      ],</span>
+<span class="sd">      &quot;b&quot;: [</span>
+<span class="sd">        &quot;B&quot;,</span>
+<span class="sd">        &quot;b&quot;</span>
+<span class="sd">      ],</span>
+<span class="sd">      &quot;c a&quot;: [</span>
+<span class="sd">        &quot;A C&quot;,</span>
+<span class="sd">        &quot;C A&quot;,</span>
+<span class="sd">        &quot;c A&quot;,</span>
+<span class="sd">        &quot;c a&quot;</span>
+<span class="sd">      ]</span>
+<span class="sd">    }</span>
+<span class="sd">    ignore_case=False, full_match=True, use_re=False, compiled=False</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">sep</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">explode</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;col&quot;</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">tolist</span><span class="p">()})</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;fingerprint&quot;</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">fingerprint</span>
+    <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;1-gram&quot;</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">one_gram</span>
+    <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;2-gram&quot;</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">two_gram</span>
+    <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;porter&quot;</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">stemmer_porter</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">stemmer_snowball</span>
+    <span class="n">x</span><span class="p">[</span><span class="s2">&quot;key&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">col</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">grp</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;key&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;col&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">})</span>
+    <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;listlen&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">col</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+    <span class="n">grp</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="n">grp</span><span class="o">.</span><span class="n">listlen</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;col&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">col</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+    <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;groupname&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">name_strategy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">name_strategy</span> <span class="o">=</span> <span class="s2">&quot;mostfrequent&quot;</span>
+    <span class="k">if</span> <span class="n">name_strategy</span> <span class="o">==</span> <span class="s2">&quot;mostfrequent&quot;</span><span class="p">:</span>
+        <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;groupname&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">col</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()[</span><span class="n">w</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span> <span class="o">==</span> <span class="n">w</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()]</span>
+            <span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">name_strategy</span> <span class="o">==</span> <span class="s2">&quot;longest&quot;</span><span class="p">:</span>
+        <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;groupname&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">col</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">name_strategy</span> <span class="o">==</span> <span class="s2">&quot;shortest&quot;</span><span class="p">:</span>
+        <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;groupname&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">col</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">transformer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;groupname&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">groupname</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">transformer</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">grp</span><span class="o">.</span><span class="n">groupname</span><span class="p">,</span> <span class="n">grp</span><span class="o">.</span><span class="n">col</span><span class="p">)}</span>
+    <span class="k">return</span> <span class="n">Thesaurus</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">full_match</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<span class="c1">#</span>
+
+
+<div class="viewcode-block" id="Thesaurus"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus">[docs]</a><span class="k">class</span> <span class="nc">Thesaurus</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="p">{},</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">full_match</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_case</span> <span class="o">=</span> <span class="n">ignore_case</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_full_match</span> <span class="o">=</span> <span class="n">full_match</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_use_re</span> <span class="o">=</span> <span class="n">use_re</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dict</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">thesaurus</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a json representation of the Thesaurus.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">ignore_case=</span><span class="si">{}</span><span class="s2">, full_match=</span><span class="si">{}</span><span class="s2">, use_re=</span><span class="si">{}</span><span class="s2">, compiled=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_case</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_full_match</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_use_re</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">text</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Thesaurus.compile"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.compile">[docs]</a>    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">:</span>
+            <span class="n">patterns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_use_re</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_full_match</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;^&quot;</span> <span class="o">+</span> <span class="n">pattern</span> <span class="o">+</span> <span class="s2">&quot;$&quot;</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_case</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">patterns</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Thesaurus.apply"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply a thesaurus to a string x.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame({</span>
+<span class="sd">        ...    &#39;f&#39;: [&#39;aaa&#39;, &#39;bbb&#39;, &#39;ccc aaa&#39;, &#39;ccc bbb&#39;, &#39;ddd eee&#39;, &#39;ddd fff&#39;,  None, &#39;zzz&#39;],</span>
+<span class="sd">        ... })</span>
+<span class="sd">        &gt;&gt;&gt; df # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">                 f</span>
+<span class="sd">        0      aaa</span>
+<span class="sd">        1      bbb</span>
+<span class="sd">        2  ccc aaa</span>
+<span class="sd">        3  ccc bbb</span>
+<span class="sd">        4  ddd eee</span>
+<span class="sd">        5  ddd fff</span>
+<span class="sd">        6     None</span>
+<span class="sd">        7      zzz</span>
+
+<span class="sd">        &gt;&gt;&gt; patterns = {&#39;aaa&#39;:[&#39;aaa&#39;, &#39;bbb&#39;, &#39;eee&#39;, &#39;fff&#39;],  &#39;1&#39;:[&#39;000&#39;]}</span>
+<span class="sd">        &gt;&gt;&gt; thesaurus = Thesaurus(patterns)</span>
+<span class="sd">        &gt;&gt;&gt; thesaurus = thesaurus.compile()</span>
+<span class="sd">        &gt;&gt;&gt; thesaurus</span>
+<span class="sd">        {</span>
+<span class="sd">          &quot;1&quot;: [</span>
+<span class="sd">            &quot;000&quot;</span>
+<span class="sd">          ],</span>
+<span class="sd">          &quot;aaa&quot;: [</span>
+<span class="sd">            &quot;aaa&quot;,</span>
+<span class="sd">            &quot;bbb&quot;,</span>
+<span class="sd">            &quot;eee&quot;,</span>
+<span class="sd">            &quot;fff&quot;</span>
+<span class="sd">          ]</span>
+<span class="sd">        }</span>
+<span class="sd">        ignore_case=True, full_match=False, use_re=False, compiled=True</span>
+
+<span class="sd">        &gt;&gt;&gt; df.f.map(lambda x: thesaurus.apply(x))</span>
+<span class="sd">        0     aaa</span>
+<span class="sd">        1     aaa</span>
+<span class="sd">        2     aaa</span>
+<span class="sd">        3     aaa</span>
+<span class="sd">        4     aaa</span>
+<span class="sd">        5     aaa</span>
+<span class="sd">        6    None</span>
+<span class="sd">        7     zzz</span>
+<span class="sd">        Name: f, dtype: object</span>
+
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame({</span>
+<span class="sd">        ...    &#39;f&#39;: [&#39;aaa|ccc aaa&#39;, &#39;bbb|ccc bbb&#39;, &#39;ccc aaa&#39;, &#39;ccc bbb&#39;, &#39;ddd eee&#39;, &#39;ddd fff&#39;,  None, &#39;zzz&#39;],</span>
+<span class="sd">        ... })</span>
+<span class="sd">        &gt;&gt;&gt; df # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">                     f</span>
+<span class="sd">        0  aaa|ccc aaa</span>
+<span class="sd">        1  bbb|ccc bbb</span>
+<span class="sd">        2      ccc aaa</span>
+<span class="sd">        3      ccc bbb</span>
+<span class="sd">        4      ddd eee</span>
+<span class="sd">        5      ddd fff</span>
+<span class="sd">        6         None</span>
+<span class="sd">        7          zzz</span>
+<span class="sd">        &gt;&gt;&gt; df.f.map(lambda x: thesaurus.apply(x, sep=&#39;|&#39;))</span>
+<span class="sd">        0    aaa|aaa</span>
+<span class="sd">        1    aaa|aaa</span>
+<span class="sd">        2        aaa</span>
+<span class="sd">        3        aaa</span>
+<span class="sd">        4        aaa</span>
+<span class="sd">        5        aaa</span>
+<span class="sd">        6       None</span>
+<span class="sd">        7        zzz</span>
+<span class="sd">        Name: f, dtype: object</span>
+
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame({</span>
+<span class="sd">        ...    &#39;f&#39;: [&#39;0&#39;, &#39;1&#39;, &#39;2&#39;, &#39;3&#39;, None, &#39;4&#39;, &#39;5&#39;, &#39;6&#39;, &#39;7&#39;, &#39;8&#39;, &#39;9&#39;],</span>
+<span class="sd">        ... })</span>
+<span class="sd">        &gt;&gt;&gt; df # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">               f</span>
+<span class="sd">        0      0</span>
+<span class="sd">        1      1</span>
+<span class="sd">        2      2</span>
+<span class="sd">        3      3</span>
+<span class="sd">        4   None</span>
+<span class="sd">        5      4</span>
+<span class="sd">        6      5</span>
+<span class="sd">        7      6</span>
+<span class="sd">        8      7</span>
+<span class="sd">        9      8</span>
+<span class="sd">        10     9</span>
+
+<span class="sd">        &gt;&gt;&gt; patterns = {</span>
+<span class="sd">        ...     &#39;a&#39;:[&#39;0&#39;, &#39;1&#39;, &#39;2&#39;],</span>
+<span class="sd">        ...     &#39;b&#39;:[&#39;4&#39;, &#39;5&#39;, &#39;6&#39;],</span>
+<span class="sd">        ...     &#39;c&#39;:[&#39;7&#39;, &#39;8&#39;, &#39;9&#39;]</span>
+<span class="sd">        ... }</span>
+<span class="sd">        &gt;&gt;&gt; thesaurus = Thesaurus(patterns, ignore_case=False, full_match=True)</span>
+<span class="sd">        &gt;&gt;&gt; thesaurus = thesaurus.compile()</span>
+<span class="sd">        &gt;&gt;&gt; df.f.map(lambda x: thesaurus.apply(x)) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">        0        a</span>
+<span class="sd">        1        a</span>
+<span class="sd">        2        a</span>
+<span class="sd">        3        3</span>
+<span class="sd">        4     None</span>
+<span class="sd">        5        b</span>
+<span class="sd">        6        b</span>
+<span class="sd">        7        b</span>
+<span class="sd">        8        c</span>
+<span class="sd">        9        c</span>
+<span class="sd">        10       c</span>
+<span class="sd">        Name: f, dtype: object</span>
+
+
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame({</span>
+<span class="sd">        ...    &#39;f&#39;: [&#39;a b, A B&#39;, &#39;A b, A B&#39;, None, &#39;b c&#39;, &#39;b, B A&#39;, &#39;b, a, c&#39;, &#39;A, B&#39;],</span>
+<span class="sd">        ... })</span>
+<span class="sd">        &gt;&gt;&gt; df</span>
+<span class="sd">                  f</span>
+<span class="sd">        0  a b, A B</span>
+<span class="sd">        1  A b, A B</span>
+<span class="sd">        2      None</span>
+<span class="sd">        3       b c</span>
+<span class="sd">        4    b, B A</span>
+<span class="sd">        5   b, a, c</span>
+<span class="sd">        6      A, B</span>
+<span class="sd">        &gt;&gt;&gt; patterns = {</span>
+<span class="sd">        ...     &#39;0&#39;:[&#39;a b&#39;, &#39;A B&#39;, &#39;B A&#39;],</span>
+<span class="sd">        ...     &#39;1&#39;:[&#39;b c&#39;],</span>
+<span class="sd">        ...     &#39;2&#39;:[&#39;a&#39;, &#39;b&#39;]</span>
+<span class="sd">        ... }</span>
+<span class="sd">        &gt;&gt;&gt; thesaurus = Thesaurus(patterns, ignore_case=False, full_match=True)</span>
+<span class="sd">        &gt;&gt;&gt; thesaurus = thesaurus.compile()</span>
+<span class="sd">        &gt;&gt;&gt; df.f.map(lambda x: thesaurus.apply(x, sep=&#39;,&#39;))</span>
+<span class="sd">        0      0,0</span>
+<span class="sd">        1    A b,0</span>
+<span class="sd">        2     None</span>
+<span class="sd">        3        1</span>
+<span class="sd">        4      2,0</span>
+<span class="sd">        5    2,2,c</span>
+<span class="sd">        6      A,B</span>
+<span class="sd">        Name: f, dtype: object</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">z</span><span class="p">)):</span>
+                        <span class="k">return</span> <span class="n">key</span>
+            <span class="k">return</span> <span class="n">z</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># Main body</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">x</span>
+        <span class="k">if</span> <span class="n">sep</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">sep</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Thesaurus.find_and_replace"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.find_and_replace">[docs]</a>    <span class="k">def</span> <span class="nf">find_and_replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Applies a thesaurus to a string, reemplacing the portion of string</span>
+<span class="sd">        matching the current pattern with the key.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame({</span>
+<span class="sd">        ...    &#39;f&#39;: [&#39;AAA&#39;, &#39;BBB&#39;, &#39;ccc AAA&#39;, &#39;ccc BBB&#39;, &#39;ddd EEE&#39;, &#39;ddd FFF&#39;,  None, &#39;zzz&#39;],</span>
+<span class="sd">        ... })</span>
+<span class="sd">        &gt;&gt;&gt; df # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">                 f</span>
+<span class="sd">        0      AAA</span>
+<span class="sd">        1      BBB</span>
+<span class="sd">        2  ccc AAA</span>
+<span class="sd">        3  ccc BBB</span>
+<span class="sd">        4  ddd EEE</span>
+<span class="sd">        5  ddd FFF</span>
+<span class="sd">        6     None</span>
+<span class="sd">        7      zzz</span>
+<span class="sd">        &gt;&gt;&gt; patterns = {&#39;aaa&#39;:[&#39;AAA&#39;, &#39;BBB&#39;, &#39;EEE&#39;, &#39;FFF&#39;],  &#39;1&#39;:[&#39;000&#39;]}</span>
+<span class="sd">        &gt;&gt;&gt; thesaurus = Thesaurus(patterns)</span>
+<span class="sd">        &gt;&gt;&gt; thesaurus = thesaurus.compile()</span>
+<span class="sd">        &gt;&gt;&gt; df.f.map(lambda x: thesaurus.find_and_replace(x))</span>
+<span class="sd">        0        aaa</span>
+<span class="sd">        1        aaa</span>
+<span class="sd">        2    ccc aaa</span>
+<span class="sd">        3    ccc aaa</span>
+<span class="sd">        4    ddd aaa</span>
+<span class="sd">        5    ddd aaa</span>
+<span class="sd">        6       None</span>
+<span class="sd">        7        zzz</span>
+<span class="sd">        Name: f, dtype: object</span>
+
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame({</span>
+<span class="sd">        ...    &#39;f&#39;: [&#39;AAA|ccc AAA&#39;, &#39;BBB ccc|ccc&#39;, &#39;ccc AAA&#39;, &#39;ccc BBB&#39;, &#39;ddd EEE&#39;, &#39;ddd FFF&#39;,  None, &#39;zzz&#39;],</span>
+<span class="sd">        ... })</span>
+<span class="sd">        &gt;&gt;&gt; df # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">                     f</span>
+<span class="sd">        0  AAA|ccc AAA</span>
+<span class="sd">        1  BBB ccc|ccc</span>
+<span class="sd">        2      ccc AAA</span>
+<span class="sd">        3      ccc BBB</span>
+<span class="sd">        4      ddd EEE</span>
+<span class="sd">        5      ddd FFF</span>
+<span class="sd">        6         None</span>
+<span class="sd">        7          zzz</span>
+<span class="sd">        &gt;&gt;&gt; df.f.map(lambda x: thesaurus.find_and_replace(x, sep=&#39;|&#39;))</span>
+<span class="sd">        0    aaa|ccc aaa</span>
+<span class="sd">        1    aaa ccc|ccc</span>
+<span class="sd">        2        ccc aaa</span>
+<span class="sd">        3        ccc aaa</span>
+<span class="sd">        4        ddd aaa</span>
+<span class="sd">        5        ddd aaa</span>
+<span class="sd">        6           None</span>
+<span class="sd">        7            zzz</span>
+<span class="sd">        Name: f, dtype: object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                    <span class="n">w</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">z</span> <span class="o">!=</span> <span class="n">w</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">w</span>
+            <span class="k">return</span> <span class="n">z</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># Main body</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">sep</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">sep</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Thesaurus.merge_keys"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.merge_keys">[docs]</a>    <span class="k">def</span> <span class="nf">merge_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">popkey</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds the strings associated to popkey to key and delete popkey.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">popkey</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">popkey</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">popkey</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">popkey</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Thesaurus.pop_key"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.pop_key">[docs]</a>    <span class="k">def</span> <span class="nf">pop_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Deletes key from thesaurus.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Thesaurus.change_key"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.change_key">[docs]</a>    <span class="k">def</span> <span class="nf">change_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_key</span><span class="p">,</span> <span class="n">new_key</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">new_key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">current_key</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="o">.</span><span class="n">popkey</span><span class="p">(</span><span class="n">current_key</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Thesaurus.to_dict"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="Thesaurus.apply_as_dict"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.apply_as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">apply_as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">sep</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_dict</span><span class="p">[</span><span class="n">z</span><span class="p">]</span> <span class="k">if</span> <span class="n">z</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="n">z</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">sep</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div></div>
+
+
+<span class="c1"># #  def text_nesting(</span>
+<span class="c1"># #     x, search_strategy=&quot;fingerprint&quot;, sep=None, transformer=None, max_distance=None</span>
+<span class="c1"># # ):</span>
+<span class="c1"># #     &quot;&quot;&quot;</span>
+
+<span class="c1"># #     Examples</span>
+<span class="c1"># #     ----------------------------------------------------------------------------------------------</span>
+
+<span class="c1"># #     &gt;&gt;&gt; import pandas as pd</span>
+<span class="c1"># #     &gt;&gt;&gt; df = pd.DataFrame({</span>
+<span class="c1"># #     ...    &#39;f&#39;: [&#39;a&#39;,</span>
+<span class="c1"># #     ...          &#39;a b&#39;,</span>
+<span class="c1"># #     ...          &#39;a b c&#39;,</span>
+<span class="c1"># #     ...          &#39;a b c d&#39;,</span>
+<span class="c1"># #     ...          &#39;a e&#39;,</span>
+<span class="c1"># #     ...          &#39;a f&#39;,</span>
+<span class="c1"># #     ...          &#39;a b e&#39;,</span>
+<span class="c1"># #     ...          &#39;a b e f&#39;,</span>
+<span class="c1"># #     ...          &#39;a b e f g&#39;],</span>
+<span class="c1"># #     ... })</span>
+<span class="c1"># #     &gt;&gt;&gt; df # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="c1"># #                f</span>
+<span class="c1"># #     0          a</span>
+<span class="c1"># #     1        a b</span>
+<span class="c1"># #     2      a b c</span>
+<span class="c1"># #     3    a b c d</span>
+<span class="c1"># #     4        a e</span>
+<span class="c1"># #     5        a f</span>
+<span class="c1"># #     6      a b e</span>
+<span class="c1"># #     7    a b e f</span>
+<span class="c1"># #     8  a b e f g</span>
+
+<span class="c1"># #     &gt;&gt;&gt; text_nesting(df.f, sep=&#39;,&#39;) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="c1"># #     {</span>
+<span class="c1"># #       &quot;a&quot;: [</span>
+<span class="c1"># #         &quot;a&quot;,</span>
+<span class="c1"># #         &quot;a e&quot;,</span>
+<span class="c1"># #         &quot;a f&quot;</span>
+<span class="c1"># #       ],</span>
+<span class="c1"># #       &quot;a b&quot;: [</span>
+<span class="c1"># #         &quot;a b&quot;,</span>
+<span class="c1"># #         &quot;a b e&quot;</span>
+<span class="c1"># #       ],</span>
+<span class="c1"># #       &quot;a b c&quot;: [</span>
+<span class="c1"># #         &quot;a b c&quot;,</span>
+<span class="c1"># #         &quot;a b c d&quot;</span>
+<span class="c1"># #       ],</span>
+<span class="c1"># #       &quot;a b e f&quot;: [</span>
+<span class="c1"># #         &quot;a b e f&quot;,</span>
+<span class="c1"># #         &quot;a b e f g&quot;</span>
+<span class="c1"># #       ]</span>
+<span class="c1"># #     }</span>
+<span class="c1"># #     ignore_case=False, full_match=True, use_re=False, compiled=False</span>
+
+<span class="c1"># #     &gt;&gt;&gt; df = pd.DataFrame({</span>
+<span class="c1"># #     ...    &#39;f&#39;: [&#39;neural networks; Artificial Neural Networks&#39;]</span>
+<span class="c1"># #     ... })</span>
+<span class="c1"># #     &gt;&gt;&gt; df # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="c1"># #                                                  f</span>
+<span class="c1"># #     0  neural networks; Artificial Neural Networks</span>
+<span class="c1"># #     &gt;&gt;&gt; text_nesting(df.f, sep=&#39;;&#39;, max_distance=1) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="c1"># #     {</span>
+<span class="c1"># #       &quot;neural networks&quot;: [</span>
+<span class="c1"># #         &quot;Artificial Neural Networks&quot;,</span>
+<span class="c1"># #         &quot;neural networks&quot;</span>
+<span class="c1"># #       ]</span>
+<span class="c1"># #     }</span>
+<span class="c1"># #     ignore_case=False, full_match=True, use_re=False, compiled=False</span>
+
+<span class="c1"># #     &quot;&quot;&quot;</span>
+
+<span class="c1"># #     x = x.dropna()</span>
+
+<span class="c1"># #     if sep is not None:</span>
+<span class="c1"># #         x = pd.Series([z.strip() for y in x for z in y.split(sep)])</span>
+
+<span class="c1"># #     result = {}</span>
+<span class="c1"># #     selected = {text: False for text in x.tolist()}</span>
+
+<span class="c1"># #     max_text_len = max([len(text) for text in x])</span>
+<span class="c1"># #     sorted_x = []</span>
+<span class="c1"># #     for text_len in range(max_text_len, -1, -1):</span>
+<span class="c1"># #         texts = x[[True if len(w) == text_len else False for w in x]]</span>
+<span class="c1"># #         texts = sorted(texts)</span>
+<span class="c1"># #         sorted_x += texts</span>
+<span class="c1"># #     x = sorted_x</span>
+
+<span class="c1"># #     # for pattern in x:</span>
+<span class="c1"># #     for iter in tqdm(range(len(x))):</span>
+
+<span class="c1"># #         pattern = x[iter]</span>
+
+<span class="c1"># #         if pattern == &quot;&quot;:</span>
+<span class="c1"># #             continue</span>
+
+<span class="c1"># #         if selected[pattern] is True:</span>
+<span class="c1"># #             continue</span>
+
+<span class="c1"># #         nested_texts = [</span>
+<span class="c1"># #             text</span>
+<span class="c1"># #             for text in x</span>
+<span class="c1"># #             if selected[text] is False and steamming_all(pattern, text)</span>
+<span class="c1"># #         ]</span>
+
+<span class="c1"># #         if max_distance is not None:</span>
+<span class="c1"># #             nested_texts = [</span>
+<span class="c1"># #                 z</span>
+<span class="c1"># #                 for z in nested_texts</span>
+<span class="c1"># #                 if abs(len(pattern.split()) - len(z.split())) &lt;= max_distance</span>
+<span class="c1"># #             ]</span>
+
+<span class="c1"># #         if len(nested_texts) &gt; 1:</span>
+<span class="c1"># #             nested_texts = sorted(list(set(nested_texts)))</span>
+
+<span class="c1"># #         if len(nested_texts) &gt; 1:</span>
+
+<span class="c1"># #             if transformer is not None:</span>
+<span class="c1"># #                 pattern = transformer(pattern)</span>
+<span class="c1"># #             if pattern in result.keys():</span>
+<span class="c1"># #                 result[pattern] += nested_texts</span>
+<span class="c1"># #             else:</span>
+<span class="c1"># #                 result[pattern] = nested_texts</span>
+<span class="c1"># #             for txt in nested_texts:</span>
+<span class="c1"># #                 selected[txt] = True</span>
+
+<span class="c1"># #     return Thesaurus(result, ignore_case=False, full_match=True, use_re=False)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1">#</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

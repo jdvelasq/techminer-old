@@ -12,9 +12,11 @@ Functions in this module
 
 import json
 import re
+import string
 from os.path import dirname, join
 
 import pandas as pd
+from nltk.stem import PorterStemmer, SnowballStemmer
 
 
 def extract_country(x):
@@ -140,146 +142,140 @@ def extract_institution(x):
     return institutions
 
 
-# import string
+def one_gram(x):
+    """Computes the 1-gram representation of string x.
+
+    See https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth
+
+    Args:
+        x (string): string to convert.
+
+    Returns:
+        string.
 
 
-# from nltk.stem import PorterStemmer, SnowballStemmer
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> one_gram('neural net')
+    'aelnrtu'
 
 
-# def one_gram(x):
-#     """Computes the 1-gram representation of string x.
-
-#     See https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth
-
-#     Args:
-#         x (string): string to convert.
-
-#     Returns:
-#         string.
-
-
-#     Examples
-#     ----------------------------------------------------------------------------------------------
-
-#     >>> one_gram('neural net')
-#     'aelnrtu'
+    """
+    if x is None:
+        return None
+    x = x.strip().lower()
+    x = re.sub("-", " ", x)
+    x = re.sub("[" + string.punctuation + "]", "", x)
+    x = remove_accents(x)
+    x = x.replace(" ", "")
+    x = sorted(list(set(x)))
+    return "".join(x)
 
 
-#     """
-#     if x is None:
-#         return None
-#     x = x.strip().lower()
-#     x = re.sub("-", " ", x)
-#     x = re.sub("[" + string.punctuation + "]", "", x)
-#     x = remove_accents(x)
-#     x = x.replace(" ", "")
-#     x = sorted(list(set(x)))
-#     return "".join(x)
+def two_gram(x):
+    """Computes the 2-gram representation of string x.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> two_gram('neural net')
+    'aleteulnneraur'
 
 
-# def two_gram(x):
-#     """Computes the 2-gram representation of string x.
-
-#     Examples
-#     ----------------------------------------------------------------------------------------------
-
-#     >>> two_gram('neural net')
-#     'aleteulnneraur'
-
-
-#     """
-#     if x is None:
-#         return None
-#     x = x.strip().lower()
-#     x = re.sub("-", " ", x)
-#     x = re.sub("[" + string.punctuation + "]", "", x)
-#     x = remove_accents(x)
-#     x = x.replace(" ", "")
-#     x = list(x)
-#     x = ["".join([x[i], x[i + 1]]) for i in range(len(x) - 1)]
-#     x = sorted(list(set(x)))
-#     return "".join(x)
+    """
+    if x is None:
+        return None
+    x = x.strip().lower()
+    x = re.sub("-", " ", x)
+    x = re.sub("[" + string.punctuation + "]", "", x)
+    x = remove_accents(x)
+    x = x.replace(" ", "")
+    x = list(x)
+    x = ["".join([x[i], x[i + 1]]) for i in range(len(x) - 1)]
+    x = sorted(list(set(x)))
+    return "".join(x)
 
 
-# def stemmer_porter(x):
-#     """Computes the stemmer transformation of string x.
+def stemmer_porter(x):
+    """Computes the stemmer transformation of string x.
 
-#     Examples
-#     ----------------------------------------------------------------------------------------------
+    Examples
+    ----------------------------------------------------------------------------------------------
 
-#     >>> stemmer_porter('neural net')
-#     'net neural'
-
-
-#     """
-#     if x is None:
-#         return None
-#     x = x.strip().lower()
-#     x = re.sub("-", " ", x)
-#     x = re.sub("[" + string.punctuation + "]", "", x)
-#     x = remove_accents(x)
-#     s = PorterStemmer()
-#     x = sorted(set([s.stem(w) for w in x.split()]))
-#     return " ".join(x)
+    >>> stemmer_porter('neural net')
+    'net neural'
 
 
-# def stemmer_snowball(x):
-#     """Computes the stemmer transformation of string x.
-
-#     Examples
-#     ----------------------------------------------------------------------------------------------
-
-#     >>> stemmer_snowball('neural net')
-#     'net neural'
-
-
-#     """
-#     if x is None:
-#         return None
-#     x = x.strip().lower()
-#     x = re.sub("-", " ", x)
-#     x = re.sub("[" + string.punctuation + "]", "", x)
-#     x = remove_accents(x)
-#     s = SnowballStemmer("english")
-#     x = sorted(set([s.stem(w) for w in x.split()]))
-#     return " ".join(x)
+    """
+    if x is None:
+        return None
+    x = x.strip().lower()
+    x = re.sub("-", " ", x)
+    x = re.sub("[" + string.punctuation + "]", "", x)
+    x = remove_accents(x)
+    s = PorterStemmer()
+    x = sorted(set([s.stem(w) for w in x.split()]))
+    return " ".join(x)
 
 
-# def fingerprint(x):
-#     """Computes 'fingerprint' representation of string x.
+def stemmer_snowball(x):
+    """Computes the stemmer transformation of string x.
 
-#     See https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth
+    Examples
+    ----------------------------------------------------------------------------------------------
 
-#     Args:
-#         x (string): string to convert.
-
-#     Returns:
-#         string.
-
-#     Examples
-#     ----------------------------------------------------------------------------------------------
-
-#     >>> fingerprint('a A b')
-#     'a b'
-#     >>> fingerprint('b a a')
-#     'a b'
-#     >>> fingerprint(None) is None
-#     True
-#     >>> fingerprint('b c')
-#     'b c'
-#     >>> fingerprint(' c b ')
-#     'b c'
+    >>> stemmer_snowball('neural net')
+    'net neural'
 
 
-#     """
-#     if x is None:
-#         return None
-#     x = x.strip().lower()
-#     x = re.sub("-", " ", x)
-#     x = re.sub("[" + string.punctuation + "]", "", x)
-#     x = remove_accents(x)
-#     x = sorted(set(w for w in x.split()))
-#     return " ".join(x)
+    """
+    if x is None:
+        return None
+    x = x.strip().lower()
+    x = re.sub("-", " ", x)
+    x = re.sub("[" + string.punctuation + "]", "", x)
+    x = remove_accents(x)
+    s = SnowballStemmer("english")
+    x = sorted(set([s.stem(w) for w in x.split()]))
+    return " ".join(x)
+
+
+def fingerprint(x):
+    """Computes 'fingerprint' representation of string x.
+
+    See https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth
+
+    Args:
+        x (string): string to convert.
+
+    Returns:
+        string.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> fingerprint('a A b')
+    'a b'
+    >>> fingerprint('b a a')
+    'a b'
+    >>> fingerprint(None) is None
+    True
+    >>> fingerprint('b c')
+    'b c'
+    >>> fingerprint(' c b ')
+    'b c'
+
+
+    """
+    if x is None:
+        return None
+    x = x.strip().lower()
+    x = re.sub("-", " ", x)
+    x = re.sub("[" + string.punctuation + "]", "", x)
+    x = remove_accents(x)
+    x = sorted(set(w for w in x.split()))
+    return " ".join(x)
 
 
 # # def find_string(self, x):

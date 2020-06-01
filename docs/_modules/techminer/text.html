@@ -162,9 +162,11 @@
 
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">string</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">join</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">nltk.stem</span> <span class="kn">import</span> <span class="n">PorterStemmer</span><span class="p">,</span> <span class="n">SnowballStemmer</span>
 
 
 <div class="viewcode-block" id="extract_country"><a class="viewcode-back" href="../../text.html#techminer.text.extract_country">[docs]</a><span class="k">def</span> <span class="nf">extract_country</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
@@ -290,146 +292,140 @@
     <span class="k">return</span> <span class="n">institutions</span></div>
 
 
-<span class="c1"># import string</span>
+<div class="viewcode-block" id="one_gram"><a class="viewcode-back" href="../../text.html#techminer.text.one_gram">[docs]</a><span class="k">def</span> <span class="nf">one_gram</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the 1-gram representation of string x.</span>
+
+<span class="sd">    See https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (string): string to convert.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        string.</span>
 
 
-<span class="c1"># from nltk.stem import PorterStemmer, SnowballStemmer</span>
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; one_gram(&#39;neural net&#39;)</span>
+<span class="sd">    &#39;aelnrtu&#39;</span>
 
 
-<span class="c1"># def one_gram(x):</span>
-<span class="c1">#     &quot;&quot;&quot;Computes the 1-gram representation of string x.</span>
-
-<span class="c1">#     See https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth</span>
-
-<span class="c1">#     Args:</span>
-<span class="c1">#         x (string): string to convert.</span>
-
-<span class="c1">#     Returns:</span>
-<span class="c1">#         string.</span>
-
-
-<span class="c1">#     Examples</span>
-<span class="c1">#     ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1">#     &gt;&gt;&gt; one_gram(&#39;neural net&#39;)</span>
-<span class="c1">#     &#39;aelnrtu&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">punctuation</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">remove_accents</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
 
 
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     if x is None:</span>
-<span class="c1">#         return None</span>
-<span class="c1">#     x = x.strip().lower()</span>
-<span class="c1">#     x = re.sub(&quot;-&quot;, &quot; &quot;, x)</span>
-<span class="c1">#     x = re.sub(&quot;[&quot; + string.punctuation + &quot;]&quot;, &quot;&quot;, x)</span>
-<span class="c1">#     x = remove_accents(x)</span>
-<span class="c1">#     x = x.replace(&quot; &quot;, &quot;&quot;)</span>
-<span class="c1">#     x = sorted(list(set(x)))</span>
-<span class="c1">#     return &quot;&quot;.join(x)</span>
+<div class="viewcode-block" id="two_gram"><a class="viewcode-back" href="../../text.html#techminer.text.two_gram">[docs]</a><span class="k">def</span> <span class="nf">two_gram</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the 2-gram representation of string x.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; two_gram(&#39;neural net&#39;)</span>
+<span class="sd">    &#39;aleteulnneraur&#39;</span>
 
 
-<span class="c1"># def two_gram(x):</span>
-<span class="c1">#     &quot;&quot;&quot;Computes the 2-gram representation of string x.</span>
-
-<span class="c1">#     Examples</span>
-<span class="c1">#     ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1">#     &gt;&gt;&gt; two_gram(&#39;neural net&#39;)</span>
-<span class="c1">#     &#39;aleteulnneraur&#39;</span>
-
-
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     if x is None:</span>
-<span class="c1">#         return None</span>
-<span class="c1">#     x = x.strip().lower()</span>
-<span class="c1">#     x = re.sub(&quot;-&quot;, &quot; &quot;, x)</span>
-<span class="c1">#     x = re.sub(&quot;[&quot; + string.punctuation + &quot;]&quot;, &quot;&quot;, x)</span>
-<span class="c1">#     x = remove_accents(x)</span>
-<span class="c1">#     x = x.replace(&quot; &quot;, &quot;&quot;)</span>
-<span class="c1">#     x = list(x)</span>
-<span class="c1">#     x = [&quot;&quot;.join([x[i], x[i + 1]]) for i in range(len(x) - 1)]</span>
-<span class="c1">#     x = sorted(list(set(x)))</span>
-<span class="c1">#     return &quot;&quot;.join(x)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">punctuation</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">remove_accents</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
 
 
-<span class="c1"># def stemmer_porter(x):</span>
-<span class="c1">#     &quot;&quot;&quot;Computes the stemmer transformation of string x.</span>
+<div class="viewcode-block" id="stemmer_porter"><a class="viewcode-back" href="../../text.html#techminer.text.stemmer_porter">[docs]</a><span class="k">def</span> <span class="nf">stemmer_porter</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the stemmer transformation of string x.</span>
 
-<span class="c1">#     Examples</span>
-<span class="c1">#     ----------------------------------------------------------------------------------------------</span>
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
 
-<span class="c1">#     &gt;&gt;&gt; stemmer_porter(&#39;neural net&#39;)</span>
-<span class="c1">#     &#39;net neural&#39;</span>
-
-
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     if x is None:</span>
-<span class="c1">#         return None</span>
-<span class="c1">#     x = x.strip().lower()</span>
-<span class="c1">#     x = re.sub(&quot;-&quot;, &quot; &quot;, x)</span>
-<span class="c1">#     x = re.sub(&quot;[&quot; + string.punctuation + &quot;]&quot;, &quot;&quot;, x)</span>
-<span class="c1">#     x = remove_accents(x)</span>
-<span class="c1">#     s = PorterStemmer()</span>
-<span class="c1">#     x = sorted(set([s.stem(w) for w in x.split()]))</span>
-<span class="c1">#     return &quot; &quot;.join(x)</span>
+<span class="sd">    &gt;&gt;&gt; stemmer_porter(&#39;neural net&#39;)</span>
+<span class="sd">    &#39;net neural&#39;</span>
 
 
-<span class="c1"># def stemmer_snowball(x):</span>
-<span class="c1">#     &quot;&quot;&quot;Computes the stemmer transformation of string x.</span>
-
-<span class="c1">#     Examples</span>
-<span class="c1">#     ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1">#     &gt;&gt;&gt; stemmer_snowball(&#39;neural net&#39;)</span>
-<span class="c1">#     &#39;net neural&#39;</span>
-
-
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     if x is None:</span>
-<span class="c1">#         return None</span>
-<span class="c1">#     x = x.strip().lower()</span>
-<span class="c1">#     x = re.sub(&quot;-&quot;, &quot; &quot;, x)</span>
-<span class="c1">#     x = re.sub(&quot;[&quot; + string.punctuation + &quot;]&quot;, &quot;&quot;, x)</span>
-<span class="c1">#     x = remove_accents(x)</span>
-<span class="c1">#     s = SnowballStemmer(&quot;english&quot;)</span>
-<span class="c1">#     x = sorted(set([s.stem(w) for w in x.split()]))</span>
-<span class="c1">#     return &quot; &quot;.join(x)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">punctuation</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">remove_accents</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">PorterStemmer</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">()]))</span>
+    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
 
 
-<span class="c1"># def fingerprint(x):</span>
-<span class="c1">#     &quot;&quot;&quot;Computes &#39;fingerprint&#39; representation of string x.</span>
+<div class="viewcode-block" id="stemmer_snowball"><a class="viewcode-back" href="../../text.html#techminer.text.stemmer_snowball">[docs]</a><span class="k">def</span> <span class="nf">stemmer_snowball</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the stemmer transformation of string x.</span>
 
-<span class="c1">#     See https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth</span>
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
 
-<span class="c1">#     Args:</span>
-<span class="c1">#         x (string): string to convert.</span>
-
-<span class="c1">#     Returns:</span>
-<span class="c1">#         string.</span>
-
-<span class="c1">#     Examples</span>
-<span class="c1">#     ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1">#     &gt;&gt;&gt; fingerprint(&#39;a A b&#39;)</span>
-<span class="c1">#     &#39;a b&#39;</span>
-<span class="c1">#     &gt;&gt;&gt; fingerprint(&#39;b a a&#39;)</span>
-<span class="c1">#     &#39;a b&#39;</span>
-<span class="c1">#     &gt;&gt;&gt; fingerprint(None) is None</span>
-<span class="c1">#     True</span>
-<span class="c1">#     &gt;&gt;&gt; fingerprint(&#39;b c&#39;)</span>
-<span class="c1">#     &#39;b c&#39;</span>
-<span class="c1">#     &gt;&gt;&gt; fingerprint(&#39; c b &#39;)</span>
-<span class="c1">#     &#39;b c&#39;</span>
+<span class="sd">    &gt;&gt;&gt; stemmer_snowball(&#39;neural net&#39;)</span>
+<span class="sd">    &#39;net neural&#39;</span>
 
 
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     if x is None:</span>
-<span class="c1">#         return None</span>
-<span class="c1">#     x = x.strip().lower()</span>
-<span class="c1">#     x = re.sub(&quot;-&quot;, &quot; &quot;, x)</span>
-<span class="c1">#     x = re.sub(&quot;[&quot; + string.punctuation + &quot;]&quot;, &quot;&quot;, x)</span>
-<span class="c1">#     x = remove_accents(x)</span>
-<span class="c1">#     x = sorted(set(w for w in x.split()))</span>
-<span class="c1">#     return &quot; &quot;.join(x)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">punctuation</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">remove_accents</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">SnowballStemmer</span><span class="p">(</span><span class="s2">&quot;english&quot;</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">()]))</span>
+    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="fingerprint"><a class="viewcode-back" href="../../text.html#techminer.text.fingerprint">[docs]</a><span class="k">def</span> <span class="nf">fingerprint</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes &#39;fingerprint&#39; representation of string x.</span>
+
+<span class="sd">    See https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (string): string to convert.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        string.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; fingerprint(&#39;a A b&#39;)</span>
+<span class="sd">    &#39;a b&#39;</span>
+<span class="sd">    &gt;&gt;&gt; fingerprint(&#39;b a a&#39;)</span>
+<span class="sd">    &#39;a b&#39;</span>
+<span class="sd">    &gt;&gt;&gt; fingerprint(None) is None</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; fingerprint(&#39;b c&#39;)</span>
+<span class="sd">    &#39;b c&#39;</span>
+<span class="sd">    &gt;&gt;&gt; fingerprint(&#39; c b &#39;)</span>
+<span class="sd">    &#39;b c&#39;</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">punctuation</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">remove_accents</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span>
+    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
 
 
 <span class="c1"># # def find_string(self, x):</span>

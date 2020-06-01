@@ -157,6 +157,7 @@
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#K"><strong>K</strong></a>
@@ -175,8 +176,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="keywords.html#techminer.keywords.Keywords.add_keywords">add_keywords() (techminer.keywords.Keywords method)</a>
 </li>
+      <li><a href="refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.apply">apply() (techminer.thesaurus.Thesaurus method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.apply_as_dict">apply_as_dict() (techminer.thesaurus.Thesaurus method)</a>
+</li>
       <li><a href="analytics.html#techminer.analytics.autocorr_map">autocorr_map() (in module techminer.analytics)</a>
 </li>
   </ul></td>
@@ -197,6 +202,8 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.change_key">change_key() (techminer.thesaurus.Thesaurus method)</a>
+</li>
       <li><a href="analytics.html#techminer.analytics.citations_by_term">citations_by_term() (in module techminer.analytics)</a>
 </li>
       <li><a href="analytics.html#techminer.analytics.citations_by_term_per_year">citations_by_term_per_year() (in module techminer.analytics)</a>
@@ -208,7 +215,11 @@
       <li><a href="dashboards.html#techminer.dashboards.co_occurrence_analysis">co_occurrence_analysis() (in module techminer.dashboards)</a>
 </li>
       <li><a href="keywords.html#techminer.keywords.Keywords.compile">compile() (techminer.keywords.Keywords method)</a>
+
+      <ul>
+        <li><a href="refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.compile">(techminer.thesaurus.Thesaurus method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="analytics.html#techminer.analytics.compute_tfm">compute_tfm() (in module techminer.analytics)</a>
@@ -266,6 +277,18 @@
   </ul></td>
 </tr></table>
 
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.find_and_replace">find_and_replace() (techminer.thesaurus.Thesaurus method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="text.html#techminer.text.fingerprint">fingerprint() (in module techminer.text)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -313,6 +336,8 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.merge_keys">merge_keys() (techminer.thesaurus.Thesaurus method)</a>
+</li>
       <li>
     module
 
@@ -327,6 +352,8 @@
 </li>
         <li><a href="text.html#module-techminer.text">techminer.text</a>
 </li>
+        <li><a href="refactoring/thesaurus.html#module-techminer.thesaurus">techminer.thesaurus</a>
+</li>
       </ul></li>
   </ul></td>
 </tr></table>
@@ -337,12 +364,20 @@
       <li><a href="analytics.html#techminer.analytics.occurrence">occurrence() (in module techminer.analytics)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="text.html#techminer.text.one_gram">one_gram() (in module techminer.text)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="plots.html#techminer.plots.pie">pie() (in module techminer.plots)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.pop_key">pop_key() (techminer.thesaurus.Thesaurus method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -364,20 +399,24 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="analytics.html#techminer.analytics.self_citation">self_citation() (in module techminer.analytics)</a>
 </li>
+      <li><a href="text.html#techminer.text.stemmer_porter">stemmer_porter() (in module techminer.text)</a>
+</li>
+      <li><a href="text.html#techminer.text.stemmer_snowball">stemmer_snowball() (in module techminer.text)</a>
+</li>
       <li><a href="analytics.html#techminer.analytics.summary_by_term">summary_by_term() (in module techminer.analytics)</a>
 
       <ul>
         <li><a href="dashboards.html#techminer.dashboards.summary_by_term">(in module techminer.dashboards)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="analytics.html#techminer.analytics.summary_by_term_per_year">summary_by_term_per_year() (in module techminer.analytics)</a>
 
       <ul>
         <li><a href="dashboards.html#techminer.dashboards.summary_by_term_per_year">(in module techminer.dashboards)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="analytics.html#techminer.analytics.summary_by_year">summary_by_year() (in module techminer.analytics)</a>
 
       <ul>
@@ -415,8 +454,6 @@
         <li><a href="keywords.html#module-techminer.keywords">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     techminer.plots
 
@@ -431,9 +468,28 @@
         <li><a href="text.html#module-techminer.text">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    techminer.thesaurus
+
+      <ul>
+        <li><a href="refactoring/thesaurus.html#module-techminer.thesaurus">module</a>
+</li>
+      </ul></li>
+      <li><a href="refactoring/thesaurus.html#techminer.thesaurus.text_clustering">text_clustering() (in module techminer.thesaurus)</a>
+</li>
+      <li><a href="refactoring/thesaurus.html#techminer.thesaurus.Thesaurus">Thesaurus (class in techminer.thesaurus)</a>
+</li>
+      <li><a href="refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.thesaurus">thesaurus() (techminer.thesaurus.Thesaurus property)</a>
+</li>
+      <li><a href="refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.to_dict">to_dict() (techminer.thesaurus.Thesaurus method)</a>
+</li>
       <li><a href="keywords.html#techminer.keywords.Keywords.tolist">tolist() (techminer.keywords.Keywords method)</a>
 </li>
       <li><a href="keywords.html#techminer.keywords.Keywords.transform">transform() (techminer.keywords.Keywords method)</a>
+</li>
+      <li><a href="text.html#techminer.text.two_gram">two_gram() (in module techminer.text)</a>
 </li>
   </ul></td>
 </tr></table>
