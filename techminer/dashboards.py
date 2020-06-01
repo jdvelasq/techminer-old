@@ -274,7 +274,6 @@ def summary_by_term_per_year(x):
         else:
             top = tc.citations_by_term(x, term).head(top_n)[term].tolist()
             matrix = tc.citations_by_term_per_year(x, term, as_matrix=True)
-        print(matrix.columns)
         matrix = matrix[top]
         output.clear_output()
         with output:
@@ -334,6 +333,126 @@ def summary_by_term_per_year(x):
 
     return AppLayout(
         header=widgets.HTML(value=html_title("Summary by Term per Year")),
+        left_sidebar=left_box,
+        center=right_box,
+        right_sidebar=None,
+        pane_widths=[2, 5, 0],
+        pane_heights=["85px", 5, 0],
+    )
+
+
+def co_occurrence_analysis(x):
+    def compute_by_term(
+        rows, columns, analysis_type, row_order, column_order, cmap, minmax
+    ):
+        #
+        if analysis_type == "Frequency":
+            matrix, limit_value = tc.co_occurrence(
+                x,
+                rows,
+                columns,
+                as_matrix=True,
+                minmax=(selection_range.value[0], selection_range.value[1]),
+                keywords=None,
+                retmaxval=True,
+            )
+        else:
+            matrix, limit_value = tc.co_citation(
+                x,
+                rows,
+                columns,
+                as_matrix=True,
+                minmax=(selection_range.value[0], selection_range.value[1]),
+                keywords=None,
+                retmaxval=True,
+            )
+        #
+        values = selection_range.value
+        if values[1] > limit_value or selection_range.max < limit_value:
+            selection_range.max = limit_value
+            if values[0] > limit_value:
+                selection_range.min = 0
+            # selection_range.value = [0, limit_value]
+        #
+        output.clear_output()
+        with output:
+            if len(matrix.columns) < 21 and len(matrix.index) < 21:
+                display(matrix.style.background_gradient(cmap=cmap))
+            else:
+                display(matrix)  # .style.background_gradient(cmap=cmap)
+
+    #
+    PANEL_HEIGHT = "570px"
+    #
+    rows = widgets.Select(
+        options=[z for z in COLUMNS if z in x.columns],
+        ensure_option=True,
+        disabled=False,
+    )
+    columns = widgets.Select(
+        options=[z for z in COLUMNS if z in x.columns],
+        ensure_option=True,
+        disabled=False,
+    )
+    analysis_type = widgets.Dropdown(
+        options=["Frequency", "Citation"], value="Frequency", disable=False,
+    )
+    selection_range = widgets.IntRangeSlider(
+        value=[0, 1000],
+        min=0,
+        max=1000,
+        step=1,
+        disabled=False,
+        continuous_update=False,
+        orientation="horizontal",
+        readout=True,
+        readout_format="d",
+    )
+    row_order = widgets.Dropdown(
+        options=["Alphabetic asc.", "Alphabetic desc.", "F/C asc.", "F/C desc."],
+        value="F/C desc.",
+        disable=False,
+    )
+    column_order = widgets.Dropdown(
+        options=["Alphabetic asc.", "Alphabetic desc.", "F/C asc.", "F/C desc."],
+        value="F/C desc.",
+        disable=False,
+    )
+    cmap = widgets.Dropdown(options=COLORMAPS, disable=False,)
+    #
+    output = widgets.Output()
+    with output:
+        display(
+            widgets.interactive_output(
+                compute_by_term,
+                {
+                    "rows": rows,
+                    "columns": columns,
+                    "analysis_type": analysis_type,
+                    "row_order": row_order,
+                    "column_order": column_order,
+                    "cmap": cmap,
+                    "minmax": selection_range,
+                },
+            )
+        )
+    #
+    left_box = widgets.VBox(
+        [
+            widgets.VBox([widgets.Label(value="Rows:"), rows]),
+            widgets.VBox([widgets.Label(value="Columns:"), columns]),
+            widgets.VBox([widgets.Label(value="Analysis type:"), analysis_type]),
+            widgets.VBox([widgets.Label(value="Range:"), selection_range]),
+            widgets.VBox([widgets.Label(value="Row order:"), row_order]),
+            widgets.VBox([widgets.Label(value="Column order:"), column_order]),
+            widgets.VBox([widgets.Label(value="Colormap:"), cmap]),
+        ],
+        layout=Layout(height=PANEL_HEIGHT, border="1px solid gray"),
+    )
+    right_box = widgets.VBox([output])
+
+    return AppLayout(
+        header=widgets.HTML(value=html_title("Co-occurrence analysis")),
         left_sidebar=left_box,
         center=right_box,
         right_sidebar=None,

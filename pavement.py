@@ -29,7 +29,7 @@ def pypi():
 @task
 def local():
     """local install"""
-    sh("pip3 uninstall techminer")
+    sh("pip3 uninstall --yes techminer")
     sh("python3 setup.py install develop")
 
 

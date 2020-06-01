@@ -1039,6 +1039,727 @@ def citations_by_term_per_year(x, column, as_matrix=False, minmax=None, keywords
     return result
 
 
+def summary_occurrence(x, column, keywords=None):
+    """Summarize occurrence and citations by terms in a column of a dataframe.
+
+    Args:
+        column (str): the column to explode.
+        sep (str): Character used as internal separator for the elements in the column.
+        keywords (Keywords): filter the result using the specified Keywords object.
+
+    Returns:
+        DataFrame.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = [ 'A', 'A', 'A;B', 'B', 'A;B;C', 'D', 'B;D']
+    >>> df = pd.DataFrame(
+    ...    {
+    ...       'Authors': x,
+    ...       'Cited by': list(range(len(x))),
+    ...       'ID': list(range(len(x))),
+    ...    }
+    ... )
+    >>> df
+      Authors  Cited by  ID
+    0       A         0   0
+    1       A         1   1
+    2     A;B         2   2
+    3       B         3   3
+    4   A;B;C         4   4
+    5       D         5   5
+    6     B;D         6   6
+
+    >>> summary_occurrence(df, column='Authors')
+       Authors (IDX) Authors (COL)  Num Documents  Cited by            ID
+    0              A             A              4         7  [0, 1, 2, 4]
+    1              A             B              2         6        [2, 4]
+    2              A             C              1         4           [4]
+    3              B             A              2         6        [2, 4]
+    4              B             B              4        15  [2, 3, 4, 6]
+    5              B             C              1         4           [4]
+    6              B             D              1         6           [6]
+    7              C             A              1         4           [4]
+    8              C             B              1         4           [4]
+    9              C             C              1         4           [4]
+    10             D             B              1         6           [6]
+    11             D             D              2        11        [5, 6]
+
+    >>> keywords = Keywords(['A', 'B'], ignore_case=False)
+    >>> keywords = keywords.compile()
+    >>> summary_occurrence(df, 'Authors', keywords=keywords)
+      Authors (IDX) Authors (COL)  Num Documents  Cited by            ID
+    0             A             A              4         7  [0, 1, 2, 4]
+    1             A             B              2         6        [2, 4]
+    2             B             A              2         6        [2, 4]
+    3             B             B              4        15  [2, 3, 4, 6]
+
+
+    """
+
+    def generate_pairs(w):
+        w = [x.strip() for x in w.split(sep)]
+        result = []
+        for idx0 in range(len(w)):
+            for idx1 in range(len(w)):
+                result.append((w[idx0], w[idx1]))
+        return result
+
+    sep = ";" if column in MULTIVALUED_COLS else None
+
+    data = x.copy()
+    data = data[[column, "Cited by", "ID"]]
+    data = data.dropna()
+    data["count"] = 1
+    data["pairs"] = data[column].map(lambda x: generate_pairs(x))
+    data = data[["pairs", "count", "Cited by", "ID"]]
+    data = data.explode("pairs")
+    result = (
+        data.groupby("pairs", as_index=False)
+        .agg({"Cited by": np.sum, "count": np.sum, "ID": list})
+        .rename(columns={"count": "Num Documents"})
+    )
+    result["Cited by"] = result["Cited by"].map(int)
+    result[column + " (IDX)"] = result["pairs"].map(lambda x: x[0])
+    result[column + " (COL)"] = result["pairs"].map(lambda x: x[1])
+    result.pop("pairs")
+    result = result[
+        [column + " (IDX)", column + " (COL)", "Num Documents", "Cited by", "ID"]
+    ]
+    if keywords is not None:
+        if keywords._patterns is None:
+            keywords = keywords.compile()
+        result = result[result[column + " (IDX)"].map(lambda w: w in keywords)]
+        result = result[result[column + " (COL)"].map(lambda w: w in keywords)]
+    result = result.sort_values(
+        [column + " (IDX)", column + " (COL)"], ignore_index=True,
+    )
+    return result
+
+
+def occurrence(x, column, as_matrix=False, minmax=None, keywords=None, retmaxval=False):
+    """Computes the occurrence between the terms in a column.
+
+    Args:
+        column (str): the column to explode.
+        sep (str): Character used as internal separator for the elements in the column.
+        as_matrix (bool): Results are returned as a matrix.
+        minmax (pair(number,number)): filter values by >=min,<=max.
+        keywords (list, Keywords): filter the result using the specified Keywords object.
+
+    Returns:
+        DataFrame.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = [ 'A', 'A', 'A;B', 'B', 'A;B;C', 'D', 'B;D']
+    >>> df = pd.DataFrame(
+    ...    {
+    ...       'Authors': x,
+    ...       'Cited by': list(range(len(x))),
+    ...       'ID': list(range(len(x))),
+    ...    }
+    ... )
+    >>> df
+      Authors  Cited by  ID
+    0       A         0   0
+    1       A         1   1
+    2     A;B         2   2
+    3       B         3   3
+    4   A;B;C         4   4
+    5       D         5   5
+    6     B;D         6   6
+
+    >>> occurrence(df, column='Authors')
+       Authors (IDX) Authors (COL)  Num Documents            ID
+    0              A             A              4  [0, 1, 2, 4]
+    1              B             B              4  [2, 3, 4, 6]
+    2              A             B              2        [2, 4]
+    3              B             A              2        [2, 4]
+    4              D             D              2        [5, 6]
+    5              A             C              1           [4]
+    6              B             C              1           [4]
+    7              B             D              1           [6]
+    8              C             A              1           [4]
+    9              C             B              1           [4]
+    10             C             C              1           [4]
+    11             D             B              1           [6]
+
+    >>> occurrence(df, column='Authors', as_matrix=True)
+       A  B  C  D
+    A  4  2  1  0
+    B  2  4  1  1
+    C  1  1  1  0
+    D  0  1  0  2
+
+    >>> occurrence(df, column='Authors', as_matrix=True, minmax=(2,3))
+       A  B  D
+    A  0  2  0
+    B  2  0  0
+    D  0  0  2
+
+    >>> keywords = Keywords(['A', 'B'], ignore_case=False)
+    >>> keywords = keywords.compile()
+    >>> occurrence(df, 'Authors', as_matrix=True, keywords=keywords)
+       A  B
+    A  4  2
+    B  2  4
+
+    """
+
+    def generate_dic(column):
+        new_names = documents_by_term(x, column)
+        new_names = {
+            term: "{:s} [{:d}]".format(term, docs_per_term)
+            for term, docs_per_term in zip(
+                new_names[column], new_names["Num Documents"],
+            )
+        }
+        return new_names
+
+    column_IDX = column + " (IDX)"
+    column_COL = column + " (COL)"
+
+    result = summary_occurrence(x, column)
+    result.pop("Cited by")
+    maxval = result["Num Documents"].max()
+    if minmax is not None:
+        min_value, max_value = minmax
+        if min_value is not None:
+            if min_value > maxval:
+                min_value = maxval
+            result = result[result["Num Documents"] >= min_value]
+        if max_value is not None:
+            if max_value > maxval:
+                max_value = maxval
+            result = result[result["Num Documents"] <= max_value]
+    if keywords is not None:
+        if keywords._patterns is None:
+            keywords = keywords.compile()
+        result = result[result[column_IDX].map(lambda w: w in keywords)]
+        result = result[result[column_COL].map(lambda w: w in keywords)]
+    result.sort_values(
+        ["Num Documents", column_IDX, column_COL],
+        ascending=[False, True, True],
+        inplace=True,
+    )
+    result = result.reset_index(drop=True)
+    if as_matrix == True:
+        result = pd.pivot_table(
+            result,
+            values="Num Documents",
+            index=column_IDX,
+            columns=column_COL,
+            fill_value=0,
+        )
+        result.columns = result.columns.tolist()
+        result.index = result.index.tolist()
+    if retmaxval is True:
+        return result, maxval
+    return result
+
+
+def self_citation(
+    x, column, as_matrix=False, minmax=None, keywords=None, retmaxval=False
+):
+    """Computes the cocitation between the terms in a column.
+
+    Args:
+        column (str): the column to explode.
+        sep (str): Character used as internal separator for the elements in the column.
+        as_matrix (bool): Results are returned as a matrix.
+        minmax (pair(number,number)): filter values by >=min,<=max.
+        keywords (list, Keywords): filter the result using the specified Keywords object.
+
+    Returns:
+        DataFrame.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = [ 'A', 'A', 'A;B', 'B', 'A;B;C', 'D', 'B;D']
+    >>> df = pd.DataFrame(
+    ...    {
+    ...       'Authors': x,
+    ...       'Cited by': list(range(len(x))),
+    ...       'ID': list(range(len(x))),
+    ...    }
+    ... )
+    >>> df
+      Authors  Cited by  ID
+    0       A         0   0
+    1       A         1   1
+    2     A;B         2   2
+    3       B         3   3
+    4   A;B;C         4   4
+    5       D         5   5
+    6     B;D         6   6
+
+    >>> self_citation(df, column='Authors')
+       Authors (IDX) Authors (COL)  Cited by            ID
+    0              B             B        15  [2, 3, 4, 6]
+    1              D             D        11        [5, 6]
+    2              A             A         7  [0, 1, 2, 4]
+    3              A             B         6        [2, 4]
+    4              B             A         6        [2, 4]
+    5              B             D         6           [6]
+    6              D             B         6           [6]
+    7              A             C         4           [4]
+    8              B             C         4           [4]
+    9              C             A         4           [4]
+    10             C             B         4           [4]
+    11             C             C         4           [4]
+
+    >>> self_citation(df, column='Authors', as_matrix=True)
+       A   B  C   D
+    A  7   6  4   0
+    B  6  15  4   6
+    C  4   4  4   0
+    D  0   6  0  11
+
+    >>> self_citation(df, column='Authors', as_matrix=True, minmax=(6,15))
+       A   B   D
+    A  7   6   0
+    B  6  15   6
+    D  0   6  11
+
+    >>> keywords = Keywords(['A', 'B'], ignore_case=False)
+    >>> keywords = keywords.compile()
+    >>> self_citation(df, 'Authors', as_matrix=True, keywords=keywords)
+       A   B
+    A  7   6
+    B  6  15
+
+
+    """
+
+    def generate_dic(column):
+        new_names = citations_by_term(x, column)
+        new_names = {
+            term: "{:s} [{:d}]".format(term, docs_per_term)
+            for term, docs_per_term in zip(new_names[column], new_names["Cited by"],)
+        }
+        return new_names
+
+    column_IDX = column + " (IDX)"
+    column_COL = column + " (COL)"
+
+    result = summary_occurrence(x, column)
+    result.pop("Num Documents")
+    maxval = result["Cited by"].max()
+    if minmax is not None:
+        min_value, max_value = minmax
+        if min_value is not None:
+            if min_value > maxval:
+                min_value = maxval
+            result = result[result["Cited by"] >= min_value]
+        if max_value is not None:
+            if max_value > maxval:
+                max_value = maxval
+            result = result[result["Cited by"] <= max_value]
+    if keywords is not None:
+        if keywords._patterns is None:
+            keywords = keywords.compile()
+        result = result[result[column_IDX].map(lambda w: w in keywords)]
+        result = result[result[column_COL].map(lambda w: w in keywords)]
+    result.sort_values(
+        ["Cited by", column_IDX, column_COL],
+        ascending=[False, True, True],
+        inplace=True,
+    )
+    result = result.reset_index(drop=True)
+    if as_matrix == True:
+        result = pd.pivot_table(
+            result,
+            values="Cited by",
+            index=column_IDX,
+            columns=column_COL,
+            fill_value=0,
+        )
+        result.columns = result.columns.tolist()
+        result.index = result.index.tolist()
+    if retmaxval is True:
+        return result, maxval
+    return result
+
+
+#
+#
+#  Co-occurrence
+#
+#
+
+
+def summary_co_occurrence(x, column_IDX, column_COL, keywords=None):
+    """Summary occurrence and citations by terms in two different columns.
+
+    Args:
+        column_IDX (str): the column to explode. Their terms are used in the index of the result dataframe.
+        sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
+        column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
+        sep_COL (str): Character used as internal separator for the elements in the column_COL.
+        keywords (Keywords): filter the result using the specified Keywords object.
+
+    Returns:
+        DataFrame.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = [ 'A', 'A;B', 'B', 'A;B;C', 'B;D']
+    >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d']
+    >>> df = pd.DataFrame(
+    ...    {
+    ...       'Authors': x,
+    ...       'Author Keywords': y,
+    ...       'Cited by': list(range(len(x))),
+    ...       'ID': list(range(len(x))),
+    ...    }
+    ... )
+    >>> df
+      Authors Author Keywords  Cited by  ID
+    0       A               a         0   0
+    1     A;B             a;b         1   1
+    2       B               b         2   2
+    3   A;B;C               c         3   3
+    4     B;D             c;d         4   4
+
+    >>> summary_co_occurrence(df, column_IDX='Authors', column_COL='Author Keywords')
+      Authors (IDX) Author Keywords (COL)  Num Documents  Cited by      ID
+    0             A                     a              2         1  [0, 1]
+    1             A                     b              1         1     [1]
+    2             A                     c              1         3     [3]
+    3             B                     a              1         1     [1]
+    4             B                     b              2         3  [1, 2]
+    5             B                     c              2         7  [3, 4]
+    6             B                     d              1         4     [4]
+    7             C                     c              1         3     [3]
+    8             D                     c              1         4     [4]
+    9             D                     d              1         4     [4]
+
+    >>> keywords = Keywords(['B', 'C', 'a', 'b'], ignore_case=False)
+    >>> keywords = keywords.compile()
+    >>> summary_co_occurrence(df, 'Authors', 'Author Keywords', keywords=keywords)
+      Authors (IDX) Author Keywords (COL)  Num Documents  Cited by      ID
+    0             B                     a              1         1     [1]
+    1             B                     b              2         3  [1, 2]
+
+
+    """
+
+    def generate_pairs(w, v):
+        if column_IDX in MULTIVALUED_COLS:
+            w = [x.strip() for x in w.split(";")]
+        else:
+            w = [w]
+        if column_COL in MULTIVALUED_COLS:
+            v = [x.strip() for x in v.split(";")]
+        else:
+            v = [v]
+        result = []
+        for idx0 in range(len(w)):
+            for idx1 in range(len(v)):
+                result.append((w[idx0], v[idx1]))
+        return result
+
+    if column_IDX == column_COL:
+        return summary_occurrence(x, column_IDX, keywords)
+    data = x.copy()
+    data = data[[column_IDX, column_COL, "Cited by", "ID"]]
+    data = data.dropna()
+    data["Num Documents"] = 1
+    data["pairs"] = [
+        generate_pairs(a, b) for a, b in zip(data[column_IDX], data[column_COL])
+    ]
+    data = data[["pairs", "Num Documents", "Cited by", "ID"]]
+    data = data.explode("pairs")
+    result = data.groupby("pairs", as_index=False).agg(
+        {"Cited by": np.sum, "Num Documents": np.sum, "ID": list}
+    )
+    result["Cited by"] = result["Cited by"].map(int)
+    result[column_IDX + " (IDX)"] = result["pairs"].map(lambda x: x[0])
+    result[column_COL + " (COL)"] = result["pairs"].map(lambda x: x[1])
+    result.pop("pairs")
+    result = result[
+        [
+            column_IDX + " (IDX)",
+            column_COL + " (COL)",
+            "Num Documents",
+            "Cited by",
+            "ID",
+        ]
+    ]
+    if keywords is not None:
+        if keywords._patterns is None:
+            keywords = keywords.compile()
+        result = result[result[column_IDX + " (IDX)"].map(lambda w: w in keywords)]
+        result = result[result[column_COL + " (COL)"].map(lambda w: w in keywords)]
+    result = result.sort_values(
+        [column_IDX + " (IDX)", column_COL + " (COL)"], ignore_index=True,
+    )
+    return result
+
+
+def co_occurrence(
+    x,
+    column_IDX,
+    column_COL,
+    as_matrix=False,
+    minmax=None,
+    keywords=None,
+    retmaxval=False,
+):
+    """Computes the co-occurrence of two terms in different colums. The report adds
+    the number of documents by term between brackets.
+
+    Args:
+        column_IDX (str): the column to explode. Their terms are used in the index of the result dataframe.
+        sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
+        column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
+        sep_COL (str): Character used as internal separator for the elements in the column_COL.
+        as_matrix (bool): Results are returned as a matrix.
+        minmax (pair(number,number)): filter values by >=min,<=max.
+        keywords (Keywords): filter the result using the specified Keywords object.
+
+    Returns:
+        DataFrame.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = [ 'A', 'A;B', 'B', 'A;B;C', 'B;D']
+    >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d']
+    >>> df = pd.DataFrame(
+    ...    {
+    ...       'Authors': x,
+    ...       'Author Keywords': y,
+    ...       'Cited by': list(range(len(x))),
+    ...       'ID': list(range(len(x))),
+    ...    }
+    ... )
+    >>> df
+      Authors Author Keywords  Cited by  ID
+    0       A               a         0   0
+    1     A;B             a;b         1   1
+    2       B               b         2   2
+    3   A;B;C               c         3   3
+    4     B;D             c;d         4   4
+
+    >>> co_occurrence(df, column_IDX='Authors', column_COL='Author Keywords')
+      Authors (IDX) Author Keywords (COL)  Num Documents      ID
+    0             A                     a              2  [0, 1]
+    1             B                     b              2  [1, 2]
+    2             B                     c              2  [3, 4]
+    3             A                     b              1     [1]
+    4             A                     c              1     [3]
+    5             B                     a              1     [1]
+    6             B                     d              1     [4]
+    7             C                     c              1     [3]
+    8             D                     c              1     [4]
+    9             D                     d              1     [4]
+
+    >>> co_occurrence(df, column_IDX='Authors', column_COL='Author Keywords', as_matrix=True)
+       a  b  c  d
+    A  2  1  1  0
+    B  1  2  2  1
+    C  0  0  1  0
+    D  0  0  1  1
+
+    >>> co_occurrence(df, column_IDX='Authors', column_COL='Author Keywords', as_matrix=True, minmax=(2,2))
+       a  b  c
+    A  2  0  0
+    B  0  2  2
+
+    >>> keywords = Keywords(['A', 'B', 'c', 'd'], ignore_case=False)
+    >>> keywords = keywords.compile()
+    >>> co_occurrence(df, 'Authors', 'Author Keywords', as_matrix=True, keywords=keywords)
+       c  d
+    A  1  0
+    B  2  1
+
+
+    """
+
+    def generate_dic(column, sep):
+        new_names = documents_by_term(x, column)
+        new_names = {
+            term: "{:s} [{:d}]".format(term, docs_per_term)
+            for term, docs_per_term in zip(
+                new_names[column], new_names["Num Documents"],
+            )
+        }
+        return new_names
+
+    if column_IDX == column_COL:
+        return occurrence(
+            x,
+            column_IDX,
+            as_matrix=as_matrix,
+            minmax=minmax,
+            keywords=keywords,
+            retmaxval=retmaxval,
+        )
+    result = summary_co_occurrence(x, column_IDX, column_COL, keywords)
+    result.pop("Cited by")
+    maxval = result["Num Documents"].max()
+    if minmax is not None:
+        min_value, max_value = minmax
+        if min_value is not None:
+            if min_value > maxval:
+                min_value = maxval
+            result = result[result["Num Documents"] >= min_value]
+        if max_value is not None:
+            if max_value > maxval:
+                max_value = maxval
+            result = result[result["Num Documents"] <= max_value]
+    result.sort_values(
+        [column_IDX + " (IDX)", column_COL + " (COL)", "Num Documents",],
+        ascending=[True, True, False],
+        inplace=True,
+    )
+    result = result.sort_values(
+        ["Num Documents", column_IDX + " (IDX)", column_COL + " (COL)"],
+        ascending=[False, True, True],
+    )
+    result = result.reset_index(drop=True)
+    if as_matrix == True:
+        result = pd.pivot_table(
+            result,
+            values="Num Documents",
+            index=column_IDX + " (IDX)",
+            columns=column_COL + " (COL)",
+            fill_value=0,
+        )
+        result.columns = result.columns.tolist()
+        result.index = result.index.tolist()
+    if retmaxval is True:
+        return result, maxval
+    return result
+
+
+def co_citation(
+    x,
+    column_IDX,
+    column_COL,
+    as_matrix=False,
+    minmax=None,
+    keywords=None,
+    retmaxval=False,
+):
+    """Computes the number of citations shared by two terms in different columns.
+
+    Args:
+        column_IDX (str): the column to explode. Their terms are used in the index of the result dataframe.
+        sep_IDX (str): Character used as internal separator for the elements in the column_IDX.
+        column_COL (str): the column to explode. Their terms are used in the columns of the result dataframe.
+        sep_COL (str): Character used as internal separator for the elements in the column_COL.
+        as_matrix (bool): Results are returned as a matrix.
+        minmax (pair(number,number)): filter values by >=min,<=max.
+        keywords (Keywords): filter the result using the specified Keywords object.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = [ 'A', 'A;B', 'B', 'A;B;C', 'B;D']
+    >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d']
+    >>> df = pd.DataFrame(
+    ...    {
+    ...       'Authors': x,
+    ...       'Author Keywords': y,
+    ...       'Cited by': list(range(len(x))),
+    ...       'ID': list(range(len(x))),
+    ...    }
+    ... )
+    >>> df
+      Authors Author Keywords  Cited by  ID
+    0       A               a         0   0
+    1     A;B             a;b         1   1
+    2       B               b         2   2
+    3   A;B;C               c         3   3
+    4     B;D             c;d         4   4
+
+    >>> co_citation(df, column_IDX='Authors', column_COL='Author Keywords')
+      Authors (IDX) Author Keywords (COL)  Cited by      ID
+    0             B                     c         7  [3, 4]
+    1             B                     d         4     [4]
+    2             D                     c         4     [4]
+    3             D                     d         4     [4]
+    4             A                     c         3     [3]
+    5             B                     b         3  [1, 2]
+    6             C                     c         3     [3]
+    7             A                     a         1  [0, 1]
+    8             A                     b         1     [1]
+    9             B                     a         1     [1]
+
+    >>> co_citation(df, column_IDX='Authors', column_COL='Author Keywords', as_matrix=True)
+       a  b  c  d
+    A  1  1  3  0
+    B  1  3  7  4
+    C  0  0  3  0
+    D  0  0  4  4
+
+    >>> co_citation(df, column_IDX='Authors', column_COL='Author Keywords', as_matrix=True, minmax=(3,4))
+       b  c  d
+    A  0  3  0
+    B  3  0  4
+    C  0  3  0
+    D  0  4  4
+
+    >>> keywords = Keywords(['A', 'B', 'c', 'd'], ignore_case=False)
+    >>> keywords = keywords.compile()
+    >>> co_citation(df, 'Authors', 'Author Keywords', as_matrix=True, keywords=keywords)
+       c  d
+    A  3  0
+    B  7  4
+
+    """
+
+    def generate_dic(column):
+        new_names = citations_by_term(x, column)
+        new_names = {
+            term: "{:s} [{:d}]".format(term, docs_per_term)
+            for term, docs_per_term in zip(new_names[column], new_names["Cited by"],)
+        }
+        return new_names
+
+    result = summary_co_occurrence(x, column_IDX, column_COL, keywords)
+    result.pop("Num Documents")
+    maxval = result["Cited by"].max()
+    if minmax is not None:
+        min_value, max_value = minmax
+        if min_value is not None:
+            result = result[result["Cited by"] >= min_value]
+        if max_value is not None:
+            result = result[result["Cited by"] <= max_value]
+    result.sort_values(
+        ["Cited by", column_IDX + " (IDX)", column_COL + " (COL)",],
+        ascending=[False, True, True,],
+        inplace=True,
+    )
+    result = result.reset_index(drop=True)
+    if as_matrix == True:
+        result = pd.pivot_table(
+            result,
+            values="Cited by",
+            index=column_IDX + " (IDX)",
+            columns=column_COL + " (COL)",
+            fill_value=0,
+        )
+        result.columns = result.columns.tolist()
+        result.index = result.index.tolist()
+    if retmaxval is True:
+        return result, retmaxval
+    return result
+
+
 #
 #
 #
