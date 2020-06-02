@@ -13,8 +13,11 @@ from IPython.display import display, HTML, clear_output
 import techminer.analytics as tc
 import techminer.plots as plt
 
-FIGSIZE = (14, 6)
-PANEL_HEIGHT = "400px"
+FIGSIZE = (18, 9.5)
+LEFT_BOX_HEIGHT = "600px"
+PANE_WIDHTS = ["255px", 10, 0]
+WIDGET_WIDTH = "250px"
+
 
 COLORMAPS = [
     "Greys",
@@ -98,10 +101,17 @@ def summary_by_year(x):
     plots = {"bar": plt.bar, "barh": plt.barh}
     #
     selected = widgets.Dropdown(
-        options=list(data.keys()), value=list(data.keys())[0], disable=False,
+        options=list(data.keys()),
+        value=list(data.keys())[0],
+        disable=False,
+        layout=Layout(width=WIDGET_WIDTH),
     )
-    plot_type = widgets.Dropdown(options=["bar", "barh"], disable=False,)
-    cmap = widgets.Dropdown(options=COLORMAPS, disable=False,)
+    plot_type = widgets.Dropdown(
+        options=["bar", "barh"], disable=False, layout=Layout(width=WIDGET_WIDTH),
+    )
+    cmap = widgets.Dropdown(
+        options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
+    )
     #
     output = widgets.Output()
     with output:
@@ -117,17 +127,17 @@ def summary_by_year(x):
             widgets.VBox([widgets.Label(value="Plot type:"), plot_type]),
             widgets.VBox([widgets.Label(value="Colormap:"), cmap]),
         ],
-        layout=Layout(height=PANEL_HEIGHT, border="1px solid gray"),
+        layout=Layout(height=LEFT_BOX_HEIGHT, border="1px solid gray"),
     )
     right_box = widgets.VBox([output])
-
+    #
     return AppLayout(
         header=widgets.HTML(value=html_title("Summary by Year")),
         left_sidebar=left_box,
         center=right_box,
         right_sidebar=None,
-        pane_widths=[2, 6, 0],
-        pane_heights=["85px", 5, 0],
+        pane_widths=PANE_WIDHTS,
+        pane_heights=["85px", LEFT_BOX_HEIGHT, 0],
     )
 
 
