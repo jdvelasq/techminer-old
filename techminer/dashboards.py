@@ -350,3 +350,115 @@ def summary_by_term(x):
         right_sidebar=None,
         pane_heights=PANE_HEIGHTS,
     )
+
+
+def summary_by_term_per_year(x):
+    #
+    def tab_0():
+        #
+        def compute(term, analysis_type, plot_type, cmap, top_n):
+            #
+            plots = {"Heatmap": plt.heatmap, "Gant": plt.gant}
+            plot = plots[plot_type]
+            #
+            if analysis_type == "Frequency":
+                top = tc.documents_by_term(x, term).head(top_n)[term].tolist()
+                matrix = tc.documents_by_term_per_year(x, term, as_matrix=True)
+            else:
+                top = tc.citations_by_term(x, term).head(top_n)[term].tolist()
+                matrix = tc.citations_by_term_per_year(x, term, as_matrix=True)
+            matrix = matrix[top]
+            output.clear_output()
+            with output:
+                if plot_type == "Heatmap":
+                    display(plot(matrix, cmap=cmap, figsize=FIGSIZE))
+                if plot_type == "Gant":
+                    display(plot(matrix, figsize=FIGSIZE))
+
+        #
+        LEFT_PANEL = [
+            (
+                "Term to analyze:",
+                "term",
+                widgets.Select(
+                    options=[z for z in COLUMNS if z in x.columns],
+                    ensure_option=True,
+                    disabled=False,
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+            ),
+            (
+                "Analysis type:",
+                "analysis_type",
+                widgets.Dropdown(
+                    options=["Frequency", "Citation"],
+                    value="Frequency",
+                    disable=False,
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+            ),
+            (
+                "Plot type:",
+                "plot_type",
+                widgets.Dropdown(
+                    options=["Heatmap", "Gant"],
+                    disable=False,
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+            ),
+            (
+                "Colormap:",
+                "cmap",
+                widgets.Dropdown(
+                    options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
+                ),
+            ),
+            (
+                "Top N:",
+                "top_n",
+                widgets.IntSlider(
+                    value=10,
+                    min=10,
+                    max=50,
+                    step=1,
+                    disabled=False,
+                    continuous_update=False,
+                    orientation="horizontal",
+                    readout=True,
+                    readout_format="d",
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+            ),
+        ]
+        #
+        args = {key: value for _, key, value in LEFT_PANEL}
+        output = widgets.Output()
+        with output:
+            display(widgets.interactive_output(compute, args,))
+        return widgets.HBox(
+            [
+                widgets.VBox(
+                    [
+                        widgets.VBox([widgets.Label(value=text), widget])
+                        for text, _, widget in LEFT_PANEL
+                    ],
+                    layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
+                ),
+                widgets.VBox([output]),
+            ]
+        )
+
+    #
+    #
+    body = widgets.Tab()
+    body.children = [tab_0()]
+    #
+    body.set_title(0, "Heatmap")
+
+    return AppLayout(
+        header=widgets.HTML(value=html_title("Summary by Term per Year")),
+        left_sidebar=None,
+        center=body,
+        right_sidebar=None,
+        pane_heights=PANE_HEIGHTS,
+    )
