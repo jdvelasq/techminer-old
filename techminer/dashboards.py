@@ -462,3 +462,111 @@ def summary_by_term_per_year(x):
         right_sidebar=None,
         pane_heights=PANE_HEIGHTS,
     )
+
+
+def co_occurrence_analysis(x):
+    #
+    def tab_0():
+        #
+        def compute(column, by, min_value, cmap):
+            #
+            matrix = tc.co_occurrence(
+                x,
+                column=column,
+                by=by,
+                as_matrix=True,
+                min_value=min_value,
+                keywords=None,
+            )
+            if LEFT_PANEL[3][2].value > matrix.max().max():
+                LEFT_PANEL[3][2].value = matrix.max().max()
+            LEFT_PANEL[3][2].max = matrix.max().max()
+            #
+            output.clear_output()
+            with output:
+                if len(matrix.columns) < 51 and len(matrix.index) < 51:
+                    display(matrix.style.background_gradient(cmap=cmap))
+                else:
+                    display(matrix)
+
+        #
+        LEFT_PANEL = [
+            (
+                "Term to analyze:",
+                "column",
+                widgets.Select(
+                    options=[z for z in COLUMNS if z in x.columns],
+                    ensure_option=True,
+                    disabled=False,
+                    continuous_update=True,
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+            ),
+            (
+                "By:",
+                "by",
+                widgets.Select(
+                    options=[z for z in COLUMNS if z in x.columns],
+                    ensure_option=True,
+                    disabled=False,
+                    continuous_update=True,
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+            ),
+            (
+                "Colormap:",
+                "cmap",
+                widgets.Dropdown(
+                    options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
+                ),
+            ),
+            (
+                "Min value:",
+                "min_value",
+                widgets.IntSlider(
+                    value=0,
+                    min=0,
+                    max=50,
+                    step=1,
+                    disabled=False,
+                    continuous_update=False,
+                    orientation="horizontal",
+                    readout=True,
+                    readout_format="d",
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+            ),
+        ]
+        #
+        args = {key: value for _, key, value in LEFT_PANEL}
+        output = widgets.Output()
+        with output:
+            display(widgets.interactive_output(compute, args,))
+        return widgets.HBox(
+            [
+                widgets.VBox(
+                    [
+                        widgets.VBox([widgets.Label(value=text), widget])
+                        for text, _, widget in LEFT_PANEL
+                    ],
+                    layout=Layout(
+                        height=LEFT_PANEL_HEIGHT, width="210px", border="1px solid gray"
+                    ),
+                ),
+                widgets.VBox([output], layout=Layout(width="1000px")),
+            ]
+        )
+
+    #
+    #
+    body = widgets.Tab()
+    body.children = [tab_0()]
+    #
+    body.set_title(0, "Heatmap")
+    return AppLayout(
+        header=widgets.HTML(value=html_title("Co-occurrence Analysis")),
+        left_sidebar=None,
+        center=body,
+        right_sidebar=None,
+        pane_heights=PANE_HEIGHTS,
+    )
