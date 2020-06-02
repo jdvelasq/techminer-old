@@ -909,14 +909,13 @@ def summary_by_term_per_year(x, column, keywords=None):
     return result
 
 
-def documents_by_term_per_year(x, column, as_matrix=False, minmax=None, keywords=None):
+def documents_by_term_per_year(x, column, as_matrix=False, keywords=None):
     """Computes the number of documents by term per year.
 
     Args:
         column (str): the column to explode.
         sep (str): Character used as internal separator for the elements in the column.
         as_matrix (bool): Results are returned as a matrix.
-        minmax (pair(number,number)): filter values by >=min,<=max.
         keywords (Keywords): filter the result using the specified Keywords object.
 
     Returns:
@@ -961,17 +960,6 @@ def documents_by_term_per_year(x, column, as_matrix=False, minmax=None, keywords
     2012         0         0         0         0         1
     2014         0         0         0         0         1
 
-    >>> documents_by_term_per_year(df, 'Authors', as_matrix=True, minmax=(2, None))
-          author 0
-    2010         2
-
-    >>> documents_by_term_per_year(df, 'Authors', as_matrix=True, minmax=(0, 1))
-          author 1  author 2  author 3  author 4
-    2010         1         1         0         0
-    2011         1         0         1         0
-    2012         0         0         0         1
-    2014         0         0         0         1
-
     >>> keywords = Keywords(['author 1', 'author 2', 'author 3'])
     >>> keywords = keywords.compile()
     >>> documents_by_term_per_year(df, 'Authors', keywords=keywords, as_matrix=True)
@@ -983,12 +971,6 @@ def documents_by_term_per_year(x, column, as_matrix=False, minmax=None, keywords
 
     result = summary_by_term_per_year(x, column, keywords)
     result.pop("Cited by")
-    if minmax is not None:
-        min_value, max_value = minmax
-        if min_value is not None:
-            result = result[result["Num Documents"] >= min_value]
-        if max_value is not None:
-            result = result[result["Num Documents"] <= max_value]
     result.sort_values(
         ["Year", "Num Documents", column], ascending=[True, False, True], inplace=True,
     )
@@ -1002,14 +984,13 @@ def documents_by_term_per_year(x, column, as_matrix=False, minmax=None, keywords
     return result
 
 
-def gant(x, column, minmax=None, keywords=None):
+def gant(x, column, keywords=None):
     """Computes the number of documents by term per year.
 
     Args:
         column (str): the column to explode.
         sep (str): Character used as internal separator for the elements in the column.
         as_matrix (bool): Results are returned as a matrix.
-        minmax (pair(number,number)): filter values by >=min,<=max.
         keywords (Keywords): filter the result using the specified Keywords object.
 
     Returns:
@@ -1059,7 +1040,7 @@ def gant(x, column, minmax=None, keywords=None):
 
     """
     result = documents_by_term_per_year(
-        x, column=column, as_matrix=True, minmax=minmax, keywords=keywords
+        x, column=column, as_matrix=True, keywords=keywords
     )
     years = [year for year in range(result.index.min(), result.index.max() + 1)]
     result = result.reindex(years, fill_value=0)
@@ -1076,13 +1057,12 @@ def gant(x, column, minmax=None, keywords=None):
     return result
 
 
-def citations_by_term_per_year(x, column, as_matrix=False, minmax=None, keywords=None):
+def citations_by_term_per_year(x, column, as_matrix=False, keywords=None):
     """Computes the number of citations by term by year in a column.
 
     Args:
         column (str): the column to explode.
         as_matrix (bool): Results are returned as a matrix.
-        minmax (pair(number,number)): filter values by >=min,<=max.
         keywords (Keywords): filter the result using the specified Keywords object.
 
     Returns:
@@ -1127,12 +1107,6 @@ def citations_by_term_per_year(x, column, as_matrix=False, minmax=None, keywords
     2012         0         0         0         0        14
     2014         0         0         0         0        15
 
-    >>> citations_by_term_per_year(df, 'Authors', as_matrix=True, minmax=(12, 15))
-          author 1  author 3  author 4
-    2011        12        13         0
-    2012         0         0        14
-    2014         0         0        15
-
     >>> keywords = Keywords(['author 1', 'author 2', 'author 3'])
     >>> keywords = keywords.compile()
     >>> citations_by_term_per_year(df, 'Authors', keywords=keywords)
@@ -1145,12 +1119,6 @@ def citations_by_term_per_year(x, column, as_matrix=False, minmax=None, keywords
     """
     result = summary_by_term_per_year(x, column, keywords)
     result.pop("Num Documents")
-    if minmax is not None:
-        min_value, max_value = minmax
-        if min_value is not None:
-            result = result[result["Cited by"] >= min_value]
-        if max_value is not None:
-            result = result[result["Cited by"] <= max_value]
     result.sort_values(
         ["Year", "Cited by", column], ascending=[True, False, False], inplace=True,
     )
@@ -1198,28 +1166,28 @@ def summary_occurrence(x, column, keywords=None):
     6     B;D         6   6
 
     >>> summary_occurrence(df, column='Authors')
-       Authors (IDX) Authors (COL)  Num Documents  Cited by            ID
-    0              A             A              4         7  [0, 1, 2, 4]
-    1              A             B              2         6        [2, 4]
-    2              A             C              1         4           [4]
-    3              B             A              2         6        [2, 4]
-    4              B             B              4        15  [2, 3, 4, 6]
-    5              B             C              1         4           [4]
-    6              B             D              1         6           [6]
-    7              C             A              1         4           [4]
-    8              C             B              1         4           [4]
-    9              C             C              1         4           [4]
-    10             D             B              1         6           [6]
-    11             D             D              2        11        [5, 6]
+       Authors Authors_  Num Documents  Cited by            ID
+    0        A        A              4         7  [0, 1, 2, 4]
+    1        A        B              2         6        [2, 4]
+    2        A        C              1         4           [4]
+    3        B        A              2         6        [2, 4]
+    4        B        B              4        15  [2, 3, 4, 6]
+    5        B        C              1         4           [4]
+    6        B        D              1         6           [6]
+    7        C        A              1         4           [4]
+    8        C        B              1         4           [4]
+    9        C        C              1         4           [4]
+    10       D        B              1         6           [6]
+    11       D        D              2        11        [5, 6]
 
     >>> keywords = Keywords(['A', 'B'], ignore_case=False)
     >>> keywords = keywords.compile()
     >>> summary_occurrence(df, 'Authors', keywords=keywords)
-      Authors (IDX) Authors (COL)  Num Documents  Cited by            ID
-    0             A             A              4         7  [0, 1, 2, 4]
-    1             A             B              2         6        [2, 4]
-    2             B             A              2         6        [2, 4]
-    3             B             B              4        15  [2, 3, 4, 6]
+      Authors Authors_  Num Documents  Cited by            ID
+    0       A        A              4         7  [0, 1, 2, 4]
+    1       A        B              2         6        [2, 4]
+    2       B        A              2         6        [2, 4]
+    3       B        B              4        15  [2, 3, 4, 6]
 
 
     """
@@ -1247,31 +1215,26 @@ def summary_occurrence(x, column, keywords=None):
         .rename(columns={"count": "Num Documents"})
     )
     result["Cited by"] = result["Cited by"].map(int)
-    result[column + " (IDX)"] = result["pairs"].map(lambda x: x[0])
-    result[column + " (COL)"] = result["pairs"].map(lambda x: x[1])
+    result[column] = result["pairs"].map(lambda x: x[0])
+    result[column + "_"] = result["pairs"].map(lambda x: x[1])
     result.pop("pairs")
-    result = result[
-        [column + " (IDX)", column + " (COL)", "Num Documents", "Cited by", "ID"]
-    ]
+    result = result[[column, column + "_", "Num Documents", "Cited by", "ID"]]
     if keywords is not None:
         if keywords._patterns is None:
             keywords = keywords.compile()
-        result = result[result[column + " (IDX)"].map(lambda w: w in keywords)]
-        result = result[result[column + " (COL)"].map(lambda w: w in keywords)]
-    result = result.sort_values(
-        [column + " (IDX)", column + " (COL)"], ignore_index=True,
-    )
+        result = result[result[column].map(lambda w: w in keywords)]
+        result = result[result[column + "_"].map(lambda w: w in keywords)]
+    result = result.sort_values([column, column + "_"], ignore_index=True,)
     return result
 
 
-def occurrence(x, column, as_matrix=False, minmax=None, keywords=None, retmaxval=False):
+def occurrence(x, column, as_matrix=False, top_n=None, keywords=None):
     """Computes the occurrence between the terms in a column.
 
     Args:
         column (str): the column to explode.
         sep (str): Character used as internal separator for the elements in the column.
         as_matrix (bool): Results are returned as a matrix.
-        minmax (pair(number,number)): filter values by >=min,<=max.
         keywords (list, Keywords): filter the result using the specified Keywords object.
 
     Returns:
@@ -1300,19 +1263,19 @@ def occurrence(x, column, as_matrix=False, minmax=None, keywords=None, retmaxval
     6     B;D         6   6
 
     >>> occurrence(df, column='Authors')
-       Authors (IDX) Authors (COL)  Num Documents            ID
-    0              A             A              4  [0, 1, 2, 4]
-    1              B             B              4  [2, 3, 4, 6]
-    2              A             B              2        [2, 4]
-    3              B             A              2        [2, 4]
-    4              D             D              2        [5, 6]
-    5              A             C              1           [4]
-    6              B             C              1           [4]
-    7              B             D              1           [6]
-    8              C             A              1           [4]
-    9              C             B              1           [4]
-    10             C             C              1           [4]
-    11             D             B              1           [6]
+       Authors Authors_  Num Documents            ID
+    0        A        A              4  [0, 1, 2, 4]
+    1        B        B              4  [2, 3, 4, 6]
+    2        A        B              2        [2, 4]
+    3        B        A              2        [2, 4]
+    4        D        D              2        [5, 6]
+    5        A        C              1           [4]
+    6        B        C              1           [4]
+    7        B        D              1           [6]
+    8        C        A              1           [4]
+    9        C        B              1           [4]
+    10       C        C              1           [4]
+    11       D        B              1           [6]
 
     >>> occurrence(df, column='Authors', as_matrix=True)
        A  B  C  D
@@ -1321,11 +1284,11 @@ def occurrence(x, column, as_matrix=False, minmax=None, keywords=None, retmaxval
     C  1  1  1  0
     D  0  1  0  2
 
-    >>> occurrence(df, column='Authors', as_matrix=True, minmax=(2,3))
+    >>> occurrence(df, column='Authors', top_n=3, as_matrix=True)
        A  B  D
-    A  0  2  0
-    B  2  0  0
-    D  0  0  2
+    A  4  2  0
+    B  2  4  1
+    D  0  1  2
 
     >>> keywords = Keywords(['A', 'B'], ignore_case=False)
     >>> keywords = keywords.compile()
@@ -1346,22 +1309,10 @@ def occurrence(x, column, as_matrix=False, minmax=None, keywords=None, retmaxval
         }
         return new_names
 
-    column_IDX = column + " (IDX)"
-    column_COL = column + " (COL)"
-
+    column_IDX = column
+    column_COL = column + "_"
     result = summary_occurrence(x, column)
     result.pop("Cited by")
-    maxval = result["Num Documents"].max()
-    if minmax is not None:
-        min_value, max_value = minmax
-        if min_value is not None:
-            if min_value > maxval:
-                min_value = maxval
-            result = result[result["Num Documents"] >= min_value]
-        if max_value is not None:
-            if max_value > maxval:
-                max_value = maxval
-            result = result[result["Num Documents"] <= max_value]
     if keywords is not None:
         if keywords._patterns is None:
             keywords = keywords.compile()
@@ -1373,6 +1324,17 @@ def occurrence(x, column, as_matrix=False, minmax=None, keywords=None, retmaxval
         inplace=True,
     )
     result = result.reset_index(drop=True)
+    if top_n is not None and len(result) > top_n * top_n:
+        m = result[result[column_IDX] == result[column_COL]].copy()
+        m.sort_values(
+            ["Num Documents", column_IDX, column_COL],
+            ascending=[False, True, True],
+            inplace=True,
+        )
+        top_n_filter = Keywords(m[column_IDX].head(top_n).tolist())
+        top_n_filter = top_n_filter.compile()
+        result = result[result[column_IDX].map(lambda w: w in top_n_filter)]
+        result = result[result[column_COL].map(lambda w: w in top_n_filter)]
     if as_matrix == True:
         result = pd.pivot_table(
             result,
@@ -1383,133 +1345,6 @@ def occurrence(x, column, as_matrix=False, minmax=None, keywords=None, retmaxval
         )
         result.columns = result.columns.tolist()
         result.index = result.index.tolist()
-    if retmaxval is True:
-        return result, maxval
-    return result
-
-
-def self_citation(
-    x, column, as_matrix=False, minmax=None, keywords=None, retmaxval=False
-):
-    """Computes the cocitation between the terms in a column.
-
-    Args:
-        column (str): the column to explode.
-        sep (str): Character used as internal separator for the elements in the column.
-        as_matrix (bool): Results are returned as a matrix.
-        minmax (pair(number,number)): filter values by >=min,<=max.
-        keywords (list, Keywords): filter the result using the specified Keywords object.
-
-    Returns:
-        DataFrame.
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> import pandas as pd
-    >>> x = [ 'A', 'A', 'A;B', 'B', 'A;B;C', 'D', 'B;D']
-    >>> df = pd.DataFrame(
-    ...    {
-    ...       'Authors': x,
-    ...       'Cited by': list(range(len(x))),
-    ...       'ID': list(range(len(x))),
-    ...    }
-    ... )
-    >>> df
-      Authors  Cited by  ID
-    0       A         0   0
-    1       A         1   1
-    2     A;B         2   2
-    3       B         3   3
-    4   A;B;C         4   4
-    5       D         5   5
-    6     B;D         6   6
-
-    >>> self_citation(df, column='Authors')
-       Authors (IDX) Authors (COL)  Cited by            ID
-    0              B             B        15  [2, 3, 4, 6]
-    1              D             D        11        [5, 6]
-    2              A             A         7  [0, 1, 2, 4]
-    3              A             B         6        [2, 4]
-    4              B             A         6        [2, 4]
-    5              B             D         6           [6]
-    6              D             B         6           [6]
-    7              A             C         4           [4]
-    8              B             C         4           [4]
-    9              C             A         4           [4]
-    10             C             B         4           [4]
-    11             C             C         4           [4]
-
-    >>> self_citation(df, column='Authors', as_matrix=True)
-       A   B  C   D
-    A  7   6  4   0
-    B  6  15  4   6
-    C  4   4  4   0
-    D  0   6  0  11
-
-    >>> self_citation(df, column='Authors', as_matrix=True, minmax=(6,15))
-       A   B   D
-    A  7   6   0
-    B  6  15   6
-    D  0   6  11
-
-    >>> keywords = Keywords(['A', 'B'], ignore_case=False)
-    >>> keywords = keywords.compile()
-    >>> self_citation(df, 'Authors', as_matrix=True, keywords=keywords)
-       A   B
-    A  7   6
-    B  6  15
-
-
-    """
-
-    def generate_dic(column):
-        new_names = citations_by_term(x, column)
-        new_names = {
-            term: "{:s} [{:d}]".format(term, docs_per_term)
-            for term, docs_per_term in zip(new_names[column], new_names["Cited by"],)
-        }
-        return new_names
-
-    column_IDX = column + " (IDX)"
-    column_COL = column + " (COL)"
-
-    result = summary_occurrence(x, column)
-    result.pop("Num Documents")
-    maxval = result["Cited by"].max()
-    if minmax is not None:
-        min_value, max_value = minmax
-        if min_value is not None:
-            if min_value > maxval:
-                min_value = maxval
-            result = result[result["Cited by"] >= min_value]
-        if max_value is not None:
-            if max_value > maxval:
-                max_value = maxval
-            result = result[result["Cited by"] <= max_value]
-    if keywords is not None:
-        if keywords._patterns is None:
-            keywords = keywords.compile()
-        result = result[result[column_IDX].map(lambda w: w in keywords)]
-        result = result[result[column_COL].map(lambda w: w in keywords)]
-    result.sort_values(
-        ["Cited by", column_IDX, column_COL],
-        ascending=[False, True, True],
-        inplace=True,
-    )
-    result = result.reset_index(drop=True)
-    if as_matrix == True:
-        result = pd.pivot_table(
-            result,
-            values="Cited by",
-            index=column_IDX,
-            columns=column_COL,
-            fill_value=0,
-        )
-        result.columns = result.columns.tolist()
-        result.index = result.index.tolist()
-    if retmaxval is True:
-        return result, maxval
     return result
 
 
