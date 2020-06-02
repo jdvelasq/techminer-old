@@ -13,7 +13,7 @@ from IPython.display import display, HTML, clear_output
 import techminer.analytics as tc
 import techminer.plots as plt
 
-FIGSIZE = (12, 6)
+FIGSIZE = (14, 6)
 PANEL_HEIGHT = "400px"
 
 COLORMAPS = [
@@ -126,7 +126,7 @@ def summary_by_year(x):
         left_sidebar=left_box,
         center=right_box,
         right_sidebar=None,
-        pane_widths=[2, 5, 0],
+        pane_widths=[2, 6, 0],
         pane_heights=["85px", 5, 0],
     )
 

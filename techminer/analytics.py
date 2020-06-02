@@ -539,7 +539,7 @@ def descriptive_stats(x):
     n = max(x.Year) - min(x.Year) + 1
     Po = len(x.Year[x.Year == min(x.Year)])
     Pn = len(x.Year[x.Year == max(x.Year)])
-    cagr = str(round(100 * (np.power(Pn / Po, n) - 1), 2)) + " %"
+    cagr = str(round(100 * (np.power(Pn / Po, 1 / n) - 1), 2)) + " %"
     y["Compound annual growth rate"] = cagr
     #
     d = [key for key in y.keys()]
