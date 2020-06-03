@@ -353,6 +353,7 @@ def gant(
     )
     ax.set_yticks(np.arange(len(x.columns)))
     ax.set_yticklabels(x.columns)
+    ax.invert_yaxis()
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)
