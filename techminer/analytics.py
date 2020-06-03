@@ -1335,15 +1335,15 @@ def co_occurrence(
 
     """
 
-    def generate_dic(column, sep):
-        new_names = documents_by_term(x, column)
-        new_names = {
-            term: "{:s} [{:d}]".format(term, docs_per_term)
-            for term, docs_per_term in zip(
-                new_names[column], new_names["Num Documents"],
-            )
-        }
-        return new_names
+    # def generate_dic(column, sep):
+    #     new_names = documents_by_term(x, column)
+    #     new_names = {
+    #         term: "{:s} [{:d}]".format(term, docs_per_term)
+    #         for term, docs_per_term in zip(
+    #             new_names[column], new_names["Num Documents"],
+    #         )
+    #     }
+    #     return new_names
 
     #
     result = summary_co_occurrence(x, column=column, by=by, keywords=keywords)
@@ -1618,10 +1618,10 @@ def corr(
     column,
     by=None,
     method="pearson",
-    top_n=None,
+    min_link_value=-1,
     cmap=None,
-    filter_by=None,
     as_matrix=True,
+    filter_by=None,
 ):
     """Computes cross-correlation among items in two different columns of the dataframe.
 
@@ -1695,7 +1695,7 @@ def corr(
     C -0.333333  0.333333  1.000000  0.57735
     D -0.577350  0.577350  0.577350  1.00000
 
-    >>> corr(df, 'Authors', 'Author Keywords', top_n=2)
+    >>> corr(df, 'Authors', 'Author Keywords', min_link_value=0)
               B         C        D
     B  1.000000  0.333333  0.57735
     C  0.333333  1.000000  0.57735
@@ -1790,7 +1790,7 @@ def corr(
     c -0.50 -0.50  1.00  0.25
     d -0.50 -0.50  0.25  1.00
 
-    >>> corr(df, 'Author Keywords', top_n=3)
+    >>> corr(df, 'Author Keywords', min_link_value=0.249)
           a     b     c     d
     a  1.00  0.25 -0.50 -0.50
     b  0.25  1.00 -0.50 -0.50
@@ -1798,12 +1798,10 @@ def corr(
     d -0.50 -0.50  0.25  1.00
 
 
-    >>> corr(df, 'Author Keywords', top_n=2)
-          a     b     c     d
-    a  1.00  0.25 -0.50 -0.50
-    b  0.25  1.00 -0.50 -0.50
-    c -0.50 -0.50  1.00  0.25
-    d -0.50 -0.50  0.25  1.00
+    >>> corr(df, 'Author Keywords', min_link_value=1.0)
+          c     d
+    c  1.00  0.25
+    d  0.25  1.00
 
     >>> keywords = Keywords(['A', 'B'], ignore_case=False)
     >>> keywords = keywords.compile()
@@ -1842,21 +1840,21 @@ def corr(
                 .melt("index")
                 .rename(columns={"index": column, "variable": by})
             )
-        if top_n is not None:
-            result = result.head(top_n)
+
+        result = result[result["value"] >= min_link_value]
         return result
 
-    if top_n is not None and top_n < len(result):
-        for col in result.columns.tolist():
-            result.at[col, col] = -1.0
-        a = result.max()
-        min_value = a.sort_values(ascending=False)[top_n]
-        a = a[a >= min_value]
-        result = result.loc[a.index.tolist(), a.index.tolist()]
-        for col in result.columns.tolist():
-            result.at[col, col] = 1
-        result = result.sort_index(axis=0, ascending=True)
-        result = result.sort_index(axis=1, ascending=True)
+    for col in result.columns.tolist():
+        result.at[col, col] = -1.0
+    a = result.max()
+    if min_link_value > a.max():
+        min_link_value = a.max()
+    a = a[a >= min_link_value]
+    result = result.loc[a.index.tolist(), a.index.tolist()]
+    for col in result.columns.tolist():
+        result.at[col, col] = 1
+    result = result.sort_index(axis=0, ascending=True)
+    result = result.sort_index(axis=1, ascending=True)
     return result
 
 
