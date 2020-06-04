@@ -6,6 +6,7 @@ Modules
     
     data
     summary_by_year
+    summary_by_term
     
     
 analytics

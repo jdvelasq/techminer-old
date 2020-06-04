@@ -210,7 +210,7 @@ COLUMNS = [
     "Source title",
 ]
 
-def body_0(x):
+def __body_0(x):
     #
     def server(**kwargs):
         #
@@ -319,7 +319,7 @@ def body_0(x):
     )
 
 
-def body_1(x):
+def __body_1(x):
     #
     def server(**kwargs):
         #
@@ -329,7 +329,7 @@ def body_1(x):
         analysis_type = kwargs['analysis_type']
         cmap = kwargs['cmap']
         #
-        df = tc.summary_by_term(x, term)
+        df = summary_by_term(x, term)
         if analysis_type == "Frequency":
             df = df[[term, "Num Documents"]]
         else:
@@ -397,9 +397,11 @@ def body_1(x):
 
 
 def app(df):
+    """Jupyter Lab dashboard to analyze documents and citations by term.
+    """
     #
     body = widgets.Tab()
-    body.children = [body_0(df), body_1(df)]
+    body.children = [__body_0(df), __body_1(df)]
     body.set_title(0, "Term Analysis")
     body.set_title(1, "Worldmap")
     #
