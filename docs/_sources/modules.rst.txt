@@ -4,11 +4,13 @@ Modules
 .. toctree::
     :maxdepth: 2
     
-    dashboards
-    analytics
-    plots
-    text
-    keywords
+    data
+    
+    
+analytics
+plots
+text
+keywords
 
 dataframe
 maps

@@ -175,6 +175,39 @@
 
 <span class="n">TEXTLEN</span> <span class="o">=</span> <span class="mi">30</span>
 
+<span class="n">COLORMAPS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Greys&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Purples&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Blues&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Greens&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Oranges&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Reds&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;YlOrBr&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;YlOrRd&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;OrRd&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PuRd&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RdPu&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BuPu&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GnBu&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PuBu&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;YlGnBu&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PuBuGn&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BuGn&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;YlGn&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Pastel1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Pastel2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Paired&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Accent&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Dark2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Set1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Set2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Set3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tab10&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tab20&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tab20b&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tab20c&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
 
 <div class="viewcode-block" id="bar"><a class="viewcode-back" href="../../plots.html#techminer.plots.bar">[docs]</a><span class="k">def</span> <span class="nf">bar</span><span class="p">(</span>
     <span class="n">x</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span>
@@ -503,6 +536,7 @@
     <span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -1399,6 +1433,16 @@
 <span class="c1">#         #         alpha=0.2,</span>
 <span class="c1">#         #         linewidth=0,</span>
 <span class="c1">#         #     )</span>
+
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="kn">import</span> <span class="nn">doctest</span>
+
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
 </pre></div>
 
            </div>

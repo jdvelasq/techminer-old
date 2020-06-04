@@ -1,0 +1,688 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>techminer.data &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TechMiner - A Package for Bibliographical Analysis using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TechMiner - A Package for Bibliographical Analysis using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>techminer.data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for techminer.data</h1><div class="highlight"><pre>
+<span></span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Primary Data Importation and Manipulation</span>
+<span class="sd">==================================================================================================</span>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">techminer.explode</span> <span class="kn">import</span> <span class="n">MULTIVALUED_COLS</span>
+<span class="kn">from</span> <span class="nn">techminer.text</span> <span class="kn">import</span> <span class="n">extract_country</span><span class="p">,</span> <span class="n">extract_institution</span><span class="p">,</span> <span class="n">remove_accents</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+    <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+
+<span class="n">NORMALIZED_NAMES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;J9&quot;</span><span class="p">:</span> <span class="s2">&quot;Abbreviated Source Title&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AB&quot;</span><span class="p">:</span> <span class="s2">&quot;Abstract&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;OA&quot;</span><span class="p">:</span> <span class="s2">&quot;Access Type&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;C1&quot;</span><span class="p">:</span> <span class="s2">&quot;Affiliations&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AR&quot;</span><span class="p">:</span> <span class="s2">&quot;Art. No.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DE&quot;</span><span class="p">:</span> <span class="s2">&quot;Author Keywords&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AU_CO&quot;</span><span class="p">:</span> <span class="s2">&quot;Countries&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RI&quot;</span><span class="p">:</span> <span class="s2">&quot;Author(s) ID&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AU_IN&quot;</span><span class="p">:</span> <span class="s2">&quot;Institutions&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AU_C1&quot;</span><span class="p">:</span> <span class="s2">&quot;Authors with affiliations&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AU&quot;</span><span class="p">:</span> <span class="s2">&quot;Authors&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TC&quot;</span><span class="p">:</span> <span class="s2">&quot;Cited by&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CR&quot;</span><span class="p">:</span> <span class="s2">&quot;Cited references&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DOI&quot;</span><span class="p">:</span> <span class="s2">&quot;DI&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DT&quot;</span><span class="p">:</span> <span class="s2">&quot;Document type&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BE&quot;</span><span class="p">:</span> <span class="s2">&quot;Editors&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;UT&quot;</span><span class="p">:</span> <span class="s2">&quot;EID&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="s2">&quot;Index Keywords&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BN&quot;</span><span class="p">:</span> <span class="s2">&quot;ISBN&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SN&quot;</span><span class="p">:</span> <span class="s2">&quot;ISSN&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;IS&quot;</span><span class="p">:</span> <span class="s2">&quot;Issue&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DE_ID&quot;</span><span class="p">:</span> <span class="s2">&quot;Keywords&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LA&quot;</span><span class="p">:</span> <span class="s2">&quot;Language of Original Document&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PG&quot;</span><span class="p">:</span> <span class="s2">&quot;Page count&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;EP&quot;</span><span class="p">:</span> <span class="s2">&quot;Page end&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BP&quot;</span><span class="p">:</span> <span class="s2">&quot;Page start&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PU&quot;</span><span class="p">:</span> <span class="s2">&quot;Publisher&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PM&quot;</span><span class="p">:</span> <span class="s2">&quot;PubMed ID&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SO&quot;</span><span class="p">:</span> <span class="s2">&quot;Source title&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;FN&quot;</span><span class="p">:</span> <span class="s2">&quot;Source&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SC&quot;</span><span class="p">:</span> <span class="s2">&quot;Subject&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TI&quot;</span><span class="p">:</span> <span class="s2">&quot;Title&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;VL&quot;</span><span class="p">:</span> <span class="s2">&quot;Volume&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PT&quot;</span><span class="p">:</span> <span class="s2">&quot;Year&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">__disambiguate_authors</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Verify if author&#39;s names are unique. For duplicated names, based on `Author(s) ID` column,</span>
+<span class="sd">    adds a consecutive number to the name.</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        col_Authors (str): Author&#39;s name column.</span>
+<span class="sd">        sep_Authors (str): Character used as internal separator for the elements in the column with the author&#39;s name.</span>
+<span class="sd">        col_AuthorsID (str): Author&#39;s ID column.</span>
+<span class="sd">        sep_AuthorsID (str): Character used as internal separator for the elements in the column with the author&#39;s ID.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...   {</span>
+<span class="sd">    ...      &quot;Authors&quot;: &quot;author 0;author 0;author 0,author 0,author 0&quot;.split(&quot;,&quot;),</span>
+<span class="sd">    ...      &quot;Author(s) ID&quot;: &quot;0;1;2;,3;,4;&quot;.split(&#39;,&#39;),</span>
+<span class="sd">    ...   }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">                          Authors Author(s) ID</span>
+<span class="sd">    0  author 0;author 0;author 0       0;1;2;</span>
+<span class="sd">    1                    author 0           3;</span>
+<span class="sd">    2                    author 0           4;</span>
+
+<span class="sd">    &gt;&gt;&gt; __disambiguate_authors(df)</span>
+<span class="sd">                                Authors Author(s) ID</span>
+<span class="sd">    0  author 0;author 0(1);author 0(2)        0;1;2</span>
+<span class="sd">    1                       author 0(3)            3</span>
+<span class="sd">    2                       author 0(4)            4</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="ow">and</span> <span class="n">w</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;;&quot;</span> <span class="k">else</span> <span class="n">w</span>
+    <span class="p">)</span>
+
+    <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Author(s) ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Author(s) ID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="ow">and</span> <span class="n">w</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;;&quot;</span> <span class="k">else</span> <span class="n">w</span>
+    <span class="p">)</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">x</span><span class="p">[[</span><span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="s2">&quot;Author(s) ID&quot;</span><span class="p">]]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;*info*&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Author(s) ID&quot;</span><span class="p">])]</span>
+
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;*info*&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;*info*&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">))</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s2">&quot;*info*&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;*info*&quot;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">names_ids</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
+
+        <span class="n">author_name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">&quot;*info*&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">author_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">&quot;*info*&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">author_name</span> <span class="ow">in</span> <span class="n">names_ids</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+            <span class="k">if</span> <span class="n">author_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names_ids</span><span class="p">[</span><span class="n">author_name</span><span class="p">]:</span>
+                <span class="n">names_ids</span><span class="p">[</span><span class="n">author_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">names_ids</span><span class="p">[</span><span class="n">author_name</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">author_id</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">names_ids</span><span class="p">[</span><span class="n">author_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">author_id</span><span class="p">]</span>
+
+    <span class="n">ids_names</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">author_name</span> <span class="ow">in</span> <span class="n">names_ids</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">author_id</span> <span class="ow">in</span> <span class="n">names_ids</span><span class="p">[</span><span class="n">author_name</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">suffix</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">ids_names</span><span class="p">[</span><span class="n">author_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">author_name</span> <span class="o">+</span> <span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ids_names</span><span class="p">[</span><span class="n">author_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">author_name</span>
+            <span class="n">suffix</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Author(s) ID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">ids_names</span><span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">z</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="k">else</span> <span class="n">z</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">##  Data importation</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+<div class="viewcode-block" id="load_scopus"><a class="viewcode-back" href="../../data.html#techminer.data.load_scopus">[docs]</a><span class="k">def</span> <span class="nf">load_scopus</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Import filter for Scopus data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Renaming and selecting columns ...&quot;</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">NORMALIZED_NAMES</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">NORMALIZED_NAMES</span><span class="o">.</span><span class="n">values</span><span class="p">()]]</span>
+    <span class="c1">#</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">remove_accents</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;Authors&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Formatting author names ...&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Authors</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Authors</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span> <span class="k">if</span> <span class="n">w</span> <span class="o">==</span> <span class="s2">&quot;[No author name available]&quot;</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Author(s) ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Author(s) ID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span> <span class="k">if</span> <span class="n">w</span> <span class="o">==</span> <span class="s2">&quot;[No author id available]&quot;</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="s2">&quot;Authors&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Disambiguating author names ...&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">__disambiguate_authors</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="s2">&quot;Title&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Removing part of titles in foreing languages ...&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">w</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;]&quot;</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="s2">&quot;Author Keywords&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="ow">and</span> <span class="s2">&quot;Index Keywords&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="p">):</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Fusioning author and index keywords ...&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">author_keywords</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Author Keywords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="p">)</span>
+        <span class="n">index_keywords</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Index Keywords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="p">)</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="n">author_keywords</span> <span class="o">+</span> <span class="n">index_keywords</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">w</span> <span class="k">if</span> <span class="n">e</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">])</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">w</span><span class="p">])</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">w</span><span class="p">)))</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">w</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Keywords&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">keywords</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="s2">&quot;Affiliations&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting countries from affiliations ...&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Countries&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Affiliations</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">extract_country</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="s2">&quot;Affiliations&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting institutions from affiliations ...&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Institutions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Affiliations</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">extract_institution</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="s2">&quot;Countries&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting country of 1st author ...&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Country 1st&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Countries&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="s2">&quot;Institutions&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting affiliation of 1st author ...&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Institution 1st&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Institutions&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="s2">&quot;Authors&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1">#</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Counting number of authors ...&quot;</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Num Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">))</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="n">x</span><span class="p">[</span><span class="s2">&quot;ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="c1">#</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">w</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">return</span> <span class="n">x</span></div>
+
+
+
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">## Term extraction and count</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+
+
+
+<div class="viewcode-block" id="extract_terms"><a class="viewcode-back" href="../../data.html#techminer.data.extract_terms">[docs]</a><span class="k">def</span> <span class="nf">extract_terms</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extracts unique terms in a column, exploding multvalued columns.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        column (str): the column to explode.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = pd.DataFrame({&#39;Authors&#39;: [&#39;xxx&#39;, &#39;xxx; zzz&#39;, &#39;yyy&#39;, &#39;xxx; yyy; zzz&#39;]})</span>
+<span class="sd">    &gt;&gt;&gt; x</span>
+<span class="sd">             Authors</span>
+<span class="sd">    0            xxx</span>
+<span class="sd">    1       xxx; zzz</span>
+<span class="sd">    2            yyy</span>
+<span class="sd">    3  xxx; yyy; zzz</span>
+
+<span class="sd">    &gt;&gt;&gt; extract_terms(x, column=&#39;Authors&#39;)</span>
+<span class="sd">      Authors</span>
+<span class="sd">    0     xxx</span>
+<span class="sd">    1     yyy</span>
+<span class="sd">    2     zzz</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">MULTIVALUED_COLS</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[[</span><span class="n">column</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">column</span><span class="p">:</span> <span class="n">x</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="count_terms"><a class="viewcode-back" href="../../data.html#techminer.data.count_terms">[docs]</a><span class="k">def</span> <span class="nf">count_terms</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Counts the number of different terms in a column.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (pandas.DataFrame): Biblographic dataframe.</span>
+<span class="sd">        column (str): the column to explode.</span>
+<span class="sd">        sep (str): Character used as internal separator for the elements in the column.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; x = pd.DataFrame({&#39;Authors&#39;: [&#39;xxx&#39;, &#39;xxx; zzz&#39;, &#39;yyy&#39;, &#39;xxx; yyy; zzz&#39;]})</span>
+<span class="sd">    &gt;&gt;&gt; x</span>
+<span class="sd">             Authors</span>
+<span class="sd">    0            xxx</span>
+<span class="sd">    1       xxx; zzz</span>
+<span class="sd">    2            yyy</span>
+<span class="sd">    3  xxx; yyy; zzz</span>
+
+<span class="sd">    &gt;&gt;&gt; count_terms(x, column=&#39;Authors&#39;)</span>
+<span class="sd">    3</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">extract_terms</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">))</span></div>
+
+
+
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">##  Data coverage</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+
+
+<div class="viewcode-block" id="coverage"><a class="viewcode-back" href="../../data.html#techminer.data.coverage">[docs]</a><span class="k">def</span> <span class="nf">coverage</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reports the number of not `None` elements for column in a dataframe.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Pandas DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = pd.DataFrame(</span>
+<span class="sd">    ...   {</span>
+<span class="sd">    ...      &quot;Authors&quot;: &quot;author 0,author 0,author 0;author 0;author 0;author 1;author 2;author 0&quot;.split(&quot;;&quot;),</span>
+<span class="sd">    ...      &quot;Author(s) ID&quot;: &quot;0;1;2;,3;,4;,5;,6;,7:&quot;.split(&#39;,&#39;),</span>
+<span class="sd">    ...      &quot;ID&quot;: list(range(6)),</span>
+<span class="sd">    ...      &quot;Source title&quot;: [&#39;source {:d}&#39;.format(w) for w in range(5)] + [pd.NA],</span>
+<span class="sd">    ...      &quot;None field&quot;: [pd.NA] * 6,</span>
+<span class="sd">    ...   }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; x</span>
+<span class="sd">                          Authors Author(s) ID  ID Source title None field</span>
+<span class="sd">    0  author 0,author 0,author 0       0;1;2;   0     source 0       &lt;NA&gt;</span>
+<span class="sd">    1                    author 0           3;   1     source 1       &lt;NA&gt;</span>
+<span class="sd">    2                    author 0           4;   2     source 2       &lt;NA&gt;</span>
+<span class="sd">    3                    author 1           5;   3     source 3       &lt;NA&gt;</span>
+<span class="sd">    4                    author 2           6;   4     source 4       &lt;NA&gt;</span>
+<span class="sd">    5                    author 0           7:   5         &lt;NA&gt;       &lt;NA&gt;</span>
+
+<span class="sd">    &gt;&gt;&gt; coverage(x)</span>
+<span class="sd">             Column  Number of items Coverage (%)</span>
+<span class="sd">    0       Authors                6      100.00%</span>
+<span class="sd">    1  Author(s) ID                6      100.00%</span>
+<span class="sd">    2            ID                6      100.00%</span>
+<span class="sd">    3  Source title                5       83.33%</span>
+<span class="sd">    4    None field                0        0.00%</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Column&quot;</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+            <span class="s2">&quot;Number of items&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span>
+            <span class="s2">&quot;Coverage (%)&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;</span><span class="si">{:5.2%}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span>
+            <span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="descriptive_stats"><a class="viewcode-back" href="../../data.html#techminer.data.descriptive_stats">[docs]</a><span class="k">def</span> <span class="nf">descriptive_stats</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Descriptive statistics of current dataframe.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pandas.Series</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...          &#39;Authors&#39;:  &#39;xxx;xxx, zzz;yyy, xxx, yyy, zzz&#39;.split(&#39;,&#39;),</span>
+<span class="sd">    ...          &#39;Author(s) ID&#39;: &#39;0;1,    3;4;,  4;,  5;,  6;&#39;.split(&#39;,&#39;),</span>
+<span class="sd">    ...          &#39;Source title&#39;: &#39; s0,     s0,   s1,  s1, s2&#39;.split(&#39;,&#39;),</span>
+<span class="sd">    ...          &#39;Author Keywords&#39;: &#39;k0;k1, k0;k2, k3;k2;k1, k4, k5&#39;.split(&#39;,&#39;),</span>
+<span class="sd">    ...          &#39;Index Keywords&#39;: &#39;w0;w1, w0;w2, w3;k1;w1, w4, w5&#39;.split(&#39;,&#39;),</span>
+<span class="sd">    ...          &#39;Year&#39;: [1990, 1991, 1992, 1993, 1994],</span>
+<span class="sd">    ...          &#39;Cited by&#39;: list(range(5)),</span>
+<span class="sd">    ...          &#39;Num Authors&#39;: [2, 2, 1, 1, 1],</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; descriptive_stats(x)</span>
+<span class="sd">                                             value</span>
+<span class="sd">    Articles                                     5</span>
+<span class="sd">    Years                                1990-1994</span>
+<span class="sd">    Average citations per article             2.00</span>
+<span class="sd">    Authors                                      3</span>
+<span class="sd">    Author(s) ID                                 7</span>
+<span class="sd">    Articles per author                       1.67</span>
+<span class="sd">    Authors per article                        0.6</span>
+<span class="sd">    Author Keywords                              6</span>
+<span class="sd">    Index Keywords                               7</span>
+<span class="sd">    Source titles                                5</span>
+<span class="sd">    Authors of single authored articles          3</span>
+<span class="sd">    Authors of multi authored articles           2</span>
+<span class="sd">    Co-authors per article                     1.4</span>
+<span class="sd">    Average articles per Source title            1</span>
+<span class="sd">    Compound annual growth rate              0.0 %</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">descriptions</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;Articles&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Years&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Average citations per article&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Authors&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Author(s) ID&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Authors of single authored articles&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Authors of multi authored articles&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Articles per author&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Authors per article&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Co-authors per article&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Author Keywords&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Index Keywords&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Source titles&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Average articles per Source title&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Compound Annual Growth Rate&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Articles&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Years&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Year</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Year</span><span class="p">))</span>
+    <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Average citations per article&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:4.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;Cited by&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+    <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">count_terms</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Authors&quot;</span><span class="p">)</span>
+    <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Author(s) ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">count_terms</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Author(s) ID&quot;</span><span class="p">)</span>
+    <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Articles per author&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">count_terms</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Authors&quot;</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Authors per article&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">count_terms</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Authors&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Author Keywords&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">count_terms</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Author Keywords&quot;</span><span class="p">)</span>
+    <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Index Keywords&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">count_terms</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Index Keywords&quot;</span><span class="p">)</span>
+    <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Source titles&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">count_terms</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Source title&quot;</span><span class="p">)</span>
+
+    <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Authors of single authored articles&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;Num Authors&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Authors of multi authored articles&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;Num Authors&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Co-authors per article&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;Num Authors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Average articles per Source title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">count_terms</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Source title&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Year</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Year</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">Po</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Year</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">Year</span> <span class="o">==</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Year</span><span class="p">)])</span>
+    <span class="n">Pn</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Year</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">Year</span> <span class="o">==</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Year</span><span class="p">)])</span>
+    <span class="n">cagr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">Pn</span> <span class="o">/</span> <span class="n">Po</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; %&quot;</span>
+    <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Compound annual growth rate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cagr</span>
+    <span class="c1">#</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">y</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">y</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">d</span><span class="p">)</span></div>
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="kn">import</span> <span class="nn">doctest</span>
+
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
