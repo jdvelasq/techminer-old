@@ -1,4 +1,4 @@
-.. automodule:: techminer.summary_by_year
+.. automodule:: techminer.by_year
     :members:
     :undoc-members:
     :show-inheritance:

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>techminer.summary_by_term_per_year &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
+  <title>techminer.by_term_per_year &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
   
 
   
@@ -132,7 +132,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>techminer.summary_by_term_per_year</li>
+      <li>techminer.by_term_per_year</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -147,10 +147,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for techminer.summary_by_term_per_year</h1><div class="highlight"><pre>
+  <h1>Source code for techminer.by_term_per_year</h1><div class="highlight"><pre>
 <span></span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Summary by Term per Year</span>
+<span class="sd">Analysis by Term per Year</span>
 <span class="sd">==================================================================================================</span>
 
 
@@ -164,10 +164,10 @@
 <span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">AppLayout</span><span class="p">,</span> <span class="n">Layout</span>
 <span class="kn">from</span> <span class="nn">techminer.explode</span> <span class="kn">import</span> <span class="n">__explode</span>
 <span class="kn">from</span> <span class="nn">techminer.plots</span> <span class="kn">import</span> <span class="n">COLORMAPS</span>
+<span class="kn">from</span> <span class="nn">techminer.keywords</span> <span class="kn">import</span> <span class="n">Keywords</span>
+<span class="kn">from</span> <span class="nn">techminer.by_term</span> <span class="kn">import</span> <span class="n">documents_by_term</span><span class="p">,</span> <span class="n">citations_by_term</span>
 
-<span class="kn">from</span> <span class="nn">techminer.summary_by_term</span> <span class="kn">import</span> <span class="n">documents_by_term</span><span class="p">,</span> <span class="n">citations_by_term</span>
-
-<div class="viewcode-block" id="summary_by_term_per_year"><a class="viewcode-back" href="../../summary_by_term_per_year.html#techminer.summary_by_term_per_year.summary_by_term_per_year">[docs]</a><span class="k">def</span> <span class="nf">summary_by_term_per_year</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="summary_by_term_per_year"><a class="viewcode-back" href="../../by_term_per_year.html#techminer.by_term_per_year.summary_by_term_per_year">[docs]</a><span class="k">def</span> <span class="nf">summary_by_term_per_year</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Computes the number of documents and citations by term per year.</span>
 
 <span class="sd">    Args:</span>
@@ -238,7 +238,7 @@
     <span class="k">return</span> <span class="n">result</span></div>
 
 
-<div class="viewcode-block" id="documents_by_term_per_year"><a class="viewcode-back" href="../../summary_by_term_per_year.html#techminer.summary_by_term_per_year.documents_by_term_per_year">[docs]</a><span class="k">def</span> <span class="nf">documents_by_term_per_year</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="documents_by_term_per_year"><a class="viewcode-back" href="../../by_term_per_year.html#techminer.by_term_per_year.documents_by_term_per_year">[docs]</a><span class="k">def</span> <span class="nf">documents_by_term_per_year</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Computes the number of documents by term per year.</span>
 
 <span class="sd">    Args:</span>
@@ -313,7 +313,7 @@
     <span class="k">return</span> <span class="n">result</span></div>
 
 
-<div class="viewcode-block" id="gant"><a class="viewcode-back" href="../../summary_by_term_per_year.html#techminer.summary_by_term_per_year.gant">[docs]</a><span class="k">def</span> <span class="nf">gant</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="gant"><a class="viewcode-back" href="../../by_term_per_year.html#techminer.by_term_per_year.gant">[docs]</a><span class="k">def</span> <span class="nf">gant</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Computes the number of documents by term per year.</span>
 
 <span class="sd">    Args:</span>
@@ -386,7 +386,7 @@
     <span class="k">return</span> <span class="n">result</span></div>
 
 
-<div class="viewcode-block" id="citations_by_term_per_year"><a class="viewcode-back" href="../../summary_by_term_per_year.html#techminer.summary_by_term_per_year.citations_by_term_per_year">[docs]</a><span class="k">def</span> <span class="nf">citations_by_term_per_year</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="citations_by_term_per_year"><a class="viewcode-back" href="../../by_term_per_year.html#techminer.by_term_per_year.citations_by_term_per_year">[docs]</a><span class="k">def</span> <span class="nf">citations_by_term_per_year</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Computes the number of citations by term by year in a column.</span>
 
 <span class="sd">    Args:</span>
@@ -598,7 +598,7 @@
     <span class="p">)</span>
 
 
-<div class="viewcode-block" id="app"><a class="viewcode-back" href="../../summary_by_term_per_year.html#techminer.summary_by_term_per_year.app">[docs]</a><span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<div class="viewcode-block" id="app"><a class="viewcode-back" href="../../by_term_per_year.html#techminer.by_term_per_year.app">[docs]</a><span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Jupyter Lab dashboard.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#</span>

@@ -1,4 +1,4 @@
-.. automodule:: techminer.summary_by_term
+.. automodule:: techminer.by_term
     :members:
     :undoc-members:
     :show-inheritance:

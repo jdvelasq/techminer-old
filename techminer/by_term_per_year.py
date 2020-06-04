@@ -1,6 +1,6 @@
 
 """
-Summary by Term per Year
+Analysis by Term per Year
 ==================================================================================================
 
 
@@ -14,8 +14,8 @@ from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
 from techminer.explode import __explode
 from techminer.plots import COLORMAPS
-
-from techminer.summary_by_term import documents_by_term, citations_by_term
+from techminer.keywords import Keywords
+from techminer.by_term import documents_by_term, citations_by_term
 
 def summary_by_term_per_year(x, column, keywords=None):
     """Computes the number of documents and citations by term per year.

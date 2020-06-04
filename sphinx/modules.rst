@@ -5,9 +5,9 @@ Modules
     :maxdepth: 2
     
     data
-    summary_by_year
-    summary_by_term
-    summary_by_term_per_year
+    by_year
+    by_term
+    by_term_per_year
     co_occurrence
     
     

@@ -14,6 +14,7 @@ from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
 from techminer.explode import __explode
 from techminer.plots import COLORMAPS
+from techminer.keywords import Keywords
 
 from techminer.explode import MULTIVALUED_COLS
 
