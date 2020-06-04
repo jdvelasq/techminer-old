@@ -7,6 +7,8 @@ Modules
     data
     summary_by_year
     summary_by_term
+    summary_by_term_per_year
+    co_occurrence
     
     
 analytics

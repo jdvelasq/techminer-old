@@ -397,7 +397,7 @@ def __body_1(x):
 
 
 def app(df):
-    """Jupyter Lab dashboard to analyze documents and citations by term.
+    """Jupyter Lab dashboard.
     """
     #
     body = widgets.Tab()

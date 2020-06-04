@@ -226,7 +226,7 @@ def __body_0(df):
 
 
 def app(df):
-    """Jupyter Lab dashboard to analyze documents and citations by year.
+    """Jupyter Lab dashboard.
     """
     #
     body = widgets.Tab()

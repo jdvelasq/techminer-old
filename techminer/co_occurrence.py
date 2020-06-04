@@ -1,6 +1,6 @@
 
 """
-Summary by Term per Year
+Co-occurrence Analysis
 ==================================================================================================
 
 
@@ -419,7 +419,7 @@ COLUMNS = [
     "Source title",
 ]
 
-def body_0(x):
+def __body_0(x):
     #
     def server(**kwargs):
         #
@@ -521,9 +521,11 @@ def body_0(x):
 
 
 def app(df):
+    """Jupyter Lab dashboard.
+    """
     #
     body = widgets.Tab()
-    body.children = [body_0(df)]
+    body.children = [__body_0(df)]
     body.set_title(0, "Matrix")
     #
     return AppLayout(
