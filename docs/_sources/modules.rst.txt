@@ -5,6 +5,7 @@ Modules
     :maxdepth: 2
     
     data
+    summary_by_year
     
     
 analytics

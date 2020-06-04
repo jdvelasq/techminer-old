@@ -141,7 +141,7 @@ RIGHT_PANEL_WIDTH = "870px"
 FIGSIZE = (15, 9.4)
 PANE_HEIGHTS = ["80px", "650px", 0]
 
-def body_0(df):
+def __body_0(df):
     #
     def server(**kwargs):
         #
@@ -226,9 +226,11 @@ def body_0(df):
 
 
 def app(df):
+    """Jupyter Lab dashboard to analyze documents and citations by year.
+    """
     #
     body = widgets.Tab()
-    body.children = [body_0(df)]
+    body.children = [__body_0(df)]
     body.set_title(0, "Time Analysis")
     #
     return AppLayout(
