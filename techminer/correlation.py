@@ -12,13 +12,11 @@ import pandas as pd
 import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
-from techminer.explode import __explode
-from techminer.plots import COLORMAPS
-from techminer.explode import __explode
-
-from techminer.explode import MULTIVALUED_COLS
-from techminer.keywords import Keywords
+from techminer.by_term import summary_by_term
 from techminer.co_occurrence import co_occurrence
+from techminer.explode import MULTIVALUED_COLS, __explode
+from techminer.keywords import Keywords
+from techminer.plots import COLORMAPS
 
 
 def compute_tfm(x, column, keywords=None):
@@ -104,9 +102,11 @@ def corr(
     by=None,
     method="pearson",
     min_link_value=-1,
+    filter_by="Frequency",
+    filter_value=0,
     cmap=None,
     as_matrix=True,
-    filter_by=None,
+    keywords=None,
 ):
     """Computes cross-correlation among items in two different columns of the dataframe.
 
@@ -300,17 +300,31 @@ def corr(
     if by is None:
         by = column
     if column == by:
-        tfm = compute_tfm(x, column=column, keywords=filter_by)
+        tfm = compute_tfm(x, column=column, keywords=keywords)
         result = tfm.corr(method=method)
     else:
         tfm = co_occurrence(x, column=column, by=by, as_matrix=True, keywords=None,)
         result = tfm.corr(method=method)
-
-    if filter_by is not None:
-        filter_by = filter_by.compile()
-        new_columns = [w for w in result.columns if w in filter_by]
-        new_index = [w for w in result.index if w in filter_by]
+    if keywords is not None:
+        keywords = keywords.compile()
+        new_columns = [w for w in result.columns if w in keywords]
+        new_index = [w for w in result.index if w in keywords]
         result = result.loc[new_index, new_columns]
+    #
+    if (filter_by == 0 or filter_by == "Frequency") and filter_value > 1:
+        df = summary_by_term(x, column)
+        if filter_value > df["Num Documents"].max():
+            filter_value = df["Num Documents"].max()
+        df = df[df["Num Documents"] >= filter_value]
+        filtered_terms = df[column].tolist()
+        result = result.loc[filtered_terms, filtered_terms]
+    if (filter_by == 1 or filter_by == "Cited by") and filter_value > 0:
+        df = summary_by_term(x, column)
+        if filter_value > df["Cited by"].max():
+            filter_value = df["Cited by"].max()
+        df = df[df["Cited by"] >= filter_value]
+        filtered_terms = df[column].tolist()
+        result = result.loc[filtered_terms, filtered_terms]
     #
     if as_matrix is False:
         if column == by:
@@ -328,7 +342,7 @@ def corr(
 
         result = result[result["value"] >= min_link_value]
         return result
-
+    #
     for col in result.columns.tolist():
         result.at[col, col] = -1.0
     a = result.max()
@@ -338,9 +352,216 @@ def corr(
     result = result.loc[a.index.tolist(), a.index.tolist()]
     for col in result.columns.tolist():
         result.at[col, col] = 1
+    # result = result.sort_values([column, by], ignore_index=True,)
     result = result.sort_index(axis=0, ascending=True)
     result = result.sort_index(axis=1, ascending=True)
     return result
+
+
+#
+#
+#  Correlation Analysis
+#
+#
+def body_0(x):
+    #
+    def server(**kwargs):
+        #
+        # Logic
+        #
+        column = kwargs["term"]
+        by = kwargs["by"]
+        method = kwargs["method"]
+        min_link_value = kwargs["min_link_value"]
+        cmap = kwargs["cmap"]
+        filter_by = kwargs["filter_by"]
+        filter_value = kwargs["filter_value"]
+        #
+        s = summary_by_term(x, column)
+        if (
+            filter_by == "Frequency"
+            and controls[6]["widget"].max != s["Num Documents"].max()
+        ):
+            controls[6]["widget"].max = s["Num Documents"].max()
+            controls[6]["widget"].value = 1
+        if filter_by == "Cited by" and controls[6]["widget"].max != s["Cited by"].max():
+            controls[6]["widget"].max = s["Cited by"].max()
+            controls[6]["widget"].value = 0
+        #
+        matrix = corr(
+            x,
+            column=column,
+            by=by,
+            method=method,
+            min_link_value=min_link_value,
+            cmap=cmap,
+            filter_by=filter_by,
+            filter_value=filter_value,
+            as_matrix=True,
+            keywords=None,
+        )
+        #
+        if filter_by == "Frequency":
+            s = s[[column, "Num Documents"]]
+            d = {}
+            for row in s.iterrows():
+                d[row[1][column]] = (
+                    row[1][column] + " [" + str(row[1]["Num Documents"]) + "]"
+                )
+            matrix.columns = [d[w] for w in matrix.columns]
+            matrix.index = [d[w] for w in matrix.index]
+        if filter_by == "Cited by":
+            s = s[[column, "Cited by"]]
+            d = {}
+            for row in s.iterrows():
+                d[row[1][column]] = (
+                    row[1][column] + " [" + str(row[1]["Cited by"]) + "]"
+                )
+            matrix.columns = [d[w] for w in matrix.columns]
+            matrix.index = [d[w] for w in matrix.index]
+
+        #
+        output.clear_output()
+        with output:
+            if len(matrix.columns) <= 50 and len(matrix.index) <= 50:
+                display(matrix.style.background_gradient(cmap=cmap))
+            else:
+                display(matrix)
+
+    #
+    # UI
+    #
+    controls = [
+        {
+            "arg": "term",
+            "desc": "Term to analyze:",
+            "widget": widgets.Select(
+                options=[z for z in COLUMNS if z in x.columns],
+                ensure_option=True,
+                disabled=False,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        {
+            "arg": "by",
+            "desc": "By Term:",
+            "widget": widgets.Select(
+                options=[z for z in COLUMNS if z in x.columns],
+                ensure_option=True,
+                disabled=False,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        {
+            "arg": "method",
+            "desc": "Method:",
+            "widget": widgets.Select(
+                options=["pearson", "kendall", "spearman"],
+                ensure_option=True,
+                disabled=False,
+                continuous_update=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        {
+            "arg": "min_link_value",
+            "desc": "Min link value:",
+            "widget": widgets.FloatSlider(
+                value=-1,
+                min=-1,
+                max=1.0,
+                step=0.01,
+                disabled=False,
+                continuous_update=False,
+                orientation="horizontal",
+                readout=True,
+                readout_format=".1f",
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        {
+            "arg": "filter_by",
+            "desc": "Filter by:",
+            "widget": widgets.Dropdown(
+                options=["Frequency", "Cited by"],
+                disable=False,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        {
+            "arg": "filter_value",
+            "desc": "Filter value",
+            "widget": widgets.IntSlider(
+                value=0,
+                min=0,
+                max=50,
+                step=1,
+                disabled=False,
+                continuous_update=False,
+                orientation="horizontal",
+                readout=True,
+                readout_format="d",
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+    ]
+    #
+    args = {control["arg"]: control["widget"] for control in controls}
+    output = widgets.Output()
+    with output:
+        display(widgets.interactive_output(server, args,))
+    return widgets.HBox(
+        [
+            widgets.VBox(
+                [
+                    widgets.VBox(
+                        [widgets.Label(value=control["desc"]), control["widget"]]
+                    )
+                    for control in controls
+                ],
+                layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
+            ),
+            widgets.VBox([output], layout=Layout(width=RIGHT_PANEL_WIDTH)),
+        ]
+    )
+
+
+#
+#
+#  Correlation Map
+#
+#
+
+#
+#
+# APP
+#
+#
+
+
+def app(df):
+    #
+    body = widgets.Tab()
+    body.children = [body_0(df)]
+    body.set_title(0, "Matrix")
+    #
+    return AppLayout(
+        header=widgets.HTML(
+            value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+                "Correlation Analysis"
+            )
+        ),
+        center=body,
+        pane_heights=PANE_HEIGHTS,
+    )
+
 
 
 # def autocorr_map(

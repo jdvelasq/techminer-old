@@ -15,10 +15,10 @@ from ipywidgets import AppLayout, Layout
 from techminer.explode import __explode
 from techminer.plots import COLORMAPS
 from techminer.keywords import Keywords
-
+from techminer.by_term import summary_by_term
 from techminer.explode import MULTIVALUED_COLS
 
-def summary_co_occurrence(x, column, by=None, keywords=None):
+def summary_co_occurrence(x, column, by=None, keywords=None, min_frequency=1, min_cited_by=0):
     """Summary occurrence and citations by terms in two different columns.
 
     Args:
@@ -114,6 +114,19 @@ def summary_co_occurrence(x, column, by=None, keywords=None):
     if keywords is not None:
         if keywords._patterns is None:
             keywords = keywords.compile()
+        result = result[result[by].map(lambda w: w in keywords)]
+        result = result[result[column].map(lambda w: w in keywords)]
+    if min_frequency > 1 and min_cited_by > 0:
+        df = summary_by_term(x, column)
+        df = df[df['Num Documents'] >= min_frequency]
+        df = df[df['Cited by'] >= min_cited_by]
+        keywords = Keywords(df[column])
+        if by[-1] != '_' and by[:-1] != column:
+            df = summary_by_term(x, by)
+            df = df[df['Num Documents'] >= min_frequency]
+            df = df[df['Cited by'] >= min_cited_by]
+            keywords += Keywords(df[by])
+        keywords.compile()
         result = result[result[by].map(lambda w: w in keywords)]
         result = result[result[column].map(lambda w: w in keywords)]
     result = result.sort_values([column, by], ignore_index=True,)
