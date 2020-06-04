@@ -358,17 +358,7 @@ def corr(
     return result
 
 
-def corr_map(
-    x,
-    column,
-    by,
-    sep=None,
-    sep_by=None,
-    method="pearson",
-    minval=None,
-    top_n_links=None,
-    keywords=None,
-):
+def corr_map(matrix, top_n_links=None, minval=0):
     """Computes the correlation map among items in a column of the dataframe.
 
     Args:
@@ -446,15 +436,8 @@ def corr_map(
 
     """
 
-    matrix = corr(
-        x,
-        column=column,
-        by=column,
-        method=method,
-        as_matrix=True,
-        show_between=None,
-        filter_by=keywords,
-    )
+    if len(matrix.columns) > 50:
+        return "Maximum number of nodex exceded!"
 
     terms = matrix.columns.tolist()
 
@@ -687,6 +670,7 @@ def body_0(x):
 #  Correlation Map
 #
 #
+
 
 #
 #

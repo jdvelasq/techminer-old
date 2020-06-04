@@ -173,7 +173,7 @@ class ChordDiagram:
         else:
             return {**default, **self._edges[key]}
 
-    def plot(self, R=3, dist=0.2, n_bezier=100, **text_attr):
+    def plot(self, figsize=(10, 10), R=3, dist=0.2, n_bezier=100, **text_attr):
         """Plots the diagram
         """
 
@@ -213,7 +213,7 @@ class ChordDiagram:
 
                 x = node_properties["node_x"][node]
                 y = node_properties["node_y"][node]
-                plt.scatter(x, y, zorder=10, **self.get_node_data(node))
+                ax.scatter(x, y, zorder=10, **self.get_node_data(node))
 
             for label in self._nodes:
 
@@ -223,7 +223,7 @@ class ChordDiagram:
                 ha = node_properties["ha"][label]
 
                 attr = {**dict(backgroundcolor="white"), **text_attr}
-                plt.text(
+                ax.text(
                     x,
                     y,
                     textwrap.shorten(text=label, width=TEXTLEN),
@@ -250,7 +250,7 @@ class ChordDiagram:
                     (1 - t) ** 2 * y0 + 2 * t * (1 - t) * y1 + t ** 2 * y2
                     for t in np.linspace(0.0, 1.0, n_bezier)
                 ]
-                plt.plot(xb, yb, **kwargs)
+                ax.plot(xb, yb, **kwargs)
 
             for edge in self._edges:
 
@@ -288,11 +288,15 @@ class ChordDiagram:
                     [x0, y0], [x1, y1], [x2, y2], **self._edges[edge],
                 )
 
+        fig = plt.Figure(figsize=figsize)
+        ax = fig.subplots()
+
         node_properties = compute_node_properties()
         draw_points()
         draw_edges()
 
-        plt.gca().axis("off")
-        plt.gca().set_aspect("equal", "box")
+        ax.set_axis_off()
+        ax.set_aspect("equal")
+        # , "box"
 
-        return plt.gca()
+        return fig

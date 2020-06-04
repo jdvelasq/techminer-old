@@ -13,6 +13,8 @@ from os.path import dirname, join
 import matplotlib.pyplot as plt
 import numpy as np
 
+from techminer.chord_diagram import ChordDiagram
+
 # import numpy as np
 # import pandas as pd
 # import squarify
@@ -531,6 +533,126 @@ def heatmap(x, figsize=(8, 8), **kwargs):
     return fig
 
 
+def chord_diagram(
+    x, figsize=(10, 10), alpha=1.0, minval=0.0, top_n_links=None, solid_lines=False
+):
+    """Creates a chord diagram from a correlation or an auto-correlation matrix.
+
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         'word 0': [1.00, 0.80, 0.70, 0.00,-0.30],
+    ...         'word 1': [0.80, 1.00, 0.70, 0.50, 0.00],
+    ...         'word 2': [0.70, 0.70, 1.00, 0.00, 0.00],
+    ...         'word 3': [0.00, 0.50, 0.00, 1.00, 0.30],
+    ...         'word 4': [-0.30, 0.00, 0.00, 0.30, 1.00],
+    ...     },
+    ...     index=['word {:d}'.format(i) for i in range(5)]
+    ... )
+    >>> df
+            word 0  word 1  word 2  word 3  word 4
+    word 0     1.0     0.8     0.7     0.0    -0.3
+    word 1     0.8     1.0     0.7     0.5     0.0
+    word 2     0.7     0.7     1.0     0.0     0.0
+    word 3     0.0     0.5     0.0     1.0     0.3
+    word 4    -0.3     0.0     0.0     0.3     1.0
+    >>> fig = chord_diagram(df)
+    >>> fig.savefig('sphinx/images/plotcd1.png')
+
+    .. image:: images/plotcd1.png
+        :width: 400px
+        :align: center
+
+    >>> fig = chord_diagram(df, top_n_links=5)
+    >>> fig.savefig('sphinx/images/plotcd2.png')
+
+    .. image:: images/plotcd2.png
+        :width: 400px
+        :align: center
+
+    >>> fig = chord_diagram(df, solid_lines=True)
+    >>> fig.savefig('sphinx/images/plotcd3.png')
+
+    .. image:: images/plotcd3.png
+        :width: 400px
+        :align: center
+
+    """
+
+    x = x.copy()
+
+    cd = ChordDiagram()
+    cd.add_nodes_from(x.columns, color="black", s=40)
+
+    if top_n_links is not None and top_n_links <= len(x.columns):
+        values = []
+        for idx_col in range(len(x.columns) - 1):
+            for idx_row in range(idx_col + 1, len(x.columns)):
+                node_a = x.index[idx_row]
+                node_b = x.columns[idx_col]
+                value = x[node_b][node_a]
+                values.append(value)
+        values = sorted(values, reverse=True)
+        minval = values[top_n_links - 1]
+
+    style = list("--::")
+    if solid_lines is True:
+        style = list("----")
+
+    width = [2.5, 1, 1, 1]
+    if solid_lines is True:
+        width = [4, 2, 1, 1]
+
+    links = 0
+    for idx_col in range(len(x.columns) - 1):
+        for idx_row in range(idx_col + 1, len(x.columns)):
+
+            node_a = x.index[idx_row]
+            node_b = x.columns[idx_col]
+            value = x[node_b][node_a]
+
+            if value > 0.75 and value >= minval:
+                cd.add_edge(
+                    node_a,
+                    node_b,
+                    linestyle=style[0],
+                    linewidth=width[0],
+                    color="black",
+                )
+                links += 1
+            elif value > 0.50 and value >= minval:
+                cd.add_edge(
+                    node_a,
+                    node_b,
+                    linestyle=style[1],
+                    linewidth=width[1],
+                    color="black",
+                )
+                links += 1
+            elif value > 0.25 and value >= minval:
+                cd.add_edge(
+                    node_a,
+                    node_b,
+                    linestyle=style[2],
+                    linewidth=width[2],
+                    color="black",
+                )
+                links += 1
+            elif value <= 0.25 and value >= minval and value > 0.0:
+                cd.add_edge(
+                    node_a, node_b, linestyle=style[3], linewidth=width[3], color="red",
+                )
+                links += 1
+
+            if top_n_links is not None and links >= top_n_links:
+                continue
+
+    return cd.plot(figsize=figsize)
+
+
 # #############################################################################################################
 
 
@@ -538,128 +660,6 @@ def heatmap(x, figsize=(8, 8), **kwargs):
 #     def __init__(self, df):
 #         self.df = df
 
-
-#     def chord_diagram(self, alpha=1.0, minval=0.0, top_n_links=None, solid_lines=False):
-#         """Creates a chord diagram from a correlation or an auto-correlation matrix.
-
-
-#         Examples
-#         ----------------------------------------------------------------------------------------------
-
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         'word 0': [1.00, 0.80, 0.70, 0.00,-0.30],
-#         ...         'word 1': [0.80, 1.00, 0.70, 0.50, 0.00],
-#         ...         'word 2': [0.70, 0.70, 1.00, 0.00, 0.00],
-#         ...         'word 3': [0.00, 0.50, 0.00, 1.00, 0.30],
-#         ...         'word 4': [-0.30, 0.00, 0.00, 0.30, 1.00],
-#         ...     },
-#         ...     index=['word {:d}'.format(i) for i in range(5)]
-#         ... )
-#         >>> df
-#                 word 0  word 1  word 2  word 3  word 4
-#         word 0     1.0     0.8     0.7     0.0    -0.3
-#         word 1     0.8     1.0     0.7     0.5     0.0
-#         word 2     0.7     0.7     1.0     0.0     0.0
-#         word 3     0.0     0.5     0.0     1.0     0.3
-#         word 4    -0.3     0.0     0.0     0.3     1.0
-#         >>> _ = Plot(df).chord_diagram()
-#         >>> plt.savefig('sphinx/images/plotcd1.png')
-
-#         .. image:: images/plotcd1.png
-#             :width: 400px
-#             :align: center
-
-#         >>> _ = Plot(df).chord_diagram(top_n_links=5)
-#         >>> plt.savefig('sphinx/images/plotcd2.png')
-
-#         .. image:: images/plotcd2.png
-#             :width: 400px
-#             :align: center
-
-#         >>> _ = Plot(df).chord_diagram(solid_lines=True)
-#         >>> plt.savefig('sphinx/images/plotcd3.png')
-
-#         .. image:: images/plotcd3.png
-#             :width: 400px
-#             :align: center
-
-#         """
-#         plt.clf()
-
-#         x = self.df.copy()
-
-#         cd = ChordDiagram()
-#         cd.add_nodes_from(x.columns, color="black", s=40)
-
-#         if top_n_links is not None and top_n_links <= len(x.columns):
-#             values = []
-#             for idx_col in range(len(x.columns) - 1):
-#                 for idx_row in range(idx_col + 1, len(x.columns)):
-#                     node_a = x.index[idx_row]
-#                     node_b = x.columns[idx_col]
-#                     value = x[node_b][node_a]
-#                     values.append(value)
-#             values = sorted(values, reverse=True)
-#             minval = values[top_n_links - 1]
-
-#         style = list("--::")
-#         if solid_lines is True:
-#             style = list("----")
-
-#         width = [2.5, 1, 1, 1]
-#         if solid_lines is True:
-#             width = [4, 2, 1, 1]
-
-#         links = 0
-#         for idx_col in range(len(x.columns) - 1):
-#             for idx_row in range(idx_col + 1, len(x.columns)):
-
-#                 node_a = x.index[idx_row]
-#                 node_b = x.columns[idx_col]
-#                 value = x[node_b][node_a]
-
-#                 if value > 0.75 and value >= minval:
-#                     cd.add_edge(
-#                         node_a,
-#                         node_b,
-#                         linestyle=style[0],
-#                         linewidth=width[0],
-#                         color="black",
-#                     )
-#                     links += 1
-#                 elif value > 0.50 and value >= minval:
-#                     cd.add_edge(
-#                         node_a,
-#                         node_b,
-#                         linestyle=style[1],
-#                         linewidth=width[1],
-#                         color="black",
-#                     )
-#                     links += 1
-#                 elif value > 0.25 and value >= minval:
-#                     cd.add_edge(
-#                         node_a,
-#                         node_b,
-#                         linestyle=style[2],
-#                         linewidth=width[2],
-#                         color="black",
-#                     )
-#                     links += 1
-#                 elif value <= 0.25 and value >= minval and value > 0.0:
-#                     cd.add_edge(
-#                         node_a,
-#                         node_b,
-#                         linestyle=style[3],
-#                         linewidth=width[3],
-#                         color="red",
-#                     )
-#                     links += 1
-
-#                 if top_n_links is not None and links >= top_n_links:
-#                     continue
-
-#         return cd.plot()
 
 #     def tree(self, cmap="Blues", alpha=0.9):
 #         """Creates a classification plot from a dataframe.
