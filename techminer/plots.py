@@ -25,6 +25,39 @@ import numpy as np
 
 TEXTLEN = 30
 
+COLORMAPS = [
+    "Greys",
+    "Purples",
+    "Blues",
+    "Greens",
+    "Oranges",
+    "Reds",
+    "YlOrBr",
+    "YlOrRd",
+    "OrRd",
+    "PuRd",
+    "RdPu",
+    "BuPu",
+    "GnBu",
+    "PuBu",
+    "YlGnBu",
+    "PuBuGn",
+    "BuGn",
+    "YlGn",
+    "Pastel1",
+    "Pastel2",
+    "Paired",
+    "Accent",
+    "Dark2",
+    "Set1",
+    "Set2",
+    "Set3",
+    "tab10",
+    "tab20",
+    "tab20b",
+    "tab20c",
+]
+
 
 def bar(
     x, width=0.8, bottom=None, align="center", cmap="Greys", figsize=(10, 6), **kwargs
@@ -1250,3 +1283,13 @@ def heatmap(x, figsize=(8, 8), **kwargs):
 #         #         alpha=0.2,
 #         #         linewidth=0,
 #         #     )
+
+
+#
+#
+#
+if __name__ == "__main__":
+
+    import doctest
+
+    doctest.testmod()
