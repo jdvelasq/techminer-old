@@ -9,6 +9,7 @@ Modules
     by_term
     by_term_per_year
     co_occurrence
+    correlation
     
     
 analytics

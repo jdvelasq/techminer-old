@@ -358,6 +358,155 @@ def corr(
     return result
 
 
+def corr_map(
+    x,
+    column,
+    by,
+    sep=None,
+    sep_by=None,
+    method="pearson",
+    minval=None,
+    top_n_links=None,
+    keywords=None,
+):
+    """Computes the correlation map among items in a column of the dataframe.
+
+    Args:
+        column (str): the column to explode.
+        sep (str): Character used as internal separator for the elements in the column.
+        method (str): Available methods are:
+
+            * pearson : Standard correlation coefficient.
+
+            * kendall : Kendall Tau correlation coefficient.
+
+            * spearman : Spearman rank correlation.
+
+        minval (float): Minimum autocorrelation value to show links.
+        top_n_links (int): Shows top n links.
+        keywords (Keywords): filter the result using the specified Keywords object.
+
+    Returns:
+        DataFrame.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = [ 'A', 'A;C', 'B', 'A;B;C', 'B;D', 'A;B', 'A;C']
+    >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd', 'c;d']
+    >>> df = pd.DataFrame(
+    ...    {
+    ...       'Authors': x,
+    ...       'Author Keywords': y,
+    ...       'Cited by': list(range(len(x))),
+    ...       'ID': list(range(len(x))),
+    ...    }
+    ... )
+    >>> df
+      Authors Author Keywords  Cited by  ID
+    0       A               a         0   0
+    1     A;C             a;b         1   1
+    2       B               b         2   2
+    3   A;B;C               c         3   3
+    4     B;D             c;d         4   4
+    5     A;B               d         5   5
+    6     A;C             c;d         6   6
+
+
+    >>> co_occurrence(df, 'Author Keywords', 'Authors', as_matrix=True)
+       A  B  C  D
+    a  2  0  1  0
+    b  1  1  1  0
+    c  2  2  2  1
+    d  2  2  1  1
+
+    >>> corr(df, 'Authors', 'Author Keywords')
+              A         B         C         D
+    A  1.000000  0.174078  0.333333  0.577350
+    B  0.174078  1.000000  0.522233  0.904534
+    C  0.333333  0.522233  1.000000  0.577350
+    D  0.577350  0.904534  0.577350  1.000000
+
+    >>> corr(df, 'Authors', 'Author Keywords')
+              A         B         C         D
+    A  1.000000  0.174078  0.333333  0.577350
+    B  0.174078  1.000000  0.522233  0.904534
+    C  0.333333  0.522233  1.000000  0.577350
+    D  0.577350  0.904534  0.577350  1.000000
+
+    >>> corr_map(df, 'Authors', 'Author Keywords')
+    {'terms': ['A', 'B', 'C', 'D'], 'edges_75': None, 'edges_50': [('A', 'C')], 'edges_25': [('B', 'D')], 'other_edges': None}
+
+    >>> keywords = Keywords(['A', 'B', 'C'], ignore_case=False)
+    >>> keywords = keywords.compile()
+    >>> corr_map(df, 'Authors', 'Author Keywords', keywords=keywords)
+    {'terms': ['A', 'B', 'C'], 'edges_75': None, 'edges_50': [('A', 'C')], 'edges_25': None, 'other_edges': None}
+
+
+    """
+
+    matrix = corr(
+        x,
+        column=column,
+        by=column,
+        method=method,
+        as_matrix=True,
+        show_between=None,
+        filter_by=keywords,
+    )
+
+    terms = matrix.columns.tolist()
+
+    n = len(matrix.columns)
+    edges_75 = []
+    edges_50 = []
+    edges_25 = []
+    other_edges = []
+
+    if top_n_links is not None:
+        values = matrix.to_numpy()
+        top_value = []
+        for icol in range(n):
+            for irow in range(icol + 1, n):
+                top_value.append(values[irow, icol])
+        top_value = sorted(top_value, reverse=True)
+        top_value = top_value[top_n_links - 1]
+        if minval is not None:
+            minval = max(minval, top_value)
+        else:
+            minval = top_value
+
+    for icol in range(n):
+        for irow in range(icol + 1, n):
+            if minval is None or matrix[terms[icol]][terms[irow]] >= minval:
+                if matrix[terms[icol]][terms[irow]] > 0.75:
+                    edges_75.append((terms[icol], terms[irow]))
+                elif matrix[terms[icol]][terms[irow]] > 0.50:
+                    edges_50.append((terms[icol], terms[irow]))
+                elif matrix[terms[icol]][terms[irow]] > 0.25:
+                    edges_25.append((terms[icol], terms[irow]))
+                elif matrix[terms[icol]][terms[irow]] > 0.0:
+                    other_edges.append((terms[icol], terms[irow]))
+
+    if len(edges_75) == 0:
+        edges_75 = None
+    if len(edges_50) == 0:
+        edges_50 = None
+    if len(edges_25) == 0:
+        edges_25 = None
+    if len(other_edges) == 0:
+        other_edges = None
+
+    return dict(
+        terms=terms,
+        edges_75=edges_75,
+        edges_50=edges_50,
+        edges_25=edges_25,
+        other_edges=other_edges,
+    )
+
+
 #
 #
 #  Correlation Analysis
@@ -561,7 +710,6 @@ def app(df):
         center=body,
         pane_heights=PANE_HEIGHTS,
     )
-
 
 
 # def autocorr_map(
