@@ -7,6 +7,7 @@ Correlation Analysis
 """
 
 import ipywidgets as widgets
+import networkx as nx
 import numpy as np
 import pandas as pd
 import techminer.plots as plt
@@ -18,6 +19,8 @@ from techminer.explode import MULTIVALUED_COLS, __explode
 from techminer.keywords import Keywords
 from techminer.maps import Map
 from techminer.plots import COLORMAPS, chord_diagram
+
+import matplotlib.pyplot as pyplot
 
 
 def compute_tfm(x, column, keywords=None):
@@ -350,87 +353,151 @@ def corr(
     return result
 
 
-def corr_map(matrix, top_n_links=None, minval=0):
-    """Computes the correlation map among items in a column of the dataframe.
+# def corr_map(matrix, top_n_links=None, minval=0):
+#     """Computes the correlation map among items in a column of the dataframe.
 
-    Args:
-        column (str): the column to explode.
-        sep (str): Character used as internal separator for the elements in the column.
-        method (str): Available methods are:
+#     Args:
+#         column (str): the column to explode.
+#         sep (str): Character used as internal separator for the elements in the column.
+#         method (str): Available methods are:
 
-            * pearson : Standard correlation coefficient.
+#             * pearson : Standard correlation coefficient.
 
-            * kendall : Kendall Tau correlation coefficient.
+#             * kendall : Kendall Tau correlation coefficient.
 
-            * spearman : Spearman rank correlation.
+#             * spearman : Spearman rank correlation.
 
-        minval (float): Minimum autocorrelation value to show links.
-        top_n_links (int): Shows top n links.
-        keywords (Keywords): filter the result using the specified Keywords object.
+#         minval (float): Minimum autocorrelation value to show links.
+#         top_n_links (int): Shows top n links.
+#         keywords (Keywords): filter the result using the specified Keywords object.
 
-    Returns:
-        DataFrame.
+#     Returns:
+#         DataFrame.
 
-    Examples
-    ----------------------------------------------------------------------------------------------
+#     Examples
+#     ----------------------------------------------------------------------------------------------
 
-    >>> import pandas as pd
-    >>> x = [ 'A', 'A;C', 'B', 'A;B;C', 'B;D', 'A;B', 'A;C']
-    >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd', 'c;d']
-    >>> df = pd.DataFrame(
-    ...    {
-    ...       'Authors': x,
-    ...       'Author Keywords': y,
-    ...       'Cited by': list(range(len(x))),
-    ...       'ID': list(range(len(x))),
-    ...    }
-    ... )
-    >>> df
-      Authors Author Keywords  Cited by  ID
-    0       A               a         0   0
-    1     A;C             a;b         1   1
-    2       B               b         2   2
-    3   A;B;C               c         3   3
-    4     B;D             c;d         4   4
-    5     A;B               d         5   5
-    6     A;C             c;d         6   6
-
-
-    >>> co_occurrence(df, 'Author Keywords', 'Authors', as_matrix=True)
-       A  B  C  D
-    a  2  0  1  0
-    b  1  1  1  0
-    c  2  2  2  1
-    d  2  2  1  1
-
-    >>> corr(df, 'Authors', 'Author Keywords')
-              A         B         C         D
-    A  1.000000  0.174078  0.333333  0.577350
-    B  0.174078  1.000000  0.522233  0.904534
-    C  0.333333  0.522233  1.000000  0.577350
-    D  0.577350  0.904534  0.577350  1.000000
-
-    >>> corr(df, 'Authors', 'Author Keywords')
-              A         B         C         D
-    A  1.000000  0.174078  0.333333  0.577350
-    B  0.174078  1.000000  0.522233  0.904534
-    C  0.333333  0.522233  1.000000  0.577350
-    D  0.577350  0.904534  0.577350  1.000000
-
-    >>> corr_map(df, 'Authors', 'Author Keywords')
-    {'terms': ['A', 'B', 'C', 'D'], 'edges_75': None, 'edges_50': [('A', 'C')], 'edges_25': [('B', 'D')], 'other_edges': None}
-
-    >>> keywords = Keywords(['A', 'B', 'C'], ignore_case=False)
-    >>> keywords = keywords.compile()
-    >>> corr_map(df, 'Authors', 'Author Keywords', keywords=keywords)
-    {'terms': ['A', 'B', 'C'], 'edges_75': None, 'edges_50': [('A', 'C')], 'edges_25': None, 'other_edges': None}
+#     >>> import pandas as pd
+#     >>> x = [ 'A', 'A;C', 'B', 'A;B;C', 'B;D', 'A;B', 'A;C']
+#     >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd', 'c;d']
+#     >>> df = pd.DataFrame(
+#     ...    {
+#     ...       'Authors': x,
+#     ...       'Author Keywords': y,
+#     ...       'Cited by': list(range(len(x))),
+#     ...       'ID': list(range(len(x))),
+#     ...    }
+#     ... )
+#     >>> df
+#       Authors Author Keywords  Cited by  ID
+#     0       A               a         0   0
+#     1     A;C             a;b         1   1
+#     2       B               b         2   2
+#     3   A;B;C               c         3   3
+#     4     B;D             c;d         4   4
+#     5     A;B               d         5   5
+#     6     A;C             c;d         6   6
 
 
+#     >>> co_occurrence(df, 'Author Keywords', 'Authors', as_matrix=True)
+#        A  B  C  D
+#     a  2  0  1  0
+#     b  1  1  1  0
+#     c  2  2  2  1
+#     d  2  2  1  1
+
+#     >>> corr(df, 'Authors', 'Author Keywords')
+#               A         B         C         D
+#     A  1.000000  0.174078  0.333333  0.577350
+#     B  0.174078  1.000000  0.522233  0.904534
+#     C  0.333333  0.522233  1.000000  0.577350
+#     D  0.577350  0.904534  0.577350  1.000000
+
+#     >>> corr(df, 'Authors', 'Author Keywords')
+#               A         B         C         D
+#     A  1.000000  0.174078  0.333333  0.577350
+#     B  0.174078  1.000000  0.522233  0.904534
+#     C  0.333333  0.522233  1.000000  0.577350
+#     D  0.577350  0.904534  0.577350  1.000000
+
+#     >>> corr_map(df, 'Authors', 'Author Keywords')
+#     {'terms': ['A', 'B', 'C', 'D'], 'edges_75': None, 'edges_50': [('A', 'C')], 'edges_25': [('B', 'D')], 'other_edges': None}
+
+#     >>> keywords = Keywords(['A', 'B', 'C'], ignore_case=False)
+#     >>> keywords = keywords.compile()
+#     >>> corr_map(df, 'Authors', 'Author Keywords', keywords=keywords)
+#     {'terms': ['A', 'B', 'C'], 'edges_75': None, 'edges_50': [('A', 'C')], 'edges_25': None, 'other_edges': None}
+
+
+#     """
+
+#     if len(matrix.columns) > 50:
+#         return "Maximum number of nodex exceded!"
+
+#     terms = matrix.columns.tolist()
+
+#     n = len(matrix.columns)
+#     edges_75 = []
+#     edges_50 = []
+#     edges_25 = []
+#     other_edges = []
+
+#     if top_n_links is not None:
+#         values = matrix.to_numpy()
+#         top_value = []
+#         for icol in range(n):
+#             for irow in range(icol + 1, n):
+#                 top_value.append(values[irow, icol])
+#         top_value = sorted(top_value, reverse=True)
+#         top_value = top_value[top_n_links - 1]
+#         if minval is not None:
+#             minval = max(minval, top_value)
+#         else:
+#             minval = top_value
+
+#     for icol in range(n):
+#         for irow in range(icol + 1, n):
+#             if minval is None or matrix[terms[icol]][terms[irow]] >= minval:
+#                 if matrix[terms[icol]][terms[irow]] > 0.75:
+#                     edges_75.append((terms[icol], terms[irow]))
+#                 elif matrix[terms[icol]][terms[irow]] > 0.50:
+#                     edges_50.append((terms[icol], terms[irow]))
+#                 elif matrix[terms[icol]][terms[irow]] > 0.25:
+#                     edges_25.append((terms[icol], terms[irow]))
+#                 elif matrix[terms[icol]][terms[irow]] > 0.0:
+#                     other_edges.append((terms[icol], terms[irow]))
+
+#     if len(edges_75) == 0:
+#         edges_75 = None
+#     if len(edges_50) == 0:
+#         edges_50 = None
+#     if len(edges_25) == 0:
+#         edges_25 = None
+#     if len(other_edges) == 0:
+#         other_edges = None
+
+#     return dict(
+#         terms=terms,
+#         edges_75=edges_75,
+#         edges_50=edges_50,
+#         edges_25=edges_25,
+#         other_edges=other_edges,
+#     )
+
+
+########## networkx interface
+
+
+def correlation_map(matrix, layout="Kamada Kawai", figsize=(11, 11), min_link_value=0):
+    """Computes the correlation map directly using networkx.
     """
 
     if len(matrix.columns) > 50:
         return "Maximum number of nodex exceded!"
 
+    #
+    # Data preparation
+    #
     terms = matrix.columns.tolist()
 
     n = len(matrix.columns)
@@ -439,22 +506,12 @@ def corr_map(matrix, top_n_links=None, minval=0):
     edges_25 = []
     other_edges = []
 
-    if top_n_links is not None:
-        values = matrix.to_numpy()
-        top_value = []
-        for icol in range(n):
-            for irow in range(icol + 1, n):
-                top_value.append(values[irow, icol])
-        top_value = sorted(top_value, reverse=True)
-        top_value = top_value[top_n_links - 1]
-        if minval is not None:
-            minval = max(minval, top_value)
-        else:
-            minval = top_value
-
     for icol in range(n):
         for irow in range(icol + 1, n):
-            if minval is None or matrix[terms[icol]][terms[irow]] >= minval:
+            if (
+                min_link_value is None
+                or matrix[terms[icol]][terms[irow]] >= min_link_value
+            ):
                 if matrix[terms[icol]][terms[irow]] > 0.75:
                     edges_75.append((terms[icol], terms[irow]))
                 elif matrix[terms[icol]][terms[irow]] > 0.50:
@@ -473,13 +530,129 @@ def corr_map(matrix, top_n_links=None, minval=0):
     if len(other_edges) == 0:
         other_edges = None
 
-    return dict(
-        terms=terms,
-        edges_75=edges_75,
-        edges_50=edges_50,
-        edges_25=edges_25,
-        other_edges=other_edges,
+    #
+    # Network drawing
+    #
+    fig = pyplot.Figure(figsize=figsize)
+    ax = fig.subplots()
+    #
+    draw_dict = {
+        "Circular": nx.draw_circular,
+        "Kamada Kawai": nx.draw_kamada_kawai,
+        "Planar": nx.draw_planar,
+        "Random": nx.draw_random,
+        "Spectral": nx.draw_spectral,
+        "Spring": nx.draw_spring,
+        "Shell": nx.draw_shell,
+    }
+    draw = draw_dict[layout]
+
+    G = nx.Graph(ax=ax)
+    G.clear()
+    #
+    G.add_nodes_from(terms)
+    #
+    if edges_75 is not None:
+        G.add_edges_from(edges_75)
+    if edges_50 is not None:
+        G.add_edges_from(edges_50)
+    if edges_25 is not None:
+        G.add_edges_from(edges_25)
+    if other_edges is not None:
+        G.add_edges_from(other_edges)
+    #
+    with_labels = True
+    if edges_75 is not None:
+        draw(
+            G,
+            ax=ax,
+            edgelist=edges_75,
+            width=3,
+            edge_color="k",
+            with_labels=with_labels,
+            font_weight="bold",
+            node_color="lightgray",
+            node_size=1,
+            bbox=dict(facecolor="white", alpha=1.0),
+        )
+        with_labels = False
+    #
+    if edges_50 is not None:
+        draw(
+            G,
+            ax=ax,
+            edgelist=edges_50,
+            edge_color="k",
+            width=1,
+            with_labels=with_labels,
+            font_weight=with_labels,
+            node_color="lightgray",
+            node_size=1,
+            bbox=dict(facecolor="white", alpha=1.0),
+        )
+        with_labels = False
+    #
+    if edges_25 is not None:
+        draw(
+            G,
+            ax=ax,
+            edgelist=edges_25,
+            edge_color="red",
+            width=1,
+            style="dashed",
+            alpha=1.0,
+            with_labels=with_labels,
+            font_weight=with_labels,
+            node_color="lightgray",
+            node_size=1,
+            bbox=dict(facecolor="white", alpha=1.0),
+        )
+        with_labels = False
+    if other_edges is not None:
+        draw(
+            G,
+            ax=ax,
+            edgelist=other_edges,
+            edge_color="red",
+            width=1,
+            alpha=1.0,
+            style="dotted",
+            with_labels=with_labels,
+            font_weight=with_labels,
+            node_color="lightgray",
+            node_size=1,
+            bbox=dict(facecolor="white", alpha=1.0),
+        )
+        with_labels = False
+
+    if with_labels is True:
+        draw(
+            G,
+            ax=ax,
+            edgelist=None,
+            edge_color="red",
+            width=1,
+            alpha=1.0,
+            style="dotted",
+            with_labels=True,
+            font_weight=None,
+            node_color="lightgray",
+            node_size=1,
+            bbox=dict(facecolor="white", alpha=1.0),
+        )
+
+    xlim = ax.get_xlim()
+    ylim = ax.get_ylim()
+    ax.set_xlim(
+        xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
     )
+    ax.set_ylim(
+        ylim[0] - 0.15 * (ylim[1] - ylim[0]), ylim[1] + 0.15 * (ylim[1] - ylim[0])
+    )
+    return fig
+
+
+##########
 
 
 #
@@ -523,6 +696,7 @@ def __body_0(x):
         filter_value = int(kwargs["filter_value"].split()[0])
         view = kwargs["view"]
         sort_by = kwargs["sort_by"]
+        layout = kwargs["layout"]
         #
         #
         #
@@ -613,8 +787,11 @@ def __body_0(x):
             if view == "Correlation map":
                 #
                 display(
-                    Map().correlation_map(
-                        figsize=(10, 10), **corr_map(matrix, minval=min_link_value)
+                    correlation_map(
+                        matrix=matrix,
+                        layout=layout,
+                        figsize=(10, 10),
+                        min_link_value=min_link_value,
                     )
                 )
                 #
@@ -680,7 +857,7 @@ def __body_0(x):
             "arg": "min_link_value",
             "desc": "Min link value:",
             "widget": widgets.Dropdown(
-                options="-1.00 -0.25 0.000 0.125 0.250 0.375 0.500 0.625 0.750 0.875".split(
+                options="-1.00 -0.25 0.00 0.125 0.250 0.375 0.500 0.625 0.750 0.875".split(
                     " "
                 ),
                 ensure_option=True,
@@ -721,6 +898,23 @@ def __body_0(x):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        {
+            "arg": "layout",
+            "desc": "Map layout:",
+            "widget": widgets.Dropdown(
+                options=[
+                    "Circular",
+                    "Kamada Kawai",
+                    "Planar",
+                    "Random",
+                    "Spectral",
+                    "Spring",
+                    "Shell",
+                ],
+                disable=False,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
     ]
     #
     args = {control["arg"]: control["widget"] for control in controls}
@@ -738,7 +932,9 @@ def __body_0(x):
                 ],
                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
             ),
-            widgets.VBox([output], layout=Layout(width=RIGHT_PANEL_WIDTH)),
+            widgets.VBox(
+                [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="center")
+            ),
         ]
     )
 

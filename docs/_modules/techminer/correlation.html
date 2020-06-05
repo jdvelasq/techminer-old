@@ -158,6 +158,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">widgets</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">techminer.plots</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -501,87 +502,151 @@
     <span class="k">return</span> <span class="n">result</span></div>
 
 
-<div class="viewcode-block" id="corr_map"><a class="viewcode-back" href="../../correlation.html#techminer.correlation.corr_map">[docs]</a><span class="k">def</span> <span class="nf">corr_map</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">top_n_links</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minval</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Computes the correlation map among items in a column of the dataframe.</span>
+<span class="c1"># def corr_map(matrix, top_n_links=None, minval=0):</span>
+<span class="c1">#     &quot;&quot;&quot;Computes the correlation map among items in a column of the dataframe.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        column (str): the column to explode.</span>
-<span class="sd">        sep (str): Character used as internal separator for the elements in the column.</span>
-<span class="sd">        method (str): Available methods are:</span>
+<span class="c1">#     Args:</span>
+<span class="c1">#         column (str): the column to explode.</span>
+<span class="c1">#         sep (str): Character used as internal separator for the elements in the column.</span>
+<span class="c1">#         method (str): Available methods are:</span>
 
-<span class="sd">            * pearson : Standard correlation coefficient.</span>
+<span class="c1">#             * pearson : Standard correlation coefficient.</span>
 
-<span class="sd">            * kendall : Kendall Tau correlation coefficient.</span>
+<span class="c1">#             * kendall : Kendall Tau correlation coefficient.</span>
 
-<span class="sd">            * spearman : Spearman rank correlation.</span>
+<span class="c1">#             * spearman : Spearman rank correlation.</span>
 
-<span class="sd">        minval (float): Minimum autocorrelation value to show links.</span>
-<span class="sd">        top_n_links (int): Shows top n links.</span>
-<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
+<span class="c1">#         minval (float): Minimum autocorrelation value to show links.</span>
+<span class="c1">#         top_n_links (int): Shows top n links.</span>
+<span class="c1">#         keywords (Keywords): filter the result using the specified Keywords object.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        DataFrame.</span>
+<span class="c1">#     Returns:</span>
+<span class="c1">#         DataFrame.</span>
 
-<span class="sd">    Examples</span>
-<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+<span class="c1">#     Examples</span>
+<span class="c1">#     ----------------------------------------------------------------------------------------------</span>
 
-<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A;C&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;B;D&#39;, &#39;A;B&#39;, &#39;A;C&#39;]</span>
-<span class="sd">    &gt;&gt;&gt; y = [ &#39;a&#39;, &#39;a;b&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c;d&#39;, &#39;d&#39;, &#39;c;d&#39;]</span>
-<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="sd">    ...    {</span>
-<span class="sd">    ...       &#39;Authors&#39;: x,</span>
-<span class="sd">    ...       &#39;Author Keywords&#39;: y,</span>
-<span class="sd">    ...       &#39;Cited by&#39;: list(range(len(x))),</span>
-<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
-<span class="sd">    ...    }</span>
-<span class="sd">    ... )</span>
-<span class="sd">    &gt;&gt;&gt; df</span>
-<span class="sd">      Authors Author Keywords  Cited by  ID</span>
-<span class="sd">    0       A               a         0   0</span>
-<span class="sd">    1     A;C             a;b         1   1</span>
-<span class="sd">    2       B               b         2   2</span>
-<span class="sd">    3   A;B;C               c         3   3</span>
-<span class="sd">    4     B;D             c;d         4   4</span>
-<span class="sd">    5     A;B               d         5   5</span>
-<span class="sd">    6     A;C             c;d         6   6</span>
-
-
-<span class="sd">    &gt;&gt;&gt; co_occurrence(df, &#39;Author Keywords&#39;, &#39;Authors&#39;, as_matrix=True)</span>
-<span class="sd">       A  B  C  D</span>
-<span class="sd">    a  2  0  1  0</span>
-<span class="sd">    b  1  1  1  0</span>
-<span class="sd">    c  2  2  2  1</span>
-<span class="sd">    d  2  2  1  1</span>
-
-<span class="sd">    &gt;&gt;&gt; corr(df, &#39;Authors&#39;, &#39;Author Keywords&#39;)</span>
-<span class="sd">              A         B         C         D</span>
-<span class="sd">    A  1.000000  0.174078  0.333333  0.577350</span>
-<span class="sd">    B  0.174078  1.000000  0.522233  0.904534</span>
-<span class="sd">    C  0.333333  0.522233  1.000000  0.577350</span>
-<span class="sd">    D  0.577350  0.904534  0.577350  1.000000</span>
-
-<span class="sd">    &gt;&gt;&gt; corr(df, &#39;Authors&#39;, &#39;Author Keywords&#39;)</span>
-<span class="sd">              A         B         C         D</span>
-<span class="sd">    A  1.000000  0.174078  0.333333  0.577350</span>
-<span class="sd">    B  0.174078  1.000000  0.522233  0.904534</span>
-<span class="sd">    C  0.333333  0.522233  1.000000  0.577350</span>
-<span class="sd">    D  0.577350  0.904534  0.577350  1.000000</span>
-
-<span class="sd">    &gt;&gt;&gt; corr_map(df, &#39;Authors&#39;, &#39;Author Keywords&#39;)</span>
-<span class="sd">    {&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: [(&#39;B&#39;, &#39;D&#39;)], &#39;other_edges&#39;: None}</span>
-
-<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], ignore_case=False)</span>
-<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
-<span class="sd">    &gt;&gt;&gt; corr_map(df, &#39;Authors&#39;, &#39;Author Keywords&#39;, keywords=keywords)</span>
-<span class="sd">    {&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: None, &#39;other_edges&#39;: None}</span>
+<span class="c1">#     &gt;&gt;&gt; import pandas as pd</span>
+<span class="c1">#     &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A;C&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;B;D&#39;, &#39;A;B&#39;, &#39;A;C&#39;]</span>
+<span class="c1">#     &gt;&gt;&gt; y = [ &#39;a&#39;, &#39;a;b&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c;d&#39;, &#39;d&#39;, &#39;c;d&#39;]</span>
+<span class="c1">#     &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#     ...    {</span>
+<span class="c1">#     ...       &#39;Authors&#39;: x,</span>
+<span class="c1">#     ...       &#39;Author Keywords&#39;: y,</span>
+<span class="c1">#     ...       &#39;Cited by&#39;: list(range(len(x))),</span>
+<span class="c1">#     ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="c1">#     ...    }</span>
+<span class="c1">#     ... )</span>
+<span class="c1">#     &gt;&gt;&gt; df</span>
+<span class="c1">#       Authors Author Keywords  Cited by  ID</span>
+<span class="c1">#     0       A               a         0   0</span>
+<span class="c1">#     1     A;C             a;b         1   1</span>
+<span class="c1">#     2       B               b         2   2</span>
+<span class="c1">#     3   A;B;C               c         3   3</span>
+<span class="c1">#     4     B;D             c;d         4   4</span>
+<span class="c1">#     5     A;B               d         5   5</span>
+<span class="c1">#     6     A;C             c;d         6   6</span>
 
 
+<span class="c1">#     &gt;&gt;&gt; co_occurrence(df, &#39;Author Keywords&#39;, &#39;Authors&#39;, as_matrix=True)</span>
+<span class="c1">#        A  B  C  D</span>
+<span class="c1">#     a  2  0  1  0</span>
+<span class="c1">#     b  1  1  1  0</span>
+<span class="c1">#     c  2  2  2  1</span>
+<span class="c1">#     d  2  2  1  1</span>
+
+<span class="c1">#     &gt;&gt;&gt; corr(df, &#39;Authors&#39;, &#39;Author Keywords&#39;)</span>
+<span class="c1">#               A         B         C         D</span>
+<span class="c1">#     A  1.000000  0.174078  0.333333  0.577350</span>
+<span class="c1">#     B  0.174078  1.000000  0.522233  0.904534</span>
+<span class="c1">#     C  0.333333  0.522233  1.000000  0.577350</span>
+<span class="c1">#     D  0.577350  0.904534  0.577350  1.000000</span>
+
+<span class="c1">#     &gt;&gt;&gt; corr(df, &#39;Authors&#39;, &#39;Author Keywords&#39;)</span>
+<span class="c1">#               A         B         C         D</span>
+<span class="c1">#     A  1.000000  0.174078  0.333333  0.577350</span>
+<span class="c1">#     B  0.174078  1.000000  0.522233  0.904534</span>
+<span class="c1">#     C  0.333333  0.522233  1.000000  0.577350</span>
+<span class="c1">#     D  0.577350  0.904534  0.577350  1.000000</span>
+
+<span class="c1">#     &gt;&gt;&gt; corr_map(df, &#39;Authors&#39;, &#39;Author Keywords&#39;)</span>
+<span class="c1">#     {&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: [(&#39;B&#39;, &#39;D&#39;)], &#39;other_edges&#39;: None}</span>
+
+<span class="c1">#     &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], ignore_case=False)</span>
+<span class="c1">#     &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="c1">#     &gt;&gt;&gt; corr_map(df, &#39;Authors&#39;, &#39;Author Keywords&#39;, keywords=keywords)</span>
+<span class="c1">#     {&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;], &#39;edges_75&#39;: None, &#39;edges_50&#39;: [(&#39;A&#39;, &#39;C&#39;)], &#39;edges_25&#39;: None, &#39;other_edges&#39;: None}</span>
+
+
+<span class="c1">#     &quot;&quot;&quot;</span>
+
+<span class="c1">#     if len(matrix.columns) &gt; 50:</span>
+<span class="c1">#         return &quot;Maximum number of nodex exceded!&quot;</span>
+
+<span class="c1">#     terms = matrix.columns.tolist()</span>
+
+<span class="c1">#     n = len(matrix.columns)</span>
+<span class="c1">#     edges_75 = []</span>
+<span class="c1">#     edges_50 = []</span>
+<span class="c1">#     edges_25 = []</span>
+<span class="c1">#     other_edges = []</span>
+
+<span class="c1">#     if top_n_links is not None:</span>
+<span class="c1">#         values = matrix.to_numpy()</span>
+<span class="c1">#         top_value = []</span>
+<span class="c1">#         for icol in range(n):</span>
+<span class="c1">#             for irow in range(icol + 1, n):</span>
+<span class="c1">#                 top_value.append(values[irow, icol])</span>
+<span class="c1">#         top_value = sorted(top_value, reverse=True)</span>
+<span class="c1">#         top_value = top_value[top_n_links - 1]</span>
+<span class="c1">#         if minval is not None:</span>
+<span class="c1">#             minval = max(minval, top_value)</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             minval = top_value</span>
+
+<span class="c1">#     for icol in range(n):</span>
+<span class="c1">#         for irow in range(icol + 1, n):</span>
+<span class="c1">#             if minval is None or matrix[terms[icol]][terms[irow]] &gt;= minval:</span>
+<span class="c1">#                 if matrix[terms[icol]][terms[irow]] &gt; 0.75:</span>
+<span class="c1">#                     edges_75.append((terms[icol], terms[irow]))</span>
+<span class="c1">#                 elif matrix[terms[icol]][terms[irow]] &gt; 0.50:</span>
+<span class="c1">#                     edges_50.append((terms[icol], terms[irow]))</span>
+<span class="c1">#                 elif matrix[terms[icol]][terms[irow]] &gt; 0.25:</span>
+<span class="c1">#                     edges_25.append((terms[icol], terms[irow]))</span>
+<span class="c1">#                 elif matrix[terms[icol]][terms[irow]] &gt; 0.0:</span>
+<span class="c1">#                     other_edges.append((terms[icol], terms[irow]))</span>
+
+<span class="c1">#     if len(edges_75) == 0:</span>
+<span class="c1">#         edges_75 = None</span>
+<span class="c1">#     if len(edges_50) == 0:</span>
+<span class="c1">#         edges_50 = None</span>
+<span class="c1">#     if len(edges_25) == 0:</span>
+<span class="c1">#         edges_25 = None</span>
+<span class="c1">#     if len(other_edges) == 0:</span>
+<span class="c1">#         other_edges = None</span>
+
+<span class="c1">#     return dict(</span>
+<span class="c1">#         terms=terms,</span>
+<span class="c1">#         edges_75=edges_75,</span>
+<span class="c1">#         edges_50=edges_50,</span>
+<span class="c1">#         edges_25=edges_25,</span>
+<span class="c1">#         other_edges=other_edges,</span>
+<span class="c1">#     )</span>
+
+
+<span class="c1">########## networkx interface</span>
+
+
+<div class="viewcode-block" id="correlation_map"><a class="viewcode-back" href="../../correlation.html#techminer.correlation.correlation_map">[docs]</a><span class="k">def</span> <span class="nf">correlation_map</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;Kamada Kawai&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">min_link_value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the correlation map directly using networkx.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;Maximum number of nodex exceded!&quot;</span>
 
+    <span class="c1">#</span>
+    <span class="c1"># Data preparation</span>
+    <span class="c1">#</span>
     <span class="n">terms</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
@@ -590,22 +655,12 @@
     <span class="n">edges_25</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">other_edges</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">if</span> <span class="n">top_n_links</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">values</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-        <span class="n">top_value</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">icol</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">irow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">icol</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-                <span class="n">top_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">irow</span><span class="p">,</span> <span class="n">icol</span><span class="p">])</span>
-        <span class="n">top_value</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">top_value</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">top_value</span> <span class="o">=</span> <span class="n">top_value</span><span class="p">[</span><span class="n">top_n_links</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">minval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">minval</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">minval</span><span class="p">,</span> <span class="n">top_value</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">minval</span> <span class="o">=</span> <span class="n">top_value</span>
-
     <span class="k">for</span> <span class="n">icol</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">irow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">icol</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">minval</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">matrix</span><span class="p">[</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">]][</span><span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]]</span> <span class="o">&gt;=</span> <span class="n">minval</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">min_link_value</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="ow">or</span> <span class="n">matrix</span><span class="p">[</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">]][</span><span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]]</span> <span class="o">&gt;=</span> <span class="n">min_link_value</span>
+            <span class="p">):</span>
                 <span class="k">if</span> <span class="n">matrix</span><span class="p">[</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">]][</span><span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="mf">0.75</span><span class="p">:</span>
                     <span class="n">edges_75</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">],</span> <span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]))</span>
                 <span class="k">elif</span> <span class="n">matrix</span><span class="p">[</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">]][</span><span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="mf">0.50</span><span class="p">:</span>
@@ -624,13 +679,113 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">other_edges</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">other_edges</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
-        <span class="n">terms</span><span class="o">=</span><span class="n">terms</span><span class="p">,</span>
-        <span class="n">edges_75</span><span class="o">=</span><span class="n">edges_75</span><span class="p">,</span>
-        <span class="n">edges_50</span><span class="o">=</span><span class="n">edges_50</span><span class="p">,</span>
-        <span class="n">edges_25</span><span class="o">=</span><span class="n">edges_25</span><span class="p">,</span>
-        <span class="n">other_edges</span><span class="o">=</span><span class="n">other_edges</span><span class="p">,</span>
-    <span class="p">)</span></div>
+    <span class="c1">#</span>
+    <span class="c1"># Network drawing</span>
+    <span class="c1">#</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="c1">#</span>
+    <span class="n">draw_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Circular&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_circular</span><span class="p">,</span>
+        <span class="s2">&quot;Kamada Kawai&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_kamada_kawai</span><span class="p">,</span>
+        <span class="s2">&quot;Planar&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_planar</span><span class="p">,</span>
+        <span class="s2">&quot;Random&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_random</span><span class="p">,</span>
+        <span class="s2">&quot;Spectral&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_spectral</span><span class="p">,</span>
+        <span class="s2">&quot;Spring&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_spring</span><span class="p">,</span>
+        <span class="s2">&quot;Shell&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_shell</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">draw</span> <span class="o">=</span> <span class="n">draw_dict</span><span class="p">[</span><span class="n">layout</span><span class="p">]</span>
+
+    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="c1">#</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="n">edges_75</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">edges_75</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">edges_50</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">edges_50</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">edges_25</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">edges_25</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">other_edges</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">other_edges</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="n">with_labels</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">edges_75</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">draw</span><span class="p">(</span>
+            <span class="n">G</span><span class="p">,</span>
+            <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+            <span class="n">edgelist</span><span class="o">=</span><span class="n">edges_75</span><span class="p">,</span>
+            <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">edge_color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span>
+            <span class="n">with_labels</span><span class="o">=</span><span class="n">with_labels</span><span class="p">,</span>
+            <span class="n">font_weight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span>
+            <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;lightgray&quot;</span><span class="p">,</span>
+            <span class="n">node_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">with_labels</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="n">edges_50</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">draw</span><span class="p">(</span>
+            <span class="n">G</span><span class="p">,</span>
+            <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+            <span class="n">edgelist</span><span class="o">=</span><span class="n">edges_50</span><span class="p">,</span>
+            <span class="n">edge_color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span>
+            <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">with_labels</span><span class="o">=</span><span class="n">with_labels</span><span class="p">,</span>
+            <span class="n">font_weight</span><span class="o">=</span><span class="n">with_labels</span><span class="p">,</span>
+            <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;lightgray&quot;</span><span class="p">,</span>
+            <span class="n">node_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">with_labels</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="n">edges_25</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">draw</span><span class="p">(</span>
+            <span class="n">G</span><span class="p">,</span>
+            <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+            <span class="n">edgelist</span><span class="o">=</span><span class="n">edges_25</span><span class="p">,</span>
+            <span class="n">edge_color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span>
+            <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">style</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+            <span class="n">with_labels</span><span class="o">=</span><span class="n">with_labels</span><span class="p">,</span>
+            <span class="n">font_weight</span><span class="o">=</span><span class="n">with_labels</span><span class="p">,</span>
+            <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;lightgray&quot;</span><span class="p">,</span>
+            <span class="n">node_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">with_labels</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">other_edges</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">draw</span><span class="p">(</span>
+            <span class="n">G</span><span class="p">,</span>
+            <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+            <span class="n">edgelist</span><span class="o">=</span><span class="n">other_edges</span><span class="p">,</span>
+            <span class="n">edge_color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span>
+            <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+            <span class="n">style</span><span class="o">=</span><span class="s2">&quot;dotted&quot;</span><span class="p">,</span>
+            <span class="n">with_labels</span><span class="o">=</span><span class="n">with_labels</span><span class="p">,</span>
+            <span class="n">font_weight</span><span class="o">=</span><span class="n">with_labels</span><span class="p">,</span>
+            <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;lightgray&quot;</span><span class="p">,</span>
+            <span class="n">node_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">with_labels</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">xlim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+    <span class="n">ylim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span>
+        <span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="p">(</span><span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="p">(</span><span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span>
+        <span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="p">(</span><span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="p">(</span><span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+<span class="c1">##########</span>
 
 
 <span class="c1">#</span>
@@ -674,6 +829,7 @@
         <span class="n">filter_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;filter_value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">view</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;view&quot;</span><span class="p">]</span>
         <span class="n">sort_by</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;sort_by&quot;</span><span class="p">]</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span>
         <span class="c1">#</span>
         <span class="c1">#</span>
         <span class="c1">#</span>
@@ -764,8 +920,8 @@
             <span class="k">if</span> <span class="n">view</span> <span class="o">==</span> <span class="s2">&quot;Correlation map&quot;</span><span class="p">:</span>
                 <span class="c1">#</span>
                 <span class="n">display</span><span class="p">(</span>
-                    <span class="n">Map</span><span class="p">()</span><span class="o">.</span><span class="n">correlation_map</span><span class="p">(</span>
-                        <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="o">**</span><span class="n">corr_map</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">minval</span><span class="o">=</span><span class="n">min_link_value</span><span class="p">)</span>
+                    <span class="n">correlation_map</span><span class="p">(</span>
+                        <span class="n">matrix</span><span class="o">=</span><span class="n">matrix</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">min_link_value</span><span class="o">=</span><span class="mi">0</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
                 <span class="c1">#</span>
@@ -831,7 +987,7 @@
             <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;min_link_value&quot;</span><span class="p">,</span>
             <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Min link value:&quot;</span><span class="p">,</span>
             <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
-                <span class="n">options</span><span class="o">=</span><span class="s2">&quot;-1.00 -0.25 0.000 0.125 0.250 0.375 0.500 0.625 0.750 0.875&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="s2">&quot;-1.00 -0.25 0.00 0.125 0.250 0.375 0.500 0.625 0.750 0.875&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
                     <span class="s2">&quot; &quot;</span>
                 <span class="p">),</span>
                 <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -872,6 +1028,23 @@
                 <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
             <span class="p">),</span>
         <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;layout&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Map layout:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span>
+                    <span class="s2">&quot;Circular&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Kamada Kawai&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Planar&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Random&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Spectral&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Spring&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Shell&quot;</span><span class="p">,</span>
+                <span class="p">],</span>
+                <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
     <span class="p">]</span>
     <span class="c1">#</span>
     <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="n">control</span><span class="p">[</span><span class="s2">&quot;arg&quot;</span><span class="p">]:</span> <span class="n">control</span><span class="p">[</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="n">controls</span><span class="p">}</span>
@@ -889,7 +1062,9 @@
                 <span class="p">],</span>
                 <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="n">LEFT_PANEL_HEIGHT</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="s2">&quot;1px solid gray&quot;</span><span class="p">),</span>
             <span class="p">),</span>
-            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">output</span><span class="p">],</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">RIGHT_PANEL_WIDTH</span><span class="p">)),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">output</span><span class="p">],</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">RIGHT_PANEL_WIDTH</span><span class="p">,</span> <span class="n">align_items</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+            <span class="p">),</span>
         <span class="p">]</span>
     <span class="p">)</span>
 
