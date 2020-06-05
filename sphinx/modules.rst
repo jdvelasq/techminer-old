@@ -1,4 +1,4 @@
-Modules
+Modules for Analysis
 ==================================================================================================
 
 .. toctree::
@@ -10,21 +10,21 @@ Modules
     by_term_per_year
     co_occurrence
     correlation
+    text 
+    keywords
+    thesaurus
     
-    
-analytics
-plots
-text
-keywords
+Basic functions
+==================================================================================================
 
-dataframe
-maps
-plot
-maps
-text
-thesaurus
-sankey_plot
-chord_diagram
+.. toctree::
+    :maxdepth: 2
+
+    plots
+    maps
+    chord_diagram
+    sankey_plot
+
 
 
     

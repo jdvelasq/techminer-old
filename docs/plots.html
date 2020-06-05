@@ -35,7 +35,9 @@
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Correlation Maps generation and manipulation" href="maps.html" />
+    <link rel="prev" title="Thesaurus" href="thesaurus.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -83,8 +85,14 @@
               
             
             
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules for Analysis</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html#basic-functions">Basic functions</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maps.html">Correlation Maps generation and manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chord_diagram.html">Chord Diagram Plot</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -129,6 +137,8 @@
   <ul class="wy-breadcrumbs">
     
       <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">Modules for Analysis</a> &raquo;</li>
         
       <li>Plots</li>
     
@@ -225,6 +235,45 @@
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/barhplot.png"><img alt="_images/barhplot.png" class="align-center" src="_images/barhplot.png" style="width: 400px;" /></a>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.plots.chord_diagram">
+<code class="sig-prename descclassname">techminer.plots.</code><code class="sig-name descname">chord_diagram</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">10, 10</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">minval</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">top_n_links</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">solid_lines</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/plots.html#chord_diagram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.plots.chord_diagram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a chord diagram from a correlation or an auto-correlation matrix.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span>
+<span class="gp">... </span>        <span class="s1">&#39;word 0&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">0.00</span><span class="p">,</span><span class="o">-</span><span class="mf">0.30</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s1">&#39;word 1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.80</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.00</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s1">&#39;word 2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.70</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.00</span><span class="p">,</span> <span class="mf">0.00</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s1">&#39;word 3&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.00</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.00</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s1">&#39;word 4&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.00</span><span class="p">,</span> <span class="mf">0.00</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">},</span>
+<span class="gp">... </span>    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;word </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">        word 0  word 1  word 2  word 3  word 4</span>
+<span class="go">word 0     1.0     0.8     0.7     0.0    -0.3</span>
+<span class="go">word 1     0.8     1.0     0.7     0.5     0.0</span>
+<span class="go">word 2     0.7     0.7     1.0     0.0     0.0</span>
+<span class="go">word 3     0.0     0.5     0.0     1.0     0.3</span>
+<span class="go">word 4    -0.3     0.0     0.0     0.3     1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">chord_diagram</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sphinx/images/plotcd1.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/plotcd1.png"><img alt="_images/plotcd1.png" class="align-center" src="_images/plotcd1.png" style="width: 400px;" /></a>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">chord_diagram</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">top_n_links</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sphinx/images/plotcd2.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/plotcd2.png"><img alt="_images/plotcd2.png" class="align-center" src="_images/plotcd2.png" style="width: 400px;" /></a>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">chord_diagram</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">solid_lines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sphinx/images/plotcd3.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/plotcd3.png"><img alt="_images/plotcd3.png" class="align-center" src="_images/plotcd3.png" style="width: 400px;" /></a>
 </dd></dl>
 
 <dl class="py function">
@@ -405,6 +454,15 @@
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="maps.html" class="btn btn-neutral float-right" title="Correlation Maps generation and manipulation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="thesaurus.html" class="btn btn-neutral float-left" title="Thesaurus" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

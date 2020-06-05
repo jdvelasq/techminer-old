@@ -84,7 +84,8 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules for Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#basic-functions">Basic functions</a></li>
 </ul>
 
             
@@ -167,7 +168,7 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="text_clustering"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.text_clustering">[docs]</a><span class="k">def</span> <span class="nf">text_clustering</span><span class="p">(</span>
+<div class="viewcode-block" id="text_clustering"><a class="viewcode-back" href="../../thesaurus.html#techminer.thesaurus.text_clustering">[docs]</a><span class="k">def</span> <span class="nf">text_clustering</span><span class="p">(</span>
     <span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name_strategy</span><span class="o">=</span><span class="s2">&quot;mostfrequent&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;porter&quot;</span><span class="p">,</span> <span class="n">transformer</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Builds a thesaurus by clustering a list of strings.</span>
@@ -353,7 +354,7 @@
 <span class="c1">#</span>
 
 
-<div class="viewcode-block" id="Thesaurus"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus">[docs]</a><span class="k">class</span> <span class="nc">Thesaurus</span><span class="p">:</span>
+<div class="viewcode-block" id="Thesaurus"><a class="viewcode-back" href="../../thesaurus.html#techminer.thesaurus.Thesaurus">[docs]</a><span class="k">class</span> <span class="nc">Thesaurus</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="p">{},</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">full_match</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span> <span class="o">=</span> <span class="n">x</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_case</span> <span class="o">=</span> <span class="n">ignore_case</span>
@@ -381,7 +382,7 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Thesaurus.compile"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.compile">[docs]</a>    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Thesaurus.compile"><a class="viewcode-back" href="../../thesaurus.html#techminer.thesaurus.Thesaurus.compile">[docs]</a>    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">:</span>
             <span class="n">patterns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
@@ -397,7 +398,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Thesaurus.apply"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Thesaurus.apply"><a class="viewcode-back" href="../../thesaurus.html#techminer.thesaurus.Thesaurus.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Apply a thesaurus to a string x.</span>
 
 <span class="sd">        Examples</span>
@@ -563,7 +564,7 @@
             <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Thesaurus.find_and_replace"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.find_and_replace">[docs]</a>    <span class="k">def</span> <span class="nf">find_and_replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Thesaurus.find_and_replace"><a class="viewcode-back" href="../../thesaurus.html#techminer.thesaurus.Thesaurus.find_and_replace">[docs]</a>    <span class="k">def</span> <span class="nf">find_and_replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Applies a thesaurus to a string, reemplacing the portion of string</span>
 <span class="sd">        matching the current pattern with the key.</span>
 
@@ -646,7 +647,7 @@
             <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Thesaurus.merge_keys"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.merge_keys">[docs]</a>    <span class="k">def</span> <span class="nf">merge_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">popkey</span><span class="p">):</span>
+<div class="viewcode-block" id="Thesaurus.merge_keys"><a class="viewcode-back" href="../../thesaurus.html#techminer.thesaurus.Thesaurus.merge_keys">[docs]</a>    <span class="k">def</span> <span class="nf">merge_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">popkey</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds the strings associated to popkey to key and delete popkey.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">popkey</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -657,23 +658,23 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">popkey</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">popkey</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Thesaurus.pop_key"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.pop_key">[docs]</a>    <span class="k">def</span> <span class="nf">pop_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<div class="viewcode-block" id="Thesaurus.pop_key"><a class="viewcode-back" href="../../thesaurus.html#techminer.thesaurus.Thesaurus.pop_key">[docs]</a>    <span class="k">def</span> <span class="nf">pop_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Deletes key from thesaurus.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Thesaurus.change_key"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.change_key">[docs]</a>    <span class="k">def</span> <span class="nf">change_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_key</span><span class="p">,</span> <span class="n">new_key</span><span class="p">):</span>
+<div class="viewcode-block" id="Thesaurus.change_key"><a class="viewcode-back" href="../../thesaurus.html#techminer.thesaurus.Thesaurus.change_key">[docs]</a>    <span class="k">def</span> <span class="nf">change_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_key</span><span class="p">,</span> <span class="n">new_key</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">new_key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">current_key</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="o">.</span><span class="n">popkey</span><span class="p">(</span><span class="n">current_key</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Thesaurus.to_dict"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Thesaurus.to_dict"><a class="viewcode-back" href="../../thesaurus.html#techminer.thesaurus.Thesaurus.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thesaurus</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
                 <span class="n">result</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span>
         <span class="k">return</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="Thesaurus.apply_as_dict"><a class="viewcode-back" href="../../refactoring/thesaurus.html#techminer.thesaurus.Thesaurus.apply_as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">apply_as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Thesaurus.apply_as_dict"><a class="viewcode-back" href="../../thesaurus.html#techminer.thesaurus.Thesaurus.apply_as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">apply_as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>

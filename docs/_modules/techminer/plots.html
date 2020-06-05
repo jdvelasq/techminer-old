@@ -84,7 +84,8 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules for Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#basic-functions">Basic functions</a></li>
 </ul>
 
             
@@ -162,6 +163,8 @@
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">techminer.chord_diagram</span> <span class="kn">import</span> <span class="n">ChordDiagram</span>
 
 <span class="c1"># import numpy as np</span>
 <span class="c1"># import pandas as pd</span>
@@ -681,6 +684,126 @@
     <span class="k">return</span> <span class="n">fig</span></div>
 
 
+<div class="viewcode-block" id="chord_diagram"><a class="viewcode-back" href="../../plots.html#techminer.plots.chord_diagram">[docs]</a><span class="k">def</span> <span class="nf">chord_diagram</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">minval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">top_n_links</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solid_lines</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates a chord diagram from a correlation or an auto-correlation matrix.</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &#39;word 0&#39;: [1.00, 0.80, 0.70, 0.00,-0.30],</span>
+<span class="sd">    ...         &#39;word 1&#39;: [0.80, 1.00, 0.70, 0.50, 0.00],</span>
+<span class="sd">    ...         &#39;word 2&#39;: [0.70, 0.70, 1.00, 0.00, 0.00],</span>
+<span class="sd">    ...         &#39;word 3&#39;: [0.00, 0.50, 0.00, 1.00, 0.30],</span>
+<span class="sd">    ...         &#39;word 4&#39;: [-0.30, 0.00, 0.00, 0.30, 1.00],</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ...     index=[&#39;word {:d}&#39;.format(i) for i in range(5)]</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">            word 0  word 1  word 2  word 3  word 4</span>
+<span class="sd">    word 0     1.0     0.8     0.7     0.0    -0.3</span>
+<span class="sd">    word 1     0.8     1.0     0.7     0.5     0.0</span>
+<span class="sd">    word 2     0.7     0.7     1.0     0.0     0.0</span>
+<span class="sd">    word 3     0.0     0.5     0.0     1.0     0.3</span>
+<span class="sd">    word 4    -0.3     0.0     0.0     0.3     1.0</span>
+<span class="sd">    &gt;&gt;&gt; fig = chord_diagram(df)</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/plotcd1.png&#39;)</span>
+
+<span class="sd">    .. image:: images/plotcd1.png</span>
+<span class="sd">        :width: 400px</span>
+<span class="sd">        :align: center</span>
+
+<span class="sd">    &gt;&gt;&gt; fig = chord_diagram(df, top_n_links=5)</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/plotcd2.png&#39;)</span>
+
+<span class="sd">    .. image:: images/plotcd2.png</span>
+<span class="sd">        :width: 400px</span>
+<span class="sd">        :align: center</span>
+
+<span class="sd">    &gt;&gt;&gt; fig = chord_diagram(df, solid_lines=True)</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/plotcd3.png&#39;)</span>
+
+<span class="sd">    .. image:: images/plotcd3.png</span>
+<span class="sd">        :width: 400px</span>
+<span class="sd">        :align: center</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">cd</span> <span class="o">=</span> <span class="n">ChordDiagram</span><span class="p">()</span>
+    <span class="n">cd</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">top_n_links</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">top_n_links</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">idx_col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">idx_row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">idx_col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+                <span class="n">node_a</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">idx_row</span><span class="p">]</span>
+                <span class="n">node_b</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">idx_col</span><span class="p">]</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">node_b</span><span class="p">][</span><span class="n">node_a</span><span class="p">]</span>
+                <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">minval</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">top_n_links</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">style</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s2">&quot;--::&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">solid_lines</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
+
+    <span class="n">width</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">solid_lines</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">links</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">idx_col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">idx_row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">idx_col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+
+            <span class="n">node_a</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">idx_row</span><span class="p">]</span>
+            <span class="n">node_b</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">idx_col</span><span class="p">]</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">node_b</span><span class="p">][</span><span class="n">node_a</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mf">0.75</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="n">minval</span><span class="p">:</span>
+                <span class="n">cd</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span>
+                    <span class="n">node_a</span><span class="p">,</span>
+                    <span class="n">node_b</span><span class="p">,</span>
+                    <span class="n">linestyle</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">linewidth</span><span class="o">=</span><span class="n">width</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">links</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mf">0.50</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="n">minval</span><span class="p">:</span>
+                <span class="n">cd</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span>
+                    <span class="n">node_a</span><span class="p">,</span>
+                    <span class="n">node_b</span><span class="p">,</span>
+                    <span class="n">linestyle</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="n">linewidth</span><span class="o">=</span><span class="n">width</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">links</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mf">0.25</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="n">minval</span><span class="p">:</span>
+                <span class="n">cd</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span>
+                    <span class="n">node_a</span><span class="p">,</span>
+                    <span class="n">node_b</span><span class="p">,</span>
+                    <span class="n">linestyle</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                    <span class="n">linewidth</span><span class="o">=</span><span class="n">width</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">links</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mf">0.25</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="n">minval</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="n">cd</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span>
+                    <span class="n">node_a</span><span class="p">,</span> <span class="n">node_b</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">width</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">links</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="n">top_n_links</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">links</span> <span class="o">&gt;=</span> <span class="n">top_n_links</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+    <span class="k">return</span> <span class="n">cd</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span></div>
+
+
 <span class="c1"># #############################################################################################################</span>
 
 
@@ -688,128 +811,6 @@
 <span class="c1">#     def __init__(self, df):</span>
 <span class="c1">#         self.df = df</span>
 
-
-<span class="c1">#     def chord_diagram(self, alpha=1.0, minval=0.0, top_n_links=None, solid_lines=False):</span>
-<span class="c1">#         &quot;&quot;&quot;Creates a chord diagram from a correlation or an auto-correlation matrix.</span>
-
-
-<span class="c1">#         Examples</span>
-<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1">#         ...     {</span>
-<span class="c1">#         ...         &#39;word 0&#39;: [1.00, 0.80, 0.70, 0.00,-0.30],</span>
-<span class="c1">#         ...         &#39;word 1&#39;: [0.80, 1.00, 0.70, 0.50, 0.00],</span>
-<span class="c1">#         ...         &#39;word 2&#39;: [0.70, 0.70, 1.00, 0.00, 0.00],</span>
-<span class="c1">#         ...         &#39;word 3&#39;: [0.00, 0.50, 0.00, 1.00, 0.30],</span>
-<span class="c1">#         ...         &#39;word 4&#39;: [-0.30, 0.00, 0.00, 0.30, 1.00],</span>
-<span class="c1">#         ...     },</span>
-<span class="c1">#         ...     index=[&#39;word {:d}&#39;.format(i) for i in range(5)]</span>
-<span class="c1">#         ... )</span>
-<span class="c1">#         &gt;&gt;&gt; df</span>
-<span class="c1">#                 word 0  word 1  word 2  word 3  word 4</span>
-<span class="c1">#         word 0     1.0     0.8     0.7     0.0    -0.3</span>
-<span class="c1">#         word 1     0.8     1.0     0.7     0.5     0.0</span>
-<span class="c1">#         word 2     0.7     0.7     1.0     0.0     0.0</span>
-<span class="c1">#         word 3     0.0     0.5     0.0     1.0     0.3</span>
-<span class="c1">#         word 4    -0.3     0.0     0.0     0.3     1.0</span>
-<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).chord_diagram()</span>
-<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotcd1.png&#39;)</span>
-
-<span class="c1">#         .. image:: images/plotcd1.png</span>
-<span class="c1">#             :width: 400px</span>
-<span class="c1">#             :align: center</span>
-
-<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).chord_diagram(top_n_links=5)</span>
-<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotcd2.png&#39;)</span>
-
-<span class="c1">#         .. image:: images/plotcd2.png</span>
-<span class="c1">#             :width: 400px</span>
-<span class="c1">#             :align: center</span>
-
-<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).chord_diagram(solid_lines=True)</span>
-<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotcd3.png&#39;)</span>
-
-<span class="c1">#         .. image:: images/plotcd3.png</span>
-<span class="c1">#             :width: 400px</span>
-<span class="c1">#             :align: center</span>
-
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         plt.clf()</span>
-
-<span class="c1">#         x = self.df.copy()</span>
-
-<span class="c1">#         cd = ChordDiagram()</span>
-<span class="c1">#         cd.add_nodes_from(x.columns, color=&quot;black&quot;, s=40)</span>
-
-<span class="c1">#         if top_n_links is not None and top_n_links &lt;= len(x.columns):</span>
-<span class="c1">#             values = []</span>
-<span class="c1">#             for idx_col in range(len(x.columns) - 1):</span>
-<span class="c1">#                 for idx_row in range(idx_col + 1, len(x.columns)):</span>
-<span class="c1">#                     node_a = x.index[idx_row]</span>
-<span class="c1">#                     node_b = x.columns[idx_col]</span>
-<span class="c1">#                     value = x[node_b][node_a]</span>
-<span class="c1">#                     values.append(value)</span>
-<span class="c1">#             values = sorted(values, reverse=True)</span>
-<span class="c1">#             minval = values[top_n_links - 1]</span>
-
-<span class="c1">#         style = list(&quot;--::&quot;)</span>
-<span class="c1">#         if solid_lines is True:</span>
-<span class="c1">#             style = list(&quot;----&quot;)</span>
-
-<span class="c1">#         width = [2.5, 1, 1, 1]</span>
-<span class="c1">#         if solid_lines is True:</span>
-<span class="c1">#             width = [4, 2, 1, 1]</span>
-
-<span class="c1">#         links = 0</span>
-<span class="c1">#         for idx_col in range(len(x.columns) - 1):</span>
-<span class="c1">#             for idx_row in range(idx_col + 1, len(x.columns)):</span>
-
-<span class="c1">#                 node_a = x.index[idx_row]</span>
-<span class="c1">#                 node_b = x.columns[idx_col]</span>
-<span class="c1">#                 value = x[node_b][node_a]</span>
-
-<span class="c1">#                 if value &gt; 0.75 and value &gt;= minval:</span>
-<span class="c1">#                     cd.add_edge(</span>
-<span class="c1">#                         node_a,</span>
-<span class="c1">#                         node_b,</span>
-<span class="c1">#                         linestyle=style[0],</span>
-<span class="c1">#                         linewidth=width[0],</span>
-<span class="c1">#                         color=&quot;black&quot;,</span>
-<span class="c1">#                     )</span>
-<span class="c1">#                     links += 1</span>
-<span class="c1">#                 elif value &gt; 0.50 and value &gt;= minval:</span>
-<span class="c1">#                     cd.add_edge(</span>
-<span class="c1">#                         node_a,</span>
-<span class="c1">#                         node_b,</span>
-<span class="c1">#                         linestyle=style[1],</span>
-<span class="c1">#                         linewidth=width[1],</span>
-<span class="c1">#                         color=&quot;black&quot;,</span>
-<span class="c1">#                     )</span>
-<span class="c1">#                     links += 1</span>
-<span class="c1">#                 elif value &gt; 0.25 and value &gt;= minval:</span>
-<span class="c1">#                     cd.add_edge(</span>
-<span class="c1">#                         node_a,</span>
-<span class="c1">#                         node_b,</span>
-<span class="c1">#                         linestyle=style[2],</span>
-<span class="c1">#                         linewidth=width[2],</span>
-<span class="c1">#                         color=&quot;black&quot;,</span>
-<span class="c1">#                     )</span>
-<span class="c1">#                     links += 1</span>
-<span class="c1">#                 elif value &lt;= 0.25 and value &gt;= minval and value &gt; 0.0:</span>
-<span class="c1">#                     cd.add_edge(</span>
-<span class="c1">#                         node_a,</span>
-<span class="c1">#                         node_b,</span>
-<span class="c1">#                         linestyle=style[3],</span>
-<span class="c1">#                         linewidth=width[3],</span>
-<span class="c1">#                         color=&quot;red&quot;,</span>
-<span class="c1">#                     )</span>
-<span class="c1">#                     links += 1</span>
-
-<span class="c1">#                 if top_n_links is not None and links &gt;= top_n_links:</span>
-<span class="c1">#                     continue</span>
-
-<span class="c1">#         return cd.plot()</span>
 
 <span class="c1">#     def tree(self, cmap=&quot;Blues&quot;, alpha=0.9):</span>
 <span class="c1">#         &quot;&quot;&quot;Creates a classification plot from a dataframe.</span>
