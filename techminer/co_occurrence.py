@@ -442,28 +442,52 @@ def __body_0(x):
         term = kwargs["term"]
         by = kwargs["by"]
         cmap = kwargs["cmap"]
-        min_value = kwargs["min_value"]
+        min_value = int(kwargs["min_value"])
+        sort_by = kwargs["sort_by"]
+        #
+        # 
         #
         matrix = co_occurrence(
                 x,
                 column=term,
                 by=by,
-                as_matrix=True,
-                min_value=float(min_value),
+                as_matrix=False,
+                min_value=0,
                 keywords=None,
             )
         #
+        options = matrix['Num Documents'].unique().tolist()
+        options = sorted(options)
+        options = [str(w) for w in options]
+        current_selection = controls[3]["widget"].value
+        controls[3]["widget"].options = options
         #
-        values = pd.Series(matrix.values.ravel()).unique().tolist()
-        values = sorted(values)
-        if min(values) > 0:
-            values = list(range(min(values))) + values
-        values = [str(w) for w in values]
-        current_value = controls[3]["widget"].value
-        controls[3]["widget"].options = values
-        if current_value not in controls[3]["widget"].options:
+        if min_value > matrix['Num Documents'].max():
+            min_value = 0
+            controls[3]["widget"].value = controls[3]["widget"].options[0]
+        if current_selection not in controls[3]["widget"].options:
+            min_value = 0
             controls[3]["widget"].value = controls[3]["widget"].options[0]
         #
+        if term == by:
+            by = by + '_'
+        #
+        matrix = pd.pivot_table(
+            matrix, values="Num Documents", index=by, columns=term, fill_value=0,
+        )
+        matrix.columns = matrix.columns.tolist()
+        matrix.index = matrix.index.tolist()
+        matrix = matrix.loc[sorted(matrix.index), sorted(matrix.columns)]
+        #
+        if min_value > 0:
+            #
+            a = matrix.max(axis=1)
+            b = matrix.max(axis=0)
+            a = a.sort_values(ascending=False)
+            b = b.sort_values(ascending=False)
+            a = a[a >= min_value]
+            b = b[b >= min_value]
+            matrix = matrix.loc[sorted(a.index), sorted(b.index)]
         #
         #
         if max(len(matrix.index), len(matrix.columns)) > 50:
@@ -472,9 +496,54 @@ def __body_0(x):
                 display(widgets.HTML("<h3>Matrix exceeds the maximum shape</h3>"))
                 return
         #
+        #
+        #
+        s = summary_by_term(x, term)
+        new_names = {
+            a: "{} [{:d}]".format(a, b)
+            for a, b in zip(s[term].tolist(), s["Num Documents"].tolist())
+        }
+        matrix = matrix.rename(columns=new_names)
+        #
+        if term == by[:-1]:
+            matrix = matrix.rename(index=new_names)
+        else:
+            s = summary_by_term(x, by)
+            new_names = {
+                a: "{} [{:d}]".format(a, b)
+                for a, b in zip(s[by].tolist(), s["Num Documents"].tolist())
+            }
+            matrix = matrix.rename(index=new_names)
+        #
+        #
+        #
         output.clear_output()
-        with output:            
-            display(matrix.style.background_gradient(cmap=cmap))
+        with output:
+            #
+            # Sort order
+            #
+            g = lambda m: int(m[m.find("[") + 1 : m.find("]")])
+            if sort_by == "Frequency/Cited by asc.":
+                names = sorted(matrix.columns, key=g, reverse=False)
+                matrix = matrix.loc[names, names]
+            if sort_by == "Frequency/Cited by desc.":
+                g = lambda m: int(m[m.find("[") + 1 : m.find("]")])
+                names = sorted(matrix.columns, key=g, reverse=True)
+                matrix = matrix.loc[names, names]
+            if sort_by == "Alphabetic asc.":
+                matrix = matrix.sort_index(axis=0, ascending=True).sort_index(
+                    axis=1, ascending=True
+                )
+            if sort_by == "Alphabetic desc.":
+                matrix = matrix.sort_index(axis=0, ascending=False).sort_index(
+                    axis=1, ascending=False
+                )
+            #
+            # View
+            #
+            display(matrix.style.format(
+                        lambda q: "{:d}".format(q) if q >= min_value else ""
+                    ).background_gradient(cmap=cmap, axis=None))
             
                 
     #
@@ -516,13 +585,29 @@ def __body_0(x):
             "arg": "min_value",
             "desc": "Min occurrence value:",
             "widget": widgets.Dropdown(
-                options=('0',),
+                options=['1'],
                 ensure_option=True,
                 disabled=False,
-                continuous_update=True,
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 4
+        {
+            "arg": "sort_by",
+            "desc": "Sort order:",
+            "widget": widgets.Dropdown(
+                options=[
+                    "Alphabetic asc.",
+                    "Alphabetic desc.",
+                    "Frequency/Cited by asc.",
+                    "Frequency/Cited by desc.",
+                ],
+                disable=False,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+
+        
     ]
     #
     args = {control["arg"]: control["widget"] for control in controls}
