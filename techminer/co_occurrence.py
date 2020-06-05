@@ -449,45 +449,61 @@ def __body_0(x):
                 column=term,
                 by=by,
                 as_matrix=True,
-                min_value=min_value,
+                min_value=float(min_value),
                 keywords=None,
             )
         #
-        if controls[3]['widget'].value > matrix.max().max():
-            controls[3]['widget'].value = matrix.max().max()
-        controls[3]['widget'].max = matrix.max().max()
+        #
+        values = pd.Series(matrix.values.ravel()).unique().tolist()
+        values = sorted(values)
+        if min(values) > 0:
+            values = list(range(min(values))) + values
+        values = [str(w) for w in values]
+        current_value = controls[3]["widget"].value
+        controls[3]["widget"].options = values
+        if current_value not in controls[3]["widget"].options:
+            controls[3]["widget"].value = controls[3]["widget"].options[0]
+        #
+        #
+        #
+        if max(len(matrix.index), len(matrix.columns)) > 50:
+            output.clear_output()
+            with output:
+                display(widgets.HTML("<h3>Matrix exceeds the maximum shape</h3>"))
+                return
         #
         output.clear_output()
-        with output:
-            if len(matrix.columns) < 51 and len(matrix.index) < 51:
-                display(matrix.style.background_gradient(cmap=cmap))
-            else:
-                display(matrix)
+        with output:            
+            display(matrix.style.background_gradient(cmap=cmap))
+            
                 
     #
     # UI
     #
     controls = [
+        # 0
         {
             "arg": "term",
             "desc": "Term to analyze:",
-            "widget": widgets.Select(
+            "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in x.columns],
                 ensure_option=True,
                 disabled=False,
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 1
         {
             "arg": "by",
             "desc": "By Term:",
-            "widget": widgets.Select(
+            "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in x.columns],
                 ensure_option=True,
                 disabled=False,
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 2
         {
             "arg": "cmap",
             "desc": "Colormap:",
@@ -495,23 +511,18 @@ def __body_0(x):
                 options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 3
         {
             "arg": "min_value",
-            "desc": "Lower value",
-            "widget": widgets.IntSlider(
-                    value=0,
-                    min=0,
-                    max=50,
-                    step=1,
-                    disabled=False,
-                    continuous_update=False,
-                    orientation="horizontal",
-                    readout=True,
-                    readout_format="d",
-                    layout=Layout(width=WIDGET_WIDTH),
-                ),
+            "desc": "Min occurrence value:",
+            "widget": widgets.Dropdown(
+                options=('0',),
+                ensure_option=True,
+                disabled=False,
+                continuous_update=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
         },
-        
     ]
     #
     args = {control["arg"]: control["widget"] for control in controls}
@@ -529,7 +540,7 @@ def __body_0(x):
                 ],
                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
             ),
-            widgets.VBox([output], layout=Layout(width=RIGHT_PANEL_WIDTH)),
+            widgets.VBox([output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")),
         ]
     )
 
