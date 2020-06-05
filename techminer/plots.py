@@ -534,7 +534,13 @@ def heatmap(x, figsize=(8, 8), **kwargs):
 
 
 def chord_diagram(
-    x, figsize=(10, 10), alpha=1.0, minval=0.0, top_n_links=None, solid_lines=False
+    x,
+    figsize=(10, 10),
+    cmap="Greys",
+    alpha=1.0,
+    minval=0.0,
+    top_n_links=None,
+    solid_lines=False,
 ):
     """Creates a chord diagram from a correlation or an auto-correlation matrix.
 
@@ -584,8 +590,39 @@ def chord_diagram(
 
     x = x.copy()
 
+    # ---------------------------------------------------
+    #
+    # Node sizes
+    #
+    terms = x.columns
+    node_sizes = [int(w[w.find("[") + 1 : w.find("]")]) for w in terms if "[" in w]
+    if len(node_sizes) == 0:
+        node_sizes = [10] * len(terms)
+    else:
+        max_size = max(node_sizes)
+        min_size = min(node_sizes)
+        if min_size == max_size:
+            node_sizes = [30] * len(terms)
+        else:
+            node_sizes = [
+                100 + int(1000 * (w - min_size) / (max_size - min_size))
+                for w in node_sizes
+            ]
+
+    #
+    # Node colors
+    #
+    cmap = plt.cm.get_cmap(cmap)
+    node_colors = [
+        cmap(0.2 + 0.75 * node_sizes[i] / max(node_sizes))
+        for i in range(len(node_sizes))
+    ]
+    #
+    # ---------------------------------------------------
+
     cd = ChordDiagram()
-    cd.add_nodes_from(x.columns, color="black", s=40)
+    for idx, term in enumerate(x.columns):
+        cd.add_node(term, color=node_colors[idx], s=node_sizes[idx])
 
     if top_n_links is not None and top_n_links <= len(x.columns):
         values = []
@@ -598,11 +635,11 @@ def chord_diagram(
         values = sorted(values, reverse=True)
         minval = values[top_n_links - 1]
 
-    style = list("--::")
+    style = ["-", "-", "--", ":"]
     if solid_lines is True:
         style = list("----")
 
-    width = [2.5, 1, 1, 1]
+    width = [4, 2, 1, 1]
     if solid_lines is True:
         width = [4, 2, 1, 1]
 
@@ -643,7 +680,11 @@ def chord_diagram(
                 links += 1
             elif value <= 0.25 and value >= minval and value > 0.0:
                 cd.add_edge(
-                    node_a, node_b, linestyle=style[3], linewidth=width[3], color="red",
+                    node_a,
+                    node_b,
+                    linestyle=style[3],
+                    linewidth=width[3],
+                    color="black",
                 )
                 links += 1
 

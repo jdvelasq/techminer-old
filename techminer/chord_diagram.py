@@ -203,6 +203,7 @@ class ChordDiagram:
                 label_y={n: p for n, p in zip(self._nodes.keys(), label_y)},
                 rotation={n: p for n, p in zip(self._nodes.keys(), rotation)},
                 ha={n: p for n, p in zip(self._nodes.keys(), ha)},
+                s={n: p for n, p in zip(self._nodes.keys(), ha)},
             )
 
         def draw_points():

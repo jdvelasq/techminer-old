@@ -488,7 +488,9 @@ def corr(
 ########## networkx interface
 
 
-def correlation_map(matrix, layout="Kamada Kawai", figsize=(11, 11), min_link_value=0):
+def correlation_map(
+    matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12), min_link_value=0
+):
     """Computes the correlation map directly using networkx.
     """
 
@@ -500,6 +502,43 @@ def correlation_map(matrix, layout="Kamada Kawai", figsize=(11, 11), min_link_va
     #
     terms = matrix.columns.tolist()
 
+    #
+    # Node sizes
+    #
+    node_sizes = [int(w[w.find("[") + 1 : w.find("]")]) for w in terms if "[" in w]
+    if len(node_sizes) == 0:
+        node_sizes = [10] * len(terms)
+    else:
+        max_size = max(node_sizes)
+        min_size = min(node_sizes)
+        if min_size == max_size:
+            node_sizes = [300] * len(terms)
+        else:
+            node_sizes = [
+                300 + int(1000 * (w - min_size) / (max_size - min_size))
+                for w in node_sizes
+            ]
+
+    #
+    # Node colors
+    #
+
+    cmap = pyplot.cm.get_cmap(cmap)
+    node_colors = [
+        cmap(0.2 + 0.75 * node_sizes[i] / max(node_sizes))
+        for i in range(len(node_sizes))
+    ]
+
+    #
+    # Remove [...] from text
+    #
+    terms = [w[: w.find("[")].strip() if "[" in w else w for w in terms]
+    matrix.columns = terms
+    matrix.index = terms
+
+    #
+    # Draw the network
+    #
     n = len(matrix.columns)
     edges_75 = []
     edges_50 = []
@@ -567,13 +606,16 @@ def correlation_map(matrix, layout="Kamada Kawai", figsize=(11, 11), min_link_va
             G,
             ax=ax,
             edgelist=edges_75,
-            width=3,
+            width=4,
             edge_color="k",
             with_labels=with_labels,
             font_weight="bold",
-            node_color="lightgray",
-            node_size=1,
+            node_color=node_colors,
+            node_size=node_sizes,
             bbox=dict(facecolor="white", alpha=1.0),
+            font_size=10,
+            horizontalalignment="left",
+            verticalalignment="baseline",
         )
         with_labels = False
     #
@@ -583,12 +625,15 @@ def correlation_map(matrix, layout="Kamada Kawai", figsize=(11, 11), min_link_va
             ax=ax,
             edgelist=edges_50,
             edge_color="k",
-            width=1,
+            width=2,
             with_labels=with_labels,
             font_weight=with_labels,
-            node_color="lightgray",
-            node_size=1,
+            node_color=node_colors,
+            node_size=node_sizes,
             bbox=dict(facecolor="white", alpha=1.0),
+            font_size=10,
+            horizontalalignment="left",
+            verticalalignment="baseline",
         )
         with_labels = False
     #
@@ -597,15 +642,18 @@ def correlation_map(matrix, layout="Kamada Kawai", figsize=(11, 11), min_link_va
             G,
             ax=ax,
             edgelist=edges_25,
-            edge_color="red",
+            edge_color="k",
             width=1,
             style="dashed",
             alpha=1.0,
             with_labels=with_labels,
             font_weight=with_labels,
-            node_color="lightgray",
-            node_size=1,
+            node_color=node_colors,
+            node_size=node_sizes,
             bbox=dict(facecolor="white", alpha=1.0),
+            font_size=10,
+            horizontalalignment="left",
+            verticalalignment="baseline",
         )
         with_labels = False
     if other_edges is not None:
@@ -613,15 +661,18 @@ def correlation_map(matrix, layout="Kamada Kawai", figsize=(11, 11), min_link_va
             G,
             ax=ax,
             edgelist=other_edges,
-            edge_color="red",
+            edge_color="k",
             width=1,
             alpha=1.0,
             style="dotted",
             with_labels=with_labels,
             font_weight=with_labels,
-            node_color="lightgray",
-            node_size=1,
+            node_color=node_colors,
+            node_size=node_sizes,
             bbox=dict(facecolor="white", alpha=1.0),
+            font_size=10,
+            horizontalalignment="left",
+            verticalalignment="baseline",
         )
         with_labels = False
 
@@ -630,17 +681,23 @@ def correlation_map(matrix, layout="Kamada Kawai", figsize=(11, 11), min_link_va
             G,
             ax=ax,
             edgelist=None,
-            edge_color="red",
+            edge_color="k",
             width=1,
             alpha=1.0,
             style="dotted",
-            with_labels=True,
-            font_weight=None,
-            node_color="lightgray",
-            node_size=1,
+            with_labels=with_labels,
+            font_weight=with_labels,
+            node_color=node_colors,
+            node_size=node_sizes,
             bbox=dict(facecolor="white", alpha=1.0),
+            font_size=10,
+            horizontalalignment="left",
+            verticalalignment="baseline",
         )
 
+    #
+    # Figure size
+    #
     xlim = ax.get_xlim()
     ylim = ax.get_ylim()
     ax.set_xlim(
@@ -649,6 +706,49 @@ def correlation_map(matrix, layout="Kamada Kawai", figsize=(11, 11), min_link_va
     ax.set_ylim(
         ylim[0] - 0.15 * (ylim[1] - ylim[0]), ylim[1] + 0.15 * (ylim[1] - ylim[0])
     )
+    #
+    # Legend
+    #
+    xlim = ax.get_xlim()
+    ylim = ax.get_ylim()
+    x_len = (xlim[1] - xlim[0]) / 40
+    y_len = (ylim[1] - ylim[0]) / 40
+    #
+    text_75 = "> 0.75 ({})".format(len(edges_75) if edges_75 is not None else 0)
+    text_50 = "0.50-0.75 ({})".format(len(edges_50) if edges_50 is not None else 0)
+    text_25 = "0.25-0.50 ({})".format(len(edges_25) if edges_25 is not None else 0)
+    text_0 = "< 0.25 ({})".format(len(other_edges) if other_edges is not None else 0)
+    #
+    ax.text(xlim[0] + 2.5 * x_len, ylim[0] + y_len * 3, text_75)
+    ax.text(xlim[0] + 2.5 * x_len, ylim[0] + y_len * 2, text_50)
+    ax.text(xlim[0] + 2.5 * x_len, ylim[0] + y_len * 1, text_25)
+    ax.text(xlim[0] + 2.5 * x_len, ylim[0] + y_len * 0, text_0)
+    #
+    ax.plot(
+        [xlim[0], xlim[0] + 2.0 * x_len],
+        [ylim[0] + y_len * 0.25, ylim[0] + y_len * 0.25],
+        "k:",
+        linewidth=1,
+    )
+    ax.plot(
+        [xlim[0], xlim[0] + 2.0 * x_len],
+        [ylim[0] + y_len * 1.25, ylim[0] + y_len * 1.25],
+        "k--",
+        linewidth=1,
+    )
+    ax.plot(
+        [xlim[0], xlim[0] + 2.0 * x_len],
+        [ylim[0] + y_len * 2.25, ylim[0] + y_len * 2.25],
+        "k-",
+        linewidth=2,
+    )
+    ax.plot(
+        [xlim[0], xlim[0] + 2.0 * x_len],
+        [ylim[0] + y_len * 3.25, ylim[0] + y_len * 3.25],
+        "k-",
+        linewidth=4,
+    )
+
     return fig
 
 
@@ -727,8 +827,23 @@ def __body_0(x):
             controls[4]["widget"].value = controls[4]["widget"].options[0]
         #
         #
+        if view == "Matrix":
+            controls[7]["widget"].disabled = False
+            controls[8]["widget"].disabled = False
+            controls[9]["widget"].disabled = True
+        if view == "Correlation map":
+            controls[7]["widget"].disabled = False
+            controls[8]["widget"].disabled = True
+            controls[9]["widget"].disabled = False
+        if view == "Chord diagram":
+            controls[7]["widget"].disabled = False
+            controls[8]["widget"].disabled = True
+            controls[9]["widget"].disabled = True
+        #
         #
         if n_columns > 50:
+            controls[7]["widget"].disabled = True
+            controls[8]["widget"].disabled = True
             output.clear_output()
             with output:
                 display(widgets.HTML("<h3>Matrix exceeds the maximum shape</h3>"))
@@ -741,7 +856,6 @@ def __body_0(x):
             column=column,
             by=by,
             method=method,
-            #  min_link_value=min_link_value,
             cmap=cmap,
             filter_by=filter_by,
             filter_value=filter_value,
@@ -790,6 +904,7 @@ def __body_0(x):
                     correlation_map(
                         matrix=matrix,
                         layout=layout,
+                        cmap=cmap,
                         figsize=(10, 10),
                         min_link_value=min_link_value,
                     )
@@ -797,13 +912,13 @@ def __body_0(x):
                 #
             if view == "Chord diagram":
                 #
-                display(chord_diagram(matrix, minval=min_link_value))
-                #
+                display(chord_diagram(matrix, cmap=cmap, minval=min_link_value))
 
     #
     # UI
     #
     controls = [
+        # 0
         {
             "arg": "term",
             "desc": "Term to analyze:",
@@ -814,6 +929,7 @@ def __body_0(x):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 1
         {
             "arg": "by",
             "desc": "By Term:",
@@ -824,6 +940,7 @@ def __body_0(x):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 2
         {
             "arg": "method",
             "desc": "Method:",
@@ -835,6 +952,7 @@ def __body_0(x):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 3
         {
             "arg": "filter_by",
             "desc": "Filter by:",
@@ -844,6 +962,7 @@ def __body_0(x):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 4
         {
             "arg": "filter_value",
             "desc": "Filter value:",
@@ -853,6 +972,7 @@ def __body_0(x):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 5
         {
             "arg": "min_link_value",
             "desc": "Min link value:",
@@ -866,6 +986,7 @@ def __body_0(x):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 6
         {
             "arg": "view",
             "desc": "View:",
@@ -877,13 +998,18 @@ def __body_0(x):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 7
         {
             "arg": "cmap",
             "desc": "Matrix colormap:",
             "widget": widgets.Dropdown(
-                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
+                options=COLORMAPS,
+                disable=False,
+                layout=Layout(width=WIDGET_WIDTH),
+                disabled=False,
             ),
         },
+        # 8
         {
             "arg": "sort_by",
             "desc": "Sort order:",
@@ -898,6 +1024,7 @@ def __body_0(x):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 9
         {
             "arg": "layout",
             "desc": "Map layout:",
@@ -911,7 +1038,7 @@ def __body_0(x):
                     "Spring",
                     "Shell",
                 ],
-                disable=False,
+                disable=True,
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
@@ -933,7 +1060,7 @@ def __body_0(x):
                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
             ),
             widgets.VBox(
-                [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="center")
+                [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")
             ),
         ]
     )
