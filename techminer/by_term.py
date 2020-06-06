@@ -12,8 +12,9 @@ import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
 from techminer.explode import __explode
-from techminer.plots import COLORMAPS
 from techminer.keywords import Keywords
+from techminer.plots import COLORMAPS
+
 
 def summary_by_term(x, column, keywords=None):
     """Summarize the number of documents and citations by term in a dataframe.
@@ -210,11 +211,78 @@ COLUMNS = [
     "Source title",
 ]
 
+##
+##
+##  Panel 0
+##
+##
 def __body_0(x):
+    # -------------------------------------------------------------------------
     #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    controls = [
+        # 0
+        {
+            "arg": "term",
+            "desc": "Term to analyze:",
+            "widget": widgets.Select(
+                    options=[z for z in COLUMNS if z in x.columns],
+                    ensure_option=True,
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+        },
+        # 1
+        {
+            "arg": "analysis_type",
+            "desc": "Analysis type:",
+            "widget": widgets.Dropdown(
+                    options=["Frequency", "Citation"],
+                    value="Frequency",
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+        },
+        # 2
+        {
+            "arg": "plot_type",
+            "desc": "Plot type:",
+            "widget": widgets.Dropdown(
+                    options=["bar", "barh", "pie"],
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+        },
+        # 3
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 4
+        {
+            "arg": "top_n",
+            "desc": "Top N:",
+            "widget": widgets.IntSlider(
+                    value=10,
+                    min=10,
+                    max=50,
+                    step=1,
+                    continuous_update=False,
+                    orientation="horizontal",
+                    readout=True,
+                    readout_format="d",
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
     def server(**kwargs):
-        #
-        # Logic
         #
         term = kwargs['term']
         cmap = kwargs['cmap']
@@ -241,64 +309,11 @@ def __body_0(x):
         with output:
             display(plot(df, cmap=cmap, figsize=FIGSIZE))
 
+    # -------------------------------------------------------------------------
     #
-    # UI
+    # Generic
     #
-    controls = [
-        {
-            "arg": "term",
-            "desc": "Term to analyze:",
-            "widget": widgets.Select(
-                    options=[z for z in COLUMNS if z in x.columns],
-                    ensure_option=True,
-                    disabled=False,
-                    layout=Layout(width=WIDGET_WIDTH),
-                ),
-        },
-        {
-            "arg": "analysis_type",
-            "desc": "Analysis type:",
-            "widget": widgets.Dropdown(
-                    options=["Frequency", "Citation"],
-                    value="Frequency",
-                    disable=False,
-                    layout=Layout(width=WIDGET_WIDTH),
-                ),
-        },
-        {
-            "arg": "plot_type",
-            "desc": "Plot type:",
-            "widget": widgets.Dropdown(
-                    options=["bar", "barh", "pie"],
-                    disable=False,
-                    layout=Layout(width=WIDGET_WIDTH),
-                ),
-        },
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(
-                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        {
-            "arg": "top_n",
-            "desc": "Top N:",
-            "widget": widgets.IntSlider(
-                    value=10,
-                    min=10,
-                    max=50,
-                    step=1,
-                    disabled=False,
-                    continuous_update=False,
-                    orientation="horizontal",
-                    readout=True,
-                    readout_format="d",
-                    layout=Layout(width=WIDGET_WIDTH),
-                ),
-        },
-    ]
-    #
+    # -------------------------------------------------------------------------
     args = {control["arg"]: control["widget"] for control in controls}
     output = widgets.Output()
     with output:
@@ -314,13 +329,58 @@ def __body_0(x):
                 ],
                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
             ),
-            widgets.VBox([output], layout=Layout(width=RIGHT_PANEL_WIDTH)),
+            widgets.VBox([output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")),
         ]
     )
 
-
+##
+##
+##  Panel 1
+##
+##
 def __body_1(x):
+    # -------------------------------------------------------------------------
     #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    controls = [
+        # 0
+        {
+            "arg": "term",
+            "desc": "Term to analyze:",
+            "widget": widgets.Select(
+                    options=["Countries", "Country 1st"],
+                    ensure_option=True,
+                    disabled=False,
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+        },
+        # 1
+        {
+            "arg": "analysis_type",
+            "desc": "Analysis type:",
+            "widget": widgets.Dropdown(
+                    options=["Frequency", "Citation"],
+                    value="Frequency",
+                    disable=False,
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+        },
+        # 2
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
     def server(**kwargs):
         #
         # Logic
@@ -339,44 +399,13 @@ def __body_1(x):
         with output:
             display(plt.worldmap(df, figsize=FIGSIZE, cmap=cmap))        
         
+    # -------------------------------------------------------------------------
     #
-    # UI
+    # Generic
     #
-    controls = [
-        {
-            "arg": "term",
-            "desc": "Term to analyze:",
-            "widget": widgets.Select(
-                    options=["Countries", "Country 1st"],
-                    ensure_option=True,
-                    disabled=False,
-                    layout=Layout(width=WIDGET_WIDTH),
-                ),
-        },
-        {
-            "arg": "analysis_type",
-            "desc": "Analysis type:",
-            "widget": widgets.Dropdown(
-                    options=["Frequency", "Citation"],
-                    value="Frequency",
-                    disable=False,
-                    layout=Layout(width=WIDGET_WIDTH),
-                ),
-        },
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(
-                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-    ]
-    #
+    # -------------------------------------------------------------------------
     args = {control["arg"]: control["widget"] for control in controls}
     output = widgets.Output()
-    # widgets.interactive_output(
-    #     server, args,
-    # )
     with output:
         display(widgets.interactive_output(server, args,))
     return widgets.HBox(
@@ -390,7 +419,7 @@ def __body_1(x):
                 ],
                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
             ),
-            widgets.VBox([output], layout=Layout(width=RIGHT_PANEL_WIDTH)),
+            widgets.VBox([output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")),
         ]
     )
 
@@ -414,5 +443,4 @@ def app(df):
         center=body,
         pane_heights=PANE_HEIGHTS,
     )
-
 
