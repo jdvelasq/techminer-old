@@ -1,4 +1,3 @@
-
 """
 Analysis by Year
 ==================================================================================================
@@ -128,7 +127,6 @@ def citations_by_year(x, cumulative=False):
     return result
 
 
-
 ##
 ##
 ##  APP
@@ -141,8 +139,52 @@ RIGHT_PANEL_WIDTH = "870px"
 FIGSIZE = (15, 9.4)
 PANE_HEIGHTS = ["80px", "650px", 0]
 
+
 def __body_0(df):
+    # -------------------------------------------------------------------------
     #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    controls = [
+        # 0
+        {
+            "arg": "selected_plot",
+            "desc": "Plot:",
+            "widget": widgets.Dropdown(
+                options=[
+                    "Documents by Year",
+                    "Cum. Documents by Year",
+                    "Times Cited by Year",
+                    "Cum. Times Cited by Year",
+                    "Avg. Times Cited by Year",
+                ],
+                value="Documents by Year",
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 1
+        {
+            "arg": "plot_type",
+            "desc": "Plot type:",
+            "widget": widgets.Dropdown(
+                options=["bar", "barh"], layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 2
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
     def server(**kwargs):
         #
         # Logic
@@ -164,51 +206,16 @@ def __body_0(df):
         with output:
             display(plot(x, cmap=kwargs["cmap"], figsize=FIGSIZE))
 
+    # -------------------------------------------------------------------------
     #
-    # UI
+    # Generic
     #
-    controls = [
-        {
-            "arg": "selected_plot",
-            "desc": "Plot:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Documents by Year",
-                    "Cum. Documents by Year",
-                    "Times Cited by Year",
-                    "Cum. Times Cited by Year",
-                    "Avg. Times Cited by Year",
-                ],
-                value="Documents by Year",
-                disable=False,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        {
-            "arg": "plot_type",
-            "desc": "Plot type:",
-            "widget": widgets.Dropdown(
-                options=["bar", "barh"],
-                disable=False,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(
-                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-    ]
-    #
+    # -------------------------------------------------------------------------
     args = {control["arg"]: control["widget"] for control in controls}
     output = widgets.Output()
     widgets.interactive_output(
         server, args,
     )
-    # with output:
-    #    display(widgets.interactive_output(server, args,))
     return widgets.HBox(
         [
             widgets.VBox(
@@ -220,7 +227,9 @@ def __body_0(df):
                 ],
                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
             ),
-            widgets.VBox([output], layout=Layout(width=RIGHT_PANEL_WIDTH)),
+            widgets.VBox(
+                [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")
+            ),
         ]
     )
 
@@ -242,6 +251,8 @@ def app(df):
         center=body,
         pane_heights=PANE_HEIGHTS,
     )
+
+
 #
 #
 #

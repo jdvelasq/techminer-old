@@ -6,13 +6,17 @@ Factor analysis
 
 """
 
-
+import ipywidgets as widgets
+from IPython.display import HTML, clear_output, display
+from ipywidgets import AppLayout, Layout
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import PCA
+from techminer.plots import COLORMAPS
 
 from techminer.correlation import compute_tfm
 from techminer.keywords import Keywords
+from techminer.by_term import summary_by_term
 
 
 def factor_analysis(x, column, n_components=None, as_matrix=True, keywords=None):
@@ -117,6 +121,226 @@ def factor_analysis(x, column, n_components=None, as_matrix=True, keywords=None)
         result.reset_index()
         .melt("index")
         .rename(columns={"index": column, "variable": "Factor"})
+    )
+
+
+##
+##
+## APP
+##
+##
+
+WIDGET_WIDTH = "200px"
+LEFT_PANEL_HEIGHT = "588px"
+RIGHT_PANEL_WIDTH = "870px"
+FIGSIZE = (14, 10.0)
+PANE_HEIGHTS = ["80px", "650px", 0]
+
+COLUMNS = [
+    "Author Keywords",
+    "Authors",
+    "Countries",
+    "Index Keywords",
+    "Institutions",
+    "Keywords",
+]
+
+
+def __body_0(x):
+    # -------------------------------------------------------------------------
+    #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    controls = [
+        # 0
+        {
+            "arg": "term",
+            "desc": "Term to analyze:",
+            "widget": widgets.Dropdown(
+                options=[z for z in COLUMNS if z in x.columns],
+                ensure_option=True,
+                disabled=False,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 1
+        {
+            "arg": "n_components",
+            "desc": "Number of factors:",
+            "widget": widgets.Dropdown(
+                options=list(range(2, 21)),
+                value=2,
+                ensure_option=True,
+                disabled=False,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 2
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 3
+        {
+            "arg": "filter_by",
+            "desc": "Filter by:",
+            "widget": widgets.Dropdown(
+                options=["Frequency", "Cited by"],
+                disable=False,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 4
+        {
+            "arg": "filter_value",
+            "desc": "Filter value:",
+            "widget": widgets.Dropdown(
+                options=[str(i) for i in range(10)],
+                disable=False,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 5
+        {
+            "arg": "sort_by",
+            "desc": "Sort order:",
+            "widget": widgets.Dropdown(
+                options=[
+                    "Alphabetic asc.",
+                    "Alphabetic desc.",
+                    "Frequency/Cited by asc.",
+                    "Frequency/Cited by desc.",
+                ],
+                disable=False,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
+    def server(**kwargs):
+        #
+        term = kwargs["term"]
+        n_components = int(kwargs["n_components"])
+        cmap = kwargs["cmap"]
+        filter_by = kwargs["filter_by"]
+        filter_value = int(kwargs["filter_value"].split()[0])
+        sort_by = kwargs["sort_by"]
+        #
+        summ_by_term = summary_by_term(x, term)
+        #
+        a = (
+            summ_by_term[summ_by_term.columns[1]]
+            .value_counts()
+            .sort_index(ascending=False)
+        )
+        a = a.cumsum()
+        a = a.sort_index(ascending=True)
+        current_value = controls[4]["widget"].value
+        controls[4]["widget"].options = [
+            "{:d} [{:d}]".format(idx, w) for w, idx in zip(a, a.index)
+        ]
+        if current_value not in controls[4]["widget"].options:
+            controls[4]["widget"].value = controls[4]["widget"].options[0]
+        #
+        if filter_by == "Frequency":
+            filtered_terms = summ_by_term[
+                summ_by_term["Num Documents"] >= filter_value
+            ][term]
+            num_docs = len(filtered_terms)
+        if filter_by == "Cited by":
+            filtered_terms = summ_by_term[summ_by_term["Cited by"] >= filter_value]
+            num_docs = len(filtered_terms)
+        if num_docs > 50:
+            output.clear_output()
+            with output:
+                display(widgets.HTML("<h3>Matrix exceeds the maximum shape</h3>"))
+                return
+        #
+        matrix = factor_analysis(
+            x=x, column=term, n_components=n_components, as_matrix=True, keywords=None
+        )
+        #
+        matrix = matrix.loc[filtered_terms, :]
+        #
+        new_names = {
+            a: "{} [{:d}]".format(a, b)
+            for a, b in zip(
+                summ_by_term[term].tolist(), summ_by_term["Num Documents"].tolist()
+            )
+        }
+        matrix = matrix.rename(index=new_names)
+        #
+        g = lambda m: int(m[m.find("[") + 1 : m.find("]")])
+        if sort_by == "Frequency/Cited by asc.":
+            names = sorted(matrix.index, key=g, reverse=False)
+            matrix = matrix.loc[names, :]
+        if sort_by == "Frequency/Cited by desc.":
+            names = sorted(matrix.index, key=g, reverse=True)
+            matrix = matrix.loc[names, :]
+        if sort_by == "Alphabetic asc.":
+            matrix = matrix.sort_index(axis=0, ascending=True).sort_index(
+                axis=1, ascending=True
+            )
+        if sort_by == "Alphabetic desc.":
+            matrix = matrix.sort_index(axis=0, ascending=False).sort_index(
+                axis=1, ascending=False
+            )
+        #
+        output.clear_output()
+        with output:
+            display(matrix.style.background_gradient(cmap=cmap, axis=None))
+
+    # -------------------------------------------------------------------------
+    #
+    # Generic
+    #
+    # -------------------------------------------------------------------------
+    args = {control["arg"]: control["widget"] for control in controls}
+    output = widgets.Output()
+    with output:
+        display(widgets.interactive_output(server, args,))
+    return widgets.HBox(
+        [
+            widgets.VBox(
+                [
+                    widgets.VBox(
+                        [widgets.Label(value=control["desc"]), control["widget"]]
+                    )
+                    for control in controls
+                ],
+                layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
+            ),
+            widgets.VBox(
+                [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")
+            ),
+        ]
+    )
+
+
+def app(df):
+    """Jupyter Lab dashboard.
+    """
+    #
+    body = widgets.Tab()
+    body.children = [__body_0(df)]
+    body.set_title(0, "Matrix")
+    #
+    return AppLayout(
+        header=widgets.HTML(
+            value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+                "Factor Analysis"
+            )
+        ),
+        center=body,
+        pane_heights=PANE_HEIGHTS,
     )
 
 
