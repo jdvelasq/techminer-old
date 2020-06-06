@@ -1,6 +1,6 @@
 
 """
-Primary Data Importation and Manipulation
+Primary Data Importation and Manipulation Functions
 ==================================================================================================
 
 
@@ -9,9 +9,12 @@ Primary Data Importation and Manipulation
 
 import logging
 
+import ipywidgets as widgets
 import numpy as np
 import pandas as pd
-from techminer.explode import MULTIVALUED_COLS
+from IPython.display import HTML, clear_output, display
+from ipywidgets import AppLayout, Layout
+from techminer.explode import MULTIVALUED_COLS, __explode
 from techminer.text import extract_country, extract_institution, remove_accents
 
 logging.basicConfig(
@@ -522,3 +525,169 @@ if __name__ == "__main__":
 #         cp.loc[idx, "Keywords"] = keywords[idx]
 
 #         return DataFrame(cp)
+
+
+
+##
+##
+##  APP
+##
+##
+
+WIDGET_WIDTH = "200px"
+LEFT_PANEL_HEIGHT = "588px"
+RIGHT_PANEL_WIDTH = "870px"
+
+
+COLUMNS = [
+    "Author Keywords",
+    "Authors",
+    "Countries",
+    "Country 1st",
+    "Index Keywords",
+    "Institution 1st",
+    "Institutions",
+    "Keywords",
+    "Source title",
+]
+
+FIELDS = [
+    "Authors",
+    "Title",
+    "Author Keywords",
+    "Index Keywords",
+    "Source title",
+    "Year",
+    "Countries",
+    "Institutions",
+    "Keywords",
+    
+]
+
+def __body_0(df):
+    # -------------------------------------------------------------------------
+    #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    controls = [
+        # 0
+        {
+            "arg": "column",
+            "desc": "Term:",
+            "widget": widgets.Dropdown(
+                options=COLUMNS,
+                value=COLUMNS[1],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 1
+        {
+            "arg": "value",
+            "desc": "Value:",
+            "widget": widgets.Dropdown(
+                options=[1], layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 2
+        {
+            "arg": "title",
+            "desc": "Title:",
+            "widget": widgets.Select(
+                options=[1, 2, 3], layout=Layout(width="700px"),
+            ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
+    def server(**kwargs):
+        #
+        column = kwargs["column"]
+        value = kwargs["value"]
+        title = kwargs["title"]
+        #
+        # Populate value control
+        #
+        if column in MULTIVALUED_COLS:
+            x = __explode(df[FIELDS], column)
+        else:
+            x = df[FIELDS]
+        z = pd.Series(x[column].unique())
+        z = z[z.map(lambda w: not pd.isna(w))]
+        z = z.sort_values()
+        controls[1]["widget"].options = z
+        #
+        # Populate titles
+        #
+        s = x[x[column] == controls[1]["widget"].value]
+        controls[2]["widget"].options = sorted(s['Title'].tolist())
+        #
+        # Print info from selected title
+        #
+        out = df[df['Title'] == controls[2]["widget"].value]
+        out = out.reset_index(drop=True)
+        out = out.iloc[0]
+        output.clear_output()
+        text = ''
+        with output:
+            for f in FIELDS:
+                z = out[f]
+                if not pd.isna(z):
+                    if f in MULTIVALUED_COLS:
+                        v = z.split(';')
+                        v = [a.strip() if isinstance(a, str) else a for a in v]
+                        text += '{:>16}: {}<br>'.format(f, v[0])
+                        for m in v[1:]:
+                            text += '                  {}<br>'.format(m)
+                    else:
+                        text += '{:>16}: {}<br>'.format(f, z)
+            display(widgets.HTML('<pre>' + text + '</pre>'))
+            
+            #display(widgets.HTML("<h3>Matrix exceeds the maximum shape</h3>"))
+
+    # -------------------------------------------------------------------------
+    #
+    # Generic
+    #
+    # -------------------------------------------------------------------------
+    args = {control["arg"]: control["widget"] for control in controls}
+    output = widgets.Output()
+    widgets.interactive_output(server, args,  )
+    return AppLayout(
+        header=widgets.HTML(
+            value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+                "Data Viewer"
+            )),
+        left_sidebar= widgets.VBox(
+            [
+                widgets.Label(value=controls[0]["desc"]),
+                controls[0]["widget"],
+                widgets.Label(value=controls[1]["desc"]),
+                controls[1]["widget"]
+            ],
+            layout=Layout(width="200px")
+        ),
+        center=widgets.VBox([widgets.Label(value=controls[2]["desc"]), controls[2]["widget"]]),
+        footer=widgets.VBox([output]),
+        # pane_widths=[1,3,0],
+        pane_heights=["80px", "130px", "600px"],
+    )
+    
+    
+def app(df):
+    """Jupyter Lab dashboard.
+    """
+    return __body_0(df)
+
+    
+#
+#
+#
+if __name__ == "__main__":
+
+    import doctest
+
+    doctest.testmod()
