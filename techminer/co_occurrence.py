@@ -434,7 +434,70 @@ COLUMNS = [
 ]
 
 def __body_0(x):
+    # -------------------------------------------------------------------------
     #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    controls = [
+        # 0
+        {
+            "arg": "term",
+            "desc": "Term to analyze:",
+            "widget": widgets.Dropdown(
+                options=[z for z in COLUMNS if z in x.columns],
+                ensure_option=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 1
+        {
+            "arg": "by",
+            "desc": "By Term:",
+            "widget": widgets.Dropdown(
+                options=[z for z in COLUMNS if z in x.columns],
+                ensure_option=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 2
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 3
+        {
+            "arg": "min_value",
+            "desc": "Min occurrence value:",
+            "widget": widgets.Dropdown(
+                options=['1'],
+                ensure_option=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 4
+        {
+            "arg": "sort_by",
+            "desc": "Sort order:",
+            "widget": widgets.Dropdown(
+                options=[
+                    "Alphabetic asc.",
+                    "Alphabetic desc.",
+                    "Frequency/Cited by asc.",
+                    "Frequency/Cited by desc.",
+                ],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
     def server(**kwargs):
         #
         # Logic
@@ -545,71 +608,11 @@ def __body_0(x):
                         lambda q: "{:d}".format(q) if q >= min_value else ""
                     ).background_gradient(cmap=cmap, axis=None))
             
-                
+    # -------------------------------------------------------------------------
     #
-    # UI
+    # Generic
     #
-    controls = [
-        # 0
-        {
-            "arg": "term",
-            "desc": "Term to analyze:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
-                ensure_option=True,
-                disabled=False,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 1
-        {
-            "arg": "by",
-            "desc": "By Term:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
-                ensure_option=True,
-                disabled=False,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 2
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(
-                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 3
-        {
-            "arg": "min_value",
-            "desc": "Min occurrence value:",
-            "widget": widgets.Dropdown(
-                options=['1'],
-                ensure_option=True,
-                disabled=False,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 4
-        {
-            "arg": "sort_by",
-            "desc": "Sort order:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Alphabetic asc.",
-                    "Alphabetic desc.",
-                    "Frequency/Cited by asc.",
-                    "Frequency/Cited by desc.",
-                ],
-                disable=False,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-
-        
-    ]
-    #
+    # -------------------------------------------------------------------------
     args = {control["arg"]: control["widget"] for control in controls}
     output = widgets.Output()
     with output:
