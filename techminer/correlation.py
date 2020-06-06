@@ -782,10 +782,129 @@ COLUMNS = [
 
 
 def __body_0(x):
+    # -------------------------------------------------------------------------
     #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    controls = [
+        # 0
+        {
+            "arg": "term",
+            "desc": "Term to analyze:",
+            "widget": widgets.Dropdown(
+                options=[z for z in COLUMNS if z in x.columns],
+                ensure_option=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 1
+        {
+            "arg": "by",
+            "desc": "By Term:",
+            "widget": widgets.Dropdown(
+                options=[z for z in COLUMNS if z in x.columns],
+                ensure_option=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 2
+        {
+            "arg": "method",
+            "desc": "Method:",
+            "widget": widgets.Dropdown(
+                options=["pearson", "kendall", "spearman"],
+                ensure_option=True,
+                continuous_update=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 3
+        {
+            "arg": "filter_by",
+            "desc": "Filter by:",
+            "widget": widgets.Dropdown(
+                options=["Frequency", "Cited by"], layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 4
+        {
+            "arg": "filter_value",
+            "desc": "Filter value:",
+            "widget": widgets.Dropdown(
+                options=[str(i) for i in range(10)], layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 5
+        {
+            "arg": "min_link_value",
+            "desc": "Min link value:",
+            "widget": widgets.Dropdown(
+                options="-1.00 -0.25 0.00 0.125 0.250 0.375 0.500 0.625 0.750 0.875".split(
+                    " "
+                ),
+                ensure_option=True,
+                continuous_update=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 6
+        {
+            "arg": "view",
+            "desc": "View:",
+            "widget": widgets.Dropdown(
+                options=["Matrix", "Correlation map", "Chord diagram"],
+                ensure_option=True,
+                continuous_update=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 7
+        {
+            "arg": "cmap",
+            "desc": "Matrix colormap:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH), disabled=False,
+            ),
+        },
+        # 8
+        {
+            "arg": "sort_by",
+            "desc": "Sort order:",
+            "widget": widgets.Dropdown(
+                options=[
+                    "Alphabetic asc.",
+                    "Alphabetic desc.",
+                    "Frequency/Cited by asc.",
+                    "Frequency/Cited by desc.",
+                ],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 9
+        {
+            "arg": "layout",
+            "desc": "Map layout:",
+            "widget": widgets.Dropdown(
+                options=[
+                    "Circular",
+                    "Kamada Kawai",
+                    "Planar",
+                    "Random",
+                    "Spectral",
+                    "Spring",
+                    "Shell",
+                ],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
     def server(**kwargs):
-        #
-        # Logic
         #
         column = kwargs["term"]
         by = kwargs["by"]
@@ -914,136 +1033,11 @@ def __body_0(x):
                 #
                 display(chord_diagram(matrix, cmap=cmap, minval=min_link_value))
 
+    # -------------------------------------------------------------------------
     #
-    # UI
+    # Generic
     #
-    controls = [
-        # 0
-        {
-            "arg": "term",
-            "desc": "Term to analyze:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
-                ensure_option=True,
-                disabled=False,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 1
-        {
-            "arg": "by",
-            "desc": "By Term:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
-                ensure_option=True,
-                disabled=False,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 2
-        {
-            "arg": "method",
-            "desc": "Method:",
-            "widget": widgets.Dropdown(
-                options=["pearson", "kendall", "spearman"],
-                ensure_option=True,
-                disabled=False,
-                continuous_update=True,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 3
-        {
-            "arg": "filter_by",
-            "desc": "Filter by:",
-            "widget": widgets.Dropdown(
-                options=["Frequency", "Cited by"],
-                disable=False,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 4
-        {
-            "arg": "filter_value",
-            "desc": "Filter value:",
-            "widget": widgets.Dropdown(
-                options=[str(i) for i in range(10)],
-                disable=False,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 5
-        {
-            "arg": "min_link_value",
-            "desc": "Min link value:",
-            "widget": widgets.Dropdown(
-                options="-1.00 -0.25 0.00 0.125 0.250 0.375 0.500 0.625 0.750 0.875".split(
-                    " "
-                ),
-                ensure_option=True,
-                disabled=False,
-                continuous_update=True,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 6
-        {
-            "arg": "view",
-            "desc": "View:",
-            "widget": widgets.Dropdown(
-                options=["Matrix", "Correlation map", "Chord diagram"],
-                ensure_option=True,
-                disabled=False,
-                continuous_update=True,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 7
-        {
-            "arg": "cmap",
-            "desc": "Matrix colormap:",
-            "widget": widgets.Dropdown(
-                options=COLORMAPS,
-                disable=False,
-                layout=Layout(width=WIDGET_WIDTH),
-                disabled=False,
-            ),
-        },
-        # 8
-        {
-            "arg": "sort_by",
-            "desc": "Sort order:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Alphabetic asc.",
-                    "Alphabetic desc.",
-                    "Frequency/Cited by asc.",
-                    "Frequency/Cited by desc.",
-                ],
-                disable=False,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 9
-        {
-            "arg": "layout",
-            "desc": "Map layout:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Circular",
-                    "Kamada Kawai",
-                    "Planar",
-                    "Random",
-                    "Spectral",
-                    "Spring",
-                    "Shell",
-                ],
-                disable=True,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-    ]
-    #
+    # -------------------------------------------------------------------------
     args = {control["arg"]: control["widget"] for control in controls}
     output = widgets.Output()
     with output:
@@ -1071,8 +1065,6 @@ def __body_0(x):
 # APP
 #
 #
-
-
 def app(df):
     #
     body = widgets.Tab()
