@@ -5,86 +5,114 @@ Keywords manipulation
 This object contains a list of unique keywords (terms of interest).
 
 
-# Regular expressions recipes
-# ---------------------------------------------------------------------------------------------------
+Regular expressions recipes
+---------------------------------------------------------------------------------------------------
 
-# The following code exemplify some common cases using regular expressions.
+The following code exemplify some common cases using regular expressions.
 
-# >>> Keywords('111').extract_from_text('one two three four five') is None
-# True
+>>> keywords = Keywords('111')
+>>> keywords = keywords.compile()
+>>> keywords.extract_from_text('one two three four five') is None
+True
 
-# * Partial match.
+* Partial match.
 
-# >>> Keywords('hre').extract_from_text('one two three four five')
-# 'hre'
-
-
-# * **Word whole only**. `r'\b'` represents word boundaries.
-
-# >>> kyw = Keywords(r'\btwo\b', use_re=True)
-# >>> kyw.extract_from_text('one two three four five')
-# 'two'
-
-# >>> kyw = Keywords(r"\b(TWO)\b", use_re=True)
-# >>> kyw.extract_from_text('one two three four five')
-# 'two'
+>>> keywords = Keywords('hre')
+>>> keywords = keywords.compile()
+>>> keywords.extract_from_text('one two three four five')
+'hre'
 
 
-# * **Case sensitive**.
+* **Word whole only**. `r'\b'` represents word boundaries.
 
-# >>> Keywords(r'\btwo\b', ignore_case=False, use_re=True).extract_from_text('one two three four five')
-# 'two'
+>>> keywords = Keywords(r'\btwo\b', use_re=True)
+>>> keywords = keywords.compile()
+>>> keywords.extract_from_text('one two three four five')
+'two'
 
-# >>> Keywords(r"\bTWO\b", ignore_case=False, use_re=True).extract_from_text('one TWO three four five')
-# 'TWO'
-
-# >>> Keywords(r"\bTWO\b", ignore_case=False, use_re=True).extract_from_text('one two three four five') is None
-# True
-
-# * **A word followed by other word**.
-
-# >>> Keywords(r'\btwo\Wthree\b', ignore_case=False, use_re=True).extract_from_text('one two three four five')
-# 'two three'
+>>> keywords = Keywords(r"\b(TWO)\b", use_re=True)
+>>> keywords = keywords.compile()
+>>> keywords.extract_from_text('one two three four five')
+'two'
 
 
-# * **Multiple white spaces**.
+* **Case sensitive**.
 
-# >>> Keywords(r"two\W+three", ignore_case=False, use_re=True).extract_from_text('one two   three four five')
-# 'two   three'
+>>> keywords = Keywords(r'\btwo\b', ignore_case=False, use_re=True)
+>>> keywords = keywords.compile()
+>>> keywords.extract_from_text('one two three four five')
+'two'
 
-# * **A list of keywords**.
+>>> keywords = Keywords(r"\bTWO\b", ignore_case=False, use_re=True)
+>>> keywords = keywords.compile()
+>>> keywords.extract_from_text('one TWO three four five')
+'TWO'
 
-# >>> Keywords([r"xxx", r"two", r"yyy"]).extract_from_text('one two three four five')
-# 'two'
+>>> keywords = Keywords(r"\bTWO\b", ignore_case=False, use_re=True)
+>>> keywords = keywords.compile()
+>>> keywords.extract_from_text('one two three four five') is None
+True
+
+* **A word followed by other word**.
+
+>>> keywords = Keywords(r'\btwo\Wthree\b', ignore_case=False, use_re=True)
+>>> keywords = keywords.compile()
+>>> keywords.extract_from_text('one two three four five')
+'two three'
 
 
-# * **Adjacent terms but the order is unimportant**.
+* **Multiple white spaces**.
 
-# >>> Keywords(r"\bthree\W+two\b|\btwo\W+three\b", use_re=True).extract_from_text('one two three four five')
-# 'two three'
+>>> keywords = Keywords(r"two\W+three", ignore_case=False, use_re=True)
+>>> keywords = keywords.compile()
+>>> keywords.extract_from_text('one two   three four five')
+'two   three'
 
-# * **Near words**.
+* **A list of keywords**.
 
-# Two words (`'two'`, `'four'`) separated by any other.
+>>> keywords = Keywords([r"xxx", r"two", r"yyy"])
+>>> keywords = keywords.compile()
+>>> keywords.extract_from_text('one two three four five')
+'two'
 
-# >>> Keywords(r"\btwo\W+\w+\W+four\b", use_re=True).extract_from_text('one two three four five')
-# 'two three four'
+
+* **Adjacent terms but the order is unimportant**.
+
+>>> keywords = Keywords(r"\bthree\W+two\b|\btwo\W+three\b", use_re=True)
+>>> keywords = keywords.compile()
+>>> keywords.extract_from_text('one two three four five')
+'two three'
+
+* **Near words**.
+
+Two words (`'two'`, `'four'`) separated by any other.
+
+>>> keywords = Keywords(r"\btwo\W+\w+\W+four\b", use_re=True)
+>>> keywords = keywords.compile()
+>>> keywords.extract_from_text('one two three four five')
+'two three four'
 
 
-# Two words (`'two'`, `'five'`) separated by one, two or three unspecified words.
+Two words (`'two'`, `'five'`) separated by one, two or three unspecified words.
 
-# >>> Keywords(r"\btwo\W+(?:\w+\W+){1,3}?five", use_re=True).extract_from_text('one two three four five')
-# 'two three four five'
+>>> keywords = Keywords(r"\btwo\W+(?:\w+\W+){1,3}?five", use_re=True)
+>>> keywords = keywords.compile()
+>>> keywords.extract_from_text('one two three four five')
+'two three four five'
 
-# * **Or operator**.
+* **Or operator**.
 
-# >>> Keywords(r"123|two", use_re=True).extract_from_text('one two three four five')
-# 'two'
+>>> keywords = Keywords(r"123|two", use_re=True)
+>>> keywords = keywords.compile()
+>>> keywords.extract_from_text('one two three four five')
+'two'
 
-# * **And operator**. One word followed by other at any word distance.
+* **And operator**. One word followed by other at any word distance.
 
-# >>> Keywords(r"\btwo\W+(?:\w+\W+)+?five", use_re=True).extract_from_text('one two three four five')
-# 'two three four five'
+>>> keywords = Keywords(r"\btwo\W+(?:\w+\W+)+?five", use_re=True)
+>>> keywords = keywords.compile()
+>>> keywords.extract_from_text('one two three four five')
+'two three four five'
 
 
 Functions in this module

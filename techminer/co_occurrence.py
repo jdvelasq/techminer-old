@@ -408,6 +408,161 @@ def occurrence(x, column, as_matrix=False, min_value=0, keywords=None):
     )
 
 
+#     def occurrence_map(self, column, sep=None, minmax=None, keywords=None):
+#         """Computes a occurrence between terms in a column.
+
+#         Args:
+#             column (str): the column to explode.
+#             sep (str): Character used as internal separator for the elements in the column.
+#             minmax (pair(number,number)): filter values by >=min,<=max.
+#             keywords (Keywords): filter the result using the specified Keywords object.
+
+#         Returns:
+#             dictionary
+
+#         Examples
+#         ----------------------------------------------------------------------------------------------
+
+#         >>> import pandas as pd
+#         >>> x = [ 'A', 'A', 'A;B', 'B', 'A;B;C', 'D', 'B;D']
+#         >>> df = pd.DataFrame(
+#         ...    {
+#         ...       'Authors': x,
+#         ...       'ID': list(range(len(x))),
+#         ...    }
+#         ... )
+#         >>> df
+#           Authors  ID
+#         0       A   0
+#         1       A   1
+#         2     A;B   2
+#         3       B   3
+#         4   A;B;C   4
+#         5       D   5
+#         6     B;D   6
+
+#         >>> DataFrame(df).occurrence_map(column='Authors')
+#         {'terms': ['A', 'B', 'C', 'D'], 'docs': ['doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4', 'doc#5'], 'edges': [('A', 'doc#0'), ('A', 'doc#1'), ('B', 'doc#1'), ('A', 'doc#2'), ('B', 'doc#2'), ('C', 'doc#2'), ('B', 'doc#3'), ('B', 'doc#4'), ('D', 'doc#4'), ('D', 'doc#5')], 'label_terms': {'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D'}, 'label_docs': {'doc#0': 2, 'doc#1': 1, 'doc#2': 1, 'doc#3': 1, 'doc#4': 1, 'doc#5': 1}}
+
+#         >>> keywords = Keywords(['A', 'B'])
+#         >>> keywords = keywords.compile()
+#         >>> DataFrame(df).occurrence_map('Authors', keywords=keywords)
+#         {'terms': ['A', 'B'], 'docs': ['doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4'], 'edges': [('A', 'doc#0'), ('A', 'doc#1'), ('B', 'doc#1'), ('A', 'doc#2'), ('B', 'doc#2'), ('B', 'doc#3'), ('B', 'doc#4')], 'label_terms': {'A': 'A', 'B': 'B'}, 'label_docs': {'doc#0': 2, 'doc#1': 1, 'doc#2': 1, 'doc#3': 1, 'doc#4': 1}}
+
+
+#         """
+#         sep = ";" if sep is None and column in SCOPUS_COLS else sep
+
+#         result = self[[column]].copy()
+#         result["count"] = 1
+#         result = result.groupby(column, as_index=False).agg({"count": np.sum})
+#         if keywords is not None:
+#             if keywords._patterns is None:
+#                 keywords = keywords.compile()
+#             if sep is not None:
+#                 result = result[
+#                     result[column].map(
+#                         lambda x: any([e in keywords for e in x.split(sep)])
+#                     )
+#                 ]
+#             else:
+#                 result = result[result[column].map(lambda x: x in keywords)]
+
+#         if sep is not None:
+#             result[column] = result[column].map(
+#                 lambda x: sorted(x.split(sep)) if isinstance(x, str) else x
+#             )
+
+#         result["doc-ID"] = ["doc#{:d}".format(i) for i in range(len(result))]
+#         terms = result[[column]].copy()
+#         terms.explode(column)
+#         terms = [item for sublist in terms[column].tolist() for item in sublist]
+#         terms = sorted(set(terms))
+#         if keywords is not None:
+#             terms = [x for x in terms if x in keywords]
+#         docs = result["doc-ID"].tolist()
+#         label_docs = {doc: label for doc, label in zip(docs, result["count"].tolist())}
+#         label_terms = {t: t for t in terms}
+#         edges = []
+#         for field, docID in zip(result[column], result["doc-ID"]):
+#             for item in field:
+#                 if keywords is None or item in keywords:
+#                     edges.append((item, docID))
+#         return dict(
+#             terms=terms,
+#             docs=docs,
+#             edges=edges,
+#             label_terms=label_terms,
+#             label_docs=label_docs,
+#         )
+
+
+
+
+#     # def correspondence_matrix(
+#     #     self,
+#     #     column_IDX,
+#     #     column_COL,
+#     #     sep_IDX=None,
+#     #     sep_COL=None,
+#     #     as_matrix=False,
+#     #     keywords=None,
+#     # ):
+#     #     """
+
+#     #     """
+#     #     result = self.co_occurrence(
+#     #         column_IDX=column_IDX,
+#     #         column_COL=column_COL,
+#     #         sep_IDX=sep_IDX,
+#     #         sep_COL=sep_COL,
+#     #         as_matrix=True,
+#     #         minmax=None,
+#     #         keywords=keywords,
+#     #     )
+
+#     #     matrix = result.transpose().values
+#     #     grand_total = np.sum(matrix)
+#     #     correspondence_matrix = np.divide(matrix, grand_total)
+#     #     row_totals = np.sum(correspondence_matrix, axis=1)
+#     #     col_totals = np.sum(correspondence_matrix, axis=0)
+#     #     independence_model = np.outer(row_totals, col_totals)
+#     #     norm_correspondence_matrix = np.divide(
+#     #         correspondence_matrix, row_totals[:, None]
+#     #     )
+#     #     distances = np.zeros(
+#     #         (correspondence_matrix.shape[0], correspondence_matrix.shape[0])
+#     #     )
+#     #     norm_col_totals = np.sum(norm_correspondence_matrix, axis=0)
+#     #     for row in range(correspondence_matrix.shape[0]):
+#     #         distances[row] = np.sqrt(
+#     #             np.sum(
+#     #                 np.square(
+#     #                     norm_correspondence_matrix - norm_correspondence_matrix[row]
+#     #                 )
+#     #                 / col_totals,
+#     #                 axis=1,
+#     #             )
+#     #         )
+#     #     std_residuals = np.divide(
+#     #         (correspondence_matrix - independence_model), np.sqrt(independence_model)
+#     #     )
+#     #     u, s, vh = np.linalg.svd(std_residuals, full_matrices=False)
+#     #     deltaR = np.diag(np.divide(1.0, np.sqrt(row_totals)))
+#     #     rowScores = np.dot(np.dot(deltaR, u), np.diag(s))
+
+#     #     return pd.DataFrame(
+#     #         data=rowScores, columns=result.columns, index=result.columns
+#     #     )
+
+
+# def relationship(x, y):
+#     sxy = sum([a * b * min(a, b) for a, b in zip(x, y)])
+#     a = math.sqrt(sum(x))
+#     b = math.sqrt(sum(y))
+#     return sxy / (a * b)
+
+
 ##
 ##
 ## APP
