@@ -12,10 +12,11 @@ import pandas as pd
 import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
+from techminer.by_term import citations_by_term, documents_by_term
 from techminer.explode import __explode
-from techminer.plots import COLORMAPS
 from techminer.keywords import Keywords
-from techminer.by_term import documents_by_term, citations_by_term
+from techminer.plots import COLORMAPS
+
 
 def summary_by_term_per_year(x, column, keywords=None):
     """Computes the number of documents and citations by term per year.
@@ -342,10 +343,73 @@ COLUMNS = [
 
 
 def __body_0(x):
+    # -------------------------------------------------------------------------
     #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    controls = [
+        # 0
+        {
+            "arg": "term",
+            "desc": "Term to analyze:",
+            "widget": widgets.Select(
+                options=[z for z in COLUMNS if z in x.columns],
+                ensure_option=True,
+                disabled=False,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 1
+        {
+            "arg": "analysis_type",
+            "desc": "Analysis type:",
+            "widget": widgets.Dropdown(
+                options=["Frequency", "Citation"],
+                value="Frequency",
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 2
+        {
+            "arg": "plot_type",
+            "desc": "Plot type:",
+            "widget": widgets.Dropdown(
+                options=["Heatmap", "Gant"],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 3
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 4
+        {
+            "arg": "top_n",
+            "desc": "Top N:",
+            "widget": widgets.IntSlider(
+                value=10,
+                min=10,
+                max=50,
+                step=1,
+                continuous_update=False,
+                orientation="horizontal",
+                readout=True,
+                readout_format="d",
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
     def server(**kwargs):
-        #
-        # Logic
         #
         term = kwargs["term"]
         analysis_type = kwargs["analysis_type"]
@@ -370,64 +434,11 @@ def __body_0(x):
             if plot_type == "Gant":
                 display(plot(matrix, figsize=FIGSIZE))
 
+    # -------------------------------------------------------------------------
     #
-    # UI
+    # Generic
     #
-    controls = [
-        {
-            "arg": "term",
-            "desc": "Term to analyze:",
-            "widget": widgets.Select(
-                options=[z for z in COLUMNS if z in x.columns],
-                ensure_option=True,
-                disabled=False,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        {
-            "arg": "analysis_type",
-            "desc": "Analysis type:",
-            "widget": widgets.Dropdown(
-                options=["Frequency", "Citation"],
-                value="Frequency",
-                disable=False,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        {
-            "arg": "plot_type",
-            "desc": "Plot type:",
-            "widget": widgets.Dropdown(
-                options=["Heatmap", "Gant"],
-                disable=False,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(
-                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        {
-            "arg": "top_n",
-            "desc": "Top N:",
-            "widget": widgets.IntSlider(
-                value=10,
-                min=10,
-                max=50,
-                step=1,
-                disabled=False,
-                continuous_update=False,
-                orientation="horizontal",
-                readout=True,
-                readout_format="d",
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-    ]
-    #
+    # -------------------------------------------------------------------------
     args = {control["arg"]: control["widget"] for control in controls}
     output = widgets.Output()
     with output:
@@ -443,7 +454,7 @@ def __body_0(x):
                 ],
                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
             ),
-            widgets.VBox([output], layout=Layout(width=RIGHT_PANEL_WIDTH)),
+            widgets.VBox([output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")),
         ]
     )
 
