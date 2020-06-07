@@ -25,6 +25,9 @@ MULTIVALUED_COLS = [
     "Index Keywords_",
     "Institutions_",
     "Keywords_",
+    #
+    "_key1_",
+    "_key2_",
 ]
 
 
