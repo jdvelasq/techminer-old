@@ -268,7 +268,7 @@ def sort_by_citations(
     a  1  5   9  13
 
     """
-    terms = citations_by_term(df, column=axis_name, sep=axis_sep)
+    terms = citations_by_term(df, column=axis_name)
     terms_sorted = (
         terms.sort_values(by=axis_name, kind=kind, ascending=ascending)
         .iloc[:, 0]

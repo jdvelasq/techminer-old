@@ -20,10 +20,12 @@ WIDGET_WIDTH = "200px"
 
 COLUMNS = [
     "Author Keywords",
+    "Author Keywords (Cleaned)",
     "Authors",
     "Countries",
     "Country 1st",
     "Index Keywords",
+    "Index Keywords (Cleaned)",
     "Institution 1st",
     "Institutions",
     "Keywords",
@@ -33,15 +35,17 @@ COLUMNS = [
 ]
 
 FIELDS = [
-    "Author Keywords",
+    "Title",
     "Authors",
-    "Countries",
+    "Author Keywords",
     "Index Keywords",
+    "Author Keywords (Cleaned)",
+    "Index Keywords (Cleaned)",
+    "Source title",
+    "Year",
+    "Countries",
     "Institutions",
     "Keywords",
-    "Source title",
-    "Title",
-    "Year",
 ]
 
 def column(df, top_n=50):
@@ -129,11 +133,11 @@ def column(df, top_n=50):
                     if f in MULTIVALUED_COLS:
                         v = z.split(';')
                         v = [a.strip() if isinstance(a, str) else a for a in v]
-                        text += '{:>16}: {}<br>'.format(f, v[0])
+                        text += '{:>25}: {}<br>'.format(f, v[0])
                         for m in v[1:]:
-                            text += '                  {}<br>'.format(m)
+                            text += '                           {}<br>'.format(m)
                     else:
-                        text += '{:>16}: {}<br>'.format(f, z)
+                        text += '{:>25}: {}<br>'.format(f, z)
             display(widgets.HTML('<pre>' + text + '</pre>'))
             
 
@@ -286,11 +290,11 @@ def matrix(df, top_n=50):
                     if f in MULTIVALUED_COLS:
                         v = z.split(';')
                         v = [a.strip() if isinstance(a, str) else a for a in v]
-                        text += '{:>16}: {}<br>'.format(f, v[0])
+                        text += '{:>25}: {}<br>'.format(f, v[0])
                         for m in v[1:]:
-                            text += '                  {}<br>'.format(m)
+                            text += '                           {}<br>'.format(m)
                     else:
-                        text += '{:>16}: {}<br>'.format(f, z)
+                        text += '{:>25}: {}<br>'.format(f, z)
             display(widgets.HTML('<pre>' + text + '</pre>'))
    
 

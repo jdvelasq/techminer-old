@@ -13,6 +13,8 @@ MULTIVALUED_COLS = [
     "Index Keywords",
     "Institutions",
     "Keywords",
+    "Author Keywords (Cleaned)",
+    "Index Keywords (Cleaned)",
     #
     "Affiliations_",
     "Author Keywords_",
@@ -25,6 +27,8 @@ MULTIVALUED_COLS = [
     "Index Keywords_",
     "Institutions_",
     "Keywords_",
+    "Author Keywords (Cleaned)_",
+    "Index Keywords (Cleaned)_",
     #
     "_key1_",
     "_key2_",

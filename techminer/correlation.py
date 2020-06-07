@@ -105,7 +105,6 @@ def corr(
     column,
     by=None,
     method="pearson",
-    #  min_link_value=-1,
     filter_by="Frequency",
     filter_value=0,
     cmap=None,
@@ -184,12 +183,6 @@ def corr(
     C -0.333333  0.333333  1.000000  0.57735
     D -0.577350  0.577350  0.577350  1.00000
 
-    >>> corr(df, 'Authors', 'Author Keywords', min_link_value=0)
-              B         C        D
-    B  1.000000  0.333333  0.57735
-    C  0.333333  1.000000  0.57735
-    D  0.577350  0.577350  1.00000
-
     >>> corr(df, 'Authors', 'Author Keywords', as_matrix=False)
        Authors Author Keywords     value
     0        A               A  1.000000
@@ -211,7 +204,7 @@ def corr(
 
     >>> keywords = Keywords(['A', 'B', 'C'], ignore_case=False)
     >>> keywords = keywords.compile()
-    >>> corr(df, 'Authors', 'Author Keywords', filter_by=keywords)
+    >>> corr(df, 'Authors', 'Author Keywords', keywords=keywords)
               A         B         C
     A  1.000000 -1.000000 -0.333333
     B -1.000000  1.000000  0.333333
@@ -294,7 +287,7 @@ def corr(
 
     >>> keywords = Keywords(['A', 'B'], ignore_case=False)
     >>> keywords = keywords.compile()
-    >>> corr(df, 'Authors', filter_by=keywords)
+    >>> corr(df, 'Authors', keywords=keywords)
               A         B
     A  1.000000 -0.316228
     B -0.316228  1.000000

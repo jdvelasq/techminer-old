@@ -1,6 +1,6 @@
 
 """
-Primary Data Importation and Manipulation Functions
+Data Importation and Manipulation Functions
 ==================================================================================================
 
 
@@ -16,48 +16,11 @@ from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
 from techminer.explode import MULTIVALUED_COLS, __explode
 from techminer.text import extract_country, extract_institution, remove_accents
+from techminer.thesaurus import text_clustering
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
-
-NORMALIZED_NAMES = {
-    "J9": "Abbreviated Source Title",
-    "AB": "Abstract",
-    "OA": "Access Type",
-    "C1": "Affiliations",
-    "AR": "Art. No.",
-    "DE": "Author Keywords",
-    "AU_CO": "Countries",
-    "RI": "Author(s) ID",
-    "AU_IN": "Institutions",
-    "AU_C1": "Authors with affiliations",
-    "AU": "Authors",
-    "TC": "Cited by",
-    "CR": "Cited references",
-    "DOI": "DI",
-    "DT": "Document type",
-    "BE": "Editors",
-    "UT": "EID",
-    "ID": "Index Keywords",
-    "BN": "ISBN",
-    "SN": "ISSN",
-    "IS": "Issue",
-    "DE_ID": "Keywords",
-    "LA": "Language of Original Document",
-    "PG": "Page count",
-    "EP": "Page end",
-    "BP": "Page start",
-    "PU": "Publisher",
-    "PM": "PubMed ID",
-    "SO": "Source title",
-    "FN": "Source",
-    "SC": "Subject",
-    "TI": "Title",
-    "VL": "Volume",
-    "PT": "Year",
-}
-
 
 def __disambiguate_authors(x):
     """Verify if author's names are unique. For duplicated names, based on `Author(s) ID` column,
@@ -155,11 +118,90 @@ def __disambiguate_authors(x):
     return result
 
 
+
+
 ##
 ##
 ##  Data importation
 ##
 ##
+
+NORMALIZED_NAMES = {
+    "AB": "Abstract",
+    "Abbreviated Source Title": "_Abbreviated Source Title",
+    "Access Type": "_Access Type",
+    "Affiliations": "Affiliations",
+    "AR": "_Art. No.",
+    "Art. No.": "_Art. No.",
+    "AU": "Authors",
+    "Author Keywords": "Author Keywords",
+    "Author(s) ID": "Author(s) ID",
+    "Authors with affiliations": "_Authors with affiliations",
+    "Authors": "Authors",
+    "BE": "Editors",
+    "BN": "_ISBN",
+    "BP": "_Page start",
+    "C1": "Affiliations",
+    "Chemicals/CAS": "_Chemicals/CAS",
+    "Cited by": "Cited by",
+    "CODEN": "_CODEN",
+    "Conference code": "_Conference code",
+    "Conference date": "_Conference date",
+    "Conference location": "_Conference location",
+    "Conference name": "_Conference name",
+    "Correspondence Address": "_Correspondence Address",
+    "CR": "Cited references",
+    "DE": "Author Keywords",
+    "Document Type": "_Document Type",
+    "DOI": "_DOI",
+    "DT": "_Document Type",
+    "Editors": "_Editors",
+    "EID": "_EID",
+    "EP": "_Page end",
+    "FN": "_Source",
+    "Funding Details": "_Funding Details",
+    "Funding Text 1": "_Funding Text 1",
+    "Index Keywords": "Index Keywords",
+    "IS": "_Issue",
+    "ISBN": "_ISBN",
+    "ISSN": "_ISSN",
+    "Issue": "_Issue",
+    "J9": "_Abbreviated Source Title",
+    "LA": "_Language of Original Document",
+    "Language of Original Document": "_Language of Original Document",
+    "Link": "_Link",
+    "Manufacturers": "_Manufacturers",
+    "Molecular Sequence Numbers": "_Molecular Sequence Numbers",
+    "OA": "_Access Type",
+    "Page count": "_Page count",
+    "Page end": "_Page end",
+    "Page start": "_Page start",
+    "PG": "_Page count",
+    "PM": "_PubMed ID",
+    "PT": "Year",
+    "PU": "_Publisher",
+    "Publication Stage": "_Publication Stage",
+    "Publisher": "_Publisher",
+    "PubMed ID": "_PubMed ID",
+    "References": "References",
+    "RI": "Author(s) ID",
+    "SC": "_Subject",
+    "SN": "_ISSN",
+    "SO": "Source title",
+    "Source title": "Source title",
+    "Source": "_Source",
+    "Sponsors": "_Sponsors",
+    "TC": "Cited by",
+    "TI": "Title",
+    "Title": "Title",
+    "Tradenames": "_Tradenames",
+    "UT": "_EID",
+    "VL": "_Volume",
+    "Volume": "_Volume",
+    "Year": "Year",
+}
+
+
 def load_scopus(x):
     """Import filter for Scopus data.
     """
@@ -198,12 +240,33 @@ def load_scopus(x):
             lambda w: w[0 : w.find("[")] if pd.isna(w) is False and w[-1] == "]" else w
         )
     #
+    keywords = []
+    if "Author Keywords" in x.columns.tolist():
+        x['Author Keywords'] = x['Author Keywords'].map(lambda w: w.lower() if pd.isna(w) is False else w)
+        keywords = x['Author Keywords'].tolist()
+    if "Index Keywords" in x.columns.tolist():
+        x['Index Keywords'] = x['Index Keywords'].map(lambda w: w.lower() if pd.isna(w) is False else w)
+        keywords = x['Index Keywords'].tolist()
+    if len(keywords) > 0:
+        logging.info("Building thesaurus for author and index keywords ...")
+        keywords = pd.Series(keywords)
+        thesaurus = text_clustering(keywords, sep=';', transformer=lambda u: u.lower())
+        thesaurus = thesaurus.compile()
+        logging.info("Cleaning Author Keywords ...")
+        x['Author Keywords (Cleaned)'] = x['Author Keywords'].map(
+            lambda w: ';'.join([thesaurus.apply(z) for z in w.split(';')]) if pd.isna(w) is False else pd.NA
+        )
+        logging.info("Cleaning Index Keywords ...")
+        x['Index Keywords (Cleaned)'] = x['Index Keywords'].map(
+            lambda w: ';'.join([thesaurus.apply(z) for z in w.split(';')]) if pd.isna(w) is False else pd.NA
+        )
+    #
     if (
-        "Author Keywords" in x.columns.tolist()
-        and "Index Keywords" in x.columns.tolist()
+        "Author Keywords (Cleaned)" in x.columns.tolist()
+        and "Index Keywords (Cleaned)" in x.columns.tolist()
     ):
         #
-        logging.info("Fusioning author and index keywords ...")
+        logging.info("Fusioning cleaned author and index keywords ...")
         #
         author_keywords = x["Author Keywords"].map(
             lambda x: x.split(";") if pd.isna(x) is False else []
@@ -226,6 +289,11 @@ def load_scopus(x):
         x["Countries"] = x.Affiliations.map(
             lambda w: extract_country(w) if pd.isna(w) is False else w
         )
+        x["Country 1st"] = x["Countries"].map(
+            lambda w: w.split(";")[0] if not pd.isna(w) else w
+        )
+        x["Countries"] = x["Countries"].map(lambda w: ';'.join(sorted(set(w.split(';')))) if pd.isna(w) is False else pd.NA)
+
     #
     if "Affiliations" in x.columns:
         #
@@ -234,22 +302,10 @@ def load_scopus(x):
         x["Institutions"] = x.Affiliations.map(
             lambda w: extract_institution(w) if pd.isna(w) is False else w
         )
-    #
-    if "Countries" in x.columns:
-        #
-        logging.info("Extracting country of 1st author ...")
-        #
-        x["Country 1st"] = x["Countries"].map(
-            lambda w: w.split(";")[0] if not pd.isna(w) else w
-        )
-    #
-    if "Institutions" in x.columns:
-        #
-        logging.info("Extracting affiliation of 1st author ...")
-        #
         x["Institution 1st"] = x["Institutions"].map(
             lambda w: w.split(";")[0] if not pd.isna(w) else w
         )
+        x["Institutions"] = x["Institutions"].map(lambda w: ';'.join(sorted(set(w.split(';')))) if pd.isna(w) is False else pd.NA)        
     #
     if "Authors" in x.columns:
         #
@@ -271,8 +327,6 @@ def load_scopus(x):
 ## Term extraction and count
 ##
 ##
-
-
 
 def extract_terms(x, column):
     """Extracts unique terms in a column, exploding multvalued columns.
@@ -302,13 +356,10 @@ def extract_terms(x, column):
     2     zzz
 
     """
-    if column in MULTIVALUED_COLS:
-        x = x.copy()
-        x[column] = x[column].map(lambda w: w.split(";") if not pd.isna(w) else w)
-        x = x.explode(column)
-        x[column] = x[column].map(lambda w: w.strip() if isinstance(w, str) else w)
-    else:
-        x = x[[column]].copy()
+    x = x.copy()
+    x[column] = x[column].map(lambda w: w.split(";") if not pd.isna(w) and isinstance(w, str) else w)
+    x = x.explode(column)
+    x[column] = x[column].map(lambda w: w.strip() if isinstance(w, str) else w)
     x = pd.unique(x[column].dropna())
     x = np.sort(x)
     return pd.DataFrame({column: x})
@@ -429,62 +480,51 @@ def descriptive_stats(x):
     >>> descriptive_stats(x)
                                              value
     Articles                                     5
-    Years                                1990-1994
-    Average citations per article             2.00
     Authors                                      3
-    Author(s) ID                                 7
     Articles per author                       1.67
     Authors per article                        0.6
-    Author Keywords                              6
-    Index Keywords                               7
-    Source titles                                5
     Authors of single authored articles          3
     Authors of multi authored articles           2
     Co-authors per article                     1.4
-    Average articles per Source title            1
+    Author(s) ID                                 7
+    Source title                                 3
+    Author Keywords                              6
+    Index Keywords                               7
+    Years                                1990-1994
     Compound annual growth rate              0.0 %
-
+    Cited by                                     5
+    Average citations per article             2.00
+    Num Authors                                  2
+    
     """
-    descriptions = [
-        "Articles",
-        "Years",
-        "Average citations per article",
-        "Authors",
-        "Author(s) ID",
-        "Authors of single authored articles",
-        "Authors of multi authored articles",
-        "Articles per author",
-        "Authors per article",
-        "Co-authors per article",
-        "Author Keywords",
-        "Index Keywords",
-        "Source titles",
-        "Average articles per Source title",
-        "Compound Annual Growth Rate",
-    ]
     y = {}
     y["Articles"] = str(len(x))
-    y["Years"] = str(min(x.Year)) + "-" + str(max(x.Year))
-    y["Average citations per article"] = "{:4.2f}".format(x["Cited by"].mean())
-    y["Authors"] = count_terms(x, "Authors")
-    y["Author(s) ID"] = count_terms(x, "Author(s) ID")
-    y["Articles per author"] = round(len(x) / count_terms(x, "Authors"), 2)
-    y["Authors per article"] = round(count_terms(x, "Authors") / len(x), 2)
-    y["Author Keywords"] = count_terms(x, "Author Keywords")
-    y["Index Keywords"] = count_terms(x, "Index Keywords")
-    y["Source titles"] = count_terms(x, "Source title")
-
-    y["Authors of single authored articles"] = len(x[x["Num Authors"] == 1])
-    y["Authors of multi authored articles"] = len(x[x["Num Authors"] > 1])
-    y["Co-authors per article"] = round(x["Num Authors"].mean(), 2)
-    y["Average articles per Source title"] = round(
-        len(x) / count_terms(x, "Source title")
-    )
-    n = max(x.Year) - min(x.Year) + 1
-    Po = len(x.Year[x.Year == min(x.Year)])
-    Pn = len(x.Year[x.Year == max(x.Year)])
-    cagr = str(round(100 * (np.power(Pn / Po, 1 / n) - 1), 2)) + " %"
-    y["Compound annual growth rate"] = cagr
+    #
+    for column in x.columns:
+        if column[0] == '_':
+            continue
+        if column != 'Year':
+            y[column] = count_terms(x, column)
+        if column == "Year":
+            y["Years"] = str(min(x.Year)) + "-" + str(max(x.Year))
+            n = max(x.Year) - min(x.Year) + 1
+            Po = len(x.Year[x.Year == min(x.Year)])
+            Pn = len(x.Year[x.Year == max(x.Year)])
+            cagr = str(round(100 * (np.power(Pn / Po, 1 / n) - 1), 2)) + " %"
+            y["Compound annual growth rate"] = cagr
+        if  column == "Cited by":
+            y["Average citations per article"] = "{:4.2f}".format(x["Cited by"].mean())
+        if column == "Authors":
+            y["Articles per author"] = round(len(x) / count_terms(x, "Authors"), 2)
+            y["Authors per article"] = round(count_terms(x, "Authors") / len(x), 2)
+        if "Num Authors" in x.columns:
+            y["Authors of single authored articles"] = len(x[x["Num Authors"] == 1])
+            y["Authors of multi authored articles"] = len(x[x["Num Authors"] > 1])
+            y["Co-authors per article"] = round(x["Num Authors"].mean(), 2)
+        if "Source Title" in x.columns:
+            y["Average articles per Source title"] = round(
+                len(x) / count_terms(x, "Source title")
+            )
     #
     d = [key for key in y.keys()]
     v = [y[key] for key in y.keys()]
@@ -533,4 +573,3 @@ if __name__ == "__main__":
 ##  APP
 ##
 ##
-
