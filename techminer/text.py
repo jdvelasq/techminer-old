@@ -19,6 +19,130 @@ import pandas as pd
 from nltk.stem import PorterStemmer, SnowballStemmer
 
 
+# def steamming(pattern, text):
+#     """
+
+#     Examples
+#     ----------------------------------------------------------------------------------------------
+
+
+#     """
+#     text = remove_accents(text)
+#     pattern = remove_accents(pattern)
+
+#     text = text.strip().lower()
+#     pattern = pattern.strip().lower()
+
+#     porter = PorterStemmer()
+
+#     pattern = [porter.stem(w) for w in pattern.split()]
+#     text = [porter.stem(w) for w in text.split()]
+
+#     return [m in text for m in pattern]
+
+
+# def steamming_all(pattern, text):
+#     """
+
+#     Examples
+#     ----------------------------------------------------------------------------------------------
+
+#     >>> steamming_all('computers cars', 'car computing')
+#     True
+
+#     >>> steamming_all('computers cars', 'car houses')
+#     False
+
+#     """
+#     return all(steamming(pattern, text))
+
+
+# def steamming_any(pattern, text):
+#     """
+
+#     Examples
+#     ----------------------------------------------------------------------------------------------
+
+#     >>> steamming_any('computers cars', 'car computing')
+#     True
+
+#     >>> steamming_any('computers cars', 'computing house')
+#     True
+
+#     >>> steamming_all('computers cars', 'tree houses')
+#     False
+
+#     """
+#     return any(steamming(pattern, text))
+
+
+def find_string(
+    patterns, x, ignore_case=True, full_match=False, use_re=False, explode=True
+):
+    r"""Find patterns in the elements of a list.
+
+    >>> x = ['aa;b', 'c;d', 'A', 'e', None]
+    >>> find_string('a', x)
+    ['A', 'aa']
+
+    >>> find_string('a', x, ignore_case=False)
+    ['aa']
+
+    >>> find_string('a', x, full_match=True)
+    ['A']
+
+    """
+    #
+    if explode is True:
+        x = [z for e in x if isinstance(e, str) for z in e.split(";")]
+    x = list(set(x))
+    #
+    results = []
+    if use_re is False:
+        patterns = [re.escape(pattern) for pattern in patterns]
+    if full_match is True:
+        patterns = ["^" + pattern + "$" for pattern in patterns]
+    if ignore_case is True:
+        patterns = [re.compile(pattern, re.I) for pattern in patterns]
+    else:
+        patterns = [re.compile(pattern) for pattern in patterns]
+    for term in x:
+        for pattern in patterns:
+            result = pattern.findall(term)
+            if len(result):
+                results.append(term)
+    return sorted(set(results))
+
+
+# # def replace_string(
+# #     pattern, x, repl=None, ignore_case=True, full_match=False, use_re=False
+# # ):
+# #     """Replace pattern in string.
+
+# #     Args:
+# #         pattern (string)
+# #         x (string)
+# #         repl (string, None)
+# #         ignore_case (bool)
+# #         full_match (bool)
+# #         use_re (bool)
+
+# #     Returns:
+# #         string or []
+
+# #     """
+
+# #     if use_re is False:
+# #         pattern = re.escape(pattern)
+
+# #     if full_match is True:
+# #         pattern = "^" + pattern + "$"
+
+# #     if ignore_case is True:
+# #         return re.sub(pattern, repl, x, re.I)
+# #     return re.sub(pattern, repl, x)
+
+
 def extract_country(x):
     """Extracts country name from a string,
 
@@ -276,132 +400,6 @@ def fingerprint(x):
     x = remove_accents(x)
     x = sorted(set(w for w in x.split()))
     return " ".join(x)
-
-
-# # def find_string(self, x):
-# #     r"""Find patterns in string.
-
-# #     Args:
-# #         x (string)
-
-# #     Returns:
-# #         string or None
-
-
-# #     Examples
-# #     ----------------------------------------------------------------------------------------------
-
-# #     >>> keywords = Keywords(r'\btwo\b', use_re=True)
-# #     >>> keywords = keywords.compile()
-# #     >>> keywords.find_string('one two three four five')
-# #     'two'
-
-# #     >>> keywords = Keywords(r'\bTWO\b', use_re=True)
-# #     >>> keywords = keywords.compile()
-# #     >>> keywords.find_string('one two three four five')
-# #     'two'
-
-# #     >>> keywords = Keywords(r'\btwo\b', ignore_case=False, use_re=True)
-# #     >>> keywords = keywords.compile()
-# #     >>> keywords.find_string('one TWO three four five') is None
-# #     True
-
-# #     >>> keywords = Keywords(r'\btwo\Wthree\b', ignore_case=False, use_re=True)
-# #     >>> keywords = keywords.compile()
-# #     >>> keywords.find_string('one two three four five')
-# #     'two three'
-
-# #     """
-# #     for pattern in self._patterns:
-# #         result = pattern.findall(x)
-# #         if len(result):
-# #             return result[0]
-# #     return None
-
-# # def replace_string(
-# #     pattern, x, repl=None, ignore_case=True, full_match=False, use_re=False
-# # ):
-# #     """Replace pattern in string.
-
-# #     Args:
-# #         pattern (string)
-# #         x (string)
-# #         repl (string, None)
-# #         ignore_case (bool)
-# #         full_match (bool)
-# #         use_re (bool)
-
-# #     Returns:
-# #         string or []
-
-# #     """
-
-# #     if use_re is False:
-# #         pattern = re.escape(pattern)
-
-# #     if full_match is True:
-# #         pattern = "^" + pattern + "$"
-
-# #     if ignore_case is True:
-# #         return re.sub(pattern, repl, x, re.I)
-# #     return re.sub(pattern, repl, x)
-
-
-# def steamming(pattern, text):
-#     """
-
-#     Examples
-#     ----------------------------------------------------------------------------------------------
-
-
-#     """
-#     text = remove_accents(text)
-#     pattern = remove_accents(pattern)
-
-#     text = text.strip().lower()
-#     pattern = pattern.strip().lower()
-
-#     porter = PorterStemmer()
-
-#     pattern = [porter.stem(w) for w in pattern.split()]
-#     text = [porter.stem(w) for w in text.split()]
-
-#     return [m in text for m in pattern]
-
-
-# def steamming_all(pattern, text):
-#     """
-
-#     Examples
-#     ----------------------------------------------------------------------------------------------
-
-#     >>> steamming_all('computers cars', 'car computing')
-#     True
-
-#     >>> steamming_all('computers cars', 'car houses')
-#     False
-
-#     """
-#     return all(steamming(pattern, text))
-
-
-# def steamming_any(pattern, text):
-#     """
-
-#     Examples
-#     ----------------------------------------------------------------------------------------------
-
-#     >>> steamming_any('computers cars', 'car computing')
-#     True
-
-#     >>> steamming_any('computers cars', 'computing house')
-#     True
-
-#     >>> steamming_all('computers cars', 'tree houses')
-#     False
-
-#     """
-#     return any(steamming(pattern, text))
 
 
 def remove_accents(text):

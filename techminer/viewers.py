@@ -18,21 +18,21 @@ WIDGET_WIDTH = "200px"
 
 
 
-COLUMNS = [
-    "Author Keywords",
-    "Author Keywords (Cleaned)",
-    "Authors",
-    "Countries",
-    "Country 1st",
-    "Index Keywords",
-    "Index Keywords (Cleaned)",
-    "Institution 1st",
-    "Institutions",
-    "Keywords",
-    "Source title",
-    "Title",
-    "Year",
-]
+# COLUMNS = [
+#     "Author Keywords",
+#     "Author Keywords (Cleaned)",
+#     "Authors",
+#     "Countries",
+#     "Country 1st",
+#     "Index Keywords",
+#     "Index Keywords (Cleaned)",
+#     "Institution 1st",
+#     "Institutions",
+#     "Keywords",
+#     "Source title",
+#     "Title",
+#     "Year",
+# ]
 
 FIELDS = [
     "Title",
@@ -51,6 +51,8 @@ FIELDS = [
 def column(df, top_n=50):
     """Jupyter Lab dashboard.
     """
+    COLUMNS = [c for c in df.columns if c[0] != '_' and c not in ['Title', 'ID', 'Cited by', 'Abstract']]
+
     # -------------------------------------------------------------------------
     #
     # UI
@@ -174,6 +176,7 @@ def column(df, top_n=50):
 def matrix(df, top_n=50):
     """Jupyter Lab dashboard to matrix data.
     """
+    COLUMNS = [c for c in df.columns if c[0] != '_' and c not in ['Title', 'ID', 'Cited by', 'Abstract']]
     #
     # -------------------------------------------------------------------------
     #
