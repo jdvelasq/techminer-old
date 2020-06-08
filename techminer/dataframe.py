@@ -89,191 +89,191 @@ The column names in the dataframe follows the convetion used in WoS.
 # from os.path import dirname, join
 
 # import numpy as np
-import pandas as pd
+#  import pandas as pd
 
 # from sklearn.decomposition import PCA
 
 
-from techminer.by_term import documents_by_term, citations_by_term
+# from techminer.by_term import documents_by_term, citations_by_term
 
 
-def sort_by_numdocuments(
-    df, matrix, axis=0, ascending=True, kind="quicksort", axis_name=None, axis_sep=None
-):
-    """Sorts a matrix axis by the number of documents.
+# def sort_by_numdocuments(
+#     df, matrix, axis=0, ascending=True, kind="quicksort", axis_name=None, axis_sep=None
+# ):
+#     """Sorts a matrix axis by the number of documents.
 
 
-    Args:
-        df (pandas.DataFrame): dataframe with bibliographic information.
-        matrix (pandas.DataFrame): matrix to sort.
-        axis ({0 or ‘index’, 1 or ‘columns’}), default 0: axis to be sorted.
-        ascending (bool): sort ascending?.
-        kind (str): ‘quicksort’, ‘mergesort’, ‘heapsort’.
-        axis_name (str): column name used to sort by number of documents.
-        axis_sep (str): character used to separate the internal values of column axis_name.
+#     Args:
+#         df (pandas.DataFrame): dataframe with bibliographic information.
+#         matrix (pandas.DataFrame): matrix to sort.
+#         axis ({0 or ‘index’, 1 or ‘columns’}), default 0: axis to be sorted.
+#         ascending (bool): sort ascending?.
+#         kind (str): ‘quicksort’, ‘mergesort’, ‘heapsort’.
+#         axis_name (str): column name used to sort by number of documents.
+#         axis_sep (str): character used to separate the internal values of column axis_name.
 
-    Returns:
-        DataFrame sorted.
+#     Returns:
+#         DataFrame sorted.
 
-    >>> import pandas as pd
-    >>> df = pd.DataFrame(
-    ...     {
-    ...         "c0": ["D"] * 4 + ["B"] * 3 + ["C"] * 2 + ["A"],
-    ...         "c1": ["a"] * 4 + ["c"] * 3 + ["b"] * 2 + ["d"],
-    ...         "Cited by": list(range(10)),
-    ...         "ID": list(range(10)),
-    ...     },
-    ... )
-    >>> df
-      c0 c1  Cited by  ID
-    0  D  a         0   0
-    1  D  a         1   1
-    2  D  a         2   2
-    3  D  a         3   3
-    4  B  c         4   4
-    5  B  c         5   5
-    6  B  c         6   6
-    7  C  b         7   7
-    8  C  b         8   8
-    9  A  d         9   9
+#     >>> import pandas as pd
+#     >>> df = pd.DataFrame(
+#     ...     {
+#     ...         "c0": ["D"] * 4 + ["B"] * 3 + ["C"] * 2 + ["A"],
+#     ...         "c1": ["a"] * 4 + ["c"] * 3 + ["b"] * 2 + ["d"],
+#     ...         "Cited by": list(range(10)),
+#     ...         "ID": list(range(10)),
+#     ...     },
+#     ... )
+#     >>> df
+#       c0 c1  Cited by  ID
+#     0  D  a         0   0
+#     1  D  a         1   1
+#     2  D  a         2   2
+#     3  D  a         3   3
+#     4  B  c         4   4
+#     5  B  c         5   5
+#     6  B  c         6   6
+#     7  C  b         7   7
+#     8  C  b         8   8
+#     9  A  d         9   9
 
-    >>> matrix = pd.DataFrame(
-    ...     {"D": [0, 1, 2, 3], "B": [4, 5, 6, 7], "A": [8, 9, 10, 11], "C": [12, 13, 14, 15],},
-    ...     index=list("badc"),
-    ... )
-    >>> matrix
-       D  B   A   C
-    b  0  4   8  12
-    a  1  5   9  13
-    d  2  6  10  14
-    c  3  7  11  15
+#     >>> matrix = pd.DataFrame(
+#     ...     {"D": [0, 1, 2, 3], "B": [4, 5, 6, 7], "A": [8, 9, 10, 11], "C": [12, 13, 14, 15],},
+#     ...     index=list("badc"),
+#     ... )
+#     >>> matrix
+#        D  B   A   C
+#     b  0  4   8  12
+#     a  1  5   9  13
+#     d  2  6  10  14
+#     c  3  7  11  15
 
-    >>> sort_by_numdocuments(df, matrix, axis='columns', ascending=True, axis_name='c0')
-        A  B   C  D
-    b   8  4  12  0
-    a   9  5  13  1
-    d  10  6  14  2
-    c  11  7  15  3
+#     >>> sort_by_numdocuments(df, matrix, axis='columns', ascending=True, axis_name='c0')
+#         A  B   C  D
+#     b   8  4  12  0
+#     a   9  5  13  1
+#     d  10  6  14  2
+#     c  11  7  15  3
 
-    >>> sort_by_numdocuments(df, matrix, axis='columns', ascending=False, axis_name='c0')
-       D   C  B   A
-    b  0  12  4   8
-    a  1  13  5   9
-    d  2  14  6  10
-    c  3  15  7  11
+#     >>> sort_by_numdocuments(df, matrix, axis='columns', ascending=False, axis_name='c0')
+#        D   C  B   A
+#     b  0  12  4   8
+#     a  1  13  5   9
+#     d  2  14  6  10
+#     c  3  15  7  11
 
-    >>> sort_by_numdocuments(df, matrix, axis='index', ascending=True, axis_name='c1')
-       D  B   A   C
-    a  1  5   9  13
-    b  0  4   8  12
-    c  3  7  11  15
-    d  2  6  10  14
+#     >>> sort_by_numdocuments(df, matrix, axis='index', ascending=True, axis_name='c1')
+#        D  B   A   C
+#     a  1  5   9  13
+#     b  0  4   8  12
+#     c  3  7  11  15
+#     d  2  6  10  14
 
-    >>> sort_by_numdocuments(df, matrix, axis='index', ascending=False, axis_name='c1')
-       D  B   A   C
-    d  2  6  10  14
-    c  3  7  11  15
-    b  0  4   8  12
-    a  1  5   9  13
+#     >>> sort_by_numdocuments(df, matrix, axis='index', ascending=False, axis_name='c1')
+#        D  B   A   C
+#     d  2  6  10  14
+#     c  3  7  11  15
+#     b  0  4   8  12
+#     a  1  5   9  13
 
-    """
-    terms = documents_by_term(df, column=axis_name)
-    terms_sorted = (
-        terms.sort_values(by=axis_name, kind=kind, ascending=ascending)
-        .iloc[:, 0]
-        .tolist()
-    )
-    if axis == "index":
-        return matrix.loc[terms_sorted, :]
-    return matrix.loc[:, terms_sorted]
-
-
-def sort_by_citations(
-    df, matrix, axis=0, ascending=True, kind="quicksort", axis_name=None, axis_sep=None
-):
-    """Sorts a matrix axis by the citations.
+#     """
+#     terms = documents_by_term(df, column=axis_name)
+#     terms_sorted = (
+#         terms.sort_values(by=axis_name, kind=kind, ascending=ascending)
+#         .iloc[:, 0]
+#         .tolist()
+#     )
+#     if axis == "index":
+#         return matrix.loc[terms_sorted, :]
+#     return matrix.loc[:, terms_sorted]
 
 
-    Args:
-        df (pandas.DataFrame): dataframe with bibliographic information.
-        matrix (pandas.DataFrame): matrix to sort.
-        axis ({0 or ‘index’, 1 or ‘columns’}), default 0: axis to be sorted.
-        ascending (bool): sort ascending?.
-        kind (str): ‘quicksort’, ‘mergesort’, ‘heapsort’.
-        axis_name (str): column name used to sort by citations.
-        axis_sep (str): character used to separate the internal values of column axis_name.
+# def sort_by_citations(
+#     df, matrix, axis=0, ascending=True, kind="quicksort", axis_name=None, axis_sep=None
+# ):
+#     """Sorts a matrix axis by the citations.
 
-    Returns:
-        DataFrame sorted.
 
-    >>> import pandas as pd
-    >>> df = pd.DataFrame(
-    ...     {
-    ...         "c0": ["D"] * 4 + ["B"] * 3 + ["C"] * 2 + ["A"],
-    ...         "c1": ["a"] * 4 + ["c"] * 3 + ["b"] * 2 + ["d"],
-    ...         "Cited by": list(range(10)),
-    ...         "ID": list(range(10)),
-    ...     },
-    ... )
-    >>> df
-      c0 c1  Cited by  ID
-    0  D  a         0   0
-    1  D  a         1   1
-    2  D  a         2   2
-    3  D  a         3   3
-    4  B  c         4   4
-    5  B  c         5   5
-    6  B  c         6   6
-    7  C  b         7   7
-    8  C  b         8   8
-    9  A  d         9   9
+#     Args:
+#         df (pandas.DataFrame): dataframe with bibliographic information.
+#         matrix (pandas.DataFrame): matrix to sort.
+#         axis ({0 or ‘index’, 1 or ‘columns’}), default 0: axis to be sorted.
+#         ascending (bool): sort ascending?.
+#         kind (str): ‘quicksort’, ‘mergesort’, ‘heapsort’.
+#         axis_name (str): column name used to sort by citations.
+#         axis_sep (str): character used to separate the internal values of column axis_name.
 
-    >>> matrix = pd.DataFrame(
-    ...     {"D": [0, 1, 2, 3], "B": [4, 5, 6, 7], "A": [8, 9, 10, 11], "C": [12, 13, 14, 15],},
-    ...     index=list("badc"),
-    ... )
-    >>> matrix
-       D  B   A   C
-    b  0  4   8  12
-    a  1  5   9  13
-    d  2  6  10  14
-    c  3  7  11  15
+#     Returns:
+#         DataFrame sorted.
 
-    >>> sort_by_citations(df, matrix, axis='columns', ascending=True, axis_name='c0')
-        A  B   C  D
-    b   8  4  12  0
-    a   9  5  13  1
-    d  10  6  14  2
-    c  11  7  15  3
+#     >>> import pandas as pd
+#     >>> df = pd.DataFrame(
+#     ...     {
+#     ...         "c0": ["D"] * 4 + ["B"] * 3 + ["C"] * 2 + ["A"],
+#     ...         "c1": ["a"] * 4 + ["c"] * 3 + ["b"] * 2 + ["d"],
+#     ...         "Cited by": list(range(10)),
+#     ...         "ID": list(range(10)),
+#     ...     },
+#     ... )
+#     >>> df
+#       c0 c1  Cited by  ID
+#     0  D  a         0   0
+#     1  D  a         1   1
+#     2  D  a         2   2
+#     3  D  a         3   3
+#     4  B  c         4   4
+#     5  B  c         5   5
+#     6  B  c         6   6
+#     7  C  b         7   7
+#     8  C  b         8   8
+#     9  A  d         9   9
 
-    >>> sort_by_citations(df, matrix, axis='columns', ascending=False, axis_name='c0')
-       D   C  B   A
-    b  0  12  4   8
-    a  1  13  5   9
-    d  2  14  6  10
-    c  3  15  7  11
+#     >>> matrix = pd.DataFrame(
+#     ...     {"D": [0, 1, 2, 3], "B": [4, 5, 6, 7], "A": [8, 9, 10, 11], "C": [12, 13, 14, 15],},
+#     ...     index=list("badc"),
+#     ... )
+#     >>> matrix
+#        D  B   A   C
+#     b  0  4   8  12
+#     a  1  5   9  13
+#     d  2  6  10  14
+#     c  3  7  11  15
 
-    >>> sort_by_citations(df, matrix, axis='index', ascending=True, axis_name='c1')
-       D  B   A   C
-    a  1  5   9  13
-    b  0  4   8  12
-    c  3  7  11  15
-    d  2  6  10  14
+#     >>> sort_by_citations(df, matrix, axis='columns', ascending=True, axis_name='c0')
+#         A  B   C  D
+#     b   8  4  12  0
+#     a   9  5  13  1
+#     d  10  6  14  2
+#     c  11  7  15  3
 
-    >>> sort_by_citations(df, matrix, axis='index', ascending=False, axis_name='c1')
-       D  B   A   C
-    d  2  6  10  14
-    c  3  7  11  15
-    b  0  4   8  12
-    a  1  5   9  13
+#     >>> sort_by_citations(df, matrix, axis='columns', ascending=False, axis_name='c0')
+#        D   C  B   A
+#     b  0  12  4   8
+#     a  1  13  5   9
+#     d  2  14  6  10
+#     c  3  15  7  11
 
-    """
-    terms = citations_by_term(df, column=axis_name)
-    terms_sorted = (
-        terms.sort_values(by=axis_name, kind=kind, ascending=ascending)
-        .iloc[:, 0]
-        .tolist()
-    )
-    if axis == "index":
-        return matrix.loc[terms_sorted, :]
-    return matrix.loc[:, terms_sorted]
+#     >>> sort_by_citations(df, matrix, axis='index', ascending=True, axis_name='c1')
+#        D  B   A   C
+#     a  1  5   9  13
+#     b  0  4   8  12
+#     c  3  7  11  15
+#     d  2  6  10  14
+
+#     >>> sort_by_citations(df, matrix, axis='index', ascending=False, axis_name='c1')
+#        D  B   A   C
+#     d  2  6  10  14
+#     c  3  7  11  15
+#     b  0  4   8  12
+#     a  1  5   9  13
+
+#     """
+#     terms = citations_by_term(df, column=axis_name)
+#     terms_sorted = (
+#         terms.sort_values(by=axis_name, kind=kind, ascending=ascending)
+#         .iloc[:, 0]
+#         .tolist()
+#     )
+#     if axis == "index":
+#         return matrix.loc[terms_sorted, :]
+#     return matrix.loc[:, terms_sorted]
