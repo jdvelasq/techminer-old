@@ -51,7 +51,7 @@ FIELDS = [
 def column(df, top_n=50):
     """Jupyter Lab dashboard.
     """
-    COLUMNS = [c for c in df.columns if c[0] != '_' and c not in ['Title', 'ID', 'Cited by', 'Abstract']]
+    COLUMNS = [c for c in df.columns if c[0] != '*' and c not in ['Title', 'ID', 'Cited by', 'Abstract']]
 
     # -------------------------------------------------------------------------
     #
@@ -176,7 +176,7 @@ def column(df, top_n=50):
 def matrix(df, top_n=50):
     """Jupyter Lab dashboard to matrix data.
     """
-    COLUMNS = [c for c in df.columns if c[0] != '_' and c not in ['Title', 'ID', 'Cited by', 'Abstract']]
+    COLUMNS = [c for c in df.columns if c[0] != '*' and c not in ['Title', 'ID', 'Cited by', 'Abstract']]
     #
     # -------------------------------------------------------------------------
     #
