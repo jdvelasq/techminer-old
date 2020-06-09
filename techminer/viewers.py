@@ -32,6 +32,7 @@ def __record_to_HTML(x):
         "Abstract",
         "Countries",
         "Institutions",
+        "Cited_by"
         
     ]:
         z = x[f]
@@ -44,7 +45,8 @@ def __record_to_HTML(x):
             "Author_Keywords_CL",
             "Index_Keywords_CL",
             "Countries",
-            "Institutions",                
+            "Institutions",
+            "Source_title",
         ]:
             v = z.split(';')
             v = [a.strip() if isinstance(a, str) else a for a in v]
@@ -57,6 +59,8 @@ def __record_to_HTML(x):
                 HTML += '{:>18}: {}<br>'.format(f, s[0])
                 for t in s[1:]:
                     HTML += '{}<br>'.format(textwrap.indent(t, ' ' * 20))
+            elif f == 'Cited_by':
+                HTML += '{:>18}: {}<br>'.format(f, int(z))
             else:
                 HTML += '{:>18}: {}<br>'.format(f, z)
     return '<pre>' + HTML + '</pre>'
