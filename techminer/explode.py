@@ -1,9 +1,31 @@
 
 
 
-# MULTIVALUED_COLS = [
-# ]
-
+MULTIVALUED_COLS = [
+    "Affiliations_",
+    "Affiliations",
+    "Author_Keywords_",
+    "Author_Keywords_CL_",
+    "Author_Keywords_CL",
+    "Author_Keywords",
+    "Authors_",
+    "Authors_ID_",
+    "Authors_ID",
+    "Authors_with_affiliations_",
+    "Authors_with_affiliations",
+    "Authors",
+    "Countries_",
+    "Countries",
+    "Index_Keywords_",
+    "Index_Keywords_CL_",
+    "Index_Keywords_CL",
+    "Index_Keywords",
+    "Institutions_",
+    "Institutions",
+    #
+    "_key1_",
+    "_key2_",
+]
 
 ##
 ##
@@ -45,31 +67,7 @@ def __explode(x, column):
     4  author 4   2
 
     """
-    if column in [
-        "Affiliations_",
-        "Affiliations",
-        "Author_Keywords_",
-        "Author_Keywords_CL_",
-        "Author_Keywords_CL",
-        "Author_Keywords",
-        "Authors_",
-        "Authors_ID_",
-        "Authors_ID",
-        "Authors_with_affiliations_",
-        "Authors_with_affiliations",
-        "Authors",
-        "Countries_",
-        "Countries",
-        "Index_Keywords_",
-        "Index_Keywords_CL_",
-        "Index_Keywords_CL",
-        "Index_Keywords",
-        "Institutions_",
-        "Institutions",
-        #
-        "_key1_",
-        "_key2_",
-    ]:
+    if column in MULTIVALUED_COLS:
         x = x.copy()
         x[column] = x[column].map(
             lambda w: sorted(list(set(w.split(";")))) if isinstance(w, str) else w
