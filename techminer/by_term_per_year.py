@@ -89,10 +89,10 @@ def summary_by_term_per_year(x, column, keywords=None):
         ["Year", column], ascending=True, inplace=True, ignore_index=True,
     )
     #
-    docs_by_year = documents_by_year(x, cumulative=False)
-    cited_by_year = citations_by_year(x, cumulative=False)
-    docs_by_year = {key: value for key, value in zip(docs_by_year.Year, docs_by_year.Num_Documents)}
-    cited_by_year = {key: value for key, value in zip(cited_by_year.Year, cited_by_year.Cited_by)}
+    groupby = result.groupby('Year').agg({'Num_Documents': np.sum, 'Cited_by':np.sum})
+    groupby = groupby.reset_index()
+    docs_by_year = {key: value for key, value in zip(groupby.Year, groupby.Num_Documents)}
+    cited_by_year = {key: value for key, value in zip(groupby.Year, groupby.Cited_by)}
     result['Documents_by_year'] = result.Year.apply(lambda w: docs_by_year[w])
     result['Documents_by_year'] = result.Documents_by_year.map(lambda w: 1 if w == 0 else w)
     result['Citations_by_year'] = result.Year.apply(lambda w: cited_by_year[w])
@@ -741,12 +741,6 @@ def __body_0(x):
             matrix = citations_by_term_per_year(x, term, as_matrix=True)
         if analysis_type == 'Perc. Frequency':
             top = citations_by_term(x, term).head(top_n)[term].tolist()
-            
-            output.clear_output()
-            with output:
-                display(perc_documents_by_term_per_year(x, term, as_matrix=False).head(50))
-                return
-
             matrix = perc_documents_by_term_per_year(x, term, as_matrix=True)
         if analysis_type == 'Perc. Cited by':
             top = citations_by_term(x, term).head(top_n)[term].tolist()
