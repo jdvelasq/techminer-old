@@ -19,61 +19,61 @@ import pandas as pd
 from nltk.stem import PorterStemmer, SnowballStemmer
 
 
-# def steamming(pattern, text):
-#     """
+def steamming(pattern, text):
+    """
 
-#     Examples
-#     ----------------------------------------------------------------------------------------------
-
-
-#     """
-#     text = remove_accents(text)
-#     pattern = remove_accents(pattern)
-
-#     text = text.strip().lower()
-#     pattern = pattern.strip().lower()
-
-#     porter = PorterStemmer()
-
-#     pattern = [porter.stem(w) for w in pattern.split()]
-#     text = [porter.stem(w) for w in text.split()]
-
-#     return [m in text for m in pattern]
+    Examples
+    ----------------------------------------------------------------------------------------------
 
 
-# def steamming_all(pattern, text):
-#     """
+    """
+    text = remove_accents(text)
+    pattern = remove_accents(pattern)
 
-#     Examples
-#     ----------------------------------------------------------------------------------------------
+    text = text.strip().lower()
+    pattern = pattern.strip().lower()
 
-#     >>> steamming_all('computers cars', 'car computing')
-#     True
+    porter = PorterStemmer()
 
-#     >>> steamming_all('computers cars', 'car houses')
-#     False
+    pattern = [porter.stem(w) for w in pattern.split()]
+    text = [porter.stem(w) for w in text.split()]
 
-#     """
-#     return all(steamming(pattern, text))
+    return [m in text for m in pattern]
 
 
-# def steamming_any(pattern, text):
-#     """
+def steamming_all(pattern, text):
+    """
 
-#     Examples
-#     ----------------------------------------------------------------------------------------------
+    Examples
+    ----------------------------------------------------------------------------------------------
 
-#     >>> steamming_any('computers cars', 'car computing')
-#     True
+    >>> steamming_all('computers cars', 'car computing')
+    True
 
-#     >>> steamming_any('computers cars', 'computing house')
-#     True
+    >>> steamming_all('computers cars', 'car houses')
+    False
 
-#     >>> steamming_all('computers cars', 'tree houses')
-#     False
+    """
+    return all(steamming(pattern, text))
 
-#     """
-#     return any(steamming(pattern, text))
+
+def steamming_any(pattern, text):
+    """
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> steamming_any('computers cars', 'car computing')
+    True
+
+    >>> steamming_any('computers cars', 'computing house')
+    True
+
+    >>> steamming_all('computers cars', 'tree houses')
+    False
+
+    """
+    return any(steamming(pattern, text))
 
 
 def find_string(
@@ -143,263 +143,140 @@ def find_string(
 # #     return re.sub(pattern, repl, x)
 
 
-# def extract_country(x):
-#     """Extracts country name from a string,
+def one_gram(x):
+    """Computes the 1-gram representation of string x.
 
-#     Examples
-#     ----------------------------------------------------------------------------------------------
+    See https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth
 
-#     >>> import pandas as pd
-#     >>> x = pd.DataFrame({
-#     ...     'AU_CO': [
-#     ...         'University, Cuba; University, Venezuela',
-#     ...         'University, United States; Univesrity, Singapore',
-#     ...         'University;',
-#     ...         'University; Univesity',
-#     ...         'University,',
-#     ...         'University',
-#     ...         None]
-#     ... })
-#     >>> x['AU_CO'].map(lambda x: extract_country(x))
-#     0             Cuba;Venezuela
-#     1    United States;Singapore
-#     2                       None
-#     3                       None
-#     4                       None
-#     5                       None
-#     6                       None
-#     Name: AU_CO, dtype: object
+    Args:
+        x (string): string to convert.
 
-#     """
-#     if x is None:
-#         return None
-#     #
-#     # lista generica de nombres de paises
-#     #
-#     module_path = dirname(__file__)
-#     with open(join(module_path, "data/worldmap.data"), "r") as f:
-#         countries = json.load(f)
-#     country_names = list(countries.keys())
-#     #
-#     # paises faltantes
-#     #
-#     country_names.append("Singapore")
-#     country_names.append("Malta")
-#     country_names.append("United States")
-#     #
-#     # Reemplazo de nombres de regiones administrativas
-#     # por nombres de paises
-#     #
-#     x = re.sub("Bosnia and Herzegovina", "Bosnia and Herz.", x)
-#     x = re.sub("Czech Republic", "Czechia", x)
-#     x = re.sub("Russian Federation", "Russia", x)
-#     x = re.sub("Hong Kong", "China", x)
-#     x = re.sub("Macau", "China", x)
-#     x = re.sub("Macao", "China", x)
-#     countries = [affiliation.split(",")[-1].strip() for affiliation in x.split(";")]
-#     countries = ";".join(
-#         [country if country in country_names else "" for country in countries]
-#     )
-#     if countries == "" or countries == ";":
-#         return None
-#     else:
-#         return countries
+    Returns:
+        string.
 
 
-# def extract_institution(x):
-#     """
-#     """
+    Examples
+    ----------------------------------------------------------------------------------------------
 
-#     def search_name(affiliation):
-#         if len(affiliation.split(",")) == 1:
-#             return item
-#         affiliation = affiliation.lower()
-#         for elem in affiliation.split(","):
-#             for name in names:
-#                 if name in elem:
-#                     return elem
-#         return None
-
-#     #
-#     names = [
-#         "univ",
-#         "institut",
-#         "centre",
-#         "center",
-#         "centro",
-#         "agency",
-#         "council",
-#         "commission",
-#         "college",
-#         "politec",
-#         "inc.",
-#         "ltd.",
-#         "office",
-#         "department",
-#         "direction" "laboratory",
-#         "laboratoire",
-#         "colegio",
-#         "school",
-#         "scuola",
-#         "ecole",
-#         "hospital",
-#         "association",
-#         "asociacion",
-#         "company",
-#         "organization",
-#         "academy",
-#     ]
-
-#     if x is pd.isna(x) is True or x is None:
-#         return None
-#     institutions = []
-#     x = x.split(";")
-#     for item in x:
-#         institution = search_name(item)
-#         if institution is None:
-#             if len(item.split(",")) == 2:
-#                 institution = item.split(",")[0]
-#         if institution is not None:
-#             institutions.append(institution)
-#     if institutions is not None:
-#         institutions = ";".join(institutions)
-#     return institutions
+    >>> one_gram('neural net')
+    'aelnrtu'
 
 
-# def one_gram(x):
-#     """Computes the 1-gram representation of string x.
-
-#     See https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth
-
-#     Args:
-#         x (string): string to convert.
-
-#     Returns:
-#         string.
-
-
-#     Examples
-#     ----------------------------------------------------------------------------------------------
-
-#     >>> one_gram('neural net')
-#     'aelnrtu'
+    """
+    if x is None:
+        return None
+    x = x.strip().lower()
+    x = re.sub("-", " ", x)
+    x = re.sub("[" + string.punctuation + "]", "", x)
+    x = remove_accents(x)
+    x = x.replace(" ", "")
+    x = sorted(list(set(x)))
+    return "".join(x)
 
 
-#     """
-#     if x is None:
-#         return None
-#     x = x.strip().lower()
-#     x = re.sub("-", " ", x)
-#     x = re.sub("[" + string.punctuation + "]", "", x)
-#     x = remove_accents(x)
-#     x = x.replace(" ", "")
-#     x = sorted(list(set(x)))
-#     return "".join(x)
+def two_gram(x):
+    """Computes the 2-gram representation of string x.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> two_gram('neural net')
+    'aleteulnneraur'
 
 
-# def two_gram(x):
-#     """Computes the 2-gram representation of string x.
-
-#     Examples
-#     ----------------------------------------------------------------------------------------------
-
-#     >>> two_gram('neural net')
-#     'aleteulnneraur'
-
-
-#     """
-#     if x is None:
-#         return None
-#     x = x.strip().lower()
-#     x = re.sub("-", " ", x)
-#     x = re.sub("[" + string.punctuation + "]", "", x)
-#     x = remove_accents(x)
-#     x = x.replace(" ", "")
-#     x = list(x)
-#     x = ["".join([x[i], x[i + 1]]) for i in range(len(x) - 1)]
-#     x = sorted(list(set(x)))
-#     return "".join(x)
+    """
+    if x is None:
+        return None
+    x = x.strip().lower()
+    x = re.sub("-", " ", x)
+    x = re.sub("[" + string.punctuation + "]", "", x)
+    x = remove_accents(x)
+    x = x.replace(" ", "")
+    x = list(x)
+    x = ["".join([x[i], x[i + 1]]) for i in range(len(x) - 1)]
+    x = sorted(list(set(x)))
+    return "".join(x)
 
 
-# def stemmer_porter(x):
-#     """Computes the stemmer transformation of string x.
+def stemmer_porter(x):
+    """Computes the stemmer transformation of string x.
 
-#     Examples
-#     ----------------------------------------------------------------------------------------------
+    Examples
+    ----------------------------------------------------------------------------------------------
 
-#     >>> stemmer_porter('neural net')
-#     'net neural'
-
-
-#     """
-#     if x is None:
-#         return None
-#     x = x.strip().lower()
-#     x = re.sub("-", " ", x)
-#     x = re.sub("[" + string.punctuation + "]", "", x)
-#     x = remove_accents(x)
-#     s = PorterStemmer()
-#     x = sorted(set([s.stem(w) for w in x.split()]))
-#     return " ".join(x)
+    >>> stemmer_porter('neural net')
+    'net neural'
 
 
-# def stemmer_snowball(x):
-#     """Computes the stemmer transformation of string x.
-
-#     Examples
-#     ----------------------------------------------------------------------------------------------
-
-#     >>> stemmer_snowball('neural net')
-#     'net neural'
-
-
-#     """
-#     if x is None:
-#         return None
-#     x = x.strip().lower()
-#     x = re.sub("-", " ", x)
-#     x = re.sub("[" + string.punctuation + "]", "", x)
-#     x = remove_accents(x)
-#     s = SnowballStemmer("english")
-#     x = sorted(set([s.stem(w) for w in x.split()]))
-#     return " ".join(x)
+    """
+    if x is None:
+        return None
+    x = x.strip().lower()
+    x = re.sub("-", " ", x)
+    x = re.sub("[" + string.punctuation + "]", "", x)
+    x = remove_accents(x)
+    s = PorterStemmer()
+    x = sorted(set([s.stem(w) for w in x.split()]))
+    return " ".join(x)
 
 
-# def fingerprint(x):
-#     """Computes 'fingerprint' representation of string x.
+def stemmer_snowball(x):
+    """Computes the stemmer transformation of string x.
 
-#     See https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth
+    Examples
+    ----------------------------------------------------------------------------------------------
 
-#     Args:
-#         x (string): string to convert.
-
-#     Returns:
-#         string.
-
-#     Examples
-#     ----------------------------------------------------------------------------------------------
-
-#     >>> fingerprint('a A b')
-#     'a b'
-#     >>> fingerprint('b a a')
-#     'a b'
-#     >>> fingerprint(None) is None
-#     True
-#     >>> fingerprint('b c')
-#     'b c'
-#     >>> fingerprint(' c b ')
-#     'b c'
+    >>> stemmer_snowball('neural net')
+    'net neural'
 
 
-#     """
-#     if x is None:
-#         return None
-#     x = x.strip().lower()
-#     x = re.sub("-", " ", x)
-#     x = re.sub("[" + string.punctuation + "]", "", x)
-#     x = remove_accents(x)
-#     x = sorted(set(w for w in x.split()))
-#     return " ".join(x)
+    """
+    if x is None:
+        return None
+    x = x.strip().lower()
+    x = re.sub("-", " ", x)
+    x = re.sub("[" + string.punctuation + "]", "", x)
+    x = remove_accents(x)
+    s = SnowballStemmer("english")
+    x = sorted(set([s.stem(w) for w in x.split()]))
+    return " ".join(x)
+
+
+def fingerprint(x):
+    """Computes 'fingerprint' representation of string x.
+
+    See https://github.com/OpenRefine/OpenRefine/wiki/Clustering-In-Depth
+
+    Args:
+        x (string): string to convert.
+
+    Returns:
+        string.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> fingerprint('a A b')
+    'a b'
+    >>> fingerprint('b a a')
+    'a b'
+    >>> fingerprint(None) is None
+    True
+    >>> fingerprint('b c')
+    'b c'
+    >>> fingerprint(' c b ')
+    'b c'
+
+
+    """
+    if x is None:
+        return None
+    x = x.strip().lower()
+    x = re.sub("-", " ", x)
+    x = re.sub("[" + string.punctuation + "]", "", x)
+    x = remove_accents(x)
+    x = sorted(set(w for w in x.split()))
+    return " ".join(x)
 
 
 def remove_accents(text):
