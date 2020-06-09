@@ -9,7 +9,7 @@ Co-occurrence Analysis
 import ipywidgets as widgets
 import numpy as np
 import pandas as pd
-# import techminer.plots as plt
+import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
 # from techminer.explode import __explode
@@ -575,20 +575,22 @@ RIGHT_PANEL_WIDTH = "870px"
 FIGSIZE = (14, 10.0)
 PANE_HEIGHTS = ["80px", "650px", 0]
 
-COLUMNS = [
-    "Author Keywords",
-    "Authors",
-    "Countries",
-    "Country 1st",
-    "Document type",
-    "Index Keywords",
-    "Institution 1st",
-    "Institutions",
-    "Keywords",
-    "Source title",
-]
+
 
 def __body_0(x):
+    COLUMNS = [
+        "Author_Keywords",
+        "Author_Keywords_CL",
+        "Authors",
+        "Countries",
+        "Country_1st_Author",
+        "Document_type",
+        "Index_Keywords",
+        "Index_Keywords_CL",
+        "Institution_1st_Author",
+        "Institutions",
+        "Source title",
+    ]
     # -------------------------------------------------------------------------
     #
     # UI
@@ -617,13 +619,22 @@ def __body_0(x):
         },
         # 2
         {
+            "arg": "plot_type",
+            "desc": "Plot type:",
+            "widget": widgets.Dropdown(
+                options=["Matrix", "Heatmap", "Bubble"],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },        
+        # 3
+        {
             "arg": "cmap",
             "desc": "Colormap:",
             "widget": widgets.Dropdown(
                 options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 3
+        # 4
         {
             "arg": "min_value",
             "desc": "Min occurrence value:",
@@ -659,6 +670,7 @@ def __body_0(x):
         #
         term = kwargs["term"]
         by = kwargs["by"]
+        plot_type = kwargs["plot_type"]
         cmap = kwargs["cmap"]
         min_value = int(kwargs["min_value"])
         sort_by = kwargs["sort_by"]
@@ -677,15 +689,15 @@ def __body_0(x):
         options = matrix['Num_Documents'].unique().tolist()
         options = sorted(options)
         options = [str(w) for w in options]
-        current_selection = controls[3]["widget"].value
-        controls[3]["widget"].options = options
+        current_selection = controls[4]["widget"].value
+        controls[4]["widget"].options = options
         #
         if min_value > matrix['Num_Documents'].max():
             min_value = 0
-            controls[3]["widget"].value = controls[3]["widget"].options[0]
-        if current_selection not in controls[3]["widget"].options:
+            controls[4]["widget"].value = controls[4]["widget"].options[0]
+        if current_selection not in controls[4]["widget"].options:
             min_value = 0
-            controls[3]["widget"].value = controls[3]["widget"].options[0]
+            controls[4]["widget"].value = controls[4]["widget"].options[0]
         #
         if term == by:
             by = by + '_'
@@ -760,9 +772,14 @@ def __body_0(x):
             #
             # View
             #
-            display(matrix.style.format(
-                        lambda q: "{:d}".format(q) if q >= min_value else ""
-                    ).background_gradient(cmap=cmap, axis=None))
+            if plot_type == 'Matrix':
+                display(matrix.style.format(
+                            lambda q: "{:d}".format(q) if q >= min_value else ""
+                        ).background_gradient(cmap=cmap, axis=None))
+            if plot_type == 'Heatmap':
+                display(plt.heatmap(matrix, cmap=cmap, figsize=(14, 8.5)))
+            if plot_type == 'Bubble':
+                display(plt.bubble(matrix.transpose(), axis=0, cmap=cmap, figsize=(14, 8.5)))
             
     # -------------------------------------------------------------------------
     #
