@@ -13,6 +13,7 @@ import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
 from techminer.by_term import citations_by_term, documents_by_term
+from techminer.by_year import documents_by_year, citations_by_year
 from techminer.explode import __explode
 from techminer.keywords import Keywords
 from techminer.plots import COLORMAPS
@@ -70,7 +71,8 @@ def summary_by_term_per_year(x, column, keywords=None):
     3  author 3  2011        13              1  [3]
 
     """
-    data = __explode(x[["Year", column, "Cited_by", "ID"]], column)
+    data = x.copy()
+    data = __explode(data[["Year", column, "Cited_by", "ID"]], column)
     data["Num_Documents"] = 1
     result = data.groupby([column, "Year"], as_index=False).agg(
         {"Cited_by": np.sum, "Num_Documents": np.size}
@@ -86,6 +88,20 @@ def summary_by_term_per_year(x, column, keywords=None):
     result.sort_values(
         ["Year", column], ascending=True, inplace=True, ignore_index=True,
     )
+    #
+    docs_by_year = documents_by_year(x, cumulative=False)
+    cited_by_year = citations_by_year(x, cumulative=False)
+    docs_by_year = {key: value for key, value in zip(docs_by_year.Year, docs_by_year.Num_Documents)}
+    cited_by_year = {key: value for key, value in zip(cited_by_year.Year, cited_by_year.Cited_by)}
+    result['Documents_by_year'] = result.Year.apply(lambda w: docs_by_year[w])
+    result['Documents_by_year'] = result.Documents_by_year.map(lambda w: 1 if w == 0 else w)
+    result['Citations_by_year'] = result.Year.apply(lambda w: cited_by_year[w])
+    result['Citations_by_year'] = result.Citations_by_year.map(lambda w: 1 if w == 0 else w)
+    result = result.assign(Perc_Num_Documents=round(result.Num_Documents / result.Documents_by_year * 100, 2))
+    result = result.assign(Perc_Cited_by=round(result.Cited_by / result.Citations_by_year * 100, 2))
+    #result.pop('Documents_by_year')
+    #result.pop('Citations_by_year')
+    #
     return result
 
 
@@ -151,6 +167,8 @@ def documents_by_term_per_year(x, column, as_matrix=False, keywords=None):
 
     result = summary_by_term_per_year(x, column, keywords)
     result.pop("Cited_by")
+    result.pop("Perc_Num_Documents")
+    result.pop("Perc_Cited_by")
     result.sort_values(
         ["Year", "Num_Documents", column], ascending=[True, False, True], inplace=True,
     )
@@ -158,6 +176,82 @@ def documents_by_term_per_year(x, column, as_matrix=False, keywords=None):
     if as_matrix == True:
         result = pd.pivot_table(
             result, values="Num_Documents", index="Year", columns=column, fill_value=0,
+        )
+        result.columns = result.columns.tolist()
+        result.index = result.index.tolist()
+    return result
+
+def perc_documents_by_term_per_year(x, column, as_matrix=False, keywords=None):
+    """Computes the number of documents by term per year.
+
+    Args:
+        column (str): the column to explode.
+        sep (str): Character used as internal separator for the elements in the column.
+        as_matrix (bool): Results are returned as a matrix.
+        keywords (Keywords): filter the result using the specified Keywords object.
+
+    Returns:
+        DataFrame.
+
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
+    ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
+    ...          "Cited_by": list(range(10,16)),
+    ...          "ID": list(range(6)),
+    ...     }
+    ... )
+    >>> df
+       Year                     Authors  Cited_by  ID
+    0  2010  author 0;author 1;author 2        10   0
+    1  2010                    author 0        11   1
+    2  2011                    author 1        12   2
+    3  2011                    author 3        13   3
+    4  2012                    author 4        14   4
+    5  2014                    author 4        15   5
+
+    >>> documents_by_term_per_year(df, 'Authors')
+        Authors  Year  Num_Documents      ID
+    0  author 0  2010              2  [0, 1]
+    1  author 1  2010              1     [0]
+    2  author 2  2010              1     [0]
+    3  author 1  2011              1     [2]
+    4  author 3  2011              1     [3]
+    5  author 4  2012              1     [4]
+    6  author 4  2014              1     [5]
+
+    >>> documents_by_term_per_year(df, 'Authors', as_matrix=True)
+          author 0  author 1  author 2  author 3  author 4
+    2010         2         1         1         0         0
+    2011         0         1         0         1         0
+    2012         0         0         0         0         1
+    2014         0         0         0         0         1
+
+    >>> keywords = Keywords(['author 1', 'author 2', 'author 3'])
+    >>> keywords = keywords.compile()
+    >>> documents_by_term_per_year(df, 'Authors', keywords=keywords, as_matrix=True)
+          author 1  author 2  author 3
+    2010         1         1         0
+    2011         1         0         1
+
+    """
+
+    result = summary_by_term_per_year(x, column, keywords)
+    result.pop("Cited_by")
+    result.pop("Num_Documents")
+    result.pop('Perc_Cited_by')
+    result.sort_values(
+        ["Year", "Perc_Num_Documents", column], ascending=[True, False, True], inplace=True,
+    )
+    result.reset_index(drop=True)
+    if as_matrix == True:
+        result = pd.pivot_table(
+            result, values="Perc_Num_Documents", index="Year", columns=column, fill_value=0,
         )
         result.columns = result.columns.tolist()
         result.index = result.index.tolist()
@@ -311,6 +405,81 @@ def citations_by_term_per_year(x, column, as_matrix=False, keywords=None):
         result.index = result.index.tolist()
     return result
 
+def perc_citations_by_term_per_year(x, column, as_matrix=False, keywords=None):
+    """Computes the number of citations by term by year in a column.
+
+    Args:
+        column (str): the column to explode.
+        as_matrix (bool): Results are returned as a matrix.
+        keywords (Keywords): filter the result using the specified Keywords object.
+
+    Returns:
+        DataFrame.
+
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
+    ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
+    ...          "Cited_by": list(range(10,16)),
+    ...          "ID": list(range(6)),
+    ...     }
+    ... )
+    >>> df
+       Year                     Authors  Cited_by  ID
+    0  2010  author 0;author 1;author 2        10   0
+    1  2010                    author 0        11   1
+    2  2011                    author 1        12   2
+    3  2011                    author 3        13   3
+    4  2012                    author 4        14   4
+    5  2014                    author 4        15   5
+
+    >>> citations_by_term_per_year(df, 'Authors')
+        Authors  Year  Cited_by      ID
+    0  author 0  2010        21  [0, 1]
+    1  author 2  2010        10     [0]
+    2  author 1  2010        10     [0]
+    3  author 3  2011        13     [3]
+    4  author 1  2011        12     [2]
+    5  author 4  2012        14     [4]
+    6  author 4  2014        15     [5]
+
+    >>> citations_by_term_per_year(df, 'Authors', as_matrix=True)
+          author 0  author 1  author 2  author 3  author 4
+    2010        21        10        10         0         0
+    2011         0        12         0        13         0
+    2012         0         0         0         0        14
+    2014         0         0         0         0        15
+
+    >>> keywords = Keywords(['author 1', 'author 2', 'author 3'])
+    >>> keywords = keywords.compile()
+    >>> citations_by_term_per_year(df, 'Authors', keywords=keywords)
+        Authors  Year  Cited_by   ID
+    0  author 2  2010        10  [0]
+    1  author 1  2010        10  [0]
+    2  author 3  2011        13  [3]
+    3  author 1  2011        12  [2]
+
+    """
+    result = summary_by_term_per_year(x, column, keywords)
+    result.pop("Num_Documents")
+    result.pop("Cited_by")
+    result.pop("Perc_Num_Documents")
+    result.sort_values(
+        ["Year", "Perc_Cited_by", column], ascending=[True, False, False], inplace=True,
+    )
+    result = result.reset_index(drop=True)
+    if as_matrix == True:
+        result = pd.pivot_table(
+            result, values="Perc_Cited_by", index="Year", columns=column, fill_value=0,
+        )
+        result.columns = result.columns.tolist()
+        result.index = result.index.tolist()
+    return result
 
 
 def growth_indicators(x, column, timewindow=2, keywords=None):
@@ -509,7 +678,7 @@ def __body_0(x):
             "arg": "analysis_type",
             "desc": "Analysis type:",
             "widget": widgets.Dropdown(
-                options=["Frequency", "Citation"],
+                options=["Frequency", "Citation", "Perc. Frequency", "Perc. Cited by"],
                 value="Frequency",
                 layout=Layout(width=WIDGET_WIDTH),
             ),
@@ -567,9 +736,21 @@ def __body_0(x):
         if analysis_type == "Frequency":
             top = documents_by_term(x, term).head(top_n)[term].tolist()
             matrix = documents_by_term_per_year(x, term, as_matrix=True)
-        else:
+        if analysis_type == 'Citation':
             top = citations_by_term(x, term).head(top_n)[term].tolist()
             matrix = citations_by_term_per_year(x, term, as_matrix=True)
+        if analysis_type == 'Perc. Frequency':
+            top = citations_by_term(x, term).head(top_n)[term].tolist()
+            
+            output.clear_output()
+            with output:
+                display(perc_documents_by_term_per_year(x, term, as_matrix=False).head(50))
+                return
+
+            matrix = perc_documents_by_term_per_year(x, term, as_matrix=True)
+        if analysis_type == 'Perc. Cited by':
+            top = citations_by_term(x, term).head(top_n)[term].tolist()
+            matrix = perc_citations_by_term_per_year(x, term, as_matrix=True)
         matrix = matrix[top]
         output.clear_output()
         with output:
@@ -690,7 +871,7 @@ def __body_1(x):
             "widget": widgets.IntSlider(
                     value=10,
                     min=10,
-                    max=50,
+                    max=100,
                     step=1,
                     continuous_update=False,
                     orientation="horizontal",
@@ -715,41 +896,37 @@ def __body_1(x):
         time_window = int(kwargs['time_window'])
         #
         plots = {"bar": plt.bar, "barh": plt.barh}
+        plot = plots[plot_type]
         #
         df = growth_indicators(x, term, timewindow=time_window)
-
-        #     Authors       AGR  ADY  PDLY  Before 2013  Between 2013-2014
-        # 0  author 3  0.666667  1.0  12.5            1                  2
-        # 1  author 4  0.000000  1.0  12.5            1                  2
-
-        #
-        filter = documents_by_term(x, term)       
-        filter = filter.sort_values(
-            ["Num_Documents", term], ascending=False
-        )
-        filter = filter[[term, "Num_Documents"]].head(top_n)[term].tolist()
-        df = df.set_index(term)
-        df = df.loc[filter, :]
-        df = df.reset_index()
-        #
-        plot = plots[plot_type]
         output.clear_output()
+        if plot_type == 'bar':
+            figsize = (14, 7.5)
+        if plot_type == 'barh':
+            figsize = (14, 10.0)
+
         with output:
             if analysis_type == "Average Growth Rate":
-                df = df.sort_values('AGR', ascending=False)
-                display(plot(df[[term, 'AGR']], cmap=cmap, figsize=FIGSIZE))
+                df = df.sort_values('AGR', ascending=False).head(top_n)
+                df = df.reset_index(drop=True)
+                display(plot(df[[term, 'AGR']], cmap=cmap, figsize=figsize))
             if analysis_type == "Average Documents per Year":
-                df = df.sort_values('ADY', ascending=False)
-                display(plot(df[[term, 'ADY']], cmap=cmap, figsize=FIGSIZE))
+                df = df.sort_values('ADY', ascending=False).head(top_n)
+                df = df.reset_index(drop=True)
+                display(plot(df[[term, 'ADY']], cmap=cmap, figsize=figsize))
             if analysis_type == "Percentage of Documents in Last Years":
-                df = df.sort_values('PDYL', ascending=False)
-                display(plot(df[[term, 'PDYL']], cmap=cmap, figsize=FIGSIZE))
+                df = df.sort_values('PDLY', ascending=False).head(top_n)
+                df = df.reset_index(drop=True)
+                display(plot(df[[term, 'PDLY']], cmap=cmap, figsize=figsize))
             if analysis_type == "Number of Document Published":
-                df = df.sort_values('Num_Documents', ascending=False)
+                df['Num_Documents'] = df[df.columns[-2]] + df[df.columns[-1]]
+                df = df.sort_values('Num_Documents', ascending=False).head(top_n)
+                df = df.reset_index(drop=True)
+                df.pop('Num_Documents')
                 if plot_type == 'bar':
-                    display(plt.stacked_bar(df[[term, df.columns[-2], df.columns[-1]]], cmap=cmap))
+                    display(plt.stacked_bar(df[[term, df.columns[-2], df.columns[-1]]], figsize=figsize, cmap=cmap))
                 if plot_type == 'barh':
-                    display(plt.stacked_barh(df[[term, df.columns[-2], df.columns[-1]]], cmap=cmap))
+                    display(plt.stacked_barh(df[[term, df.columns[-2], df.columns[-1]]], figsize=figsize, cmap=cmap))
 
 
     # -------------------------------------------------------------------------

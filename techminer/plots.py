@@ -100,7 +100,14 @@ def bar(
         x.pop("ID")
     if cmap is not None:
         kwargs["color"] = [
-            cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
+            cmap(
+                (
+                    0.2
+                    + 0.75
+                    * (x[x.columns[1]][i] - min(x[x.columns[1]]))
+                    / (max(x[x.columns[1]]) - min(x[x.columns[1]]))
+                )
+            )
             for i in range(len(x[x.columns[1]]))
         ]
     ax.bar(
@@ -161,7 +168,14 @@ def barh(x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **
     if cmap is not None:
         cmap = plt.cm.get_cmap(cmap)
         kwargs["color"] = [
-            cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
+            cmap(
+                (
+                    0.2
+                    + 0.75
+                    * (x[x.columns[1]][i] - min(x[x.columns[1]][i]))
+                    / (max(x[x.columns[1]]) - min(x[x.columns[1]][i]))
+                )
+            )
             for i in range(len(x[x.columns[1]]))
         ]
     ax.barh(
@@ -851,10 +865,13 @@ def stacked_bar(
             width=width,
             bottom=bottom,
             align=align,
+            label=col,
             **({}),
             **kwargs,
         )
         bottom = bottom + x[col]
+
+    ax.legend()
 
     ax.set_xticks(np.arange(len(x[x.columns[0]])))
     ax.set_xticklabels(x[x.columns[0]])
@@ -871,7 +888,7 @@ def stacked_bar(
 
 
 def stacked_barh(
-    self, figsize=(10, 10), height=0.8, left=None, align="center", cmap=None, **kwargs
+    x, figsize=(10, 10), height=0.8, left=None, align="center", cmap=None, **kwargs
 ):
     """Stacked horzontal bar plot.
 

@@ -104,7 +104,7 @@ def documents_by_year(x, cumulative=False):
         DataFrame.
 
     """
-    result = summary_by_year(x, cumulative)
+    result = summary_by_year(x)
     result.pop("Cited_by")
     result = result.reset_index(drop=True)
     return result
@@ -121,7 +121,7 @@ def citations_by_year(x, cumulative=False):
         DataFrame.
 
     """
-    result = summary_by_year(x, cumulative)
+    result = summary_by_year(x)
     result.pop("Num_Documents")
     result = result.reset_index(drop=True)
     return result
