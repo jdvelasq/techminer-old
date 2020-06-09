@@ -121,17 +121,26 @@ def __disambiguate_authors(x):
 
 def __MAP(x, column, f):
     """Applies function f to column in dataframe x.
+
+    >>> import pandas as pd
+    >>> x = pd.DataFrame({'Affiliations': ['USA; Russian Federation']})
+    >>> __MAP(x, 'Affiliations', lambda w: __extract_country(w))
+    0    United States;Russia
+    Name: Affiliations, dtype: object
+
+
     """
     x = x.copy()
-    if column[0] in [
-        "Authors",
-        "Authors_ID",
-        "Author_Keywords",
+    if column in [
+        "Affiliations",
         "Author_Keywords_ID",
-        "Index_Keywords",
-        "Index_Keywords_ID",
-        "Institutions",
+        "Author_Keywords",
+        "Authors_ID",
+        "Authors",
         "Countries",
+        "Index_Keywords_ID",
+        "Index_Keywords",
+        "Institutions",
     ]:
         z = x[column].map(lambda w: w.split(';') if not pd.isna(w) else w)
         z = z.map(lambda w: [f(z) for z in w] if isinstance(w, list) else w)
@@ -148,6 +157,9 @@ def __extract_country(x):
     ----------------------------------------------------------------------------------------------
 
     >>> __extract_country('United States of America')
+    'United States'
+
+    >>> __extract_country('USA')
     'United States'
 
     >>> __extract_country('Peoples R China')
@@ -178,7 +190,7 @@ def __extract_country(x):
     #
     x = x.title()
     x = re.sub("United States Of America", "United States", x)
-    x = re.sub("USA", "United States", x)
+    x = re.sub("Usa", "United States", x)
     x = re.sub("Bosnia and Herzegovina", "Bosnia and Herz.", x)
     x = re.sub("Czech Republic", "Czechia", x)
     x = re.sub("Russian Federation", "Russia", x)

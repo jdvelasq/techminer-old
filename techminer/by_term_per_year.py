@@ -312,6 +312,145 @@ Analysis by Term per Year
 #     return result
 
 
+
+def growth_indicators(self, column, timewindow=2, keywords=None):
+    """Computes the average growth rate of a group of terms.
+
+    Args:
+        column (str): the column to explode.
+        timewindow (int): time window for analysis
+        keywords (Keywords): filter the result using the specified Keywords object.
+
+    Returns:
+        DataFrame.
+
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...          "Year": [2010, 2010, 2011, 2011, 2012, 2013, 2014, 2014],
+    ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4,author 0;author 3,author 3;author 4".split(","),
+    ...          "Cited_by": list(range(10,18)),
+    ...          "ID": list(range(8)),
+    ...     }
+    ... )
+    >>> df
+       Year                     Authors  Cited_by  ID
+    0  2010  author 0;author 1;author 2        10   0
+    1  2010                    author 0        11   1
+    2  2011                    author 1        12   2
+    3  2011                    author 3        13   3
+    4  2012                    author 4        14   4
+    5  2013                    author 4        15   5
+    6  2014           author 0;author 3        16   6
+    7  2014           author 3;author 4        17   7
+
+    >>> DataFrame(df).documents_by_term_per_year('Authors', as_matrix=True)
+            author 0  author 1  author 2  author 3  author 4
+    2010         2         1         1         0         0
+    2011         0         1         0         1         0
+    2012         0         0         0         0         1
+    2013         0         0         0         0         1
+    2014         1         0         0         2         1
+
+    >>> DataFrame(df).growth_indicators('Authors')
+        Authors       AGR  ADY   PDLY  Before 2013  Between 2013-2014
+    0  author 3  0.666667  1.0  12.50            1                  2
+    1  author 0  0.333333  0.5   6.25            2                  1
+    2  author 4  0.000000  1.0  12.50            1                  2
+
+    >>> keywords = Keywords(['author 3', 'author 4'])
+    >>> keywords = keywords.compile()
+    >>> DataFrame(df).growth_indicators('Authors', keywords=keywords)
+        Authors       AGR  ADY  PDLY  Before 2013  Between 2013-2014
+    0  author 3  0.666667  1.0  12.5            1                  2
+    1  author 4  0.000000  1.0  12.5            1                  2
+
+    """
+
+    def compute_agr():
+        result = self.documents_by_term_per_year(
+            column=column, sep=sep, keywords=keywords
+        )
+        years_agr = sorted(set(result.Year))[-(timewindow + 1) :]
+        years_agr = [years_agr[0], years_agr[-1]]
+        result = result[result.Year.map(lambda w: w in years_agr)]
+        result.pop("ID")
+        result = pd.pivot_table(
+            result,
+            columns="Year",
+            index=column,
+            values="Num_Documents",
+            fill_value=0,
+        )
+        result["AGR"] = 0.0
+        result = result.assign(
+            AGR=(result[years_agr[1]] - result[years_agr[0]]) / (timewindow + 1)
+        )
+        result.pop(years_agr[0])
+        result.pop(years_agr[1])
+        result = result.reset_index()
+        result.columns = list(result.columns)
+        result = result.sort_values(by=["AGR", column], ascending=False)
+        return result
+
+    def compute_ady():
+        result = self.documents_by_term_per_year(
+            column=column, sep=sep, keywords=keywords
+        )
+        years_ady = sorted(set(result.Year))[-timewindow:]
+        result = result[result.Year.map(lambda w: w in years_ady)]
+        result = result.groupby([column], as_index=False).agg(
+            {"Num_Documents": np.sum}
+        )
+        result = result.set_index(column)
+        result = result.rename(columns={"Num_Documents": "ADY"})
+        result["ADY"] = result.ADY.map(lambda w: w / timewindow)
+        return result.ADY
+
+    def compute_num_documents():
+        result = self.documents_by_term_per_year(
+            column=column, sep=sep, keywords=keywords
+        )
+        years_between = sorted(set(result.Year))[-timewindow:]
+        years_before = sorted(set(result.Year))[0:-timewindow]
+        between = result[result.Year.map(lambda w: w in years_between)]
+        before = result[result.Year.map(lambda w: w in years_before)]
+        between = between.groupby([column], as_index=False).agg(
+            {"Num_Documents": np.sum}
+        )
+        between = between.rename(
+            columns={
+                "Num_Documents": "Between {}-{}".format(
+                    years_between[0], years_between[-1]
+                )
+            }
+        )
+        before = before.groupby([column], as_index=False).agg(
+            {"Num_Documents": np.sum}
+        )
+        before = before.rename(
+            columns={"Num_Documents": "Before {}".format(years_between[0])}
+        )
+        result = pd.merge(before, between, on=column)
+        result = result.set_index(column)
+        return result
+
+    result = compute_agr()
+    result = result.set_index(column)
+    ady = compute_ady()
+    result.at[ady.index, "ADY"] = ady
+    result = result.assign(PDLY=round(result.ADY / len(self) * 100, 2))
+    num_docs = compute_num_documents()
+    result = pd.merge(result, num_docs, on=column)
+    result = result.reset_index()
+    return result
+
+
+
 # ##
 # ##
 # ## APP
