@@ -626,15 +626,16 @@ FIGSIZE = (14, 10.0)
 PANE_HEIGHTS = ["80px", "750px", 0]
 
 COLUMNS = [
-    "Author Keywords",
+    "Author_Keywords",
+    "Author_Keywords_CL",
     "Authors",
     "Countries",
-    "Country 1st",
-    "Document type",
-    "Index Keywords",
-    "Institution 1st",
+    "Country_1st_Author",
+    "Document_type",
+    "Index_Keywords",
+    "Index_Keywords_CL",
+    "Institution_1st_Author",
     "Institutions",
-    "Keywords",
     "Source title",
 ]
 
@@ -711,7 +712,7 @@ def __body_0(x):
             "arg": "view",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Matrix", "Correlation map", "Chord diagram"],
+                options=["Matrix", "Heatmap", "Correlation map", "Chord diagram"],
                 ensure_option=True,
                 continuous_update=True,
                 layout=Layout(width=WIDGET_WIDTH),
@@ -804,7 +805,7 @@ def __body_0(x):
             controls[4]["widget"].value = controls[4]["widget"].options[0]
         #
         #
-        if view == "Matrix":
+        if view == "Matrix" or view == "Heatmap":
             controls[7]["widget"].disabled = False
             controls[8]["widget"].disabled = False
             controls[9]["widget"].disabled = True
@@ -846,7 +847,7 @@ def __body_0(x):
         #
         output.clear_output()
         with output:
-            if view == "Matrix":
+            if view == "Matrix" or view == "Heatmap":
                 #
                 # Sort order
                 #
@@ -869,11 +870,16 @@ def __body_0(x):
                 #
                 # View
                 #
-                display(
-                    matrix.style.format(
-                        lambda q: "{:+4.3f}".format(q) if q >= min_link_value else ""
-                    ).background_gradient(cmap=cmap)
-                )
+                if view == "Matrix":
+                    display(
+                        matrix.style.format(
+                            lambda q: "{:+4.3f}".format(q)
+                            if q >= min_link_value
+                            else ""
+                        ).background_gradient(cmap=cmap)
+                    )
+                if view == "Heatmap":
+                    display(plt.heatmap(matrix, cmap=cmap, figsize=(14, 8.5)))
                 #
             if view == "Correlation map":
                 #

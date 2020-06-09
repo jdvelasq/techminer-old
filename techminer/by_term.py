@@ -434,6 +434,7 @@ def __body_0(x):
         output.clear_output()
         with output:
             display(plot(df, cmap=cmap, figsize=FIGSIZE))
+            
 
     # -------------------------------------------------------------------------
     #

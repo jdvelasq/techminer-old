@@ -95,10 +95,10 @@ def bar(
     """
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
-    cmap = plt.cm.get_cmap(cmap)
     if "ID" in x.columns:
         x.pop("ID")
     if cmap is not None:
+        cmap = plt.cm.get_cmap(cmap)
         kwargs["color"] = [
             cmap(
                 (
@@ -172,11 +172,11 @@ def barh(x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **
                 (
                     0.2
                     + 0.75
-                    * (x[x.columns[1]][i] - min(x[x.columns[1]][i]))
-                    / (max(x[x.columns[1]]) - min(x[x.columns[1]][i]))
+                    * (x[x.columns[1]][i] - min(x[x.columns[1]]))
+                    / (max(x[x.columns[1]]) - min(x[x.columns[1]]))
                 )
             )
-            for i in range(len(x[x.columns[1]]))
+            for i in range(len(x))
         ]
     ax.barh(
         y=range(len(x)),
