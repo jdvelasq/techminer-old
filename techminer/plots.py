@@ -12,18 +12,19 @@ from os.path import dirname, join
 
 import matplotlib.pyplot as plt
 import numpy as np
-
+import squarify
 from techminer.chord_diagram import ChordDiagram
+from wordcloud import ImageColorGenerator, WordCloud
 
-# import numpy as np
-# import pandas as pd
-# import squarify
 # from mpl_toolkits.axes_grid1 import make_axes_locatable
 # from scipy.spatial import ConvexHull
 # from sklearn.cluster import AgglomerativeClustering
-# from wordcloud import ImageColorGenerator, WordCloud
 
 # from .chord_diagram import ChordDiagram
+
+# import numpy as np
+# import pandas as pd
+
 
 TEXTLEN = 30
 
@@ -185,6 +186,140 @@ def barh(x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **
     return fig
 
 
+def bubble(
+    x,
+    axis=0,
+    rmax=80,
+    figsize=(9, 9),
+    cmap="Blues",
+    grid_lw=1.0,
+    grid_c="gray",
+    grid_ls=":",
+    **kwargs
+):
+
+    """Creates a gant activity plot from a dataframe.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         "author 0": [ 1, 2, 3, 4, 5, 6, 7],
+    ...         "author 1": [14, 13, 12, 11, 10, 9, 8],
+    ...         "author 2": [1, 5, 8, 9, 0, 0, 0],
+    ...         "author 3": [0, 0, 1, 1, 1, 0, 0],
+    ...         "author 4": [0, 10, 0, 4, 2, 0, 1],
+    ...     },
+    ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
+    ... )
+    >>> df
+            author 0  author 1  author 2  author 3  author 4
+    2010         1        14         1         0         0
+    2011         2        13         5         0        10
+    2012         3        12         8         1         0
+    2013         4        11         9         1         4
+    2014         5        10         0         1         2
+    2015         6         9         0         0         0
+    2016         7         8         0         0         1
+
+    >>> fig = bubble(df, axis=0, alpha=0.5, rmax=150)
+    >>> fig.savefig('sphinx/images/bubbleplot0.png')
+
+    .. image:: images/bubbleplot0.png
+        :width: 400px
+        :align: center
+
+    >>> fig = bubble(df, axis=1, alpha=0.5, rmax=150)
+    >>> fig.savefig('sphinx/images/bubbleplot1.png')
+
+    .. image:: images/bubbleplot1.png
+        :width: 400px
+        :align: center
+
+
+    """
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    cmap = plt.cm.get_cmap(cmap)
+    x = x.copy()
+    if axis == "index":
+        axis == 0
+    if axis == "columns":
+        axis == 1
+
+    vmax = x.max().max()
+    vmin = x.min().min()
+
+    rmin = 0
+
+    if axis == 0:
+        for idx, row in enumerate(x.iterrows()):
+            values = [
+                10 * (rmin + (rmax - rmin) * w / (vmax - vmin)) for w in row[1].tolist()
+            ]
+            ax.scatter(
+                range(len(x.columns)),
+                [idx] * len(x.columns),
+                marker="o",
+                s=values,
+                **kwargs,
+            )
+            ax.hlines(
+                idx,
+                -1,
+                len(x.columns),
+                linewidth=grid_lw,
+                color=grid_c,
+                linestyle=grid_ls,
+            )
+    else:
+        for idx, col in enumerate(x.columns):
+            values = [10 * (rmin + (rmax - rmin) * w / (vmax - vmin)) for w in x[col]]
+            ax.scatter(
+                [idx] * len(x.index),
+                range(len(x.index)),
+                marker="o",
+                s=values,
+                **kwargs,
+            )
+            ax.vlines(
+                idx,
+                -1,
+                len(x.index),
+                linewidth=grid_lw,
+                color=grid_c,
+                linestyle=grid_ls,
+            )
+
+    for idx_col, col in enumerate(x.columns):
+        for idx_row, row in enumerate(x.index):
+
+            if x[col][row] != 0:
+                ax.text(idx_col, idx_row, x[col][row], va="center", ha="center")
+
+    ax.set_xlim(-1, len(x.columns))
+    ax.set_ylim(-1, len(x.index) + 1)
+
+    ax.set_xticks(np.arange(len(x.columns)))
+    ax.set_xticklabels(x.columns)
+    ax.tick_params(axis="x", labelrotation=90)
+    ax.xaxis.tick_top()
+
+    ax.invert_yaxis()
+    ax.set_yticks(np.arange(len(x.index)))
+    ax.set_yticklabels(x.index)
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
+
+    return fig
+
+
 def pie(
     x,
     figsize=(8, 8),
@@ -261,68 +396,163 @@ def pie(
     return fig
 
 
-def worldmap(x, figsize=(10, 5), cmap="Pastel2", legend=True, *args, **kwargs):
-    """Worldmap plot with the number of documents per country.
+#     def plot(self, *args, scalex=True, scaley=True, **kwargs):
+#         """Creates a plot from a dataframe.
 
-    Examples
-    ----------------------------------------------------------------------------------------------
+#         Examples
+#         ----------------------------------------------------------------------------------------------
 
-    >>> import pandas as pd
-    >>> x = pd.DataFrame(
-    ...     {
-    ...         "AU_CO": ["China", "Taiwan", "United States", "United Kingdom", "India", "Colombia"],
-    ...         "Num_Documents": [1000, 900, 800, 700, 600, 1000],
-    ...     },
-    ... )
-    >>> x
-                AU_CO  Num Documents
-    0           China           1000
-    1          Taiwan            900
-    2   United States            800
-    3  United Kingdom            700
-    4           India            600
-    5        Colombia           1000
+#         >>> import pandas as pd
+#         >>> df = pd.DataFrame(
+#         ...     {
+#         ...         "author 0": [ 1, 2, 3, 4, 5, 6, 7],
+#         ...         "author 1": [14, 13, 12, 11, 10, 9, 8],
+#         ...         "author 2": [1, 5, 8, 9, 0, 0, 0],
+#         ...         "author 3": [0, 0, 1, 1, 1, 0, 0],
+#         ...         "author 4": [0, 10, 0, 4, 2, 0, 1],
+#         ...     },
+#         ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
+#         ... )
+#         >>> df
+#               author 0  author 1  author 2  author 3  author 4
+#         2010         1        14         1         0         0
+#         2011         2        13         5         0        10
+#         2012         3        12         8         1         0
+#         2013         4        11         9         1         4
+#         2014         5        10         0         1         2
+#         2015         6         9         0         0         0
+#         2016         7         8         0         0         1
+#         >>> _ = Plot(df).plot()
+#         >>> plt.savefig('sphinx/images/plotplot.png')
+
+#         .. image:: images/plotplot.png
+#             :width: 400px
+#             :align: center
 
 
-    >>> fig = worldmap(x, figsize=(15, 6))
-    >>> fig.savefig('sphinx/images/worldmap.png')
+#         """
+#         plt.clf()
+#         x = self.df.copy()
+#         if "ID" in x.columns:
+#             x.pop("ID")
+#             plt.gca().plot(
+#                 range(len(x)),
+#                 x[x.columns[1]],
+#                 *args,
+#                 scalex=scalex,
+#                 scaley=scaley,
+#                 **kwargs,
+#             )
+#             plt.xticks(
+#                 np.arange(len(x[x.columns[0]])), x[x.columns[0]], rotation="vertical"
+#             )
+#             plt.xlabel(x.columns[0])
+#             plt.ylabel(x.columns[1])
+#         else:
+#             for col in x.columns:
+#                 plt.plot(x.index, x[col], label=col, **kwargs)
+#             plt.legend()
 
-    .. image:: images/worldmap.png
-        :width: 2000px
-        :align: center
+#         plt.gca().spines["top"].set_visible(False)
+#         plt.gca().spines["right"].set_visible(False)
+#         plt.gca().spines["left"].set_visible(False)
+#         plt.gca().spines["bottom"].set_visible(False)
+#         return plt.gca()
 
+#     def wordcloud(
+#         self,
+#         font_path=None,
+#         width=400,
+#         height=200,
+#         margin=2,
+#         ranks_only=None,
+#         prefer_horizontal=0.9,
+#         mask=None,
+#         scale=1,
+#         color_func=None,
+#         max_words=200,
+#         min_font_size=4,
+#         stopwords=None,
+#         random_state=None,
+#         background_color="black",
+#         max_font_size=None,
+#         font_step=1,
+#         mode="RGB",
+#         relative_scaling="auto",
+#         regexp=None,
+#         collocations=True,
+#         colormap=None,
+#         normalize_plurals=True,
+#         contour_width=0,
+#         contour_color="black",
+#         repeat=False,
+#         include_numbers=False,
+#         min_word_length=0,
+#     ):
+#         """Plots a wordcloud from a dataframe.
 
-    """
-    module_path = dirname(__file__)
-    fig = plt.Figure(figsize=figsize)
-    ax = fig.subplots()
-    x = x.copy()
-    x["color"] = x[x.columns[1]].map(lambda w: w / x[x.columns[1]].max())
-    x = x.set_index(x.columns[0])
-    cmap = plt.cm.get_cmap(cmap)
-    with open(join(module_path, "data/worldmap.data"), "r") as f:
-        countries = json.load(f)
-    for country in countries.keys():
-        data = countries[country]
-        for item in data:
-            ax.plot(item[0], item[1], "-k", linewidth=0.5)
-            if country in x.index.tolist():
-                ax.fill(item[0], item[1], color=cmap(x.color[country]))
-    #
-    xmin, xmax = ax.get_xlim()
-    ymin, ymax = ax.get_ylim()
-    xleft = xmax - 0.02 * (xmax - xmin)
-    xright = xmax
-    xbar = np.linspace(xleft, xright, 10)
-    ybar = np.linspace(ymin, ymin + (ymax - ymin), 100)
-    xv, yv = np.meshgrid(xbar, ybar)
-    z = yv / (ymax - ymin) - ymin
-    ax.pcolormesh(xv, yv, z, cmap=cmap)
-    ax.text(xleft, ymin, "0", ha="right")
-    ax.text(xleft, ymax, str(x[x.columns[0]].max()), ha="right")
-    ax.set_aspect("equal")
-    ax.axis("off")
-    return fig
+#         Examples
+#         ----------------------------------------------------------------------------------------------
+
+#         >>> import pandas as pd
+#         >>> df = pd.DataFrame(
+#         ...     {
+#         ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+#         ...         "Num_Documents": [10, 5, 2, 1],
+#         ...         "ID": list(range(4)),
+#         ...     }
+#         ... )
+#         >>> df
+#             Authors  Num Documents  ID
+#         0  author 3             10   0
+#         1  author 1              5   1
+#         2  author 0              2   2
+#         3  author 2              1   3
+#         >>> _ = Plot(df).wordcloud()
+#         >>> plt.savefig('sphinx/images/wordcloud.png')
+
+#         .. image:: images/wordcloud.png
+#             :width: 400px
+#             :align: center
+
+#         """
+#         plt.clf()
+#         x = self.df.copy()
+#         x.pop("ID")
+#         words = {row[0]: row[1] for _, row in x.iterrows()}
+#         wordcloud = WordCloud(
+#             font_path=font_path,
+#             width=width,
+#             height=height,
+#             margin=margin,
+#             ranks_only=ranks_only,
+#             prefer_horizontal=prefer_horizontal,
+#             mask=mask,
+#             scale=scale,
+#             color_func=color_func,
+#             max_words=max_words,
+#             min_font_size=min_font_size,
+#             stopwords=stopwords,
+#             random_state=random_state,
+#             background_color=background_color,
+#             max_font_size=max_font_size,
+#             font_step=font_step,
+#             mode=mode,
+#             relative_scaling=relative_scaling,
+#             regexp=regexp,
+#             collocations=collocations,
+#             colormap=colormap,
+#             normalize_plurals=normalize_plurals,
+#             contour_width=contour_width,
+#             contour_color=contour_color,
+#             repeat=repeat,
+#             include_numbers=include_numbers,
+#             min_word_length=min_word_length,
+#         )
+#         wordcloud.generate_from_frequencies(words)
+#         plt.gca().imshow(wordcloud, interpolation="bilinear")
+#         plt.gca().axis("off")
+#         return plt.gca()
 
 
 def gant(
@@ -533,6 +763,199 @@ def heatmap(x, figsize=(8, 8), **kwargs):
     return fig
 
 
+def stacked_bar(
+    x, figsize=(10, 10), width=0.8, bottom=None, align="center", cmap="Greys", **kwargs
+):
+    """Stacked vertical bar plot.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         "Authors": "author 0,author 1,author 2,author 3,author 3,author 5".split(","),
+    ...         "col 0": [6, 5, 4, 3, 2, 1],
+    ...         "col 1": [0, 2, 5, 1, 5, 7],
+    ...         "ID": list(range(6)),
+    ...     }
+    ... )
+    >>> df
+        Authors  col 0  col 1  ID
+    0  author 0      6      0   0
+    1  author 1      5      2   1
+    2  author 2      4      5   2
+    3  author 3      3      1   3
+    4  author 3      2      5   4
+    5  author 5      1      7   5
+
+    >>> _ = Plot(df).stacked_bar(cmap='Blues')
+    >>> plt.savefig('sphinx/images/stkbar0.png')
+
+    .. image:: images/stkbar0.png
+        :width: 400px
+        :align: center
+
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         "Authors": "author 0,author 1,author 2,author 3,author 3,author 5".split(","),
+    ...         "col 0": [6, 5, 2, 3, 4, 1],
+    ...         "col 1": [0, 1, 2, 3, 4, 5],
+    ...         "col 2": [3, 2, 3, 1, 0, 1],
+    ...         "ID": list(range(6)),
+    ...     }
+    ... )
+    >>> df
+        Authors  col 0  col 1  col 2  ID
+    0  author 0      6      0      3   0
+    1  author 1      5      1      2   1
+    2  author 2      2      2      3   2
+    3  author 3      3      3      1   3
+    4  author 3      4      4      0   4
+    5  author 5      1      5      1   5
+
+    >>> _ = Plot(df).stacked_bar(cmap='Blues')
+    >>> plt.savefig('sphinx/images/stkbar1.png')
+
+    .. image:: images/stkbar1.png
+        :width: 400px
+        :align: center
+
+    """
+
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    cmap = plt.cm.get_cmap(cmap)
+    x = x.copy()
+    if "ID" in x.columns:
+        x.pop("ID")
+    if bottom is None:
+        bottom = x[x.columns[1]].map(lambda w: 0.0)
+    for icol, col in enumerate(x.columns[1:]):
+        if cmap is not None:
+            kwargs["color"] = cmap((0.2 + 0.75 * icol / (len(x.columns) - 1)))
+        ax.bar(
+            x=range(len(x)),
+            height=x[col],
+            width=width,
+            bottom=bottom,
+            align=align,
+            **({}),
+            **kwargs,
+        )
+        bottom = bottom + x[col]
+
+    ax.set_xticks(np.arange(len(x[x.columns[0]])))
+    ax.set_xticklabels(x[x.columns[0]])
+    ax.tick_params(axis="x", labelrotation=90)
+    #
+    ax.set_xlabel(x.columns[0])
+    ax.set_ylabel(x.columns[1])
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
+
+    return fig
+
+
+def stacked_barh(
+    self, figsize=(10, 10), height=0.8, left=None, align="center", cmap=None, **kwargs
+):
+    """Stacked horzontal bar plot.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         "Authors": "author 0,author 1,author 2,author 3,author 3,author 5".split(","),
+    ...         "col 0": [6, 5, 4, 3, 2, 1],
+    ...         "col 1": [0, 2, 5, 1, 5, 7],
+    ...         "ID": list(range(6)),
+    ...     }
+    ... )
+    >>> df
+        Authors  col 0  col 1  ID
+    0  author 0      6      0   0
+    1  author 1      5      2   1
+    2  author 2      4      5   2
+    3  author 3      3      1   3
+    4  author 3      2      5   4
+    5  author 5      1      7   5
+
+    >>> _ = Plot(df).stacked_barh(cmap='Blues')
+    >>> plt.savefig('sphinx/images/stkbarh0.png')
+
+    .. image:: images/stkbarh0.png
+        :width: 400px
+        :align: center
+
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         "Authors": "author 0,author 1,author 2,author 3,author 3,author 5".split(","),
+    ...         "col 0": [6, 5, 2, 3, 4, 1],
+    ...         "col 1": [0, 1, 2, 3, 4, 5],
+    ...         "col 2": [3, 2, 3, 1, 0, 1],
+    ...         "ID": list(range(6)),
+    ...     }
+    ... )
+    >>> df
+        Authors  col 0  col 1  col 2  ID
+    0  author 0      6      0      3   0
+    1  author 1      5      1      2   1
+    2  author 2      2      2      3   2
+    3  author 3      3      3      1   3
+    4  author 3      4      4      0   4
+    5  author 5      1      5      1   5
+
+    >>> _ = Plot(df).stacked_barh(cmap='Blues')
+    >>> plt.savefig('sphinx/images/stkbarh1.png')
+
+    .. image:: images/stkbarh1.png
+        :width: 400px
+        :align: center
+
+    """
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+    cmap = plt.cm.get_cmap(cmap)
+
+    x = x.copy()
+    if "ID" in x.columns:
+        x.pop("ID")
+    if left is None:
+        left = x[x.columns[1]].map(lambda w: 0.0)
+    for icol, col in enumerate(x.columns[1:]):
+        if cmap is not None:
+            kwargs["color"] = cmap((0.2 + 0.75 * icol / (len(x.columns) - 1)))
+        ax.barh(
+            y=range(len(x)),
+            width=x[col],
+            height=height,
+            left=left,
+            align=align,
+            **({}),
+            **kwargs,
+        )
+        left = left + x[col]
+
+    ax.invert_yaxis()
+    ax.set_yticks(np.arange(len(x[x.columns[0]])))
+    ax.set_yticklabels(x[x.columns[0]])
+    ax.set_xlabel(x.columns[1])
+    ax.set_ylabel(x.columns[0])
+    #
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
+
+    return fig
+
+
 def chord_diagram(
     x,
     figsize=(10, 10),
@@ -695,521 +1118,69 @@ def chord_diagram(
     return cd.plot(figsize=figsize)
 
 
-# #############################################################################################################
+def worldmap(x, figsize=(10, 5), cmap="Pastel2", legend=True, *args, **kwargs):
+    """Worldmap plot with the number of documents per country.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = pd.DataFrame(
+    ...     {
+    ...         "AU_CO": ["China", "Taiwan", "United States", "United Kingdom", "India", "Colombia"],
+    ...         "Num_Documents": [1000, 900, 800, 700, 600, 1000],
+    ...     },
+    ... )
+    >>> x
+                AU_CO  Num Documents
+    0           China           1000
+    1          Taiwan            900
+    2   United States            800
+    3  United Kingdom            700
+    4           India            600
+    5        Colombia           1000
 
 
-# class Plot:
-#     def __init__(self, df):
-#         self.df = df
+    >>> fig = worldmap(x, figsize=(15, 6))
+    >>> fig.savefig('sphinx/images/worldmap.png')
+
+    .. image:: images/worldmap.png
+        :width: 2000px
+        :align: center
 
 
-#     def tree(self, cmap="Blues", alpha=0.9):
-#         """Creates a classification plot from a dataframe.
+    """
+    module_path = dirname(__file__)
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+    x = x.copy()
+    x["color"] = x[x.columns[1]].map(lambda w: w / x[x.columns[1]].max())
+    x = x.set_index(x.columns[0])
+    cmap = plt.cm.get_cmap(cmap)
+    with open(join(module_path, "data/worldmap.data"), "r") as f:
+        countries = json.load(f)
+    for country in countries.keys():
+        data = countries[country]
+        for item in data:
+            ax.plot(item[0], item[1], "-k", linewidth=0.5)
+            if country in x.index.tolist():
+                ax.fill(item[0], item[1], color=cmap(x.color[country]))
+    #
+    xmin, xmax = ax.get_xlim()
+    ymin, ymax = ax.get_ylim()
+    xleft = xmax - 0.02 * (xmax - xmin)
+    xright = xmax
+    xbar = np.linspace(xleft, xright, 10)
+    ybar = np.linspace(ymin, ymin + (ymax - ymin), 100)
+    xv, yv = np.meshgrid(xbar, ybar)
+    z = yv / (ymax - ymin) - ymin
+    ax.pcolormesh(xv, yv, z, cmap=cmap)
+    ax.text(xleft, ymin, "0", ha="right")
+    ax.text(xleft, ymax, str(x[x.columns[0]].max()), ha="right")
+    ax.set_aspect("equal")
+    ax.axis("off")
+    return fig
 
-#         Examples
-#         ----------------------------------------------------------------------------------------------
-
-#         >>> import pandas as pd
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-#         ...         "Num_Documents": [10, 5, 2, 1],
-#         ...         "ID": list(range(4)),
-#         ...     }
-#         ... )
-#         >>> df
-#             Authors  Num Documents  ID
-#         0  author 3             10   0
-#         1  author 1              5   1
-#         2  author 0              2   2
-#         3  author 2              1   3
-
-#         >>> _ = Plot(df).tree()
-#         >>> plt.savefig('sphinx/images/treeplot.png')
-
-#         .. image:: images/treeplot.png
-#             :width: 400px
-#             :align: center
-
-
-#         """
-#         plt.clf()
-#         x = self.df.copy()
-#         cmap = plt.cm.get_cmap(cmap)
-#         colors = [
-#             cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
-#             for i in range(len(x[x.columns[1]]))
-#         ]
-#         squarify.plot(
-#             sizes=x[x.columns[1]], label=x[x.columns[0]], color=colors, alpha=alpha
-#         )
-#         plt.gca().axis("off")
-#         return plt.gca()
-
-#     def bubble(
-#         self,
-#         axis=0,
-#         rmax=80,
-#         cmap="Blues",
-#         grid_lw=1.0,
-#         grid_c="gray",
-#         grid_ls=":",
-#         **kwargs
-#     ):
-
-#         """Creates a gant activity plot from a dataframe.
-
-#         Examples
-#         ----------------------------------------------------------------------------------------------
-
-#         >>> import pandas as pd
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         "author 0": [ 1, 2, 3, 4, 5, 6, 7],
-#         ...         "author 1": [14, 13, 12, 11, 10, 9, 8],
-#         ...         "author 2": [1, 5, 8, 9, 0, 0, 0],
-#         ...         "author 3": [0, 0, 1, 1, 1, 0, 0],
-#         ...         "author 4": [0, 10, 0, 4, 2, 0, 1],
-#         ...     },
-#         ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
-#         ... )
-#         >>> df
-#               author 0  author 1  author 2  author 3  author 4
-#         2010         1        14         1         0         0
-#         2011         2        13         5         0        10
-#         2012         3        12         8         1         0
-#         2013         4        11         9         1         4
-#         2014         5        10         0         1         2
-#         2015         6         9         0         0         0
-#         2016         7         8         0         0         1
-
-#         >>> _ = Plot(df).bubble(axis=0, alpha=0.5, rmax=150)
-#         >>> plt.savefig('sphinx/images/bubbleplot0.png')
-
-#         .. image:: images/bubbleplot0.png
-#             :width: 400px
-#             :align: center
-
-#         >>> _ = Plot(df).bubble(axis=1, alpha=0.5, rmax=150)
-#         >>> plt.savefig('sphinx/images/bubbleplot1.png')
-
-#         .. image:: images/bubbleplot1.png
-#             :width: 400px
-#             :align: center
-
-
-#         """
-#         plt.clf()
-#         cmap = plt.cm.get_cmap(cmap)
-#         x = self.df.copy()
-#         if axis == "index":
-#             axis == 0
-#         if axis == "columns":
-#             axis == 1
-
-#         vmax = x.max().max()
-#         vmin = x.min().min()
-
-#         rmin = 0
-
-#         if axis == 0:
-#             for idx, row in enumerate(x.iterrows()):
-#                 values = [
-#                     10 * (rmin + (rmax - rmin) * w / (vmax - vmin))
-#                     for w in row[1].tolist()
-#                 ]
-#                 plt.gca().scatter(
-#                     range(len(x.columns)),
-#                     [idx] * len(x.columns),
-#                     marker="o",
-#                     s=values,
-#                     **kwargs,
-#                 )
-#                 plt.hlines(
-#                     idx,
-#                     -1,
-#                     len(x.columns),
-#                     linewidth=grid_lw,
-#                     color=grid_c,
-#                     linestyle=grid_ls,
-#                 )
-#         else:
-#             for idx, col in enumerate(x.columns):
-#                 values = [
-#                     10 * (rmin + (rmax - rmin) * w / (vmax - vmin)) for w in x[col]
-#                 ]
-#                 plt.gca().scatter(
-#                     [idx] * len(x.index),
-#                     range(len(x.index)),
-#                     marker="o",
-#                     s=values,
-#                     **kwargs,
-#                 )
-#                 plt.vlines(
-#                     idx,
-#                     -1,
-#                     len(x.index),
-#                     linewidth=grid_lw,
-#                     color=grid_c,
-#                     linestyle=grid_ls,
-#                 )
-
-#         for idx_col, col in enumerate(x.columns):
-#             for idx_row, row in enumerate(x.index):
-
-#                 if x[col][row] != 0:
-#                     plt.text(idx_col, idx_row, x[col][row], va="center", ha="center")
-
-#         plt.xlim(-1, len(x.columns))
-#         plt.ylim(-1, len(x.index) + 1)
-
-#         plt.xticks(
-#             np.arange(len(x.columns)),
-#             x.columns,
-#             rotation="vertical",
-#             horizontalalignment="center",
-#         )
-#         plt.yticks(np.arange(len(x.index)), x.index)
-
-#         plt.gca().spines["top"].set_visible(False)
-#         plt.gca().spines["right"].set_visible(False)
-#         plt.gca().spines["left"].set_visible(False)
-#         plt.gca().spines["bottom"].set_visible(False)
-
-#         return plt.gca()
-
-
-#     def plot(self, *args, scalex=True, scaley=True, **kwargs):
-#         """Creates a plot from a dataframe.
-
-#         Examples
-#         ----------------------------------------------------------------------------------------------
-
-#         >>> import pandas as pd
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         "author 0": [ 1, 2, 3, 4, 5, 6, 7],
-#         ...         "author 1": [14, 13, 12, 11, 10, 9, 8],
-#         ...         "author 2": [1, 5, 8, 9, 0, 0, 0],
-#         ...         "author 3": [0, 0, 1, 1, 1, 0, 0],
-#         ...         "author 4": [0, 10, 0, 4, 2, 0, 1],
-#         ...     },
-#         ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
-#         ... )
-#         >>> df
-#               author 0  author 1  author 2  author 3  author 4
-#         2010         1        14         1         0         0
-#         2011         2        13         5         0        10
-#         2012         3        12         8         1         0
-#         2013         4        11         9         1         4
-#         2014         5        10         0         1         2
-#         2015         6         9         0         0         0
-#         2016         7         8         0         0         1
-#         >>> _ = Plot(df).plot()
-#         >>> plt.savefig('sphinx/images/plotplot.png')
-
-#         .. image:: images/plotplot.png
-#             :width: 400px
-#             :align: center
-
-
-#         """
-#         plt.clf()
-#         x = self.df.copy()
-#         if "ID" in x.columns:
-#             x.pop("ID")
-#             plt.gca().plot(
-#                 range(len(x)),
-#                 x[x.columns[1]],
-#                 *args,
-#                 scalex=scalex,
-#                 scaley=scaley,
-#                 **kwargs,
-#             )
-#             plt.xticks(
-#                 np.arange(len(x[x.columns[0]])), x[x.columns[0]], rotation="vertical"
-#             )
-#             plt.xlabel(x.columns[0])
-#             plt.ylabel(x.columns[1])
-#         else:
-#             for col in x.columns:
-#                 plt.plot(x.index, x[col], label=col, **kwargs)
-#             plt.legend()
-
-#         plt.gca().spines["top"].set_visible(False)
-#         plt.gca().spines["right"].set_visible(False)
-#         plt.gca().spines["left"].set_visible(False)
-#         plt.gca().spines["bottom"].set_visible(False)
-#         return plt.gca()
-
-#     def wordcloud(
-#         self,
-#         font_path=None,
-#         width=400,
-#         height=200,
-#         margin=2,
-#         ranks_only=None,
-#         prefer_horizontal=0.9,
-#         mask=None,
-#         scale=1,
-#         color_func=None,
-#         max_words=200,
-#         min_font_size=4,
-#         stopwords=None,
-#         random_state=None,
-#         background_color="black",
-#         max_font_size=None,
-#         font_step=1,
-#         mode="RGB",
-#         relative_scaling="auto",
-#         regexp=None,
-#         collocations=True,
-#         colormap=None,
-#         normalize_plurals=True,
-#         contour_width=0,
-#         contour_color="black",
-#         repeat=False,
-#         include_numbers=False,
-#         min_word_length=0,
-#     ):
-#         """Plots a wordcloud from a dataframe.
-
-#         Examples
-#         ----------------------------------------------------------------------------------------------
-
-#         >>> import pandas as pd
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-#         ...         "Num_Documents": [10, 5, 2, 1],
-#         ...         "ID": list(range(4)),
-#         ...     }
-#         ... )
-#         >>> df
-#             Authors  Num Documents  ID
-#         0  author 3             10   0
-#         1  author 1              5   1
-#         2  author 0              2   2
-#         3  author 2              1   3
-#         >>> _ = Plot(df).wordcloud()
-#         >>> plt.savefig('sphinx/images/wordcloud.png')
-
-#         .. image:: images/wordcloud.png
-#             :width: 400px
-#             :align: center
-
-#         """
-#         plt.clf()
-#         x = self.df.copy()
-#         x.pop("ID")
-#         words = {row[0]: row[1] for _, row in x.iterrows()}
-#         wordcloud = WordCloud(
-#             font_path=font_path,
-#             width=width,
-#             height=height,
-#             margin=margin,
-#             ranks_only=ranks_only,
-#             prefer_horizontal=prefer_horizontal,
-#             mask=mask,
-#             scale=scale,
-#             color_func=color_func,
-#             max_words=max_words,
-#             min_font_size=min_font_size,
-#             stopwords=stopwords,
-#             random_state=random_state,
-#             background_color=background_color,
-#             max_font_size=max_font_size,
-#             font_step=font_step,
-#             mode=mode,
-#             relative_scaling=relative_scaling,
-#             regexp=regexp,
-#             collocations=collocations,
-#             colormap=colormap,
-#             normalize_plurals=normalize_plurals,
-#             contour_width=contour_width,
-#             contour_color=contour_color,
-#             repeat=repeat,
-#             include_numbers=include_numbers,
-#             min_word_length=min_word_length,
-#         )
-#         wordcloud.generate_from_frequencies(words)
-#         plt.gca().imshow(wordcloud, interpolation="bilinear")
-#         plt.gca().axis("off")
-#         return plt.gca()
-
-#     def stacked_bar(
-#         self, width=0.8, bottom=None, align="center", cmap="Greys", **kwargs
-#     ):
-#         """Stacked vertical bar plot.
-
-#         Examples
-#         ----------------------------------------------------------------------------------------------
-
-#         >>> import pandas as pd
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         "Authors": "author 0,author 1,author 2,author 3,author 3,author 5".split(","),
-#         ...         "col 0": [6, 5, 4, 3, 2, 1],
-#         ...         "col 1": [0, 2, 5, 1, 5, 7],
-#         ...         "ID": list(range(6)),
-#         ...     }
-#         ... )
-#         >>> df
-#             Authors  col 0  col 1  ID
-#         0  author 0      6      0   0
-#         1  author 1      5      2   1
-#         2  author 2      4      5   2
-#         3  author 3      3      1   3
-#         4  author 3      2      5   4
-#         5  author 5      1      7   5
-
-#         >>> _ = Plot(df).stacked_bar(cmap='Blues')
-#         >>> plt.savefig('sphinx/images/stkbar0.png')
-
-#         .. image:: images/stkbar0.png
-#             :width: 400px
-#             :align: center
-
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         "Authors": "author 0,author 1,author 2,author 3,author 3,author 5".split(","),
-#         ...         "col 0": [6, 5, 2, 3, 4, 1],
-#         ...         "col 1": [0, 1, 2, 3, 4, 5],
-#         ...         "col 2": [3, 2, 3, 1, 0, 1],
-#         ...         "ID": list(range(6)),
-#         ...     }
-#         ... )
-#         >>> df
-#             Authors  col 0  col 1  col 2  ID
-#         0  author 0      6      0      3   0
-#         1  author 1      5      1      2   1
-#         2  author 2      2      2      3   2
-#         3  author 3      3      3      1   3
-#         4  author 3      4      4      0   4
-#         5  author 5      1      5      1   5
-
-#         >>> _ = Plot(df).stacked_bar(cmap='Blues')
-#         >>> plt.savefig('sphinx/images/stkbar1.png')
-
-#         .. image:: images/stkbar1.png
-#             :width: 400px
-#             :align: center
-
-#         """
-#         plt.clf()
-#         cmap = plt.cm.get_cmap(cmap)
-#         x = self.df.copy()
-#         if "ID" in x.columns:
-#             x.pop("ID")
-#         if bottom is None:
-#             bottom = x[x.columns[1]].map(lambda w: 0.0)
-#         for icol, col in enumerate(x.columns[1:]):
-#             if cmap is not None:
-#                 kwargs["color"] = cmap((0.2 + 0.75 * icol / (len(x.columns) - 1)))
-#             plt.gca().bar(
-#                 x=range(len(x)),
-#                 height=x[col],
-#                 width=width,
-#                 bottom=bottom,
-#                 align=align,
-#                 **({}),
-#                 **kwargs,
-#             )
-#             bottom = bottom + x[col]
-#         plt.xticks(
-#             np.arange(len(x[x.columns[0]])), x[x.columns[0]], rotation="vertical"
-#         )
-#         plt.xlabel(x.columns[0])
-#         # plt.ylabel(x.columns[1])
-#         plt.gca().spines["top"].set_visible(False)
-#         plt.gca().spines["right"].set_visible(False)
-#         plt.gca().spines["left"].set_visible(False)
-#         plt.gca().spines["bottom"].set_visible(False)
-#         return plt.gca()
-
-#     def stacked_barh(self, height=0.8, left=None, align="center", cmap=None, **kwargs):
-#         """Stacked horzontal bar plot.
-
-#         Examples
-#         ----------------------------------------------------------------------------------------------
-
-#         >>> import pandas as pd
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         "Authors": "author 0,author 1,author 2,author 3,author 3,author 5".split(","),
-#         ...         "col 0": [6, 5, 4, 3, 2, 1],
-#         ...         "col 1": [0, 2, 5, 1, 5, 7],
-#         ...         "ID": list(range(6)),
-#         ...     }
-#         ... )
-#         >>> df
-#             Authors  col 0  col 1  ID
-#         0  author 0      6      0   0
-#         1  author 1      5      2   1
-#         2  author 2      4      5   2
-#         3  author 3      3      1   3
-#         4  author 3      2      5   4
-#         5  author 5      1      7   5
-
-#         >>> _ = Plot(df).stacked_barh(cmap='Blues')
-#         >>> plt.savefig('sphinx/images/stkbarh0.png')
-
-#         .. image:: images/stkbarh0.png
-#             :width: 400px
-#             :align: center
-
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         "Authors": "author 0,author 1,author 2,author 3,author 3,author 5".split(","),
-#         ...         "col 0": [6, 5, 2, 3, 4, 1],
-#         ...         "col 1": [0, 1, 2, 3, 4, 5],
-#         ...         "col 2": [3, 2, 3, 1, 0, 1],
-#         ...         "ID": list(range(6)),
-#         ...     }
-#         ... )
-#         >>> df
-#             Authors  col 0  col 1  col 2  ID
-#         0  author 0      6      0      3   0
-#         1  author 1      5      1      2   1
-#         2  author 2      2      2      3   2
-#         3  author 3      3      3      1   3
-#         4  author 3      4      4      0   4
-#         5  author 5      1      5      1   5
-
-#         >>> _ = Plot(df).stacked_barh(cmap='Blues')
-#         >>> plt.savefig('sphinx/images/stkbarh1.png')
-
-#         .. image:: images/stkbarh1.png
-#             :width: 400px
-#             :align: center
-
-#         """
-#         plt.clf()
-#         cmap = plt.cm.get_cmap(cmap)
-#         x = self.df.copy()
-#         if "ID" in x.columns:
-#             x.pop("ID")
-#         if left is None:
-#             left = x[x.columns[1]].map(lambda w: 0.0)
-#         for icol, col in enumerate(x.columns[1:]):
-#             if cmap is not None:
-#                 kwargs["color"] = cmap((0.2 + 0.75 * icol / (len(x.columns) - 1)))
-#             plt.gca().barh(
-#                 y=range(len(x)),
-#                 width=x[col],
-#                 height=height,
-#                 left=left,
-#                 align=align,
-#                 **({}),
-#                 **kwargs,
-#             )
-#             left = left + x[col]
-#         plt.yticks(np.arange(len(x[x.columns[0]])), x[x.columns[0]])
-#         plt.gca().spines["top"].set_visible(False)
-#         plt.gca().spines["right"].set_visible(False)
-#         plt.gca().spines["left"].set_visible(False)
-#         plt.gca().spines["bottom"].set_visible(False)
-#         return plt.gca()
 
 #     def correspondence_plot(self):
 #         """Computes and plot clusters of data using correspondence analysis.
@@ -1325,6 +1296,50 @@ def chord_diagram(
 #         #         alpha=0.2,
 #         #         linewidth=0,
 #         #     )
+
+
+def tree(self, cmap="Blues", alpha=0.9):
+    """Creates a classification plot from a dataframe.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+    ...         "Num_Documents": [10, 5, 2, 1],
+    ...         "ID": list(range(4)),
+    ...     }
+    ... )
+    >>> df
+        Authors  Num Documents  ID
+    0  author 3             10   0
+    1  author 1              5   1
+    2  author 0              2   2
+    3  author 2              1   3
+
+    >>> _ = Plot(df).tree()
+    >>> plt.savefig('sphinx/images/treeplot.png')
+
+    .. image:: images/treeplot.png
+        :width: 400px
+        :align: center
+
+
+    """
+    plt.clf()
+    x = self.df.copy()
+    cmap = plt.cm.get_cmap(cmap)
+    colors = [
+        cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
+        for i in range(len(x[x.columns[1]]))
+    ]
+    squarify.plot(
+        sizes=x[x.columns[1]], label=x[x.columns[0]], color=colors, alpha=alpha
+    )
+    plt.gca().axis("off")
+    return plt.gca()
 
 
 #
