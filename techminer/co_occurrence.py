@@ -328,7 +328,7 @@ def summary_occurrence(x, column, keywords=None):
     return summary_co_occurrence(x=x, column=column, by=None, keywords=keywords)
 
 
-def occurrence(x, column, as_matrix=False, min_value=0, keywords=None):
+def occurrence(x, column, as_matrix=False, normalization=None, min_value=0, keywords=None):
     """Computes the occurrence between the terms in a column.
 
     Args:
@@ -406,6 +406,29 @@ def occurrence(x, column, as_matrix=False, min_value=0, keywords=None):
         min_value=min_value,
         keywords=keywords,
     )
+
+def normalize_matrix(matrix, normalization=None):
+    matrix = matrix.applymap(lambda w: float(w))
+    m = matrix.copy()
+    if normalization == 'association':    
+        for col in m.columns:
+            for row in m.index:
+                matrix.at[row, col] = m.at[row, col] / (m.loc[row, row] * m.at[col, col])
+    if normalization == 'inclusion':
+        for col in m.columns:
+            for row in m.index:
+                matrix.at[row, col] = m.at[row, col] / min(m.loc[row, row], m.at[col, col])
+    if normalization == 'jaccard':
+        for col in m.columns:
+            for row in m.index:
+                matrix.at[row, col] = m.at[row, col] /(m.loc[row, row] + m.at[col, col] - m.at[row, col])
+    if normalization == 'salton':
+        for col in m.columns:
+            for row in m.index:
+                matrix.at[row, col] = m.at[row, col] / np.sqrt((m.loc[row, row] * m.at[col, col]))
+    return matrix
+
+
 
 
 # #     def occurrence_map(self, column, sep=None, minmax=None, keywords=None):
@@ -575,7 +598,11 @@ RIGHT_PANEL_WIDTH = "870px"
 FIGSIZE = (14, 10.0)
 PANE_HEIGHTS = ["80px", "650px", 0]
 
-
+#
+#
+#  Co-occurrence Matrix
+#
+#
 
 def __body_0(x):
     COLUMNS = [
@@ -806,13 +833,276 @@ def __body_0(x):
     )
 
 
+#
+#
+#  Occurrence Network
+#
+#
+
+def __body_1(x):
+    COLUMNS = [
+        "Author_Keywords",
+        "Author_Keywords_CL",
+        "Authors",
+        "Countries",
+        "Country_1st_Author",
+        "Document_type",
+        "Index_Keywords",
+        "Index_Keywords_CL",
+        "Institution_1st_Author",
+        "Institutions",
+        "Source title",
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    controls = [
+        # 0
+        {
+            "arg": "term",
+            "desc": "Term to analyze:",
+            "widget": widgets.Dropdown(
+                options=[z for z in COLUMNS if z in x.columns],
+                ensure_option=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 1
+        {
+            "arg": "normalization",
+            "desc": "Normalization:",
+            "widget": widgets.Dropdown(
+                options=['None', 'association', 'inclusion', 'jaccard', 'salton'],
+                ensure_option=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 2
+        {
+            "arg": "plot_type",
+            "desc": "Plot type:",
+            "widget": widgets.Dropdown(
+                options=["Matrix", "Heatmap", "Bubble", "Network"],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },        
+        # 3
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 4
+        {
+            "arg": "min_value",
+            "desc": "Min occurrence value:",
+            "widget": widgets.Dropdown(
+                options=['1'],
+                ensure_option=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 4
+        {
+            "arg": "sort_by",
+            "desc": "Sort order:",
+            "widget": widgets.Dropdown(
+                options=[
+                    "Alphabetic asc.",
+                    "Alphabetic desc.",
+                    "Frequency/Cited by asc.",
+                    "Frequency/Cited by desc.",
+                ],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 5
+        {
+            "arg": "layout",
+            "desc": "Map layout:",
+            "widget": widgets.Dropdown(
+                options=[
+                    "Circular",
+                    "Kamada Kawai",
+                    "Planar",
+                    "Random",
+                    "Spectral",
+                    "Spring",
+                    "Shell",
+                ],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
+    def server(**kwargs):
+        #
+        # Logic
+        #
+        term = kwargs["term"]
+        normalization = kwargs["normalization"]
+        plot_type = kwargs["plot_type"]
+        cmap = kwargs["cmap"]
+        min_value = int(kwargs["min_value"])
+        sort_by = kwargs["sort_by"]
+        layout = kwargs["layout"]
+        #
+        # 
+        #
+        matrix = occurrence(
+                x,
+                column=term,
+                as_matrix=False,
+                min_value=0,
+                keywords=None,
+            )
+        #
+        options = matrix['Num_Documents'].unique().tolist()
+        options = sorted(options)
+        options = [str(w) for w in options]
+        current_selection = controls[4]["widget"].value
+        controls[4]["widget"].options = options
+        #
+        if min_value > matrix['Num_Documents'].max():
+            min_value = 0
+            controls[4]["widget"].value = controls[4]["widget"].options[0]
+        if current_selection not in controls[4]["widget"].options:
+            min_value = 0
+            controls[4]["widget"].value = controls[4]["widget"].options[0]
+        #
+        by = term + '_'
+        #
+        matrix = pd.pivot_table(
+            matrix, values="Num_Documents", index=by, columns=term, fill_value=0,
+        )
+        matrix.columns = matrix.columns.tolist()
+        matrix.index = matrix.index.tolist()
+        matrix = matrix.loc[sorted(matrix.index), sorted(matrix.columns)]
+        #
+        if min_value > 0:
+            #
+            a = matrix.max(axis=1)
+            b = matrix.max(axis=0)
+            a = a.sort_values(ascending=False)
+            b = b.sort_values(ascending=False)
+            a = a[a >= min_value]
+            b = b[b >= min_value]
+            matrix = matrix.loc[sorted(a.index), sorted(b.index)]
+        #
+        #
+        if max(len(matrix.index), len(matrix.columns)) > 50:
+            output.clear_output()
+            with output:
+                display(widgets.HTML("<h3>Matrix exceeds the maximum shape</h3>"))
+                return
+        #
+        s = summary_by_term(x, term)
+        new_names = {
+            a: "{} [{:d}]".format(a, b)
+            for a, b in zip(s[term].tolist(), s["Num_Documents"].tolist())
+        }
+        matrix = matrix.rename(columns=new_names)
+        #
+        if term == by[:-1]:
+            matrix = matrix.rename(index=new_names)
+        else:
+            s = summary_by_term(x, by)
+            new_names = {
+                a: "{} [{:d}]".format(a, b)
+                for a, b in zip(s[by].tolist(), s["Num_Documents"].tolist())
+            }
+            matrix = matrix.rename(index=new_names)
+        #
+        #
+        #
+        matrix = normalize_matrix(matrix, normalization)
+        #
+        #
+        #
+        output.clear_output()
+        with output:
+            #
+            # Sort order
+            #
+            g = lambda m: int(m[m.find("[") + 1 : m.find("]")])
+            if sort_by == "Frequency/Cited by asc.":
+                col_names = sorted(matrix.columns, key=g, reverse=False)
+                row_names = sorted(matrix.index, key=g, reverse=False)
+                matrix = matrix.loc[row_names, col_names]
+            if sort_by == "Frequency/Cited by desc.":
+                col_names = sorted(matrix.columns, key=g, reverse=True)
+                row_names = sorted(matrix.index, key=g, reverse=True)
+                matrix = matrix.loc[row_names, col_names]
+            if sort_by == "Alphabetic asc.":
+                matrix = matrix.sort_index(axis=0, ascending=True).sort_index(
+                    axis=1, ascending=True
+                )
+            if sort_by == "Alphabetic desc.":
+                matrix = matrix.sort_index(axis=0, ascending=False).sort_index(
+                    axis=1, ascending=False
+                )
+            #
+            # View
+            #
+            if plot_type == 'Matrix':
+                if normalization == 'None':
+                    display(matrix.style.format(
+                                lambda q: "{:g}".format(q) 
+                            ).background_gradient(cmap=cmap, axis=None))
+                else:
+                    display(matrix.style.format(
+                                lambda q: "{:3.2f}".format(q) 
+                            ).background_gradient(cmap=cmap, axis=None))
+            if plot_type == 'Heatmap':
+                display(plt.heatmap(matrix, cmap=cmap, figsize=(14, 8.5)))
+            if plot_type == 'Bubble':
+                display(plt.bubble(matrix.transpose(), axis=0, cmap=cmap, figsize=(14, 8.5)))
+            if plot_type == "Network":
+                display(occurrence_map(
+                    matrix, layout=layout, cmap=cmap, figsize=(14, 8.5)
+                ))
+            
+    # -------------------------------------------------------------------------
+    #
+    # Generic
+    #
+    # -------------------------------------------------------------------------
+    args = {control["arg"]: control["widget"] for control in controls}
+    output = widgets.Output()
+    with output:
+        display(widgets.interactive_output(server, args,))
+    return widgets.HBox(
+        [
+            widgets.VBox(
+                [
+                    widgets.VBox(
+                        [widgets.Label(value=control["desc"]), control["widget"]]
+                    )
+                    for control in controls
+                ],
+                layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
+            ),
+            widgets.VBox([output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")),
+        ]
+    )
+
+
 def app(df):
     """Jupyter Lab dashboard.
     """
     #
     body = widgets.Tab()
-    body.children = [__body_0(df)]
-    body.set_title(0, "Matrix")
+    body.children = [__body_0(df), __body_1(df)]
+    body.set_title(0, "Co-occurrence")
+    body.set_title(1, "Occurrence")
     #
     return AppLayout(
         header=widgets.HTML(
@@ -823,4 +1113,133 @@ def app(df):
         center=body,
         pane_heights=PANE_HEIGHTS,
     )
+
+
+
+import matplotlib.pyplot as pyplot
+import networkx as nx
+
+def occurrence_map(
+    matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)
+):
+    """Computes the occurrence map directly using networkx.
+    """
+
+    if len(matrix.columns) > 50:
+        return "Maximum number of nodex exceded!"
+
+    #
+    # Data preparation
+    #
+    terms = matrix.columns.tolist()
+
+    #
+    # Node sizes
+    #
+    node_sizes = [int(w[w.find("[") + 1 : w.find("]")]) for w in terms if "[" in w]
+    if len(node_sizes) == 0:
+        node_sizes = [10] * len(terms)
+    else:
+        max_size = max(node_sizes)
+        min_size = min(node_sizes)
+        if min_size == max_size:
+            node_sizes = [300] * len(terms)
+        else:
+            node_sizes = [
+                300 + int(1000 * (w - min_size) / (max_size - min_size))
+                for w in node_sizes
+            ]
+
+    #
+    # Node colors
+    #
+    cmap = pyplot.cm.get_cmap(cmap)
+    node_colors = [
+        cmap(0.2 + 0.75 * node_sizes[i] / max(node_sizes))
+        for i in range(len(node_sizes))
+    ]
+
+    #
+    # Remove [...] from text
+    #
+    terms = [w[: w.find("[")].strip() if "[" in w else w for w in terms]
+    matrix.columns = terms
+    matrix.index = terms
+
+    #
+    # Draw the network
+    #
+    fig = pyplot.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    draw_dict = {
+        "Circular": nx.draw_circular,
+        "Kamada Kawai": nx.draw_kamada_kawai,
+        "Planar": nx.draw_planar,
+        "Random": nx.draw_random,
+        "Spectral": nx.draw_spectral,
+        "Spring": nx.draw_spring,
+        "Shell": nx.draw_shell,
+    }
+    draw = draw_dict[layout]
+
+    G = nx.Graph(ax=ax)
+    G.clear()
+
+    #
+    # network nodes
+    #
+    G.add_nodes_from(terms)
+
+    #
+    # network edges
+    #
+    n = len(matrix.columns)
+    for icol in range(n-1):
+        for irow in range(icol + 1, n):
+            if matrix.at[matrix.columns[irow], matrix.columns[icol]] > 0:
+                G.add_edge(terms[icol], terms[irow], width=matrix.at[matrix.columns[irow], matrix.columns[icol]])
+                                
+    #
+    # Draw nodes
+    #
+    max_width = matrix.max().max()
+    first_time = True
+    for e in G.edges.data():
+        a, b, width = e
+        edge = [(a, b)]
+        width = 3 * width['width'] / max_width
+        draw(
+            G,
+            ax=ax,
+            edgelist=edge,
+            width=width,
+            edge_color="k",
+            with_labels=first_time,
+            font_weight="bold",
+            node_color=node_colors,
+            node_size=node_sizes,
+            bbox=dict(facecolor="white", alpha=1.0),
+            font_size=10,
+            horizontalalignment="left",
+            verticalalignment="baseline",
+        )
+        first_time = False
+
+    #
+    
+
+    #
+    # Figure size
+    #
+    xlim = ax.get_xlim()
+    ylim = ax.get_ylim()
+    ax.set_xlim(
+        xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
+    )
+    ax.set_ylim(
+        ylim[0] - 0.15 * (ylim[1] - ylim[0]), ylim[1] + 0.15 * (ylim[1] - ylim[0])
+    )
+
+    return fig
 
