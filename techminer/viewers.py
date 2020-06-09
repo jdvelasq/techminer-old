@@ -14,6 +14,8 @@ import textwrap
 from techminer.by_term import summary_by_term
 from techminer.explode import __explode
 
+from techminer.explode import MULTIVALUED_COLS
+
 WIDGET_WIDTH = "200px"
 
 def __record_to_HTML(x):
@@ -189,7 +191,21 @@ def column(df, top_n=50):
 def matrix(df, top_n=50):
     """Jupyter Lab dashboard to matrix data.
     """
-    COLUMNS = [c for c in df.columns if c[0] != '*' and c not in ['Title', 'ID', 'Cited by', 'Abstract']]
+    COLUMNS = [
+        "Author_Keywords",
+        "Author_Keywords_CL",
+        "Authors",
+        "Countries",
+        "Country_1st_Author",
+        "Index_Keywords",
+        "Index_Keywords_CL",
+        "Institution_1st_Author",
+        "Institutions",
+        "Keywords",
+        "Source_title",
+        "Title",
+        "Year",
+    ]
     #
     # -------------------------------------------------------------------------
     #
@@ -264,10 +280,11 @@ def matrix(df, top_n=50):
         if main_column in MULTIVALUED_COLS:
             xdf = __explode(xdf, '_key1_')
         #
+        
         if top_n is not None:
             summary = summary_by_term(xdf, '_key1_')
-            top_terms_freq = set(summary.sort_values('Num Documents', ascending=False).head(top_n)['_key1_'])
-            top_terms_cited_by = set(summary.sort_values('Cited by', ascending=False).head(top_n)['_key1_'])
+            top_terms_freq = set(summary.sort_values('Num_Documents', ascending=False).head(top_n)['_key1_'])
+            top_terms_cited_by = set(summary.sort_values('Cited_by', ascending=False).head(top_n)['_key1_'])
             top_terms = sorted(top_terms_freq | top_terms_cited_by)
             controls[1]["widget"].options = top_terms
         else:
@@ -300,18 +317,7 @@ def matrix(df, top_n=50):
         output.clear_output()
         text = ''
         with output:
-            for f in FIELDS:
-                z = out[f]
-                if not pd.isna(z):
-                    if f in MULTIVALUED_COLS:
-                        v = z.split(';')
-                        v = [a.strip() if isinstance(a, str) else a for a in v]
-                        text += '{:>25}: {}<br>'.format(f, v[0])
-                        for m in v[1:]:
-                            text += '                           {}<br>'.format(m)
-                    else:
-                        text += '{:>25}: {}<br>'.format(f, z)
-            display(widgets.HTML('<pre>' + text + '</pre>'))
+            display(widgets.HTML(__record_to_HTML(out)))
    
 
     # -------------------------------------------------------------------------
