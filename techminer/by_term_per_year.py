@@ -37,7 +37,7 @@ Analysis by Term per Year
 #     ...     {
 #     ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
 #     ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
-#     ...          "Cited by": list(range(10,16)),
+#     ...          "Cited_by": list(range(10,16)),
 #     ...          "ID": list(range(6)),
 #     ...     }
 #     ... )
@@ -70,15 +70,15 @@ Analysis by Term per Year
 #     3  author 3  2011        13              1  [3]
 
 #     """
-#     data = __explode(x[["Year", column, "Cited by", "ID"]], column)
-#     data["Num Documents"] = 1
+#     data = __explode(x[["Year", column, "Cited_by", "ID"]], column)
+#     data["Num_Documents"] = 1
 #     result = data.groupby([column, "Year"], as_index=False).agg(
-#         {"Cited by": np.sum, "Num Documents": np.size}
+#         {"Cited_by": np.sum, "Num_Documents": np.size}
 #     )
 #     result = result.assign(
 #         ID=data.groupby([column, "Year"]).agg({"ID": list}).reset_index()["ID"]
 #     )
-#     result["Cited by"] = result["Cited by"].map(lambda x: int(x))
+#     result["Cited_by"] = result["Cited_by"].map(lambda x: int(x))
 #     if keywords is not None:
 #         if keywords._patterns is None:
 #             keywords = keywords.compile()
@@ -110,7 +110,7 @@ Analysis by Term per Year
 #     ...     {
 #     ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
 #     ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
-#     ...          "Cited by": list(range(10,16)),
+#     ...          "Cited_by": list(range(10,16)),
 #     ...          "ID": list(range(6)),
 #     ...     }
 #     ... )
@@ -150,14 +150,14 @@ Analysis by Term per Year
 #     """
 
 #     result = summary_by_term_per_year(x, column, keywords)
-#     result.pop("Cited by")
+#     result.pop("Cited_by")
 #     result.sort_values(
-#         ["Year", "Num Documents", column], ascending=[True, False, True], inplace=True,
+#         ["Year", "Num_Documents", column], ascending=[True, False, True], inplace=True,
 #     )
 #     result.reset_index(drop=True)
 #     if as_matrix == True:
 #         result = pd.pivot_table(
-#             result, values="Num Documents", index="Year", columns=column, fill_value=0,
+#             result, values="Num_Documents", index="Year", columns=column, fill_value=0,
 #         )
 #         result.columns = result.columns.tolist()
 #         result.index = result.index.tolist()
@@ -185,7 +185,7 @@ Analysis by Term per Year
 #     ...     {
 #     ...          "Year": [2010, 2011, 2011, 2012, 2015, 2012, 2016],
 #     ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 3,author 4,author 4".split(","),
-#     ...          "Cited by": list(range(10,17)),
+#     ...          "Cited_by": list(range(10,17)),
 #     ...          "ID": list(range(7)),
 #     ...     }
 #     ... )
@@ -257,7 +257,7 @@ Analysis by Term per Year
 #     ...     {
 #     ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
 #     ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
-#     ...          "Cited by": list(range(10,16)),
+#     ...          "Cited_by": list(range(10,16)),
 #     ...          "ID": list(range(6)),
 #     ...     }
 #     ... )
@@ -298,14 +298,14 @@ Analysis by Term per Year
 
 #     """
 #     result = summary_by_term_per_year(x, column, keywords)
-#     result.pop("Num Documents")
+#     result.pop("Num_Documents")
 #     result.sort_values(
-#         ["Year", "Cited by", column], ascending=[True, False, False], inplace=True,
+#         ["Year", "Cited_by", column], ascending=[True, False, False], inplace=True,
 #     )
 #     result = result.reset_index(drop=True)
 #     if as_matrix == True:
 #         result = pd.pivot_table(
-#             result, values="Cited by", index="Year", columns=column, fill_value=0,
+#             result, values="Cited_by", index="Year", columns=column, fill_value=0,
 #         )
 #         result.columns = result.columns.tolist()
 #         result.index = result.index.tolist()

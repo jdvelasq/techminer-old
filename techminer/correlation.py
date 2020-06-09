@@ -300,15 +300,15 @@ Correlation Analysis
 #     column_filter = None
 #     if (filter_by == 0 or filter_by == "Frequency") and filter_value > 1:
 #         df = summary_by_term(x, column)
-#         if filter_value > df["Num Documents"].max():
-#             filter_value = df["Num Documents"].max()
-#         df = df[df["Num Documents"] >= filter_value]
+#         if filter_value > df["Num_Documents"].max():
+#             filter_value = df["Num_Documents"].max()
+#         df = df[df["Num_Documents"] >= filter_value]
 #         column_filter = df[column].tolist()
-#     if (filter_by == 1 or filter_by == "Cited by") and filter_value > 0:
+#     if (filter_by == 1 or filter_by == "Cited_by") and filter_value > 0:
 #         df = summary_by_term(x, column)
-#         if filter_value > df["Cited by"].max():
-#             filter_value = df["Cited by"].max()
-#         df = df[df["Cited by"] >= filter_value]
+#         if filter_value > df["Cited_by"].max():
+#             filter_value = df["Cited_by"].max()
+#         df = df[df["Cited_by"] >= filter_value]
 #         column_filter = df[column].tolist()
 #     if column_filter is not None:
 #         column_filter = Keywords(column_filter, ignore_case=False, full_match=True)
@@ -682,7 +682,7 @@ Correlation Analysis
 #             "arg": "filter_by",
 #             "desc": "Filter by:",
 #             "widget": widgets.Dropdown(
-#                 options=["Frequency", "Cited by"], layout=Layout(width=WIDGET_WIDTH),
+#                 options=["Frequency", "Cited_by"], layout=Layout(width=WIDGET_WIDTH),
 #             ),
 #         },
 #         # 4
@@ -779,18 +779,18 @@ Correlation Analysis
 #         #
 #         s = summary_by_term(x, column)
 #         if filter_by == "Frequency":
-#             s = s[[column, "Num Documents"]]
-#             n_columns = len(s[s["Num Documents"] > filter_value])
+#             s = s[[column, "Num_Documents"]]
+#             n_columns = len(s[s["Num_Documents"] > filter_value])
 #             new_names = {
 #                 a: "{} [{:d}]".format(a, b)
-#                 for a, b in zip(s[column].tolist(), s["Num Documents"].tolist())
+#                 for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
 #             }
-#         if filter_by == "Cited by":
-#             s = s[[column, "Cited by"]]
-#             n_columns = len(s[s["Cited by"] > filter_value])
+#         if filter_by == "Cited_by":
+#             s = s[[column, "Cited_by"]]
+#             n_columns = len(s[s["Cited_by"] > filter_value])
 #             new_names = {
 #                 a: "{} [{:d}]".format(a, b)
-#                 for a, b in zip(s[column].tolist(), s["Cited by"].tolist())
+#                 for a, b in zip(s[column].tolist(), s["Cited_by"].tolist())
 #             }
 #         #
 #         a = s[s.columns[1]].value_counts().sort_index(ascending=False)

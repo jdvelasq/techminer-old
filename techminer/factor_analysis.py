@@ -189,7 +189,7 @@ Factor analysis
 #             "arg": "filter_by",
 #             "desc": "Filter by:",
 #             "widget": widgets.Dropdown(
-#                 options=["Frequency", "Cited by"],
+#                 options=["Frequency", "Cited_by"],
 #                 disable=False,
 #                 layout=Layout(width=WIDGET_WIDTH),
 #             ),
@@ -252,11 +252,11 @@ Factor analysis
 #         #
 #         if filter_by == "Frequency":
 #             filtered_terms = summ_by_term[
-#                 summ_by_term["Num Documents"] >= filter_value
+#                 summ_by_term["Num_Documents"] >= filter_value
 #             ][term]
 #             num_docs = len(filtered_terms)
-#         if filter_by == "Cited by":
-#             filtered_terms = summ_by_term[summ_by_term["Cited by"] >= filter_value]
+#         if filter_by == "Cited_by":
+#             filtered_terms = summ_by_term[summ_by_term["Cited_by"] >= filter_value]
 #             num_docs = len(filtered_terms)
 #         if num_docs > 50:
 #             output.clear_output()
@@ -273,7 +273,7 @@ Factor analysis
 #         new_names = {
 #             a: "{} [{:d}]".format(a, b)
 #             for a, b in zip(
-#                 summ_by_term[term].tolist(), summ_by_term["Num Documents"].tolist()
+#                 summ_by_term[term].tolist(), summ_by_term["Num_Documents"].tolist()
 #             )
 #         }
 #         matrix = matrix.rename(index=new_names)

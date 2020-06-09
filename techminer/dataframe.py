@@ -120,7 +120,7 @@ The column names in the dataframe follows the convetion used in WoS.
 #     ...     {
 #     ...         "c0": ["D"] * 4 + ["B"] * 3 + ["C"] * 2 + ["A"],
 #     ...         "c1": ["a"] * 4 + ["c"] * 3 + ["b"] * 2 + ["d"],
-#     ...         "Cited by": list(range(10)),
+#     ...         "Cited_by": list(range(10)),
 #     ...         "ID": list(range(10)),
 #     ...     },
 #     ... )
@@ -211,7 +211,7 @@ The column names in the dataframe follows the convetion used in WoS.
 #     ...     {
 #     ...         "c0": ["D"] * 4 + ["B"] * 3 + ["C"] * 2 + ["A"],
 #     ...         "c1": ["a"] * 4 + ["c"] * 3 + ["b"] * 2 + ["d"],
-#     ...         "Cited by": list(range(10)),
+#     ...         "Cited_by": list(range(10)),
 #     ...         "ID": list(range(10)),
 #     ...     },
 #     ... )

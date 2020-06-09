@@ -73,7 +73,7 @@ def bar(
     >>> df = pd.DataFrame(
     ...     {
     ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-    ...         "Num Documents": [3, 2, 2, 1],
+    ...         "Num_Documents": [3, 2, 2, 1],
     ...         "ID": list(range(4)),
     ...     }
     ... )
@@ -134,7 +134,7 @@ def barh(x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **
     >>> x = pd.DataFrame(
     ...     {
     ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-    ...         "Num Documents": [3, 2, 2, 1],
+    ...         "Num_Documents": [3, 2, 2, 1],
     ...         "ID": list(range(4)),
     ...     }
     ... )
@@ -212,7 +212,7 @@ def pie(
     >>> df = pd.DataFrame(
     ...     {
     ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-    ...         "Num Documents": [3, 2, 2, 1],
+    ...         "Num_Documents": [3, 2, 2, 1],
     ...         "ID": list(range(4)),
     ...     }
     ... )
@@ -271,7 +271,7 @@ def worldmap(x, figsize=(10, 5), cmap="Pastel2", legend=True, *args, **kwargs):
     >>> x = pd.DataFrame(
     ...     {
     ...         "AU_CO": ["China", "Taiwan", "United States", "United Kingdom", "India", "Colombia"],
-    ...         "Num Documents": [1000, 900, 800, 700, 600, 1000],
+    ...         "Num_Documents": [1000, 900, 800, 700, 600, 1000],
     ...     },
     ... )
     >>> x
@@ -713,7 +713,7 @@ def chord_diagram(
 #         >>> df = pd.DataFrame(
 #         ...     {
 #         ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-#         ...         "Num Documents": [10, 5, 2, 1],
+#         ...         "Num_Documents": [10, 5, 2, 1],
 #         ...         "ID": list(range(4)),
 #         ...     }
 #         ... )
@@ -981,7 +981,7 @@ def chord_diagram(
 #         >>> df = pd.DataFrame(
 #         ...     {
 #         ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-#         ...         "Num Documents": [10, 5, 2, 1],
+#         ...         "Num_Documents": [10, 5, 2, 1],
 #         ...         "ID": list(range(4)),
 #         ...     }
 #         ... )

@@ -97,20 +97,20 @@ Co-occurrence Analysis
 #         by = column + "_"
 #         data[by] = data[column].copy()
 
-#     data = data[[by, column, "Cited by", "ID"]]
+#     data = data[[by, column, "Cited_by", "ID"]]
 #     data = data.dropna()
-#     data["Num Documents"] = 1
+#     data["Num_Documents"] = 1
 #     data["pairs"] = [generate_pairs(a, b) for a, b in zip(data[by], data[column])]
-#     data = data[["pairs", "Num Documents", "Cited by", "ID"]]
+#     data = data[["pairs", "Num_Documents", "Cited_by", "ID"]]
 #     data = data.explode("pairs")
 #     result = data.groupby("pairs", as_index=False).agg(
-#         {"Cited by": np.sum, "Num Documents": np.sum, "ID": list}
+#         {"Cited_by": np.sum, "Num_Documents": np.sum, "ID": list}
 #     )
-#     result["Cited by"] = result["Cited by"].map(int)
+#     result["Cited_by"] = result["Cited_by"].map(int)
 #     result[by] = result["pairs"].map(lambda x: x[0])
 #     result[column] = result["pairs"].map(lambda x: x[1])
 #     result.pop("pairs")
-#     result = result[[column, by, "Num Documents", "Cited by", "ID",]]
+#     result = result[[column, by, "Num_Documents", "Cited_by", "ID",]]
 #     if keywords is not None:
 #         if keywords._patterns is None:
 #             keywords = keywords.compile()
@@ -219,7 +219,7 @@ Co-occurrence Analysis
 #     #     new_names = {
 #     #         term: "{:s} [{:d}]".format(term, docs_per_term)
 #     #         for term, docs_per_term in zip(
-#     #             new_names[column], new_names["Num Documents"],
+#     #             new_names[column], new_names["Num_Documents"],
 #     #         )
 #     #     }
 #     #     return new_names
@@ -228,20 +228,20 @@ Co-occurrence Analysis
 #     result = summary_co_occurrence(x, column=column, by=by, keywords=keywords)
 #     if by is None or by == column:
 #         by = column + "_"
-#     result.pop("Cited by")
+#     result.pop("Cited_by")
 #     #
 #     if as_matrix is False:
 #         result = result.sort_values(
-#             ["Num Documents", column, by], ascending=[False, True, True],
+#             ["Num_Documents", column, by], ascending=[False, True, True],
 #         )
 #         if min_value is not None and min_value > 0:
-#             result = result[result["Num Documents"] >= min_value]
+#             result = result[result["Num_Documents"] >= min_value]
 #         result = result.reset_index(drop=True)
 #         return result
 #     #
 #     if as_matrix == True:
 #         result = pd.pivot_table(
-#             result, values="Num Documents", index=by, columns=column, fill_value=0,
+#             result, values="Num_Documents", index=by, columns=column, fill_value=0,
 #         )
 #         result.columns = result.columns.tolist()
 #         result.index = result.index.tolist()
@@ -691,7 +691,7 @@ Co-occurrence Analysis
 #             by = by + '_'
 #         #
 #         matrix = pd.pivot_table(
-#             matrix, values="Num Documents", index=by, columns=term, fill_value=0,
+#             matrix, values="Num_Documents", index=by, columns=term, fill_value=0,
 #         )
 #         matrix.columns = matrix.columns.tolist()
 #         matrix.index = matrix.index.tolist()
@@ -719,7 +719,7 @@ Co-occurrence Analysis
 #         s = summary_by_term(x, term)
 #         new_names = {
 #             a: "{} [{:d}]".format(a, b)
-#             for a, b in zip(s[term].tolist(), s["Num Documents"].tolist())
+#             for a, b in zip(s[term].tolist(), s["Num_Documents"].tolist())
 #         }
 #         matrix = matrix.rename(columns=new_names)
 #         #
@@ -729,7 +729,7 @@ Co-occurrence Analysis
 #             s = summary_by_term(x, by)
 #             new_names = {
 #                 a: "{} [{:d}]".format(a, b)
-#                 for a, b in zip(s[by].tolist(), s["Num Documents"].tolist())
+#                 for a, b in zip(s[by].tolist(), s["Num_Documents"].tolist())
 #             }
 #             matrix = matrix.rename(index=new_names)
 #         #

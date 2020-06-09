@@ -26,7 +26,7 @@
 #         ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
 #         ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
 #         ...          "Author Keywords": "w0;w1,w0,w1,w5;w3;w4,w5,w3".split(','),
-#         ...          "Cited by": list(range(10,16)),
+#         ...          "Cited_by": list(range(10,16)),
 #         ...          "ID": list(range(6)),
 #         ...     }
 #         ... )
@@ -66,19 +66,19 @@
 #         """
 
 #         data = DataFrame(
-#             self[[column_IDX, column_COL, "Year", "Cited by", "ID"]]
+#             self[[column_IDX, column_COL, "Year", "Cited_by", "ID"]]
 #         ).explode(column_IDX, sep_IDX)
 #         data = DataFrame(data).explode(column_COL, sep_COL)
-#         data["Num Documents"] = 1
+#         data["Num_Documents"] = 1
 #         result = data.groupby([column_IDX, column_COL, "Year"], as_index=False).agg(
-#             {"Cited by": np.sum, "Num Documents": np.size}
+#             {"Cited_by": np.sum, "Num_Documents": np.size}
 #         )
 #         result = result.assign(
 #             ID=data.groupby([column_IDX, column_COL, "Year"])
 #             .agg({"ID": list})
 #             .reset_index()["ID"]
 #         )
-#         result["Cited by"] = result["Cited by"].map(lambda x: int(x))
+#         result["Cited_by"] = result["Cited_by"].map(lambda x: int(x))
 #         if keywords is not None:
 #             if keywords._patterns is None:
 #                 keywords = keywords.compile()
@@ -113,7 +113,7 @@
 #         ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
 #         ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
 #         ...          "Author Keywords": "w0;w1,w0,w1,w5;w3;w4,w5,w3".split(','),
-#         ...          "Cited by": list(range(10,16)),
+#         ...          "Cited_by": list(range(10,16)),
 #         ...          "ID": list(range(6)),
 #         ...     }
 #         ... )
@@ -155,7 +155,7 @@
 #         result = self.summarize_by_term_per_term_per_year(
 #             column_IDX, column_COL, sep_IDX, sep_COL, keywords
 #         )
-#         result.pop("Cited by")
+#         result.pop("Cited_by")
 #         result.sort_values(
 #             ["Year", column_IDX, column_COL],
 #             ascending=[True, True, True],
@@ -187,7 +187,7 @@
 #         ...          "Year": [2010, 2010, 2011, 2011, 2012, 2014],
 #         ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4".split(","),
 #         ...          "Author Keywords": "w0;w1,w0,w1,w5;w3;w4,w5,w3".split(','),
-#         ...          "Cited by": list(range(10,16)),
+#         ...          "Cited_by": list(range(10,16)),
 #         ...          "ID": list(range(6)),
 #         ...     }
 #         ... )
@@ -230,7 +230,7 @@
 #         result = self.summarize_by_term_per_term_per_year(
 #             column_IDX, column_COL, sep_IDX, sep_COL, keywords
 #         )
-#         result.pop("Num Documents")
+#         result.pop("Num_Documents")
 #         result.sort_values(
 #             ["Year", column_IDX, column_COL],
 #             ascending=[True, True, True],

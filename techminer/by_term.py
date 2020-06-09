@@ -46,7 +46,7 @@ def summary_by_term(x, column, keywords=None):
     3                    author 3        13   3
 
     >>> summary_by_term(x, 'Authors')
-        Authors  Num Documents  Cited by      ID
+        Authors  Num Documents  Cited_by      ID
     0  author 0              2        21  [0, 1]
     1  author 1              2        22  [0, 2]
     2  author 2              1        10     [0]
@@ -55,7 +55,7 @@ def summary_by_term(x, column, keywords=None):
     >>> keywords = Keywords(['author 1', 'author 2'])
     >>> keywords = keywords.compile()
     >>> summary_by_term(x, 'Authors', keywords=keywords)
-        Authors  Num Documents  Cited by      ID
+        Authors  Num Documents  Cited_by      ID
     0  author 1              2        22  [0, 2]
     1  author 2              1        10     [0]
 

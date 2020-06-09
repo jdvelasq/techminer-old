@@ -51,7 +51,7 @@ def __explode(x, column):
         "Author_Keywords_",
         "Author_Keywords_CL_",
         "Author_Keywords_CL",
-        "Author_Keywords"
+        "Author_Keywords",
         "Authors_",
         "Authors_ID_",
         "Authors_ID",

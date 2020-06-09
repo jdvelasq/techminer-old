@@ -65,17 +65,17 @@ def column(df, top_n=50):
     """Jupyter Lab dashboard.
     """
     COLUMNS = [
-        "Author Keywords",
-        "Author Keywords (Cleaned)",
+        "Author_Keywords",
+        "Author_Keywords_CL",
         "Authors",
         "Countries",
-        "Country 1st",
-        "Index Keywords",
-        "Index Keywords (Cleaned)",
-        "Institution 1st",
+        "Country_1st_Author",
+        "Index_Keywords",
+        "Index_Keywords_CL",
+        "Institution_1st_Author",
         "Institutions",
         "Keywords",
-        "Source title",
+        "Source_title",
         "Title",
         "Year",
     ]
@@ -150,6 +150,7 @@ def column(df, top_n=50):
         output.clear_output()
         with output:
             display(widgets.HTML(__record_to_HTML(out)))
+
             
 
     # -------------------------------------------------------------------------
