@@ -1195,20 +1195,22 @@ def occurrence_map(
     # network edges
     #
     n = len(matrix.columns)
+    max_width = 0
     for icol in range(n-1):
         for irow in range(icol + 1, n):
-            if matrix.at[matrix.columns[irow], matrix.columns[icol]] > 0:
-                G.add_edge(terms[icol], terms[irow], width=matrix.at[matrix.columns[irow], matrix.columns[icol]])
-                                
+            link = matrix.at[matrix.columns[irow], matrix.columns[icol]]
+            if  link > 0:
+                G.add_edge(terms[icol], terms[irow], width=link)
+                if max_width < link:
+                    max_width = link
     #
     # Draw nodes
     #
-    max_width = matrix.max().max()
     first_time = True
     for e in G.edges.data():
         a, b, width = e
         edge = [(a, b)]
-        width = 3 * width['width'] / max_width
+        width = 0.2 + 4.0 * width['width'] / max_width
         draw(
             G,
             ax=ax,
