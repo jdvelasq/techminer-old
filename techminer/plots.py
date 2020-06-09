@@ -320,6 +320,79 @@ def bubble(
     return fig
 
 
+def plot(x, *args, figsize=(9, 9), cmap="Blues", scalex=True, scaley=True, **kwargs):
+    """Creates a plot from a dataframe.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         "author 0": [ 1, 2, 3, 4, 5, 6, 7],
+    ...         "author 1": [14, 13, 12, 11, 10, 9, 8],
+    ...         "author 2": [1, 5, 8, 9, 0, 0, 0],
+    ...         "author 3": [0, 0, 1, 1, 1, 0, 0],
+    ...         "author 4": [0, 10, 0, 4, 2, 0, 1],
+    ...     },
+    ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
+    ... )
+    >>> df
+            author 0  author 1  author 2  author 3  author 4
+    2010         1        14         1         0         0
+    2011         2        13         5         0        10
+    2012         3        12         8         1         0
+    2013         4        11         9         1         4
+    2014         5        10         0         1         2
+    2015         6         9         0         0         0
+    2016         7         8         0         0         1
+    >>> _ = Plot(df).plot()
+    >>> plt.savefig('sphinx/images/plotplot.png')
+
+    .. image:: images/plotplot.png
+        :width: 400px
+        :align: center
+
+
+    """
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    cmap = plt.cm.get_cmap(cmap)
+
+    x = x.copy()
+    if "ID" in x.columns:
+        x.pop("ID")
+        ax.plot(
+            range(len(x)),
+            x[x.columns[1]],
+            *args,
+            scalex=scalex,
+            scaley=scaley,
+            **kwargs,
+        )
+        plt.xticks(
+            np.arange(len(x[x.columns[0]])), x[x.columns[0]], rotation="vertical"
+        )
+        ax.set_xlabel(x.columns[0])
+        ax.set_ylabel(x.columns[1])
+    else:
+        for col in x.columns:
+            ax.plot(x.index, x[col], label=col, **kwargs)
+        ax.legend()
+
+    ax.set_xticks(x.index)
+    ax.set_xticklabels(x.index)
+    ax.tick_params(axis="x", labelrotation=90)
+    # ax.xaxis.tick_top()
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
+    return fig
+
+
 def pie(
     x,
     figsize=(8, 8),
@@ -395,69 +468,6 @@ def pie(
     )
     return fig
 
-
-#     def plot(self, *args, scalex=True, scaley=True, **kwargs):
-#         """Creates a plot from a dataframe.
-
-#         Examples
-#         ----------------------------------------------------------------------------------------------
-
-#         >>> import pandas as pd
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         "author 0": [ 1, 2, 3, 4, 5, 6, 7],
-#         ...         "author 1": [14, 13, 12, 11, 10, 9, 8],
-#         ...         "author 2": [1, 5, 8, 9, 0, 0, 0],
-#         ...         "author 3": [0, 0, 1, 1, 1, 0, 0],
-#         ...         "author 4": [0, 10, 0, 4, 2, 0, 1],
-#         ...     },
-#         ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
-#         ... )
-#         >>> df
-#               author 0  author 1  author 2  author 3  author 4
-#         2010         1        14         1         0         0
-#         2011         2        13         5         0        10
-#         2012         3        12         8         1         0
-#         2013         4        11         9         1         4
-#         2014         5        10         0         1         2
-#         2015         6         9         0         0         0
-#         2016         7         8         0         0         1
-#         >>> _ = Plot(df).plot()
-#         >>> plt.savefig('sphinx/images/plotplot.png')
-
-#         .. image:: images/plotplot.png
-#             :width: 400px
-#             :align: center
-
-
-#         """
-#         plt.clf()
-#         x = self.df.copy()
-#         if "ID" in x.columns:
-#             x.pop("ID")
-#             plt.gca().plot(
-#                 range(len(x)),
-#                 x[x.columns[1]],
-#                 *args,
-#                 scalex=scalex,
-#                 scaley=scaley,
-#                 **kwargs,
-#             )
-#             plt.xticks(
-#                 np.arange(len(x[x.columns[0]])), x[x.columns[0]], rotation="vertical"
-#             )
-#             plt.xlabel(x.columns[0])
-#             plt.ylabel(x.columns[1])
-#         else:
-#             for col in x.columns:
-#                 plt.plot(x.index, x[col], label=col, **kwargs)
-#             plt.legend()
-
-#         plt.gca().spines["top"].set_visible(False)
-#         plt.gca().spines["right"].set_visible(False)
-#         plt.gca().spines["left"].set_visible(False)
-#         plt.gca().spines["bottom"].set_visible(False)
-#         return plt.gca()
 
 #     def wordcloud(
 #         self,

@@ -519,7 +519,7 @@ def __body_0(x):
             "arg": "plot_type",
             "desc": "Plot type:",
             "widget": widgets.Dropdown(
-                options=["Heatmap", "Bubble", "Gant"],
+                options=["Heatmap", "Bubble", "Gant", 'Lines'],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
@@ -561,7 +561,7 @@ def __body_0(x):
         cmap = kwargs["cmap"]
         top_n = kwargs["top_n"]
         #
-        plots = {"Heatmap": plt.heatmap, "Gant": plt.gant, "Bubble": plt.bubble}
+        plots = {"Heatmap": plt.heatmap, "Gant": plt.gant, "Bubble": plt.bubble, "Lines": plt.plot}
         plot = plots[plot_type]
         #
         if analysis_type == "Frequency":
@@ -579,6 +579,8 @@ def __body_0(x):
                 display(plot(matrix, figsize=FIGSIZE))
             if plot_type == "Bubble":
                 display(plot(matrix.transpose(), axis=0, cmap=cmap, figsize=FIGSIZE))
+            if plot_type == "Lines":
+                display(plot(matrix, cmap=cmap, figsize=FIGSIZE))
 
 
     # -------------------------------------------------------------------------
