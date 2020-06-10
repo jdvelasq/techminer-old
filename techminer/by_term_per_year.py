@@ -686,7 +686,7 @@ def __body_0(x):
         # 2
         {
             "arg": "plot_type",
-            "desc": "Plot type:",
+            "desc": "View:",
             "widget": widgets.Dropdown(
                 options=["Heatmap", "Bubble", "Gant", 'Lines'],
                 layout=Layout(width=WIDGET_WIDTH),

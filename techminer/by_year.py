@@ -140,7 +140,7 @@ FIGSIZE = (15, 9.4)
 PANE_HEIGHTS = ["80px", "650px", 0]
 
 
-def __body_0(df):
+def __APP0__(df):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -166,9 +166,10 @@ def __body_0(df):
         # 1
         {
             "arg": "plot_type",
-            "desc": "Plot type:",
+            "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["bar", "barh"], layout=Layout(width=WIDGET_WIDTH),
+                options=["Bar plot", "Horizontal bar plot", "Table"],
+                layout=Layout(width=WIDGET_WIDTH),
             ),
         },
         # 2
@@ -189,7 +190,7 @@ def __body_0(df):
         #
         # Logic
         #
-        plots = {"bar": plt.bar, "barh": plt.barh}
+        plots = {"Bar plot": plt.bar, "Horizontal bar plot": plt.barh, "Table": None}
         data = {
             "Documents by Year": ["Year", "Num_Documents"],
             "Cum. Documents by Year": ["Year", "Cum_Num_Documents"],
@@ -204,7 +205,10 @@ def __body_0(df):
         #
         output.clear_output()
         with output:
-            display(plot(x, cmap=kwargs["cmap"], figsize=FIGSIZE))
+            if plot is None:
+                display(x)
+            else:
+                display(plot(x, cmap=kwargs["cmap"], figsize=FIGSIZE))
 
     # -------------------------------------------------------------------------
     #
@@ -239,7 +243,7 @@ def app(df):
     """
     #
     body = widgets.Tab()
-    body.children = [__body_0(df)]
+    body.children = [__APP0__(df)]
     body.set_title(0, "Time Analysis")
     #
     return AppLayout(

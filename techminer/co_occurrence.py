@@ -882,7 +882,7 @@ def __body_1(x):
         # 2
         {
             "arg": "plot_type",
-            "desc": "Plot type:",
+            "desc": "View:",
             "widget": widgets.Dropdown(
                 options=["Matrix", "Heatmap", "Bubble", "Network"],
                 layout=Layout(width=WIDGET_WIDTH),

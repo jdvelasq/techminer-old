@@ -372,7 +372,7 @@ def __body_0(x):
         # 2
         {
             "arg": "plot_type",
-            "desc": "Plot type:",
+            "desc": "View:",
             "widget": widgets.Dropdown(
                     options=["bar", "barh", "pie"],
                     layout=Layout(width=WIDGET_WIDTH),
