@@ -604,7 +604,7 @@ PANE_HEIGHTS = ["80px", "650px", 0]
 #
 #
 
-def __body_0(x):
+def __TAB0__(x):
     COLUMNS = [
         "Author_Keywords",
         "Author_Keywords_CL",
@@ -647,9 +647,9 @@ def __body_0(x):
         # 2
         {
             "arg": "plot_type",
-            "desc": "Plot type:",
+            "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Matrix", "Heatmap", "Bubble"],
+                options=["Heatmap", "Bubble plot", "Table"],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },        
@@ -747,7 +747,7 @@ def __body_0(x):
             matrix = matrix.loc[sorted(a.index), sorted(b.index)]
         #
         #
-        if max(len(matrix.index), len(matrix.columns)) > 50:
+        if max(len(matrix.index), len(matrix.columns)) > 60:
             output.clear_output()
             with output:
                 display(widgets.HTML("<h3>Matrix exceeds the maximum shape</h3>"))
@@ -772,40 +772,39 @@ def __body_0(x):
             }
             matrix = matrix.rename(index=new_names)
         #
+        # Sort order
         #
+        g = lambda m: int(m[m.find("[") + 1 : m.find("]")])
+        if sort_by == "Frequency/Cited by asc.":
+            col_names = sorted(matrix.columns, key=g, reverse=False)
+            row_names = sorted(matrix.index, key=g, reverse=False)
+            matrix = matrix.loc[row_names, col_names]
+        if sort_by == "Frequency/Cited by desc.":
+            col_names = sorted(matrix.columns, key=g, reverse=True)
+            row_names = sorted(matrix.index, key=g, reverse=True)
+            matrix = matrix.loc[row_names, col_names]
+        if sort_by == "Alphabetic asc.":
+            matrix = matrix.sort_index(axis=0, ascending=True).sort_index(
+                axis=1, ascending=True
+            )
+        if sort_by == "Alphabetic desc.":
+            matrix = matrix.sort_index(axis=0, ascending=False).sort_index(
+                axis=1, ascending=False
+            )
         #
         output.clear_output()
         with output:
             #
-            # Sort order
-            #
-            g = lambda m: int(m[m.find("[") + 1 : m.find("]")])
-            if sort_by == "Frequency/Cited by asc.":
-                col_names = sorted(matrix.columns, key=g, reverse=False)
-                row_names = sorted(matrix.index, key=g, reverse=False)
-                matrix = matrix.loc[row_names, col_names]
-            if sort_by == "Frequency/Cited by desc.":
-                col_names = sorted(matrix.columns, key=g, reverse=True)
-                row_names = sorted(matrix.index, key=g, reverse=True)
-                matrix = matrix.loc[row_names, col_names]
-            if sort_by == "Alphabetic asc.":
-                matrix = matrix.sort_index(axis=0, ascending=True).sort_index(
-                    axis=1, ascending=True
-                )
-            if sort_by == "Alphabetic desc.":
-                matrix = matrix.sort_index(axis=0, ascending=False).sort_index(
-                    axis=1, ascending=False
-                )
-            #
             # View
             #
-            if plot_type == 'Matrix':
-                display(matrix.style.format(
-                            lambda q: "{:d}".format(q) if q >= min_value else ""
-                        ).background_gradient(cmap=cmap, axis=None))
+            if plot_type == 'Table':
+                with pd.option_context("display.max_columns", 60, "display.max_rows", 60):
+                    display(matrix.style.format(
+                                lambda q: "{:d}".format(q) if q >= min_value else ""
+                            ).background_gradient(cmap=cmap, axis=None))
             if plot_type == 'Heatmap':
                 display(plt.heatmap(matrix, cmap=cmap, figsize=(14, 8.5)))
-            if plot_type == 'Bubble':
+            if plot_type == 'Bubble plot':
                 display(plt.bubble(matrix.transpose(), axis=0, cmap=cmap, figsize=(14, 8.5)))
             
     # -------------------------------------------------------------------------
@@ -839,7 +838,7 @@ def __body_0(x):
 #
 #
 
-def __body_1(x):
+def __TAB1__(x):
     COLUMNS = [
         "Author_Keywords",
         "Author_Keywords_CL",
@@ -884,7 +883,7 @@ def __body_1(x):
             "arg": "plot_type",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Matrix", "Heatmap", "Bubble", "Network"],
+                options=["Heatmap", "Bubble plot", "Network plot", "Table"],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },        
@@ -998,7 +997,7 @@ def __body_1(x):
             matrix = matrix.loc[sorted(a.index), sorted(b.index)]
         #
         #
-        if max(len(matrix.index), len(matrix.columns)) > 50:
+        if max(len(matrix.index), len(matrix.columns)) > 60:
             output.clear_output()
             with output:
                 display(widgets.HTML("<h3>Matrix exceeds the maximum shape</h3>"))
@@ -1025,47 +1024,45 @@ def __body_1(x):
         #
         matrix = normalize_matrix(matrix, normalization)
         #
+        # Sort order
         #
-        #
+        g = lambda m: int(m[m.find("[") + 1 : m.find("]")])
+        if sort_by == "Frequency/Cited by asc.":
+            col_names = sorted(matrix.columns, key=g, reverse=False)
+            row_names = sorted(matrix.index, key=g, reverse=False)
+            matrix = matrix.loc[row_names, col_names]
+        if sort_by == "Frequency/Cited by desc.":
+            col_names = sorted(matrix.columns, key=g, reverse=True)
+            row_names = sorted(matrix.index, key=g, reverse=True)
+            matrix = matrix.loc[row_names, col_names]
+        if sort_by == "Alphabetic asc.":
+            matrix = matrix.sort_index(axis=0, ascending=True).sort_index(
+                axis=1, ascending=True
+            )
+        if sort_by == "Alphabetic desc.":
+            matrix = matrix.sort_index(axis=0, ascending=False).sort_index(
+                axis=1, ascending=False
+            )
         output.clear_output()
         with output:
             #
-            # Sort order
-            #
-            g = lambda m: int(m[m.find("[") + 1 : m.find("]")])
-            if sort_by == "Frequency/Cited by asc.":
-                col_names = sorted(matrix.columns, key=g, reverse=False)
-                row_names = sorted(matrix.index, key=g, reverse=False)
-                matrix = matrix.loc[row_names, col_names]
-            if sort_by == "Frequency/Cited by desc.":
-                col_names = sorted(matrix.columns, key=g, reverse=True)
-                row_names = sorted(matrix.index, key=g, reverse=True)
-                matrix = matrix.loc[row_names, col_names]
-            if sort_by == "Alphabetic asc.":
-                matrix = matrix.sort_index(axis=0, ascending=True).sort_index(
-                    axis=1, ascending=True
-                )
-            if sort_by == "Alphabetic desc.":
-                matrix = matrix.sort_index(axis=0, ascending=False).sort_index(
-                    axis=1, ascending=False
-                )
-            #
             # View
             #
-            if plot_type == 'Matrix':
-                if normalization == 'None':
-                    display(matrix.style.format(
-                                lambda q: "{:g}".format(q) 
-                            ).background_gradient(cmap=cmap, axis=None))
-                else:
-                    display(matrix.style.format(
-                                lambda q: "{:3.2f}".format(q) 
-                            ).background_gradient(cmap=cmap, axis=None))
+            if plot_type == 'Table':
+                with pd.option_context("display.max_columns", 60, "display.max_rows", 60):
+                    if normalization == 'None':
+                        display(matrix.style.format(
+                                    lambda q: "{:g}".format(q) 
+                                ).background_gradient(cmap=cmap, axis=None))
+                    else:
+                        display(matrix.style.format(
+                                    lambda q: "{:3.2f}".format(q) 
+                                ).background_gradient(cmap=cmap, axis=None))
             if plot_type == 'Heatmap':
                 display(plt.heatmap(matrix, cmap=cmap, figsize=(14, 8.5)))
-            if plot_type == 'Bubble':
+            if plot_type == 'Bubble plot':
                 display(plt.bubble(matrix.transpose(), axis=0, cmap=cmap, figsize=(14, 8.5)))
-            if plot_type == "Network":
+            if plot_type == "Network plot":
                 display(occurrence_map(
                     matrix, layout=layout, cmap=cmap, figsize=(14, 8.5)
                 ))
@@ -1100,7 +1097,7 @@ def app(df):
     """
     #
     body = widgets.Tab()
-    body.children = [__body_0(df), __body_1(df)]
+    body.children = [__TAB0__(df), __TAB1__(df)]
     body.set_title(0, "Co-occurrence")
     body.set_title(1, "Occurrence")
     #
