@@ -688,7 +688,7 @@ def __body_0(x):
             "arg": "plot_type",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Heatmap", "Bubble", "Gant", 'Lines'],
+                options=["Heatmap", "Bubble plot", "Gant diagram", 'Lines plot', "Table"],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
@@ -706,8 +706,8 @@ def __body_0(x):
             "desc": "Top N:",
             "widget": widgets.IntSlider(
                 value=10,
-                min=10,
-                max=50,
+                min=5,
+                max=60,
                 step=1,
                 continuous_update=False,
                 orientation="horizontal",
@@ -730,7 +730,7 @@ def __body_0(x):
         cmap = kwargs["cmap"]
         top_n = kwargs["top_n"]
         #
-        plots = {"Heatmap": plt.heatmap, "Gant": plt.gant, "Bubble": plt.bubble, "Lines": plt.plot}
+        plots = {"Heatmap": plt.heatmap, "Gant diagram": plt.gant, "Bubble plot": plt.bubble, "Lines": plt.plot, "Table":None}
         plot = plots[plot_type]
         #
         if analysis_type == "Frequency":
@@ -750,12 +750,15 @@ def __body_0(x):
         with output:
             if plot_type == "Heatmap":
                 display(plot(matrix, cmap=cmap, figsize=FIGSIZE))
-            if plot_type == "Gant":
+            if plot_type == "Gant diagram":
                 display(plot(matrix, figsize=FIGSIZE))
-            if plot_type == "Bubble":
+            if plot_type == "Bubble plot":
                 display(plot(matrix.transpose(), axis=0, cmap=cmap, figsize=FIGSIZE))
-            if plot_type == "Lines":
+            if plot_type == "Lines plot":
                 display(plot(matrix, cmap=cmap, figsize=FIGSIZE))
+            if plot_type == 'Table':
+                with pd.option_context("display.max_columns", 60):
+                    display(matrix)
 
 
     # -------------------------------------------------------------------------
