@@ -640,7 +640,7 @@ COLUMNS = [
 ]
 
 
-def __body_0(x):
+def __TAB0__(x):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -712,7 +712,7 @@ def __body_0(x):
             "arg": "view",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Matrix", "Heatmap", "Correlation map", "Chord diagram"],
+                options=["Heatmap", "Correlation map", "Chord diagram", "Table"],
                 ensure_option=True,
                 continuous_update=True,
                 layout=Layout(width=WIDGET_WIDTH),
@@ -819,7 +819,7 @@ def __body_0(x):
             controls[9]["widget"].disabled = True
         #
         #
-        if n_columns > 50:
+        if n_columns > 60:
             controls[7]["widget"].disabled = True
             controls[8]["widget"].disabled = True
             output.clear_output()
@@ -847,7 +847,7 @@ def __body_0(x):
         #
         output.clear_output()
         with output:
-            if view == "Matrix" or view == "Heatmap":
+            if view == "Table" or view == "Heatmap":
                 #
                 # Sort order
                 #
@@ -870,14 +870,17 @@ def __body_0(x):
                 #
                 # View
                 #
-                if view == "Matrix":
-                    display(
-                        matrix.style.format(
-                            lambda q: "{:+4.3f}".format(q)
-                            if q >= min_link_value
-                            else ""
-                        ).background_gradient(cmap=cmap)
-                    )
+                with pd.option_context(
+                    "display.max_columns", 60, "display.max_rows", 60
+                ):
+                    if view == "Table":
+                        display(
+                            matrix.style.format(
+                                lambda q: "{:+4.3f}".format(q)
+                                if q >= min_link_value
+                                else ""
+                            ).background_gradient(cmap=cmap)
+                        )
                 if view == "Heatmap":
                     display(plt.heatmap(matrix, cmap=cmap, figsize=(14, 8.5)))
                 #
@@ -932,7 +935,7 @@ def __body_0(x):
 def app(df):
     #
     body = widgets.Tab()
-    body.children = [__body_0(df)]
+    body.children = [__TAB0__(df)]
     body.set_title(0, "Matrix")
     #
     return AppLayout(
