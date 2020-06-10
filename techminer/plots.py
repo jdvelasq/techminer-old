@@ -35,6 +35,9 @@ COLORMAPS = [
     "Greens",
     "Oranges",
     "Reds",
+    "ocean",
+    "gnuplot",
+    "gnuplot2",
     "YlOrBr",
     "YlOrRd",
     "OrRd",
@@ -47,6 +50,42 @@ COLORMAPS = [
     "PuBuGn",
     "BuGn",
     "YlGn",
+    "viridis",
+    "plasma",
+    "inferno",
+    "magma",
+    "cividis",
+    "binary",
+    "gist_yarg",
+    "gist_gray",
+    "gray",
+    "bone",
+    "pink",
+    "spring",
+    "summer",
+    "autumn",
+    "winter",
+    "cool",
+    "Wistia",
+    "hot",
+    "afmhot",
+    "gist_heat",
+    "copper",
+    "PiYG",
+    "PRGn",
+    "BrBG",
+    "PuOr",
+    "RdGy",
+    "RdBu",
+    "RdYlBu",
+    "RdYlGn",
+    "Spectral",
+    "coolwarm",
+    "bwr",
+    "seismic",
+    "twilight",
+    "twilight_shifted",
+    "hsv",
     "Pastel1",
     "Pastel2",
     "Paired",
@@ -59,6 +98,49 @@ COLORMAPS = [
     "tab20",
     "tab20b",
     "tab20c",
+    "flag",
+    "prism",
+    "gist_earth",
+    "terrain",
+    "gist_stern",
+    "CMRmap",
+    "cubehelix",
+    "brg",
+    "gist_rainbow",
+    "rainbow",
+    "jet",
+    "nipy_spectral",
+    "gist_ncar",
+]
+
+STYLE = [
+    "default",
+    "classic",
+    "Solarize_Light2",
+    "_classic_test_patch",
+    "bmh",
+    "dark_background",
+    "fast",
+    "fivethirtyeight",
+    "ggplot",
+    "grayscale",
+    "seaborn",
+    "seaborn-bright",
+    "seaborn-colorblind",
+    "seaborn-dark",
+    "seaborn-dark-palette",
+    "seaborn-darkgrid",
+    "seaborn-deep",
+    "seaborn-muted",
+    "seaborn-notebook",
+    "seaborn-paper",
+    "seaborn-pastel",
+    "seaborn-poster",
+    "seaborn-talk",
+    "seaborn-ticks",
+    "seaborn-white",
+    "seaborn-whitegrid",
+    "tableau-colorblind10",
 ]
 
 
@@ -79,7 +161,7 @@ def bar(
     ...     }
     ... )
     >>> df
-        Authors  Num Documents  ID
+        Authors  Num_Documents  ID
     0  author 3              3   0
     1  author 1              2   1
     2  author 0              2   2
@@ -93,6 +175,7 @@ def bar(
 
 
     """
+
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
     if "ID" in x.columns:
@@ -147,7 +230,7 @@ def barh(x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **
     ...     }
     ... )
     >>> x
-        Authors  Num Documents  ID
+        Authors  Num_Documents  ID
     0  author 3              3   0
     1  author 1              2   1
     2  author 0              2   2
@@ -229,7 +312,7 @@ def bubble(
     ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
     ... )
     >>> df
-            author 0  author 1  author 2  author 3  author 4
+          author 0  author 1  author 2  author 3  author 4
     2010         1        14         1         0         0
     2011         2        13         5         0        10
     2012         3        12         8         1         0
@@ -352,7 +435,7 @@ def plot(x, *args, figsize=(9, 9), cmap="Blues", scalex=True, scaley=True, **kwa
     ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
     ... )
     >>> df
-            author 0  author 1  author 2  author 3  author 4
+          author 0  author 1  author 2  author 3  author 4
     2010         1        14         1         0         0
     2011         2        13         5         0        10
     2012         3        12         8         1         0
@@ -360,8 +443,8 @@ def plot(x, *args, figsize=(9, 9), cmap="Blues", scalex=True, scaley=True, **kwa
     2014         5        10         0         1         2
     2015         6         9         0         0         0
     2016         7         8         0         0         1
-    >>> _ = Plot(df).plot()
-    >>> plt.savefig('sphinx/images/plotplot.png')
+    >>> fig = plot(df)
+    >>> fig.savefig('sphinx/images/plotplot.png')
 
     .. image:: images/plotplot.png
         :width: 400px
@@ -439,7 +522,7 @@ def pie(
     ...     }
     ... )
     >>> df
-        Authors  Num Documents  ID
+        Authors  Num_Documents  ID
     0  author 3              3   0
     1  author 1              2   1
     2  author 0              2   2
@@ -483,100 +566,102 @@ def pie(
     return fig
 
 
-#     def wordcloud(
-#         self,
-#         font_path=None,
-#         width=400,
-#         height=200,
-#         margin=2,
-#         ranks_only=None,
-#         prefer_horizontal=0.9,
-#         mask=None,
-#         scale=1,
-#         color_func=None,
-#         max_words=200,
-#         min_font_size=4,
-#         stopwords=None,
-#         random_state=None,
-#         background_color="black",
-#         max_font_size=None,
-#         font_step=1,
-#         mode="RGB",
-#         relative_scaling="auto",
-#         regexp=None,
-#         collocations=True,
-#         colormap=None,
-#         normalize_plurals=True,
-#         contour_width=0,
-#         contour_color="black",
-#         repeat=False,
-#         include_numbers=False,
-#         min_word_length=0,
-#     ):
-#         """Plots a wordcloud from a dataframe.
+def wordcloud(
+    x,
+    figsize=(8, 8),
+    font_path=None,
+    width=400,
+    height=200,
+    margin=2,
+    ranks_only=None,
+    prefer_horizontal=0.9,
+    mask=None,
+    scale=1,
+    color_func=None,
+    max_words=200,
+    min_font_size=4,
+    stopwords=None,
+    random_state=None,
+    background_color="black",
+    max_font_size=None,
+    font_step=1,
+    mode="RGB",
+    relative_scaling="auto",
+    regexp=None,
+    collocations=True,
+    colormap=None,
+    normalize_plurals=True,
+    contour_width=0,
+    contour_color="black",
+    repeat=False,
+    include_numbers=False,
+    min_word_length=0,
+):
+    """Plots a wordcloud from a dataframe.
 
-#         Examples
-#         ----------------------------------------------------------------------------------------------
+    Examples
+    ----------------------------------------------------------------------------------------------
 
-#         >>> import pandas as pd
-#         >>> df = pd.DataFrame(
-#         ...     {
-#         ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-#         ...         "Num_Documents": [10, 5, 2, 1],
-#         ...         "ID": list(range(4)),
-#         ...     }
-#         ... )
-#         >>> df
-#             Authors  Num Documents  ID
-#         0  author 3             10   0
-#         1  author 1              5   1
-#         2  author 0              2   2
-#         3  author 2              1   3
-#         >>> _ = Plot(df).wordcloud()
-#         >>> plt.savefig('sphinx/images/wordcloud.png')
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+    ...         "Num_Documents": [10, 5, 2, 1],
+    ...         "ID": list(range(4)),
+    ...     }
+    ... )
+    >>> df
+        Authors  Num_Documents  ID
+    0  author 3             10   0
+    1  author 1              5   1
+    2  author 0              2   2
+    3  author 2              1   3
+    >>> fig = wordcloud(df)
+    >>> fig.savefig('sphinx/images/wordcloud.png')
 
-#         .. image:: images/wordcloud.png
-#             :width: 400px
-#             :align: center
+    .. image:: images/wordcloud.png
+        :width: 400px
+        :align: center
 
-#         """
-#         plt.clf()
-#         x = self.df.copy()
-#         x.pop("ID")
-#         words = {row[0]: row[1] for _, row in x.iterrows()}
-#         wordcloud = WordCloud(
-#             font_path=font_path,
-#             width=width,
-#             height=height,
-#             margin=margin,
-#             ranks_only=ranks_only,
-#             prefer_horizontal=prefer_horizontal,
-#             mask=mask,
-#             scale=scale,
-#             color_func=color_func,
-#             max_words=max_words,
-#             min_font_size=min_font_size,
-#             stopwords=stopwords,
-#             random_state=random_state,
-#             background_color=background_color,
-#             max_font_size=max_font_size,
-#             font_step=font_step,
-#             mode=mode,
-#             relative_scaling=relative_scaling,
-#             regexp=regexp,
-#             collocations=collocations,
-#             colormap=colormap,
-#             normalize_plurals=normalize_plurals,
-#             contour_width=contour_width,
-#             contour_color=contour_color,
-#             repeat=repeat,
-#             include_numbers=include_numbers,
-#             min_word_length=min_word_length,
-#         )
-#         wordcloud.generate_from_frequencies(words)
-#         plt.gca().imshow(wordcloud, interpolation="bilinear")
-#         plt.gca().axis("off")
-#         return plt.gca()
+    """
+    x = x.copy()
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+    x.pop("ID")
+    words = {row[0]: row[1] for _, row in x.iterrows()}
+    wordcloud = WordCloud(
+        font_path=font_path,
+        width=width,
+        height=height,
+        margin=margin,
+        ranks_only=ranks_only,
+        prefer_horizontal=prefer_horizontal,
+        mask=mask,
+        scale=scale,
+        color_func=color_func,
+        max_words=max_words,
+        min_font_size=min_font_size,
+        stopwords=stopwords,
+        random_state=random_state,
+        background_color=background_color,
+        max_font_size=max_font_size,
+        font_step=font_step,
+        mode=mode,
+        relative_scaling=relative_scaling,
+        regexp=regexp,
+        collocations=collocations,
+        colormap=colormap,
+        normalize_plurals=normalize_plurals,
+        contour_width=contour_width,
+        contour_color=contour_color,
+        repeat=repeat,
+        include_numbers=include_numbers,
+        min_word_length=min_word_length,
+    )
+    wordcloud.generate_from_frequencies(words)
+    ax.imshow(wordcloud, interpolation="bilinear")
+    ax.axis("off")
+    return fig
 
 
 def gant(
@@ -813,8 +898,8 @@ def stacked_bar(
     4  author 3      2      5   4
     5  author 5      1      7   5
 
-    >>> _ = Plot(df).stacked_bar(cmap='Blues')
-    >>> plt.savefig('sphinx/images/stkbar0.png')
+    >>> fig = stacked_bar(df, cmap='Blues')
+    >>> fig.savefig('sphinx/images/stkbar0.png')
 
     .. image:: images/stkbar0.png
         :width: 400px
@@ -838,8 +923,8 @@ def stacked_bar(
     4  author 3      4      4      0   4
     5  author 5      1      5      1   5
 
-    >>> _ = Plot(df).stacked_bar(cmap='Blues')
-    >>> plt.savefig('sphinx/images/stkbar1.png')
+    >>> fig = stacked_bar(df, cmap='Blues')
+    >>> fig.savefig('sphinx/images/stkbar1.png')
 
     .. image:: images/stkbar1.png
         :width: 400px
@@ -913,8 +998,8 @@ def stacked_barh(
     4  author 3      2      5   4
     5  author 5      1      7   5
 
-    >>> _ = Plot(df).stacked_barh(cmap='Blues')
-    >>> plt.savefig('sphinx/images/stkbarh0.png')
+    >>> fig = stacked_barh(df, cmap='Blues')
+    >>> fig.savefig('sphinx/images/stkbarh0.png')
 
     .. image:: images/stkbarh0.png
         :width: 400px
@@ -938,8 +1023,8 @@ def stacked_barh(
     4  author 3      4      4      0   4
     5  author 5      1      5      1   5
 
-    >>> _ = Plot(df).stacked_barh(cmap='Blues')
-    >>> plt.savefig('sphinx/images/stkbarh1.png')
+    >>> fig = stacked_barh(df, cmap='Blues')
+    >>> fig.savefig('sphinx/images/stkbarh1.png')
 
     .. image:: images/stkbarh1.png
         :width: 400px
@@ -1159,7 +1244,7 @@ def worldmap(x, figsize=(10, 5), cmap="Pastel2", legend=True, *args, **kwargs):
     ...     },
     ... )
     >>> x
-                AU_CO  Num Documents
+                AU_CO  Num_Documents
     0           China           1000
     1          Taiwan            900
     2   United States            800
@@ -1205,6 +1290,50 @@ def worldmap(x, figsize=(10, 5), cmap="Pastel2", legend=True, *args, **kwargs):
     ax.text(xleft, ymin, "0", ha="right")
     ax.text(xleft, ymax, str(x[x.columns[0]].max()), ha="right")
     ax.set_aspect("equal")
+    ax.axis("off")
+    return fig
+
+
+def tree(x, cmap="Blues", figsize=(8, 8), alpha=0.9):
+    """Creates a classification plot from a dataframe.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+    ...         "Num_Documents": [10, 5, 2, 1],
+    ...         "ID": list(range(4)),
+    ...     }
+    ... )
+    >>> df
+        Authors  Num_Documents  ID
+    0  author 3             10   0
+    1  author 1              5   1
+    2  author 0              2   2
+    3  author 2              1   3
+
+    >>> fig = tree(df)
+    >>> fig.savefig('sphinx/images/treeplot.png')
+
+    .. image:: images/treeplot.png
+        :width: 400px
+        :align: center
+
+
+    """
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+    x = x.copy()
+    cmap = plt.cm.get_cmap(cmap)
+    column0 = x[x.columns[0]]
+    column1 = x[x.columns[1]]
+    colors = [
+        cmap((0.2 + 0.75 * column1[i] / max(column1))) for i in range(len(column1))
+    ]
+    squarify.plot(sizes=column1, label=column0, color=colors, alpha=alpha, ax=ax)
     ax.axis("off")
     return fig
 
@@ -1323,50 +1452,6 @@ def worldmap(x, figsize=(10, 5), cmap="Pastel2", legend=True, *args, **kwargs):
 #         #         alpha=0.2,
 #         #         linewidth=0,
 #         #     )
-
-
-def tree(self, cmap="Blues", alpha=0.9):
-    """Creates a classification plot from a dataframe.
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> import pandas as pd
-    >>> df = pd.DataFrame(
-    ...     {
-    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-    ...         "Num_Documents": [10, 5, 2, 1],
-    ...         "ID": list(range(4)),
-    ...     }
-    ... )
-    >>> df
-        Authors  Num Documents  ID
-    0  author 3             10   0
-    1  author 1              5   1
-    2  author 0              2   2
-    3  author 2              1   3
-
-    >>> _ = Plot(df).tree()
-    >>> plt.savefig('sphinx/images/treeplot.png')
-
-    .. image:: images/treeplot.png
-        :width: 400px
-        :align: center
-
-
-    """
-    plt.clf()
-    x = self.df.copy()
-    cmap = plt.cm.get_cmap(cmap)
-    colors = [
-        cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))
-        for i in range(len(x[x.columns[1]]))
-    ]
-    squarify.plot(
-        sizes=x[x.columns[1]], label=x[x.columns[0]], color=colors, alpha=alpha
-    )
-    plt.gca().axis("off")
-    return plt.gca()
 
 
 #
