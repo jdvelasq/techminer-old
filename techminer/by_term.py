@@ -374,7 +374,7 @@ def __body_0(x):
             "arg": "plot_type",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                    options=["bar", "barh", "pie"],
+                    options=["Bar plot", "Horizontal bar plot", "Pie plot", "Table"],
                     layout=Layout(width=WIDGET_WIDTH),
                 ),
         },
@@ -392,8 +392,8 @@ def __body_0(x):
             "desc": "Top N:",
             "widget": widgets.IntSlider(
                     value=10,
-                    min=10,
-                    max=50,
+                    min=5,
+                    max=60,
                     step=1,
                     continuous_update=False,
                     orientation="horizontal",
@@ -416,7 +416,7 @@ def __body_0(x):
         top_n = kwargs['top_n']
         plot_type = kwargs['plot_type']
         #
-        plots = {"bar": plt.bar, "barh": plt.barh, "pie": plt.pie}
+        plots = {"Bar plot": plt.bar, "Horizontal bar plot": plt.barh, "Pie plot": plt.pie, "Table": None}
         #
         df = summary_by_term(x, term)
         if analysis_type == "Frequency":
@@ -433,7 +433,10 @@ def __body_0(x):
         plot = plots[plot_type]
         output.clear_output()
         with output:
-            display(plot(df, cmap=cmap, figsize=FIGSIZE))
+            if plot is None:
+                display(df)
+            else:
+                display(plot(df, cmap=cmap, figsize=FIGSIZE))
             
 
     # -------------------------------------------------------------------------
