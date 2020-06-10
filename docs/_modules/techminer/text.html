@@ -170,127 +170,128 @@
 <span class="kn">from</span> <span class="nn">nltk.stem</span> <span class="kn">import</span> <span class="n">PorterStemmer</span><span class="p">,</span> <span class="n">SnowballStemmer</span>
 
 
-<div class="viewcode-block" id="extract_country"><a class="viewcode-back" href="../../text.html#techminer.text.extract_country">[docs]</a><span class="k">def</span> <span class="nf">extract_country</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Extracts country name from a string,</span>
+<div class="viewcode-block" id="steamming"><a class="viewcode-back" href="../../text.html#techminer.text.steamming">[docs]</a><span class="k">def</span> <span class="nf">steamming</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    ----------------------------------------------------------------------------------------------</span>
 
-<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">    &gt;&gt;&gt; x = pd.DataFrame({</span>
-<span class="sd">    ...     &#39;AU_CO&#39;: [</span>
-<span class="sd">    ...         &#39;University, Cuba; University, Venezuela&#39;,</span>
-<span class="sd">    ...         &#39;University, United States; Univesrity, Singapore&#39;,</span>
-<span class="sd">    ...         &#39;University;&#39;,</span>
-<span class="sd">    ...         &#39;University; Univesity&#39;,</span>
-<span class="sd">    ...         &#39;University,&#39;,</span>
-<span class="sd">    ...         &#39;University&#39;,</span>
-<span class="sd">    ...         None]</span>
-<span class="sd">    ... })</span>
-<span class="sd">    &gt;&gt;&gt; x[&#39;AU_CO&#39;].map(lambda x: extract_country(x))</span>
-<span class="sd">    0             Cuba;Venezuela</span>
-<span class="sd">    1    United States;Singapore</span>
-<span class="sd">    2                       None</span>
-<span class="sd">    3                       None</span>
-<span class="sd">    4                       None</span>
-<span class="sd">    5                       None</span>
-<span class="sd">    6                       None</span>
-<span class="sd">    Name: AU_CO, dtype: object</span>
-<span class="sd">    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span>
-    <span class="c1">#</span>
-    <span class="c1"># lista generica de nombres de paises</span>
-    <span class="c1">#</span>
-    <span class="n">module_path</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">module_path</span><span class="p">,</span> <span class="s2">&quot;data/worldmap.data&quot;</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">countries</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-    <span class="n">country_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">countries</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    <span class="c1">#</span>
-    <span class="c1"># paises faltantes</span>
-    <span class="c1">#</span>
-    <span class="n">country_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Singapore&quot;</span><span class="p">)</span>
-    <span class="n">country_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Malta&quot;</span><span class="p">)</span>
-    <span class="n">country_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;United States&quot;</span><span class="p">)</span>
-    <span class="c1">#</span>
-    <span class="c1"># Reemplazo de nombres de regiones administrativas</span>
-    <span class="c1"># por nombres de paises</span>
-    <span class="c1">#</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;Bosnia and Herzegovina&quot;</span><span class="p">,</span> <span class="s2">&quot;Bosnia and Herz.&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;Czech Republic&quot;</span><span class="p">,</span> <span class="s2">&quot;Czechia&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;Russian Federation&quot;</span><span class="p">,</span> <span class="s2">&quot;Russia&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;Hong Kong&quot;</span><span class="p">,</span> <span class="s2">&quot;China&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;Macau&quot;</span><span class="p">,</span> <span class="s2">&quot;China&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;Macao&quot;</span><span class="p">,</span> <span class="s2">&quot;China&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-    <span class="n">countries</span> <span class="o">=</span> <span class="p">[</span><span class="n">affiliation</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">affiliation</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)]</span>
-    <span class="n">countries</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">country</span> <span class="k">if</span> <span class="n">country</span> <span class="ow">in</span> <span class="n">country_names</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span> <span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="n">countries</span><span class="p">]</span>
-    <span class="p">)</span>
-    <span class="k">if</span> <span class="n">countries</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">countries</span> <span class="o">==</span> <span class="s2">&quot;;&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">countries</span></div>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">remove_accents</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="n">remove_accents</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="n">porter</span> <span class="o">=</span> <span class="n">PorterStemmer</span><span class="p">()</span>
+
+    <span class="n">pattern</span> <span class="o">=</span> <span class="p">[</span><span class="n">porter</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">pattern</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">porter</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">m</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">pattern</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="extract_institution"><a class="viewcode-back" href="../../text.html#techminer.text.extract_institution">[docs]</a><span class="k">def</span> <span class="nf">extract_institution</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="steamming_all"><a class="viewcode-back" href="../../text.html#techminer.text.steamming_all">[docs]</a><span class="k">def</span> <span class="nf">steamming_all</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; steamming_all(&#39;computers cars&#39;, &#39;car computing&#39;)</span>
+<span class="sd">    True</span>
+
+<span class="sd">    &gt;&gt;&gt; steamming_all(&#39;computers cars&#39;, &#39;car houses&#39;)</span>
+<span class="sd">    False</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">steamming</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">text</span><span class="p">))</span></div>
 
-    <span class="k">def</span> <span class="nf">search_name</span><span class="p">(</span><span class="n">affiliation</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">affiliation</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">item</span>
-        <span class="n">affiliation</span> <span class="o">=</span> <span class="n">affiliation</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">affiliation</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">elem</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">elem</span>
-        <span class="k">return</span> <span class="kc">None</span>
 
+<div class="viewcode-block" id="steamming_any"><a class="viewcode-back" href="../../text.html#techminer.text.steamming_any">[docs]</a><span class="k">def</span> <span class="nf">steamming_any</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; steamming_any(&#39;computers cars&#39;, &#39;car computing&#39;)</span>
+<span class="sd">    True</span>
+
+<span class="sd">    &gt;&gt;&gt; steamming_any(&#39;computers cars&#39;, &#39;computing house&#39;)</span>
+<span class="sd">    True</span>
+
+<span class="sd">    &gt;&gt;&gt; steamming_all(&#39;computers cars&#39;, &#39;tree houses&#39;)</span>
+<span class="sd">    False</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">steamming</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">text</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="find_string"><a class="viewcode-back" href="../../text.html#techminer.text.find_string">[docs]</a><span class="k">def</span> <span class="nf">find_string</span><span class="p">(</span>
+    <span class="n">patterns</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">full_match</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_re</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Find patterns in the elements of a list.</span>
+
+<span class="sd">    &gt;&gt;&gt; x = [&#39;aa;b&#39;, &#39;c;d&#39;, &#39;A&#39;, &#39;e&#39;, None]</span>
+<span class="sd">    &gt;&gt;&gt; find_string(&#39;a&#39;, x)</span>
+<span class="sd">    [&#39;A&#39;, &#39;aa&#39;]</span>
+
+<span class="sd">    &gt;&gt;&gt; find_string(&#39;a&#39;, x, ignore_case=False)</span>
+<span class="sd">    [&#39;aa&#39;]</span>
+
+<span class="sd">    &gt;&gt;&gt; find_string(&#39;a&#39;, x, full_match=True)</span>
+<span class="sd">    [&#39;A&#39;]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#</span>
-    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;univ&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;institut&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;centre&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;center&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;centro&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;agency&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;council&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;commission&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;college&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;politec&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;inc.&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;ltd.&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;office&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;department&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;direction&quot;</span> <span class="s2">&quot;laboratory&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;laboratoire&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;colegio&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;school&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;scuola&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;ecole&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;hospital&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;association&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;asociacion&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;company&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;organization&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;academy&quot;</span><span class="p">,</span>
-    <span class="p">]</span>
+    <span class="k">if</span> <span class="n">explode</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">z</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">x</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="c1">#</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">use_re</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">full_match</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;^&quot;</span> <span class="o">+</span> <span class="n">pattern</span> <span class="o">+</span> <span class="s2">&quot;$&quot;</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">ignore_case</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">results</span><span class="p">))</span></div>
 
-    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span>
-    <span class="n">institutions</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
-        <span class="n">institution</span> <span class="o">=</span> <span class="n">search_name</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">institution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="n">institution</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">institution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">institutions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">institution</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">institutions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">institutions</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">institutions</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">institutions</span></div>
+
+<span class="c1"># # def replace_string(</span>
+<span class="c1"># #     pattern, x, repl=None, ignore_case=True, full_match=False, use_re=False</span>
+<span class="c1"># # ):</span>
+<span class="c1"># #     &quot;&quot;&quot;Replace pattern in string.</span>
+
+<span class="c1"># #     Args:</span>
+<span class="c1"># #         pattern (string)</span>
+<span class="c1"># #         x (string)</span>
+<span class="c1"># #         repl (string, None)</span>
+<span class="c1"># #         ignore_case (bool)</span>
+<span class="c1"># #         full_match (bool)</span>
+<span class="c1"># #         use_re (bool)</span>
+
+<span class="c1"># #     Returns:</span>
+<span class="c1"># #         string or []</span>
+
+<span class="c1"># #     &quot;&quot;&quot;</span>
+
+<span class="c1"># #     if use_re is False:</span>
+<span class="c1"># #         pattern = re.escape(pattern)</span>
+
+<span class="c1"># #     if full_match is True:</span>
+<span class="c1"># #         pattern = &quot;^&quot; + pattern + &quot;$&quot;</span>
+
+<span class="c1"># #     if ignore_case is True:</span>
+<span class="c1"># #         return re.sub(pattern, repl, x, re.I)</span>
+<span class="c1"># #     return re.sub(pattern, repl, x)</span>
 
 
 <div class="viewcode-block" id="one_gram"><a class="viewcode-back" href="../../text.html#techminer.text.one_gram">[docs]</a><span class="k">def</span> <span class="nf">one_gram</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
@@ -427,132 +428,6 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">remove_accents</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span>
     <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
-
-
-<span class="c1"># # def find_string(self, x):</span>
-<span class="c1"># #     r&quot;&quot;&quot;Find patterns in string.</span>
-
-<span class="c1"># #     Args:</span>
-<span class="c1"># #         x (string)</span>
-
-<span class="c1"># #     Returns:</span>
-<span class="c1"># #         string or None</span>
-
-
-<span class="c1"># #     Examples</span>
-<span class="c1"># #     ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1"># #     &gt;&gt;&gt; keywords = Keywords(r&#39;\btwo\b&#39;, use_re=True)</span>
-<span class="c1"># #     &gt;&gt;&gt; keywords = keywords.compile()</span>
-<span class="c1"># #     &gt;&gt;&gt; keywords.find_string(&#39;one two three four five&#39;)</span>
-<span class="c1"># #     &#39;two&#39;</span>
-
-<span class="c1"># #     &gt;&gt;&gt; keywords = Keywords(r&#39;\bTWO\b&#39;, use_re=True)</span>
-<span class="c1"># #     &gt;&gt;&gt; keywords = keywords.compile()</span>
-<span class="c1"># #     &gt;&gt;&gt; keywords.find_string(&#39;one two three four five&#39;)</span>
-<span class="c1"># #     &#39;two&#39;</span>
-
-<span class="c1"># #     &gt;&gt;&gt; keywords = Keywords(r&#39;\btwo\b&#39;, ignore_case=False, use_re=True)</span>
-<span class="c1"># #     &gt;&gt;&gt; keywords = keywords.compile()</span>
-<span class="c1"># #     &gt;&gt;&gt; keywords.find_string(&#39;one TWO three four five&#39;) is None</span>
-<span class="c1"># #     True</span>
-
-<span class="c1"># #     &gt;&gt;&gt; keywords = Keywords(r&#39;\btwo\Wthree\b&#39;, ignore_case=False, use_re=True)</span>
-<span class="c1"># #     &gt;&gt;&gt; keywords = keywords.compile()</span>
-<span class="c1"># #     &gt;&gt;&gt; keywords.find_string(&#39;one two three four five&#39;)</span>
-<span class="c1"># #     &#39;two three&#39;</span>
-
-<span class="c1"># #     &quot;&quot;&quot;</span>
-<span class="c1"># #     for pattern in self._patterns:</span>
-<span class="c1"># #         result = pattern.findall(x)</span>
-<span class="c1"># #         if len(result):</span>
-<span class="c1"># #             return result[0]</span>
-<span class="c1"># #     return None</span>
-
-<span class="c1"># # def replace_string(</span>
-<span class="c1"># #     pattern, x, repl=None, ignore_case=True, full_match=False, use_re=False</span>
-<span class="c1"># # ):</span>
-<span class="c1"># #     &quot;&quot;&quot;Replace pattern in string.</span>
-
-<span class="c1"># #     Args:</span>
-<span class="c1"># #         pattern (string)</span>
-<span class="c1"># #         x (string)</span>
-<span class="c1"># #         repl (string, None)</span>
-<span class="c1"># #         ignore_case (bool)</span>
-<span class="c1"># #         full_match (bool)</span>
-<span class="c1"># #         use_re (bool)</span>
-
-<span class="c1"># #     Returns:</span>
-<span class="c1"># #         string or []</span>
-
-<span class="c1"># #     &quot;&quot;&quot;</span>
-
-<span class="c1"># #     if use_re is False:</span>
-<span class="c1"># #         pattern = re.escape(pattern)</span>
-
-<span class="c1"># #     if full_match is True:</span>
-<span class="c1"># #         pattern = &quot;^&quot; + pattern + &quot;$&quot;</span>
-
-<span class="c1"># #     if ignore_case is True:</span>
-<span class="c1"># #         return re.sub(pattern, repl, x, re.I)</span>
-<span class="c1"># #     return re.sub(pattern, repl, x)</span>
-
-
-<span class="c1"># def steamming(pattern, text):</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-
-<span class="c1">#     Examples</span>
-<span class="c1">#     ----------------------------------------------------------------------------------------------</span>
-
-
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     text = remove_accents(text)</span>
-<span class="c1">#     pattern = remove_accents(pattern)</span>
-
-<span class="c1">#     text = text.strip().lower()</span>
-<span class="c1">#     pattern = pattern.strip().lower()</span>
-
-<span class="c1">#     porter = PorterStemmer()</span>
-
-<span class="c1">#     pattern = [porter.stem(w) for w in pattern.split()]</span>
-<span class="c1">#     text = [porter.stem(w) for w in text.split()]</span>
-
-<span class="c1">#     return [m in text for m in pattern]</span>
-
-
-<span class="c1"># def steamming_all(pattern, text):</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-
-<span class="c1">#     Examples</span>
-<span class="c1">#     ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1">#     &gt;&gt;&gt; steamming_all(&#39;computers cars&#39;, &#39;car computing&#39;)</span>
-<span class="c1">#     True</span>
-
-<span class="c1">#     &gt;&gt;&gt; steamming_all(&#39;computers cars&#39;, &#39;car houses&#39;)</span>
-<span class="c1">#     False</span>
-
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     return all(steamming(pattern, text))</span>
-
-
-<span class="c1"># def steamming_any(pattern, text):</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-
-<span class="c1">#     Examples</span>
-<span class="c1">#     ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1">#     &gt;&gt;&gt; steamming_any(&#39;computers cars&#39;, &#39;car computing&#39;)</span>
-<span class="c1">#     True</span>
-
-<span class="c1">#     &gt;&gt;&gt; steamming_any(&#39;computers cars&#39;, &#39;computing house&#39;)</span>
-<span class="c1">#     True</span>
-
-<span class="c1">#     &gt;&gt;&gt; steamming_all(&#39;computers cars&#39;, &#39;tree houses&#39;)</span>
-<span class="c1">#     False</span>
-
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     return any(steamming(pattern, text))</span>
 
 
 <div class="viewcode-block" id="remove_accents"><a class="viewcode-back" href="../../text.html#techminer.text.remove_accents">[docs]</a><span class="k">def</span> <span class="nf">remove_accents</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>

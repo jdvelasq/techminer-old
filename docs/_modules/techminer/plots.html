@@ -161,20 +161,23 @@
 <span class="kn">import</span> <span class="nn">textwrap</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">join</span>
 
+<span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
+<span class="kn">import</span> <span class="nn">squarify</span>
 <span class="kn">from</span> <span class="nn">techminer.chord_diagram</span> <span class="kn">import</span> <span class="n">ChordDiagram</span>
+<span class="kn">from</span> <span class="nn">wordcloud</span> <span class="kn">import</span> <span class="n">ImageColorGenerator</span><span class="p">,</span> <span class="n">WordCloud</span>
 
-<span class="c1"># import numpy as np</span>
-<span class="c1"># import pandas as pd</span>
-<span class="c1"># import squarify</span>
 <span class="c1"># from mpl_toolkits.axes_grid1 import make_axes_locatable</span>
 <span class="c1"># from scipy.spatial import ConvexHull</span>
 <span class="c1"># from sklearn.cluster import AgglomerativeClustering</span>
-<span class="c1"># from wordcloud import ImageColorGenerator, WordCloud</span>
 
 <span class="c1"># from .chord_diagram import ChordDiagram</span>
+
+<span class="c1"># import numpy as np</span>
+<span class="c1"># import pandas as pd</span>
+
+<span class="n">FONT_SIZE</span> <span class="o">=</span> <span class="mi">16</span>
 
 <span class="n">TEXTLEN</span> <span class="o">=</span> <span class="mi">30</span>
 
@@ -185,6 +188,9 @@
     <span class="s2">&quot;Greens&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Oranges&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Reds&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ocean&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gnuplot&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gnuplot2&quot;</span><span class="p">,</span>
     <span class="s2">&quot;YlOrBr&quot;</span><span class="p">,</span>
     <span class="s2">&quot;YlOrRd&quot;</span><span class="p">,</span>
     <span class="s2">&quot;OrRd&quot;</span><span class="p">,</span>
@@ -197,6 +203,42 @@
     <span class="s2">&quot;PuBuGn&quot;</span><span class="p">,</span>
     <span class="s2">&quot;BuGn&quot;</span><span class="p">,</span>
     <span class="s2">&quot;YlGn&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;viridis&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;plasma&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;inferno&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;magma&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cividis&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;binary&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gist_yarg&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gist_gray&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gray&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bone&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pink&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;spring&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;summer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;autumn&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;winter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cool&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Wistia&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hot&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;afmhot&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gist_heat&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;copper&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PiYG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PRGn&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BrBG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PuOr&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RdGy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RdBu&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RdYlBu&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RdYlGn&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Spectral&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;coolwarm&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bwr&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seismic&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;twilight&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;twilight_shifted&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hsv&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Pastel1&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Pastel2&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Paired&quot;</span><span class="p">,</span>
@@ -209,6 +251,49 @@
     <span class="s2">&quot;tab20&quot;</span><span class="p">,</span>
     <span class="s2">&quot;tab20b&quot;</span><span class="p">,</span>
     <span class="s2">&quot;tab20c&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;flag&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;prism&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gist_earth&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;terrain&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gist_stern&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CMRmap&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cubehelix&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;brg&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gist_rainbow&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rainbow&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;jet&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nipy_spectral&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gist_ncar&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">STYLE</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;classic&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Solarize_Light2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;_classic_test_patch&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bmh&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dark_background&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fast&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fivethirtyeight&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ggplot&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;grayscale&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seaborn&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seaborn-bright&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seaborn-colorblind&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seaborn-dark&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seaborn-dark-palette&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seaborn-darkgrid&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seaborn-deep&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seaborn-muted&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seaborn-notebook&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seaborn-paper&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seaborn-pastel&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seaborn-poster&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seaborn-talk&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seaborn-ticks&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seaborn-white&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seaborn-whitegrid&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tableau-colorblind10&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
 
@@ -224,12 +309,12 @@
 <span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
 <span class="sd">    ...     {</span>
 <span class="sd">    ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
-<span class="sd">    ...         &quot;Num Documents&quot;: [3, 2, 2, 1],</span>
+<span class="sd">    ...         &quot;Num_Documents&quot;: [3, 2, 2, 1],</span>
 <span class="sd">    ...         &quot;ID&quot;: list(range(4)),</span>
 <span class="sd">    ...     }</span>
 <span class="sd">    ... )</span>
 <span class="sd">    &gt;&gt;&gt; df</span>
-<span class="sd">        Authors  Num Documents  ID</span>
+<span class="sd">        Authors  Num_Documents  ID</span>
 <span class="sd">    0  author 3              3   0</span>
 <span class="sd">    1  author 1              2   1</span>
 <span class="sd">    2  author 0              2   2</span>
@@ -243,16 +328,25 @@
 
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;font&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">FONT_SIZE</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-    <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;ID&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">cmap</span><span class="p">((</span><span class="mf">0.2</span> <span class="o">+</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]])))</span>
+            <span class="n">cmap</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="mf">0.2</span>
+                    <span class="o">+</span> <span class="mf">0.75</span>
+                    <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]))</span>
+                    <span class="o">/</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]))</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]))</span>
         <span class="p">]</span>
+
     <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
         <span class="n">x</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
         <span class="n">height</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
@@ -262,16 +356,21 @@
         <span class="o">**</span><span class="p">({}),</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span>
+
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])))</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">labelrotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
-    <span class="c1">#</span>
+
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">fig</span></div>
 
 
@@ -285,12 +384,12 @@
 <span class="sd">    &gt;&gt;&gt; x = pd.DataFrame(</span>
 <span class="sd">    ...     {</span>
 <span class="sd">    ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
-<span class="sd">    ...         &quot;Num Documents&quot;: [3, 2, 2, 1],</span>
+<span class="sd">    ...         &quot;Num_Documents&quot;: [3, 2, 2, 1],</span>
 <span class="sd">    ...         &quot;ID&quot;: list(range(4)),</span>
 <span class="sd">    ...     }</span>
 <span class="sd">    ... )</span>
 <span class="sd">    &gt;&gt;&gt; x</span>
-<span class="sd">        Authors  Num Documents  ID</span>
+<span class="sd">        Authors  Num_Documents  ID</span>
 <span class="sd">    0  author 3              3   0</span>
 <span class="sd">    1  author 1              2   1</span>
 <span class="sd">    2  author 0              2   2</span>
@@ -303,17 +402,27 @@
 <span class="sd">        :align: center</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;font&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">FONT_SIZE</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">if</span> <span class="s2">&quot;ID&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">cmap</span><span class="p">((</span><span class="mf">0.2</span> <span class="o">+</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]])))</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]))</span>
+            <span class="n">cmap</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="mf">0.2</span>
+                    <span class="o">+</span> <span class="mf">0.75</span>
+                    <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]))</span>
+                    <span class="o">/</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]))</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
         <span class="p">]</span>
+
     <span class="n">ax</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span>
         <span class="n">y</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
         <span class="n">width</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
@@ -322,17 +431,226 @@
         <span class="n">align</span><span class="o">=</span><span class="n">align</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span>
+
     <span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])))</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="c1">#</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+<div class="viewcode-block" id="bubble"><a class="viewcode-back" href="../../plots.html#techminer.plots.bubble">[docs]</a><span class="k">def</span> <span class="nf">bubble</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">rmax</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span>
+    <span class="n">grid_lw</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">grid_c</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span>
+    <span class="n">grid_ls</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Creates a gant activity plot from a dataframe.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;author 0&quot;: [ 1, 2, 3, 4, 5, 6, 7],</span>
+<span class="sd">    ...         &quot;author 1&quot;: [14, 13, 12, 11, 10, 9, 8],</span>
+<span class="sd">    ...         &quot;author 2&quot;: [1, 5, 8, 9, 0, 0, 0],</span>
+<span class="sd">    ...         &quot;author 3&quot;: [0, 0, 1, 1, 1, 0, 0],</span>
+<span class="sd">    ...         &quot;author 4&quot;: [0, 10, 0, 4, 2, 0, 1],</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">          author 0  author 1  author 2  author 3  author 4</span>
+<span class="sd">    2010         1        14         1         0         0</span>
+<span class="sd">    2011         2        13         5         0        10</span>
+<span class="sd">    2012         3        12         8         1         0</span>
+<span class="sd">    2013         4        11         9         1         4</span>
+<span class="sd">    2014         5        10         0         1         2</span>
+<span class="sd">    2015         6         9         0         0         0</span>
+<span class="sd">    2016         7         8         0         0         1</span>
+
+<span class="sd">    &gt;&gt;&gt; fig = bubble(df, axis=0, alpha=0.5, rmax=150)</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/bubbleplot0.png&#39;)</span>
+
+<span class="sd">    .. image:: images/bubbleplot0.png</span>
+<span class="sd">        :width: 400px</span>
+<span class="sd">        :align: center</span>
+
+<span class="sd">    &gt;&gt;&gt; fig = bubble(df, axis=1, alpha=0.5, rmax=150)</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/bubbleplot1.png&#39;)</span>
+
+<span class="sd">    .. image:: images/bubbleplot1.png</span>
+<span class="sd">        :width: 400px</span>
+<span class="sd">        :align: center</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;font&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">FONT_SIZE</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s2">&quot;columns&quot;</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">vmax</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="n">vmin</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+
+    <span class="n">rmin</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()):</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="mi">10</span> <span class="o">*</span> <span class="p">(</span><span class="n">rmin</span> <span class="o">+</span> <span class="p">(</span><span class="n">rmax</span> <span class="o">-</span> <span class="n">rmin</span><span class="p">)</span> <span class="o">*</span> <span class="n">w</span> <span class="o">/</span> <span class="p">(</span><span class="n">vmax</span> <span class="o">-</span> <span class="n">vmin</span><span class="p">))</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="p">]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)),</span>
+                <span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span>
+                <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span>
+                <span class="n">s</span><span class="o">=</span><span class="n">values</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span> <span class="o">*</span> <span class="p">(</span><span class="n">rmin</span> <span class="o">+</span> <span class="p">(</span><span class="n">rmax</span> <span class="o">-</span> <span class="n">rmin</span><span class="p">)</span> <span class="o">*</span> <span class="n">w</span> <span class="o">/</span> <span class="p">(</span><span class="n">vmax</span> <span class="o">-</span> <span class="n">vmin</span><span class="p">))</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
+                <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">)),</span>
+                <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span>
+                <span class="n">s</span><span class="o">=</span><span class="n">values</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span>
+            <span class="n">idx</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">grid_lw</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">grid_c</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">grid_ls</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span>
+            <span class="n">idx</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">grid_lw</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">grid_c</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">grid_ls</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">idx_col</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">idx_row</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">row</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">idx_col</span><span class="p">,</span> <span class="n">idx_row</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">row</span><span class="p">],</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">labelrotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">tick_top</span><span class="p">()</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">)))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-    <span class="c1">#</span>
+
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+<div class="viewcode-block" id="plot"><a class="viewcode-back" href="../../plots.html#techminer.plots.plot">[docs]</a><span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates a plot from a dataframe.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;author 0&quot;: [ 1, 2, 3, 4, 5, 6, 7],</span>
+<span class="sd">    ...         &quot;author 1&quot;: [14, 13, 12, 11, 10, 9, 8],</span>
+<span class="sd">    ...         &quot;author 2&quot;: [1, 5, 8, 9, 0, 0, 0],</span>
+<span class="sd">    ...         &quot;author 3&quot;: [0, 0, 1, 1, 1, 0, 0],</span>
+<span class="sd">    ...         &quot;author 4&quot;: [0, 10, 0, 4, 2, 0, 1],</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">          author 0  author 1  author 2  author 3  author 4</span>
+<span class="sd">    2010         1        14         1         0         0</span>
+<span class="sd">    2011         2        13         5         0        10</span>
+<span class="sd">    2012         3        12         8         1         0</span>
+<span class="sd">    2013         4        11         9         1         4</span>
+<span class="sd">    2014         5        10         0         1         2</span>
+<span class="sd">    2015         6         9         0         0         0</span>
+<span class="sd">    2016         7         8         0         0         1</span>
+<span class="sd">    &gt;&gt;&gt; fig = plot(df)</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/plotplot.png&#39;)</span>
+
+<span class="sd">    .. image:: images/plotplot.png</span>
+<span class="sd">        :width: 400px</span>
+<span class="sd">        :align: center</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;font&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">FONT_SIZE</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s2">&quot;ID&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+            <span class="n">scalex</span><span class="o">=</span><span class="n">scalex</span><span class="p">,</span>
+            <span class="n">scaley</span><span class="o">=</span><span class="n">scaley</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])),</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span>
+        <span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">labelrotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+    <span class="c1"># ax.xaxis.tick_top()</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">fig</span></div>
 
 
@@ -363,12 +681,12 @@
 <span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
 <span class="sd">    ...     {</span>
 <span class="sd">    ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
-<span class="sd">    ...         &quot;Num Documents&quot;: [3, 2, 2, 1],</span>
+<span class="sd">    ...         &quot;Num_Documents&quot;: [3, 2, 2, 1],</span>
 <span class="sd">    ...         &quot;ID&quot;: list(range(4)),</span>
 <span class="sd">    ...     }</span>
 <span class="sd">    ... )</span>
 <span class="sd">    &gt;&gt;&gt; df</span>
-<span class="sd">        Authors  Num Documents  ID</span>
+<span class="sd">        Authors  Num_Documents  ID</span>
 <span class="sd">    0  author 3              3   0</span>
 <span class="sd">    1  author 1              2   1</span>
 <span class="sd">    2  author 0              2   2</span>
@@ -382,9 +700,11 @@
 
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;font&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">FONT_SIZE</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
     <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">if</span> <span class="s2">&quot;ID&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
@@ -412,73 +732,113 @@
     <span class="k">return</span> <span class="n">fig</span></div>
 
 
-<div class="viewcode-block" id="worldmap"><a class="viewcode-back" href="../../plots.html#techminer.plots.worldmap">[docs]</a><span class="k">def</span> <span class="nf">worldmap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Pastel2&quot;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Worldmap plot with the number of documents per country.</span>
+<div class="viewcode-block" id="wordcloud"><a class="viewcode-back" href="../../plots.html#techminer.plots.wordcloud">[docs]</a><span class="k">def</span> <span class="nf">wordcloud</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+    <span class="n">font_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+    <span class="n">margin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">ranks_only</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">prefer_horizontal</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+    <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">color_func</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">max_words</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+    <span class="n">min_font_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">stopwords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">background_color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+    <span class="n">max_font_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">font_step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;RGB&quot;</span><span class="p">,</span>
+    <span class="n">relative_scaling</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+    <span class="n">regexp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">collocations</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">colormap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span>
+    <span class="n">normalize_plurals</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">contour_width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">contour_color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+    <span class="n">repeat</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">include_numbers</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">min_word_length</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plots a wordcloud from a dataframe.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    ----------------------------------------------------------------------------------------------</span>
 
 <span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">    &gt;&gt;&gt; x = pd.DataFrame(</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
 <span class="sd">    ...     {</span>
-<span class="sd">    ...         &quot;AU_CO&quot;: [&quot;China&quot;, &quot;Taiwan&quot;, &quot;United States&quot;, &quot;United Kingdom&quot;, &quot;India&quot;, &quot;Colombia&quot;],</span>
-<span class="sd">    ...         &quot;Num Documents&quot;: [1000, 900, 800, 700, 600, 1000],</span>
-<span class="sd">    ...     },</span>
+<span class="sd">    ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
+<span class="sd">    ...         &quot;Num_Documents&quot;: [10, 5, 2, 1],</span>
+<span class="sd">    ...         &quot;ID&quot;: list(range(4)),</span>
+<span class="sd">    ...     }</span>
 <span class="sd">    ... )</span>
-<span class="sd">    &gt;&gt;&gt; x</span>
-<span class="sd">                AU_CO  Num Documents</span>
-<span class="sd">    0           China           1000</span>
-<span class="sd">    1          Taiwan            900</span>
-<span class="sd">    2   United States            800</span>
-<span class="sd">    3  United Kingdom            700</span>
-<span class="sd">    4           India            600</span>
-<span class="sd">    5        Colombia           1000</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">        Authors  Num_Documents  ID</span>
+<span class="sd">    0  author 3             10   0</span>
+<span class="sd">    1  author 1              5   1</span>
+<span class="sd">    2  author 0              2   2</span>
+<span class="sd">    3  author 2              1   3</span>
+<span class="sd">    &gt;&gt;&gt; fig = wordcloud(df)</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/wordcloud.png&#39;)</span>
 
-
-<span class="sd">    &gt;&gt;&gt; fig = worldmap(x, figsize=(15, 6))</span>
-<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/worldmap.png&#39;)</span>
-
-<span class="sd">    .. image:: images/worldmap.png</span>
-<span class="sd">        :width: 2000px</span>
+<span class="sd">    .. image:: images/wordcloud.png</span>
+<span class="sd">        :width: 400px</span>
 <span class="sd">        :align: center</span>
 
-
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">module_path</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">x</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="o">/</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">module_path</span><span class="p">,</span> <span class="s2">&quot;data/worldmap.data&quot;</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">countries</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="n">countries</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">countries</span><span class="p">[</span><span class="n">country</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;-k&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">country</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
-                <span class="n">ax</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cmap</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">color</span><span class="p">[</span><span class="n">country</span><span class="p">]))</span>
+    <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="p">{</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()}</span>
+    <span class="n">wordcloud</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span>
+        <span class="n">font_path</span><span class="o">=</span><span class="n">font_path</span><span class="p">,</span>
+        <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+        <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+        <span class="n">margin</span><span class="o">=</span><span class="n">margin</span><span class="p">,</span>
+        <span class="n">ranks_only</span><span class="o">=</span><span class="n">ranks_only</span><span class="p">,</span>
+        <span class="n">prefer_horizontal</span><span class="o">=</span><span class="n">prefer_horizontal</span><span class="p">,</span>
+        <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span>
+        <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span>
+        <span class="n">color_func</span><span class="o">=</span><span class="n">color_func</span><span class="p">,</span>
+        <span class="n">max_words</span><span class="o">=</span><span class="n">max_words</span><span class="p">,</span>
+        <span class="n">min_font_size</span><span class="o">=</span><span class="n">min_font_size</span><span class="p">,</span>
+        <span class="n">stopwords</span><span class="o">=</span><span class="n">stopwords</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+        <span class="n">background_color</span><span class="o">=</span><span class="n">background_color</span><span class="p">,</span>
+        <span class="n">max_font_size</span><span class="o">=</span><span class="n">max_font_size</span><span class="p">,</span>
+        <span class="n">font_step</span><span class="o">=</span><span class="n">font_step</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span>
+        <span class="n">relative_scaling</span><span class="o">=</span><span class="n">relative_scaling</span><span class="p">,</span>
+        <span class="n">regexp</span><span class="o">=</span><span class="n">regexp</span><span class="p">,</span>
+        <span class="n">collocations</span><span class="o">=</span><span class="n">collocations</span><span class="p">,</span>
+        <span class="n">colormap</span><span class="o">=</span><span class="n">colormap</span><span class="p">,</span>
+        <span class="n">normalize_plurals</span><span class="o">=</span><span class="n">normalize_plurals</span><span class="p">,</span>
+        <span class="n">contour_width</span><span class="o">=</span><span class="n">contour_width</span><span class="p">,</span>
+        <span class="n">contour_color</span><span class="o">=</span><span class="n">contour_color</span><span class="p">,</span>
+        <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span>
+        <span class="n">include_numbers</span><span class="o">=</span><span class="n">include_numbers</span><span class="p">,</span>
+        <span class="n">min_word_length</span><span class="o">=</span><span class="n">min_word_length</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">wordcloud</span><span class="o">.</span><span class="n">generate_from_frequencies</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wordcloud</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;bilinear&quot;</span><span class="p">)</span>
     <span class="c1">#</span>
-    <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
-    <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
-    <span class="n">xleft</span> <span class="o">=</span> <span class="n">xmax</span> <span class="o">-</span> <span class="mf">0.02</span> <span class="o">*</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span>
-    <span class="n">xright</span> <span class="o">=</span> <span class="n">xmax</span>
-    <span class="n">xbar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xleft</span><span class="p">,</span> <span class="n">xright</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-    <span class="n">ybar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">+</span> <span class="p">(</span><span class="n">ymax</span> <span class="o">-</span> <span class="n">ymin</span><span class="p">),</span> <span class="mi">100</span><span class="p">)</span>
-    <span class="n">xv</span><span class="p">,</span> <span class="n">yv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xbar</span><span class="p">,</span> <span class="n">ybar</span><span class="p">)</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">yv</span> <span class="o">/</span> <span class="p">(</span><span class="n">ymax</span> <span class="o">-</span> <span class="n">ymin</span><span class="p">)</span> <span class="o">-</span> <span class="n">ymin</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">xv</span><span class="p">,</span> <span class="n">yv</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">xleft</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">xleft</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s2">&quot;lightgray&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s2">&quot;lightgray&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s2">&quot;lightgray&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s2">&quot;lightgray&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="c1">#</span>
     <span class="k">return</span> <span class="n">fig</span></div>
 
 
-<div class="viewcode-block" id="gant"><a class="viewcode-back" href="../../plots.html#techminer.plots.gant">[docs]</a><span class="k">def</span> <span class="nf">gant</span><span class="p">(</span>
-    <span class="n">x</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">hlines_lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">hlines_c</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">hlines_ls</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-<span class="p">):</span>
+<div class="viewcode-block" id="gant"><a class="viewcode-back" href="../../plots.html#techminer.plots.gant">[docs]</a><span class="k">def</span> <span class="nf">gant</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">grid_lw</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">grid_c</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">grid_ls</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Creates a gant activity plot from a dataframe.</span>
 
 <span class="sd">    Examples</span>
@@ -514,36 +874,45 @@
 
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;font&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">FONT_SIZE</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">if</span> <span class="s2">&quot;linewidth&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;lw&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;linewidth&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
     <span class="k">if</span> <span class="s2">&quot;marker&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;marker&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;markersize&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;ms&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;markersize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;markersize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span>
     <span class="k">if</span> <span class="s2">&quot;color&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;c&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;k&quot;</span>
     <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
         <span class="n">w</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
         <span class="n">w</span> <span class="o">=</span> <span class="n">w</span><span class="p">[</span><span class="n">w</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span>
-        <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)),</span>
-        <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
-        <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
-        <span class="n">linewidth</span><span class="o">=</span><span class="n">hlines_lw</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="n">hlines_c</span><span class="p">,</span>
-        <span class="n">linestyle</span><span class="o">=</span><span class="n">hlines_ls</span><span class="p">,</span>
-    <span class="p">)</span>
+
+    <span class="c1"># ax.hlines(</span>
+    <span class="c1">#     range(len(x.columns)),</span>
+    <span class="c1">#     x.index.min(),</span>
+    <span class="c1">#     x.index.max(),</span>
+    <span class="c1">#     linewidth=hlines_lw,</span>
+    <span class="c1">#     color=hlines_c,</span>
+    <span class="c1">#     linestyle=hlines_ls,</span>
+    <span class="c1"># )</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">grid_c</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">grid_ls</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">grid_lw</span><span class="p">)</span>
+
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">labelrotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">fig</span></div>
 
 
@@ -639,8 +1008,10 @@
 <span class="sd">        :align: center</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;font&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">FONT_SIZE</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,)</span>
     <span class="n">x</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
@@ -684,8 +1055,215 @@
     <span class="k">return</span> <span class="n">fig</span></div>
 
 
+<div class="viewcode-block" id="stacked_bar"><a class="viewcode-back" href="../../plots.html#techminer.plots.stacked_bar">[docs]</a><span class="k">def</span> <span class="nf">stacked_bar</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Stacked vertical bar plot.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;Authors&quot;: &quot;author 0,author 1,author 2,author 3,author 3,author 5&quot;.split(&quot;,&quot;),</span>
+<span class="sd">    ...         &quot;col 0&quot;: [6, 5, 4, 3, 2, 1],</span>
+<span class="sd">    ...         &quot;col 1&quot;: [0, 2, 5, 1, 5, 7],</span>
+<span class="sd">    ...         &quot;ID&quot;: list(range(6)),</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">        Authors  col 0  col 1  ID</span>
+<span class="sd">    0  author 0      6      0   0</span>
+<span class="sd">    1  author 1      5      2   1</span>
+<span class="sd">    2  author 2      4      5   2</span>
+<span class="sd">    3  author 3      3      1   3</span>
+<span class="sd">    4  author 3      2      5   4</span>
+<span class="sd">    5  author 5      1      7   5</span>
+
+<span class="sd">    &gt;&gt;&gt; fig = stacked_bar(df, cmap=&#39;Blues&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/stkbar0.png&#39;)</span>
+
+<span class="sd">    .. image:: images/stkbar0.png</span>
+<span class="sd">        :width: 400px</span>
+<span class="sd">        :align: center</span>
+
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;Authors&quot;: &quot;author 0,author 1,author 2,author 3,author 3,author 5&quot;.split(&quot;,&quot;),</span>
+<span class="sd">    ...         &quot;col 0&quot;: [6, 5, 2, 3, 4, 1],</span>
+<span class="sd">    ...         &quot;col 1&quot;: [0, 1, 2, 3, 4, 5],</span>
+<span class="sd">    ...         &quot;col 2&quot;: [3, 2, 3, 1, 0, 1],</span>
+<span class="sd">    ...         &quot;ID&quot;: list(range(6)),</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">        Authors  col 0  col 1  col 2  ID</span>
+<span class="sd">    0  author 0      6      0      3   0</span>
+<span class="sd">    1  author 1      5      1      2   1</span>
+<span class="sd">    2  author 2      2      2      3   2</span>
+<span class="sd">    3  author 3      3      3      1   3</span>
+<span class="sd">    4  author 3      4      4      0   4</span>
+<span class="sd">    5  author 5      1      5      1   5</span>
+
+<span class="sd">    &gt;&gt;&gt; fig = stacked_bar(df, cmap=&#39;Blues&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/stkbar1.png&#39;)</span>
+
+<span class="sd">    .. image:: images/stkbar1.png</span>
+<span class="sd">        :width: 400px</span>
+<span class="sd">        :align: center</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;font&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">FONT_SIZE</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s2">&quot;ID&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bottom</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">bottom</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">icol</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+        <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">((</span><span class="mf">0.2</span> <span class="o">+</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">icol</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
+            <span class="n">height</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">],</span>
+            <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+            <span class="n">bottom</span><span class="o">=</span><span class="n">bottom</span><span class="p">,</span>
+            <span class="n">align</span><span class="o">=</span><span class="n">align</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="n">col</span><span class="p">,</span>
+            <span class="o">**</span><span class="p">({}),</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">bottom</span> <span class="o">=</span> <span class="n">bottom</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">labelrotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+<div class="viewcode-block" id="stacked_barh"><a class="viewcode-back" href="../../plots.html#techminer.plots.stacked_barh">[docs]</a><span class="k">def</span> <span class="nf">stacked_barh</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Stacked horzontal bar plot.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;Authors&quot;: &quot;author 0,author 1,author 2,author 3,author 3,author 5&quot;.split(&quot;,&quot;),</span>
+<span class="sd">    ...         &quot;col 0&quot;: [6, 5, 4, 3, 2, 1],</span>
+<span class="sd">    ...         &quot;col 1&quot;: [0, 2, 5, 1, 5, 7],</span>
+<span class="sd">    ...         &quot;ID&quot;: list(range(6)),</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">        Authors  col 0  col 1  ID</span>
+<span class="sd">    0  author 0      6      0   0</span>
+<span class="sd">    1  author 1      5      2   1</span>
+<span class="sd">    2  author 2      4      5   2</span>
+<span class="sd">    3  author 3      3      1   3</span>
+<span class="sd">    4  author 3      2      5   4</span>
+<span class="sd">    5  author 5      1      7   5</span>
+
+<span class="sd">    &gt;&gt;&gt; fig = stacked_barh(df, cmap=&#39;Blues&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/stkbarh0.png&#39;)</span>
+
+<span class="sd">    .. image:: images/stkbarh0.png</span>
+<span class="sd">        :width: 400px</span>
+<span class="sd">        :align: center</span>
+
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;Authors&quot;: &quot;author 0,author 1,author 2,author 3,author 3,author 5&quot;.split(&quot;,&quot;),</span>
+<span class="sd">    ...         &quot;col 0&quot;: [6, 5, 2, 3, 4, 1],</span>
+<span class="sd">    ...         &quot;col 1&quot;: [0, 1, 2, 3, 4, 5],</span>
+<span class="sd">    ...         &quot;col 2&quot;: [3, 2, 3, 1, 0, 1],</span>
+<span class="sd">    ...         &quot;ID&quot;: list(range(6)),</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">        Authors  col 0  col 1  col 2  ID</span>
+<span class="sd">    0  author 0      6      0      3   0</span>
+<span class="sd">    1  author 1      5      1      2   1</span>
+<span class="sd">    2  author 2      2      2      3   2</span>
+<span class="sd">    3  author 3      3      3      1   3</span>
+<span class="sd">    4  author 3      4      4      0   4</span>
+<span class="sd">    5  author 5      1      5      1   5</span>
+
+<span class="sd">    &gt;&gt;&gt; fig = stacked_barh(df, cmap=&#39;Blues&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/stkbarh1.png&#39;)</span>
+
+<span class="sd">    .. image:: images/stkbarh1.png</span>
+<span class="sd">        :width: 400px</span>
+<span class="sd">        :align: center</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;font&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">FONT_SIZE</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s2">&quot;ID&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">left</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">icol</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+        <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">((</span><span class="mf">0.2</span> <span class="o">+</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">icol</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span>
+            <span class="n">y</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
+            <span class="n">width</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">],</span>
+            <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+            <span class="n">left</span><span class="o">=</span><span class="n">left</span><span class="p">,</span>
+            <span class="n">align</span><span class="o">=</span><span class="n">align</span><span class="p">,</span>
+            <span class="o">**</span><span class="p">({}),</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">left</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="c1">#</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
 <div class="viewcode-block" id="chord_diagram"><a class="viewcode-back" href="../../plots.html#techminer.plots.chord_diagram">[docs]</a><span class="k">def</span> <span class="nf">chord_diagram</span><span class="p">(</span>
-    <span class="n">x</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">minval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">top_n_links</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solid_lines</span><span class="o">=</span><span class="kc">False</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">minval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">top_n_links</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">solid_lines</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Creates a chord diagram from a correlation or an auto-correlation matrix.</span>
 
@@ -693,6 +1271,7 @@
 <span class="sd">    Examples</span>
 <span class="sd">    ----------------------------------------------------------------------------------------------</span>
 
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
 <span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
 <span class="sd">    ...     {</span>
 <span class="sd">    ...         &#39;word 0&#39;: [1.00, 0.80, 0.70, 0.00,-0.30],</span>
@@ -735,8 +1314,39 @@
 
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
+    <span class="c1"># ---------------------------------------------------</span>
+    <span class="c1">#</span>
+    <span class="c1"># Node sizes</span>
+    <span class="c1">#</span>
+    <span class="n">terms</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">node_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)])</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">terms</span> <span class="k">if</span> <span class="s2">&quot;[&quot;</span> <span class="ow">in</span> <span class="n">w</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">node_sizes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">node_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">max_size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">node_sizes</span><span class="p">)</span>
+        <span class="n">min_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">node_sizes</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">min_size</span> <span class="o">==</span> <span class="n">max_size</span><span class="p">:</span>
+            <span class="n">node_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">30</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">node_sizes</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="mi">100</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">-</span> <span class="n">min_size</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_size</span> <span class="o">-</span> <span class="n">min_size</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">node_sizes</span>
+            <span class="p">]</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Node colors</span>
+    <span class="c1">#</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">node_colors</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">cmap</span><span class="p">(</span><span class="mf">0.2</span> <span class="o">+</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">node_sizes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">node_sizes</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">node_sizes</span><span class="p">))</span>
+    <span class="p">]</span>
+    <span class="c1">#</span>
+    <span class="c1"># ---------------------------------------------------</span>
+
     <span class="n">cd</span> <span class="o">=</span> <span class="n">ChordDiagram</span><span class="p">()</span>
-    <span class="n">cd</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">term</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+        <span class="n">cd</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">node_colors</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="n">node_sizes</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">top_n_links</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">top_n_links</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
         <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
@@ -749,11 +1359,11 @@
         <span class="n">values</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">minval</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">top_n_links</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
 
-    <span class="n">style</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s2">&quot;--::&quot;</span><span class="p">)</span>
+    <span class="n">style</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">solid_lines</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">style</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s2">&quot;----&quot;</span><span class="p">)</span>
 
-    <span class="n">width</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">solid_lines</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">width</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 
@@ -794,7 +1404,11 @@
                 <span class="n">links</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">elif</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mf">0.25</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="n">minval</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
                 <span class="n">cd</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span>
-                    <span class="n">node_a</span><span class="p">,</span> <span class="n">node_b</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">width</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span>
+                    <span class="n">node_a</span><span class="p">,</span>
+                    <span class="n">node_b</span><span class="p">,</span>
+                    <span class="n">linestyle</span><span class="o">=</span><span class="n">style</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                    <span class="n">linewidth</span><span class="o">=</span><span class="n">width</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="n">links</span> <span class="o">+=</span> <span class="mi">1</span>
 
@@ -804,521 +1418,133 @@
     <span class="k">return</span> <span class="n">cd</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span></div>
 
 
-<span class="c1"># #############################################################################################################</span>
+<div class="viewcode-block" id="worldmap"><a class="viewcode-back" href="../../plots.html#techminer.plots.worldmap">[docs]</a><span class="k">def</span> <span class="nf">worldmap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Pastel2&quot;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Worldmap plot with the number of documents per country.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;AU_CO&quot;: [&quot;China&quot;, &quot;Taiwan&quot;, &quot;United States&quot;, &quot;United Kingdom&quot;, &quot;India&quot;, &quot;Colombia&quot;],</span>
+<span class="sd">    ...         &quot;Num_Documents&quot;: [1000, 900, 800, 700, 600, 1000],</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; x</span>
+<span class="sd">                AU_CO  Num_Documents</span>
+<span class="sd">    0           China           1000</span>
+<span class="sd">    1          Taiwan            900</span>
+<span class="sd">    2   United States            800</span>
+<span class="sd">    3  United Kingdom            700</span>
+<span class="sd">    4           India            600</span>
+<span class="sd">    5        Colombia           1000</span>
+<span class="sd">    &gt;&gt;&gt; fig = worldmap(x, figsize=(15, 6))</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/worldmap.png&#39;)</span>
+
+<span class="sd">    .. image:: images/worldmap.png</span>
+<span class="sd">        :width: 2000px</span>
+<span class="sd">        :align: center</span>
 
 
-<span class="c1"># class Plot:</span>
-<span class="c1">#     def __init__(self, df):</span>
-<span class="c1">#         self.df = df</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;font&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">FONT_SIZE</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">column0</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">column1</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">x</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="p">(</span><span class="n">w</span> <span class="o">-</span> <span class="n">column1</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">column1</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">column1</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+    <span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">column0</span><span class="p">)</span>
+
+    <span class="n">module_path</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">module_path</span><span class="p">,</span> <span class="s2">&quot;data/worldmap.data&quot;</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">countries</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="n">countries</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">countries</span><span class="p">[</span><span class="n">country</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;-k&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">country</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cmap</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">color</span><span class="p">[</span><span class="n">country</span><span class="p">]))</span>
+    <span class="c1">#</span>
+    <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+    <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+    <span class="n">xleft</span> <span class="o">=</span> <span class="n">xmax</span> <span class="o">-</span> <span class="mf">0.02</span> <span class="o">*</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span>
+    <span class="n">xright</span> <span class="o">=</span> <span class="n">xmax</span>
+    <span class="n">xbar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xleft</span><span class="p">,</span> <span class="n">xright</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">ybar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">+</span> <span class="p">(</span><span class="n">ymax</span> <span class="o">-</span> <span class="n">ymin</span><span class="p">),</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">xv</span><span class="p">,</span> <span class="n">yv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xbar</span><span class="p">,</span> <span class="n">ybar</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">yv</span> <span class="o">/</span> <span class="p">(</span><span class="n">ymax</span> <span class="o">-</span> <span class="n">ymin</span><span class="p">)</span> <span class="o">-</span> <span class="n">ymin</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">xv</span><span class="p">,</span> <span class="n">yv</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">+</span> <span class="p">(</span><span class="n">ymax</span> <span class="o">-</span> <span class="n">ymin</span><span class="p">),</span> <span class="mi">11</span><span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nb">round</span><span class="p">(</span><span class="n">column1</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="n">column1</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">column1</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+            <span class="n">xright</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="p">(</span><span class="n">xright</span> <span class="o">-</span> <span class="n">xleft</span><span class="p">),</span> <span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">])),</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1">#  ax.text(xright, ymin, &quot;0&quot;, ha=&quot;left&quot;)</span>
+    <span class="c1"># ax.text(xright, ymax, str(x[x.columns[0]].max()), ha=&quot;left&quot;)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;on&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="k">return</span> <span class="n">fig</span></div>
 
 
-<span class="c1">#     def tree(self, cmap=&quot;Blues&quot;, alpha=0.9):</span>
-<span class="c1">#         &quot;&quot;&quot;Creates a classification plot from a dataframe.</span>
+<div class="viewcode-block" id="tree"><a class="viewcode-back" href="../../plots.html#techminer.plots.tree">[docs]</a><span class="k">def</span> <span class="nf">tree</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates a classification plot from a dataframe.</span>
 
-<span class="c1">#         Examples</span>
-<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
 
-<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
-<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1">#         ...     {</span>
-<span class="c1">#         ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
-<span class="c1">#         ...         &quot;Num Documents&quot;: [10, 5, 2, 1],</span>
-<span class="c1">#         ...         &quot;ID&quot;: list(range(4)),</span>
-<span class="c1">#         ...     }</span>
-<span class="c1">#         ... )</span>
-<span class="c1">#         &gt;&gt;&gt; df</span>
-<span class="c1">#             Authors  Num Documents  ID</span>
-<span class="c1">#         0  author 3             10   0</span>
-<span class="c1">#         1  author 1              5   1</span>
-<span class="c1">#         2  author 0              2   2</span>
-<span class="c1">#         3  author 2              1   3</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
+<span class="sd">    ...         &quot;Num_Documents&quot;: [10, 5, 2, 1],</span>
+<span class="sd">    ...         &quot;ID&quot;: list(range(4)),</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">        Authors  Num_Documents  ID</span>
+<span class="sd">    0  author 3             10   0</span>
+<span class="sd">    1  author 1              5   1</span>
+<span class="sd">    2  author 0              2   2</span>
+<span class="sd">    3  author 2              1   3</span>
 
-<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).tree()</span>
-<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/treeplot.png&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; fig = tree(df)</span>
+<span class="sd">    &gt;&gt;&gt; fig.savefig(&#39;sphinx/images/treeplot.png&#39;)</span>
 
-<span class="c1">#         .. image:: images/treeplot.png</span>
-<span class="c1">#             :width: 400px</span>
-<span class="c1">#             :align: center</span>
-
-
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         plt.clf()</span>
-<span class="c1">#         x = self.df.copy()</span>
-<span class="c1">#         cmap = plt.cm.get_cmap(cmap)</span>
-<span class="c1">#         colors = [</span>
-<span class="c1">#             cmap((0.2 + 0.75 * x[x.columns[1]][i] / max(x[x.columns[1]])))</span>
-<span class="c1">#             for i in range(len(x[x.columns[1]]))</span>
-<span class="c1">#         ]</span>
-<span class="c1">#         squarify.plot(</span>
-<span class="c1">#             sizes=x[x.columns[1]], label=x[x.columns[0]], color=colors, alpha=alpha</span>
-<span class="c1">#         )</span>
-<span class="c1">#         plt.gca().axis(&quot;off&quot;)</span>
-<span class="c1">#         return plt.gca()</span>
-
-<span class="c1">#     def bubble(</span>
-<span class="c1">#         self,</span>
-<span class="c1">#         axis=0,</span>
-<span class="c1">#         rmax=80,</span>
-<span class="c1">#         cmap=&quot;Blues&quot;,</span>
-<span class="c1">#         grid_lw=1.0,</span>
-<span class="c1">#         grid_c=&quot;gray&quot;,</span>
-<span class="c1">#         grid_ls=&quot;:&quot;,</span>
-<span class="c1">#         **kwargs</span>
-<span class="c1">#     ):</span>
-
-<span class="c1">#         &quot;&quot;&quot;Creates a gant activity plot from a dataframe.</span>
-
-<span class="c1">#         Examples</span>
-<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
-<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1">#         ...     {</span>
-<span class="c1">#         ...         &quot;author 0&quot;: [ 1, 2, 3, 4, 5, 6, 7],</span>
-<span class="c1">#         ...         &quot;author 1&quot;: [14, 13, 12, 11, 10, 9, 8],</span>
-<span class="c1">#         ...         &quot;author 2&quot;: [1, 5, 8, 9, 0, 0, 0],</span>
-<span class="c1">#         ...         &quot;author 3&quot;: [0, 0, 1, 1, 1, 0, 0],</span>
-<span class="c1">#         ...         &quot;author 4&quot;: [0, 10, 0, 4, 2, 0, 1],</span>
-<span class="c1">#         ...     },</span>
-<span class="c1">#         ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]</span>
-<span class="c1">#         ... )</span>
-<span class="c1">#         &gt;&gt;&gt; df</span>
-<span class="c1">#               author 0  author 1  author 2  author 3  author 4</span>
-<span class="c1">#         2010         1        14         1         0         0</span>
-<span class="c1">#         2011         2        13         5         0        10</span>
-<span class="c1">#         2012         3        12         8         1         0</span>
-<span class="c1">#         2013         4        11         9         1         4</span>
-<span class="c1">#         2014         5        10         0         1         2</span>
-<span class="c1">#         2015         6         9         0         0         0</span>
-<span class="c1">#         2016         7         8         0         0         1</span>
-
-<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).bubble(axis=0, alpha=0.5, rmax=150)</span>
-<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/bubbleplot0.png&#39;)</span>
-
-<span class="c1">#         .. image:: images/bubbleplot0.png</span>
-<span class="c1">#             :width: 400px</span>
-<span class="c1">#             :align: center</span>
-
-<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).bubble(axis=1, alpha=0.5, rmax=150)</span>
-<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/bubbleplot1.png&#39;)</span>
-
-<span class="c1">#         .. image:: images/bubbleplot1.png</span>
-<span class="c1">#             :width: 400px</span>
-<span class="c1">#             :align: center</span>
+<span class="sd">    .. image:: images/treeplot.png</span>
+<span class="sd">        :width: 400px</span>
+<span class="sd">        :align: center</span>
 
 
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         plt.clf()</span>
-<span class="c1">#         cmap = plt.cm.get_cmap(cmap)</span>
-<span class="c1">#         x = self.df.copy()</span>
-<span class="c1">#         if axis == &quot;index&quot;:</span>
-<span class="c1">#             axis == 0</span>
-<span class="c1">#         if axis == &quot;columns&quot;:</span>
-<span class="c1">#             axis == 1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;font&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">FONT_SIZE</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
 
-<span class="c1">#         vmax = x.max().max()</span>
-<span class="c1">#         vmin = x.min().min()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">column0</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">column1</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">cmap</span><span class="p">((</span><span class="mf">0.2</span> <span class="o">+</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">column1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">column1</span><span class="p">)))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">column1</span><span class="p">))</span>
+    <span class="p">]</span>
+    <span class="n">squarify</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sizes</span><span class="o">=</span><span class="n">column1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">column0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span></div>
 
-<span class="c1">#         rmin = 0</span>
-
-<span class="c1">#         if axis == 0:</span>
-<span class="c1">#             for idx, row in enumerate(x.iterrows()):</span>
-<span class="c1">#                 values = [</span>
-<span class="c1">#                     10 * (rmin + (rmax - rmin) * w / (vmax - vmin))</span>
-<span class="c1">#                     for w in row[1].tolist()</span>
-<span class="c1">#                 ]</span>
-<span class="c1">#                 plt.gca().scatter(</span>
-<span class="c1">#                     range(len(x.columns)),</span>
-<span class="c1">#                     [idx] * len(x.columns),</span>
-<span class="c1">#                     marker=&quot;o&quot;,</span>
-<span class="c1">#                     s=values,</span>
-<span class="c1">#                     **kwargs,</span>
-<span class="c1">#                 )</span>
-<span class="c1">#                 plt.hlines(</span>
-<span class="c1">#                     idx,</span>
-<span class="c1">#                     -1,</span>
-<span class="c1">#                     len(x.columns),</span>
-<span class="c1">#                     linewidth=grid_lw,</span>
-<span class="c1">#                     color=grid_c,</span>
-<span class="c1">#                     linestyle=grid_ls,</span>
-<span class="c1">#                 )</span>
-<span class="c1">#         else:</span>
-<span class="c1">#             for idx, col in enumerate(x.columns):</span>
-<span class="c1">#                 values = [</span>
-<span class="c1">#                     10 * (rmin + (rmax - rmin) * w / (vmax - vmin)) for w in x[col]</span>
-<span class="c1">#                 ]</span>
-<span class="c1">#                 plt.gca().scatter(</span>
-<span class="c1">#                     [idx] * len(x.index),</span>
-<span class="c1">#                     range(len(x.index)),</span>
-<span class="c1">#                     marker=&quot;o&quot;,</span>
-<span class="c1">#                     s=values,</span>
-<span class="c1">#                     **kwargs,</span>
-<span class="c1">#                 )</span>
-<span class="c1">#                 plt.vlines(</span>
-<span class="c1">#                     idx,</span>
-<span class="c1">#                     -1,</span>
-<span class="c1">#                     len(x.index),</span>
-<span class="c1">#                     linewidth=grid_lw,</span>
-<span class="c1">#                     color=grid_c,</span>
-<span class="c1">#                     linestyle=grid_ls,</span>
-<span class="c1">#                 )</span>
-
-<span class="c1">#         for idx_col, col in enumerate(x.columns):</span>
-<span class="c1">#             for idx_row, row in enumerate(x.index):</span>
-
-<span class="c1">#                 if x[col][row] != 0:</span>
-<span class="c1">#                     plt.text(idx_col, idx_row, x[col][row], va=&quot;center&quot;, ha=&quot;center&quot;)</span>
-
-<span class="c1">#         plt.xlim(-1, len(x.columns))</span>
-<span class="c1">#         plt.ylim(-1, len(x.index) + 1)</span>
-
-<span class="c1">#         plt.xticks(</span>
-<span class="c1">#             np.arange(len(x.columns)),</span>
-<span class="c1">#             x.columns,</span>
-<span class="c1">#             rotation=&quot;vertical&quot;,</span>
-<span class="c1">#             horizontalalignment=&quot;center&quot;,</span>
-<span class="c1">#         )</span>
-<span class="c1">#         plt.yticks(np.arange(len(x.index)), x.index)</span>
-
-<span class="c1">#         plt.gca().spines[&quot;top&quot;].set_visible(False)</span>
-<span class="c1">#         plt.gca().spines[&quot;right&quot;].set_visible(False)</span>
-<span class="c1">#         plt.gca().spines[&quot;left&quot;].set_visible(False)</span>
-<span class="c1">#         plt.gca().spines[&quot;bottom&quot;].set_visible(False)</span>
-
-<span class="c1">#         return plt.gca()</span>
-
-
-<span class="c1">#     def plot(self, *args, scalex=True, scaley=True, **kwargs):</span>
-<span class="c1">#         &quot;&quot;&quot;Creates a plot from a dataframe.</span>
-
-<span class="c1">#         Examples</span>
-<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
-<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1">#         ...     {</span>
-<span class="c1">#         ...         &quot;author 0&quot;: [ 1, 2, 3, 4, 5, 6, 7],</span>
-<span class="c1">#         ...         &quot;author 1&quot;: [14, 13, 12, 11, 10, 9, 8],</span>
-<span class="c1">#         ...         &quot;author 2&quot;: [1, 5, 8, 9, 0, 0, 0],</span>
-<span class="c1">#         ...         &quot;author 3&quot;: [0, 0, 1, 1, 1, 0, 0],</span>
-<span class="c1">#         ...         &quot;author 4&quot;: [0, 10, 0, 4, 2, 0, 1],</span>
-<span class="c1">#         ...     },</span>
-<span class="c1">#         ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]</span>
-<span class="c1">#         ... )</span>
-<span class="c1">#         &gt;&gt;&gt; df</span>
-<span class="c1">#               author 0  author 1  author 2  author 3  author 4</span>
-<span class="c1">#         2010         1        14         1         0         0</span>
-<span class="c1">#         2011         2        13         5         0        10</span>
-<span class="c1">#         2012         3        12         8         1         0</span>
-<span class="c1">#         2013         4        11         9         1         4</span>
-<span class="c1">#         2014         5        10         0         1         2</span>
-<span class="c1">#         2015         6         9         0         0         0</span>
-<span class="c1">#         2016         7         8         0         0         1</span>
-<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).plot()</span>
-<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/plotplot.png&#39;)</span>
-
-<span class="c1">#         .. image:: images/plotplot.png</span>
-<span class="c1">#             :width: 400px</span>
-<span class="c1">#             :align: center</span>
-
-
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         plt.clf()</span>
-<span class="c1">#         x = self.df.copy()</span>
-<span class="c1">#         if &quot;ID&quot; in x.columns:</span>
-<span class="c1">#             x.pop(&quot;ID&quot;)</span>
-<span class="c1">#             plt.gca().plot(</span>
-<span class="c1">#                 range(len(x)),</span>
-<span class="c1">#                 x[x.columns[1]],</span>
-<span class="c1">#                 *args,</span>
-<span class="c1">#                 scalex=scalex,</span>
-<span class="c1">#                 scaley=scaley,</span>
-<span class="c1">#                 **kwargs,</span>
-<span class="c1">#             )</span>
-<span class="c1">#             plt.xticks(</span>
-<span class="c1">#                 np.arange(len(x[x.columns[0]])), x[x.columns[0]], rotation=&quot;vertical&quot;</span>
-<span class="c1">#             )</span>
-<span class="c1">#             plt.xlabel(x.columns[0])</span>
-<span class="c1">#             plt.ylabel(x.columns[1])</span>
-<span class="c1">#         else:</span>
-<span class="c1">#             for col in x.columns:</span>
-<span class="c1">#                 plt.plot(x.index, x[col], label=col, **kwargs)</span>
-<span class="c1">#             plt.legend()</span>
-
-<span class="c1">#         plt.gca().spines[&quot;top&quot;].set_visible(False)</span>
-<span class="c1">#         plt.gca().spines[&quot;right&quot;].set_visible(False)</span>
-<span class="c1">#         plt.gca().spines[&quot;left&quot;].set_visible(False)</span>
-<span class="c1">#         plt.gca().spines[&quot;bottom&quot;].set_visible(False)</span>
-<span class="c1">#         return plt.gca()</span>
-
-<span class="c1">#     def wordcloud(</span>
-<span class="c1">#         self,</span>
-<span class="c1">#         font_path=None,</span>
-<span class="c1">#         width=400,</span>
-<span class="c1">#         height=200,</span>
-<span class="c1">#         margin=2,</span>
-<span class="c1">#         ranks_only=None,</span>
-<span class="c1">#         prefer_horizontal=0.9,</span>
-<span class="c1">#         mask=None,</span>
-<span class="c1">#         scale=1,</span>
-<span class="c1">#         color_func=None,</span>
-<span class="c1">#         max_words=200,</span>
-<span class="c1">#         min_font_size=4,</span>
-<span class="c1">#         stopwords=None,</span>
-<span class="c1">#         random_state=None,</span>
-<span class="c1">#         background_color=&quot;black&quot;,</span>
-<span class="c1">#         max_font_size=None,</span>
-<span class="c1">#         font_step=1,</span>
-<span class="c1">#         mode=&quot;RGB&quot;,</span>
-<span class="c1">#         relative_scaling=&quot;auto&quot;,</span>
-<span class="c1">#         regexp=None,</span>
-<span class="c1">#         collocations=True,</span>
-<span class="c1">#         colormap=None,</span>
-<span class="c1">#         normalize_plurals=True,</span>
-<span class="c1">#         contour_width=0,</span>
-<span class="c1">#         contour_color=&quot;black&quot;,</span>
-<span class="c1">#         repeat=False,</span>
-<span class="c1">#         include_numbers=False,</span>
-<span class="c1">#         min_word_length=0,</span>
-<span class="c1">#     ):</span>
-<span class="c1">#         &quot;&quot;&quot;Plots a wordcloud from a dataframe.</span>
-
-<span class="c1">#         Examples</span>
-<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
-<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1">#         ...     {</span>
-<span class="c1">#         ...         &quot;Authors&quot;: &quot;author 3,author 1,author 0,author 2&quot;.split(&quot;,&quot;),</span>
-<span class="c1">#         ...         &quot;Num Documents&quot;: [10, 5, 2, 1],</span>
-<span class="c1">#         ...         &quot;ID&quot;: list(range(4)),</span>
-<span class="c1">#         ...     }</span>
-<span class="c1">#         ... )</span>
-<span class="c1">#         &gt;&gt;&gt; df</span>
-<span class="c1">#             Authors  Num Documents  ID</span>
-<span class="c1">#         0  author 3             10   0</span>
-<span class="c1">#         1  author 1              5   1</span>
-<span class="c1">#         2  author 0              2   2</span>
-<span class="c1">#         3  author 2              1   3</span>
-<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).wordcloud()</span>
-<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/wordcloud.png&#39;)</span>
-
-<span class="c1">#         .. image:: images/wordcloud.png</span>
-<span class="c1">#             :width: 400px</span>
-<span class="c1">#             :align: center</span>
-
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         plt.clf()</span>
-<span class="c1">#         x = self.df.copy()</span>
-<span class="c1">#         x.pop(&quot;ID&quot;)</span>
-<span class="c1">#         words = {row[0]: row[1] for _, row in x.iterrows()}</span>
-<span class="c1">#         wordcloud = WordCloud(</span>
-<span class="c1">#             font_path=font_path,</span>
-<span class="c1">#             width=width,</span>
-<span class="c1">#             height=height,</span>
-<span class="c1">#             margin=margin,</span>
-<span class="c1">#             ranks_only=ranks_only,</span>
-<span class="c1">#             prefer_horizontal=prefer_horizontal,</span>
-<span class="c1">#             mask=mask,</span>
-<span class="c1">#             scale=scale,</span>
-<span class="c1">#             color_func=color_func,</span>
-<span class="c1">#             max_words=max_words,</span>
-<span class="c1">#             min_font_size=min_font_size,</span>
-<span class="c1">#             stopwords=stopwords,</span>
-<span class="c1">#             random_state=random_state,</span>
-<span class="c1">#             background_color=background_color,</span>
-<span class="c1">#             max_font_size=max_font_size,</span>
-<span class="c1">#             font_step=font_step,</span>
-<span class="c1">#             mode=mode,</span>
-<span class="c1">#             relative_scaling=relative_scaling,</span>
-<span class="c1">#             regexp=regexp,</span>
-<span class="c1">#             collocations=collocations,</span>
-<span class="c1">#             colormap=colormap,</span>
-<span class="c1">#             normalize_plurals=normalize_plurals,</span>
-<span class="c1">#             contour_width=contour_width,</span>
-<span class="c1">#             contour_color=contour_color,</span>
-<span class="c1">#             repeat=repeat,</span>
-<span class="c1">#             include_numbers=include_numbers,</span>
-<span class="c1">#             min_word_length=min_word_length,</span>
-<span class="c1">#         )</span>
-<span class="c1">#         wordcloud.generate_from_frequencies(words)</span>
-<span class="c1">#         plt.gca().imshow(wordcloud, interpolation=&quot;bilinear&quot;)</span>
-<span class="c1">#         plt.gca().axis(&quot;off&quot;)</span>
-<span class="c1">#         return plt.gca()</span>
-
-<span class="c1">#     def stacked_bar(</span>
-<span class="c1">#         self, width=0.8, bottom=None, align=&quot;center&quot;, cmap=&quot;Greys&quot;, **kwargs</span>
-<span class="c1">#     ):</span>
-<span class="c1">#         &quot;&quot;&quot;Stacked vertical bar plot.</span>
-
-<span class="c1">#         Examples</span>
-<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
-<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1">#         ...     {</span>
-<span class="c1">#         ...         &quot;Authors&quot;: &quot;author 0,author 1,author 2,author 3,author 3,author 5&quot;.split(&quot;,&quot;),</span>
-<span class="c1">#         ...         &quot;col 0&quot;: [6, 5, 4, 3, 2, 1],</span>
-<span class="c1">#         ...         &quot;col 1&quot;: [0, 2, 5, 1, 5, 7],</span>
-<span class="c1">#         ...         &quot;ID&quot;: list(range(6)),</span>
-<span class="c1">#         ...     }</span>
-<span class="c1">#         ... )</span>
-<span class="c1">#         &gt;&gt;&gt; df</span>
-<span class="c1">#             Authors  col 0  col 1  ID</span>
-<span class="c1">#         0  author 0      6      0   0</span>
-<span class="c1">#         1  author 1      5      2   1</span>
-<span class="c1">#         2  author 2      4      5   2</span>
-<span class="c1">#         3  author 3      3      1   3</span>
-<span class="c1">#         4  author 3      2      5   4</span>
-<span class="c1">#         5  author 5      1      7   5</span>
-
-<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).stacked_bar(cmap=&#39;Blues&#39;)</span>
-<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/stkbar0.png&#39;)</span>
-
-<span class="c1">#         .. image:: images/stkbar0.png</span>
-<span class="c1">#             :width: 400px</span>
-<span class="c1">#             :align: center</span>
-
-<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1">#         ...     {</span>
-<span class="c1">#         ...         &quot;Authors&quot;: &quot;author 0,author 1,author 2,author 3,author 3,author 5&quot;.split(&quot;,&quot;),</span>
-<span class="c1">#         ...         &quot;col 0&quot;: [6, 5, 2, 3, 4, 1],</span>
-<span class="c1">#         ...         &quot;col 1&quot;: [0, 1, 2, 3, 4, 5],</span>
-<span class="c1">#         ...         &quot;col 2&quot;: [3, 2, 3, 1, 0, 1],</span>
-<span class="c1">#         ...         &quot;ID&quot;: list(range(6)),</span>
-<span class="c1">#         ...     }</span>
-<span class="c1">#         ... )</span>
-<span class="c1">#         &gt;&gt;&gt; df</span>
-<span class="c1">#             Authors  col 0  col 1  col 2  ID</span>
-<span class="c1">#         0  author 0      6      0      3   0</span>
-<span class="c1">#         1  author 1      5      1      2   1</span>
-<span class="c1">#         2  author 2      2      2      3   2</span>
-<span class="c1">#         3  author 3      3      3      1   3</span>
-<span class="c1">#         4  author 3      4      4      0   4</span>
-<span class="c1">#         5  author 5      1      5      1   5</span>
-
-<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).stacked_bar(cmap=&#39;Blues&#39;)</span>
-<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/stkbar1.png&#39;)</span>
-
-<span class="c1">#         .. image:: images/stkbar1.png</span>
-<span class="c1">#             :width: 400px</span>
-<span class="c1">#             :align: center</span>
-
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         plt.clf()</span>
-<span class="c1">#         cmap = plt.cm.get_cmap(cmap)</span>
-<span class="c1">#         x = self.df.copy()</span>
-<span class="c1">#         if &quot;ID&quot; in x.columns:</span>
-<span class="c1">#             x.pop(&quot;ID&quot;)</span>
-<span class="c1">#         if bottom is None:</span>
-<span class="c1">#             bottom = x[x.columns[1]].map(lambda w: 0.0)</span>
-<span class="c1">#         for icol, col in enumerate(x.columns[1:]):</span>
-<span class="c1">#             if cmap is not None:</span>
-<span class="c1">#                 kwargs[&quot;color&quot;] = cmap((0.2 + 0.75 * icol / (len(x.columns) - 1)))</span>
-<span class="c1">#             plt.gca().bar(</span>
-<span class="c1">#                 x=range(len(x)),</span>
-<span class="c1">#                 height=x[col],</span>
-<span class="c1">#                 width=width,</span>
-<span class="c1">#                 bottom=bottom,</span>
-<span class="c1">#                 align=align,</span>
-<span class="c1">#                 **({}),</span>
-<span class="c1">#                 **kwargs,</span>
-<span class="c1">#             )</span>
-<span class="c1">#             bottom = bottom + x[col]</span>
-<span class="c1">#         plt.xticks(</span>
-<span class="c1">#             np.arange(len(x[x.columns[0]])), x[x.columns[0]], rotation=&quot;vertical&quot;</span>
-<span class="c1">#         )</span>
-<span class="c1">#         plt.xlabel(x.columns[0])</span>
-<span class="c1">#         # plt.ylabel(x.columns[1])</span>
-<span class="c1">#         plt.gca().spines[&quot;top&quot;].set_visible(False)</span>
-<span class="c1">#         plt.gca().spines[&quot;right&quot;].set_visible(False)</span>
-<span class="c1">#         plt.gca().spines[&quot;left&quot;].set_visible(False)</span>
-<span class="c1">#         plt.gca().spines[&quot;bottom&quot;].set_visible(False)</span>
-<span class="c1">#         return plt.gca()</span>
-
-<span class="c1">#     def stacked_barh(self, height=0.8, left=None, align=&quot;center&quot;, cmap=None, **kwargs):</span>
-<span class="c1">#         &quot;&quot;&quot;Stacked horzontal bar plot.</span>
-
-<span class="c1">#         Examples</span>
-<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
-
-<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
-<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1">#         ...     {</span>
-<span class="c1">#         ...         &quot;Authors&quot;: &quot;author 0,author 1,author 2,author 3,author 3,author 5&quot;.split(&quot;,&quot;),</span>
-<span class="c1">#         ...         &quot;col 0&quot;: [6, 5, 4, 3, 2, 1],</span>
-<span class="c1">#         ...         &quot;col 1&quot;: [0, 2, 5, 1, 5, 7],</span>
-<span class="c1">#         ...         &quot;ID&quot;: list(range(6)),</span>
-<span class="c1">#         ...     }</span>
-<span class="c1">#         ... )</span>
-<span class="c1">#         &gt;&gt;&gt; df</span>
-<span class="c1">#             Authors  col 0  col 1  ID</span>
-<span class="c1">#         0  author 0      6      0   0</span>
-<span class="c1">#         1  author 1      5      2   1</span>
-<span class="c1">#         2  author 2      4      5   2</span>
-<span class="c1">#         3  author 3      3      1   3</span>
-<span class="c1">#         4  author 3      2      5   4</span>
-<span class="c1">#         5  author 5      1      7   5</span>
-
-<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).stacked_barh(cmap=&#39;Blues&#39;)</span>
-<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/stkbarh0.png&#39;)</span>
-
-<span class="c1">#         .. image:: images/stkbarh0.png</span>
-<span class="c1">#             :width: 400px</span>
-<span class="c1">#             :align: center</span>
-
-<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1">#         ...     {</span>
-<span class="c1">#         ...         &quot;Authors&quot;: &quot;author 0,author 1,author 2,author 3,author 3,author 5&quot;.split(&quot;,&quot;),</span>
-<span class="c1">#         ...         &quot;col 0&quot;: [6, 5, 2, 3, 4, 1],</span>
-<span class="c1">#         ...         &quot;col 1&quot;: [0, 1, 2, 3, 4, 5],</span>
-<span class="c1">#         ...         &quot;col 2&quot;: [3, 2, 3, 1, 0, 1],</span>
-<span class="c1">#         ...         &quot;ID&quot;: list(range(6)),</span>
-<span class="c1">#         ...     }</span>
-<span class="c1">#         ... )</span>
-<span class="c1">#         &gt;&gt;&gt; df</span>
-<span class="c1">#             Authors  col 0  col 1  col 2  ID</span>
-<span class="c1">#         0  author 0      6      0      3   0</span>
-<span class="c1">#         1  author 1      5      1      2   1</span>
-<span class="c1">#         2  author 2      2      2      3   2</span>
-<span class="c1">#         3  author 3      3      3      1   3</span>
-<span class="c1">#         4  author 3      4      4      0   4</span>
-<span class="c1">#         5  author 5      1      5      1   5</span>
-
-<span class="c1">#         &gt;&gt;&gt; _ = Plot(df).stacked_barh(cmap=&#39;Blues&#39;)</span>
-<span class="c1">#         &gt;&gt;&gt; plt.savefig(&#39;sphinx/images/stkbarh1.png&#39;)</span>
-
-<span class="c1">#         .. image:: images/stkbarh1.png</span>
-<span class="c1">#             :width: 400px</span>
-<span class="c1">#             :align: center</span>
-
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         plt.clf()</span>
-<span class="c1">#         cmap = plt.cm.get_cmap(cmap)</span>
-<span class="c1">#         x = self.df.copy()</span>
-<span class="c1">#         if &quot;ID&quot; in x.columns:</span>
-<span class="c1">#             x.pop(&quot;ID&quot;)</span>
-<span class="c1">#         if left is None:</span>
-<span class="c1">#             left = x[x.columns[1]].map(lambda w: 0.0)</span>
-<span class="c1">#         for icol, col in enumerate(x.columns[1:]):</span>
-<span class="c1">#             if cmap is not None:</span>
-<span class="c1">#                 kwargs[&quot;color&quot;] = cmap((0.2 + 0.75 * icol / (len(x.columns) - 1)))</span>
-<span class="c1">#             plt.gca().barh(</span>
-<span class="c1">#                 y=range(len(x)),</span>
-<span class="c1">#                 width=x[col],</span>
-<span class="c1">#                 height=height,</span>
-<span class="c1">#                 left=left,</span>
-<span class="c1">#                 align=align,</span>
-<span class="c1">#                 **({}),</span>
-<span class="c1">#                 **kwargs,</span>
-<span class="c1">#             )</span>
-<span class="c1">#             left = left + x[col]</span>
-<span class="c1">#         plt.yticks(np.arange(len(x[x.columns[0]])), x[x.columns[0]])</span>
-<span class="c1">#         plt.gca().spines[&quot;top&quot;].set_visible(False)</span>
-<span class="c1">#         plt.gca().spines[&quot;right&quot;].set_visible(False)</span>
-<span class="c1">#         plt.gca().spines[&quot;left&quot;].set_visible(False)</span>
-<span class="c1">#         plt.gca().spines[&quot;bottom&quot;].set_visible(False)</span>
-<span class="c1">#         return plt.gca()</span>
 
 <span class="c1">#     def correspondence_plot(self):</span>
 <span class="c1">#         &quot;&quot;&quot;Computes and plot clusters of data using correspondence analysis.</span>

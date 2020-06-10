@@ -37,7 +37,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Keywords manipulation" href="keywords.html" />
-    <link rel="prev" title="Correlation Analysis" href="correlation.html" /> 
+    <link rel="prev" title="&lt;no title&gt;" href="correlation.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -87,12 +87,7 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules for Analysis</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="data.html">Primary Data Importation and Manipulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="by_year.html">Analysis by Year</a></li>
-<li class="toctree-l2"><a class="reference internal" href="by_term.html">Analysis by Term</a></li>
-<li class="toctree-l2"><a class="reference internal" href="by_term_per_year.html">Analysis by Term per Year</a></li>
-<li class="toctree-l2"><a class="reference internal" href="co_occurrence.html">Co-occurrence Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="correlation.html">Correlation Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html">Data Importation and Manipulation Functions</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Text manipulation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#functions-in-this-module">Functions in this module</a></li>
 </ul>
@@ -198,38 +193,23 @@
 <div class="section" id="functions-in-this-module">
 <h2>Functions in this module<a class="headerlink" href="#functions-in-this-module" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt id="techminer.text.extract_country">
-<code class="sig-prename descclassname">techminer.text.</code><code class="sig-name descname">extract_country</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/text.html#extract_country"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.text.extract_country" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extracts country name from a string,</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-<span class="gp">... </span>    <span class="s1">&#39;AU_CO&#39;</span><span class="p">:</span> <span class="p">[</span>
-<span class="gp">... </span>        <span class="s1">&#39;University, Cuba; University, Venezuela&#39;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;University, United States; Univesrity, Singapore&#39;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;University;&#39;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;University; Univesity&#39;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;University,&#39;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;University&#39;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="kc">None</span><span class="p">]</span>
-<span class="gp">... </span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;AU_CO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">extract_country</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-<span class="go">0             Cuba;Venezuela</span>
-<span class="go">1    United States;Singapore</span>
-<span class="go">2                       None</span>
-<span class="go">3                       None</span>
-<span class="go">4                       None</span>
-<span class="go">5                       None</span>
-<span class="go">6                       None</span>
-<span class="go">Name: AU_CO, dtype: object</span>
+<dt id="techminer.text.find_string">
+<code class="sig-prename descclassname">techminer.text.</code><code class="sig-name descname">find_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">patterns</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">ignore_case</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">full_match</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_re</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">explode</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/text.html#find_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.text.find_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find patterns in the elements of a list.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;aa;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c;d&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_string</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="go">[&#39;A&#39;, &#39;aa&#39;]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">find_string</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">ignore_case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">[&#39;aa&#39;]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">find_string</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">full_match</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">[&#39;A&#39;]</span>
 </pre></div>
 </div>
 </dd></dl>
-
-<dl class="py function">
-<dt id="techminer.text.extract_institution">
-<code class="sig-prename descclassname">techminer.text.</code><code class="sig-name descname">extract_institution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/text.html#extract_institution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.text.extract_institution" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="py function">
 <dt id="techminer.text.fingerprint">
@@ -291,6 +271,44 @@
 </dd></dl>
 
 <dl class="py function">
+<dt id="techminer.text.steamming">
+<code class="sig-prename descclassname">techminer.text.</code><code class="sig-name descname">steamming</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/text.html#steamming"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.text.steamming" title="Permalink to this definition">¶</a></dt>
+<dd><p class="rubric">Examples</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.text.steamming_all">
+<code class="sig-prename descclassname">techminer.text.</code><code class="sig-name descname">steamming_all</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/text.html#steamming_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.text.steamming_all" title="Permalink to this definition">¶</a></dt>
+<dd><p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">steamming_all</span><span class="p">(</span><span class="s1">&#39;computers cars&#39;</span><span class="p">,</span> <span class="s1">&#39;car computing&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">steamming_all</span><span class="p">(</span><span class="s1">&#39;computers cars&#39;</span><span class="p">,</span> <span class="s1">&#39;car houses&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.text.steamming_any">
+<code class="sig-prename descclassname">techminer.text.</code><code class="sig-name descname">steamming_any</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/text.html#steamming_any"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.text.steamming_any" title="Permalink to this definition">¶</a></dt>
+<dd><p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">steamming_any</span><span class="p">(</span><span class="s1">&#39;computers cars&#39;</span><span class="p">,</span> <span class="s1">&#39;car computing&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">steamming_any</span><span class="p">(</span><span class="s1">&#39;computers cars&#39;</span><span class="p">,</span> <span class="s1">&#39;computing house&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">steamming_all</span><span class="p">(</span><span class="s1">&#39;computers cars&#39;</span><span class="p">,</span> <span class="s1">&#39;tree houses&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt id="techminer.text.stemmer_porter">
 <code class="sig-prename descclassname">techminer.text.</code><code class="sig-name descname">stemmer_porter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/text.html#stemmer_porter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.text.stemmer_porter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the stemmer transformation of string x.</p>
@@ -337,7 +355,7 @@
         <a href="keywords.html" class="btn btn-neutral float-right" title="Keywords manipulation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="correlation.html" class="btn btn-neutral float-left" title="Correlation Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="correlation.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

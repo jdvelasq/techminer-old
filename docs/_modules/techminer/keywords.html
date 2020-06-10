@@ -156,86 +156,114 @@
 <span class="sd">This object contains a list of unique keywords (terms of interest).</span>
 
 
-<span class="sd"># Regular expressions recipes</span>
-<span class="sd"># ---------------------------------------------------------------------------------------------------</span>
+<span class="sd">Regular expressions recipes</span>
+<span class="sd">---------------------------------------------------------------------------------------------------</span>
 
-<span class="sd"># The following code exemplify some common cases using regular expressions.</span>
+<span class="sd">The following code exemplify some common cases using regular expressions.</span>
 
-<span class="sd"># &gt;&gt;&gt; Keywords(&#39;111&#39;).extract_from_text(&#39;one two three four five&#39;) is None</span>
-<span class="sd"># True</span>
+<span class="sd">&gt;&gt;&gt; keywords = Keywords(&#39;111&#39;)</span>
+<span class="sd">&gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">&gt;&gt;&gt; keywords.extract_from_text(&#39;one two three four five&#39;) is None</span>
+<span class="sd">True</span>
 
-<span class="sd"># * Partial match.</span>
+<span class="sd">* Partial match.</span>
 
-<span class="sd"># &gt;&gt;&gt; Keywords(&#39;hre&#39;).extract_from_text(&#39;one two three four five&#39;)</span>
-<span class="sd"># &#39;hre&#39;</span>
-
-
-<span class="sd"># * **Word whole only**. `r&#39;\b&#39;` represents word boundaries.</span>
-
-<span class="sd"># &gt;&gt;&gt; kyw = Keywords(r&#39;\btwo\b&#39;, use_re=True)</span>
-<span class="sd"># &gt;&gt;&gt; kyw.extract_from_text(&#39;one two three four five&#39;)</span>
-<span class="sd"># &#39;two&#39;</span>
-
-<span class="sd"># &gt;&gt;&gt; kyw = Keywords(r&quot;\b(TWO)\b&quot;, use_re=True)</span>
-<span class="sd"># &gt;&gt;&gt; kyw.extract_from_text(&#39;one two three four five&#39;)</span>
-<span class="sd"># &#39;two&#39;</span>
+<span class="sd">&gt;&gt;&gt; keywords = Keywords(&#39;hre&#39;)</span>
+<span class="sd">&gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">&gt;&gt;&gt; keywords.extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;hre&#39;</span>
 
 
-<span class="sd"># * **Case sensitive**.</span>
+<span class="sd">* **Word whole only**. `r&#39;\b&#39;` represents word boundaries.</span>
 
-<span class="sd"># &gt;&gt;&gt; Keywords(r&#39;\btwo\b&#39;, ignore_case=False, use_re=True).extract_from_text(&#39;one two three four five&#39;)</span>
-<span class="sd"># &#39;two&#39;</span>
+<span class="sd">&gt;&gt;&gt; keywords = Keywords(r&#39;\btwo\b&#39;, use_re=True)</span>
+<span class="sd">&gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">&gt;&gt;&gt; keywords.extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two&#39;</span>
 
-<span class="sd"># &gt;&gt;&gt; Keywords(r&quot;\bTWO\b&quot;, ignore_case=False, use_re=True).extract_from_text(&#39;one TWO three four five&#39;)</span>
-<span class="sd"># &#39;TWO&#39;</span>
-
-<span class="sd"># &gt;&gt;&gt; Keywords(r&quot;\bTWO\b&quot;, ignore_case=False, use_re=True).extract_from_text(&#39;one two three four five&#39;) is None</span>
-<span class="sd"># True</span>
-
-<span class="sd"># * **A word followed by other word**.</span>
-
-<span class="sd"># &gt;&gt;&gt; Keywords(r&#39;\btwo\Wthree\b&#39;, ignore_case=False, use_re=True).extract_from_text(&#39;one two three four five&#39;)</span>
-<span class="sd"># &#39;two three&#39;</span>
+<span class="sd">&gt;&gt;&gt; keywords = Keywords(r&quot;\b(TWO)\b&quot;, use_re=True)</span>
+<span class="sd">&gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">&gt;&gt;&gt; keywords.extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two&#39;</span>
 
 
-<span class="sd"># * **Multiple white spaces**.</span>
+<span class="sd">* **Case sensitive**.</span>
 
-<span class="sd"># &gt;&gt;&gt; Keywords(r&quot;two\W+three&quot;, ignore_case=False, use_re=True).extract_from_text(&#39;one two   three four five&#39;)</span>
-<span class="sd"># &#39;two   three&#39;</span>
+<span class="sd">&gt;&gt;&gt; keywords = Keywords(r&#39;\btwo\b&#39;, ignore_case=False, use_re=True)</span>
+<span class="sd">&gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">&gt;&gt;&gt; keywords.extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two&#39;</span>
 
-<span class="sd"># * **A list of keywords**.</span>
+<span class="sd">&gt;&gt;&gt; keywords = Keywords(r&quot;\bTWO\b&quot;, ignore_case=False, use_re=True)</span>
+<span class="sd">&gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">&gt;&gt;&gt; keywords.extract_from_text(&#39;one TWO three four five&#39;)</span>
+<span class="sd">&#39;TWO&#39;</span>
 
-<span class="sd"># &gt;&gt;&gt; Keywords([r&quot;xxx&quot;, r&quot;two&quot;, r&quot;yyy&quot;]).extract_from_text(&#39;one two three four five&#39;)</span>
-<span class="sd"># &#39;two&#39;</span>
+<span class="sd">&gt;&gt;&gt; keywords = Keywords(r&quot;\bTWO\b&quot;, ignore_case=False, use_re=True)</span>
+<span class="sd">&gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">&gt;&gt;&gt; keywords.extract_from_text(&#39;one two three four five&#39;) is None</span>
+<span class="sd">True</span>
+
+<span class="sd">* **A word followed by other word**.</span>
+
+<span class="sd">&gt;&gt;&gt; keywords = Keywords(r&#39;\btwo\Wthree\b&#39;, ignore_case=False, use_re=True)</span>
+<span class="sd">&gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">&gt;&gt;&gt; keywords.extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two three&#39;</span>
 
 
-<span class="sd"># * **Adjacent terms but the order is unimportant**.</span>
+<span class="sd">* **Multiple white spaces**.</span>
 
-<span class="sd"># &gt;&gt;&gt; Keywords(r&quot;\bthree\W+two\b|\btwo\W+three\b&quot;, use_re=True).extract_from_text(&#39;one two three four five&#39;)</span>
-<span class="sd"># &#39;two three&#39;</span>
+<span class="sd">&gt;&gt;&gt; keywords = Keywords(r&quot;two\W+three&quot;, ignore_case=False, use_re=True)</span>
+<span class="sd">&gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">&gt;&gt;&gt; keywords.extract_from_text(&#39;one two   three four five&#39;)</span>
+<span class="sd">&#39;two   three&#39;</span>
 
-<span class="sd"># * **Near words**.</span>
+<span class="sd">* **A list of keywords**.</span>
 
-<span class="sd"># Two words (`&#39;two&#39;`, `&#39;four&#39;`) separated by any other.</span>
+<span class="sd">&gt;&gt;&gt; keywords = Keywords([r&quot;xxx&quot;, r&quot;two&quot;, r&quot;yyy&quot;])</span>
+<span class="sd">&gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">&gt;&gt;&gt; keywords.extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two&#39;</span>
 
-<span class="sd"># &gt;&gt;&gt; Keywords(r&quot;\btwo\W+\w+\W+four\b&quot;, use_re=True).extract_from_text(&#39;one two three four five&#39;)</span>
-<span class="sd"># &#39;two three four&#39;</span>
+
+<span class="sd">* **Adjacent terms but the order is unimportant**.</span>
+
+<span class="sd">&gt;&gt;&gt; keywords = Keywords(r&quot;\bthree\W+two\b|\btwo\W+three\b&quot;, use_re=True)</span>
+<span class="sd">&gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">&gt;&gt;&gt; keywords.extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two three&#39;</span>
+
+<span class="sd">* **Near words**.</span>
+
+<span class="sd">Two words (`&#39;two&#39;`, `&#39;four&#39;`) separated by any other.</span>
+
+<span class="sd">&gt;&gt;&gt; keywords = Keywords(r&quot;\btwo\W+\w+\W+four\b&quot;, use_re=True)</span>
+<span class="sd">&gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">&gt;&gt;&gt; keywords.extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two three four&#39;</span>
 
 
-<span class="sd"># Two words (`&#39;two&#39;`, `&#39;five&#39;`) separated by one, two or three unspecified words.</span>
+<span class="sd">Two words (`&#39;two&#39;`, `&#39;five&#39;`) separated by one, two or three unspecified words.</span>
 
-<span class="sd"># &gt;&gt;&gt; Keywords(r&quot;\btwo\W+(?:\w+\W+){1,3}?five&quot;, use_re=True).extract_from_text(&#39;one two three four five&#39;)</span>
-<span class="sd"># &#39;two three four five&#39;</span>
+<span class="sd">&gt;&gt;&gt; keywords = Keywords(r&quot;\btwo\W+(?:\w+\W+){1,3}?five&quot;, use_re=True)</span>
+<span class="sd">&gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">&gt;&gt;&gt; keywords.extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two three four five&#39;</span>
 
-<span class="sd"># * **Or operator**.</span>
+<span class="sd">* **Or operator**.</span>
 
-<span class="sd"># &gt;&gt;&gt; Keywords(r&quot;123|two&quot;, use_re=True).extract_from_text(&#39;one two three four five&#39;)</span>
-<span class="sd"># &#39;two&#39;</span>
+<span class="sd">&gt;&gt;&gt; keywords = Keywords(r&quot;123|two&quot;, use_re=True)</span>
+<span class="sd">&gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">&gt;&gt;&gt; keywords.extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two&#39;</span>
 
-<span class="sd"># * **And operator**. One word followed by other at any word distance.</span>
+<span class="sd">* **And operator**. One word followed by other at any word distance.</span>
 
-<span class="sd"># &gt;&gt;&gt; Keywords(r&quot;\btwo\W+(?:\w+\W+)+?five&quot;, use_re=True).extract_from_text(&#39;one two three four five&#39;)</span>
-<span class="sd"># &#39;two three four five&#39;</span>
+<span class="sd">&gt;&gt;&gt; keywords = Keywords(r&quot;\btwo\W+(?:\w+\W+)+?five&quot;, use_re=True)</span>
+<span class="sd">&gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">&gt;&gt;&gt; keywords.extract_from_text(&#39;one two three four five&#39;)</span>
+<span class="sd">&#39;two three four five&#39;</span>
 
 
 <span class="sd">Functions in this module</span>

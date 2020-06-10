@@ -10,6 +10,7 @@ import json
 import textwrap
 from os.path import dirname, join
 
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import squarify
@@ -25,6 +26,7 @@ from wordcloud import ImageColorGenerator, WordCloud
 # import numpy as np
 # import pandas as pd
 
+FONT_SIZE = 16
 
 TEXTLEN = 30
 
@@ -175,7 +177,7 @@ def bar(
 
 
     """
-
+    matplotlib.rc("font", size=FONT_SIZE)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
     if "ID" in x.columns:
@@ -193,6 +195,7 @@ def bar(
             )
             for i in range(len(x[x.columns[1]]))
         ]
+
     ax.bar(
         x=range(len(x)),
         height=x[x.columns[1]],
@@ -202,16 +205,21 @@ def bar(
         **({}),
         **kwargs,
     )
+
     ax.set_xticks(np.arange(len(x[x.columns[0]])))
     ax.set_xticklabels(x[x.columns[0]])
     ax.tick_params(axis="x", labelrotation=90)
-    #
+
     ax.set_xlabel(x.columns[0])
     ax.set_ylabel(x.columns[1])
+
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
+    ax.spines["bottom"].set_visible(True)
+
+    ax.grid(axis="y", color="gray", linestyle=":")
+
     return fig
 
 
@@ -243,8 +251,10 @@ def barh(x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **
         :align: center
 
     """
+    matplotlib.rc("font", size=FONT_SIZE)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
+
     x = x.copy()
     if "ID" in x.columns:
         x.pop("ID")
@@ -261,6 +271,7 @@ def barh(x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **
             )
             for i in range(len(x))
         ]
+
     ax.barh(
         y=range(len(x)),
         width=x[x.columns[1]],
@@ -269,17 +280,20 @@ def barh(x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **
         align=align,
         **kwargs,
     )
+
     ax.invert_yaxis()
     ax.set_yticks(np.arange(len(x[x.columns[0]])))
     ax.set_yticklabels(x[x.columns[0]])
     ax.set_xlabel(x.columns[1])
     ax.set_ylabel(x.columns[0])
-    #
+
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
+    ax.spines["left"].set_visible(True)
     ax.spines["bottom"].set_visible(False)
-    #
+
+    ax.grid(axis="x", color="gray", linestyle=":")
+
     return fig
 
 
@@ -337,16 +351,17 @@ def bubble(
 
 
     """
+    matplotlib.rc("font", size=FONT_SIZE)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
-
     cmap = plt.cm.get_cmap(cmap)
-    x = x.copy()
-    if axis == "index":
-        axis == 0
-    if axis == "columns":
-        axis == 1
 
+    if axis == "index":
+        axis = 0
+    if axis == "columns":
+        axis = 1
+
+    x = x.copy()
     vmax = x.max().max()
     vmin = x.min().min()
 
@@ -364,14 +379,7 @@ def bubble(
                 s=values,
                 **kwargs,
             )
-            ax.hlines(
-                idx,
-                -1,
-                len(x.columns),
-                linewidth=grid_lw,
-                color=grid_c,
-                linestyle=grid_ls,
-            )
+
     else:
         for idx, col in enumerate(x.columns):
             values = [10 * (rmin + (rmax - rmin) * w / (vmax - vmin)) for w in x[col]]
@@ -382,20 +390,24 @@ def bubble(
                 s=values,
                 **kwargs,
             )
-            ax.vlines(
-                idx,
-                -1,
-                len(x.index),
-                linewidth=grid_lw,
-                color=grid_c,
-                linestyle=grid_ls,
-            )
+
+    for idx, row in enumerate(x.iterrows()):
+        ax.hlines(
+            idx, -1, len(x.columns), linewidth=grid_lw, color=grid_c, linestyle=grid_ls,
+        )
+
+    for idx, col in enumerate(x.columns):
+        ax.vlines(
+            idx, -1, len(x.index), linewidth=grid_lw, color=grid_c, linestyle=grid_ls,
+        )
 
     for idx_col, col in enumerate(x.columns):
         for idx_row, row in enumerate(x.index):
 
             if x[col][row] != 0:
                 ax.text(idx_col, idx_row, x[col][row], va="center", ha="center")
+
+    ax.set_aspect("equal")
 
     ax.set_xlim(-1, len(x.columns))
     ax.set_ylim(-1, len(x.index) + 1)
@@ -452,9 +464,9 @@ def plot(x, *args, figsize=(9, 9), cmap="Blues", scalex=True, scaley=True, **kwa
 
 
     """
+    matplotlib.rc("font", size=FONT_SIZE)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
-
     cmap = plt.cm.get_cmap(cmap)
 
     x = x.copy()
@@ -486,7 +498,8 @@ def plot(x, *args, figsize=(9, 9), cmap="Blues", scalex=True, scaley=True, **kwa
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
+    ax.spines["bottom"].set_visible(True)
+
     return fig
 
 
@@ -536,9 +549,11 @@ def pie(
 
 
     """
+    matplotlib.rc("font", size=FONT_SIZE)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
     cmap = plt.cm.get_cmap(cmap)
+
     x = x.copy()
     if "ID" in x.columns:
         x.pop("ID")
@@ -582,14 +597,14 @@ def wordcloud(
     min_font_size=4,
     stopwords=None,
     random_state=None,
-    background_color="black",
+    background_color="white",
     max_font_size=None,
     font_step=1,
     mode="RGB",
     relative_scaling="auto",
     regexp=None,
     collocations=True,
-    colormap=None,
+    colormap="Blues",
     normalize_plurals=True,
     contour_width=0,
     contour_color="black",
@@ -624,9 +639,10 @@ def wordcloud(
         :align: center
 
     """
-    x = x.copy()
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
+
+    x = x.copy()
     x.pop("ID")
     words = {row[0]: row[1] for _, row in x.iterrows()}
     wordcloud = WordCloud(
@@ -660,13 +676,18 @@ def wordcloud(
     )
     wordcloud.generate_from_frequencies(words)
     ax.imshow(wordcloud, interpolation="bilinear")
-    ax.axis("off")
+    #
+    ax.spines["bottom"].set_color("lightgray")
+    ax.spines["top"].set_color("lightgray")
+    ax.spines["right"].set_color("lightgray")
+    ax.spines["left"].set_color("lightgray")
+    ax.set_xticks([])
+    ax.set_yticks([])
+    #
     return fig
 
 
-def gant(
-    x, figsize=(8, 8), hlines_lw=0.5, hlines_c="gray", hlines_ls=":", *args, **kwargs
-):
+def gant(x, figsize=(8, 8), grid_lw=1.0, grid_c="gray", grid_ls=":", *args, **kwargs):
     """Creates a gant activity plot from a dataframe.
 
     Examples
@@ -702,36 +723,45 @@ def gant(
 
 
     """
+    matplotlib.rc("font", size=FONT_SIZE)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
+
     x = x.copy()
     if "linewidth" not in kwargs.keys() and "lw" not in kwargs.keys():
         kwargs["linewidth"] = 4
     if "marker" not in kwargs.keys():
         kwargs["marker"] = "o"
     if "markersize" not in kwargs.keys() and "ms" not in kwargs.keys():
-        kwargs["markersize"] = 10
+        kwargs["markersize"] = 8
     if "color" not in kwargs.keys() and "c" not in kwargs.keys():
         kwargs["color"] = "k"
     for idx, col in enumerate(x.columns):
         w = x[col]
         w = w[w > 0]
         ax.plot(w.index, [idx] * len(w.index), **kwargs)
-    ax.hlines(
-        range(len(x.columns)),
-        x.index.min(),
-        x.index.max(),
-        linewidth=hlines_lw,
-        color=hlines_c,
-        linestyle=hlines_ls,
-    )
+
+    # ax.hlines(
+    #     range(len(x.columns)),
+    #     x.index.min(),
+    #     x.index.max(),
+    #     linewidth=hlines_lw,
+    #     color=hlines_c,
+    #     linestyle=hlines_ls,
+    # )
+
+    ax.grid(axis="both", color=grid_c, linestyle=grid_ls, linewidth=grid_lw)
+
     ax.set_yticks(np.arange(len(x.columns)))
+    ax.tick_params(axis="x", labelrotation=90)
     ax.set_yticklabels(x.columns)
     ax.invert_yaxis()
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
+    ax.spines["bottom"].set_visible(True)
+    ax.set_aspect("equal")
+
     return fig
 
 
@@ -827,8 +857,10 @@ def heatmap(x, figsize=(8, 8), **kwargs):
         :align: center
 
     """
+    matplotlib.rc("font", size=FONT_SIZE)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
+
     x = x.copy()
     result = ax.pcolor(np.transpose(x.values), **kwargs,)
     x.columns = [
@@ -931,11 +963,11 @@ def stacked_bar(
         :align: center
 
     """
-
+    matplotlib.rc("font", size=FONT_SIZE)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
-
     cmap = plt.cm.get_cmap(cmap)
+
     x = x.copy()
     if "ID" in x.columns:
         x.pop("ID")
@@ -958,16 +990,18 @@ def stacked_bar(
 
     ax.legend()
 
+    ax.grid(axis="y", color="gray", linestyle=":")
+
     ax.set_xticks(np.arange(len(x[x.columns[0]])))
     ax.set_xticklabels(x[x.columns[0]])
     ax.tick_params(axis="x", labelrotation=90)
-    #
+
     ax.set_xlabel(x.columns[0])
     ax.set_ylabel(x.columns[1])
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
+    ax.spines["bottom"].set_visible(True)
 
     return fig
 
@@ -1031,6 +1065,7 @@ def stacked_barh(
         :align: center
 
     """
+    matplotlib.rc("font", size=FONT_SIZE)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
     cmap = plt.cm.get_cmap(cmap)
@@ -1062,8 +1097,10 @@ def stacked_barh(
     #
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
+    ax.spines["left"].set_visible(True)
     ax.spines["bottom"].set_visible(False)
+
+    ax.grid(axis="x", color="gray", linestyle=":")
 
     return fig
 
@@ -1251,8 +1288,6 @@ def worldmap(x, figsize=(10, 5), cmap="Pastel2", legend=True, *args, **kwargs):
     3  United Kingdom            700
     4           India            600
     5        Colombia           1000
-
-
     >>> fig = worldmap(x, figsize=(15, 6))
     >>> fig.savefig('sphinx/images/worldmap.png')
 
@@ -1262,13 +1297,20 @@ def worldmap(x, figsize=(10, 5), cmap="Pastel2", legend=True, *args, **kwargs):
 
 
     """
-    module_path = dirname(__file__)
+    matplotlib.rc("font", size=FONT_SIZE)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
-    x = x.copy()
-    x["color"] = x[x.columns[1]].map(lambda w: w / x[x.columns[1]].max())
-    x = x.set_index(x.columns[0])
     cmap = plt.cm.get_cmap(cmap)
+
+    x = x.copy()
+    column0 = x[x.columns[0]]
+    column1 = x[x.columns[1]]
+    x["color"] = x[x.columns[1]].map(
+        lambda w: (w - column1.min()) / (column1.max() - column1.min())
+    )
+    x = x.set_index(column0)
+
+    module_path = dirname(__file__)
     with open(join(module_path, "data/worldmap.data"), "r") as f:
         countries = json.load(f)
     for country in countries.keys():
@@ -1287,10 +1329,23 @@ def worldmap(x, figsize=(10, 5), cmap="Pastel2", legend=True, *args, **kwargs):
     xv, yv = np.meshgrid(xbar, ybar)
     z = yv / (ymax - ymin) - ymin
     ax.pcolormesh(xv, yv, z, cmap=cmap)
-    ax.text(xleft, ymin, "0", ha="right")
-    ax.text(xleft, ymax, str(x[x.columns[0]].max()), ha="right")
+    #
+    pos = np.linspace(ymin, ymin + (ymax - ymin), 11)
+    value = [
+        round(column1.min() + (column1.max() - column1.min()) * i / 10, 0)
+        for i in range(11)
+    ]
+    for i in range(11):
+        ax.text(
+            xright + 0.2 * (xright - xleft), pos[i], str(int(value[i])), ha="left",
+        )
+
+    #  ax.text(xright, ymin, "0", ha="left")
+    # ax.text(xright, ymax, str(x[x.columns[0]].max()), ha="left")
     ax.set_aspect("equal")
-    ax.axis("off")
+    ax.axis("on")
+    ax.set_xticks([])
+    ax.set_yticks([])
     return fig
 
 
@@ -1324,10 +1379,12 @@ def tree(x, cmap="Blues", figsize=(8, 8), alpha=0.9):
 
 
     """
+    matplotlib.rc("font", size=FONT_SIZE)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
-    x = x.copy()
     cmap = plt.cm.get_cmap(cmap)
+
+    x = x.copy()
     column0 = x[x.columns[0]]
     column1 = x[x.columns[1]]
     colors = [

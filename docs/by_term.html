@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Analysis by Term &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
+  <title>&lt;no title&gt; &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
   
 
   
@@ -36,8 +36,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Analysis by Term per Year" href="by_term_per_year.html" />
-    <link rel="prev" title="Analysis by Year" href="by_year.html" /> 
+    <link rel="next" title="&lt;no title&gt;" href="by_term_per_year.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="by_year.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,19 +85,8 @@
               
             
             
-              <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules for Analysis</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="data.html">Primary Data Importation and Manipulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="by_year.html">Analysis by Year</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Analysis by Term</a></li>
-<li class="toctree-l2"><a class="reference internal" href="by_term_per_year.html">Analysis by Term per Year</a></li>
-<li class="toctree-l2"><a class="reference internal" href="co_occurrence.html">Co-occurrence Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="correlation.html">Correlation Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="text.html">Text manipulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="keywords.html">Keywords manipulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thesaurus.html">Thesaurus</a></li>
-</ul>
-</li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules for Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html#basic-functions">Basic functions</a></li>
 </ul>
 
@@ -146,7 +135,7 @@
         
           <li><a href="modules.html">Modules for Analysis</a> &raquo;</li>
         
-      <li>Analysis by Term</li>
+      <li>&lt;no title&gt;</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -189,168 +178,7 @@
     text-align: unset;
 }
 </style>
-<span class="target" id="module-techminer.by_term"></span><div class="section" id="analysis-by-term">
-<h1>Analysis by Term<a class="headerlink" href="#analysis-by-term" title="Permalink to this headline">¶</a></h1>
-<dl class="py function">
-<dt id="techminer.by_term.app">
-<code class="sig-prename descclassname">techminer.by_term.</code><code class="sig-name descname">app</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/by_term.html#app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.by_term.app" title="Permalink to this definition">¶</a></dt>
-<dd><p>Jupyter Lab dashboard.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="techminer.by_term.citations_by_term">
-<code class="sig-prename descclassname">techminer.by_term.</code><code class="sig-name descname">citations_by_term</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/by_term.html#citations_by_term"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.by_term.citations_by_term" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the number of citations by item in a column.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
-<li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
-<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>DataFrame.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">{</span>
-<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0;author 1;author 2,author 0,author 1,author 3&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
-<span class="gp">... </span>         <span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">14</span><span class="p">)),</span>
-<span class="gp">... </span>         <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)),</span>
-<span class="gp">... </span>    <span class="p">}</span>
-<span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
-<span class="go">                      Authors  Cited by  ID</span>
-<span class="go">0  author 0;author 1;author 2        10   0</span>
-<span class="go">1                    author 0        11   1</span>
-<span class="go">2                    author 1        12   2</span>
-<span class="go">3                    author 3        13   3</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">citations_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
-<span class="go">    Authors  Cited by      ID</span>
-<span class="go">0  author 1        22  [0, 2]</span>
-<span class="go">1  author 0        21  [0, 1]</span>
-<span class="go">2  author 3        13     [3]</span>
-<span class="go">3  author 2        10     [0]</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;author 1&#39;</span><span class="p">,</span> <span class="s1">&#39;author 2&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">citations_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
-<span class="go">    Authors  Cited by      ID</span>
-<span class="go">0  author 1        22  [0, 2]</span>
-<span class="go">1  author 2        10     [0]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt id="techminer.by_term.documents_by_term">
-<code class="sig-prename descclassname">techminer.by_term.</code><code class="sig-name descname">documents_by_term</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/by_term.html#documents_by_term"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.by_term.documents_by_term" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the number of documents per term in a given column.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
-<li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
-<li><p><strong>keywords</strong> (<a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>DataFrame.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">{</span>
-<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0;author 1;author 2,author 0,author 1,author 3&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
-<span class="gp">... </span>         <span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">14</span><span class="p">)),</span>
-<span class="gp">... </span>         <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)),</span>
-<span class="gp">... </span>    <span class="p">}</span>
-<span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
-<span class="go">                      Authors  Cited by  ID</span>
-<span class="go">0  author 0;author 1;author 2        10   0</span>
-<span class="go">1                    author 0        11   1</span>
-<span class="go">2                    author 1        12   2</span>
-<span class="go">3                    author 3        13   3</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">documents_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
-<span class="go">    Authors  Num Documents      ID</span>
-<span class="go">0  author 0              2  [0, 1]</span>
-<span class="go">1  author 1              2  [0, 2]</span>
-<span class="go">2  author 2              1     [0]</span>
-<span class="go">3  author 3              1     [3]</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;author 1&#39;</span><span class="p">,</span> <span class="s1">&#39;author 2&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">documents_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
-<span class="go">    Authors  Num Documents      ID</span>
-<span class="go">0  author 1              2  [0, 2]</span>
-<span class="go">1  author 2              1     [0]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt id="techminer.by_term.summary_by_term">
-<code class="sig-prename descclassname">techminer.by_term.</code><code class="sig-name descname">summary_by_term</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/by_term.html#summary_by_term"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.by_term.summary_by_term" title="Permalink to this definition">¶</a></dt>
-<dd><p>Summarize the number of documents and citations by term in a dataframe.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
-<li><p><strong>keywords</strong> (<em>int</em><em>, </em><em>list</em>) – filter the results.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>DataFrame.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">{</span>
-<span class="gp">... </span>         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;author 0;author 1;author 2,author 0,author 1,author 3&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
-<span class="gp">... </span>         <span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">14</span><span class="p">)),</span>
-<span class="gp">... </span>         <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)),</span>
-<span class="gp">... </span>    <span class="p">}</span>
-<span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
-<span class="go">                      Authors  Cited by  ID</span>
-<span class="go">0  author 0;author 1;author 2        10   0</span>
-<span class="go">1                    author 0        11   1</span>
-<span class="go">2                    author 1        12   2</span>
-<span class="go">3                    author 3        13   3</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
-<span class="go">    Authors  Num Documents  Cited by      ID</span>
-<span class="go">0  author 0              2        21  [0, 1]</span>
-<span class="go">1  author 1              2        22  [0, 2]</span>
-<span class="go">2  author 2              1        10     [0]</span>
-<span class="go">3  author 3              1        13     [3]</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">([</span><span class="s1">&#39;author 1&#39;</span><span class="p">,</span> <span class="s1">&#39;author 2&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
-<span class="go">    Authors  Num Documents  Cited by      ID</span>
-<span class="go">0  author 1              2        22  [0, 2]</span>
-<span class="go">1  author 2              1        10     [0]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</div>
-
+<span class="target" id="module-techminer.by_term"></span>
 
            </div>
            
@@ -359,10 +187,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="by_term_per_year.html" class="btn btn-neutral float-right" title="Analysis by Term per Year" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="by_term_per_year.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="by_year.html" class="btn btn-neutral float-left" title="Analysis by Year" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="by_year.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

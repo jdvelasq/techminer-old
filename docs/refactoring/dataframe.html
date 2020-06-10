@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>&lt;no title&gt; &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
+  <title>DataFrame object &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
   
 
   
@@ -131,7 +131,7 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>&lt;no title&gt;</li>
+      <li>DataFrame object</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -174,6 +174,88 @@
     text-align: unset;
 }
 </style>
+<span class="target" id="module-techminer.dataframe"></span><div class="section" id="dataframe-object">
+<h1>DataFrame object<a class="headerlink" href="#dataframe-object" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="column-names">
+<h2>Column names<a class="headerlink" href="#column-names" title="Permalink to this headline">¶</a></h2>
+<p>The column names in the dataframe follows the convetion used in WoS.</p>
+<ul class="simple">
+<li><p><cite>AB</cite>: Abstract.</p></li>
+<li><p><cite>AF</cite>: Author full name.</p></li>
+<li><p><cite>AR</cite>: Article Number.</p></li>
+<li><p><cite>AU</cite>: Authors.</p></li>
+<li><p><cite>AI</cite>: Authors Identifiers.</p></li>
+<li><p><cite>BA</cite>: Book Authors.</p></li>
+<li><p><cite>BE</cite>: Editors.</p></li>
+<li><p><cite>BF</cite>: Book Authors Full Name.</p></li>
+<li><p><cite>BN</cite>: International Standard Book Number (ISBN).</p></li>
+<li><p><cite>BP</cite>: Begining page.</p></li>
+<li><p><cite>BS</cite>: Book Series Subtitle.</p></li>
+<li><p><cite>C1</cite>: Author Address.</p></li>
+<li><p><cite>CA</cite>: Group Authors.</p></li>
+<li><p><cite>CL</cite>: Conference Location.</p></li>
+<li><p><cite>CR</cite>: Cited References.</p></li>
+<li><p><cite>CT</cite>: Conference Title.</p></li>
+<li><p><cite>CY</cite>: Conference Date.</p></li>
+<li><p><cite>D2</cite>: Book DOI.</p></li>
+<li><p><cite>DA</cite>: Date this report was generated.</p></li>
+<li><p><cite>DE</cite>: Author keywords.</p></li>
+<li><p><cite>DI</cite>: DOI</p></li>
+<li><p><cite>DT</cite>: Document Type.</p></li>
+<li><p><cite>EA</cite>: Early access date.</p></li>
+<li><p><cite>EF</cite>: End of File.</p></li>
+<li><p><cite>EI</cite>: Electronic International Standard Serial Number (eISSN).</p></li>
+<li><p><cite>EM</cite>: E-mail Address.</p></li>
+<li><p><cite>EP</cite>: Ending page.</p></li>
+<li><p><cite>ER</cite>: End of Record.</p></li>
+<li><p><cite>EY</cite>: Early access year.</p></li>
+<li><p><cite>FN</cite>: File Name.</p></li>
+<li><p><cite>FU</cite>: Funding Agency and Grant Number.</p></li>
+<li><p><cite>FX</cite>: Funding Text.</p></li>
+<li><p><cite>GA</cite>: Document Delivery Number.</p></li>
+<li><p><cite>GP</cite>: Book Group Authors.</p></li>
+<li><p><cite>HC</cite>: ESI Highly Cited Paper. Note that this field is valued only for ESI subscribers.</p></li>
+<li><p><cite>HO</cite>: Conference Host.</p></li>
+<li><p><cite>HP</cite>: ESI Hot Paper. Note that this field is valued only for ESI subscribers.</p></li>
+<li><p><cite>ID</cite>: Keyword plus.</p></li>
+<li><p><cite>IS</cite>: Issue.</p></li>
+<li><p><cite>J9</cite>: 29-Character Source Abbreviation.</p></li>
+<li><p><cite>JI</cite>: ISO Source Abbreviation</p></li>
+<li><p><cite>LA</cite>: Language.</p></li>
+<li><p><cite>MA</cite>: Meeting Abstract.</p></li>
+<li><p><cite>NR</cite>: Cited Reference Count.</p></li>
+<li><p><cite>OA</cite>: Open Access Indicator.</p></li>
+<li><p><cite>OI</cite>: ORCID Identifier (Open Researcher and Contributor ID).</p></li>
+<li><p><cite>P2</cite>: Chapter Count (Book Citation Index).</p></li>
+<li><p><cite>PA</cite>: Publisher Address.</p></li>
+<li><p><cite>PG</cite>: Page count.</p></li>
+<li><p><cite>PI</cite>: Publisher City.</p></li>
+<li><p><cite>PM</cite>: PubMed ID.</p></li>
+<li><p><cite>PN</cite>: Part Number.</p></li>
+<li><p><cite>PR</cite>: Reprint Address.</p></li>
+<li><p><cite>PT</cite>: Publication Type (J=Journal; B=Book; S=Series; P=Patent).</p></li>
+<li><p><cite>PU</cite>: Publisher.</p></li>
+<li><p><cite>PY</cite>: Year Published.</p></li>
+<li><p><cite>RI</cite>: ResearcherID Number.</p></li>
+<li><p><cite>SC</cite>: Research Areas.</p></li>
+<li><p><cite>SE</cite>: Book Series Title.</p></li>
+<li><p><cite>SI</cite>: Special Issue.</p></li>
+<li><p><cite>SN</cite>: International Standard Serial Number (ISSN).</p></li>
+<li><p><cite>SO</cite>: Publication Name.</p></li>
+<li><p><cite>SP</cite>: Conference Sponsors.</p></li>
+<li><p><cite>SU</cite>: Supplement.</p></li>
+<li><p><cite>TC</cite>: Web of Science Core Collection Times Cited Count.</p></li>
+<li><p><cite>TI</cite>: Document Title.</p></li>
+<li><p><cite>U1</cite>: Usage Count (Last 180 Days).</p></li>
+<li><p><cite>U2</cite>: Usage Count (Since 2013).</p></li>
+<li><p><cite>UT</cite>: Accession Number.</p></li>
+<li><p><cite>VL</cite>: Volume.</p></li>
+<li><p><cite>VR</cite>: Version Number.</p></li>
+<li><p><cite>WC</cite>: Web of Science Categories.</p></li>
+<li><p><cite>Z9</cite>: Total Times Cited Count.</p></li>
+</ul>
+</div>
+</div>
 
 
            </div>
