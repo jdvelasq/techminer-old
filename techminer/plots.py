@@ -26,7 +26,7 @@ from wordcloud import ImageColorGenerator, WordCloud
 # import numpy as np
 # import pandas as pd
 
-FONT_SIZE = 16
+FONT_SIZE = 13
 
 TEXTLEN = 30
 
@@ -147,7 +147,14 @@ STYLE = [
 
 
 def bar(
-    x, width=0.8, bottom=None, align="center", cmap="Greys", figsize=(10, 6), **kwargs
+    x,
+    width=0.8,
+    bottom=None,
+    align="center",
+    style="default",
+    cmap="Greys",
+    figsize=(10, 6),
+    **kwargs
 ):
     """Creates a bar plot from a dataframe.
 
@@ -178,11 +185,11 @@ def bar(
 
     """
     matplotlib.rc("font", size=FONT_SIZE)
-    fig = plt.Figure(figsize=figsize)
-    ax = fig.subplots()
+
     if "ID" in x.columns:
         x.pop("ID")
-    if cmap is not None:
+
+    if cmap is not None and style == "default":
         cmap = plt.cm.get_cmap(cmap)
         kwargs["color"] = [
             cmap(
@@ -195,30 +202,37 @@ def bar(
             )
             for i in range(len(x[x.columns[1]]))
         ]
+    else:
+        kwargs["color"] = cmap
 
-    ax.bar(
-        x=range(len(x)),
-        height=x[x.columns[1]],
-        width=width,
-        bottom=bottom,
-        align=align,
-        **({}),
-        **kwargs,
-    )
+    with plt.style.context(style):
 
-    ax.set_xticks(np.arange(len(x[x.columns[0]])))
-    ax.set_xticklabels(x[x.columns[0]])
-    ax.tick_params(axis="x", labelrotation=90)
+        fig = plt.Figure(figsize=figsize)
+        ax = fig.subplots()
 
-    ax.set_xlabel(x.columns[0])
-    ax.set_ylabel(x.columns[1])
+        ax.bar(
+            x=range(len(x)),
+            height=x[x.columns[1]],
+            width=width,
+            bottom=bottom,
+            align=align,
+            **({}),
+            **kwargs,
+        )
 
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(True)
+        ax.set_xticks(np.arange(len(x[x.columns[0]])))
+        ax.set_xticklabels(x[x.columns[0]])
+        ax.tick_params(axis="x", labelrotation=90)
 
-    ax.grid(axis="y", color="gray", linestyle=":")
+        ax.set_xlabel(x.columns[0])
+        ax.set_ylabel(x.columns[1])
+
+        if style == "default":
+            ax.spines["top"].set_visible(False)
+            ax.spines["right"].set_visible(False)
+            ax.spines["left"].set_visible(False)
+            ax.spines["bottom"].set_visible(True)
+            ax.grid(axis="y", color="gray", linestyle=":")
 
     return fig
 
