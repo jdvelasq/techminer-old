@@ -769,7 +769,7 @@
     <span class="n">relative_scaling</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
     <span class="n">regexp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">collocations</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">colormap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span>
     <span class="n">normalize_plurals</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">contour_width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
     <span class="n">contour_color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
@@ -808,7 +808,8 @@
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;ID&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
     <span class="n">words</span> <span class="o">=</span> <span class="p">{</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()}</span>
     <span class="n">wordcloud</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span>
         <span class="n">font_path</span><span class="o">=</span><span class="n">font_path</span><span class="p">,</span>
@@ -831,7 +832,7 @@
         <span class="n">relative_scaling</span><span class="o">=</span><span class="n">relative_scaling</span><span class="p">,</span>
         <span class="n">regexp</span><span class="o">=</span><span class="n">regexp</span><span class="p">,</span>
         <span class="n">collocations</span><span class="o">=</span><span class="n">collocations</span><span class="p">,</span>
-        <span class="n">colormap</span><span class="o">=</span><span class="n">colormap</span><span class="p">,</span>
+        <span class="n">colormap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
         <span class="n">normalize_plurals</span><span class="o">=</span><span class="n">normalize_plurals</span><span class="p">,</span>
         <span class="n">contour_width</span><span class="o">=</span><span class="n">contour_width</span><span class="p">,</span>
         <span class="n">contour_color</span><span class="o">=</span><span class="n">contour_color</span><span class="p">,</span>

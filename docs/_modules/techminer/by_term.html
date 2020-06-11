@@ -468,10 +468,10 @@
 <span class="c1">##</span>
 
 <span class="n">WIDGET_WIDTH</span> <span class="o">=</span> <span class="s2">&quot;200px&quot;</span>
-<span class="n">LEFT_PANEL_HEIGHT</span> <span class="o">=</span> <span class="s2">&quot;588px&quot;</span>
+<span class="n">LEFT_PANEL_HEIGHT</span> <span class="o">=</span> <span class="s2">&quot;620px&quot;</span>
 <span class="n">RIGHT_PANEL_WIDTH</span> <span class="o">=</span> <span class="s2">&quot;870px&quot;</span>
 <span class="n">FIGSIZE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mf">8.2</span><span class="p">)</span>
-<span class="n">PANE_HEIGHTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;80px&quot;</span><span class="p">,</span> <span class="s2">&quot;650px&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">PANE_HEIGHTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;80px&quot;</span><span class="p">,</span> <span class="s2">&quot;700px&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 
 
 <span class="c1">##</span>
@@ -527,7 +527,7 @@
             <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;plot_type&quot;</span><span class="p">,</span>
             <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;View:&quot;</span><span class="p">,</span>
             <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
-                    <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Bar plot&quot;</span><span class="p">,</span> <span class="s2">&quot;Horizontal bar plot&quot;</span><span class="p">,</span> <span class="s2">&quot;Pie plot&quot;</span><span class="p">,</span> <span class="s2">&quot;Table&quot;</span><span class="p">],</span>
+                    <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Bar plot&quot;</span><span class="p">,</span> <span class="s2">&quot;Horizontal bar plot&quot;</span><span class="p">,</span> <span class="s2">&quot;Pie plot&quot;</span><span class="p">,</span> <span class="s2">&quot;Wordcloud&quot;</span><span class="p">,</span> <span class="s2">&quot;Treemap&quot;</span><span class="p">,</span> <span class="s2">&quot;Table&quot;</span><span class="p">],</span>
                     <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
                 <span class="p">),</span>
         <span class="p">},</span>
@@ -569,7 +569,20 @@
         <span class="n">top_n</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;top_n&#39;</span><span class="p">]</span>
         <span class="n">plot_type</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;plot_type&#39;</span><span class="p">]</span>
         <span class="c1">#</span>
-        <span class="n">plots</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Bar plot&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">,</span> <span class="s2">&quot;Horizontal bar plot&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">,</span> <span class="s2">&quot;Pie plot&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">pie</span><span class="p">,</span> <span class="s2">&quot;Table&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+        <span class="n">plots</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Bar plot&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">,</span>
+            <span class="s2">&quot;Horizontal bar plot&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">,</span>
+            <span class="s2">&quot;Pie plot&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">pie</span><span class="p">,</span>
+            <span class="s2">&quot;Wordcloud&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">wordcloud</span><span class="p">,</span>
+            <span class="s2">&quot;Treemap&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">tree</span><span class="p">,</span>
+            <span class="s2">&quot;Table&quot;</span><span class="p">:</span> <span class="kc">None</span>
+        <span class="p">}</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s1">&#39;Table&#39;</span><span class="p">:</span>
+            <span class="n">controls</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">controls</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">False</span>
+
         <span class="c1">#</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">term</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">analysis_type</span> <span class="o">==</span> <span class="s2">&quot;Frequency&quot;</span><span class="p">:</span>
@@ -589,7 +602,7 @@
             <span class="k">if</span> <span class="n">plot</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">display</span><span class="p">(</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">)))</span>
+                <span class="n">display</span><span class="p">(</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">)))</span>
             
 
     <span class="c1"># -------------------------------------------------------------------------</span>

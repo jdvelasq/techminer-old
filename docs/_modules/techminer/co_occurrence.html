@@ -1,0 +1,1449 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>techminer.co_occurrence &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TechMiner - A Package for Bibliographical Analysis using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules for Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#basic-functions">Basic functions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TechMiner - A Package for Bibliographical Analysis using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>techminer.co_occurrence</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for techminer.co_occurrence</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Co-occurrence Analysis</span>
+<span class="sd">==================================================================================================</span>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">widgets</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">techminer.plots</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">clear_output</span><span class="p">,</span> <span class="n">display</span>
+<span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">AppLayout</span><span class="p">,</span> <span class="n">Layout</span>
+
+<span class="c1"># from techminer.explode import __explode</span>
+<span class="kn">from</span> <span class="nn">techminer.plots</span> <span class="kn">import</span> <span class="n">COLORMAPS</span>
+<span class="kn">from</span> <span class="nn">techminer.keywords</span> <span class="kn">import</span> <span class="n">Keywords</span>
+<span class="kn">from</span> <span class="nn">techminer.by_term</span> <span class="kn">import</span> <span class="n">summary_by_term</span>
+<span class="kn">from</span> <span class="nn">techminer.explode</span> <span class="kn">import</span> <span class="n">MULTIVALUED_COLS</span>
+
+
+<div class="viewcode-block" id="summary_co_occurrence"><a class="viewcode-back" href="../../co_occurrence.html#techminer.co_occurrence.summary_co_occurrence">[docs]</a><span class="k">def</span> <span class="nf">summary_co_occurrence</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cited_by</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Summary occurrence and citations by terms in two different columns.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        by (str): the column to explode. Their terms are used in the index of the result dataframe.</span>
+<span class="sd">        sep_IDX (str): Character used as internal separator for the elements in the by.</span>
+<span class="sd">        column (str): the column to explode. Their terms are used in the columns of the result dataframe.</span>
+<span class="sd">        sep_COL (str): Character used as internal separator for the elements in the column.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;B;D&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; y = [ &#39;a&#39;, &#39;a;b&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c;d&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Author_Keywords&#39;: y,</span>
+<span class="sd">    ...       &#39;Cited_by&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors Author_Keywords  Cited_by  ID</span>
+<span class="sd">    0       A               a         0   0</span>
+<span class="sd">    1     A;B             a;b         1   1</span>
+<span class="sd">    2       B               b         2   2</span>
+<span class="sd">    3   A;B;C               c         3   3</span>
+<span class="sd">    4     B;D             c;d         4   4</span>
+
+<span class="sd">    &gt;&gt;&gt; summary_co_occurrence(df, column=&#39;Author_Keywords&#39;, by=&#39;Authors&#39;)</span>
+<span class="sd">      Author_Keywords Authors  Num_Documents  Cited_by      ID</span>
+<span class="sd">    0               a       A              2         1  [0, 1]</span>
+<span class="sd">    1               a       B              1         1     [1]</span>
+<span class="sd">    2               b       A              1         1     [1]</span>
+<span class="sd">    3               b       B              2         3  [1, 2]</span>
+<span class="sd">    4               c       A              1         3     [3]</span>
+<span class="sd">    5               c       B              2         7  [3, 4]</span>
+<span class="sd">    6               c       C              1         3     [3]</span>
+<span class="sd">    7               c       D              1         4     [4]</span>
+<span class="sd">    8               d       B              1         4     [4]</span>
+<span class="sd">    9               d       D              1         4     [4]</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;B&#39;, &#39;C&#39;, &#39;a&#39;, &#39;b&#39;], ignore_case=False)</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; summary_co_occurrence(df, &#39;Authors&#39;, &#39;Author_Keywords&#39;, keywords=keywords)</span>
+<span class="sd">      Authors Author_Keywords  Num_Documents  Cited_by      ID</span>
+<span class="sd">    0       B               a              1         1     [1]</span>
+<span class="sd">    1       B               b              2         3  [1, 2]</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">generate_pairs</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">by</span> <span class="ow">in</span> <span class="n">MULTIVALUED_COLS</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">MULTIVALUED_COLS</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">idx0</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">idx1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)):</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">w</span><span class="p">[</span><span class="n">idx0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="n">idx1</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="c1">#</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">by</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">by</span> <span class="o">==</span> <span class="n">column</span><span class="p">:</span>
+        <span class="n">by</span> <span class="o">=</span> <span class="n">column</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">by</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="n">by</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="s2">&quot;Cited_by&quot;</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">]]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;pairs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">generate_pairs</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">by</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">])]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s2">&quot;pairs&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Cited_by&quot;</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">]]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;pairs&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;pairs&quot;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;Cited_by&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited_by&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited_by&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">result</span><span class="p">[</span><span class="n">by</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;pairs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">result</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;pairs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;pairs&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[[</span><span class="n">column</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Cited_by&quot;</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">,]]</span>
+    <span class="k">if</span> <span class="n">keywords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">keywords</span><span class="o">.</span><span class="n">_patterns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">by</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">min_frequency</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">min_cited_by</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_frequency</span><span class="p">]</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Cited_by&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_cited_by</span><span class="p">]</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">by</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;_&quot;</span> <span class="ow">and</span> <span class="n">by</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">column</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">by</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_frequency</span><span class="p">]</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Cited_by&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_cited_by</span><span class="p">]</span>
+            <span class="n">keywords</span> <span class="o">+=</span> <span class="n">Keywords</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">by</span><span class="p">])</span>
+        <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">by</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="n">column</span><span class="p">,</span> <span class="n">by</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="co_occurrence"><a class="viewcode-back" href="../../co_occurrence.html#techminer.co_occurrence.co_occurrence">[docs]</a><span class="k">def</span> <span class="nf">co_occurrence</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the co-occurrence of two terms in different colums. The report adds</span>
+<span class="sd">    the number of documents by term between brackets.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        by (str): the column to explode. Their terms are used in the index of the result dataframe.</span>
+<span class="sd">        sep_IDX (str): Character used as internal separator for the elements in the by.</span>
+<span class="sd">        column (str): the column to explode. Their terms are used in the columns of the result dataframe.</span>
+<span class="sd">        sep_COL (str): Character used as internal separator for the elements in the column.</span>
+<span class="sd">        as_matrix (bool): Results are returned as a matrix.</span>
+<span class="sd">        minmax (pair(number,number)): filter values by &gt;=min,&lt;=max.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;B;D&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; y = [ &#39;a&#39;, &#39;a;b&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c;d&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Author_Keywords&#39;: y,</span>
+<span class="sd">    ...       &#39;Cited_by&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors Author_Keywords  Cited_by  ID</span>
+<span class="sd">    0       A               a         0   0</span>
+<span class="sd">    1     A;B             a;b         1   1</span>
+<span class="sd">    2       B               b         2   2</span>
+<span class="sd">    3   A;B;C               c         3   3</span>
+<span class="sd">    4     B;D             c;d         4   4</span>
+
+<span class="sd">    &gt;&gt;&gt; co_occurrence(df, column=&#39;Authors&#39;, by=&#39;Author_Keywords&#39;)</span>
+<span class="sd">      Authors Author_Keywords  Num_Documents      ID</span>
+<span class="sd">    0       A               a              2  [0, 1]</span>
+<span class="sd">    1       B               b              2  [1, 2]</span>
+<span class="sd">    2       B               c              2  [3, 4]</span>
+<span class="sd">    3       A               b              1     [1]</span>
+<span class="sd">    4       A               c              1     [3]</span>
+<span class="sd">    5       B               a              1     [1]</span>
+<span class="sd">    6       B               d              1     [4]</span>
+<span class="sd">    7       C               c              1     [3]</span>
+<span class="sd">    8       D               c              1     [4]</span>
+<span class="sd">    9       D               d              1     [4]</span>
+
+<span class="sd">    &gt;&gt;&gt; co_occurrence(df, column=&#39;Author_Keywords&#39;, by=&#39;Authors&#39;, as_matrix=True)</span>
+<span class="sd">       a  b  c  d</span>
+<span class="sd">    A  2  1  1  0</span>
+<span class="sd">    B  1  2  2  1</span>
+<span class="sd">    C  0  0  1  0</span>
+<span class="sd">    D  0  0  1  1</span>
+
+<span class="sd">    &gt;&gt;&gt; co_occurrence(df, column=&#39;Author_Keywords&#39;, by=&#39;Authors&#39;, as_matrix=True, min_value=2)</span>
+<span class="sd">       a  b  c</span>
+<span class="sd">    A  2  1  1</span>
+<span class="sd">    B  1  2  2</span>
+
+<span class="sd">    &gt;&gt;&gt; co_occurrence(df, column=&#39;Author_Keywords&#39;, by=&#39;Authors&#39;, as_matrix=True, min_value=5)</span>
+<span class="sd">       a  b  c</span>
+<span class="sd">    A  2  1  1</span>
+<span class="sd">    B  1  2  2</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;, &#39;c&#39;, &#39;d&#39;], ignore_case=False)</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; co_occurrence(df, column=&#39;Author_Keywords&#39;, by=&#39;Authors&#39;, as_matrix=True, keywords=keywords)</span>
+<span class="sd">       c  d</span>
+<span class="sd">    A  1  0</span>
+<span class="sd">    B  2  1</span>
+
+<span class="sd">    </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># def generate_dic(column, sep):</span>
+    <span class="c1">#     new_names = documents_by_term(x, column)</span>
+    <span class="c1">#     new_names = {</span>
+    <span class="c1">#         term: &quot;{:s} [{:d}]&quot;.format(term, docs_per_term)</span>
+    <span class="c1">#         for term, docs_per_term in zip(</span>
+    <span class="c1">#             new_names[column], new_names[&quot;Num_Documents&quot;],</span>
+    <span class="c1">#         )</span>
+    <span class="c1">#     }</span>
+    <span class="c1">#     return new_names</span>
+
+    <span class="c1">#</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">summary_co_occurrence</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="n">by</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">by</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">by</span> <span class="o">==</span> <span class="n">column</span><span class="p">:</span>
+        <span class="n">by</span> <span class="o">=</span> <span class="n">column</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;Cited_by&quot;</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="n">as_matrix</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">by</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">min_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">min_value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="n">as_matrix</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+            <span class="n">result</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">by</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">column</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">min_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">min_value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1">#</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">min_value</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">b</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="k">if</span> <span class="n">min_value</span> <span class="o">&gt;</span> <span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">b</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="k">else</span> <span class="n">min_value</span>
+        <span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">a</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="n">b</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
+        <span class="c1">#</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">sorted</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+
+
+<div class="viewcode-block" id="summary_occurrence"><a class="viewcode-back" href="../../co_occurrence.html#techminer.co_occurrence.summary_occurrence">[docs]</a><span class="k">def</span> <span class="nf">summary_occurrence</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Summarize occurrence and citations by terms in a column of a dataframe.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        column (str): the column to explode.</span>
+<span class="sd">        sep (str): Character used as internal separator for the elements in the column.</span>
+<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;D&#39;, &#39;B;D&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Cited_by&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors  Cited_by  ID</span>
+<span class="sd">    0       A         0   0</span>
+<span class="sd">    1       A         1   1</span>
+<span class="sd">    2     A;B         2   2</span>
+<span class="sd">    3       B         3   3</span>
+<span class="sd">    4   A;B;C         4   4</span>
+<span class="sd">    5       D         5   5</span>
+<span class="sd">    6     B;D         6   6</span>
+
+<span class="sd">    &gt;&gt;&gt; summary_occurrence(df, column=&#39;Authors&#39;)</span>
+<span class="sd">       Authors Authors_  Num_Documents  Cited_by            ID</span>
+<span class="sd">    0        A        A              4         7  [0, 1, 2, 4]</span>
+<span class="sd">    1        A        B              2         6        [2, 4]</span>
+<span class="sd">    2        A        C              1         4           [4]</span>
+<span class="sd">    3        B        A              2         6        [2, 4]</span>
+<span class="sd">    4        B        B              4        15  [2, 3, 4, 6]</span>
+<span class="sd">    5        B        C              1         4           [4]</span>
+<span class="sd">    6        B        D              1         6           [6]</span>
+<span class="sd">    7        C        A              1         4           [4]</span>
+<span class="sd">    8        C        B              1         4           [4]</span>
+<span class="sd">    9        C        C              1         4           [4]</span>
+<span class="sd">    10       D        B              1         6           [6]</span>
+<span class="sd">    11       D        D              2        11        [5, 6]</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;], ignore_case=False)</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; summary_occurrence(df, &#39;Authors&#39;, keywords=keywords)</span>
+<span class="sd">      Authors Authors_  Num_Documents  Cited_by            ID</span>
+<span class="sd">    0       A        A              4         7  [0, 1, 2, 4]</span>
+<span class="sd">    1       A        B              2         6        [2, 4]</span>
+<span class="sd">    2       B        A              2         6        [2, 4]</span>
+<span class="sd">    3       B        B              4        15  [2, 3, 4, 6]</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">summary_co_occurrence</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="occurrence"><a class="viewcode-back" href="../../co_occurrence.html#techminer.co_occurrence.occurrence">[docs]</a><span class="k">def</span> <span class="nf">occurrence</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">normalization</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the occurrence between the terms in a column.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        column (str): the column to explode.</span>
+<span class="sd">        sep (str): Character used as internal separator for the elements in the column.</span>
+<span class="sd">        as_matrix (bool): Results are returned as a matrix.</span>
+<span class="sd">        keywords (list, Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;D&#39;, &#39;B;D&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Cited_by&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors  Cited_by  ID</span>
+<span class="sd">    0       A         0   0</span>
+<span class="sd">    1       A         1   1</span>
+<span class="sd">    2     A;B         2   2</span>
+<span class="sd">    3       B         3   3</span>
+<span class="sd">    4   A;B;C         4   4</span>
+<span class="sd">    5       D         5   5</span>
+<span class="sd">    6     B;D         6   6</span>
+
+<span class="sd">    &gt;&gt;&gt; occurrence(df, column=&#39;Authors&#39;)</span>
+<span class="sd">       Authors Authors_  Num_Documents            ID</span>
+<span class="sd">    0        A        A              4  [0, 1, 2, 4]</span>
+<span class="sd">    1        B        B              4  [2, 3, 4, 6]</span>
+<span class="sd">    2        A        B              2        [2, 4]</span>
+<span class="sd">    3        B        A              2        [2, 4]</span>
+<span class="sd">    4        D        D              2        [5, 6]</span>
+<span class="sd">    5        A        C              1           [4]</span>
+<span class="sd">    6        B        C              1           [4]</span>
+<span class="sd">    7        B        D              1           [6]</span>
+<span class="sd">    8        C        A              1           [4]</span>
+<span class="sd">    9        C        B              1           [4]</span>
+<span class="sd">    10       C        C              1           [4]</span>
+<span class="sd">    11       D        B              1           [6]</span>
+
+<span class="sd">    &gt;&gt;&gt; occurrence(df, column=&#39;Authors&#39;, as_matrix=True)</span>
+<span class="sd">       A  B  C  D</span>
+<span class="sd">    A  4  2  1  0</span>
+<span class="sd">    B  2  4  1  1</span>
+<span class="sd">    C  1  1  1  0</span>
+<span class="sd">    D  0  1  0  2</span>
+
+<span class="sd">    &gt;&gt;&gt; occurrence(df, column=&#39;Authors&#39;, min_value=2, as_matrix=True)</span>
+<span class="sd">       A  B  D</span>
+<span class="sd">    A  4  2  0</span>
+<span class="sd">    B  2  4  1</span>
+<span class="sd">    D  0  1  2</span>
+
+<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;], ignore_case=False)</span>
+<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="sd">    &gt;&gt;&gt; occurrence(df, &#39;Authors&#39;, as_matrix=True, keywords=keywords)</span>
+<span class="sd">       A  B</span>
+<span class="sd">    A  4  2</span>
+<span class="sd">    B  2  4</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">co_occurrence</span><span class="p">(</span>
+        <span class="n">x</span><span class="p">,</span>
+        <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+        <span class="n">by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">as_matrix</span><span class="o">=</span><span class="n">as_matrix</span><span class="p">,</span>
+        <span class="n">min_value</span><span class="o">=</span><span class="n">min_value</span><span class="p">,</span>
+        <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="normalize_matrix"><a class="viewcode-back" href="../../co_occurrence.html#techminer.co_occurrence.normalize_matrix">[docs]</a><span class="k">def</span> <span class="nf">normalize_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">normalization</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">normalization</span> <span class="o">==</span> <span class="s2">&quot;association&quot;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+                <span class="n">matrix</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span>
+                    <span class="n">m</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">row</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+                <span class="p">)</span>
+    <span class="k">if</span> <span class="n">normalization</span> <span class="o">==</span> <span class="s2">&quot;inclusion&quot;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+                <span class="n">matrix</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">/</span> <span class="nb">min</span><span class="p">(</span>
+                    <span class="n">m</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">row</span><span class="p">],</span> <span class="n">m</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+                <span class="p">)</span>
+    <span class="k">if</span> <span class="n">normalization</span> <span class="o">==</span> <span class="s2">&quot;jaccard&quot;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+                <span class="n">matrix</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span>
+                    <span class="n">m</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">row</span><span class="p">]</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">-</span> <span class="n">m</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+                <span class="p">)</span>
+    <span class="k">if</span> <span class="n">normalization</span> <span class="o">==</span> <span class="s2">&quot;salton&quot;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+                <span class="n">matrix</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">row</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="n">col</span><span class="p">])</span>
+                <span class="p">)</span>
+    <span class="k">return</span> <span class="n">matrix</span></div>
+
+
+<span class="c1"># #     def occurrence_map(self, column, sep=None, minmax=None, keywords=None):</span>
+<span class="c1"># #         &quot;&quot;&quot;Computes a occurrence between terms in a column.</span>
+
+<span class="c1"># #         Args:</span>
+<span class="c1"># #             column (str): the column to explode.</span>
+<span class="c1"># #             sep (str): Character used as internal separator for the elements in the column.</span>
+<span class="c1"># #             minmax (pair(number,number)): filter values by &gt;=min,&lt;=max.</span>
+<span class="c1"># #             keywords (Keywords): filter the result using the specified Keywords object.</span>
+
+<span class="c1"># #         Returns:</span>
+<span class="c1"># #             dictionary</span>
+
+<span class="c1"># #         Examples</span>
+<span class="c1"># #         ----------------------------------------------------------------------------------------------</span>
+
+<span class="c1"># #         &gt;&gt;&gt; import pandas as pd</span>
+<span class="c1"># #         &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;D&#39;, &#39;B;D&#39;]</span>
+<span class="c1"># #         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1"># #         ...    {</span>
+<span class="c1"># #         ...       &#39;Authors&#39;: x,</span>
+<span class="c1"># #         ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="c1"># #         ...    }</span>
+<span class="c1"># #         ... )</span>
+<span class="c1"># #         &gt;&gt;&gt; df</span>
+<span class="c1"># #           Authors  ID</span>
+<span class="c1"># #         0       A   0</span>
+<span class="c1"># #         1       A   1</span>
+<span class="c1"># #         2     A;B   2</span>
+<span class="c1"># #         3       B   3</span>
+<span class="c1"># #         4   A;B;C   4</span>
+<span class="c1"># #         5       D   5</span>
+<span class="c1"># #         6     B;D   6</span>
+
+<span class="c1"># #         &gt;&gt;&gt; DataFrame(df).occurrence_map(column=&#39;Authors&#39;)</span>
+<span class="c1"># #         {&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;docs&#39;: [&#39;doc#0&#39;, &#39;doc#1&#39;, &#39;doc#2&#39;, &#39;doc#3&#39;, &#39;doc#4&#39;, &#39;doc#5&#39;], &#39;edges&#39;: [(&#39;A&#39;, &#39;doc#0&#39;), (&#39;A&#39;, &#39;doc#1&#39;), (&#39;B&#39;, &#39;doc#1&#39;), (&#39;A&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#2&#39;), (&#39;C&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#3&#39;), (&#39;B&#39;, &#39;doc#4&#39;), (&#39;D&#39;, &#39;doc#4&#39;), (&#39;D&#39;, &#39;doc#5&#39;)], &#39;label_terms&#39;: {&#39;A&#39;: &#39;A&#39;, &#39;B&#39;: &#39;B&#39;, &#39;C&#39;: &#39;C&#39;, &#39;D&#39;: &#39;D&#39;}, &#39;label_docs&#39;: {&#39;doc#0&#39;: 2, &#39;doc#1&#39;: 1, &#39;doc#2&#39;: 1, &#39;doc#3&#39;: 1, &#39;doc#4&#39;: 1, &#39;doc#5&#39;: 1}}</span>
+
+<span class="c1"># #         &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;])</span>
+<span class="c1"># #         &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="c1"># #         &gt;&gt;&gt; DataFrame(df).occurrence_map(&#39;Authors&#39;, keywords=keywords)</span>
+<span class="c1"># #         {&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;], &#39;docs&#39;: [&#39;doc#0&#39;, &#39;doc#1&#39;, &#39;doc#2&#39;, &#39;doc#3&#39;, &#39;doc#4&#39;], &#39;edges&#39;: [(&#39;A&#39;, &#39;doc#0&#39;), (&#39;A&#39;, &#39;doc#1&#39;), (&#39;B&#39;, &#39;doc#1&#39;), (&#39;A&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#3&#39;), (&#39;B&#39;, &#39;doc#4&#39;)], &#39;label_terms&#39;: {&#39;A&#39;: &#39;A&#39;, &#39;B&#39;: &#39;B&#39;}, &#39;label_docs&#39;: {&#39;doc#0&#39;: 2, &#39;doc#1&#39;: 1, &#39;doc#2&#39;: 1, &#39;doc#3&#39;: 1, &#39;doc#4&#39;: 1}}</span>
+
+
+<span class="c1"># #         &quot;&quot;&quot;</span>
+<span class="c1"># #         sep = &quot;;&quot; if sep is None and column in SCOPUS_COLS else sep</span>
+
+<span class="c1"># #         result = self[[column]].copy()</span>
+<span class="c1"># #         result[&quot;count&quot;] = 1</span>
+<span class="c1"># #         result = result.groupby(column, as_index=False).agg({&quot;count&quot;: np.sum})</span>
+<span class="c1"># #         if keywords is not None:</span>
+<span class="c1"># #             if keywords._patterns is None:</span>
+<span class="c1"># #                 keywords = keywords.compile()</span>
+<span class="c1"># #             if sep is not None:</span>
+<span class="c1"># #                 result = result[</span>
+<span class="c1"># #                     result[column].map(</span>
+<span class="c1"># #                         lambda x: any([e in keywords for e in x.split(sep)])</span>
+<span class="c1"># #                     )</span>
+<span class="c1"># #                 ]</span>
+<span class="c1"># #             else:</span>
+<span class="c1"># #                 result = result[result[column].map(lambda x: x in keywords)]</span>
+
+<span class="c1"># #         if sep is not None:</span>
+<span class="c1"># #             result[column] = result[column].map(</span>
+<span class="c1"># #                 lambda x: sorted(x.split(sep)) if isinstance(x, str) else x</span>
+<span class="c1"># #             )</span>
+
+<span class="c1"># #         result[&quot;doc-ID&quot;] = [&quot;doc#{:d}&quot;.format(i) for i in range(len(result))]</span>
+<span class="c1"># #         terms = result[[column]].copy()</span>
+<span class="c1"># #         terms.explode(column)</span>
+<span class="c1"># #         terms = [item for sublist in terms[column].tolist() for item in sublist]</span>
+<span class="c1"># #         terms = sorted(set(terms))</span>
+<span class="c1"># #         if keywords is not None:</span>
+<span class="c1"># #             terms = [x for x in terms if x in keywords]</span>
+<span class="c1"># #         docs = result[&quot;doc-ID&quot;].tolist()</span>
+<span class="c1"># #         label_docs = {doc: label for doc, label in zip(docs, result[&quot;count&quot;].tolist())}</span>
+<span class="c1"># #         label_terms = {t: t for t in terms}</span>
+<span class="c1"># #         edges = []</span>
+<span class="c1"># #         for field, docID in zip(result[column], result[&quot;doc-ID&quot;]):</span>
+<span class="c1"># #             for item in field:</span>
+<span class="c1"># #                 if keywords is None or item in keywords:</span>
+<span class="c1"># #                     edges.append((item, docID))</span>
+<span class="c1"># #         return dict(</span>
+<span class="c1"># #             terms=terms,</span>
+<span class="c1"># #             docs=docs,</span>
+<span class="c1"># #             edges=edges,</span>
+<span class="c1"># #             label_terms=label_terms,</span>
+<span class="c1"># #             label_docs=label_docs,</span>
+<span class="c1"># #         )</span>
+
+
+<span class="c1"># #     # def correspondence_matrix(</span>
+<span class="c1"># #     #     self,</span>
+<span class="c1"># #     #     column_IDX,</span>
+<span class="c1"># #     #     column_COL,</span>
+<span class="c1"># #     #     sep_IDX=None,</span>
+<span class="c1"># #     #     sep_COL=None,</span>
+<span class="c1"># #     #     as_matrix=False,</span>
+<span class="c1"># #     #     keywords=None,</span>
+<span class="c1"># #     # ):</span>
+<span class="c1"># #     #     &quot;&quot;&quot;</span>
+
+<span class="c1"># #     #     &quot;&quot;&quot;</span>
+<span class="c1"># #     #     result = self.co_occurrence(</span>
+<span class="c1"># #     #         column_IDX=column_IDX,</span>
+<span class="c1"># #     #         column_COL=column_COL,</span>
+<span class="c1"># #     #         sep_IDX=sep_IDX,</span>
+<span class="c1"># #     #         sep_COL=sep_COL,</span>
+<span class="c1"># #     #         as_matrix=True,</span>
+<span class="c1"># #     #         minmax=None,</span>
+<span class="c1"># #     #         keywords=keywords,</span>
+<span class="c1"># #     #     )</span>
+
+<span class="c1"># #     #     matrix = result.transpose().values</span>
+<span class="c1"># #     #     grand_total = np.sum(matrix)</span>
+<span class="c1"># #     #     correspondence_matrix = np.divide(matrix, grand_total)</span>
+<span class="c1"># #     #     row_totals = np.sum(correspondence_matrix, axis=1)</span>
+<span class="c1"># #     #     col_totals = np.sum(correspondence_matrix, axis=0)</span>
+<span class="c1"># #     #     independence_model = np.outer(row_totals, col_totals)</span>
+<span class="c1"># #     #     norm_correspondence_matrix = np.divide(</span>
+<span class="c1"># #     #         correspondence_matrix, row_totals[:, None]</span>
+<span class="c1"># #     #     )</span>
+<span class="c1"># #     #     distances = np.zeros(</span>
+<span class="c1"># #     #         (correspondence_matrix.shape[0], correspondence_matrix.shape[0])</span>
+<span class="c1"># #     #     )</span>
+<span class="c1"># #     #     norm_col_totals = np.sum(norm_correspondence_matrix, axis=0)</span>
+<span class="c1"># #     #     for row in range(correspondence_matrix.shape[0]):</span>
+<span class="c1"># #     #         distances[row] = np.sqrt(</span>
+<span class="c1"># #     #             np.sum(</span>
+<span class="c1"># #     #                 np.square(</span>
+<span class="c1"># #     #                     norm_correspondence_matrix - norm_correspondence_matrix[row]</span>
+<span class="c1"># #     #                 )</span>
+<span class="c1"># #     #                 / col_totals,</span>
+<span class="c1"># #     #                 axis=1,</span>
+<span class="c1"># #     #             )</span>
+<span class="c1"># #     #         )</span>
+<span class="c1"># #     #     std_residuals = np.divide(</span>
+<span class="c1"># #     #         (correspondence_matrix - independence_model), np.sqrt(independence_model)</span>
+<span class="c1"># #     #     )</span>
+<span class="c1"># #     #     u, s, vh = np.linalg.svd(std_residuals, full_matrices=False)</span>
+<span class="c1"># #     #     deltaR = np.diag(np.divide(1.0, np.sqrt(row_totals)))</span>
+<span class="c1"># #     #     rowScores = np.dot(np.dot(deltaR, u), np.diag(s))</span>
+
+<span class="c1"># #     #     return pd.DataFrame(</span>
+<span class="c1"># #     #         data=rowScores, columns=result.columns, index=result.columns</span>
+<span class="c1"># #     #     )</span>
+
+
+<span class="c1"># # def relationship(x, y):</span>
+<span class="c1"># #     sxy = sum([a * b * min(a, b) for a, b in zip(x, y)])</span>
+<span class="c1"># #     a = math.sqrt(sum(x))</span>
+<span class="c1"># #     b = math.sqrt(sum(y))</span>
+<span class="c1"># #     return sxy / (a * b)</span>
+
+
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">## APP</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+
+<span class="n">WIDGET_WIDTH</span> <span class="o">=</span> <span class="s2">&quot;200px&quot;</span>
+<span class="n">LEFT_PANEL_HEIGHT</span> <span class="o">=</span> <span class="s2">&quot;588px&quot;</span>
+<span class="n">RIGHT_PANEL_WIDTH</span> <span class="o">=</span> <span class="s2">&quot;870px&quot;</span>
+<span class="n">FIGSIZE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+<span class="n">PANE_HEIGHTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;80px&quot;</span><span class="p">,</span> <span class="s2">&quot;650px&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#  Co-occurrence Matrix</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+
+
+<span class="k">def</span> <span class="nf">__TAB0__</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">COLUMNS</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;Author_Keywords&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Author_Keywords_CL&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Authors&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Countries&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Country_1st_Author&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Document_type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Index_Keywords&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Index_Keywords_CL&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Institution_1st_Author&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Institutions&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Source_title&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Abstract_CL&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Title_CL&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1">#</span>
+    <span class="c1"># UI</span>
+    <span class="c1">#</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="n">controls</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="c1"># 0</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;term&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Term to analyze:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="n">z</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">COLUMNS</span> <span class="k">if</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span>
+                <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 1</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;by&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;By Term:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="n">z</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">COLUMNS</span> <span class="k">if</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span>
+                <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 2</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;plot_type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;View:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Heatmap&quot;</span><span class="p">,</span> <span class="s2">&quot;Bubble plot&quot;</span><span class="p">,</span> <span class="s2">&quot;Table&quot;</span><span class="p">],</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 3</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;cmap&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Colormap:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">COLORMAPS</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 4</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;min_value&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Min occurrence value:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">],</span> <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 4</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;sort_by&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Sort order:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span>
+                    <span class="s2">&quot;Alphabetic asc.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Alphabetic desc.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Frequency/Cited by asc.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Frequency/Cited by desc.&quot;</span><span class="p">,</span>
+                <span class="p">],</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">]</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1">#</span>
+    <span class="c1"># Logic</span>
+    <span class="c1">#</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">server</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1">#</span>
+        <span class="c1"># Logic</span>
+        <span class="c1">#</span>
+        <span class="n">term</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;term&quot;</span><span class="p">]</span>
+        <span class="n">by</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;by&quot;</span><span class="p">]</span>
+        <span class="n">plot_type</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;plot_type&quot;</span><span class="p">]</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cmap&quot;</span><span class="p">]</span>
+        <span class="n">min_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;min_value&quot;</span><span class="p">])</span>
+        <span class="n">sort_by</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;sort_by&quot;</span><span class="p">]</span>
+        <span class="c1">#</span>
+        <span class="c1">#</span>
+        <span class="c1">#</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">co_occurrence</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">term</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="n">by</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">options</span><span class="p">]</span>
+        <span class="n">current_selection</span> <span class="o">=</span> <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">options</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">min_value</span> <span class="o">&gt;</span> <span class="n">matrix</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">():</span>
+            <span class="n">min_value</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">current_selection</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
+            <span class="n">min_value</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">term</span> <span class="o">==</span> <span class="n">by</span><span class="p">:</span>
+            <span class="n">by</span> <span class="o">=</span> <span class="n">by</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span>
+        <span class="c1">#</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+            <span class="n">matrix</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">by</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">term</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">matrix</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">matrix</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">sorted</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">min_value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1">#</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">a</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="n">b</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">sorted</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span>
+        <span class="c1">#</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">60</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+            <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+                <span class="n">display</span><span class="p">(</span><span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="s2">&quot;&lt;h3&gt;Matrix exceeds the maximum shape&lt;/h3&gt;&quot;</span><span class="p">))</span>
+                <span class="k">return</span>
+        <span class="c1">#</span>
+        <span class="c1">#</span>
+        <span class="c1">#</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">term</span><span class="p">)</span>
+        <span class="n">new_names</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">a</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> [</span><span class="si">{:d}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">term</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="p">}</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">new_names</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">term</span> <span class="o">==</span> <span class="n">by</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">new_names</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">by</span><span class="p">)</span>
+            <span class="n">new_names</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">a</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> [</span><span class="si">{:d}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">by</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+            <span class="p">}</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">new_names</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1"># Sort order</span>
+        <span class="c1">#</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Frequency/Cited by asc.&quot;</span><span class="p">:</span>
+            <span class="n">col_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">row_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row_names</span><span class="p">,</span> <span class="n">col_names</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Frequency/Cited by desc.&quot;</span><span class="p">:</span>
+            <span class="n">col_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">row_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row_names</span><span class="p">,</span> <span class="n">col_names</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Alphabetic asc.&quot;</span><span class="p">:</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Alphabetic desc.&quot;</span><span class="p">:</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+            <span class="c1">#</span>
+            <span class="c1"># View</span>
+            <span class="c1">#</span>
+            <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s2">&quot;Table&quot;</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">option_context</span><span class="p">(</span>
+                    <span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="s2">&quot;display.max_rows&quot;</span><span class="p">,</span> <span class="mi">60</span>
+                <span class="p">):</span>
+                    <span class="n">display</span><span class="p">(</span>
+                        <span class="n">matrix</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="k">lambda</span> <span class="n">q</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="k">if</span> <span class="n">q</span> <span class="o">&gt;=</span> <span class="n">min_value</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+                        <span class="p">)</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                    <span class="p">)</span>
+            <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s2">&quot;Heatmap&quot;</span><span class="p">:</span>
+                <span class="n">display</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mf">8.5</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s2">&quot;Bubble plot&quot;</span><span class="p">:</span>
+                <span class="n">display</span><span class="p">(</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">bubble</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mf">8.5</span><span class="p">))</span>
+                <span class="p">)</span>
+
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1">#</span>
+    <span class="c1"># Generic</span>
+    <span class="c1">#</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="n">control</span><span class="p">[</span><span class="s2">&quot;arg&quot;</span><span class="p">]:</span> <span class="n">control</span><span class="p">[</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="n">controls</span><span class="p">}</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">widgets</span><span class="o">.</span><span class="n">interactive_output</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">args</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">control</span><span class="p">[</span><span class="s2">&quot;desc&quot;</span><span class="p">]),</span> <span class="n">control</span><span class="p">[</span><span class="s2">&quot;widget&quot;</span><span class="p">]]</span>
+                    <span class="p">)</span>
+                    <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="n">controls</span>
+                <span class="p">],</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="n">LEFT_PANEL_HEIGHT</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="s2">&quot;1px solid gray&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">output</span><span class="p">],</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">RIGHT_PANEL_WIDTH</span><span class="p">,</span> <span class="n">align_items</span><span class="o">=</span><span class="s2">&quot;baseline&quot;</span><span class="p">)</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#  Occurrence Network</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+
+
+<span class="k">def</span> <span class="nf">__TAB1__</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">COLUMNS</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;Author_Keywords&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Author_Keywords_CL&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Authors&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Countries&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Index_Keywords&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Index_Keywords_CL&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Institutions&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Abstract_CL&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Title_CL&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1">#</span>
+    <span class="c1"># UI</span>
+    <span class="c1">#</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="n">controls</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="c1"># 0</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;term&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Term to analyze:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="n">z</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">COLUMNS</span> <span class="k">if</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span>
+                <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 1</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;normalization&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Normalization:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;association&quot;</span><span class="p">,</span> <span class="s2">&quot;inclusion&quot;</span><span class="p">,</span> <span class="s2">&quot;jaccard&quot;</span><span class="p">,</span> <span class="s2">&quot;salton&quot;</span><span class="p">],</span>
+                <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 2</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;plot_type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;View:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Heatmap&quot;</span><span class="p">,</span> <span class="s2">&quot;Bubble plot&quot;</span><span class="p">,</span> <span class="s2">&quot;Network plot&quot;</span><span class="p">,</span> <span class="s2">&quot;Table&quot;</span><span class="p">],</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 3</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;cmap&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Colormap:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">COLORMAPS</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 4</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;min_value&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Min occurrence value:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">],</span> <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 4</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;sort_by&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Sort order:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span>
+                    <span class="s2">&quot;Alphabetic asc.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Alphabetic desc.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Frequency/Cited by asc.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Frequency/Cited by desc.&quot;</span><span class="p">,</span>
+                <span class="p">],</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 5</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;layout&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Map layout:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span>
+                    <span class="s2">&quot;Circular&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Kamada Kawai&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Planar&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Random&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Spectral&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Spring&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Shell&quot;</span><span class="p">,</span>
+                <span class="p">],</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">]</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1">#</span>
+    <span class="c1"># Logic</span>
+    <span class="c1">#</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">server</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1">#</span>
+        <span class="c1"># Logic</span>
+        <span class="c1">#</span>
+        <span class="n">term</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;term&quot;</span><span class="p">]</span>
+        <span class="n">normalization</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;normalization&quot;</span><span class="p">]</span>
+        <span class="n">plot_type</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;plot_type&quot;</span><span class="p">]</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cmap&quot;</span><span class="p">]</span>
+        <span class="n">min_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;min_value&quot;</span><span class="p">])</span>
+        <span class="n">sort_by</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;sort_by&quot;</span><span class="p">]</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span>
+        <span class="c1">#</span>
+        <span class="c1">#</span>
+        <span class="c1">#</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">occurrence</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">term</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">options</span><span class="p">]</span>
+        <span class="n">current_selection</span> <span class="o">=</span> <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">options</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">min_value</span> <span class="o">&gt;</span> <span class="n">matrix</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">():</span>
+            <span class="n">min_value</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">current_selection</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
+            <span class="n">min_value</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1">#</span>
+        <span class="n">by</span> <span class="o">=</span> <span class="n">term</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span>
+        <span class="c1">#</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+            <span class="n">matrix</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">by</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">term</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">matrix</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">matrix</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">sorted</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">min_value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1">#</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">a</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="n">b</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">sorted</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span>
+        <span class="c1">#</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">60</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+            <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+                <span class="n">display</span><span class="p">(</span><span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="s2">&quot;&lt;h3&gt;Matrix exceeds the maximum shape&lt;/h3&gt;&quot;</span><span class="p">))</span>
+                <span class="k">return</span>
+        <span class="c1">#</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">term</span><span class="p">)</span>
+        <span class="n">new_names</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">a</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> [</span><span class="si">{:d}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">term</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="p">}</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">new_names</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">term</span> <span class="o">==</span> <span class="n">by</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">new_names</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">by</span><span class="p">)</span>
+            <span class="n">new_names</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">a</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> [</span><span class="si">{:d}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">by</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+            <span class="p">}</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">new_names</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1">#</span>
+        <span class="c1">#</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">normalize_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">normalization</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1"># Sort order</span>
+        <span class="c1">#</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Frequency/Cited by asc.&quot;</span><span class="p">:</span>
+            <span class="n">col_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">row_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row_names</span><span class="p">,</span> <span class="n">col_names</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Frequency/Cited by desc.&quot;</span><span class="p">:</span>
+            <span class="n">col_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">row_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row_names</span><span class="p">,</span> <span class="n">col_names</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Alphabetic asc.&quot;</span><span class="p">:</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Alphabetic desc.&quot;</span><span class="p">:</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+            <span class="c1">#</span>
+            <span class="c1"># View</span>
+            <span class="c1">#</span>
+            <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s2">&quot;Table&quot;</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">option_context</span><span class="p">(</span>
+                    <span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="s2">&quot;display.max_rows&quot;</span><span class="p">,</span> <span class="mi">60</span>
+                <span class="p">):</span>
+                    <span class="k">if</span> <span class="n">normalization</span> <span class="o">==</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+                        <span class="n">display</span><span class="p">(</span>
+                            <span class="n">matrix</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="k">lambda</span> <span class="n">q</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{:g}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">display</span><span class="p">(</span>
+                            <span class="n">matrix</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="k">lambda</span> <span class="n">q</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{:3.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                        <span class="p">)</span>
+            <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s2">&quot;Heatmap&quot;</span><span class="p">:</span>
+                <span class="n">display</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mf">8.5</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s2">&quot;Bubble plot&quot;</span><span class="p">:</span>
+                <span class="n">display</span><span class="p">(</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">bubble</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mf">8.5</span><span class="p">))</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s2">&quot;Network plot&quot;</span><span class="p">:</span>
+                <span class="n">display</span><span class="p">(</span>
+                    <span class="n">occurrence_map</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mf">8.5</span><span class="p">))</span>
+                <span class="p">)</span>
+
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1">#</span>
+    <span class="c1"># Generic</span>
+    <span class="c1">#</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="n">control</span><span class="p">[</span><span class="s2">&quot;arg&quot;</span><span class="p">]:</span> <span class="n">control</span><span class="p">[</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="n">controls</span><span class="p">}</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">widgets</span><span class="o">.</span><span class="n">interactive_output</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">args</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">control</span><span class="p">[</span><span class="s2">&quot;desc&quot;</span><span class="p">]),</span> <span class="n">control</span><span class="p">[</span><span class="s2">&quot;widget&quot;</span><span class="p">]]</span>
+                    <span class="p">)</span>
+                    <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="n">controls</span>
+                <span class="p">],</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="n">LEFT_PANEL_HEIGHT</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="s2">&quot;1px solid gray&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">output</span><span class="p">],</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">RIGHT_PANEL_WIDTH</span><span class="p">,</span> <span class="n">align_items</span><span class="o">=</span><span class="s2">&quot;baseline&quot;</span><span class="p">)</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="app"><a class="viewcode-back" href="../../co_occurrence.html#techminer.co_occurrence.app">[docs]</a><span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Jupyter Lab dashboard.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Tab</span><span class="p">()</span>
+    <span class="n">body</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">__TAB0__</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">__TAB1__</span><span class="p">(</span><span class="n">df</span><span class="p">)]</span>
+    <span class="n">body</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Co-occurrence&quot;</span><span class="p">)</span>
+    <span class="n">body</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Occurrence&quot;</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="k">return</span> <span class="n">AppLayout</span><span class="p">(</span>
+        <span class="n">header</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span>
+            <span class="n">value</span><span class="o">=</span><span class="s2">&quot;&lt;h1&gt;</span><span class="si">{}</span><span class="s2">&lt;/h1&gt;&lt;hr style=&#39;height:2px;border-width:0;color:gray;background-color:gray&#39;&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="s2">&quot;Co-occurrence Analysis&quot;</span>
+            <span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">center</span><span class="o">=</span><span class="n">body</span><span class="p">,</span>
+        <span class="n">pane_heights</span><span class="o">=</span><span class="n">PANE_HEIGHTS</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">pyplot</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+
+
+<div class="viewcode-block" id="occurrence_map"><a class="viewcode-back" href="../../co_occurrence.html#techminer.co_occurrence.occurrence_map">[docs]</a><span class="k">def</span> <span class="nf">occurrence_map</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;Kamada Kawai&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="mi">12</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the occurrence map directly using networkx.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Maximum number of nodex exceded!&quot;</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Data preparation</span>
+    <span class="c1">#</span>
+    <span class="n">terms</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Node sizes</span>
+    <span class="c1">#</span>
+    <span class="n">node_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)])</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">terms</span> <span class="k">if</span> <span class="s2">&quot;[&quot;</span> <span class="ow">in</span> <span class="n">w</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">node_sizes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">node_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">max_size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">node_sizes</span><span class="p">)</span>
+        <span class="n">min_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">node_sizes</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">min_size</span> <span class="o">==</span> <span class="n">max_size</span><span class="p">:</span>
+            <span class="n">node_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">300</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">node_sizes</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="mi">300</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">-</span> <span class="n">min_size</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_size</span> <span class="o">-</span> <span class="n">min_size</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">node_sizes</span>
+            <span class="p">]</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Node colors</span>
+    <span class="c1">#</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">node_colors</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">cmap</span><span class="p">(</span><span class="mf">0.2</span> <span class="o">+</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">node_sizes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">node_sizes</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">node_sizes</span><span class="p">))</span>
+    <span class="p">]</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Remove [...] from text</span>
+    <span class="c1">#</span>
+    <span class="n">terms</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="p">[:</span> <span class="n">w</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">if</span> <span class="s2">&quot;[&quot;</span> <span class="ow">in</span> <span class="n">w</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">terms</span><span class="p">]</span>
+    <span class="n">matrix</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">terms</span>
+    <span class="n">matrix</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">terms</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Draw the network</span>
+    <span class="c1">#</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+    <span class="n">draw_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Circular&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_circular</span><span class="p">,</span>
+        <span class="s2">&quot;Kamada Kawai&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_kamada_kawai</span><span class="p">,</span>
+        <span class="s2">&quot;Planar&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_planar</span><span class="p">,</span>
+        <span class="s2">&quot;Random&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_random</span><span class="p">,</span>
+        <span class="s2">&quot;Spectral&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_spectral</span><span class="p">,</span>
+        <span class="s2">&quot;Spring&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_spring</span><span class="p">,</span>
+        <span class="s2">&quot;Shell&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_shell</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">draw</span> <span class="o">=</span> <span class="n">draw_dict</span><span class="p">[</span><span class="n">layout</span><span class="p">]</span>
+
+    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># network nodes</span>
+    <span class="c1">#</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># network edges</span>
+    <span class="c1">#</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">max_width</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">icol</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">irow</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">icol</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+            <span class="n">link</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">irow</span><span class="p">],</span> <span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">icol</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="n">link</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">terms</span><span class="p">[</span><span class="n">icol</span><span class="p">],</span> <span class="n">terms</span><span class="p">[</span><span class="n">irow</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="n">link</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">max_width</span> <span class="o">&lt;</span> <span class="n">link</span><span class="p">:</span>
+                    <span class="n">max_width</span> <span class="o">=</span> <span class="n">link</span>
+    <span class="c1">#</span>
+    <span class="c1"># Draw nodes</span>
+    <span class="c1">#</span>
+    <span class="n">first_time</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">data</span><span class="p">():</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">e</span>
+        <span class="n">edge</span> <span class="o">=</span> <span class="p">[(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)]</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">+</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">width</span><span class="p">[</span><span class="s2">&quot;width&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">max_width</span>
+        <span class="n">draw</span><span class="p">(</span>
+            <span class="n">G</span><span class="p">,</span>
+            <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+            <span class="n">edgelist</span><span class="o">=</span><span class="n">edge</span><span class="p">,</span>
+            <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+            <span class="n">edge_color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span>
+            <span class="n">with_labels</span><span class="o">=</span><span class="n">first_time</span><span class="p">,</span>
+            <span class="n">font_weight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span>
+            <span class="n">node_color</span><span class="o">=</span><span class="n">node_colors</span><span class="p">,</span>
+            <span class="n">node_size</span><span class="o">=</span><span class="n">node_sizes</span><span class="p">,</span>
+            <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+            <span class="n">font_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+            <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;baseline&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">first_time</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1">#</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Figure size</span>
+    <span class="c1">#</span>
+    <span class="n">xlim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+    <span class="n">ylim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span>
+        <span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="p">(</span><span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="p">(</span><span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span>
+        <span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="p">(</span><span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="p">(</span><span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
