@@ -13,16 +13,18 @@ import re
 from os.path import dirname, join
 
 import ipywidgets as widgets
+import nltk
 import numpy as np
 import pandas as pd
+from nltk import WordNetLemmatizer, pos_tag
+from nltk.corpus import stopwords
+
+from techminer.text import remove_accents
+from techminer.thesaurus import text_clustering
 
 # from IPython.display import HTML, clear_output, display
 # from ipywidgets import AppLayout, Layout
 # from techminer.explode import MULTIVALUED_COLS, __explode
-from techminer.text import remove_accents
-
-#  extract_country, extract_institution, 
-from techminer.thesaurus import text_clustering
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -141,6 +143,8 @@ def __MAP(x, column, f):
         "Index_Keywords_ID",
         "Index_Keywords",
         "Institutions",
+        "Abstract_CL",
+        "Title_CL",
     ]:
         z = x[column].map(lambda w: w.split(';') if not pd.isna(w) else w)
         z = z.map(lambda w: [f(z) for z in w] if isinstance(w, list) else w)
@@ -165,6 +169,9 @@ def __extract_country(x):
     >>> __extract_country('Peoples R China')
     'China'
 
+    >>> __extract_country('Russian Federation')
+    'Russia'
+    
     >>> __extract_country('xxx')
     <NA>
 
@@ -178,40 +185,43 @@ def __extract_country(x):
     with open(join(module_path, "data/worldmap.data"), "r") as f:
         countries = json.load(f)
     country_names = list(countries.keys())
-    #
+    
     # paises faltantes
-    #
     country_names.append("Singapore")
     country_names.append("Malta")
     country_names.append("United States")
-    #
+    country_names = {country.lower(): country for country in country_names}
+
     # Reemplazo de nombres de regiones administrativas
     # por nombres de paises
-    #
-    x = x.title()
-    x = re.sub("United States Of America", "United States", x)
-    x = re.sub("Usa", "United States", x)
-    x = re.sub("Bosnia and Herzegovina", "Bosnia and Herz.", x)
-    x = re.sub("Czech Republic", "Czechia", x)
-    x = re.sub("Russian Federation", "Russia", x)
-    x = re.sub("Hong Kong", "China", x)
-    x = re.sub("Macau", "China", x)
-    x = re.sub("Macao", "China", x)
+    x = x.lower()
+    x = x.strip()
+    x = re.sub("united states of america", "united states", x)
+    x = re.sub("usa", "united states", x)
+    x = re.sub("bosnia and herzegovina", "bosnia and herz.", x)
+    x = re.sub("czech republic", "czechia", x)
+    x = re.sub("russian federation", "russia", x)
+    x = re.sub("peoples r china", "china", x)
+    x = re.sub("hong kong", "china", x)
+    x = re.sub("macau", "china", x)
+    x = re.sub("macao", "china", x)
     #
     for z in x.split(','):
+        if z.lower() in country_names.keys():
+            return country_names[z.lower()]
+        # descarta espaciado
+        z = z.lower()
         z = z.split(' ')
         z = [w.strip() for w in z]
         z = ' '.join(z)
-        for country in country_names:
-            if country.title() in z:
-                return country
+        if z.lower() in country_names.keys():
+            return country_names[z.lower()]
     return pd.NA
 
 
 def __extract_institution(x):
     """
     """
-
     def search_name(affiliation):
         if len(affiliation.split(",")) == 1:
             return x.strip()
@@ -259,6 +269,155 @@ def __extract_institution(x):
         if len(x.split(",")) == 2:
             return x.split(",")[0].strip()
     return institution
+
+
+text="Hypericum ericoides is a rock plant of potential ornamental use in sustainable gardening in Mediterranean urban environment. This study was carried out to investigate the effects of temperature, light, salinity and soil moisture at the stage of plant life most sensitive to abiotic stresses (seed germination). The results indicate that light is not a germination requirement, while temperature the main factor that regulates the germination process of this species. Seed germination was inhibited by warm temperatures of 25 and 30 °C. By contrast, intermediate temperatures of 10, 15 and 20 °C induced high germination percentages both in alternating light/darkness and continuous darkness. The alternating temperature of 12/20 °C led to germination percentages close to 100 % and the highest germination speed, making this the suggested optimal for germination. The germination values attained demonstrated the absence of dormancy in H. ericoides seeds. In general, salinity and drought stress (induced by NaCl and PEG solutes, respectively) caused similar effects, reducing and delaying seed germination as the osmotic potential decreased (from 0 to -1.68 MPa). However, while most non-germinated seeds remained viable during exposure to all the osmotic potentials induced by PEG and germinated when drought stress was alleviated, the highest levels of salt stress permanently inhibited germination, although not in all seeds. These results indicated that germination inhibition under both NaCl and PEG stress is mainly due to the low water potential caused by osmotic stress, while salt stress had the added toxic effect of specific ions at the highest concentrations of NaCl. So, H. ericoides seeds can germinate well under conditions of moderate salinity and high drought stress, making it a promising species for use in sustainable urban gardening, with a low input of irrigation water of low quality."
+
+def __NLP(text):
+    """Extracts keywords from phrases.
+    """
+    from nltk.corpus import stopwords
+    
+
+    stopwords = stopwords.words('english')
+    stopwords += [
+        'herein',
+
+    ]
+
+    text = text.lower()
+    text = text.split('.')
+    text = [w for phrase in text for w in phrase.split(';')]
+    text = [w for phrase in text for w in phrase.split(',')]
+   
+    for st in stopwords:
+         text = [w.strip() for phrase in text for w in phrase.split(" " + st + " ")]
+    
+    result = []
+    for phrase in text:
+        phrase = phrase.split()
+        for st in stopwords:
+            if len(phrase) >0 and st == phrase[0]:
+                phrase = phrase[1:]
+            if len(phrase) > 0 and st == phrase[-1]:
+                phrase = phrase[:-1]
+        if len(phrase) > 0:
+            result.append(' '.join(phrase))
+    text = result
+
+    text = [word for phrase in text for word in phrase.split('(')]
+    text = [word for phrase in text for word in phrase.split(')')]
+    
+    text = [phrase for phrase in text if not phrase.isdigit()]
+    text = [phrase.strip() for phrase in text]
+    text = [phrase for phrase in text if phrase != '']
+    
+    result = []
+    for phrase in text:
+        tags = nltk.pos_tag(phrase.split(' '))
+        tags = [
+            t for t in tags if t[1] not in ['CD', 'VB', 'VBD',
+             'VBG', 'VBN', 'VBP', 'VBZ', 'JJ', 'RB']
+        ]
+        tags = [t[0] for t in tags]
+        phrase = ' '.join(tags)
+        result.append(phrase)
+
+    text = result
+    text = [phrase for phrase in text if phrase != '']
+    
+
+    lem = WordNetLemmatizer()
+    text = [
+        ' '.join([lem.lemmatize(word) for word in phrase.split(' ')]) if len(phrase.split(' ')) == 1 else phrase
+        
+        for phrase in text
+    ]
+
+    text = [phrase for phrase in text if phrase != '%']
+    text = [phrase for phrase in text if not phrase.replace('+', '').replace('-','').isdigit()]
+
+    return ';'.join(sorted(set(text)))
+
+    ##
+
+    
+
+
+
+
+
+    # #text = text.split('.')
+    # text = [w for phrase in text for w in phrase.split(';')]
+    # text = [w for phrase in text for w in phrase.split(',')]
+    # for st in stopwords:
+    #     text = [w.strip() for phrase in text for w in phrase.split(" " + st + " ")]
+    # text = [phrase for phrase in text if phrase != '']
+
+
+
+
+    # expressions = [
+    #     'applied',
+    #     'despite',
+    #     'direct',
+    #     'discussed',
+    #     'evaluate',
+    #     'found',
+    #     'near future',
+    #     'obtain',
+    #     'often limited',
+    #     'presents',
+    #     'produce',
+    #     'significantly reduced', 
+    #     'study aimed',
+    #     'widely applied',
+    #     'worse',
+    #     'one',
+    #     'two',
+    #     'three',
+    #     'four',
+    #     'five',
+    #     'six',
+    #     'seven',
+    #     'eight',
+    #     'nine',
+    #     'among'
+
+
+    # ]
+
+    # text = [phrase for phrase in text if phrase not in expressions]
+
+    return sorted(text)
+
+
+    # build n-grams
+    # result = []
+    # for phrase in text:
+    #     words = phrase.split()
+    #     for n in range(len(words) - max_length):
+    #         result.append(' '.join(words[n: n + max_length]))
+
+    # result1 = []
+    # for stop in english_stopwords:
+
+
+    # for w in stopwords.words('english'):
+    # result1 = []
+    # for phrase in result:
+    #     for word in phrase:
+    #         if word in english_stopwords:
+
+
+
+    return result
+
+
+
+
+
+
 
 
 
@@ -383,11 +542,33 @@ def load_scopus(x):
             logging.info("Cleaning Index Keywords ...")
             x["Index_Keywords_CL"] = __MAP(x, "Index_Keywords", thesaurus.apply)
             x["Index_Keywords_CL"] = __MAP(x, "Index_Keywords_CL", lambda w: w.strip() if not pd.isna(w) else w)    
-    #
+    
+    if "Abstract" in x.columns:
+
+        x.Abstract = x.Abstract.map(lambda w: w[0:w.find('\u00a9')] if not pd.isna(w) else w)
+        
+        logging.info("Extracting Abstract Keywords ...")
+        x["Abstract_CL"] = __MAP(x, "Abstract", __NLP)
+        logging.info("Clustering Abstract Keywords ...")
+        thesaurus = text_clustering(x.Abstract_CL, transformer=lambda u: u.lower())
+        logging.info("Cleaning Abstract Keywords ...")
+        thesaurus = thesaurus.compile()
+        x["Abstract_CL"] = __MAP(x, "Abstract_CL", thesaurus.apply)
+
+    if "Title" in x.columns:
+        logging.info("Extracting Title Keywords ...")
+        x["Title_CL"] = __MAP(x, "Title", __NLP)
+        logging.info("Clustering Title Keywords ...")
+        thesaurus = text_clustering(x.Title_CL, transformer=lambda u: u.lower())
+        logging.info("Cleaning Title Keywords ...")
+        thesaurus = thesaurus.compile()
+        x["Title_CL"] = __MAP(x, "Title_CL", thesaurus.apply)
+
+
     x["ID"] = range(len(x))
-    #
+
     x = x.applymap(lambda w: pd.NA if isinstance(w, str) and w == "" else w)
-    #
+
     return x
 
 
