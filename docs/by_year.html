@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>&lt;no title&gt; &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
+  <title>Analysis by Year &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.1 documentation</title>
   
 
   
@@ -85,8 +85,15 @@
               
             
             
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules for Analysis</a></li>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules for Analysis</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="data.html">Data Importation and Manipulation Functions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Analysis by Year</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text.html">Text manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keywords.html">Keywords manipulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thesaurus.html">Thesaurus</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html#basic-functions">Basic functions</a></li>
 </ul>
 
@@ -135,7 +142,7 @@
         
           <li><a href="modules.html">Modules for Analysis</a> &raquo;</li>
         
-      <li>&lt;no title&gt;</li>
+      <li>Analysis by Year</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -178,7 +185,102 @@
     text-align: unset;
 }
 </style>
-<span class="target" id="module-techminer.by_year"></span>
+<span class="target" id="module-techminer.by_year"></span><div class="section" id="analysis-by-year">
+<h1>Analysis by Year<a class="headerlink" href="#analysis-by-year" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="techminer.by_year.app">
+<code class="sig-prename descclassname">techminer.by_year.</code><code class="sig-name descname">app</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/by_year.html#app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.by_year.app" title="Permalink to this definition">¶</a></dt>
+<dd><p>Jupyter Lab dashboard.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.by_year.citations_by_year">
+<code class="sig-prename descclassname">techminer.by_year.</code><code class="sig-name descname">citations_by_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">cumulative</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/by_year.html#citations_by_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.by_year.citations_by_year" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the number of citations by year.
+This function adds the missing years in the sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cumulative</strong> (<em>bool</em>) – cumulate values per year.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.by_year.documents_by_year">
+<code class="sig-prename descclassname">techminer.by_year.</code><code class="sig-name descname">documents_by_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">cumulative</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/by_year.html#documents_by_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.by_year.documents_by_year" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the number of documents per year.
+This function adds the missing years in the sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cumulative</strong> (<em>bool</em>) – cumulate values per year.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.by_year.summary_by_year">
+<code class="sig-prename descclassname">techminer.by_year.</code><code class="sig-name descname">summary_by_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/by_year.html#summary_by_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.by_year.summary_by_year" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the number of document and the number of total citations per year.
+This funciton adds the missing years in the sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>pandas.DataFrame</em>) – bibliographic dataframe.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pandas.DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span>
+<span class="gp">... </span>         <span class="s2">&quot;Year&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2010</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">2016</span><span class="p">],</span>
+<span class="gp">... </span>         <span class="s2">&quot;Cited_by&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">)),</span>
+<span class="gp">... </span>         <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)),</span>
+<span class="gp">... </span>    <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">   Year  Cited_by  ID</span>
+<span class="go">0  2010        10   0</span>
+<span class="go">1  2010        11   1</span>
+<span class="go">2  2011        12   2</span>
+<span class="go">3  2011        13   3</span>
+<span class="go">4  2012        14   4</span>
+<span class="go">5  2016        15   5</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">summary_by_year</span><span class="p">(</span><span class="n">df</span><span class="p">)[[</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span> <span class="s1">&#39;Cited_by&#39;</span><span class="p">,</span> <span class="s1">&#39;Num_Documents&#39;</span><span class="p">,</span> <span class="s1">&#39;ID&#39;</span><span class="p">]]</span>
+<span class="go">   Year  Cited_by  Num_Documents      ID</span>
+<span class="go">0  2010        21              2  [0, 1]</span>
+<span class="go">1  2011        25              2  [2, 3]</span>
+<span class="go">2  2012        14              1     [4]</span>
+<span class="go">3  2013         0              0      []</span>
+<span class="go">4  2014         0              0      []</span>
+<span class="go">5  2015         0              0      []</span>
+<span class="go">6  2016        15              1     [5]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">summary_by_year</span><span class="p">(</span><span class="n">df</span><span class="p">)[[</span><span class="s1">&#39;Cum_Num_Documents&#39;</span><span class="p">,</span> <span class="s1">&#39;Cum_Cited_by&#39;</span><span class="p">,</span> <span class="s1">&#39;Avg_Cited_by&#39;</span><span class="p">]]</span>
+<span class="go">   Cum_Num_Documents  Cum_Cited_by  Avg_Cited_by</span>
+<span class="go">0                  2            21          10.5</span>
+<span class="go">1                  4            46          12.5</span>
+<span class="go">2                  5            60          14.0</span>
+<span class="go">3                  5            60           0.0</span>
+<span class="go">4                  5            60           0.0</span>
+<span class="go">5                  5            60           0.0</span>
+<span class="go">6                  6            75          15.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
 
            </div>
            
