@@ -618,7 +618,7 @@ def wordcloud(
     relative_scaling="auto",
     regexp=None,
     collocations=True,
-    colormap="Blues",
+    cmap="Blues",
     normalize_plurals=True,
     contour_width=0,
     contour_color="black",
@@ -657,7 +657,8 @@ def wordcloud(
     ax = fig.subplots()
 
     x = x.copy()
-    x.pop("ID")
+    if "ID" in x.columns:
+        x.pop("ID")
     words = {row[0]: row[1] for _, row in x.iterrows()}
     wordcloud = WordCloud(
         font_path=font_path,
@@ -680,7 +681,7 @@ def wordcloud(
         relative_scaling=relative_scaling,
         regexp=regexp,
         collocations=collocations,
-        colormap=colormap,
+        colormap=cmap,
         normalize_plurals=normalize_plurals,
         contour_width=contour_width,
         contour_color=contour_color,

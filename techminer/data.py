@@ -175,6 +175,9 @@ def __extract_country(x):
     >>> __extract_country('xxx')
     <NA>
 
+    >>> __extract_country('Department of Architecture, National University of Singapore, Singapore')
+    'Singapore'
+
     """
     if pd.isna(x) or x is None:
         return pd.NA
@@ -206,7 +209,8 @@ def __extract_country(x):
     x = re.sub("macau", "china", x)
     x = re.sub("macao", "china", x)
     #
-    for z in x.split(','):
+    for z in reversed(x.split(',')):
+        z = z.strip()
         if z.lower() in country_names.keys():
             return country_names[z.lower()]
         # descarta espaciado
@@ -271,7 +275,6 @@ def __extract_institution(x):
     return institution
 
 
-text="Hypericum ericoides is a rock plant of potential ornamental use in sustainable gardening in Mediterranean urban environment. This study was carried out to investigate the effects of temperature, light, salinity and soil moisture at the stage of plant life most sensitive to abiotic stresses (seed germination). The results indicate that light is not a germination requirement, while temperature the main factor that regulates the germination process of this species. Seed germination was inhibited by warm temperatures of 25 and 30 °C. By contrast, intermediate temperatures of 10, 15 and 20 °C induced high germination percentages both in alternating light/darkness and continuous darkness. The alternating temperature of 12/20 °C led to germination percentages close to 100 % and the highest germination speed, making this the suggested optimal for germination. The germination values attained demonstrated the absence of dormancy in H. ericoides seeds. In general, salinity and drought stress (induced by NaCl and PEG solutes, respectively) caused similar effects, reducing and delaying seed germination as the osmotic potential decreased (from 0 to -1.68 MPa). However, while most non-germinated seeds remained viable during exposure to all the osmotic potentials induced by PEG and germinated when drought stress was alleviated, the highest levels of salt stress permanently inhibited germination, although not in all seeds. These results indicated that germination inhibition under both NaCl and PEG stress is mainly due to the low water potential caused by osmotic stress, while salt stress had the added toxic effect of specific ions at the highest concentrations of NaCl. So, H. ericoides seeds can germinate well under conditions of moderate salinity and high drought stress, making it a promising species for use in sustainable urban gardening, with a low input of irrigation water of low quality."
 
 def __NLP(text):
     """Extracts keywords from phrases.
@@ -512,6 +515,9 @@ def load_scopus(x):
         
         logging.info("Extracting institution of first author ...")
         x["Institution_1st_Author"] = x.Institutions.map(lambda w: w.split(';')[0] if isinstance(w, str) else w)
+
+        logging.info("Reducing list of countries ...")
+        x["Countries"] = x.Countries.map(lambda w: ';'.join(set(w.split(';'))) if isinstance(w, str) else w)
 
     if "Author_Keywords" in x.columns:
         logging.info("Transforming Author Keywords to lower case ...")
