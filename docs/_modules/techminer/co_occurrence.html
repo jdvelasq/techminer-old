@@ -166,13 +166,92 @@
 <span class="c1"># from techminer.explode import __explode</span>
 <span class="kn">from</span> <span class="nn">techminer.plots</span> <span class="kn">import</span> <span class="n">COLORMAPS</span>
 <span class="kn">from</span> <span class="nn">techminer.keywords</span> <span class="kn">import</span> <span class="n">Keywords</span>
-<span class="kn">from</span> <span class="nn">techminer.by_term</span> <span class="kn">import</span> <span class="n">summary_by_term</span>
-<span class="kn">from</span> <span class="nn">techminer.explode</span> <span class="kn">import</span> <span class="n">MULTIVALUED_COLS</span>
+<span class="kn">from</span> <span class="nn">techminer.by_term</span> <span class="kn">import</span> <span class="n">summary_by_term</span><span class="p">,</span> <span class="n">documents_by_term</span><span class="p">,</span> <span class="n">citations_by_term</span>
+<span class="kn">from</span> <span class="nn">techminer.explode</span> <span class="kn">import</span> <span class="n">MULTIVALUED_COLS</span><span class="p">,</span> <span class="n">__explode</span>
 
 
-<div class="viewcode-block" id="summary_co_occurrence"><a class="viewcode-back" href="../../co_occurrence.html#techminer.co_occurrence.summary_co_occurrence">[docs]</a><span class="k">def</span> <span class="nf">summary_co_occurrence</span><span class="p">(</span>
-    <span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_frequency</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_cited_by</span><span class="o">=</span><span class="mi">0</span>
-<span class="p">):</span>
+<div class="viewcode-block" id="compute_tfm"><a class="viewcode-back" href="../../co_occurrence.html#techminer.co_occurrence.compute_tfm">[docs]</a><span class="k">def</span> <span class="nf">compute_tfm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">selected_columns</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the term-frequency matrix for the terms in a column.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        column (str): the column to explode.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;B;D&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; y = [ &#39;a&#39;, &#39;a;b&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c;d&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Author_Keywords&#39;: y,</span>
+<span class="sd">    ...       &#39;Cited_by&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors Author_Keywords  Cited_by  ID</span>
+<span class="sd">    0       A               a         0   0</span>
+<span class="sd">    1     A;B             a;b         1   1</span>
+<span class="sd">    2       B               b         2   2</span>
+<span class="sd">    3   A;B;C               c         3   3</span>
+<span class="sd">    4     B;D             c;d         4   4</span>
+
+<span class="sd">    &gt;&gt;&gt; compute_tfm(df, &#39;Authors&#39;)</span>
+<span class="sd">       A  B  C  D</span>
+<span class="sd">    0  1  0  0  0</span>
+<span class="sd">    1  1  1  0  0</span>
+<span class="sd">    2  0  1  0  0</span>
+<span class="sd">    3  1  1  1  0</span>
+<span class="sd">    4  0  1  0  1</span>
+
+<span class="sd">    &gt;&gt;&gt; compute_tfm(df, &#39;Author_Keywords&#39;)</span>
+<span class="sd">       a  b  c  d</span>
+<span class="sd">    0  1  0  0  0</span>
+<span class="sd">    1  1  1  0  0</span>
+<span class="sd">    2  0  1  0  0</span>
+<span class="sd">    3  0  0  1  0</span>
+<span class="sd">    4  0  0  1  1</span>
+
+<span class="sd">    &gt;&gt;&gt; compute_tfm(df, &#39;Authors&#39;, selected_columns=[&#39;A&#39;, &#39;B&#39;])</span>
+<span class="sd">       A  B</span>
+<span class="sd">    0  1  0</span>
+<span class="sd">    1  1  1</span>
+<span class="sd">    2  0  1</span>
+<span class="sd">    3  1  1</span>
+<span class="sd">    4  0  1</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">x</span><span class="p">[[</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">__explode</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;ID&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">column</span><span class="p">,</span> <span class="n">margins</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">selected_columns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">selected_columns</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="p">]]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="most_frequent"><a class="viewcode-back" href="../../co_occurrence.html#techminer.co_occurrence.most_frequent">[docs]</a><span class="k">def</span> <span class="nf">most_frequent</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">top_n</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">documents_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="most_cited_by"><a class="viewcode-back" href="../../co_occurrence.html#techminer.co_occurrence.most_cited_by">[docs]</a><span class="k">def</span> <span class="nf">most_cited_by</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">top_n</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">citations_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="co_occurrence"><a class="viewcode-back" href="../../co_occurrence.html#techminer.co_occurrence.co_occurrence">[docs]</a><span class="k">def</span> <span class="nf">co_occurrence</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">selected_columns</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Summary occurrence and citations by terms in two different columns.</span>
 
 <span class="sd">    Args:</span>
@@ -207,283 +286,63 @@
 <span class="sd">    3   A;B;C               c         3   3</span>
 <span class="sd">    4     B;D             c;d         4   4</span>
 
-<span class="sd">    &gt;&gt;&gt; summary_co_occurrence(df, column=&#39;Author_Keywords&#39;, by=&#39;Authors&#39;)</span>
-<span class="sd">      Author_Keywords Authors  Num_Documents  Cited_by      ID</span>
-<span class="sd">    0               a       A              2         1  [0, 1]</span>
-<span class="sd">    1               a       B              1         1     [1]</span>
-<span class="sd">    2               b       A              1         1     [1]</span>
-<span class="sd">    3               b       B              2         3  [1, 2]</span>
-<span class="sd">    4               c       A              1         3     [3]</span>
-<span class="sd">    5               c       B              2         7  [3, 4]</span>
-<span class="sd">    6               c       C              1         3     [3]</span>
-<span class="sd">    7               c       D              1         4     [4]</span>
-<span class="sd">    8               d       B              1         4     [4]</span>
-<span class="sd">    9               d       D              1         4     [4]</span>
-
-<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;B&#39;, &#39;C&#39;, &#39;a&#39;, &#39;b&#39;], ignore_case=False)</span>
-<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
-<span class="sd">    &gt;&gt;&gt; summary_co_occurrence(df, &#39;Authors&#39;, &#39;Author_Keywords&#39;, keywords=keywords)</span>
-<span class="sd">      Authors Author_Keywords  Num_Documents  Cited_by      ID</span>
-<span class="sd">    0       B               a              1         1     [1]</span>
-<span class="sd">    1       B               b              2         3  [1, 2]</span>
-
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">generate_pairs</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">by</span> <span class="ow">in</span> <span class="n">MULTIVALUED_COLS</span><span class="p">:</span>
-            <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">MULTIVALUED_COLS</span><span class="p">:</span>
-            <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">]</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">idx0</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)):</span>
-            <span class="k">for</span> <span class="n">idx1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)):</span>
-                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">w</span><span class="p">[</span><span class="n">idx0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="n">idx1</span><span class="p">]))</span>
-        <span class="k">return</span> <span class="n">result</span>
-
-    <span class="c1">#</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">by</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">by</span> <span class="o">==</span> <span class="n">column</span><span class="p">:</span>
-        <span class="n">by</span> <span class="o">=</span> <span class="n">column</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span>
-        <span class="n">data</span><span class="p">[</span><span class="n">by</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="n">by</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="s2">&quot;Cited_by&quot;</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">]]</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;pairs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">generate_pairs</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">by</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">])]</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s2">&quot;pairs&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Cited_by&quot;</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">]]</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;pairs&quot;</span><span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;pairs&quot;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>
-        <span class="p">{</span><span class="s2">&quot;Cited_by&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">}</span>
-    <span class="p">)</span>
-    <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited_by&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Cited_by&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-    <span class="n">result</span><span class="p">[</span><span class="n">by</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;pairs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">result</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;pairs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;pairs&quot;</span><span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[[</span><span class="n">column</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Cited_by&quot;</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">,]]</span>
-    <span class="k">if</span> <span class="n">keywords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">keywords</span><span class="o">.</span><span class="n">_patterns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">by</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
-    <span class="k">if</span> <span class="n">min_frequency</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">min_cited_by</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_frequency</span><span class="p">]</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Cited_by&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_cited_by</span><span class="p">]</span>
-        <span class="n">keywords</span> <span class="o">=</span> <span class="n">Keywords</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">column</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">by</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;_&quot;</span> <span class="ow">and</span> <span class="n">by</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">column</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">by</span><span class="p">)</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_frequency</span><span class="p">]</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Cited_by&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_cited_by</span><span class="p">]</span>
-            <span class="n">keywords</span> <span class="o">+=</span> <span class="n">Keywords</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">by</span><span class="p">])</span>
-        <span class="n">keywords</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">by</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">)]</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="n">column</span><span class="p">,</span> <span class="n">by</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,)</span>
-    <span class="k">return</span> <span class="n">result</span></div>
-
-
-<div class="viewcode-block" id="co_occurrence"><a class="viewcode-back" href="../../co_occurrence.html#techminer.co_occurrence.co_occurrence">[docs]</a><span class="k">def</span> <span class="nf">co_occurrence</span><span class="p">(</span>
-    <span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Computes the co-occurrence of two terms in different colums. The report adds</span>
-<span class="sd">    the number of documents by term between brackets.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        by (str): the column to explode. Their terms are used in the index of the result dataframe.</span>
-<span class="sd">        sep_IDX (str): Character used as internal separator for the elements in the by.</span>
-<span class="sd">        column (str): the column to explode. Their terms are used in the columns of the result dataframe.</span>
-<span class="sd">        sep_COL (str): Character used as internal separator for the elements in the column.</span>
-<span class="sd">        as_matrix (bool): Results are returned as a matrix.</span>
-<span class="sd">        minmax (pair(number,number)): filter values by &gt;=min,&lt;=max.</span>
-<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        DataFrame.</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    ----------------------------------------------------------------------------------------------</span>
-
-<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;B;D&#39;]</span>
-<span class="sd">    &gt;&gt;&gt; y = [ &#39;a&#39;, &#39;a;b&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c;d&#39;]</span>
-<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="sd">    ...    {</span>
-<span class="sd">    ...       &#39;Authors&#39;: x,</span>
-<span class="sd">    ...       &#39;Author_Keywords&#39;: y,</span>
-<span class="sd">    ...       &#39;Cited_by&#39;: list(range(len(x))),</span>
-<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
-<span class="sd">    ...    }</span>
-<span class="sd">    ... )</span>
-<span class="sd">    &gt;&gt;&gt; df</span>
-<span class="sd">      Authors Author_Keywords  Cited_by  ID</span>
-<span class="sd">    0       A               a         0   0</span>
-<span class="sd">    1     A;B             a;b         1   1</span>
-<span class="sd">    2       B               b         2   2</span>
-<span class="sd">    3   A;B;C               c         3   3</span>
-<span class="sd">    4     B;D             c;d         4   4</span>
-
-<span class="sd">    &gt;&gt;&gt; co_occurrence(df, column=&#39;Authors&#39;, by=&#39;Author_Keywords&#39;)</span>
-<span class="sd">      Authors Author_Keywords  Num_Documents      ID</span>
-<span class="sd">    0       A               a              2  [0, 1]</span>
-<span class="sd">    1       B               b              2  [1, 2]</span>
-<span class="sd">    2       B               c              2  [3, 4]</span>
-<span class="sd">    3       A               b              1     [1]</span>
-<span class="sd">    4       A               c              1     [3]</span>
-<span class="sd">    5       B               a              1     [1]</span>
-<span class="sd">    6       B               d              1     [4]</span>
-<span class="sd">    7       C               c              1     [3]</span>
-<span class="sd">    8       D               c              1     [4]</span>
-<span class="sd">    9       D               d              1     [4]</span>
-
-<span class="sd">    &gt;&gt;&gt; co_occurrence(df, column=&#39;Author_Keywords&#39;, by=&#39;Authors&#39;, as_matrix=True)</span>
+<span class="sd">    &gt;&gt;&gt; co_occurrence(df, column=&#39;Author_Keywords&#39;, by=&#39;Authors&#39;)</span>
 <span class="sd">       a  b  c  d</span>
 <span class="sd">    A  2  1  1  0</span>
 <span class="sd">    B  1  2  2  1</span>
 <span class="sd">    C  0  0  1  0</span>
 <span class="sd">    D  0  0  1  1</span>
 
-<span class="sd">    &gt;&gt;&gt; co_occurrence(df, column=&#39;Author_Keywords&#39;, by=&#39;Authors&#39;, as_matrix=True, min_value=2)</span>
-<span class="sd">       a  b  c</span>
-<span class="sd">    A  2  1  1</span>
-<span class="sd">    B  1  2  2</span>
-
-<span class="sd">    &gt;&gt;&gt; co_occurrence(df, column=&#39;Author_Keywords&#39;, by=&#39;Authors&#39;, as_matrix=True, min_value=5)</span>
-<span class="sd">       a  b  c</span>
-<span class="sd">    A  2  1  1</span>
-<span class="sd">    B  1  2  2</span>
-
-<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;, &#39;c&#39;, &#39;d&#39;], ignore_case=False)</span>
-<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
-<span class="sd">    &gt;&gt;&gt; co_occurrence(df, column=&#39;Author_Keywords&#39;, by=&#39;Authors&#39;, as_matrix=True, keywords=keywords)</span>
+<span class="sd">    &gt;&gt;&gt; selected_columns = [&#39;A&#39;, &#39;B&#39;, &#39;c&#39;, &#39;d&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; co_occurrence(df, column=&#39;Author_Keywords&#39;, by=&#39;Authors&#39;, selected_columns=selected_columns)</span>
 <span class="sd">       c  d</span>
 <span class="sd">    A  1  0</span>
 <span class="sd">    B  2  1</span>
 
-<span class="sd">    </span>
+
 
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># def generate_dic(column, sep):</span>
-    <span class="c1">#     new_names = documents_by_term(x, column)</span>
-    <span class="c1">#     new_names = {</span>
-    <span class="c1">#         term: &quot;{:s} [{:d}]&quot;.format(term, docs_per_term)</span>
-    <span class="c1">#         for term, docs_per_term in zip(</span>
-    <span class="c1">#             new_names[column], new_names[&quot;Num_Documents&quot;],</span>
-    <span class="c1">#         )</span>
-    <span class="c1">#     }</span>
-    <span class="c1">#     return new_names</span>
-
-    <span class="c1">#</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">summary_co_occurrence</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="n">by</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">by</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">by</span> <span class="o">==</span> <span class="n">column</span><span class="p">:</span>
         <span class="n">by</span> <span class="o">=</span> <span class="n">column</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span>
-    <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;Cited_by&quot;</span><span class="p">)</span>
-    <span class="c1">#</span>
-    <span class="k">if</span> <span class="n">as_matrix</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-            <span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">by</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
-        <span class="p">)</span>
-        <span class="k">if</span> <span class="n">min_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">min_value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">result</span>
-    <span class="c1">#</span>
-    <span class="k">if</span> <span class="n">as_matrix</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
-            <span class="n">result</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">by</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">column</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">min_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">min_value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="c1">#</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">min_value</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">b</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="k">if</span> <span class="n">min_value</span> <span class="o">&gt;</span> <span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">b</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="k">else</span> <span class="n">min_value</span>
-        <span class="p">)</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">a</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="n">b</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
-        <span class="c1">#</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">sorted</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">by</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">selected_columns</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">selected_columns</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">selected_columns</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">selected_columns</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">top_by</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;Frequency&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">top_n</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">selected_columns</span> <span class="o">=</span> <span class="n">selected_columns</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">most_frequent</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">top_n</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">top_by</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;Cited_by&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">top_n</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">selected_columns</span> <span class="o">=</span> <span class="n">selected_columns</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">most_frequent</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">top_n</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_columns</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">selected_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">selected_columns</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">selected_columns</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">A</span> <span class="o">=</span> <span class="n">compute_tfm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">selected_columns</span><span class="p">)</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">compute_tfm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">selected_columns</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">A</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">B</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span>
+        <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
     <span class="k">return</span> <span class="n">result</span></div>
 
 
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
-
-
-<div class="viewcode-block" id="summary_occurrence"><a class="viewcode-back" href="../../co_occurrence.html#techminer.co_occurrence.summary_occurrence">[docs]</a><span class="k">def</span> <span class="nf">summary_occurrence</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Summarize occurrence and citations by terms in a column of a dataframe.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        column (str): the column to explode.</span>
-<span class="sd">        sep (str): Character used as internal separator for the elements in the column.</span>
-<span class="sd">        keywords (Keywords): filter the result using the specified Keywords object.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        DataFrame.</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    ----------------------------------------------------------------------------------------------</span>
-
-<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;D&#39;, &#39;B;D&#39;]</span>
-<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="sd">    ...    {</span>
-<span class="sd">    ...       &#39;Authors&#39;: x,</span>
-<span class="sd">    ...       &#39;Cited_by&#39;: list(range(len(x))),</span>
-<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
-<span class="sd">    ...    }</span>
-<span class="sd">    ... )</span>
-<span class="sd">    &gt;&gt;&gt; df</span>
-<span class="sd">      Authors  Cited_by  ID</span>
-<span class="sd">    0       A         0   0</span>
-<span class="sd">    1       A         1   1</span>
-<span class="sd">    2     A;B         2   2</span>
-<span class="sd">    3       B         3   3</span>
-<span class="sd">    4   A;B;C         4   4</span>
-<span class="sd">    5       D         5   5</span>
-<span class="sd">    6     B;D         6   6</span>
-
-<span class="sd">    &gt;&gt;&gt; summary_occurrence(df, column=&#39;Authors&#39;)</span>
-<span class="sd">       Authors Authors_  Num_Documents  Cited_by            ID</span>
-<span class="sd">    0        A        A              4         7  [0, 1, 2, 4]</span>
-<span class="sd">    1        A        B              2         6        [2, 4]</span>
-<span class="sd">    2        A        C              1         4           [4]</span>
-<span class="sd">    3        B        A              2         6        [2, 4]</span>
-<span class="sd">    4        B        B              4        15  [2, 3, 4, 6]</span>
-<span class="sd">    5        B        C              1         4           [4]</span>
-<span class="sd">    6        B        D              1         6           [6]</span>
-<span class="sd">    7        C        A              1         4           [4]</span>
-<span class="sd">    8        C        B              1         4           [4]</span>
-<span class="sd">    9        C        C              1         4           [4]</span>
-<span class="sd">    10       D        B              1         6           [6]</span>
-<span class="sd">    11       D        D              2        11        [5, 6]</span>
-
-<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;], ignore_case=False)</span>
-<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
-<span class="sd">    &gt;&gt;&gt; summary_occurrence(df, &#39;Authors&#39;, keywords=keywords)</span>
-<span class="sd">      Authors Authors_  Num_Documents  Cited_by            ID</span>
-<span class="sd">    0       A        A              4         7  [0, 1, 2, 4]</span>
-<span class="sd">    1       A        B              2         6        [2, 4]</span>
-<span class="sd">    2       B        A              2         6        [2, 4]</span>
-<span class="sd">    3       B        B              4        15  [2, 3, 4, 6]</span>
-
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">summary_co_occurrence</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="occurrence"><a class="viewcode-back" href="../../co_occurrence.html#techminer.co_occurrence.occurrence">[docs]</a><span class="k">def</span> <span class="nf">occurrence</span><span class="p">(</span>
-    <span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">normalization</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">column</span><span class="p">,</span>
+    <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">normalization</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">top_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">top_n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">selected_columns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Computes the occurrence between the terms in a column.</span>
 
@@ -519,48 +378,26 @@
 <span class="sd">    6     B;D         6   6</span>
 
 <span class="sd">    &gt;&gt;&gt; occurrence(df, column=&#39;Authors&#39;)</span>
-<span class="sd">       Authors Authors_  Num_Documents            ID</span>
-<span class="sd">    0        A        A              4  [0, 1, 2, 4]</span>
-<span class="sd">    1        B        B              4  [2, 3, 4, 6]</span>
-<span class="sd">    2        A        B              2        [2, 4]</span>
-<span class="sd">    3        B        A              2        [2, 4]</span>
-<span class="sd">    4        D        D              2        [5, 6]</span>
-<span class="sd">    5        A        C              1           [4]</span>
-<span class="sd">    6        B        C              1           [4]</span>
-<span class="sd">    7        B        D              1           [6]</span>
-<span class="sd">    8        C        A              1           [4]</span>
-<span class="sd">    9        C        B              1           [4]</span>
-<span class="sd">    10       C        C              1           [4]</span>
-<span class="sd">    11       D        B              1           [6]</span>
-
-<span class="sd">    &gt;&gt;&gt; occurrence(df, column=&#39;Authors&#39;, as_matrix=True)</span>
 <span class="sd">       A  B  C  D</span>
 <span class="sd">    A  4  2  1  0</span>
 <span class="sd">    B  2  4  1  1</span>
 <span class="sd">    C  1  1  1  0</span>
 <span class="sd">    D  0  1  0  2</span>
 
-<span class="sd">    &gt;&gt;&gt; occurrence(df, column=&#39;Authors&#39;, min_value=2, as_matrix=True)</span>
+<span class="sd">    &gt;&gt;&gt; occurrence(df, column=&#39;Authors&#39;, selected_columns=[&#39;A&#39;, &#39;B&#39;, &#39;D&#39;])</span>
 <span class="sd">       A  B  D</span>
 <span class="sd">    A  4  2  0</span>
 <span class="sd">    B  2  4  1</span>
 <span class="sd">    D  0  1  2</span>
-
-<span class="sd">    &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;], ignore_case=False)</span>
-<span class="sd">    &gt;&gt;&gt; keywords = keywords.compile()</span>
-<span class="sd">    &gt;&gt;&gt; occurrence(df, &#39;Authors&#39;, as_matrix=True, keywords=keywords)</span>
-<span class="sd">       A  B</span>
-<span class="sd">    A  4  2</span>
-<span class="sd">    B  2  4</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">co_occurrence</span><span class="p">(</span>
         <span class="n">x</span><span class="p">,</span>
         <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
         <span class="n">by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">as_matrix</span><span class="o">=</span><span class="n">as_matrix</span><span class="p">,</span>
-        <span class="n">min_value</span><span class="o">=</span><span class="n">min_value</span><span class="p">,</span>
-        <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">,</span>
+        <span class="n">top_by</span><span class="o">=</span><span class="n">top_by</span><span class="p">,</span>
+        <span class="n">top_n</span><span class="o">=</span><span class="n">top_n</span><span class="p">,</span>
+        <span class="n">selected_columns</span><span class="o">=</span><span class="n">selected_columns</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
@@ -594,157 +431,157 @@
     <span class="k">return</span> <span class="n">matrix</span></div>
 
 
-<span class="c1"># #     def occurrence_map(self, column, sep=None, minmax=None, keywords=None):</span>
-<span class="c1"># #         &quot;&quot;&quot;Computes a occurrence between terms in a column.</span>
+<span class="c1">#     def occurrence_map(self, column, sep=None, minmax=None, keywords=None):</span>
+<span class="c1">#         &quot;&quot;&quot;Computes a occurrence between terms in a column.</span>
 
-<span class="c1"># #         Args:</span>
-<span class="c1"># #             column (str): the column to explode.</span>
-<span class="c1"># #             sep (str): Character used as internal separator for the elements in the column.</span>
-<span class="c1"># #             minmax (pair(number,number)): filter values by &gt;=min,&lt;=max.</span>
-<span class="c1"># #             keywords (Keywords): filter the result using the specified Keywords object.</span>
+<span class="c1">#         Args:</span>
+<span class="c1">#             column (str): the column to explode.</span>
+<span class="c1">#             sep (str): Character used as internal separator for the elements in the column.</span>
+<span class="c1">#             minmax (pair(number,number)): filter values by &gt;=min,&lt;=max.</span>
+<span class="c1">#             keywords (Keywords): filter the result using the specified Keywords object.</span>
 
-<span class="c1"># #         Returns:</span>
-<span class="c1"># #             dictionary</span>
+<span class="c1">#         Returns:</span>
+<span class="c1">#             dictionary</span>
 
-<span class="c1"># #         Examples</span>
-<span class="c1"># #         ----------------------------------------------------------------------------------------------</span>
+<span class="c1">#         Examples</span>
+<span class="c1">#         ----------------------------------------------------------------------------------------------</span>
 
-<span class="c1"># #         &gt;&gt;&gt; import pandas as pd</span>
-<span class="c1"># #         &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;D&#39;, &#39;B;D&#39;]</span>
-<span class="c1"># #         &gt;&gt;&gt; df = pd.DataFrame(</span>
-<span class="c1"># #         ...    {</span>
-<span class="c1"># #         ...       &#39;Authors&#39;: x,</span>
-<span class="c1"># #         ...       &#39;ID&#39;: list(range(len(x))),</span>
-<span class="c1"># #         ...    }</span>
-<span class="c1"># #         ... )</span>
-<span class="c1"># #         &gt;&gt;&gt; df</span>
-<span class="c1"># #           Authors  ID</span>
-<span class="c1"># #         0       A   0</span>
-<span class="c1"># #         1       A   1</span>
-<span class="c1"># #         2     A;B   2</span>
-<span class="c1"># #         3       B   3</span>
-<span class="c1"># #         4   A;B;C   4</span>
-<span class="c1"># #         5       D   5</span>
-<span class="c1"># #         6     B;D   6</span>
+<span class="c1">#         &gt;&gt;&gt; import pandas as pd</span>
+<span class="c1">#         &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;D&#39;, &#39;B;D&#39;]</span>
+<span class="c1">#         &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="c1">#         ...    {</span>
+<span class="c1">#         ...       &#39;Authors&#39;: x,</span>
+<span class="c1">#         ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="c1">#         ...    }</span>
+<span class="c1">#         ... )</span>
+<span class="c1">#         &gt;&gt;&gt; df</span>
+<span class="c1">#           Authors  ID</span>
+<span class="c1">#         0       A   0</span>
+<span class="c1">#         1       A   1</span>
+<span class="c1">#         2     A;B   2</span>
+<span class="c1">#         3       B   3</span>
+<span class="c1">#         4   A;B;C   4</span>
+<span class="c1">#         5       D   5</span>
+<span class="c1">#         6     B;D   6</span>
 
-<span class="c1"># #         &gt;&gt;&gt; DataFrame(df).occurrence_map(column=&#39;Authors&#39;)</span>
-<span class="c1"># #         {&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;docs&#39;: [&#39;doc#0&#39;, &#39;doc#1&#39;, &#39;doc#2&#39;, &#39;doc#3&#39;, &#39;doc#4&#39;, &#39;doc#5&#39;], &#39;edges&#39;: [(&#39;A&#39;, &#39;doc#0&#39;), (&#39;A&#39;, &#39;doc#1&#39;), (&#39;B&#39;, &#39;doc#1&#39;), (&#39;A&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#2&#39;), (&#39;C&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#3&#39;), (&#39;B&#39;, &#39;doc#4&#39;), (&#39;D&#39;, &#39;doc#4&#39;), (&#39;D&#39;, &#39;doc#5&#39;)], &#39;label_terms&#39;: {&#39;A&#39;: &#39;A&#39;, &#39;B&#39;: &#39;B&#39;, &#39;C&#39;: &#39;C&#39;, &#39;D&#39;: &#39;D&#39;}, &#39;label_docs&#39;: {&#39;doc#0&#39;: 2, &#39;doc#1&#39;: 1, &#39;doc#2&#39;: 1, &#39;doc#3&#39;: 1, &#39;doc#4&#39;: 1, &#39;doc#5&#39;: 1}}</span>
+<span class="c1">#         &gt;&gt;&gt; DataFrame(df).occurrence_map(column=&#39;Authors&#39;)</span>
+<span class="c1">#         {&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;], &#39;docs&#39;: [&#39;doc#0&#39;, &#39;doc#1&#39;, &#39;doc#2&#39;, &#39;doc#3&#39;, &#39;doc#4&#39;, &#39;doc#5&#39;], &#39;edges&#39;: [(&#39;A&#39;, &#39;doc#0&#39;), (&#39;A&#39;, &#39;doc#1&#39;), (&#39;B&#39;, &#39;doc#1&#39;), (&#39;A&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#2&#39;), (&#39;C&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#3&#39;), (&#39;B&#39;, &#39;doc#4&#39;), (&#39;D&#39;, &#39;doc#4&#39;), (&#39;D&#39;, &#39;doc#5&#39;)], &#39;label_terms&#39;: {&#39;A&#39;: &#39;A&#39;, &#39;B&#39;: &#39;B&#39;, &#39;C&#39;: &#39;C&#39;, &#39;D&#39;: &#39;D&#39;}, &#39;label_docs&#39;: {&#39;doc#0&#39;: 2, &#39;doc#1&#39;: 1, &#39;doc#2&#39;: 1, &#39;doc#3&#39;: 1, &#39;doc#4&#39;: 1, &#39;doc#5&#39;: 1}}</span>
 
-<span class="c1"># #         &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;])</span>
-<span class="c1"># #         &gt;&gt;&gt; keywords = keywords.compile()</span>
-<span class="c1"># #         &gt;&gt;&gt; DataFrame(df).occurrence_map(&#39;Authors&#39;, keywords=keywords)</span>
-<span class="c1"># #         {&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;], &#39;docs&#39;: [&#39;doc#0&#39;, &#39;doc#1&#39;, &#39;doc#2&#39;, &#39;doc#3&#39;, &#39;doc#4&#39;], &#39;edges&#39;: [(&#39;A&#39;, &#39;doc#0&#39;), (&#39;A&#39;, &#39;doc#1&#39;), (&#39;B&#39;, &#39;doc#1&#39;), (&#39;A&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#3&#39;), (&#39;B&#39;, &#39;doc#4&#39;)], &#39;label_terms&#39;: {&#39;A&#39;: &#39;A&#39;, &#39;B&#39;: &#39;B&#39;}, &#39;label_docs&#39;: {&#39;doc#0&#39;: 2, &#39;doc#1&#39;: 1, &#39;doc#2&#39;: 1, &#39;doc#3&#39;: 1, &#39;doc#4&#39;: 1}}</span>
-
-
-<span class="c1"># #         &quot;&quot;&quot;</span>
-<span class="c1"># #         sep = &quot;;&quot; if sep is None and column in SCOPUS_COLS else sep</span>
-
-<span class="c1"># #         result = self[[column]].copy()</span>
-<span class="c1"># #         result[&quot;count&quot;] = 1</span>
-<span class="c1"># #         result = result.groupby(column, as_index=False).agg({&quot;count&quot;: np.sum})</span>
-<span class="c1"># #         if keywords is not None:</span>
-<span class="c1"># #             if keywords._patterns is None:</span>
-<span class="c1"># #                 keywords = keywords.compile()</span>
-<span class="c1"># #             if sep is not None:</span>
-<span class="c1"># #                 result = result[</span>
-<span class="c1"># #                     result[column].map(</span>
-<span class="c1"># #                         lambda x: any([e in keywords for e in x.split(sep)])</span>
-<span class="c1"># #                     )</span>
-<span class="c1"># #                 ]</span>
-<span class="c1"># #             else:</span>
-<span class="c1"># #                 result = result[result[column].map(lambda x: x in keywords)]</span>
-
-<span class="c1"># #         if sep is not None:</span>
-<span class="c1"># #             result[column] = result[column].map(</span>
-<span class="c1"># #                 lambda x: sorted(x.split(sep)) if isinstance(x, str) else x</span>
-<span class="c1"># #             )</span>
-
-<span class="c1"># #         result[&quot;doc-ID&quot;] = [&quot;doc#{:d}&quot;.format(i) for i in range(len(result))]</span>
-<span class="c1"># #         terms = result[[column]].copy()</span>
-<span class="c1"># #         terms.explode(column)</span>
-<span class="c1"># #         terms = [item for sublist in terms[column].tolist() for item in sublist]</span>
-<span class="c1"># #         terms = sorted(set(terms))</span>
-<span class="c1"># #         if keywords is not None:</span>
-<span class="c1"># #             terms = [x for x in terms if x in keywords]</span>
-<span class="c1"># #         docs = result[&quot;doc-ID&quot;].tolist()</span>
-<span class="c1"># #         label_docs = {doc: label for doc, label in zip(docs, result[&quot;count&quot;].tolist())}</span>
-<span class="c1"># #         label_terms = {t: t for t in terms}</span>
-<span class="c1"># #         edges = []</span>
-<span class="c1"># #         for field, docID in zip(result[column], result[&quot;doc-ID&quot;]):</span>
-<span class="c1"># #             for item in field:</span>
-<span class="c1"># #                 if keywords is None or item in keywords:</span>
-<span class="c1"># #                     edges.append((item, docID))</span>
-<span class="c1"># #         return dict(</span>
-<span class="c1"># #             terms=terms,</span>
-<span class="c1"># #             docs=docs,</span>
-<span class="c1"># #             edges=edges,</span>
-<span class="c1"># #             label_terms=label_terms,</span>
-<span class="c1"># #             label_docs=label_docs,</span>
-<span class="c1"># #         )</span>
+<span class="c1">#         &gt;&gt;&gt; keywords = Keywords([&#39;A&#39;, &#39;B&#39;])</span>
+<span class="c1">#         &gt;&gt;&gt; keywords = keywords.compile()</span>
+<span class="c1">#         &gt;&gt;&gt; DataFrame(df).occurrence_map(&#39;Authors&#39;, keywords=keywords)</span>
+<span class="c1">#         {&#39;terms&#39;: [&#39;A&#39;, &#39;B&#39;], &#39;docs&#39;: [&#39;doc#0&#39;, &#39;doc#1&#39;, &#39;doc#2&#39;, &#39;doc#3&#39;, &#39;doc#4&#39;], &#39;edges&#39;: [(&#39;A&#39;, &#39;doc#0&#39;), (&#39;A&#39;, &#39;doc#1&#39;), (&#39;B&#39;, &#39;doc#1&#39;), (&#39;A&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#2&#39;), (&#39;B&#39;, &#39;doc#3&#39;), (&#39;B&#39;, &#39;doc#4&#39;)], &#39;label_terms&#39;: {&#39;A&#39;: &#39;A&#39;, &#39;B&#39;: &#39;B&#39;}, &#39;label_docs&#39;: {&#39;doc#0&#39;: 2, &#39;doc#1&#39;: 1, &#39;doc#2&#39;: 1, &#39;doc#3&#39;: 1, &#39;doc#4&#39;: 1}}</span>
 
 
-<span class="c1"># #     # def correspondence_matrix(</span>
-<span class="c1"># #     #     self,</span>
-<span class="c1"># #     #     column_IDX,</span>
-<span class="c1"># #     #     column_COL,</span>
-<span class="c1"># #     #     sep_IDX=None,</span>
-<span class="c1"># #     #     sep_COL=None,</span>
-<span class="c1"># #     #     as_matrix=False,</span>
-<span class="c1"># #     #     keywords=None,</span>
-<span class="c1"># #     # ):</span>
-<span class="c1"># #     #     &quot;&quot;&quot;</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         sep = &quot;;&quot; if sep is None and column in SCOPUS_COLS else sep</span>
 
-<span class="c1"># #     #     &quot;&quot;&quot;</span>
-<span class="c1"># #     #     result = self.co_occurrence(</span>
-<span class="c1"># #     #         column_IDX=column_IDX,</span>
-<span class="c1"># #     #         column_COL=column_COL,</span>
-<span class="c1"># #     #         sep_IDX=sep_IDX,</span>
-<span class="c1"># #     #         sep_COL=sep_COL,</span>
-<span class="c1"># #     #         as_matrix=True,</span>
-<span class="c1"># #     #         minmax=None,</span>
-<span class="c1"># #     #         keywords=keywords,</span>
-<span class="c1"># #     #     )</span>
+<span class="c1">#         result = self[[column]].copy()</span>
+<span class="c1">#         result[&quot;count&quot;] = 1</span>
+<span class="c1">#         result = result.groupby(column, as_index=False).agg({&quot;count&quot;: np.sum})</span>
+<span class="c1">#         if keywords is not None:</span>
+<span class="c1">#             if keywords._patterns is None:</span>
+<span class="c1">#                 keywords = keywords.compile()</span>
+<span class="c1">#             if sep is not None:</span>
+<span class="c1">#                 result = result[</span>
+<span class="c1">#                     result[column].map(</span>
+<span class="c1">#                         lambda x: any([e in keywords for e in x.split(sep)])</span>
+<span class="c1">#                     )</span>
+<span class="c1">#                 ]</span>
+<span class="c1">#             else:</span>
+<span class="c1">#                 result = result[result[column].map(lambda x: x in keywords)]</span>
 
-<span class="c1"># #     #     matrix = result.transpose().values</span>
-<span class="c1"># #     #     grand_total = np.sum(matrix)</span>
-<span class="c1"># #     #     correspondence_matrix = np.divide(matrix, grand_total)</span>
-<span class="c1"># #     #     row_totals = np.sum(correspondence_matrix, axis=1)</span>
-<span class="c1"># #     #     col_totals = np.sum(correspondence_matrix, axis=0)</span>
-<span class="c1"># #     #     independence_model = np.outer(row_totals, col_totals)</span>
-<span class="c1"># #     #     norm_correspondence_matrix = np.divide(</span>
-<span class="c1"># #     #         correspondence_matrix, row_totals[:, None]</span>
-<span class="c1"># #     #     )</span>
-<span class="c1"># #     #     distances = np.zeros(</span>
-<span class="c1"># #     #         (correspondence_matrix.shape[0], correspondence_matrix.shape[0])</span>
-<span class="c1"># #     #     )</span>
-<span class="c1"># #     #     norm_col_totals = np.sum(norm_correspondence_matrix, axis=0)</span>
-<span class="c1"># #     #     for row in range(correspondence_matrix.shape[0]):</span>
-<span class="c1"># #     #         distances[row] = np.sqrt(</span>
-<span class="c1"># #     #             np.sum(</span>
-<span class="c1"># #     #                 np.square(</span>
-<span class="c1"># #     #                     norm_correspondence_matrix - norm_correspondence_matrix[row]</span>
-<span class="c1"># #     #                 )</span>
-<span class="c1"># #     #                 / col_totals,</span>
-<span class="c1"># #     #                 axis=1,</span>
-<span class="c1"># #     #             )</span>
-<span class="c1"># #     #         )</span>
-<span class="c1"># #     #     std_residuals = np.divide(</span>
-<span class="c1"># #     #         (correspondence_matrix - independence_model), np.sqrt(independence_model)</span>
-<span class="c1"># #     #     )</span>
-<span class="c1"># #     #     u, s, vh = np.linalg.svd(std_residuals, full_matrices=False)</span>
-<span class="c1"># #     #     deltaR = np.diag(np.divide(1.0, np.sqrt(row_totals)))</span>
-<span class="c1"># #     #     rowScores = np.dot(np.dot(deltaR, u), np.diag(s))</span>
+<span class="c1">#         if sep is not None:</span>
+<span class="c1">#             result[column] = result[column].map(</span>
+<span class="c1">#                 lambda x: sorted(x.split(sep)) if isinstance(x, str) else x</span>
+<span class="c1">#             )</span>
 
-<span class="c1"># #     #     return pd.DataFrame(</span>
-<span class="c1"># #     #         data=rowScores, columns=result.columns, index=result.columns</span>
-<span class="c1"># #     #     )</span>
+<span class="c1">#         result[&quot;doc-ID&quot;] = [&quot;doc#{:d}&quot;.format(i) for i in range(len(result))]</span>
+<span class="c1">#         terms = result[[column]].copy()</span>
+<span class="c1">#         terms.explode(column)</span>
+<span class="c1">#         terms = [item for sublist in terms[column].tolist() for item in sublist]</span>
+<span class="c1">#         terms = sorted(set(terms))</span>
+<span class="c1">#         if keywords is not None:</span>
+<span class="c1">#             terms = [x for x in terms if x in keywords]</span>
+<span class="c1">#         docs = result[&quot;doc-ID&quot;].tolist()</span>
+<span class="c1">#         label_docs = {doc: label for doc, label in zip(docs, result[&quot;count&quot;].tolist())}</span>
+<span class="c1">#         label_terms = {t: t for t in terms}</span>
+<span class="c1">#         edges = []</span>
+<span class="c1">#         for field, docID in zip(result[column], result[&quot;doc-ID&quot;]):</span>
+<span class="c1">#             for item in field:</span>
+<span class="c1">#                 if keywords is None or item in keywords:</span>
+<span class="c1">#                     edges.append((item, docID))</span>
+<span class="c1">#         return dict(</span>
+<span class="c1">#             terms=terms,</span>
+<span class="c1">#             docs=docs,</span>
+<span class="c1">#             edges=edges,</span>
+<span class="c1">#             label_terms=label_terms,</span>
+<span class="c1">#             label_docs=label_docs,</span>
+<span class="c1">#         )</span>
 
 
-<span class="c1"># # def relationship(x, y):</span>
-<span class="c1"># #     sxy = sum([a * b * min(a, b) for a, b in zip(x, y)])</span>
-<span class="c1"># #     a = math.sqrt(sum(x))</span>
-<span class="c1"># #     b = math.sqrt(sum(y))</span>
-<span class="c1"># #     return sxy / (a * b)</span>
+<span class="c1">#     # def correspondence_matrix(</span>
+<span class="c1">#     #     self,</span>
+<span class="c1">#     #     column_IDX,</span>
+<span class="c1">#     #     column_COL,</span>
+<span class="c1">#     #     sep_IDX=None,</span>
+<span class="c1">#     #     sep_COL=None,</span>
+<span class="c1">#     #     as_matrix=False,</span>
+<span class="c1">#     #     keywords=None,</span>
+<span class="c1">#     # ):</span>
+<span class="c1">#     #     &quot;&quot;&quot;</span>
+
+<span class="c1">#     #     &quot;&quot;&quot;</span>
+<span class="c1">#     #     result = self.co_occurrence(</span>
+<span class="c1">#     #         column_IDX=column_IDX,</span>
+<span class="c1">#     #         column_COL=column_COL,</span>
+<span class="c1">#     #         sep_IDX=sep_IDX,</span>
+<span class="c1">#     #         sep_COL=sep_COL,</span>
+<span class="c1">#     #         as_matrix=True,</span>
+<span class="c1">#     #         minmax=None,</span>
+<span class="c1">#     #         keywords=keywords,</span>
+<span class="c1">#     #     )</span>
+
+<span class="c1">#     #     matrix = result.transpose().values</span>
+<span class="c1">#     #     grand_total = np.sum(matrix)</span>
+<span class="c1">#     #     correspondence_matrix = np.divide(matrix, grand_total)</span>
+<span class="c1">#     #     row_totals = np.sum(correspondence_matrix, axis=1)</span>
+<span class="c1">#     #     col_totals = np.sum(correspondence_matrix, axis=0)</span>
+<span class="c1">#     #     independence_model = np.outer(row_totals, col_totals)</span>
+<span class="c1">#     #     norm_correspondence_matrix = np.divide(</span>
+<span class="c1">#     #         correspondence_matrix, row_totals[:, None]</span>
+<span class="c1">#     #     )</span>
+<span class="c1">#     #     distances = np.zeros(</span>
+<span class="c1">#     #         (correspondence_matrix.shape[0], correspondence_matrix.shape[0])</span>
+<span class="c1">#     #     )</span>
+<span class="c1">#     #     norm_col_totals = np.sum(norm_correspondence_matrix, axis=0)</span>
+<span class="c1">#     #     for row in range(correspondence_matrix.shape[0]):</span>
+<span class="c1">#     #         distances[row] = np.sqrt(</span>
+<span class="c1">#     #             np.sum(</span>
+<span class="c1">#     #                 np.square(</span>
+<span class="c1">#     #                     norm_correspondence_matrix - norm_correspondence_matrix[row]</span>
+<span class="c1">#     #                 )</span>
+<span class="c1">#     #                 / col_totals,</span>
+<span class="c1">#     #                 axis=1,</span>
+<span class="c1">#     #             )</span>
+<span class="c1">#     #         )</span>
+<span class="c1">#     #     std_residuals = np.divide(</span>
+<span class="c1">#     #         (correspondence_matrix - independence_model), np.sqrt(independence_model)</span>
+<span class="c1">#     #     )</span>
+<span class="c1">#     #     u, s, vh = np.linalg.svd(std_residuals, full_matrices=False)</span>
+<span class="c1">#     #     deltaR = np.diag(np.divide(1.0, np.sqrt(row_totals)))</span>
+<span class="c1">#     #     rowScores = np.dot(np.dot(deltaR, u), np.diag(s))</span>
+
+<span class="c1">#     #     return pd.DataFrame(</span>
+<span class="c1">#     #         data=rowScores, columns=result.columns, index=result.columns</span>
+<span class="c1">#     #     )</span>
+
+
+<span class="c1"># def relationship(x, y):</span>
+<span class="c1">#     sxy = sum([a * b * min(a, b) for a, b in zip(x, y)])</span>
+<span class="c1">#     a = math.sqrt(sum(x))</span>
+<span class="c1">#     b = math.sqrt(sum(y))</span>
+<span class="c1">#     return sxy / (a * b)</span>
 
 
 <span class="c1">##</span>
@@ -827,13 +664,30 @@
         <span class="p">},</span>
         <span class="c1"># 4</span>
         <span class="p">{</span>
-            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;min_value&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Min occurrence value:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;top_by&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Top by:&quot;</span><span class="p">,</span>
             <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
-                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">],</span> <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Frequency&quot;</span><span class="p">,</span> <span class="s2">&quot;Cited by&quot;</span><span class="p">,</span> <span class="s2">&quot;Both&quot;</span><span class="p">],</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
             <span class="p">),</span>
         <span class="p">},</span>
-        <span class="c1"># 4</span>
+        <span class="c1"># 5</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;top_n&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Top N:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">IntSlider</span><span class="p">(</span>
+                <span class="n">value</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                <span class="nb">min</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                <span class="nb">max</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+                <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">continuous_update</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span>
+                <span class="n">readout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">readout_format</span><span class="o">=</span><span class="s2">&quot;d&quot;</span><span class="p">,</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 6</span>
         <span class="p">{</span>
             <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;sort_by&quot;</span><span class="p">,</span>
             <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Sort order:&quot;</span><span class="p">,</span>
@@ -861,54 +715,15 @@
         <span class="n">by</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;by&quot;</span><span class="p">]</span>
         <span class="n">plot_type</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;plot_type&quot;</span><span class="p">]</span>
         <span class="n">cmap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cmap&quot;</span><span class="p">]</span>
-        <span class="n">min_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;min_value&quot;</span><span class="p">])</span>
+        <span class="n">top_by</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;top_by&quot;</span><span class="p">]</span>
+        <span class="n">top_n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;top_n&quot;</span><span class="p">])</span>
         <span class="n">sort_by</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;sort_by&quot;</span><span class="p">]</span>
         <span class="c1">#</span>
         <span class="c1">#</span>
         <span class="c1">#</span>
         <span class="n">matrix</span> <span class="o">=</span> <span class="n">co_occurrence</span><span class="p">(</span>
-            <span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">term</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="n">by</span><span class="p">,</span> <span class="n">as_matrix</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">term</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="n">by</span><span class="p">,</span> <span class="n">top_by</span><span class="o">=</span><span class="n">top_by</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="n">top_n</span><span class="p">,</span> <span class="n">selected_columns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="c1">#</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">options</span><span class="p">]</span>
-        <span class="n">current_selection</span> <span class="o">=</span> <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
-        <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">options</span>
-        <span class="c1">#</span>
-        <span class="k">if</span> <span class="n">min_value</span> <span class="o">&gt;</span> <span class="n">matrix</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">():</span>
-            <span class="n">min_value</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">current_selection</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
-            <span class="n">min_value</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">controls</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="c1">#</span>
-        <span class="k">if</span> <span class="n">term</span> <span class="o">==</span> <span class="n">by</span><span class="p">:</span>
-            <span class="n">by</span> <span class="o">=</span> <span class="n">by</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span>
-        <span class="c1">#</span>
-        <span class="n">matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
-            <span class="n">matrix</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">by</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">term</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">matrix</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-        <span class="n">matrix</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-        <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">sorted</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span>
-        <span class="c1">#</span>
-        <span class="k">if</span> <span class="n">min_value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1">#</span>
-            <span class="n">a</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-            <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">a</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="n">b</span> <span class="o">&gt;=</span> <span class="n">min_value</span><span class="p">]</span>
-            <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">sorted</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span>
-        <span class="c1">#</span>
-        <span class="c1">#</span>
-        <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">60</span><span class="p">:</span>
-            <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
-            <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
-                <span class="n">display</span><span class="p">(</span><span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="s2">&quot;&lt;h3&gt;Matrix exceeds the maximum shape&lt;/h3&gt;&quot;</span><span class="p">))</span>
-                <span class="k">return</span>
         <span class="c1">#</span>
         <span class="c1">#</span>
         <span class="c1">#</span>
@@ -958,11 +773,8 @@
                 <span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">option_context</span><span class="p">(</span>
                     <span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="s2">&quot;display.max_rows&quot;</span><span class="p">,</span> <span class="mi">60</span>
                 <span class="p">):</span>
-                    <span class="n">display</span><span class="p">(</span>
-                        <span class="n">matrix</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                            <span class="k">lambda</span> <span class="n">q</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{:d}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="k">if</span> <span class="n">q</span> <span class="o">&gt;=</span> <span class="n">min_value</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
-                        <span class="p">)</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-                    <span class="p">)</span>
+                    <span class="c1">#  display(matrix.style.background_gradient(cmap=cmap, axis=None))</span>
+                    <span class="n">display</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s2">&quot;Heatmap&quot;</span><span class="p">:</span>
                 <span class="n">display</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mf">8.5</span><span class="p">)))</span>
             <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s2">&quot;Bubble plot&quot;</span><span class="p">:</span>
@@ -1265,9 +1077,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#</span>
     <span class="n">body</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Tab</span><span class="p">()</span>
-    <span class="n">body</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">__TAB0__</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">__TAB1__</span><span class="p">(</span><span class="n">df</span><span class="p">)]</span>
+    <span class="n">body</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">__TAB0__</span><span class="p">(</span><span class="n">df</span><span class="p">)]</span>
     <span class="n">body</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Co-occurrence&quot;</span><span class="p">)</span>
-    <span class="n">body</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Occurrence&quot;</span><span class="p">)</span>
+    <span class="c1"># body.set_title(1, &quot;Occurrence&quot;)</span>
     <span class="c1">#</span>
     <span class="k">return</span> <span class="n">AppLayout</span><span class="p">(</span>
         <span class="n">header</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span>
