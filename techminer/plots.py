@@ -186,6 +186,7 @@ def bar(
     """
     matplotlib.rc("font", size=FONT_SIZE)
 
+    x = x.copy()
     if "ID" in x.columns:
         x.pop("ID")
 
@@ -237,7 +238,16 @@ def bar(
     return fig
 
 
-def barh(x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **kwargs):
+def barh(
+    x,
+    height=0.8,
+    left=None,
+    figsize=(8, 5),
+    align="center",
+    style="default",
+    cmap=None,
+    **kwargs
+):
     """Make a pie chart from a dataframe.
 
     Examples
@@ -266,13 +276,12 @@ def barh(x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **
 
     """
     matplotlib.rc("font", size=FONT_SIZE)
-    fig = plt.Figure(figsize=figsize)
-    ax = fig.subplots()
 
     x = x.copy()
     if "ID" in x.columns:
         x.pop("ID")
-    if cmap is not None:
+
+    if cmap is not None and style == "default":
         cmap = plt.cm.get_cmap(cmap)
         kwargs["color"] = [
             cmap(
@@ -285,30 +294,37 @@ def barh(x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **
             )
             for i in range(len(x))
         ]
+    else:
+        kwargs["color"] = cmap
 
-    ax.barh(
-        y=range(len(x)),
-        width=x[x.columns[1]],
-        height=height,
-        left=left,
-        align=align,
-        **kwargs,
-    )
+    with plt.style.context(style):
 
-    ax.invert_yaxis()
-    ax.set_yticks(np.arange(len(x[x.columns[0]])))
-    ax.set_yticklabels(x[x.columns[0]])
-    ax.set_xlabel(x.columns[1])
-    ax.set_ylabel(x.columns[0])
+        fig = plt.Figure(figsize=figsize)
+        ax = fig.subplots()
 
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(True)
-    ax.spines["bottom"].set_visible(False)
+        ax.barh(
+            y=range(len(x)),
+            width=x[x.columns[1]],
+            height=height,
+            left=left,
+            align=align,
+            **kwargs,
+        )
 
-    ax.grid(axis="x", color="gray", linestyle=":")
+        ax.invert_yaxis()
+        ax.set_yticks(np.arange(len(x[x.columns[0]])))
+        ax.set_yticklabels(x[x.columns[0]])
+        ax.set_xlabel(x.columns[1])
+        ax.set_ylabel(x.columns[0])
 
-    return fig
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.spines["left"].set_visible(True)
+        ax.spines["bottom"].set_visible(False)
+
+        ax.grid(axis="x", color="gray", linestyle=":")
+
+        return fig
 
 
 def bubble(

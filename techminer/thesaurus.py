@@ -7,6 +7,7 @@ import json
 import re
 
 import pandas as pd
+from techminer.explode import __explode
 
 from techminer.text import (
     fingerprint,
@@ -112,6 +113,8 @@ def text_clustering(x, name_strategy="mostfrequent", key="porter", transformer=N
 
     """
     x = x.dropna()
+    x = x.map(lambda w: w.split(";"))
+    x = x.explode()
     x = x.map(lambda w: w.strip())
     x = x.unique()
     x = pd.DataFrame({"col": x.tolist()})
@@ -153,6 +156,26 @@ def text_clustering(x, name_strategy="mostfrequent", key="porter", transformer=N
     return Thesaurus(result, ignore_case=False, full_match=True, use_re=False)
 
 
+def read_textfile(filename):
+    """
+    """
+    dic = {}
+    key = None
+    values = None
+    #
+    file = open(filename, "r")
+    for word in file:
+        word = word[:-1] if word[-1] == "\n" else word
+        if word[0] != " ":
+            if key is not None:
+                dic[key] = values
+            key = word.strip()
+            values = []
+        else:
+            values.append(word.strip())
+    return Thesaurus(x=dic, ignore_case=True, full_match=False, use_re=False)
+
+
 class Thesaurus:
     def __init__(self, x={}, ignore_case=True, full_match=False, use_re=False):
         self._thesaurus = x
@@ -165,6 +188,13 @@ class Thesaurus:
     @property
     def thesaurus(self):
         return self._thesaurus
+
+    def to_textfile(self, filename):
+        with open(filename, "w") as file:
+            for key in sorted(self._thesaurus.keys()):
+                file.write(key + "\n")
+                for item in self._thesaurus[key]:
+                    file.write("    " + item + "\n")
 
     def __repr__(self):
         """Returns a json representation of the Thesaurus.

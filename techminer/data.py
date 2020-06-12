@@ -10,6 +10,7 @@ Data Importation and Manipulation Functions
 import json
 import logging
 import re
+import string
 from os.path import dirname, join
 
 import ipywidgets as widgets
@@ -18,9 +19,9 @@ import numpy as np
 import pandas as pd
 from nltk import WordNetLemmatizer, pos_tag
 from nltk.corpus import stopwords
-
 from techminer.text import remove_accents
 from techminer.thesaurus import text_clustering
+from techminer.explode import MULTIVALUED_COLS
 
 # from IPython.display import HTML, clear_output, display
 # from ipywidgets import AppLayout, Layout
@@ -133,19 +134,7 @@ def __MAP(x, column, f):
 
     """
     x = x.copy()
-    if column in [
-        "Affiliations",
-        "Author_Keywords_ID",
-        "Author_Keywords",
-        "Authors_ID",
-        "Authors",
-        "Countries",
-        "Index_Keywords_ID",
-        "Index_Keywords",
-        "Institutions",
-        "Abstract_CL",
-        "Title_CL",
-    ]:
+    if column in MULTIVALUED_COLS:
         z = x[column].map(lambda w: w.split(';') if not pd.isna(w) else w)
         z = z.map(lambda w: [f(z) for z in w] if isinstance(w, list) else w)
         z = z.map(lambda w: [z for z in w if not pd.isna(z)] if isinstance(w, list) else w)
@@ -277,149 +266,56 @@ def __extract_institution(x):
 
 
 def __NLP(text):
-    """Extracts keywords from phrases.
+    """Extracts words  and 2-grams from phrases.
     """
-    from nltk.corpus import stopwords
     
-
+    def obtain_n_grams(x, n):
+        from nltk.corpus import stopwords
+        stopwords = stopwords.words('english')
+        if len(x.split()) < n+1:
+            return [x.strip()]
+        words = x.split()
+        text = [words[index:index+n] for index in range(len(words) - n +1)]
+        text = [phrase for phrase in text if not any([word in stopwords for word in phrase])]
+        text = [ [word for word in phrase if not word.isdigit()] for phrase in text]
+        lem = WordNetLemmatizer()
+        text = [[lem.lemmatize(word) for word in phrase] for phrase in text]
+        text = [[word for word in phrase if word != ''] for phrase in text]
+        text = [' '.join(phrase)  for phrase in text if len(phrase)]
+        
+        return text
+        return sorted(set(text))
+        
+    from nltk.corpus import stopwords
+ 
     stopwords = stopwords.words('english')
-    stopwords += [
-        'herein',
 
-    ]
+    nlp_result = []
 
     text = text.lower()
     text = text.split('.')
-    text = [w for phrase in text for w in phrase.split(';')]
-    text = [w for phrase in text for w in phrase.split(',')]
-   
-    for st in stopwords:
-         text = [w.strip() for phrase in text for w in phrase.split(" " + st + " ")]
+    text = [word for phrase in text for word in phrase.split(';')]
+    text = [word for phrase in text for word in phrase.split(',')]
+    text = [phrase.translate(str.maketrans('', '', string.punctuation)) for phrase in text]
     
-    result = []
-    for phrase in text:
-        phrase = phrase.split()
-        for st in stopwords:
-            if len(phrase) >0 and st == phrase[0]:
-                phrase = phrase[1:]
-            if len(phrase) > 0 and st == phrase[-1]:
-                phrase = phrase[:-1]
-        if len(phrase) > 0:
-            result.append(' '.join(phrase))
-    text = result
-
-    text = [word for phrase in text for word in phrase.split('(')]
-    text = [word for phrase in text for word in phrase.split(')')]
+    two_grams = [obtain_n_grams(phrase, 2) for phrase in text]
+    two_grams = [word for phrase in two_grams for word in phrase]
+    two_grams = [phrase  for phrase in two_grams if phrase != '']
+    two_grams = sorted(set(two_grams))
     
-    text = [phrase for phrase in text if not phrase.isdigit()]
-    text = [phrase.strip() for phrase in text]
-    text = [phrase for phrase in text if phrase != '']
+    three_grams = [obtain_n_grams(phrase, 3) for phrase in text]
+    three_grams = [word for phrase in three_grams for word in phrase]
+    three_grams = [phrase  for phrase in three_grams if phrase != '']
+    three_grams = sorted(set(three_grams))
     
-    result = []
-    for phrase in text:
-        tags = nltk.pos_tag(phrase.split(' '))
-        tags = [
-            t for t in tags if t[1] not in ['CD', 'VB', 'VBD',
-             'VBG', 'VBN', 'VBP', 'VBZ', 'JJ', 'RB']
-        ]
-        tags = [t[0] for t in tags]
-        phrase = ' '.join(tags)
-        result.append(phrase)
-
-    text = result
-    text = [phrase for phrase in text if phrase != '']
+    text = [word for phrase in text for word in phrase.split() if not word.isdigit()]
+    text = [word for word in text if word not in stopwords]
+    text = [word for word in text if word != '']
     
-
     lem = WordNetLemmatizer()
-    text = [
-        ' '.join([lem.lemmatize(word) for word in phrase.split(' ')]) if len(phrase.split(' ')) == 1 else phrase
-        
-        for phrase in text
-    ]
-
-    text = [phrase for phrase in text if phrase != '%']
-    text = [phrase for phrase in text if not phrase.replace('+', '').replace('-','').isdigit()]
-
-    return ';'.join(sorted(set(text)))
-
-    ##
-
+    text = sorted(set([lem.lemmatize(word) for word in text]))
+    return ';'.join(sorted(set(text + two_grams + three_grams)))
     
-
-
-
-
-
-    # #text = text.split('.')
-    # text = [w for phrase in text for w in phrase.split(';')]
-    # text = [w for phrase in text for w in phrase.split(',')]
-    # for st in stopwords:
-    #     text = [w.strip() for phrase in text for w in phrase.split(" " + st + " ")]
-    # text = [phrase for phrase in text if phrase != '']
-
-
-
-
-    # expressions = [
-    #     'applied',
-    #     'despite',
-    #     'direct',
-    #     'discussed',
-    #     'evaluate',
-    #     'found',
-    #     'near future',
-    #     'obtain',
-    #     'often limited',
-    #     'presents',
-    #     'produce',
-    #     'significantly reduced', 
-    #     'study aimed',
-    #     'widely applied',
-    #     'worse',
-    #     'one',
-    #     'two',
-    #     'three',
-    #     'four',
-    #     'five',
-    #     'six',
-    #     'seven',
-    #     'eight',
-    #     'nine',
-    #     'among'
-
-
-    # ]
-
-    # text = [phrase for phrase in text if phrase not in expressions]
-
-    return sorted(text)
-
-
-    # build n-grams
-    # result = []
-    # for phrase in text:
-    #     words = phrase.split()
-    #     for n in range(len(words) - max_length):
-    #         result.append(' '.join(words[n: n + max_length]))
-
-    # result1 = []
-    # for stop in english_stopwords:
-
-
-    # for w in stopwords.words('english'):
-    # result1 = []
-    # for phrase in result:
-    #     for word in phrase:
-    #         if word in english_stopwords:
-
-
-
-    return result
-
-
-
-
-
 
 
 
@@ -527,48 +423,48 @@ def load_scopus(x):
         logging.info("Transforming Index Keywords to lower case ...")
         x['Index_Keywords'] = x.Index_Keywords.map(lambda w: w.lower() if not pd.isna(w) else w)
 
-    keywords = []
-    if "Author_Keywords" in x.columns:
-        keywords += x.Author_Keywords.tolist()
-    if "Index_Keywords" in x.columns:
-        keywords += x.Index_Keywords.tolist()
-    if len(keywords) > 0:
-        keywords = pd.Series(keywords)
-        keywords = keywords.map(lambda w: w.split(';') if isinstance(w, str) else w)
-        keywords = keywords.explode()
-        keywords = keywords.reset_index(drop=True)
-        logging.info("Clustering keywords ...")
-        thesaurus = text_clustering(keywords, transformer=lambda u: u.lower())
-        thesaurus = thesaurus.compile()
-        if "Author_Keywords" in x.columns:
-            logging.info("Cleaning Author Keywords ...")
-            x["Author_Keywords_CL"] = __MAP(x, "Author_Keywords", thesaurus.apply)
-            x["Author_Keywords_CL"] = __MAP(x, "Author_Keywords_CL", lambda w: w.strip() if not pd.isna(w) else w)
-        if "Index_Keywords" in x.columns:
-            logging.info("Cleaning Index Keywords ...")
-            x["Index_Keywords_CL"] = __MAP(x, "Index_Keywords", thesaurus.apply)
-            x["Index_Keywords_CL"] = __MAP(x, "Index_Keywords_CL", lambda w: w.strip() if not pd.isna(w) else w)    
+    # keywords = []
+    # if "Author_Keywords" in x.columns:
+    #     keywords += x.Author_Keywords.tolist()
+    # if "Index_Keywords" in x.columns:
+    #     keywords += x.Index_Keywords.tolist()
+    # if len(keywords) > 0:
+    #     keywords = pd.Series(keywords)
+    #     keywords = keywords.map(lambda w: w.split(';') if isinstance(w, str) else w)
+    #     keywords = keywords.explode()
+    #     keywords = keywords.reset_index(drop=True)
+    #     logging.info("Clustering keywords ...")
+    #     thesaurus = text_clustering(keywords, transformer=lambda u: u.lower())
+    #     thesaurus = thesaurus.compile()
+    #     if "Author_Keywords" in x.columns:
+    #         logging.info("Cleaning Author Keywords ...")
+    #         x["Author_Keywords_CL"] = __MAP(x, "Author_Keywords", thesaurus.apply)
+    #         x["Author_Keywords_CL"] = __MAP(x, "Author_Keywords_CL", lambda w: w.strip() if not pd.isna(w) else w)
+    #     if "Index_Keywords" in x.columns:
+    #         logging.info("Cleaning Index Keywords ...")
+    #         x["Index_Keywords_CL"] = __MAP(x, "Index_Keywords", thesaurus.apply)
+    #         x["Index_Keywords_CL"] = __MAP(x, "Index_Keywords_CL", lambda w: w.strip() if not pd.isna(w) else w)    
     
     if "Abstract" in x.columns:
 
         x.Abstract = x.Abstract.map(lambda w: w[0:w.find('\u00a9')] if not pd.isna(w) else w)
         
-        logging.info("Extracting Abstract Keywords ...")
-        x["Abstract_CL"] = __MAP(x, "Abstract", __NLP)
-        logging.info("Clustering Abstract Keywords ...")
-        thesaurus = text_clustering(x.Abstract_CL, transformer=lambda u: u.lower())
-        logging.info("Cleaning Abstract Keywords ...")
-        thesaurus = thesaurus.compile()
-        x["Abstract_CL"] = __MAP(x, "Abstract_CL", thesaurus.apply)
+        logging.info("Extracting Abstract words ...")
+        x["Abstract_words"] = __MAP(x, "Abstract", __NLP)
+        # logging.info("Clustering Abstract Keywords ...")
+        # thesaurus = text_clustering(x.Abstract_CL, transformer=lambda u: u.lower())
+        # logging.info("Cleaning Abstract Keywords ...")
+        # thesaurus = thesaurus.compile()
+        # x["Abstract_CL"] = __MAP(x, "Abstract_CL", thesaurus.apply)
 
     if "Title" in x.columns:
-        logging.info("Extracting Title Keywords ...")
-        x["Title_CL"] = __MAP(x, "Title", __NLP)
-        logging.info("Clustering Title Keywords ...")
-        thesaurus = text_clustering(x.Title_CL, transformer=lambda u: u.lower())
-        logging.info("Cleaning Title Keywords ...")
-        thesaurus = thesaurus.compile()
-        x["Title_CL"] = __MAP(x, "Title_CL", thesaurus.apply)
+        logging.info("Extracting Title words ...")
+        x["Title_words"] = __MAP(x, "Title", __NLP)
+        # logging.info("Clustering Title Keywords ...")
+        # thesaurus = text_clustering(x.Title_CL, transformer=lambda u: u.lower())
+        # logging.info("Cleaning Title Keywords ...")
+        # thesaurus = thesaurus.compile()
+        # x["Title_CL"] = __MAP(x, "Title_CL", thesaurus.apply)
 
 
     x["ID"] = range(len(x))

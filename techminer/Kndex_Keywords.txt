@@ -1,0 +1,519 @@
+abortion, veterinary
+    abortion, veterinary
+    veterinary abortion
+africa, central
+    africa, central
+    central africa
+africa, southern
+    africa, southern
+    southern africa
+african american
+    african american
+    african americans
+agricultural crops
+    agricultural crops
+    crops, agricultural
+agricultural development
+    agricultural development
+    agriculture development
+agricultural irrigation
+    agricultural irrigation
+    irrigation (agriculture)
+agricultural practice
+    agricultural practice
+    agricultural practices
+agricultural production
+    agricultural production
+    agricultural productions
+    agriculture productions
+air pollutant
+    air pollutant
+    air pollutants
+    air pollution
+alkali
+    alkali
+    alkalies
+animal
+    animal
+    animals
+animal housing
+    animal housing
+    housing, animal
+animals, domestic
+    animals, domestic
+    domestic animal
+aquaponic
+    aquaponic
+    aquaponics
+aquifer
+    aquifer
+    aquifers
+arid region
+    arid region
+    arid regions
+aromatic hydrocarbon
+    aromatic hydrocarbon
+    aromatic hydrocarbons
+atmospheric deposition
+    atmospheric deposition
+    atmospheric depositions
+bacterial dna
+    bacterial dna
+    dna, bacterial
+biological marker
+    biological marker
+    biological markers
+biological pest control
+    biological pest control
+    pest control, biological
+biosolid
+    biosolid
+    biosolids
+bovine brucellosis
+    bovine brucellosis
+    brucellosis, bovine
+buffalo
+    buffalo
+    buffaloes
+building
+    building
+    buildings
+c reactive protein
+    c reactive protein
+    c-reactive protein
+capital
+    capital
+    capitalism
+carbon emission
+    carbon emission
+    carbon emissions
+case control study
+    case control study
+    case-control studies
+chicken
+    chicken
+    chickens
+child, preschool
+    child, preschool
+    preschool child
+cities
+    cities
+    city
+climate change
+    climate change
+    climatic changes
+community garden
+    community garden
+    community gardens
+compost
+    compost
+    composting
+compost technologies
+    compost technologies
+    composting technologies
+concentration (parameter)
+    concentration (parameter)
+    concentration (parameters)
+control systems
+    control systems
+    controlling system
+controlled environment agriculture
+    controlled environment agriculture
+    controlled environment agricultures
+cost benefit analysis
+    cost benefit analysis
+    cost-benefit analysis
+crispr cas system
+    crispr cas system
+    crispr-cas systems
+crop
+    crop
+    crops
+cross-sectional studies
+    cross-sectional studies
+    cross-sectional study
+dairy product
+    dairy product
+    dairy products
+developed countries
+    developed countries
+    developing countries
+    developing country
+dna directed rna polymerase
+    dna directed rna polymerase
+    dna-directed rna polymerases
+dna, plant
+    dna, plant
+    plant dna
+drug effect
+    drug effect
+    drug effects
+duck
+    duck
+    ducks
+economic activities
+    economic activities
+    economic activity
+economic aspect
+    economic aspect
+    economic aspects
+ecosystem
+    ecosystem
+    ecosystems
+ecosystem function
+    ecosystem function
+    ecosystem functioning
+ecosystem service
+    ecosystem service
+    ecosystem services
+edible plant
+    edible plant
+    edible plants
+effluent
+    effluent
+    effluents
+egg
+    egg
+    eggs
+electric conductivity
+    electric conductivity
+    electrical conductivity
+electrophoresis, gel, pulsed-field
+    electrophoresis, gel, pulsed-field
+    pulsed field gel electrophoresis
+environmental factor
+    environmental factor
+    environmental factors
+environmental pollution
+    environmental pollution
+    environmental pollutions
+enzyme linked immunosorbent assay
+    enzyme linked immunosorbent assay
+    enzyme-linked immunosorbent assay
+farming
+    farming
+    farms
+feasibility studies
+    feasibility studies
+    feasibility study
+fertility
+    fertility
+    fertilizer
+    fertilizers
+fertilizer application
+    fertilizer application
+    fertilizer applications
+fish
+    fish
+    fishing
+flooding
+    flooding
+    floods
+food production
+    food production
+    food products
+fruit
+    fruit
+    fruits
+fruit and vegetables
+    fruit and vegetables
+    fruits and vegetables
+garden
+    garden
+    gardener
+    gardening
+    gardens
+genotoxicities
+    genotoxicities
+    genotoxicity
+goat
+    goat
+    goats
+harare [zimbabwe]
+    harare [zimbabwe]
+    zimbabwe, harare
+harvest
+    harvest
+    harvesting
+health hazard
+    health hazard
+    health hazards
+health risk
+    health risk
+    health risks
+heavy metal
+    heavy metal
+    heavy metals
+    metals, heavy
+helminth
+    helminth
+    helminths
+hookworm infection
+    hookworm infection
+    hookworm infections
+horticultural
+    horticultural
+    horticulture
+household survey
+    household survey
+    household surveys
+houses
+    houses
+    housing
+human
+    human
+    humans
+hydroponic
+    hydroponic
+    hydroponics
+information systems
+    information systems
+    system information
+internet of thing (iots)
+    internet of thing (iots)
+    internet of things (iot)
+invertebrate
+    invertebrate
+    invertebrates
+investment
+    investment
+    investments
+iron oxide
+    iron oxide
+    iron oxides
+irrigation water
+    irrigation water
+    irrigation waters
+kenya, nairobi
+    kenya, nairobi
+    nairobi [kenya]
+leafy vegetable
+    leafy vegetable
+    leafy vegetables
+literature review
+    literature review
+    literature reviews
+map
+    map
+    mapping
+meat
+    meat
+    meats
+mechanical properties
+    mechanical properties
+    mechanical property
+megacities
+    megacities
+    megacity
+metal
+    metal
+    metals
+micronucleus test
+    micronucleus test
+    micronucleus tests
+model
+    model
+    modeling
+    models
+models, statistical
+    models, statistical
+    statistical model
+monitor and control
+    monitor and control
+    monitoring and control
+multivariant analysis
+    multivariant analysis
+    multivariate analysis
+nanoparticle
+    nanoparticle
+    nanoparticles
+natural resource
+    natural resource
+    natural resources
+neoplasm
+    neoplasm
+    neoplasms
+nitrate
+    nitrate
+    nitrates
+nut
+    nut
+    nuts
+nutrient
+    nutrient
+    nutrients
+nutrient content
+    nutrient content
+    nutrient contents
+nutritional value
+    nutritional value
+    nutritive value
+optimal production
+    optimal production
+    production optimization
+orchard
+    orchard
+    orchards
+organic pollutant
+    organic pollutant
+    organic pollutants
+organic waste
+    organic waste
+    organic wastes
+pathogen
+    pathogen
+    pathogens
+pesticide
+    pesticide
+    pesticides
+photovoltaic system
+    photovoltaic system
+    photovoltaic systems
+physiological stress
+    physiological stress
+    stress, physiological
+plant
+    plant
+    plants
+pollutant
+    pollutant
+    pollution
+polycyclic aromatic hydrocarbon
+    polycyclic aromatic hydrocarbon
+    polycyclic aromatic hydrocarbons
+polysaccharide
+    polysaccharide
+    polysaccharides
+predation
+    predation
+    predator
+profit
+    profit
+    profitability
+prospective studies
+    prospective studies
+    prospective study
+questionnaire
+    questionnaire
+    questionnaires
+questionnaire survey
+    questionnaire survey
+    questionnaire surveys
+real time polymerase chain reaction
+    real time polymerase chain reaction
+    real-time polymerase chain reaction
+research program
+    research program
+    research programs
+risk factor
+    risk factor
+    risk factors
+river
+    river
+    rivers
+roof
+    roof
+    roofs
+rural area
+    rural area
+    rural areas
+rural landscape
+    rural landscape
+    rural landscapes
+rural-urban migration
+    rural-urban migration
+    urban-rural migration
+salinity
+    salinity
+    salinization
+sedimentation
+    sedimentation
+    sediments
+sensor
+    sensor
+    sensors
+seoul , south korea
+    seoul , south korea
+    seoul [south korea]
+silicone
+    silicone
+    silicones
+smart cities
+    smart cities
+    smart city
+soil
+    soil
+    soils
+soil pollutant
+    soil pollutant
+    soil pollutants
+    soil pollution
+soil test
+    soil test
+    soil testing
+solar power
+    solar power
+    solar-powered
+spatial variation
+    spatial variation
+    spatial variations
+standard
+    standard
+    standards
+student
+    student
+    students
+survey
+    survey
+    surveying
+    surveys
+survey method
+    survey method
+    survey methods
+survivor
+    survivor
+    survivors
+sustainability
+    sustainability
+    sustainable
+trace element
+    trace element
+    trace elements
+trace metal
+    trace metal
+    trace metals
+urban
+    urban
+    urbanity
+    urbanization
+urban agriculture
+    urban agriculture
+    urban agricultures
+urban area
+    urban area
+    urban areas
+urban farming
+    urban farming
+    urban farmings
+urban garden
+    urban garden
+    urban gardening
+urban region
+    urban region
+    urban regions
+urban soil
+    urban soil
+    urban soils
+vegetable
+    vegetable
+    vegetables
+    vegetation
+waste disposal facilities
+    waste disposal facilities
+    waste disposal facility
+water resource
+    water resource
+    water resources
+x ray absorption spectroscopy
+    x ray absorption spectroscopy
+    x-ray absorption spectroscopy
