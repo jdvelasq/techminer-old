@@ -142,15 +142,17 @@ def factor_map(
     #
 
     cmap = pyplot.cm.get_cmap(cmap)
-    node_colors = [
-        cmap(0.2 + 0.75 * node_sizes[i] / max(node_sizes))
-        for i in range(len(node_sizes))
-    ]
+
+    # node_colors = [
+    #     cmap(0.2 + 0.75 * node_sizes[i] / max(node_sizes))
+    #     for i in range(len(node_sizes))
+    # ]
 
     #
     # Remove [...] from text
     #
     terms = [w[: w.find("[")].strip() if "[" in w else w for w in terms]
+    node_colors = {t: cmap(0.03) for t in terms}
     matrix.index = terms
 
     #
@@ -181,11 +183,15 @@ def factor_map(
     #
     # network edges
     #
-    for column in matrix.columns:
+    for idx, column in enumerate(matrix.columns):
 
         matrix = matrix.sort_values(column, ascending=False)
 
         x = matrix[column][matrix[column] >= 0.25]
+        if len(x) > 1:
+            for t in x.index:
+                node_colors[t] = cmap(0.05 + 0.9 * float(idx) / len(matrix.columns))
+
         if len(x) > 1:
             for t0 in range(len(x.index) - 1):
                 for t1 in range(1, len(x.index)):
@@ -198,6 +204,10 @@ def factor_map(
                         G.add_edge(x.index[t0], x.index[t1], width=1)
         #
         x = matrix[column][matrix[column] < -0.25]
+        if len(x) > 1:
+            for t in x.index:
+                node_colors[t] = cmap(0.1 + 0.9 * float(idx) / len(matrix.columns))
+
         if len(x) > 1:
             for t0 in range(len(x.index) - 1):
                 for t1 in range(1, len(x.index)):
@@ -222,10 +232,10 @@ def factor_map(
             width=dic["width"],
             edge_color="k",
             with_labels=False,
-            node_color=node_colors,
+            node_color=[node_colors[t] for t in terms],
             node_size=node_sizes,
             edgecolors="k",
-            linewidths=2,
+            linewidths=1,
         )
 
     #
