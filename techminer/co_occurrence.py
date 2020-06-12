@@ -681,7 +681,7 @@ def __TAB0__(x):
             if plot_type == "Network" and term != by:
                 display(
                     co_occurrence_map(
-                        matrix, layout=layout, cmap=cmap, figsize=(14, 8.5)
+                        matrix, layout=layout, cmap=cmap, figsize=(14, 11)
                     )
                 )
 
@@ -897,6 +897,183 @@ def occurrence_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)
     # Figure size
     #
 
+    ax.set_xlim(
+        xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
+    )
+    ax.set_ylim(
+        ylim[0] - 0.15 * (ylim[1] - ylim[0]), ylim[1] + 0.15 * (ylim[1] - ylim[0])
+    )
+    ax.set_aspect("equal")
+    return fig
+
+
+def co_occurrence_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)):
+    """Computes the occurrence map directly using networkx.
+    """
+    #
+    def compute_node_sizes(terms):
+        #
+        node_sizes = [int(w[w.find("[") + 1 : w.find("]")]) for w in terms if "[" in w]
+        if len(terms) == 0:
+            node_sizes = [500] * len(terms)
+        else:
+            max_size = max(node_sizes)
+            min_size = min(node_sizes)
+            if min_size == max_size:
+                node_sizes = [500] * len(terms)
+            else:
+                node_sizes = [
+                    600 + int(2500 * (w - min_size) / (max_size - min_size))
+                    for w in node_sizes
+                ]
+        node_colors = [
+            cmap(0.2 + 0.75 * node_sizes[i] / max(node_sizes))
+            for i in range(len(node_sizes))
+        ]
+        return node_sizes, node_colors
+
+    #
+    #
+    #
+    cmap = pyplot.cm.get_cmap(cmap)
+
+    #
+    # Data preparation
+    #
+    column_node_sizes, column_node_colors = compute_node_sizes(matrix.columns)
+    index_node_sizes, index_node_colors = compute_node_sizes(matrix.index)
+
+    #
+    # Remove [...] from text
+    #
+    terms = matrix.columns.tolist() + matrix.index.tolist()
+    terms = [w[: w.find("[")].strip() if "[" in w else w for w in terms]
+    matrix.columns = [
+        w[: w.find("[")].strip() if "[" in w else w for w in matrix.columns
+    ]
+    matrix.index = [w[: w.find("[")].strip() if "[" in w else w for w in matrix.index]
+
+    #
+    # Draw the network
+    #
+    fig = pyplot.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    G = nx.Graph(ax=ax)
+    G.clear()
+
+    #
+    # network nodes
+    #
+    G.add_nodes_from(terms)
+
+    #
+    # network edges
+    #
+    n = len(matrix.columns)
+    max_width = 0
+    for col in matrix.columns:
+        for row in matrix.index:
+            link = matrix.at[row, col]
+            if link > 0:
+                G.add_edge(row, col, width=link)
+                if max_width < link:
+                    max_width = link
+
+    draw_dict = {
+        "Circular": nx.draw_circular,
+        "Kamada Kawai": nx.draw_kamada_kawai,
+        "Planar": nx.draw_planar,
+        "Random": nx.draw_random,
+        "Spectral": nx.draw_spectral,
+        "Spring": nx.draw_spring,
+        "Shell": nx.draw_shell,
+    }
+    draw = draw_dict[layout]
+
+    for e in G.edges.data():
+        a, b, width = e
+        edge = [(a, b)]
+        width = 0.2 + 4.0 * width["width"] / max_width
+        draw(
+            G,
+            ax=ax,
+            edgelist=edge,
+            width=width,
+            edge_color="k",
+            with_labels=False,
+            node_size=1,
+        )
+
+    #
+    # Layout
+    #
+    layout_dict = {
+        "Circular": nx.circular_layout,
+        "Kamada Kawai": nx.kamada_kawai_layout,
+        "Planar": nx.planar_layout,
+        "Random": nx.random_layout,
+        "Spectral": nx.spectral_layout,
+        "Spring": nx.spring_layout,
+        "Shell": nx.shell_layout,
+    }
+    pos = layout_dict[layout](G)
+
+    #
+    # Draw column nodes
+    #
+    nx.draw_networkx_nodes(
+        G,
+        pos,
+        ax=ax,
+        edge_color="k",
+        nodelist=matrix.columns,
+        node_size=column_node_sizes,
+        node_color=column_node_colors,
+        node_shape="o",
+    )
+
+    #
+    # Draw index nodes
+    #
+    nx.draw_networkx_nodes(
+        G,
+        pos,
+        ax=ax,
+        edge_color="k",
+        nodelist=matrix.index,
+        node_size=index_node_sizes,
+        node_color=index_node_colors,
+        node_shape="s",
+    )
+
+    #
+    # Labels
+    #
+    xlim = ax.get_xlim()
+    ylim = ax.get_ylim()
+    node_sizes = column_node_sizes + index_node_sizes
+    for idx, term in enumerate(terms):
+        x, y = pos[term]
+        ax.text(
+            x
+            + 0.01 * (xlim[1] - xlim[0])
+            + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
+            y
+            - 0.01 * (ylim[1] - ylim[0])
+            - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
+            s=term,
+            fontsize=10,
+            bbox=dict(
+                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
+            ),
+            horizontalalignment="left",
+            verticalalignment="top",
+        )
+
+    #
+    # Figure size
+    #
     ax.set_xlim(
         xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
     )
