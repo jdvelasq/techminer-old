@@ -17,18 +17,9 @@ import squarify
 from techminer.chord_diagram import ChordDiagram
 from wordcloud import ImageColorGenerator, WordCloud
 
-# from mpl_toolkits.axes_grid1 import make_axes_locatable
-# from scipy.spatial import ConvexHull
-# from sklearn.cluster import AgglomerativeClustering
-
-# from .chord_diagram import ChordDiagram
-
-# import numpy as np
-# import pandas as pd
-
 FONT_SIZE = 13
 
-TEXTLEN = 30
+TEXTLEN = 40
 
 COLORMAPS = [
     "Greys",
@@ -221,8 +212,12 @@ def bar(
             **kwargs,
         )
 
+        xticklabels = [
+            textwrap.shorten(text=text, width=TEXTLEN) for text in x[x.columns[0]]
+        ]
+
         ax.set_xticks(np.arange(len(x[x.columns[0]])))
-        ax.set_xticklabels(x[x.columns[0]])
+        ax.set_xticklabels(xticklabels)
         ax.tick_params(axis="x", labelrotation=90)
 
         ax.set_xlabel(x.columns[0])

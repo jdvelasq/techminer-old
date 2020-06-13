@@ -5,14 +5,13 @@ Analysis by Year
 
 """
 import ipywidgets as widgets
+import matplotlib.pyplot as pyplot
 import numpy as np
 import pandas as pd
 import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
 from techminer.plots import COLORMAPS, STYLE
-
-import matplotlib.pyplot as pyplot
 
 
 def summary_by_year(df):

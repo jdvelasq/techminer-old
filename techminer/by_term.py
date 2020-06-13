@@ -14,7 +14,7 @@ from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
 from techminer.explode import __explode
 from techminer.plots import COLORMAPS
-
+from techminer.params import EXCLUDE_COLS
 
 def summary_by_term(x, column, limit_to=None, exclude=None):
     """Summarize the number of documents and citations by term in a dataframe.
@@ -73,8 +73,22 @@ def summary_by_term(x, column, limit_to=None, exclude=None):
     )
     result = result.assign(ID=x.groupby(column).agg({"ID": list}).reset_index()["ID"])
     result["Cited_by"] = result["Cited_by"].map(lambda x: int(x))
+
+    if isinstance(limit_to, dict):
+        if column in limit_to.keys():
+            limit_to = limit_to[column]
+        else:
+            limit_to = None
+
     if limit_to is not None:
         result = result[result[column].map(lambda w: w in limit_to)]
+
+    if isinstance(exclude, dict):
+        if column in exclude.keys():
+            exclude = exclude[column]
+        else:
+            exclude = None
+
     if exclude is not None:
         result = result[result[column].map(lambda w: w not in exclude)]
 
@@ -329,11 +343,10 @@ def most_cited_documents(x):
 ##
 ###############################################################################
 
-WIDGET_WIDTH = "200px"
-LEFT_PANEL_HEIGHT = "620px"
-RIGHT_PANEL_WIDTH = "870px"
-FIGSIZE = (14, 8.2)
-PANE_HEIGHTS = ["80px", "700px", 0]
+WIDGET_WIDTH = "180px"
+LEFT_PANEL_HEIGHT = "655px"
+RIGHT_PANEL_WIDTH = "1200px"
+PANE_HEIGHTS = ["80px", "720px", 0]
 
 
 ##
@@ -341,34 +354,21 @@ PANE_HEIGHTS = ["80px", "700px", 0]
 ##  Panel 0
 ##
 ##
-def __APP0__(x):
-    #
-    COLUMNS = [
-        "Author_Keywords",
-        "Author_Keywords_CL",
-        "Authors",
-        "Countries",
-        "Country_1st_Author",
-        "Document_type",
-        "Index_Keywords",
-        "Index_Keywords_CL",
-        "Institution_1st_Author",
-        "Institutions",
-        "Source_title",
-        "Abstract_CL",
-        "Title_CL",
-    ]
+def __APP0__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
     #
     # -------------------------------------------------------------------------
+    COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
+    limit_to=limit_to
+    #
     controls = [
         # 0
         {
             "arg": "term",
             "desc": "Term to analyze:",
-            "widget": widgets.Select(
+            "widget": widgets.Dropdown(
                     options=[z for z in COLUMNS if z in x.columns],
                     ensure_option=True,
                     layout=Layout(width=WIDGET_WIDTH),
@@ -405,16 +405,30 @@ def __APP0__(x):
         {
             "arg": "top_n",
             "desc": "Top N:",
-            "widget": widgets.IntSlider(
-                    value=10,
-                    min=5,
-                    max=60,
-                    step=1,
-                    continuous_update=False,
-                    orientation="horizontal",
-                    readout=True,
-                    readout_format="d",
+            "widget": widgets.Dropdown(
+                    options=list(range(5, 51, 5)),
+                    ensure_option=True,
                     layout=Layout(width=WIDGET_WIDTH),
+                ),
+        },
+        # 5
+        {
+            "arg": "figsize_width",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                    options=range(5,15, 1),
+                    ensure_option=True,
+                    layout=Layout(width="88px"),
+                ),
+        },
+        # 6
+        {
+            "arg": "figsize_height",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                    options=range(5,15, 1),
+                    ensure_option=True,
+                    layout=Layout(width="88px"),
                 ),
         },
     ]
@@ -430,6 +444,8 @@ def __APP0__(x):
         analysis_type = kwargs['analysis_type']
         top_n = kwargs['top_n']
         plot_type = kwargs['plot_type']
+        figsize_width = int(kwargs['figsize_width'])
+        figsize_height = int(kwargs['figsize_height'])
         #
         plots = {
             "Bar plot": plt.bar,
@@ -444,9 +460,9 @@ def __APP0__(x):
             controls[3]["widget"].disabled = True
         else:
             controls[3]["widget"].disabled = False
-
+        #   
+        df = summary_by_term(x, term, limit_to=limit_to, exclude=exclude)
         #
-        df = summary_by_term(x, term)
         if analysis_type == "Frequency":
             df = df.sort_values(
                 ["Num_Documents", "Cited_by", term], ascending=False
@@ -464,9 +480,8 @@ def __APP0__(x):
             if plot is None:
                 display(df)
             else:
-                display(plot(df, cmap=cmap, figsize=(13, 6.0)))
+                display(plot(df, cmap=cmap, figsize=(figsize_width, figsize_height)))
             
-
     # -------------------------------------------------------------------------
     #
     # Generic
@@ -475,7 +490,7 @@ def __APP0__(x):
     args = {control["arg"]: control["widget"] for control in controls}
     output = widgets.Output()
     with output:
-        display(widgets.interactive_output(server, args,))
+        display(widgets.interactive_output(server, args))
     return widgets.HBox(
         [
             widgets.VBox(
@@ -484,6 +499,13 @@ def __APP0__(x):
                         [widgets.Label(value=control["desc"]), control["widget"]]
                     )
                     for control in controls
+                    if control["desc"] not in ["Figsize"]
+                ] + [
+                    widgets.Label(value="Figure Size"),
+                    widgets.HBox([
+                        controls[-2]["widget"],
+                        controls[-1]["widget"],
+                    ])
                 ],
                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
             ),
@@ -533,6 +555,26 @@ def __APP1__(x):
                 options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 3
+        {
+            "arg": "figsize_width",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                    options=range(15, 21, 1),
+                    ensure_option=True,
+                    layout=Layout(width="88px"),
+                ),
+        },
+        # 4
+        {
+            "arg": "figsize_height",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                    options=range(4, 9, 1),
+                    ensure_option=True,
+                    layout=Layout(width="88px"),
+                ),
+        },        
     ]
     # -------------------------------------------------------------------------
     #
@@ -546,6 +588,8 @@ def __APP1__(x):
         term = kwargs['term']
         analysis_type = kwargs['analysis_type']
         cmap = kwargs['cmap']
+        figsize_width = int(kwargs['figsize_width'])
+        figsize_height = int(kwargs['figsize_height'])
         #
         df = summary_by_term(x, term)
         if analysis_type == "Frequency":
@@ -555,7 +599,7 @@ def __APP1__(x):
         df = df.reset_index(drop=True)
         output.clear_output()
         with output:
-            display(plt.worldmap(df, figsize=(15, 8.0), cmap=cmap))        
+            display(plt.worldmap(df, figsize=(figsize_width, figsize_height), cmap=cmap))        
         
     # -------------------------------------------------------------------------
     #
@@ -574,6 +618,13 @@ def __APP1__(x):
                         [widgets.Label(value=control["desc"]), control["widget"]]
                     )
                     for control in controls
+                    if control["desc"] not in ["Figsize"]
+                ] + [
+                    widgets.Label(value="Figure Size"),
+                    widgets.HBox([
+                        controls[-2]["widget"],
+                        controls[-1]["widget"],
+                    ])
                 ],
                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
             ),
@@ -583,12 +634,12 @@ def __APP1__(x):
 
 
 
-def app(df):
+def app(df, limit_to=None, exclude=None):
     """Jupyter Lab dashboard.
     """
     #
     body = widgets.Tab()
-    body.children = [__APP0__(df), __APP1__(df)]
+    body.children = [__APP0__(df, limit_to, exclude), __APP1__(df)]
     body.set_title(0, "Term Analysis")
     body.set_title(1, "Worldmap")
     #
