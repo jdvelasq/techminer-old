@@ -19,7 +19,7 @@ from techminer.keywords import Keywords
 from techminer.plots import COLORMAPS
 
 
-def compute_tfm(x, column, selected_columns=None):
+def compute_tfm(x, column, limit_to=None, exclude=None):
     """Computes the term-frequency matrix for the terms in a column.
 
     Args:
@@ -66,13 +66,22 @@ def compute_tfm(x, column, selected_columns=None):
     3  0  0  1  0
     4  0  0  1  1
 
-    >>> compute_tfm(df, 'Authors', selected_columns=['A', 'B'])
+    >>> compute_tfm(df, 'Authors', limit_to=['A', 'B'])
        A  B
     0  1  0
     1  1  1
     2  0  1
     3  1  1
     4  0  1
+
+    >>> compute_tfm(df, 'Authors', exclude=['A', 'B'])
+       C  D
+    0  0  0
+    1  0  0
+    2  0  0
+    3  1  0
+    4  0  1
+
 
     """
     data = x[[column, "ID"]].copy()
@@ -82,8 +91,10 @@ def compute_tfm(x, column, selected_columns=None):
         data=data, index="ID", columns=column, margins=False, fill_value=0.0,
     )
     result.columns = [b for _, b in result.columns]
-    if selected_columns is not None:
-        result = result[[k for k in selected_columns if k in result.columns]]
+    if limit_to is not None:
+        result = result[[k for k in limit_to if k in result.columns]]
+    if exclude is not None:
+        result = result[[k for k in result.columns if k not in exclude]]
     result = result.reset_index(drop=True)
     return result
 
@@ -104,7 +115,9 @@ def most_cited_by(x, column, top_n):
     return result
 
 
-def co_occurrence(x, column, by=None, top_by=None, top_n=None, selected_columns=None):
+def co_occurrence(
+    x, column, by=None, top_by=None, top_n=None, limit_to=None, exclude=None
+):
     """Summary occurrence and citations by terms in two different columns.
 
     Args:
@@ -152,13 +165,16 @@ def co_occurrence(x, column, by=None, top_by=None, top_n=None, selected_columns=
     B  1  2  2
     D  0  0  1
 
-    >>> selected_columns = ['A', 'B', 'c', 'd']
-    >>> co_occurrence(df, column='Author_Keywords', by='Authors', selected_columns=selected_columns)
+    >>> terms = ['A', 'B', 'c', 'd']
+    >>> co_occurrence(df, column='Author_Keywords', by='Authors', limit_to=terms)
        c  d
     A  1  0
     B  2  1
 
-
+    >>> co_occurrence(df, column='Author_Keywords', by='Authors', exclude=terms)
+       a  b
+    C  0  0
+    D  0  0
 
     """
     x = x.copy()
@@ -166,21 +182,21 @@ def co_occurrence(x, column, by=None, top_by=None, top_n=None, selected_columns=
         by = column + "_"
         x[by] = x[column].copy()
 
-    if selected_columns is None:
+    if limit_to is None:
         if (top_by == 0 or top_by == "Frequency") and top_n is not None:
-            selected_columns = set(most_frequent(x, column, top_n)) | set(
+            limit_to = set(most_frequent(x, column, top_n)) | set(
                 most_frequent(x, by, top_n)
             )
         if (top_by == 1 or top_by == "Cited_by") and top_n is not None:
-            selected_columns = set(most_cited_by(x, column, top_n)) | set(
+            limit_to = set(most_cited_by(x, column, top_n)) | set(
                 most_cited_by(x, by, top_n)
             )
-        if selected_columns is not None:
-            selected_columns = list(selected_columns)
+        if limit_to is not None:
+            limit_to = list(limit_to)
 
     x = x[[column, by, "ID"]].dropna()
-    A = compute_tfm(x, column, selected_columns)
-    B = compute_tfm(x, by, selected_columns)
+    A = compute_tfm(x, column, limit_to, exclude)
+    B = compute_tfm(x, by, limit_to, exclude)
 
     result = np.matmul(B.transpose().values, A.values)
     result = pd.DataFrame(result, columns=A.columns, index=B.columns)
@@ -198,7 +214,8 @@ def occurrence(
     normalization=None,
     top_by=None,
     top_n=None,
-    selected_columns=None,
+    limit_to=None,
+    exclude=None,
 ):
     """Computes the occurrence between the terms in a column.
 
@@ -246,11 +263,15 @@ def occurrence(
     B  2  4  1
     D  0  1  2
 
-    >>> occurrence(df, column='Authors', selected_columns=['A', 'B', 'D'])
-       A  B  D
-    A  4  2  0
-    B  2  4  1
-    D  0  1  2
+    >>> occurrence(df, column='Authors', limit_to=['A', 'B'])
+       A  B
+    A  4  2
+    B  2  4
+
+    >>> occurrence(df, column='Authors', exclude=['A', 'B'])
+       C  D
+    C  1  0
+    D  0  2
 
     """
     return co_occurrence(
@@ -259,11 +280,14 @@ def occurrence(
         by=None,
         top_by=top_by,
         top_n=top_n,
-        selected_columns=selected_columns,
+        limit_to=limit_to,
+        exclude=exclude,
     )
 
 
 def normalize_matrix(matrix, normalization=None):
+    """
+    """
     matrix = matrix.applymap(lambda w: float(w))
     m = matrix.copy()
     if normalization == "association":
@@ -648,15 +672,6 @@ def app(df):
         center=body,
         pane_heights=PANE_HEIGHTS,
     )
-
-
-# import matplotlib.pyplot as pyplot
-#
-# import numpy as np
-# import pandas as pd
-
-# matrix = np.random.uniform(size=(8, 8))
-# matrix = pd.DataFrame(matrix, columns=list("abcdefgh"), index=list("abcdefgh"))
 
 
 def occurrence_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)):

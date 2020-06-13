@@ -31,7 +31,8 @@ def corr(
     top_by=None,
     top_n=None,
     cmap=None,
-    selected_columns=None,
+    limit_to=None,
+    exclude=None,
 ):
     """Computes cross-correlation among items in two different columns of the dataframe.
 
@@ -105,11 +106,17 @@ def corr(
     C -0.333333  0.333333  1.000000  0.57735
     D -0.577350  0.577350  0.577350  1.00000
 
-    >>> corr(df, 'Authors', 'Author_Keywords', selected_columns=['A', 'B', 'C'])
+    >>> corr(df, 'Authors', 'Author_Keywords', limit_to=['A', 'B', 'C'])
               A         B         C
     A  1.000000 -1.000000 -0.333333
     B -1.000000  1.000000  0.333333
     C -0.333333  0.333333  1.000000
+
+    >>> corr(df, 'Authors', 'Author_Keywords', exclude=['A'])
+              B         C        D
+    B  1.000000  0.333333  0.57735
+    C  0.333333  1.000000  0.57735
+    D  0.577350  0.577350  1.00000
 
     >>> import pandas as pd
     >>> x = [ 'A', 'A;B', 'B', 'A;B;C', 'B;D', 'A;B']
@@ -155,40 +162,30 @@ def corr(
     c -0.50 -0.50  1.00  0.25
     d -0.50 -0.50  0.25  1.00
 
-    # >>> corr(df, 'Author_Keywords', min_link_value=0.249)
-    #       a     b     c     d
-    # a  1.00  0.25 -0.50 -0.50
-    # b  0.25  1.00 -0.50 -0.50
-    # c -0.50 -0.50  1.00  0.25
-    # d -0.50 -0.50  0.25  1.00
-
-
-    # >>> corr(df, 'Author_Keywords', min_link_value=1.0)
-    #       c     d
-    # c  1.00  0.25
-    # d  0.25  1.00
-
 
 
     """
     if by is None:
         by = column
     #
-    if selected_columns is None:
+    if limit_to is None:
         if (top_by == 0 or top_by == "Frequency") and top_n is not None:
-            selected_columns = set(most_frequent(x, column, top_n))
+            limit_to = set(most_frequent(x, column, top_n))
         if (top_by == 1 or top_by == "Cited_by") and top_n is not None:
-            selected_columns = set(most_cited_by(x, column, top_n))
-        if selected_columns is not None:
-            selected_columns = list(selected_columns)
+            limit_to = set(most_cited_by(x, column, top_n))
+        if limit_to is not None:
+            limit_to = list(limit_to)
 
     if column == by:
-        tfm = compute_tfm(x, column=column, selected_columns=None)
+        tfm = compute_tfm(x, column=column, limit_to=limit_to, exclude=exclude)
+        result = tfm.corr(method=method)
     else:
-        tfm = co_occurrence(x, column=column, by=by, selected_columns=None)
-    result = tfm.corr(method=method)
-    if selected_columns is not None:
-        result = result.loc[selected_columns, selected_columns]
+        x = x[[column, by, "ID"]].dropna()
+        A = compute_tfm(x, column, limit_to, exclude)
+        B = compute_tfm(x, by)
+        tfm = np.matmul(B.transpose().values, A.values)
+        tfm = pd.DataFrame(tfm, columns=A.columns, index=B.columns)
+        result = tfm.corr(method=method)
 
     result = result.sort_index(axis=0, ascending=True)
     result = result.sort_index(axis=1, ascending=True)
