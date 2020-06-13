@@ -13,9 +13,10 @@ import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
 from techminer.by_term import citations_by_term, documents_by_term
-from techminer.by_year import documents_by_year, citations_by_year
+from techminer.by_year import citations_by_year, documents_by_year
 from techminer.explode import __explode
 from techminer.keywords import Keywords
+from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
 
 
@@ -105,10 +106,25 @@ def summary_by_term_per_year(x, column, limit_to=None, exclude=None):
         ID=data.groupby([column, "Year"]).agg({"ID": list}).reset_index()["ID"]
     )
     result["Cited_by"] = result["Cited_by"].map(lambda x: int(x))
+
+    if isinstance(limit_to, dict):
+        if column in limit_to.keys():
+            limit_to = limit_to[column]
+        else:
+            limit_to = None
+
     if limit_to is not None:
-        result = result[result[column].map(lambda w: w in limit_to)]
+        result = result.loc[result[column].map(lambda w: w in limit_to),:]
+
+    if isinstance(exclude, dict):
+        if column in exclude.keys():
+            exclude = exclude[column]
+        else:
+            exclude = None
+
     if exclude is not None:
-        result = result[result[column].map(lambda w: w not in exclude)]
+        result = result.loc[result[column].map(lambda w: w not in exclude),:]
+
     result.sort_values(
         ["Year", column], ascending=True, inplace=True, ignore_index=True,
     )
@@ -702,11 +718,9 @@ def growth_indicators(x, column, timewindow=2, limit_to=None, exclude=None):
             columns={"Num_Documents": "Before {}".format(years_between[0])}
         )
         result = pd.merge(before, between, on=column)
-        # result = result.set_index(column)
         return result
 
     result = compute_agr()
-    # result = result.set_index(column)
     ady = compute_ady()
     result = pd.merge(result, ady, on=column)
     result = result.assign(PDLY=round(result.ADY / len(x) * 100, 2))
@@ -723,52 +737,31 @@ def growth_indicators(x, column, timewindow=2, limit_to=None, exclude=None):
 ##
 ##
 
-WIDGET_WIDTH = "200px"
-LEFT_PANEL_HEIGHT = "588px"
-RIGHT_PANEL_WIDTH = "870px"
-FIGSIZE = (14, 10.0)
-PANE_HEIGHTS = ["80px", "650px", 0]
-
-
-
-
-
+WIDGET_WIDTH = "180px"
+LEFT_PANEL_HEIGHT = "655px"
+RIGHT_PANEL_WIDTH = "1200px"
+PANE_HEIGHTS = ["80px", "720px", 0]
 
 ##
 ##
 ##  Time Analysis
 ##
 ##
-def __APP0__(x):
-    COLUMNS = [
-        "Author_Keywords",
-        "Author_Keywords_CL",
-        "Authors",
-        "Countries",
-        "Country_1st_Author",
-        "Document_type",
-        "Index_Keywords",
-        "Index_Keywords_CL",
-        "Institution_1st_Author",
-        "Institutions",
-        "Source_title",
-        "Abstract_CL",
-        "Title_CL",
-    ]
+def __APP0__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
     #
     # -------------------------------------------------------------------------
+    COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
+    #
     controls = [
         # 0
         {
             "arg": "term",
             "desc": "Term to analyze:",
-            "widget": widgets.Select(
+            "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in x.columns],
-                ensure_option=True,
-                disabled=False,
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
@@ -803,17 +796,31 @@ def __APP0__(x):
         {
             "arg": "top_n",
             "desc": "Top N:",
-            "widget": widgets.IntSlider(
-                value=10,
-                min=5,
-                max=60,
-                step=1,
-                continuous_update=False,
-                orientation="horizontal",
-                readout=True,
-                readout_format="d",
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
+            "widget": widgets.Dropdown(
+                    options=list(range(5, 51, 5)),
+                    ensure_option=True,
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+        },
+        # 5
+        {
+            "arg": "figsize_width",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                    options=range(5,15, 1),
+                    ensure_option=True,
+                    layout=Layout(width="88px"),
+                ),
+        },
+        # 6
+        {
+            "arg": "figsize_height",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                    options=range(5,15, 1),
+                    ensure_option=True,
+                    layout=Layout(width="88px"),
+                ),
         },
     ]
     # -------------------------------------------------------------------------
@@ -828,33 +835,35 @@ def __APP0__(x):
         plot_type = kwargs["plot_type"]
         cmap = kwargs["cmap"]
         top_n = kwargs["top_n"]
+        figsize_width = int(kwargs['figsize_width'])
+        figsize_height = int(kwargs['figsize_height'])
         #
         plots = {"Heatmap": plt.heatmap, "Gant diagram": plt.gant, "Bubble plot": plt.bubble, "Lines": plt.plot, "Table":None}
         plot = plots[plot_type]
         #
         if analysis_type == "Frequency":
-            top = documents_by_term(x, term).head(top_n)[term].tolist()
+            top = documents_by_term(x, term, limit_to, exclude).head(top_n)[term].tolist()
             matrix = documents_by_term_per_year(x, term, as_matrix=True)
         if analysis_type == 'Citation':
-            top = citations_by_term(x, term).head(top_n)[term].tolist()
+            top = citations_by_term(x, term, limit_to, exclude).head(top_n)[term].tolist()
             matrix = citations_by_term_per_year(x, term, as_matrix=True)
         if analysis_type == 'Perc. Frequency':
-            top = citations_by_term(x, term).head(top_n)[term].tolist()
+            top = citations_by_term(x, term, limit_to, exclude).head(top_n)[term].tolist()
             matrix = perc_documents_by_term_per_year(x, term, as_matrix=True)
         if analysis_type == 'Perc. Cited by':
-            top = citations_by_term(x, term).head(top_n)[term].tolist()
+            top = citations_by_term(x, term, limit_to, exclude).head(top_n)[term].tolist()
             matrix = perc_citations_by_term_per_year(x, term, as_matrix=True)
         matrix = matrix[top]
         output.clear_output()
         with output:
             if plot_type == "Heatmap":
-                display(plot(matrix, cmap=cmap, figsize=FIGSIZE))
+                display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
             if plot_type == "Gant diagram":
-                display(plot(matrix, figsize=FIGSIZE))
+                display(plot(matrix, figsize=(figsize_width, figsize_height)))
             if plot_type == "Bubble plot":
-                display(plot(matrix.transpose(), axis=0, cmap=cmap, figsize=FIGSIZE))
+                display(plot(matrix.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
             if plot_type == "Lines plot":
-                display(plot(matrix, cmap=cmap, figsize=FIGSIZE))
+                display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
             if plot_type == 'Table':
                 with pd.option_context("display.max_columns", 60):
                     display(matrix)
@@ -877,6 +886,13 @@ def __APP0__(x):
                         [widgets.Label(value=control["desc"]), control["widget"]]
                     )
                     for control in controls
+                    if control["desc"] not in ["Figsize"]
+                ] + [
+                    widgets.Label(value="Figure Size"),
+                    widgets.HBox([
+                        controls[-2]["widget"],
+                        controls[-1]["widget"],
+                    ])
                 ],
                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
             ),
@@ -890,31 +906,20 @@ def __APP0__(x):
 ##  Growth Indicators
 ##
 ##
-def __APP1__(x):
-    #
-    COLUMNS = [
-        "Author_Keywords",
-        "Author_Keywords_CL",
-        "Countries",
-        "Country_1st_Author",
-        "Index_Keywords",
-        "Index_Keywords_CL",
-        "Institution_1st_Author",
-        "Institutions",
-        "Abstract_CL",
-        "Title_CL",
-    ]
+def __APP1__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
     #
     # -------------------------------------------------------------------------
+    COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
+    #
     controls = [
         # 0
         {
             "arg": "term",
             "desc": "Term to analyze:",
-            "widget": widgets.Select(
+            "widget": widgets.Dropdown(
                     options=[z for z in COLUMNS if z in x.columns],
                     ensure_option=True,
                     layout=Layout(width=WIDGET_WIDTH),
@@ -966,18 +971,31 @@ def __APP1__(x):
         {
             "arg": "top_n",
             "desc": "Top N:",
-            "widget": widgets.IntSlider(
-                    value=10,
-                    min=10,
-                    max=100,
-                    step=1,
-                    continuous_update=False,
-                    orientation="horizontal",
-                    readout=True,
-                    readout_format="d",
+            "widget": widgets.Dropdown(
+                    options=list(range(5, 51, 5)),
+                    ensure_option=True,
                     layout=Layout(width=WIDGET_WIDTH),
                 ),
         },
+        # 6
+        {
+            "arg": "figsize_width",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                    options=range(5,15, 1),
+                    layout=Layout(width="88px"),
+                ),
+        },
+        # 7
+        {
+            "arg": "figsize_height",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                    options=range(5,15, 1),
+                    layout=Layout(width="88px"),
+                ),
+        },
+
     ]
     # -------------------------------------------------------------------------
     #
@@ -992,39 +1010,37 @@ def __APP1__(x):
         top_n = kwargs['top_n']
         plot_type = kwargs['plot_type']
         time_window = int(kwargs['time_window'])
+        figsize_width = int(kwargs['figsize_width'])
+        figsize_height = int(kwargs['figsize_height'])        
         #
         plots = {"bar": plt.bar, "barh": plt.barh}
         plot = plots[plot_type]
         #
-        df = growth_indicators(x, term, timewindow=time_window)
+        df = growth_indicators(x, term, timewindow=time_window, limit_to=limit_to, exclude=exclude)
         output.clear_output()
-        if plot_type == 'bar':
-            figsize = (14, 7.5)
-        if plot_type == 'barh':
-            figsize = (14, 10.0)
 
         with output:
             if analysis_type == "Average Growth Rate":
                 df = df.sort_values('AGR', ascending=False).head(top_n)
                 df = df.reset_index(drop=True)
-                display(plot(df[[term, 'AGR']], cmap=cmap, figsize=figsize))
+                display(plot(df[[term, 'AGR']], cmap=cmap, figsize=(figsize_width, figsize_height)))
             if analysis_type == "Average Documents per Year":
                 df = df.sort_values('ADY', ascending=False).head(top_n)
                 df = df.reset_index(drop=True)
-                display(plot(df[[term, 'ADY']], cmap=cmap, figsize=figsize))
+                display(plot(df[[term, 'ADY']], cmap=cmap, figsize=(figsize_width, figsize_height)))
             if analysis_type == "Percentage of Documents in Last Years":
                 df = df.sort_values('PDLY', ascending=False).head(top_n)
                 df = df.reset_index(drop=True)
-                display(plot(df[[term, 'PDLY']], cmap=cmap, figsize=figsize))
+                display(plot(df[[term, 'PDLY']], cmap=cmap, figsize=(figsize_width, figsize_height)))
             if analysis_type == "Number of Document Published":
                 df['Num_Documents'] = df[df.columns[-2]] + df[df.columns[-1]]
                 df = df.sort_values('Num_Documents', ascending=False).head(top_n)
                 df = df.reset_index(drop=True)
                 df.pop('Num_Documents')
                 if plot_type == 'bar':
-                    display(plt.stacked_bar(df[[term, df.columns[-2], df.columns[-1]]], figsize=figsize, cmap=cmap))
+                    display(plt.stacked_bar(df[[term, df.columns[-2], df.columns[-1]]], figsize=(figsize_width, figsize_height), cmap=cmap))
                 if plot_type == 'barh':
-                    display(plt.stacked_barh(df[[term, df.columns[-2], df.columns[-1]]], figsize=figsize, cmap=cmap))
+                    display(plt.stacked_barh(df[[term, df.columns[-2], df.columns[-1]]], figsize=(figsize_width, figsize_height), cmap=cmap))
 
 
     # -------------------------------------------------------------------------
@@ -1044,6 +1060,13 @@ def __APP1__(x):
                         [widgets.Label(value=control["desc"]), control["widget"]]
                     )
                     for control in controls
+                    if control["desc"] not in ["Figsize"]
+                ] + [
+                    widgets.Label(value="Figure Size"),
+                    widgets.HBox([
+                        controls[-2]["widget"],
+                        controls[-1]["widget"],
+                    ])
                 ],
                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
             ),
@@ -1053,12 +1076,12 @@ def __APP1__(x):
 
 
 
-def app(df):
+def app(df, limit_to=None, exclude=None):
     """Jupyter Lab dashboard.
     """
     #
     body = widgets.Tab()
-    body.children = [__APP0__(df), __APP1__(df)]
+    body.children = [__APP0__(df, limit_to, exclude), __APP1__(df, limit_to, exclude)]
     body.set_title(0, "Time Analysis")
     body.set_title(1, "Growth Indicators")
     #

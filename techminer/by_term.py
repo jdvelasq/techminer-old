@@ -7,14 +7,15 @@ Analysis by Term
 
 """
 import ipywidgets as widgets
-import pandas as pd
 import numpy as np
+import pandas as pd
 import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
 from techminer.explode import __explode
-from techminer.plots import COLORMAPS
 from techminer.params import EXCLUDE_COLS
+from techminer.plots import COLORMAPS
+
 
 def summary_by_term(x, column, limit_to=None, exclude=None):
     """Summarize the number of documents and citations by term in a dataframe.
@@ -361,7 +362,6 @@ def __APP0__(x, limit_to, exclude):
     #
     # -------------------------------------------------------------------------
     COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
-    limit_to=limit_to
     #
     controls = [
         # 0
@@ -522,7 +522,7 @@ def __APP0__(x, limit_to, exclude):
 #  Panel 1
 #
 #
-def __APP1__(x):
+def __APP1__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -656,4 +656,3 @@ def app(df, limit_to=None, exclude=None):
         center=body,
         pane_heights=PANE_HEIGHTS,
     )
-
