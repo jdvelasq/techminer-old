@@ -20,7 +20,7 @@ from techminer.plots import COLORMAPS
 
 
 def factor_analysis(
-    x, column, n_components=None, top_by=None, top_n=None, selected_columns=None
+    x, column, n_components=None, top_by=None, top_n=None, limit_to=None, exclude=None
 ):
     """Computes the matrix of factors for terms in a given column.
 
@@ -77,15 +77,22 @@ def factor_analysis(
 
     
 
-    >>> factor_analysis(df, 'Authors', n_components=3, keywords=['A', 'B', 'C'])
+    >>> factor_analysis(df, 'Authors', n_components=3, limit_to=['A', 'B', 'C'])
              F0        F1        F2
     A -0.888074  0.000000  0.459701
     B  0.325058  0.707107  0.627963
     C -0.325058  0.707107 -0.627963
 
+    >>> factor_analysis(df, 'Authors', n_components=3, exclude=['C'])
+             F0            F1       F2
+    A -0.774597 -0.000000e+00  0.00000
+    B  0.258199  7.071068e-01 -0.57735
+    D  0.516398  1.110223e-16  0.57735
+
+
     """
 
-    tfm = compute_tfm(x, column, selected_columns)
+    tfm = compute_tfm(x, column, limit_to)
     terms = tfm.columns.tolist()
     if n_components is None:
         n_components = int(np.sqrt(len(set(terms))))
@@ -95,23 +102,25 @@ def factor_analysis(
         result, columns=["F" + str(i) for i in range(n_components)], index=terms
     )
 
-    if selected_columns is None:
+    if limit_to is None:
         if (top_by == 0 or top_by == "Frequency") and top_n is not None:
-            selected_columns = set(most_frequent(x, column, top_n))
+            limit_to = set(most_frequent(x, column, top_n))
         if (top_by == 1 or top_by == "Cited_by") and top_n is not None:
-            selected_columns = set(most_cited_by(x, column, top_n))
-        if selected_columns is not None:
-            selected_columns = list(selected_columns)
+            limit_to = set(most_cited_by(x, column, top_n))
+        if limit_to is not None:
+            limit_to = list(limit_to)
 
-    if selected_columns is not None:
-        result = result.loc[selected_columns, :]
+    if limit_to is not None:
+        result = result.loc[limit_to, :]
+
+    if exclude is not None:
+        limit_to = [t for t in result.index.tolist() if t not in exclude]
+        result = result.loc[limit_to, :]
 
     return result
 
 
-def factor_map(
-    matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12), min_link_value=0
-):
+def factor_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)):
     """
     """
 
