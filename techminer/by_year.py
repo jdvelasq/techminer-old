@@ -133,11 +133,10 @@ def citations_by_year(x, cumulative=False):
 #
 #
 
-WIDGET_WIDTH = "200px"
-LEFT_PANEL_HEIGHT = "588px"
-RIGHT_PANEL_WIDTH = "870px"
-FIGSIZE = (15, 9.4)
-PANE_HEIGHTS = ["80px", "650px", 0]
+WIDGET_WIDTH = "180px"
+LEFT_PANEL_HEIGHT = "655px"
+RIGHT_PANEL_WIDTH = "1200px"
+PANE_HEIGHTS = ["80px", "720px", 0]
 
 
 def __APP0__(df):
@@ -188,6 +187,26 @@ def __APP0__(df):
                 options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 4
+        {
+            "arg": "figsize_width",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1),
+                ensure_option=True,
+                layout=Layout(width="88px"),
+            ),
+        },
+        # 5
+        {
+            "arg": "figsize_height",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1),
+                ensure_option=True,
+                layout=Layout(width="88px"),
+            ),
+        },
     ]
     # -------------------------------------------------------------------------
     #
@@ -212,9 +231,13 @@ def __APP0__(df):
         plot = plots[kwargs["plot_type"]]
         style = kwargs["style"]
         cmap = kwargs["cmap"]
+        figsize_width = int(kwargs["figsize_width"])
+        figsize_height = int(kwargs["figsize_height"])
         #
         controls[2]["widget"].disabled = True if plot is None else False
         controls[3]["widget"].disabled = True if plot is None else False
+        controls[-1]["widget"].disabled = True if plot is None else False
+        controls[-2]["widget"].disabled = True if plot is None else False
         #
         if style == "default":
             controls[3]["widget"].options = COLORMAPS
@@ -230,7 +253,14 @@ def __APP0__(df):
             if plot is None:
                 display(x)
             else:
-                display(plot(x, style=style, cmap=cmap, figsize=FIGSIZE))
+                display(
+                    plot(
+                        x,
+                        style=style,
+                        cmap=cmap,
+                        figsize=(figsize_width, figsize_height),
+                    )
+                )
 
     # -------------------------------------------------------------------------
     #
@@ -250,6 +280,11 @@ def __APP0__(df):
                         [widgets.Label(value=control["desc"]), control["widget"]]
                     )
                     for control in controls
+                    if control["desc"] not in ["Figsize"]
+                ]
+                + [
+                    widgets.Label(value="Figure Size"),
+                    widgets.HBox([controls[-2]["widget"], controls[-1]["widget"],]),
                 ],
                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
             ),

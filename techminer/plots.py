@@ -212,9 +212,12 @@ def bar(
             **kwargs,
         )
 
-        xticklabels = [
-            textwrap.shorten(text=text, width=TEXTLEN) for text in x[x.columns[0]]
-        ]
+        if x[x.columns[0]].dtype != "int64":
+            xticklabels = [
+                textwrap.shorten(text=text, width=TEXTLEN) for text in x[x.columns[0]]
+            ]
+        else:
+            xticklabels = x[x.columns[0]]
 
         ax.set_xticks(np.arange(len(x[x.columns[0]])))
         ax.set_xticklabels(xticklabels)

@@ -458,8 +458,12 @@ def __APP0__(x, limit_to, exclude):
         #
         if plot_type == 'Table':
             controls[3]["widget"].disabled = True
+            controls[-1]["widget"].disabled = True
+            controls[-2]["widget"].disabled = True
         else:
             controls[3]["widget"].disabled = False
+            controls[-1]["widget"].disabled = False
+            controls[-2]["widget"].disabled = False
         #   
         df = summary_by_term(x, term, limit_to=limit_to, exclude=exclude)
         #
