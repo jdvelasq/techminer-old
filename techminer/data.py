@@ -19,9 +19,9 @@ import numpy as np
 import pandas as pd
 from nltk import WordNetLemmatizer, pos_tag
 from nltk.corpus import stopwords
+from techminer.explode import MULTIVALUED_COLS
 from techminer.text import remove_accents
 from techminer.thesaurus import text_clustering
-from techminer.explode import MULTIVALUED_COLS
 
 # from IPython.display import HTML, clear_output, display
 # from ipywidgets import AppLayout, Layout

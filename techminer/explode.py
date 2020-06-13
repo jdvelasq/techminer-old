@@ -1,41 +1,5 @@
+from techminer.params import MULTIVALUED_COLS
 
-
-
-MULTIVALUED_COLS = [
-    "Abstract_words_CL",
-    "Abstract_words",
-    "Title_words_CL",
-    "Title_words",
-    "Affiliations_",
-    "Affiliations",
-    "Author_Keywords_",
-    "Author_Keywords_CL_",
-    "Author_Keywords_CL",
-    "Author_Keywords",
-    "Authors_",
-    "Authors_ID_",
-    "Authors_ID",
-    "Authors_with_affiliations_",
-    "Authors_with_affiliations",
-    "Authors",
-    "Countries_",
-    "Countries",
-    "Index_Keywords_",
-    "Index_Keywords_CL_",
-    "Index_Keywords_CL",
-    "Index_Keywords",
-    "Institutions_",
-    "Institutions",
-    #
-    "_key1_",
-    "_key2_",
-]
-
-##
-##
-## Auxiliary Functions
-##
-##
 def __explode(x, column):
     """Transform each element of a field to a row, reseting index values.
 
@@ -80,4 +44,3 @@ def __explode(x, column):
         x[column] = x[column].map(lambda w: w.strip() if isinstance(w, str) else w)
         x = x.reset_index(drop=True)
     return x
-
