@@ -13,16 +13,17 @@ import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
 from techminer.explode import __explode
-from techminer.keywords import Keywords
 from techminer.plots import COLORMAPS
 
 
-def summary_by_term(x, column, keywords=None):
+def summary_by_term(x, column, limit_to=None, exclude=None):
     """Summarize the number of documents and citations by term in a dataframe.
 
     Args:
-        column (str): the column to explode.
-        keywords (int, list): filter the results.
+        x (pandas.DataFrame): Bibliographic dataframe
+        column (str): Column to Analyze.
+        limit_to (list): Limit the result to the terms in the list.
+        exclude (list): Terms to be excluded.
 
     Returns:
         DataFrame.
@@ -52,12 +53,16 @@ def summary_by_term(x, column, keywords=None):
     2  author 2              1        10     [0]
     3  author 3              1        13     [3]
 
-    >>> keywords = Keywords(['author 1', 'author 2'])
-    >>> keywords = keywords.compile()
-    >>> summary_by_term(x, 'Authors', keywords=keywords)
+    >>> items = ['author 1', 'author 2']
+    >>> summary_by_term(x, 'Authors', limit_to=items)
         Authors  Num_Documents  Cited_by      ID
     0  author 1              2        22  [0, 2]
     1  author 2              1        10     [0]
+
+    >>> summary_by_term(x, 'Authors', exclude=items)
+        Authors  Num_Documents  Cited_by      ID
+    0  author 0              2        21  [0, 1]
+    1  author 3              1        13     [3]
 
     """
     x = x.copy()
@@ -68,8 +73,11 @@ def summary_by_term(x, column, keywords=None):
     )
     result = result.assign(ID=x.groupby(column).agg({"ID": list}).reset_index()["ID"])
     result["Cited_by"] = result["Cited_by"].map(lambda x: int(x))
-    if keywords is not None:
-        result = result[result[column].map(lambda w: w in keywords)]
+    if limit_to is not None:
+        result = result[result[column].map(lambda w: w in limit_to)]
+    if exclude is not None:
+        result = result[result[column].map(lambda w: w not in exclude)]
+
     result.sort_values(
         [column, "Num_Documents", "Cited_by"],
         ascending=[True, False, False],
@@ -79,13 +87,15 @@ def summary_by_term(x, column, keywords=None):
     return result
 
 
-def documents_by_term(x, column, keywords=None):
+def documents_by_term(x, column, limit_to=None, exclude=None):
     """Computes the number of documents per term in a given column.
 
     Args:
-        column (str): the column to explode.
-        sep (str): Character used as internal separator for the elements in the column.
-        keywords (Keywords): filter the result using the specified Keywords object.
+        x (pandas.DataFrame): Bibliographic dataframe
+        column (str): Column to analize.
+        limit_to (list): Limits to the terms in the list from the results.
+        exclude (list): Terms to be excluded.
+        
 
     Returns:
         DataFrame.
@@ -115,16 +125,15 @@ def documents_by_term(x, column, keywords=None):
     2  author 2              1     [0]
     3  author 3              1     [3]
 
-    >>> keywords = Keywords(['author 1', 'author 2'])
-    >>> keywords = keywords.compile()
-    >>> documents_by_term(x, 'Authors', keywords=keywords)
+    >>> terms = ['author 1', 'author 2']
+    >>> documents_by_term(x, 'Authors', limit_to=terms)
         Authors  Num_Documents      ID
     0  author 1              2  [0, 2]
     1  author 2              1     [0]
 
     """
 
-    result = summary_by_term(x, column, keywords)
+    result = summary_by_term(x, column, limit_to, exclude)
     result.pop("Cited_by")
     result.sort_values(
         ["Num_Documents", column],
@@ -135,13 +144,14 @@ def documents_by_term(x, column, keywords=None):
     return result
 
 
-def citations_by_term(x, column, keywords=None):
+def citations_by_term(x, column, limit_to=None, exclude=None):
     """Computes the number of citations by item in a column.
 
     Args:
-        column (str): the column to explode.
-        sep (str): Character used as internal separator for the elements in the column.
-        keywords (Keywords): filter the result using the specified Keywords object.
+        x (pandas.DataFrame): bibliographic dataframe.
+        column (str): the column to analyze.
+        limit_to (list): Limits to the terms in the list from the results.
+        exclude (list): Terms to be excluded.
 
     Returns:
         DataFrame.
@@ -171,16 +181,15 @@ def citations_by_term(x, column, keywords=None):
     2  author 3        13     [3]
     3  author 2        10     [0]
 
-    >>> keywords = Keywords(['author 1', 'author 2'])
-    >>> keywords = keywords.compile()
-    >>> citations_by_term(x, 'Authors', keywords=keywords)
+    >>> terms = ['author 1', 'author 2']
+    >>> citations_by_term(x, 'Authors', limit_to=terms)
         Authors  Cited_by      ID
     0  author 1        22  [0, 2]
     1  author 2        10     [0]
 
 
     """
-    result = summary_by_term(x, column, keywords)
+    result = summary_by_term(x, column, limit_to, exclude)
     result.pop("Num_Documents")
     result.sort_values(
         ["Cited_by", column], ascending=[False, True], inplace=True, ignore_index=True,
@@ -190,10 +199,14 @@ def citations_by_term(x, column, keywords=None):
 
 
 def most_cited_documents(x):
-    """ Returns the cited documents.
+    """ Returns the most cited documents.
+
+    Args:
+        x (pandas.DataFrame): bibliographic dataframe.
 
     Results:
-        pandas.DataFrame
+        A pandas.DataFrame.
+        
 
     """
     result = x.sort_values(by="Cited_by", ascending=False)[
@@ -310,11 +323,11 @@ def most_cited_documents(x):
 #         return DataFrame(df)
 
 
-##
+###############################################################################
 ##
 ##  APP
 ##
-##
+###############################################################################
 
 WIDGET_WIDTH = "200px"
 LEFT_PANEL_HEIGHT = "620px"
