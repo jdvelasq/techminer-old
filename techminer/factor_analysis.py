@@ -20,6 +20,9 @@ from techminer.keywords import Keywords
 from techminer.plots import COLORMAPS
 
 
+from techminer.explode import __explode
+
+
 def factor_analysis(
     x, column, n_components=None, top_by=None, top_n=None, limit_to=None, exclude=None
 ):
@@ -76,8 +79,6 @@ def factor_analysis(
     C -0.258199  7.071068e-01  0.57735
     D  0.516398  1.110223e-16  0.57735
 
-    
-
     >>> factor_analysis(df, 'Authors', n_components=3, limit_to=['A', 'B', 'C'])
              F0        F1        F2
     A -0.888074  0.000000  0.459701
@@ -90,44 +91,169 @@ def factor_analysis(
     B  0.258199  7.071068e-01 -0.57735
     D  0.516398  1.110223e-16  0.57735
 
-
     """
 
     #
     # Computo
     #
-    tfm = compute_tfm(x, column, limit_to=None, exclude=None)
-    terms = tfm.columns.tolist()
+    dtm = document_term_matrix(x, column)
+    terms = dtm.columns.tolist()
     if n_components is None:
         n_components = int(np.sqrt(len(set(terms))))
     pca = PCA(n_components=n_components)
-    result = np.transpose(pca.fit(X=tfm.values).components_)
+    result = np.transpose(pca.fit(X=dtm.values).components_)
     result = pd.DataFrame(
         result, columns=["F" + str(i) for i in range(n_components)], index=terms
     )
 
-    #
-    # Visualizacion
-    #
-    # if (top_by == 0 or top_by == "Frequency") and top_n is not None:
-    #     top_terms =
+    result = filter_index(
+        x=x,
+        column=column,
+        matrix=result,
+        axis=0,
+        top_by=top_by,
+        top_n=top_n,
+        limit_to=limit_to,
+        exclude=exclude,
+    )
+
+    return result
 
 
-    if limit_to is None or (isinstance(limit_to, dict) and column in limit_to.keys()):
-        if (top_by == 0 or top_by == "Frequency") and top_n is not None:
-            limit_to = set(most_frequent(x, column, top_n))
-        if (top_by == 1 or top_by == "Cited_by") and top_n is not None:
-            limit_to = set(most_cited_by(x, column, top_n))
-        if limit_to is not None:
-            limit_to = list(limit_to)
+def filter_index(
+    x, column, matrix, axis, top_by=0, top_n=10, limit_to=None, exclude=None
+):
+    """
+    Args:
+        x: bibliographic database
+        column: column analyzed
+        matrix: result
+        axis: 0=rows, 1=columns
+        top_by: 0=frequency, 1=cited_by
+
+    """
+    top_terms = summary_by_term(x, column)
+
+    if top_by == 0 or top_by == "Frequency":
+        top_terms = top_terms.sort_values(
+            ["Num_Documents", "Cited_by", column],
+            ascending=[False, False, True],
+            ignore_index=True,
+        )
+
+    if top_by == 1 or top_by == "Cited_by":
+        top_terms = top_terms.sort_values(
+            ["Cited_by", "Num_Documents", column],
+            ascending=[False, False, True],
+            ignore_index=True,
+        )
+
+    top_terms = top_terms[column]
+
+    if isinstance(limit_to, dict):
+        if column in limit_to.keys():
+            limit_to = limit_to[column]
+        else:
+            limit_to = None
 
     if limit_to is not None:
-        result = result.loc[limit_to, :]
+        top_terms = top_terms[top_terms.map(lambda w: w in limit_to)]
+
+    if isinstance(exclude, dict):
+        if column in exclude.keys():
+            exclude = exclude[column]
+        else:
+            exclude = None
 
     if exclude is not None:
-        limit_to = [t for t in result.index.tolist() if t not in exclude]
-        result = result.loc[limit_to, :]
+        top_terms = top_terms[top_terms.map(lambda w: w not in exclude)]
 
+    if top_n is not None:
+        top_terms = top_terms.head(top_n)
+
+    top_terms = top_terms.tolist()
+
+    if axis == 0 or axis == 2:
+        matrix = matrix.loc[top_terms, :]
+
+    if axis == 1 or axis == 2:
+        matrix = matrix.loc[:, top_terms]
+
+    return matrix
+
+
+def document_term_matrix(x, column):
+    """Computes the term-frequency matrix for the terms in a column.
+
+    Args:
+        column (str): the column to explode.
+
+    Returns:
+        DataFrame.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = [ 'A', 'A;B', 'B', 'A;B;C', 'B;D']
+    >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d']
+    >>> df = pd.DataFrame(
+    ...    {
+    ...       'Authors': x,
+    ...       'Author_Keywords': y,
+    ...       'Cited_by': list(range(len(x))),
+    ...       'ID': list(range(len(x))),
+    ...    }
+    ... )
+    >>> df
+      Authors Author_Keywords  Cited_by  ID
+    0       A               a         0   0
+    1     A;B             a;b         1   1
+    2       B               b         2   2
+    3   A;B;C               c         3   3
+    4     B;D             c;d         4   4
+
+    >>> compute_tfm(df, 'Authors')
+       A  B  C  D
+    0  1  0  0  0
+    1  1  1  0  0
+    2  0  1  0  0
+    3  1  1  1  0
+    4  0  1  0  1
+
+    >>> compute_tfm(df, 'Author_Keywords')
+       a  b  c  d
+    0  1  0  0  0
+    1  1  1  0  0
+    2  0  1  0  0
+    3  0  0  1  0
+    4  0  0  1  1
+
+    >>> compute_tfm(df, 'Authors', limit_to=['A', 'B'])
+       A  B
+    0  1  0
+    1  1  1
+    2  0  1
+    3  1  1
+    4  0  1
+
+    >>> compute_tfm(df, 'Authors', exclude=['A', 'B'])
+       C  D
+    0  0  0
+    1  0  0
+    2  0  0
+    3  1  0
+    4  0  1
+
+
+    """
+    data = x[[column, "ID"]].copy()
+    data["value"] = 1.0
+    data = __explode(data, column)
+    result = pd.pivot_table(
+        data=data, index="ID", columns=column, margins=False, fill_value=0.0,
+    )
+    result.columns = [b for _, b in result.columns]
     return result
 
 
@@ -316,23 +442,28 @@ def factor_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)):
 #
 #
 
-WIDGET_WIDTH = "200px"
-LEFT_PANEL_HEIGHT = "588px"
-RIGHT_PANEL_WIDTH = "870px"
-FIGSIZE = (14, 10.0)
-PANE_HEIGHTS = ["80px", "650px", 0]
+WIDGET_WIDTH = "180px"
+LEFT_PANEL_HEIGHT = "655px"
+RIGHT_PANEL_WIDTH = "1200px"
+PANE_HEIGHTS = ["80px", "720px", 0]
 
 COLUMNS = [
-    "Author Keywords",
     "Authors",
     "Countries",
-    "Index Keywords",
     "Institutions",
-    "Keywords",
+    "Author_Keywords",
+    "Index_Keywords",
+    "Abstract_words_CL",
+    "Abstract_words",
+    "Title_words_CL",
+    "Title_words",
+    "Affiliations",
+    "Author_Keywords_CL",
+    "Index_Keywords_CL",
 ]
 
 
-def __TAB0__(x):
+def __TAB0__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -382,15 +513,9 @@ def __TAB0__(x):
         {
             "arg": "top_n",
             "desc": "Top N:",
-            "widget": widgets.IntSlider(
-                value=5,
-                min=5,
-                max=50,
-                step=1,
-                continuous_update=False,
-                orientation="horizontal",
-                readout=True,
-                readout_format="d",
+            "widget": widgets.Dropdown(
+                options=list(range(5, 51, 5)),
+                ensure_option=True,
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
@@ -446,6 +571,26 @@ def __TAB0__(x):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 9
+        {
+            "arg": "figsize_width",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1),
+                ensure_option=True,
+                layout=Layout(width="88px"),
+            ),
+        },
+        # 10
+        {
+            "arg": "figsize_height",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1),
+                ensure_option=True,
+                layout=Layout(width="88px"),
+            ),
+        },
     ]
     # -------------------------------------------------------------------------
     #
@@ -463,6 +608,8 @@ def __TAB0__(x):
         factor = kwargs["factor"]
         view = kwargs["view"]
         layout = kwargs["layout"]
+        figsize_width = int(kwargs["figsize_width"])
+        figsize_height = int(kwargs["figsize_height"])
         #
         matrix = factor_analysis(
             x=x,
@@ -470,7 +617,8 @@ def __TAB0__(x):
             n_components=n_components,
             top_by=top_by,
             top_n=top_n,
-            selected_columns=None,
+            limit_to=limit_to,
+            exclude=exclude,
         )
         #
         controls[6]["widget"].options = matrix.columns
@@ -515,7 +663,14 @@ def __TAB0__(x):
                     ).background_gradient(cmap=cmap, axis=None)
                 )
             else:
-                display(factor_map(matrix, layout=layout, cmap=cmap, figsize=(17, 12)))
+                display(
+                    factor_map(
+                        matrix,
+                        layout=layout,
+                        cmap=cmap,
+                        figsize=(figsize_width, figsize_height),
+                    )
+                )
 
     # -------------------------------------------------------------------------
     #
@@ -534,6 +689,11 @@ def __TAB0__(x):
                         [widgets.Label(value=control["desc"]), control["widget"]]
                     )
                     for control in controls
+                    if control["desc"] not in ["Figsize"]
+                ]
+                + [
+                    widgets.Label(value="Figure Size"),
+                    widgets.HBox([controls[-2]["widget"], controls[-1]["widget"],]),
                 ],
                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
             ),
@@ -544,12 +704,12 @@ def __TAB0__(x):
     )
 
 
-def app(df):
+def app(df, limit_to=None, exclude=None):
     """Jupyter Lab dashboard.
     """
     #
     body = widgets.Tab()
-    body.children = [__TAB0__(df)]
+    body.children = [__TAB0__(x=df, limit_to=limit_to, exclude=exclude)]
     body.set_title(0, "Matrix")
     #
     return AppLayout(

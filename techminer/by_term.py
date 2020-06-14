@@ -48,7 +48,7 @@ from techminer.plots import COLORMAPS
 #     return result
 
 
-def summary_by_term(x, column, top_by=0, top_n=None, limit_to=None, exclude=None):
+def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=None):
     """Summarize the number of documents and citations by term in a dataframe.
 
     Args:
@@ -112,7 +112,7 @@ def summary_by_term(x, column, top_by=0, top_n=None, limit_to=None, exclude=None
     result["Cited_by"] = result["Cited_by"].map(lambda x: int(x))
 
     #
-    # Selection
+    # Filter
     #
     
     if isinstance(limit_to, dict):
@@ -149,10 +149,24 @@ def summary_by_term(x, column, top_by=0, top_n=None, limit_to=None, exclude=None
             ignore_index=True,
         )
 
+    if top_by is None:
+        result.sort_values(
+            [column, "Num_Documents", "Cited_by"],
+            ascending=[True, False, False],
+            inplace=True,
+            ignore_index=True,
+        )
+
     if top_n is not None:
         result = result.head(top_n)
 
     return result
+
+def get_top_by(x, column, top_by, top_n, limit_to, exclude):
+    """Return a list with the top_n terms of column
+    """
+    return summary_by_term(x=x, column=column, top_by=top_by, top_n=top_n, limit_to=limit_to, exclude=exclude)[column].tolist()
+
 
 
 # def documents_by_term(x, column, limit_to=None, exclude=None):
