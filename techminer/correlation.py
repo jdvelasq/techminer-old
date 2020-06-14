@@ -6,21 +6,25 @@ Correlation Analysis
 """
 
 import ipywidgets as widgets
+import matplotlib.pyplot as pyplot
 import networkx as nx
 import numpy as np
 import pandas as pd
 import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
-from techminer.by_term import summary_by_term, documents_by_term, citations_by_term
-from techminer.co_occurrence import co_occurrence
+from techminer.by_term import citations_by_term, documents_by_term, summary_by_term
+from techminer.co_occurrence import (
+    co_occurrence,
+    compute_tfm,
+    most_cited_by,
+    most_frequent,
+)
 from techminer.explode import MULTIVALUED_COLS, __explode
 from techminer.keywords import Keywords
 from techminer.maps import Map
+from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS, chord_diagram
-from techminer.co_occurrence import compute_tfm, most_frequent, most_cited_by
-
-import matplotlib.pyplot as pyplot
 
 
 def corr(
@@ -167,22 +171,22 @@ def corr(
     """
     if by is None:
         by = column
-    #
-    if limit_to is None:
-        if (top_by == 0 or top_by == "Frequency") and top_n is not None:
-            limit_to = set(most_frequent(x, column, top_n))
-        if (top_by == 1 or top_by == "Cited_by") and top_n is not None:
-            limit_to = set(most_cited_by(x, column, top_n))
-        if limit_to is not None:
-            limit_to = list(limit_to)
+        # if isinstance(limit_to, dict) and column in limit_to.keys():
+        #     limit_to[by] = limit_to[column]
+        # if isinstance(exclude, dict) and column in exclude.keys():
+        #     exclude[by] = exclude[column]
 
     if column == by:
         tfm = compute_tfm(x, column=column, limit_to=limit_to, exclude=exclude)
+        if limit_to is None or column not in limit_to.keys():
+            tfm = tfm[most_frequent(x, column, top_n, limit_to=None, exclude=exclude)]
         result = tfm.corr(method=method)
     else:
-        x = x[[column, by, "ID"]].dropna()
-        A = compute_tfm(x, column, limit_to, exclude)
-        B = compute_tfm(x, by)
+        w = x[[column, by, "ID"]].dropna()
+        A = compute_tfm(w, column, limit_to, exclude)
+        if limit_to is None or column not in limit_to.keys():
+            A = A[most_frequent(x, column, top_n, limit_to=None, exclude=exclude)]
+        B = compute_tfm(w, by)
         tfm = np.matmul(B.transpose().values, A.values)
         tfm = pd.DataFrame(tfm, columns=A.columns, index=B.columns)
         result = tfm.corr(method=method)
@@ -504,42 +508,26 @@ def correlation_map(
     return fig
 
 
-# ##########
+###############################################################################
+##
+##  APP
+##
+###############################################################################
+
+WIDGET_WIDTH = "180px"
+LEFT_PANEL_HEIGHT = "710px"
+RIGHT_PANEL_WIDTH = "1200px"
+PANE_HEIGHTS = ["80px", "770px", 0]
 
 
-#
-#
-#  Correlation Analysis
-#
-#
-
-WIDGET_WIDTH = "200px"
-LEFT_PANEL_HEIGHT = "650px"
-RIGHT_PANEL_WIDTH = "870px"
-FIGSIZE = (14, 10.0)
-PANE_HEIGHTS = ["80px", "750px", 0]
-
-COLUMNS = [
-    "Author_Keywords",
-    "Author_Keywords_CL",
-    "Authors",
-    "Countries",
-    "Country_1st_Author",
-    "Document_type",
-    "Index_Keywords",
-    "Index_Keywords_CL",
-    "Institution_1st_Author",
-    "Institutions",
-    "Source_title",
-]
-
-
-def __TAB0__(x):
+def __TAB0__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
     #
     # -------------------------------------------------------------------------
+    COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
+    #
     controls = [
         # 0
         {
@@ -584,16 +572,8 @@ def __TAB0__(x):
         {
             "arg": "top_n",
             "desc": "Top N:",
-            "widget": widgets.IntSlider(
-                value=5,
-                min=5,
-                max=50,
-                step=1,
-                continuous_update=False,
-                orientation="horizontal",
-                readout=True,
-                readout_format="d",
-                layout=Layout(width=WIDGET_WIDTH),
+            "widget": widgets.Dropdown(
+                options=list(range(5, 51, 5)), layout=Layout(width=WIDGET_WIDTH),
             ),
         },
         # 5
@@ -659,6 +639,26 @@ def __TAB0__(x):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 10
+        {
+            "arg": "figsize_width",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1),
+                ensure_option=True,
+                layout=Layout(width="88px"),
+            ),
+        },
+        # 11
+        {
+            "arg": "figsize_height",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1),
+                ensure_option=True,
+                layout=Layout(width="88px"),
+            ),
+        },
     ]
     # -------------------------------------------------------------------------
     #
@@ -677,6 +677,8 @@ def __TAB0__(x):
         view = kwargs["view"]
         sort_by = kwargs["sort_by"]
         layout = kwargs["layout"]
+        figsize_width = int(kwargs["figsize_width"])
+        figsize_height = int(kwargs["figsize_height"])
         #
         if view == "Matrix" or view == "Heatmap":
             controls[7]["widget"].disabled = False
@@ -699,7 +701,8 @@ def __TAB0__(x):
             cmap=cmap,
             top_by=top_by,
             top_n=top_n,
-            selected_columns=None,
+            limit_to=limit_to,
+            exclude=exclude,
         )
         #
         #
@@ -717,17 +720,6 @@ def __TAB0__(x):
                 for a, b in zip(s[column].tolist(), s["Cited_by"].tolist())
             }
         matrix = matrix.rename(columns=new_names, index=new_names)
-        #
-        # if column == by:
-        #     matrix = matrix.rename(index=new_names)
-        # else:
-        #     s = summary_by_term(x, by)
-        #     new_names = {
-        #         a: "{} [{:d}]".format(a, b)
-        #         for a, b in zip(s[by].tolist(), s["Num_Documents"].tolist())
-        #     }
-        #     matrix = matrix.rename(index=new_names)
-        #
         output.clear_output()
         with output:
             if view == "Table" or view == "Heatmap":
@@ -765,7 +757,11 @@ def __TAB0__(x):
                             ).background_gradient(cmap=cmap)
                         )
                 if view == "Heatmap":
-                    display(plt.heatmap(matrix, cmap=cmap, figsize=(14, 8.5)))
+                    display(
+                        plt.heatmap(
+                            matrix, cmap=cmap, figsize=(figsize_width, figsize_height)
+                        )
+                    )
                 #
             if view == "Correlation map":
                 #
@@ -774,14 +770,21 @@ def __TAB0__(x):
                         matrix=matrix,
                         layout=layout,
                         cmap=cmap,
-                        figsize=(10, 10),
+                        figsize=(figsize_width, figsize_height),
                         min_link_value=min_link_value,
                     )
                 )
                 #
             if view == "Chord diagram":
                 #
-                display(chord_diagram(matrix, cmap=cmap, minval=min_link_value))
+                display(
+                    chord_diagram(
+                        matrix,
+                        figsize=(figsize_width, figsize_height),
+                        cmap=cmap,
+                        minval=min_link_value,
+                    )
+                )
 
     # -------------------------------------------------------------------------
     #
@@ -792,6 +795,7 @@ def __TAB0__(x):
     output = widgets.Output()
     with output:
         display(widgets.interactive_output(server, args,))
+
     return widgets.HBox(
         [
             widgets.VBox(
@@ -800,6 +804,11 @@ def __TAB0__(x):
                         [widgets.Label(value=control["desc"]), control["widget"]]
                     )
                     for control in controls
+                    if control["desc"] not in ["Figsize"]
+                ]
+                + [
+                    widgets.Label(value="Figure Size"),
+                    widgets.HBox([controls[-2]["widget"], controls[-1]["widget"],]),
                 ],
                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
             ),
@@ -815,10 +824,10 @@ def __TAB0__(x):
 # APP
 #
 #
-def app(df):
+def app(df, limit_to=None, exclude=None):
     #
     body = widgets.Tab()
-    body.children = [__TAB0__(df)]
+    body.children = [__TAB0__(df, limit_to, exclude)]
     body.set_title(0, "Matrix")
     #
     return AppLayout(
