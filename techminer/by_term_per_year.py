@@ -4,7 +4,7 @@ Analysis by Term per Year
 ==================================================================================================
 
 
-
+ 
 """
 import ipywidgets as widgets
 import numpy as np
@@ -12,7 +12,7 @@ import pandas as pd
 import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
-from techminer.by_term import citations_by_term, documents_by_term
+# from techminer.by_term import citations_by_term, documents_by_term
 from techminer.by_year import citations_by_year, documents_by_year
 from techminer.explode import __explode
 from techminer.keywords import Keywords
@@ -112,6 +112,8 @@ def summary_by_term_per_year(x, column, limit_to=None, exclude=None):
             limit_to = limit_to[column]
         else:
             limit_to = None
+
+
 
     if limit_to is not None:
         result = result.loc[result[column].map(lambda w: w in limit_to),:]

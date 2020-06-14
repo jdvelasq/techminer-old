@@ -13,7 +13,7 @@ import matplotlib.pyplot as pyplot
 import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
-from techminer.by_term import citations_by_term, documents_by_term, summary_by_term
+from techminer.by_term import summary_by_term  # ,citations_by_term, documents_by_term,
 from techminer.explode import MULTIVALUED_COLS, __explode
 from techminer.keywords import Keywords
 from techminer.plots import COLORMAPS
@@ -112,22 +112,6 @@ def compute_tfm(x, column, limit_to=None, exclude=None):
         result = result[[k for k in result.columns if k not in exclude]]
 
     result = result.reset_index(drop=True)
-    return result
-
-
-def most_frequent(x, column, top_n, limit_to, exclude):
-    result = summary_by_term(x, column, limit_to=limit_to, exclude=exclude)
-    result = result.sort_values(["Num_Documents", "Cited_by", column], ascending=False)
-    result = result[column].head(top_n)
-    result = result.tolist()
-    return result
-
-
-def most_cited_by(x, column, top_n, limit_to, exclude):
-    result = summary_by_term(x, column, limit_to=limit_to, exclude=exclude)
-    result = result.sort_values(["Cited_by", "Num_Documents", column], ascending=False)
-    result = result[column].head(top_n)
-    result = result.tolist()
     return result
 
 

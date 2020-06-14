@@ -3,7 +3,7 @@
 Analysis by Term
 ==================================================================================================
 
-
+ 
 
 """
 import ipywidgets as widgets
@@ -17,7 +17,38 @@ from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
 
 
-def summary_by_term(x, column, limit_to=None, exclude=None):
+
+
+# def get_top_terms(x, column, top_by=0, top_n=None, limit_to=None, exclude=None):
+    
+#     result = summary_by_term(x, column)
+
+#     if top_by == 0 or top_by == "Frequency":
+        
+#     if top_by == 1 or top_by == "Cited_by":
+
+
+
+
+
+
+# def most_frequent(x, column, top_n, limit_to, exclude):
+#     result = summary_by_term(x, column, limit_to=limit_to, exclude=exclude)
+#     result = result.sort_values(["Num_Documents", "Cited_by", column], ascending=False)
+#     result = result[column].head(top_n)
+#     result = result.tolist()
+#     return result
+
+
+# def most_cited_by(x, column, top_n, limit_to, exclude):
+#     result = summary_by_term(x, column, limit_to=limit_to, exclude=exclude)
+#     result = result.sort_values(["Cited_by", "Num_Documents", column], ascending=False)
+#     result = result[column].head(top_n)
+#     result = result.tolist()
+#     return result
+
+
+def summary_by_term(x, column, top_by=0, top_n=None, limit_to=None, exclude=None):
     """Summarize the number of documents and citations by term in a dataframe.
 
     Args:
@@ -66,6 +97,11 @@ def summary_by_term(x, column, limit_to=None, exclude=None):
     1  author 3              1        13     [3]
 
     """
+
+    #
+    # Computation
+    #
+
     x = x.copy()
     x = __explode(x[[column, "Cited_by", "ID"]], column)
     x["Num_Documents"] = 1
@@ -75,6 +111,10 @@ def summary_by_term(x, column, limit_to=None, exclude=None):
     result = result.assign(ID=x.groupby(column).agg({"ID": list}).reset_index()["ID"])
     result["Cited_by"] = result["Cited_by"].map(lambda x: int(x))
 
+    #
+    # Selection
+    #
+    
     if isinstance(limit_to, dict):
         if column in limit_to.keys():
             limit_to = limit_to[column]
@@ -93,144 +133,157 @@ def summary_by_term(x, column, limit_to=None, exclude=None):
     if exclude is not None:
         result = result[result[column].map(lambda w: w not in exclude)]
 
-    result.sort_values(
-        [column, "Num_Documents", "Cited_by"],
-        ascending=[True, False, False],
-        inplace=True,
-        ignore_index=True,
-    )
+    if (top_by == 0 or top_by == "Frequency"):
+        result.sort_values(
+            ["Num_Documents", "Cited_by", column],
+            ascending=[False, False, True],
+            inplace=True,
+            ignore_index=True,
+        )
+
+    if (top_by == 1 or top_by == "Cited_by"):
+        result.sort_values(
+            ["Cited_by", "Num_Documents", column],
+            ascending=[False, False, True],
+            inplace=True,
+            ignore_index=True,
+        )
+
+    if top_n is not None:
+        result = result.head(top_n)
+
     return result
 
 
-def documents_by_term(x, column, limit_to=None, exclude=None):
-    """Computes the number of documents per term in a given column.
+# def documents_by_term(x, column, limit_to=None, exclude=None):
+#     """Computes the number of documents per term in a given column.
 
-    Args:
-        x (pandas.DataFrame): Bibliographic dataframe
-        column (str): Column to analize.
-        limit_to (list): Limits to the terms in the list from the results.
-        exclude (list): Terms to be excluded.
+#     Args:
+#         x (pandas.DataFrame): Bibliographic dataframe
+#         column (str): Column to analize.
+#         limit_to (list): Limits to the terms in the list from the results.
+#         exclude (list): Terms to be excluded.
         
 
-    Returns:
-        DataFrame.
+#     Returns:
+#         DataFrame.
 
-    Examples
-    ----------------------------------------------------------------------------------------------
+#     Examples
+#     ----------------------------------------------------------------------------------------------
 
-    >>> import pandas as pd
-    >>> x = pd.DataFrame(
-    ...     {
-    ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3".split(","),
-    ...          "Cited_by": list(range(10,14)),
-    ...          "ID": list(range(4)),
-    ...     }
-    ... )
-    >>> x
-                          Authors  Cited_by  ID
-    0  author 0;author 1;author 2        10   0
-    1                    author 0        11   1
-    2                    author 1        12   2
-    3                    author 3        13   3
+#     >>> import pandas as pd
+#     >>> x = pd.DataFrame(
+#     ...     {
+#     ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3".split(","),
+#     ...          "Cited_by": list(range(10,14)),
+#     ...          "ID": list(range(4)),
+#     ...     }
+#     ... )
+#     >>> x
+#                           Authors  Cited_by  ID
+#     0  author 0;author 1;author 2        10   0
+#     1                    author 0        11   1
+#     2                    author 1        12   2
+#     3                    author 3        13   3
 
-    >>> documents_by_term(x, 'Authors')
-        Authors  Num_Documents      ID
-    0  author 0              2  [0, 1]
-    1  author 1              2  [0, 2]
-    2  author 2              1     [0]
-    3  author 3              1     [3]
+#     >>> documents_by_term(x, 'Authors')
+#         Authors  Num_Documents      ID
+#     0  author 0              2  [0, 1]
+#     1  author 1              2  [0, 2]
+#     2  author 2              1     [0]
+#     3  author 3              1     [3]
 
-    >>> terms = ['author 1', 'author 2']
-    >>> documents_by_term(x, 'Authors', limit_to=terms)
-        Authors  Num_Documents      ID
-    0  author 1              2  [0, 2]
-    1  author 2              1     [0]
+#     >>> terms = ['author 1', 'author 2']
+#     >>> documents_by_term(x, 'Authors', limit_to=terms)
+#         Authors  Num_Documents      ID
+#     0  author 1              2  [0, 2]
+#     1  author 2              1     [0]
 
-    """
+#     """
 
-    result = summary_by_term(x, column, limit_to, exclude)
-    result.pop("Cited_by")
-    result.sort_values(
-        ["Num_Documents", column],
-        ascending=[False, True],
-        inplace=True,
-        ignore_index=True,
-    )
-    return result
-
-
-def citations_by_term(x, column, limit_to=None, exclude=None):
-    """Computes the number of citations by item in a column.
-
-    Args:
-        x (pandas.DataFrame): bibliographic dataframe.
-        column (str): the column to analyze.
-        limit_to (list): Limits to the terms in the list from the results.
-        exclude (list): Terms to be excluded.
-
-    Returns:
-        DataFrame.
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> import pandas as pd
-    >>> x = pd.DataFrame(
-    ...     {
-    ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3".split(","),
-    ...          "Cited_by": list(range(10,14)),
-    ...          "ID": list(range(4)),
-    ...     }
-    ... )
-    >>> x
-                          Authors  Cited_by  ID
-    0  author 0;author 1;author 2        10   0
-    1                    author 0        11   1
-    2                    author 1        12   2
-    3                    author 3        13   3
-
-    >>> citations_by_term(x, 'Authors')
-        Authors  Cited_by      ID
-    0  author 1        22  [0, 2]
-    1  author 0        21  [0, 1]
-    2  author 3        13     [3]
-    3  author 2        10     [0]
-
-    >>> terms = ['author 1', 'author 2']
-    >>> citations_by_term(x, 'Authors', limit_to=terms)
-        Authors  Cited_by      ID
-    0  author 1        22  [0, 2]
-    1  author 2        10     [0]
+#     result = summary_by_term(x, column, limit_to, exclude)
+#     result.pop("Cited_by")
+#     result.sort_values(
+#         ["Num_Documents", column],
+#         ascending=[False, True],
+#         inplace=True,
+#         ignore_index=True,
+#     )
+#     return result
 
 
-    """
-    result = summary_by_term(x, column, limit_to, exclude)
-    result.pop("Num_Documents")
-    result.sort_values(
-        ["Cited_by", column], ascending=[False, True], inplace=True, ignore_index=True,
-    )
-    return result
+# def citations_by_term(x, column, limit_to=None, exclude=None):
+#     """Computes the number of citations by item in a column.
+
+#     Args:
+#         x (pandas.DataFrame): bibliographic dataframe.
+#         column (str): the column to analyze.
+#         limit_to (list): Limits to the terms in the list from the results.
+#         exclude (list): Terms to be excluded.
+
+#     Returns:
+#         DataFrame.
+
+#     Examples
+#     ----------------------------------------------------------------------------------------------
+
+#     >>> import pandas as pd
+#     >>> x = pd.DataFrame(
+#     ...     {
+#     ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3".split(","),
+#     ...          "Cited_by": list(range(10,14)),
+#     ...          "ID": list(range(4)),
+#     ...     }
+#     ... )
+#     >>> x
+#                           Authors  Cited_by  ID
+#     0  author 0;author 1;author 2        10   0
+#     1                    author 0        11   1
+#     2                    author 1        12   2
+#     3                    author 3        13   3
+
+#     >>> citations_by_term(x, 'Authors')
+#         Authors  Cited_by      ID
+#     0  author 1        22  [0, 2]
+#     1  author 0        21  [0, 1]
+#     2  author 3        13     [3]
+#     3  author 2        10     [0]
+
+#     >>> terms = ['author 1', 'author 2']
+#     >>> citations_by_term(x, 'Authors', limit_to=terms)
+#         Authors  Cited_by      ID
+#     0  author 1        22  [0, 2]
+#     1  author 2        10     [0]
+
+
+#     """
+#     result = summary_by_term(x, column, limit_to, exclude)
+#     result.pop("Num_Documents")
+#     result.sort_values(
+#         ["Cited_by", column], ascending=[False, True], inplace=True, ignore_index=True,
+#     )
+#     return result
 
 
 
-def most_cited_documents(x):
-    """ Returns the most cited documents.
+# def most_cited_documents(x):
+#     """ Returns the most cited documents.
 
-    Args:
-        x (pandas.DataFrame): bibliographic dataframe.
+#     Args:
+#         x (pandas.DataFrame): bibliographic dataframe.
 
-    Results:
-        A pandas.DataFrame.
+#     Results:
+#         A pandas.DataFrame.
         
 
-    """
-    result = x.sort_values(by="Cited_by", ascending=False)[
-        ["Title", "Authors", "Year", "Cited_by", "ID"]
-    ]
-    result["Cited_by"] = result["Cited_by"].map(
-        lambda w: int(w) if pd.isna(w) is False else 0
-    )
-    return result
+#     """
+#     result = x.sort_values(by="Cited_by", ascending=False)[
+#         ["Title", "Authors", "Year", "Cited_by", "ID"]
+#     ]
+#     result["Cited_by"] = result["Cited_by"].map(
+#         lambda w: int(w) if pd.isna(w) is False else 0
+#     )
+#     return result
 
 
 
@@ -366,42 +419,23 @@ def __APP0__(x, limit_to, exclude):
     controls = [
         # 0
         {
-            "arg": "term",
-            "desc": "Term to analyze:",
+            "arg": "column",
+            "desc": "Column to analyze:",
             "widget": widgets.Dropdown(
                     options=[z for z in COLUMNS if z in x.columns],
-                    ensure_option=True,
                     layout=Layout(width=WIDGET_WIDTH),
                 ),
         },
         # 1
         {
-            "arg": "analysis_type",
-            "desc": "Analysis type:",
+            "arg": "top_by",
+            "desc": "Top by:",
             "widget": widgets.Dropdown(
                     options=["Frequency", "Citation"],
-                    value="Frequency",
                     layout=Layout(width=WIDGET_WIDTH),
                 ),
         },
         # 2
-        {
-            "arg": "plot_type",
-            "desc": "View:",
-            "widget": widgets.Dropdown(
-                    options=["Bar plot", "Horizontal bar plot", "Pie plot", "Wordcloud", "Treemap", "Table"],
-                    layout=Layout(width=WIDGET_WIDTH),
-                ),
-        },
-        # 3
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(
-                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 4
         {
             "arg": "top_n",
             "desc": "Top N:",
@@ -410,6 +444,23 @@ def __APP0__(x, limit_to, exclude):
                     ensure_option=True,
                     layout=Layout(width=WIDGET_WIDTH),
                 ),
+        },
+        # 3
+        {
+            "arg": "plot_type",
+            "desc": "View:",
+            "widget": widgets.Dropdown(
+                    options=["Bar plot", "Horizontal bar plot", "Pie plot", "Wordcloud", "Treemap", "Table"],
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+        },
+        # 4
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
+            ),
         },
         # 5
         {
@@ -439,11 +490,11 @@ def __APP0__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     def server(**kwargs):
         #
-        term = kwargs['term']
-        cmap = kwargs['cmap']
-        analysis_type = kwargs['analysis_type']
+        column = kwargs['column']
+        top_by = kwargs['top_by']
         top_n = kwargs['top_n']
         plot_type = kwargs['plot_type']
+        cmap = kwargs['cmap']
         figsize_width = int(kwargs['figsize_width'])
         figsize_height = int(kwargs['figsize_height'])
         #
@@ -465,19 +516,8 @@ def __APP0__(x, limit_to, exclude):
             controls[-1]["widget"].disabled = False
             controls[-2]["widget"].disabled = False
         #   
-        df = summary_by_term(x, term, limit_to=limit_to, exclude=exclude)
+        df = summary_by_term(x, column=column, top_by=top_by, top_n = top_n, limit_to=limit_to, exclude=exclude)
         #
-        if analysis_type == "Frequency":
-            df = df.sort_values(
-                ["Num_Documents", "Cited_by", term], ascending=False
-            )
-            df = df[[term, "Num_Documents"]].head(top_n)
-        else:
-            df = df.sort_values(
-                ["Cited_by", "Num_Documents", term], ascending=False
-            )
-            df = df[[term, "Cited_by"]].head(top_n)
-        df = df.reset_index(drop=True)
         plot = plots[plot_type]
         output.clear_output()
         with output:
@@ -643,7 +683,7 @@ def app(df, limit_to=None, exclude=None):
     """
     #
     body = widgets.Tab()
-    body.children = [__APP0__(df, limit_to, exclude), __APP1__(df)]
+    body.children = [__APP0__(df, limit_to, exclude), __APP1__(df, limit_to, exclude)]
     body.set_title(0, "Term Analysis")
     body.set_title(1, "Worldmap")
     #

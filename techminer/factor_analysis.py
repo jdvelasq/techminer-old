@@ -14,7 +14,8 @@ from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
 from sklearn.decomposition import PCA
 from techminer.by_term import summary_by_term
-from techminer.co_occurrence import compute_tfm, most_cited_by, most_frequent
+
+#  from techminer.co_occurrence import compute_tfm, most_cited_by, most_frequent
 from techminer.keywords import Keywords
 from techminer.plots import COLORMAPS
 
@@ -92,7 +93,10 @@ def factor_analysis(
 
     """
 
-    tfm = compute_tfm(x, column, limit_to)
+    #
+    # Computo
+    #
+    tfm = compute_tfm(x, column, limit_to=None, exclude=None)
     terms = tfm.columns.tolist()
     if n_components is None:
         n_components = int(np.sqrt(len(set(terms))))
@@ -102,7 +106,14 @@ def factor_analysis(
         result, columns=["F" + str(i) for i in range(n_components)], index=terms
     )
 
-    if limit_to is None:
+    #
+    # Visualizacion
+    #
+    # if (top_by == 0 or top_by == "Frequency") and top_n is not None:
+    #     top_terms =
+
+
+    if limit_to is None or (isinstance(limit_to, dict) and column in limit_to.keys()):
         if (top_by == 0 or top_by == "Frequency") and top_n is not None:
             limit_to = set(most_frequent(x, column, top_n))
         if (top_by == 1 or top_by == "Cited_by") and top_n is not None:

@@ -13,12 +13,14 @@ import pandas as pd
 import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
-from techminer.by_term import citations_by_term, documents_by_term, summary_by_term
+
+#  from techminer.by_term import citations_by_term, documents_by_term, summary_by_term
+from techminer.by_term import summary_by_term
 from techminer.co_occurrence import (
     co_occurrence,
     compute_tfm,
-    most_cited_by,
-    most_frequent,
+    #    most_cited_by,
+    #    most_frequent,
 )
 from techminer.explode import MULTIVALUED_COLS, __explode
 from techminer.keywords import Keywords
@@ -177,13 +179,17 @@ def corr(
         #     exclude[by] = exclude[column]
 
     if column == by:
+        #
         tfm = compute_tfm(x, column=column, limit_to=limit_to, exclude=exclude)
+        #
         if limit_to is None or column not in limit_to.keys():
             tfm = tfm[most_frequent(x, column, top_n, limit_to=None, exclude=exclude)]
         result = tfm.corr(method=method)
     else:
         w = x[[column, by, "ID"]].dropna()
+        #
         A = compute_tfm(w, column, limit_to, exclude)
+        #
         if limit_to is None or column not in limit_to.keys():
             A = A[most_frequent(x, column, top_n, limit_to=None, exclude=exclude)]
         B = compute_tfm(w, by)
