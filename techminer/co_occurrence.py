@@ -17,6 +17,7 @@ from techminer.by_term import citations_by_term, documents_by_term, summary_by_t
 from techminer.explode import MULTIVALUED_COLS, __explode
 from techminer.keywords import Keywords
 from techminer.plots import COLORMAPS
+from techminer.params import EXCLUDE_COLS
 
 
 def compute_tfm(x, column, limit_to=None, exclude=None):
@@ -91,24 +92,39 @@ def compute_tfm(x, column, limit_to=None, exclude=None):
         data=data, index="ID", columns=column, margins=False, fill_value=0.0,
     )
     result.columns = [b for _, b in result.columns]
+
+    if isinstance(limit_to, dict):
+        if column in limit_to.keys():
+            limit_to = limit_to[column]
+        else:
+            limit_to = None
+
     if limit_to is not None:
         result = result[[k for k in limit_to if k in result.columns]]
+
+    if isinstance(exclude, dict):
+        if column in exclude.keys():
+            exclude = exclude[column]
+        else:
+            exclude = None
+
     if exclude is not None:
         result = result[[k for k in result.columns if k not in exclude]]
+
     result = result.reset_index(drop=True)
     return result
 
 
-def most_frequent(x, column, top_n):
-    result = summary_by_term(x, column)
+def most_frequent(x, column, top_n, limit_to, exclude):
+    result = summary_by_term(x, column, limit_to=limit_to, exclude=exclude)
     result = result.sort_values(["Num_Documents", "Cited_by", column], ascending=False)
     result = result[column].head(top_n)
     result = result.tolist()
     return result
 
 
-def most_cited_by(x, column, top_n):
-    result = summary_by_term(x, column)
+def most_cited_by(x, column, top_n, limit_to, exclude):
+    result = summary_by_term(x, column, limit_to=limit_to, exclude=exclude)
     result = result.sort_values(["Cited_by", "Num_Documents", column], ascending=False)
     result = result[column].head(top_n)
     result = result.tolist()
@@ -181,22 +197,22 @@ def co_occurrence(
     if by is None or by == column:
         by = column + "_"
         x[by] = x[column].copy()
+        if isinstance(limit_to, dict) and column in limit_to.keys():
+            limit_to[by] = limit_to[column]
+        if isinstance(exclude, dict) and column in exclude.keys():
+            exclude[by] = exclude[column]
 
-    if limit_to is None:
-        if (top_by == 0 or top_by == "Frequency") and top_n is not None:
-            limit_to = set(most_frequent(x, column, top_n)) | set(
-                most_frequent(x, by, top_n)
-            )
-        if (top_by == 1 or top_by == "Cited_by") and top_n is not None:
-            limit_to = set(most_cited_by(x, column, top_n)) | set(
-                most_cited_by(x, by, top_n)
-            )
-        if limit_to is not None:
-            limit_to = list(limit_to)
+    w = x[[column, by, "ID"]].dropna()
+    A = compute_tfm(w, column, limit_to, exclude)
+    B = compute_tfm(w, by, limit_to, exclude)
 
-    x = x[[column, by, "ID"]].dropna()
-    A = compute_tfm(x, column, limit_to, exclude)
-    B = compute_tfm(x, by, limit_to, exclude)
+    if (top_by == 0 or top_by == "Frequency") and top_n is not None:
+        A = A[most_frequent(x, column, top_n, limit_to=A.columns, exclude=None)]
+        B = B[most_frequent(x, by, top_n, limit_to=B.columns, exclude=None)]
+
+    if (top_by == 1 or top_by == "Cited_by") and top_n is not None:
+        A = A[most_cited_by(x, column, top_n, limit_to=A.columns, exclude=None)]
+        B = B[most_cited_by(x, by, top_n, limit_to=B.columns, exclude=None)]
 
     result = np.matmul(B.transpose().values, A.values)
     result = pd.DataFrame(result, columns=A.columns, index=B.columns)
@@ -381,17 +397,16 @@ def normalize_matrix(matrix, normalization=None):
 #     return sxy / (a * b)
 
 
+###############################################################################
 ##
+##  APP
 ##
-## APP
-##
-##
+###############################################################################
 
-WIDGET_WIDTH = "200px"
-LEFT_PANEL_HEIGHT = "588px"
-RIGHT_PANEL_WIDTH = "870px"
-FIGSIZE = (14, 10.0)
-PANE_HEIGHTS = ["80px", "650px", 0]
+WIDGET_WIDTH = "180px"
+LEFT_PANEL_HEIGHT = "655px"
+RIGHT_PANEL_WIDTH = "1200px"
+PANE_HEIGHTS = ["80px", "720px", 0]
 
 #
 #
@@ -400,27 +415,14 @@ PANE_HEIGHTS = ["80px", "650px", 0]
 #
 
 
-def __TAB0__(x):
-    COLUMNS = [
-        "Author_Keywords",
-        "Author_Keywords_CL",
-        "Authors",
-        "Countries",
-        "Country_1st_Author",
-        "Document_type",
-        "Index_Keywords",
-        "Index_Keywords_CL",
-        "Institution_1st_Author",
-        "Institutions",
-        "Source_title",
-        "Abstract_CL",
-        "Title_CL",
-    ]
+def __TAB0__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
     #
     # -------------------------------------------------------------------------
+    COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
+    #
     controls = [
         # 0
         {
@@ -471,16 +473,8 @@ def __TAB0__(x):
         {
             "arg": "top_n",
             "desc": "Top N:",
-            "widget": widgets.IntSlider(
-                value=5,
-                min=5,
-                max=50,
-                step=1,
-                continuous_update=False,
-                orientation="horizontal",
-                readout=True,
-                readout_format="d",
-                layout=Layout(width=WIDGET_WIDTH),
+            "widget": widgets.Dropdown(
+                options=list(range(5, 51, 5)), layout=Layout(width=WIDGET_WIDTH),
             ),
         },
         # 6
@@ -524,6 +518,26 @@ def __TAB0__(x):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
+        # 9
+        {
+            "arg": "figsize_width",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1),
+                ensure_option=True,
+                layout=Layout(width="88px"),
+            ),
+        },
+        # 10
+        {
+            "arg": "figsize_height",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1),
+                ensure_option=True,
+                layout=Layout(width="88px"),
+            ),
+        },
     ]
     # -------------------------------------------------------------------------
     #
@@ -543,9 +557,17 @@ def __TAB0__(x):
         sort_by = kwargs["sort_by"]
         normalization = kwargs["normalization"]
         layout = kwargs["layout"]
+        figsize_width = int(kwargs["figsize_width"])
+        figsize_height = int(kwargs["figsize_height"])
         #
         matrix = co_occurrence(
-            x, column=term, by=by, top_by=top_by, top_n=top_n, selected_columns=None,
+            x,
+            column=term,
+            by=by,
+            top_by=top_by,
+            top_n=top_n,
+            limit_to=limit_to,
+            exclude=exclude,
         )
         #
         controls[7]["widget"].disabled = (
@@ -553,7 +575,7 @@ def __TAB0__(x):
         )
         controls[8]["widget"].disabled = False if plot_type == "Network" else True
         #
-        s = summary_by_term(x, term)
+        s = summary_by_term(x, term, limit_to, exclude)
         new_names = {
             a: "{} [{:d}]".format(a, b)
             for a, b in zip(s[term].tolist(), s["Num_Documents"].tolist())
@@ -604,19 +626,36 @@ def __TAB0__(x):
                 ):
                     display(matrix.style.background_gradient(cmap=cmap, axis=None))
             if plot_type == "Heatmap":
-                display(plt.heatmap(matrix, cmap=cmap, figsize=(14, 8.5)))
+                display(
+                    plt.heatmap(
+                        matrix, cmap=cmap, figsize=(figsize_width, figsize_height)
+                    )
+                )
             if plot_type == "Bubble plot":
                 display(
-                    plt.bubble(matrix.transpose(), axis=0, cmap=cmap, figsize=(14, 8.5))
+                    plt.bubble(
+                        matrix.transpose(),
+                        axis=0,
+                        cmap=cmap,
+                        figsize=(figsize_width, figsize_height),
+                    )
                 )
             if plot_type == "Network" and term == by:
                 display(
-                    occurrence_map(matrix, layout=layout, cmap=cmap, figsize=(14, 11))
+                    occurrence_map(
+                        matrix,
+                        layout=layout,
+                        cmap=cmap,
+                        figsize=(figsize_width, figsize_height),
+                    )
                 )
             if plot_type == "Network" and term != by:
                 display(
                     co_occurrence_map(
-                        matrix, layout=layout, cmap=cmap, figsize=(14, 11)
+                        matrix,
+                        layout=layout,
+                        cmap=cmap,
+                        figsize=(figsize_width, figsize_height),
                     )
                 )
 
@@ -637,6 +676,11 @@ def __TAB0__(x):
                         [widgets.Label(value=control["desc"]), control["widget"]]
                     )
                     for control in controls
+                    if control["desc"] not in ["Figsize"]
+                ]
+                + [
+                    widgets.Label(value="Figure Size"),
+                    widgets.HBox([controls[-2]["widget"], controls[-1]["widget"],]),
                 ],
                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
             ),
@@ -654,12 +698,12 @@ def __TAB0__(x):
 #
 
 
-def app(df):
+def app(df, limit_to=None, exclude=None):
     """Jupyter Lab dashboard.
     """
     #
     body = widgets.Tab()
-    body.children = [__TAB0__(df)]
+    body.children = [__TAB0__(df, limit_to, exclude)]
     body.set_title(0, "Co-occurrence")
     body.set_title(1, "Occurrence")
     #
