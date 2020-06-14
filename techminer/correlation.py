@@ -18,7 +18,6 @@ from ipywidgets import AppLayout, Layout
 from techminer.by_term import summary_by_term
 from techminer.co_occurrence import (
     co_occurrence,
-    compute_tfm,
     #    most_cited_by,
     #    most_frequent,
 )
@@ -27,6 +26,8 @@ from techminer.keywords import Keywords
 from techminer.maps import Map
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS, chord_diagram
+
+
 
 
 def corr(
@@ -179,23 +180,38 @@ def corr(
         #     exclude[by] = exclude[column]
 
     if column == by:
-        #
-        tfm = compute_tfm(x, column=column, limit_to=limit_to, exclude=exclude)
-        #
-        if limit_to is None or column not in limit_to.keys():
-            tfm = tfm[most_frequent(x, column, top_n, limit_to=None, exclude=exclude)]
-        result = tfm.corr(method=method)
+
+        dtm = document_term_matrix(x, column=column)
+        dtm = filter_index(
+            x=x,
+            column=column,
+            matrix=dtm,
+            axis=1,
+            top_by=0,
+            top_n=top_n,
+            limit_to=limit_to,
+            exclude=exclude,
+        )
+        result = dtm.corr(method=method)
+
     else:
+
         w = x[[column, by, "ID"]].dropna()
-        #
-        A = compute_tfm(w, column, limit_to, exclude)
-        #
-        if limit_to is None or column not in limit_to.keys():
-            A = A[most_frequent(x, column, top_n, limit_to=None, exclude=exclude)]
-        B = compute_tfm(w, by)
-        tfm = np.matmul(B.transpose().values, A.values)
-        tfm = pd.DataFrame(tfm, columns=A.columns, index=B.columns)
-        result = tfm.corr(method=method)
+        A = document_term_matrix(w, column=column)
+        A = filter_index(
+            x=x,
+            column=column,
+            matrix=A,
+            axis=1,
+            top_by=0,
+            top_n=top_n,
+            limit_to=limit_to,
+            exclude=exclude,
+        )
+        B = document_term_matrix(w, column=by)
+        matrix = np.matmul(B.transpose().values, A.values)
+        matrix = pd.DataFrame(matrix, columns=A.columns, index=B.columns)
+        result = matrix.corr(method=method)
 
     result = result.sort_index(axis=0, ascending=True)
     result = result.sort_index(axis=1, ascending=True)
@@ -600,7 +616,7 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "view",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Heatmap", "Correlation map", "Chord diagram", "Table"],
+                options=["Table", "Heatmap", "Correlation map", "Chord diagram"],
                 ensure_option=True,
                 continuous_update=True,
                 layout=Layout(width=WIDGET_WIDTH),
@@ -714,18 +730,19 @@ def __TAB0__(x, limit_to, exclude):
         #
         #
         if top_by == "Frequency":
-            s = documents_by_term(x, column)
+            s = summary_by_term(x, column)
             new_names = {
                 a: "{} [{:d}]".format(a, b)
                 for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
             }
         else:
-            s = citations_by_term(x, column)
+            s = summary_by_term(x, column)
             new_names = {
                 a: "{} [{:d}]".format(a, b)
                 for a, b in zip(s[column].tolist(), s["Cited_by"].tolist())
             }
         matrix = matrix.rename(columns=new_names, index=new_names)
+
         output.clear_output()
         with output:
             if view == "Table" or view == "Heatmap":

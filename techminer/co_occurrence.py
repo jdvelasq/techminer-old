@@ -20,6 +20,142 @@ from techminer.plots import COLORMAPS
 from techminer.params import EXCLUDE_COLS
 
 
+def filter_index(
+    x, column, matrix, axis, top_by=0, top_n=10, limit_to=None, exclude=None
+):
+    """
+    Args:
+        x: bibliographic database
+        column: column analyzed
+        matrix: result
+        axis: 0=rows, 1=columns
+        top_by: 0=frequency, 1=cited_by
+
+    """
+    top_terms = summary_by_term(x, column)
+
+    if top_by == 0 or top_by == "Frequency":
+        top_terms = top_terms.sort_values(
+            ["Num_Documents", "Cited_by", column],
+            ascending=[False, False, True],
+            ignore_index=True,
+        )
+
+    if top_by == 1 or top_by == "Cited_by":
+        top_terms = top_terms.sort_values(
+            ["Cited_by", "Num_Documents", column],
+            ascending=[False, False, True],
+            ignore_index=True,
+        )
+
+    top_terms = top_terms[column]
+
+    if isinstance(limit_to, dict):
+        if column in limit_to.keys():
+            limit_to = limit_to[column]
+        else:
+            limit_to = None
+
+    if limit_to is not None:
+        top_terms = top_terms[top_terms.map(lambda w: w in limit_to)]
+
+    if isinstance(exclude, dict):
+        if column in exclude.keys():
+            exclude = exclude[column]
+        else:
+            exclude = None
+
+    if exclude is not None:
+        top_terms = top_terms[top_terms.map(lambda w: w not in exclude)]
+
+    if top_n is not None:
+        top_terms = top_terms.head(top_n)
+
+    top_terms = top_terms.tolist()
+
+    if axis == 0 or axis == 2:
+        matrix = matrix.loc[top_terms, :]
+
+    if axis == 1 or axis == 2:
+        matrix = matrix.loc[:, top_terms]
+
+    return matrix
+
+
+def document_term_matrix(x, column):
+    """Computes the term-frequency matrix for the terms in a column.
+
+    Args:
+        column (str): the column to explode.
+
+    Returns:
+        DataFrame.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = [ 'A', 'A;B', 'B', 'A;B;C', 'B;D']
+    >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d']
+    >>> df = pd.DataFrame(
+    ...    {
+    ...       'Authors': x,
+    ...       'Author_Keywords': y,
+    ...       'Cited_by': list(range(len(x))),
+    ...       'ID': list(range(len(x))),
+    ...    }
+    ... )
+    >>> df
+      Authors Author_Keywords  Cited_by  ID
+    0       A               a         0   0
+    1     A;B             a;b         1   1
+    2       B               b         2   2
+    3   A;B;C               c         3   3
+    4     B;D             c;d         4   4
+
+    >>> compute_tfm(df, 'Authors')
+       A  B  C  D
+    0  1  0  0  0
+    1  1  1  0  0
+    2  0  1  0  0
+    3  1  1  1  0
+    4  0  1  0  1
+
+    >>> compute_tfm(df, 'Author_Keywords')
+       a  b  c  d
+    0  1  0  0  0
+    1  1  1  0  0
+    2  0  1  0  0
+    3  0  0  1  0
+    4  0  0  1  1
+
+    >>> compute_tfm(df, 'Authors', limit_to=['A', 'B'])
+       A  B
+    0  1  0
+    1  1  1
+    2  0  1
+    3  1  1
+    4  0  1
+
+    >>> compute_tfm(df, 'Authors', exclude=['A', 'B'])
+       C  D
+    0  0  0
+    1  0  0
+    2  0  0
+    3  1  0
+    4  0  1
+
+
+    """
+    data = x[[column, "ID"]].copy()
+    data["value"] = 1.0
+    data = __explode(data, column)
+    result = pd.pivot_table(
+        data=data, index="ID", columns=column, margins=False, fill_value=0.0,
+    )
+    result.columns = [b for _, b in result.columns]
+    return result
+
 
 def co_occurrence(
     x, column, by=None, top_by=None, top_n=None, limit_to=None, exclude=None
@@ -93,16 +229,28 @@ def co_occurrence(
             exclude[by] = exclude[column]
 
     w = x[[column, by, "ID"]].dropna()
-    A = compute_tfm(w, column, limit_to, exclude)
-    B = compute_tfm(w, by, limit_to, exclude)
-
-    if (top_by == 0 or top_by == "Frequency") and top_n is not None:
-        A = A[most_frequent(x, column, top_n, limit_to=A.columns, exclude=None)]
-        B = B[most_frequent(x, by, top_n, limit_to=B.columns, exclude=None)]
-
-    if (top_by == 1 or top_by == "Cited_by") and top_n is not None:
-        A = A[most_cited_by(x, column, top_n, limit_to=A.columns, exclude=None)]
-        B = B[most_cited_by(x, by, top_n, limit_to=B.columns, exclude=None)]
+    A = document_term_matrix(w, column)
+    A = filter_index(
+        x=x,
+        column=column,
+        matrix=A,
+        axis=1,
+        top_by=top_by,
+        top_n=top_n,
+        limit_to=limit_to,
+        exclude=exclude,
+    )
+    B = document_term_matrix(w, by)
+    B = filter_index(
+        x=x,
+        column=by,
+        matrix=B,
+        axis=1,
+        top_by=top_by,
+        top_n=top_n,
+        limit_to=limit_to,
+        exclude=exclude,
+    )
 
     result = np.matmul(B.transpose().values, A.values)
     result = pd.DataFrame(result, columns=A.columns, index=B.columns)
@@ -339,7 +487,7 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "plot_type",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Heatmap", "Bubble plot", "Table", "Network"],
+                options=["Table", "Heatmap", "Bubble plot", "Network"],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
@@ -465,7 +613,14 @@ def __TAB0__(x, limit_to, exclude):
         )
         controls[8]["widget"].disabled = False if plot_type == "Network" else True
         #
-        s = summary_by_term(x, term, limit_to, exclude)
+        s = summary_by_term(
+            x=x,
+            column=term,
+            top_by=top_by,
+            top_n=top_n,
+            limit_to=limit_to,
+            exclude=exclude,
+        )
         new_names = {
             a: "{} [{:d}]".format(a, b)
             for a, b in zip(s[term].tolist(), s["Num_Documents"].tolist())
