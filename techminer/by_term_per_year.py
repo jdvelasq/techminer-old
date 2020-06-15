@@ -12,8 +12,6 @@ import pandas as pd
 import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
-# from techminer.by_term import citations_by_term, documents_by_term
-from techminer.by_year import citations_by_year, documents_by_year
 from techminer.explode import __explode
 from techminer.keywords import Keywords
 from techminer.params import EXCLUDE_COLS
