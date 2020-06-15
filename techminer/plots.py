@@ -808,6 +808,137 @@ def bubble(
     return fig
 
 
+def bubble_prop(
+    x,
+    y,
+    figsize=(9, 9),
+    cmap="Blues",
+    grid_lw=1.0,
+    grid_c="gray",
+    grid_ls=":",
+    **kwargs
+):
+
+    """Creates a gant activity plot from a dataframe.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         "author 0": [ 1, 2, 3, 4, 5, 6, 7],
+    ...         "author 1": [14, 13, 12, 11, 10, 9, 8],
+    ...         "author 2": [1, 5, 8, 9, 0, 0, 0],
+    ...         "author 3": [0, 0, 1, 1, 1, 0, 0],
+    ...         "author 4": [0, 10, 0, 4, 2, 0, 1],
+    ...     },
+    ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
+    ... )
+    >>> df
+          author 0  author 1  author 2  author 3  author 4
+    2010         1        14         1         0         0
+    2011         2        13         5         0        10
+    2012         3        12         8         1         0
+    2013         4        11         9         1         4
+    2014         5        10         0         1         2
+    2015         6         9         0         0         0
+    2016         7         8         0         0         1
+
+    >>> fig = bubble(df, axis=0, alpha=0.5, rmax=150)
+    >>> fig.savefig('sphinx/images/bubbleplot0.png')
+
+    .. image:: images/bubbleplot0.png
+        :width: 400px
+        :align: center
+
+    >>> fig = bubble(df, axis=1, alpha=0.5, rmax=150)
+    >>> fig.savefig('sphinx/images/bubbleplot1.png')
+
+    .. image:: images/bubbleplot1.png
+        :width: 400px
+        :align: center
+
+
+    """
+    matplotlib.rc("font", size=FONT_SIZE)
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+    cmap = plt.cm.get_cmap(cmap)
+
+    x = x.copy()
+
+    size_max = x.max().max()
+    size_min = x.min().min()
+
+    y = y.loc[:, x.columns]
+
+    color_max = y.max().max()
+    color_min = y.min().min()
+
+    for idx, row in enumerate(x.index.tolist()):
+
+        sizes = [
+            100 + 400 * (w - size_min) / (size_max - size_min) if w != 0 else 0
+            for w in x.loc[row, :]
+        ]
+
+        colors = [
+            cmap(0.2 + 0.8 * (w - color_min) / (color_max - color_min))
+            for w in y.loc[row, :]
+        ]
+
+        #  return range(len(x.columns)), [idx] * len(x.columns)
+
+        ax.scatter(
+            list(range(len(x.columns))),
+            [idx] * len(x.columns),
+            marker="o",
+            s=sizes,
+            alpha=0.6,
+            c=colors,
+            edgecolors="k",
+            #  **kwargs,
+        )
+
+    for idx, row in enumerate(x.iterrows()):
+        ax.hlines(
+            idx, -1, len(x.columns), linewidth=grid_lw, color=grid_c, linestyle=grid_ls,
+        )
+
+    for idx, col in enumerate(x.columns):
+        ax.vlines(
+            idx, -1, len(x.index), linewidth=grid_lw, color=grid_c, linestyle=grid_ls,
+        )
+
+    for idx_col, col in enumerate(x.columns):
+        for idx_row, row in enumerate(x.index):
+
+            if x[col][row] != 0:
+                ax.text(idx_col, idx_row, x[col][row], va="center", ha="center")
+
+    ax.set_aspect("equal")
+
+    ax.set_xlim(-1, len(x.columns))
+    ax.set_ylim(-1, len(x.index) + 1)
+
+    ax.set_xticks(np.arange(len(x.columns)))
+    ax.set_xticklabels(x.columns)
+    ax.tick_params(axis="x", labelrotation=90)
+    ax.xaxis.tick_top()
+
+    ax.invert_yaxis()
+    ax.set_yticks(np.arange(len(x.index)))
+    ax.set_yticklabels(x.index)
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
+
+    return fig
+
+
 def plot(x, *args, figsize=(9, 9), cmap="Blues", scalex=True, scaley=True, **kwargs):
     """Creates a plot from a dataframe.
 

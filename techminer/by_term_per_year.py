@@ -808,41 +808,33 @@ def __APP0__(x, limit_to, exclude):
     controls = [
         # 0
         {
-            "arg": "term",
-            "desc": "Term to analyze:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 1
-        {
-            "arg": "analysis_type",
-            "desc": "Analysis type:",
+            "arg": "analysis_by",
+            "desc": "Analysis by:",
             "widget": widgets.Dropdown(
                 options=["Frequency", "Citation", "Perc. Frequency", "Perc. Cited by"],
                 value="Frequency",
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 2
+        # 1
         {
-            "arg": "plot_type",
+            "arg": "view",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Table", "Heatmap", "Bubble plot", "Gant diagram", 'Lines plot', ],
+                options=["Summary", "Heatmap", "Bubble plot", "Gant diagram", 'Lines plot', ],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 3
+        # 2
         {
-            "arg": "cmap",
-            "desc": "Colormap:",
+            "arg": "column",
+            "desc": "Column to analyze:",
             "widget": widgets.Dropdown(
-                options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
+                options=[z for z in COLUMNS if z in x.columns],
+                layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 4
+        # 3
         {
             "arg": "top_n",
             "desc": "Top N:",
@@ -851,6 +843,14 @@ def __APP0__(x, limit_to, exclude):
                     ensure_option=True,
                     layout=Layout(width=WIDGET_WIDTH),
                 ),
+        },
+        # 4
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
+            ),
         },
         # 5
         {
@@ -880,43 +880,52 @@ def __APP0__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     def server(**kwargs):
         #
-        term = kwargs["term"]
-        analysis_type = kwargs["analysis_type"]
-        plot_type = kwargs["plot_type"]
+        analysis_by = kwargs["analysis_by"]
+        view = kwargs["view"]
+        column = kwargs["column"]
+        top_n = kwargs["top_n"] 
         cmap = kwargs["cmap"]
-        top_n = kwargs["top_n"]
         figsize_width = int(kwargs['figsize_width'])
         figsize_height = int(kwargs['figsize_height'])
         #
-        plots = {"Heatmap": plt.heatmap, "Gant diagram": plt.gant, "Bubble plot": plt.bubble, "Lines": plt.plot, "Table":None}
-        plot = plots[plot_type]
+        plots = {"Heatmap": plt.heatmap, "Gant diagram": plt.gant, "Bubble plot": plt.bubble_prop, "Lines": plt.plot, "Summary":None}
+        plot = plots[view]
         #
-        if analysis_type == "Frequency":
-            matrix = documents_by_term_per_year(x, term, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
-        
-        if analysis_type == 'Citation':
-            matrix = citations_by_term_per_year(x, term, as_matrix=True, topn=top_n, limit_to=limit_to, exclude=exclude)
-
-        if analysis_type == 'Perc. Frequency':
-            matrix = perc_documents_by_term_per_year(x, term, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
-
-        if analysis_type == 'Perc. Cited by':
-            matrix = perc_citations_by_term_per_year(x, term, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
-
-
         output.clear_output()
         with output:
-            if plot_type == "Heatmap":
-                display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
-            if plot_type == "Gant diagram":
-                display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
-            if plot_type == "Bubble plot":
-                display(plot(matrix.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
-            if plot_type == "Lines plot":
-                display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
-            if plot_type == 'Table':
-                display(matrix.style.background_gradient(cmap=cmap, axis=None))
 
+            if analysis_by == "Frequency":
+                matrix = documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+                if view == "Gant diagram":
+                    display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
+                    return
+                if view == "Bubble plot":
+                    z = citations_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
+                    display(plot(matrix.transpose(), z.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
+                    return
+
+            if analysis_by == "Citation":
+                matrix = citations_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+                if view == "Bubble plot":
+                    z = documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+                    display(plot(matrix.transpose(), z.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
+                    return 
+
+            if analysis_by == "Perc. Frequency":
+                matrix = perc_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+
+            if analysis_by == "Perc. Cited by":
+                matrix = perc_citations_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+
+            if view == 'Summary':
+                display(matrix.style.background_gradient(cmap=cmap, axis=None))
+            if view == "Heatmap":
+                display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
+            if view == "Lines plot":
+                display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
+
+            
+            
 
     # -------------------------------------------------------------------------
     #
