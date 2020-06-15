@@ -503,6 +503,179 @@ def barh_prop(
     return fig
 
 
+def pie(
+    x,
+    figsize=(8, 8),
+    cmap="Greys",
+    explode=None,
+    autopct=None,
+    pctdistance=0.6,
+    shadow=False,
+    labeldistance=1.1,
+    startangle=None,
+    radius=None,
+    counterclock=True,
+    wedgeprops=None,
+    textprops=None,
+    center=(0, 0),
+    frame=False,
+    rotatelabels=False,
+):
+    """Creates a pie plot from a dataframe.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+    ...         "Num_Documents": [3, 2, 2, 1],
+    ...         "ID": list(range(4)),
+    ...     }
+    ... )
+    >>> df
+        Authors  Num_Documents  ID
+    0  author 3              3   0
+    1  author 1              2   1
+    2  author 0              2   2
+    3  author 2              1   3
+    >>> fig = pie(df, cmap="Blues")
+    >>> fig.savefig('sphinx/images/pieplot.png')
+
+    .. image:: images/pieplot.png
+        :width: 400px
+        :align: center
+
+
+    """
+    matplotlib.rc("font", size=FONT_SIZE)
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+    cmap = plt.cm.get_cmap(cmap)
+
+    x = x.copy()
+    if "ID" in x.columns:
+        x.pop("ID")
+    colors = None
+    if cmap is not None:
+        colors = [cmap(1.0 - 0.9 * (i / len(x))) for i in range(len(x[x.columns[1]]))]
+    ax.pie(
+        x=x[x.columns[1]],
+        explode=explode,
+        labels=x[x.columns[0]],
+        colors=colors,
+        autopct=autopct,
+        pctdistance=pctdistance,
+        shadow=shadow,
+        labeldistance=labeldistance,
+        startangle=startangle,
+        radius=radius,
+        counterclock=counterclock,
+        wedgeprops=wedgeprops,
+        textprops=textprops,
+        center=center,
+        frame=frame,
+        rotatelabels=rotatelabels,
+    )
+    return fig
+
+
+def pie_prop(
+    x,
+    figsize=(8, 8),
+    cmap="Greys",
+    explode=None,
+    autopct=None,
+    pctdistance=0.6,
+    shadow=False,
+    labeldistance=1.1,
+    startangle=None,
+    radius=None,
+    counterclock=True,
+    wedgeprops=None,
+    textprops=None,
+    center=(0, 0),
+    frame=False,
+    rotatelabels=False,
+):
+    """Creates a pie plot from a dataframe.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+    ...         "Num_Documents": [3, 2, 2, 1],
+    ...         "ID": list(range(4)),
+    ...     }
+    ... )
+    >>> df
+        Authors  Num_Documents  ID
+    0  author 3              3   0
+    1  author 1              2   1
+    2  author 0              2   2
+    3  author 2              1   3
+    >>> fig = pie(df, cmap="Blues")
+    >>> fig.savefig('sphinx/images/pieplot.png')
+
+    .. image:: images/pieplot.png
+        :width: 400px
+        :align: center
+
+
+    """
+    matplotlib.rc("font", size=FONT_SIZE)
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+    cmap = plt.cm.get_cmap(cmap)
+
+    x = x.copy()
+    if "ID" in x.columns:
+        x.pop("ID")
+
+    column0 = x[x.columns[0]]
+    column1 = x[x.columns[1]]
+    column2 = x[x.columns[2]]
+
+    colors = None
+    if cmap is not None:
+        cmap = plt.cm.get_cmap(cmap)
+        colors = [
+            cmap(
+                (
+                    0.2
+                    + 0.75
+                    * (column2[i] - column2.min())
+                    / (column2.max() - column2.min())
+                )
+            )
+            for i in range(len(x))
+        ]
+
+    ax.pie(
+        x=column1,
+        explode=explode,
+        labels=x[x.columns[0]],
+        colors=colors,
+        autopct=autopct,
+        pctdistance=pctdistance,
+        shadow=shadow,
+        labeldistance=labeldistance,
+        startangle=startangle,
+        radius=radius,
+        counterclock=counterclock,
+        wedgeprops=wedgeprops,
+        textprops=textprops,
+        center=center,
+        frame=frame,
+        rotatelabels=rotatelabels,
+    )
+    return fig
+
+
 def bubble(
     x,
     axis=0,
@@ -706,84 +879,6 @@ def plot(x, *args, figsize=(9, 9), cmap="Blues", scalex=True, scaley=True, **kwa
     ax.spines["left"].set_visible(False)
     ax.spines["bottom"].set_visible(True)
 
-    return fig
-
-
-def pie(
-    x,
-    figsize=(8, 8),
-    cmap="Greys",
-    explode=None,
-    autopct=None,
-    pctdistance=0.6,
-    shadow=False,
-    labeldistance=1.1,
-    startangle=None,
-    radius=None,
-    counterclock=True,
-    wedgeprops=None,
-    textprops=None,
-    center=(0, 0),
-    frame=False,
-    rotatelabels=False,
-):
-    """Creates a pie plot from a dataframe.
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> import pandas as pd
-    >>> df = pd.DataFrame(
-    ...     {
-    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-    ...         "Num_Documents": [3, 2, 2, 1],
-    ...         "ID": list(range(4)),
-    ...     }
-    ... )
-    >>> df
-        Authors  Num_Documents  ID
-    0  author 3              3   0
-    1  author 1              2   1
-    2  author 0              2   2
-    3  author 2              1   3
-    >>> fig = pie(df, cmap="Blues")
-    >>> fig.savefig('sphinx/images/pieplot.png')
-
-    .. image:: images/pieplot.png
-        :width: 400px
-        :align: center
-
-
-    """
-    matplotlib.rc("font", size=FONT_SIZE)
-    fig = plt.Figure(figsize=figsize)
-    ax = fig.subplots()
-    cmap = plt.cm.get_cmap(cmap)
-
-    x = x.copy()
-    if "ID" in x.columns:
-        x.pop("ID")
-    colors = None
-    if cmap is not None:
-        colors = [cmap(1.0 - 0.9 * (i / len(x))) for i in range(len(x[x.columns[1]]))]
-    ax.pie(
-        x=x[x.columns[1]],
-        explode=explode,
-        labels=x[x.columns[0]],
-        colors=colors,
-        autopct=autopct,
-        pctdistance=pctdistance,
-        shadow=shadow,
-        labeldistance=labeldistance,
-        startangle=startangle,
-        radius=radius,
-        counterclock=counterclock,
-        wedgeprops=wedgeprops,
-        textprops=textprops,
-        center=center,
-        frame=frame,
-        rotatelabels=rotatelabels,
-    )
     return fig
 
 

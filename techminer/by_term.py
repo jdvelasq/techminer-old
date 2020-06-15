@@ -523,7 +523,7 @@ def __APP0__(x, limit_to, exclude):
             "Summary": None,
             "Bar plot": plt.bar_prop,
             "Horizontal bar plot": plt.barh_prop,
-            "Pie plot": plt.pie,
+            "Pie plot": plt.pie_prop,
             "Wordcloud": plt.wordcloud,
             "Treemap": plt.tree,
         }
