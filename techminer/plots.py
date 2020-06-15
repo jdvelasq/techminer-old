@@ -1341,15 +1341,40 @@ def worldmap(x, figsize=(10, 5), cmap="Pastel2", legend=True, *args, **kwargs):
     ]
     for i in range(11):
         ax.text(
-            xright + 0.2 * (xright - xleft), pos[i], str(int(value[i])), ha="left",
+            xright + 0.4 * (xright - xleft),
+            pos[i],
+            str(int(value[i])),
+            ha="left",
+            va="center",
         )
 
-    #  ax.text(xright, ymin, "0", ha="left")
+    ax.plot(
+        [xleft - 0.1 * (xright - xleft), xleft - 0.1 * (xright - xleft)],
+        [ymin, ymax],
+        color="gray",
+        linewidth=1,
+    )
+    for i in range(11):
+        ax.plot(
+            [xleft - 0.0 * (xright - xleft), xright],
+            [pos[i], pos[i]],
+            linewidth=2.0,
+            color=cmap((11 - i) / 11),
+        )
+
+    # ax.text(xright, ymin, "0", ha="left")
     # ax.text(xright, ymax, str(x[x.columns[0]].max()), ha="left")
+
     ax.set_aspect("equal")
     ax.axis("on")
     ax.set_xticks([])
     ax.set_yticks([])
+
+    ax.spines["bottom"].set_color("gray")
+    ax.spines["top"].set_color("gray")
+    ax.spines["right"].set_color("gray")
+    ax.spines["left"].set_color("gray")
+
     return fig
 
 
