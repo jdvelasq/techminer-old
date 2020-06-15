@@ -4,14 +4,19 @@ Analysis by Year
 
 
 """
+import textwrap
+
 import ipywidgets as widgets
+import matplotlib
 import matplotlib.pyplot as pyplot
 import numpy as np
 import pandas as pd
-import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
-from techminer.plots import COLORMAPS, STYLE
+from techminer.plots import COLORMAPS
+import techminer.plots as plt
+
+TEXTLEN = 40
 
 
 def summary_by_year(df):
@@ -87,44 +92,238 @@ def summary_by_year(df):
     result["Cum_Cited_by"] = result["Cited_by"].cumsum()
     result["Avg_Cited_by"] = result["Cited_by"] / result["Num_Documents"]
     result["Avg_Cited_by"] = result["Avg_Cited_by"].map(
-        lambda x: 0 if pd.isna(x) else x
+        lambda x: 0 if pd.isna(x) else round(x, 2)
     )
     result = result.reset_index()
     return result
 
 
-def documents_by_year(x, cumulative=False):
-    """Computes the number of documents per year.
-    This function adds the missing years in the sequence.
+#
+#
+#  Plots
+#
+#
 
-    Args:
-        cumulative (bool): cumulate values per year.
+FONTSIZE = 13
 
-    Returns:
-        DataFrame.
+
+#
+#  View:
+
+#    Documents by year **
+#    Cum Documents by year
+#    Times cited by year **
+#    Cumulative times cited by year
+#    Avg times cited by year
+#
+
+
+def documents_by_year_bar(
+    x,
+    width=0.8,
+    bottom=None,
+    align="center",
+    style="default",
+    cmap="Greys",
+    figsize=(10, 6),
+    **kwargs
+):
+    """Creates a bar plot from a dataframe.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
+    ...          "Cited_by": list(range(10,16)),
+    ...          "ID": list(range(6)),
+    ...     }
+    ... )
+    >>> df
+       Year  Cited_by  ID
+    0  2010        10   0
+    1  2010        11   1
+    2  2011        12   2
+    3  2011        13   3
+    4  2012        14   4
+    5  2016        15   5
+
+    >>> summary_by_year(df)[['Year', 'Cited_by', 'Num_Documents', 'ID']]
+       Year  Cited_by  Num_Documents      ID
+    0  2010        21              2  [0, 1]
+    1  2011        25              2  [2, 3]
+    2  2012        14              1     [4]
+    3  2013         0              0      []
+    4  2014         0              0      []
+    5  2015         0              0      []
+    6  2016        15              1     [5]
+
+
+    >>> fig = documents_by_year_bar(x=df, cmap="Blues")
+    >>> fig.savefig('sphinx/images/documents-by-year-barplot.png')
+
+    .. image:: images/documents-by-year-barplot.png
+        :width: 400px
+        :align: center
+
 
     """
-    result = summary_by_year(x)
-    result.pop("Cited_by")
-    result = result.reset_index(drop=True)
-    return result
+    #
+    # Data
+    #
+    table = summary_by_year(x)
+
+    #
+    # Color as a function of times cited
+    #
+    matplotlib.rc("font", size=FONTSIZE)
+    if cmap is not None:
+        cmap = pyplot.cm.get_cmap(cmap)
+        kwargs["color"] = [
+            cmap(
+                (
+                    0.2
+                    + 0.75
+                    * (value - table.Cited_by.min())
+                    / (table.Cited_by.max() - table.Cited_by.min())
+                )
+            )
+            for value in table.Cited_by
+        ]
+
+    fig = pyplot.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    ax.bar(
+        x=range(len(table)),
+        height=table.Num_Documents,
+        width=width,
+        bottom=bottom,
+        align=align,
+        **({}),
+        **kwargs,
+    )
+
+    ax.set_xticks(np.arange(len(table)))
+    ax.set_xticklabels(table.Year)
+    ax.tick_params(axis="x", labelrotation=90)
+
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Num_Documents")
+
+    if style == "default":
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.spines["left"].set_visible(False)
+        ax.spines["bottom"].set_visible(True)
+        ax.grid(axis="y", color="gray", linestyle=":")
+
+    return fig
 
 
-def citations_by_year(x, cumulative=False):
-    """Computes the number of citations by year.
-    This function adds the missing years in the sequence.
+def documents_by_year_barh(
+    x,
+    height=0.8,
+    left=None,
+    figsize=(8, 5),
+    align="center",
+    style="default",
+    cmap=None,
+    **kwargs
+):
+    """Creates a bar plot from a dataframe.
 
-    Args:
-        cumulative (bool): cumulate values per year.
+Examples
+    ----------------------------------------------------------------------------------------------
 
-    Returns:
-        DataFrame.
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
+    ...          "Cited_by": list(range(10,16)),
+    ...          "ID": list(range(6)),
+    ...     }
+    ... )
+    >>> df
+       Year  Cited_by  ID
+    0  2010        10   0
+    1  2010        11   1
+    2  2011        12   2
+    3  2011        13   3
+    4  2012        14   4
+    5  2016        15   5
+
+    >>> summary_by_year(df)[['Year', 'Cited_by', 'Num_Documents', 'ID']]
+       Year  Cited_by  Num_Documents      ID
+    0  2010        21              2  [0, 1]
+    1  2011        25              2  [2, 3]
+    2  2012        14              1     [4]
+    3  2013         0              0      []
+    4  2014         0              0      []
+    5  2015         0              0      []
+    6  2016        15              1     [5]
+
+
+    >>> fig = documents_by_year_barh(x=df, cmap="Blues")
+    >>> fig.savefig('sphinx/images/documents-by-year-barhplot.png')
+
+    .. image:: images/documents-by-year-barhplot.png
+        :width: 400px
+        :align: center
 
     """
-    result = summary_by_year(x)
-    result.pop("Num_Documents")
-    result = result.reset_index(drop=True)
-    return result
+
+    #
+    # Data
+    #
+    table = summary_by_year(x)
+
+    #
+    # Color as a function of times cited
+    #
+    matplotlib.rc("font", size=FONTSIZE)
+    if cmap is not None:
+        cmap = pyplot.cm.get_cmap(cmap)
+        kwargs["color"] = [
+            cmap(
+                (
+                    0.2
+                    + 0.75
+                    * (value - table.Cited_by.min())
+                    / (table.Cited_by.max() - table.Cited_by.min())
+                )
+            )
+            for value in table.Cited_by
+        ]
+
+    fig = pyplot.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    ax.barh(
+        y=range(len(table.Year)),
+        width=table.Num_Documents,
+        height=height,
+        left=left,
+        align=align,
+        **kwargs,
+    )
+
+    ax.invert_yaxis()
+    ax.set_yticks(np.arange(len(table)))
+    ax.set_yticklabels(table.Year)
+    ax.set_xlabel("Num_Documents")
+    ax.set_ylabel("Year")
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(True)
+    ax.spines["bottom"].set_visible(False)
+
+    ax.grid(axis="x", color="gray", linestyle=":")
+
+    return fig
 
 
 #
