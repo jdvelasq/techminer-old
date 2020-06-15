@@ -884,6 +884,23 @@ def occurrence_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)
     }
     label_pos = layout_dict[layout](G)
 
+    if not G.edges():
+        nx.draw_networkx_nodes(
+            G,
+            label_pos,
+            ax=ax,
+            edge_color="k",
+            nodelist=terms,
+            node_size=node_sizes,
+            node_color=node_colors,
+            node_shape="o",
+        )
+
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.spines["left"].set_visible(False)
+        ax.spines["bottom"].set_visible(False)
+
     #
     # Figure size
     #
