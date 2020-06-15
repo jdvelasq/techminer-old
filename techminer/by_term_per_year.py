@@ -138,53 +138,6 @@ def summary_by_term_per_year(x, column, top_by=None, top_n=None, limit_to=None, 
         ignore_index=True,
     )
 
-
-    # if isinstance(limit_to, dict):
-    #     if column in limit_to.keys():
-    #         limit_to = limit_to[column]
-    #     else:
-    #         limit_to = None
-
-    # if limit_to is not None:
-    #     result = result[result[column].map(lambda w: w in limit_to)]
-
-    # if isinstance(exclude, dict):
-    #     if column in exclude.keys():
-    #         exclude = exclude[column]
-    #     else:
-    #         exclude = None
-
-    # if exclude is not None:
-    #     result = result[result[column].map(lambda w: w not in exclude)]
-
-    # if (top_by == 0 or top_by == "Frequency"):
-    #     result.sort_values(
-    #         ["Num_Documents", "Cited_by", column],
-    #         ascending=[False, False, True],
-    #         inplace=True,
-    #         ignore_index=True,
-    #     )
-
-    # if (top_by == 1 or top_by == "Cited_by"):
-    #     result.sort_values(
-    #         ["Year", "Cited_by", "Num_Documents", column],
-    #         ascending=[True, False, False, True],
-    #         inplace=True,
-    #         ignore_index=True,
-    #     )
-
-    # if top_by is None:
-    #     result.sort_values(
-    #         [column, "Year", "Cited_by", "Num_Documents"],
-    #         ascending=[True, True, False, False],
-    #         inplace=True,
-    #         ignore_index=True,
-    #     )
-
-
-    # if top_n is not None:
-    #     result = result.head(top_n)
-
     result.reset_index(drop=True)
     return result
 
@@ -281,7 +234,7 @@ def documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=
 
     return result
 
-def perc_documents_by_term_per_year(x, column, as_matrix=False, limit_to=None, exclude=None):
+def perc_documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None):
     """Computes the number of documents by term per year.
 
     Args:
@@ -354,6 +307,7 @@ def perc_documents_by_term_per_year(x, column, as_matrix=False, limit_to=None, e
     result.sort_values(
         ["Year", "Perc_Num_Documents", column], ascending=[True, False, True], inplace=True,
     )
+    result = result.head(top_n)
     result.reset_index(drop=True)
     if as_matrix == True:
         result = pd.pivot_table(
@@ -534,7 +488,7 @@ def citations_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=
     3  2014  author 4               100.0         100.00
 
     """
-    result = summary_by_term_per_year(x, column, top_by="Cited_by", top_n=top_n, limit_to=limit_to, exclude=exclude)
+    result = summary_by_term_per_year(x, column, top_by="Times_Cited", top_n=top_n, limit_to=limit_to, exclude=exclude)
 
     result.pop("Num_Documents")
 
@@ -888,7 +842,7 @@ def __APP0__(x, limit_to, exclude):
         figsize_width = int(kwargs['figsize_width'])
         figsize_height = int(kwargs['figsize_height'])
         #
-        plots = {"Heatmap": plt.heatmap, "Gant diagram": plt.gant, "Bubble plot": plt.bubble_prop, "Lines": plt.plot, "Summary":None}
+        plots = {"Heatmap": plt.heatmap, "Gant diagram": plt.gant, "Bubble plot": plt.bubble_prop, "Lines plot": plt.plot, "Summary":None}
         plot = plots[view]
         #
         output.clear_output()
@@ -897,7 +851,7 @@ def __APP0__(x, limit_to, exclude):
             if analysis_by == "Frequency":
                 matrix = documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
                 if view == "Gant diagram":
-                    display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
+                    display(plot(matrix, figsize=(figsize_width, figsize_height)))
                     return
                 if view == "Bubble plot":
                     z = citations_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
@@ -907,7 +861,7 @@ def __APP0__(x, limit_to, exclude):
             if analysis_by == "Citation":
                 matrix = citations_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
                 if view == "Bubble plot":
-                    z = documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+                    z = documents_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
                     display(plot(matrix.transpose(), z.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
                     return 
 
