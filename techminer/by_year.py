@@ -648,41 +648,44 @@ def __APP0__(df):
         controls[-1]["widget"].disabled = True if view == "Summary" else False
         controls[-2]["widget"].disabled = True if view == "Summary" else False
         #
+        x = summary_by_year(df)
+        #
         output.clear_output()
         with output:
             #
             if view == "Summary":
-                x = summary_by_year(df)
                 x.pop("ID")
                 display(x)
                 return
             #
             if view == "Documents by Year":
+                x = x[["Year", "Num_Documents", "Cited_by"]]
                 if plot_type == "Bar plot":
                     display(
-                        documents_by_year_bar(
-                            df, cmap=cmap, figsize=(figsize_width, figsize_height)
+                        plt.bar_prop(
+                            x, cmap=cmap, figsize=(figsize_width, figsize_height)
                         )
                     )
                 if plot_type == "Horizontal bar plot":
                     display(
-                        documents_by_year_barh(
-                            df, cmap=cmap, figsize=(figsize_width, figsize_height)
+                        plt.barh_prop(
+                            x, cmap=cmap, figsize=(figsize_width, figsize_height)
                         )
                     )
                 return
             #
             if view == "Times Cited by Year":
+                x = x[["Year", "Cited_by", "Num_Documents"]]
                 if plot_type == "Bar plot":
                     display(
-                        times_cited_by_year_bar(
-                            df, cmap=cmap, figsize=(figsize_width, figsize_height)
+                        plt.bar_prop(
+                            x, cmap=cmap, figsize=(figsize_width, figsize_height)
                         )
                     )
                 if plot_type == "Horizontal bar plot":
                     display(
-                        times_cited_by_year_barh(
-                            df, cmap=cmap, figsize=(figsize_width, figsize_height)
+                        plt.barh_prop(
+                            x, cmap=cmap, figsize=(figsize_width, figsize_height)
                         )
                     )
                 return

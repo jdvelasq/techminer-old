@@ -142,7 +142,7 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
             ignore_index=True,
         )
 
-    if (top_by == 1 or top_by == "Times Cited"):
+    if (top_by == 1 or top_by == "Times_Cited"):
         result = result[[column, 'Cited_by', 'Num_Documents', 'ID']]
         result.sort_values(
             ["Cited_by", "Num_Documents", column],
@@ -153,7 +153,7 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
 
     if top_by is None:
         result.sort_values(
-            [column, "Num_Documents", "Cited_by", 'ID'],
+            [column, "Num_Documents", "Cited_by"],
             ascending=[True, False, False],
             inplace=True,
             ignore_index=True,
@@ -168,6 +168,7 @@ def get_top_by(x, column, top_by, top_n, limit_to, exclude):
     """Return a list with the top_n terms of column
     """
     return summary_by_term(x=x, column=column, top_by=top_by, top_n=top_n, limit_to=limit_to, exclude=exclude)[column].tolist()
+
 
 
 
@@ -456,7 +457,7 @@ def __APP0__(x, limit_to, exclude):
             "arg": "top_by",
             "desc": "Top by:",
             "widget": widgets.Dropdown(
-                    options=["Frequency", "Times Cited"],
+                    options=["Frequency", "Times_Cited"],
                     layout=Layout(width=WIDGET_WIDTH),
                 ),
         },
@@ -520,8 +521,8 @@ def __APP0__(x, limit_to, exclude):
         #
         plots = {
             "Summary": None,
-            "Bar plot": plt.bar,
-            "Horizontal bar plot": plt.barh,
+            "Bar plot": plt.bar_prop,
+            "Horizontal bar plot": plt.barh_prop,
             "Pie plot": plt.pie,
             "Wordcloud": plt.wordcloud,
             "Treemap": plt.tree,
@@ -545,6 +546,11 @@ def __APP0__(x, limit_to, exclude):
                 df.pop('ID')
                 display(df)
             else:
+                if top_by == "Frequency":
+                    df = df[[column, "Num_Documents", "Cited_by"]]
+                else:
+                    df = df[[column, "Cited_by", "Num_Documents" ]]
+
                 display(plot(df, cmap=cmap, figsize=(figsize_width, figsize_height)))
             
     # -------------------------------------------------------------------------
