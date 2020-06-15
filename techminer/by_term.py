@@ -134,6 +134,7 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
         result = result[result[column].map(lambda w: w not in exclude)]
 
     if (top_by == 0 or top_by == "Frequency"):
+        result = result[[column, 'Num_Documents', 'Cited_by', 'ID']]
         result.sort_values(
             ["Num_Documents", "Cited_by", column],
             ascending=[False, False, True],
@@ -141,7 +142,8 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
             ignore_index=True,
         )
 
-    if (top_by == 1 or top_by == "Cited_by"):
+    if (top_by == 1 or top_by == "Times Cited"):
+        result = result[[column, 'Cited_by', 'Num_Documents', 'ID']]
         result.sort_values(
             ["Cited_by", "Num_Documents", column],
             ascending=[False, False, True],
@@ -151,7 +153,7 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
 
     if top_by is None:
         result.sort_values(
-            [column, "Num_Documents", "Cited_by"],
+            [column, "Num_Documents", "Cited_by", 'ID'],
             ascending=[True, False, False],
             inplace=True,
             ignore_index=True,
@@ -433,6 +435,15 @@ def __APP0__(x, limit_to, exclude):
     controls = [
         # 0
         {
+            "arg": "view",
+            "desc": "View:",
+            "widget": widgets.Dropdown(
+                    options=["Summary", "Bar plot", "Horizontal bar plot", "Pie plot", "Wordcloud", "Treemap"],
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+        },
+        # 1
+        {
             "arg": "column",
             "desc": "Column to analyze:",
             "widget": widgets.Dropdown(
@@ -440,31 +451,22 @@ def __APP0__(x, limit_to, exclude):
                     layout=Layout(width=WIDGET_WIDTH),
                 ),
         },
-        # 1
+        # 2
         {
             "arg": "top_by",
             "desc": "Top by:",
             "widget": widgets.Dropdown(
-                    options=["Frequency", "Citation"],
+                    options=["Frequency", "Times Cited"],
                     layout=Layout(width=WIDGET_WIDTH),
                 ),
         },
-        # 2
+        # 3
         {
             "arg": "top_n",
             "desc": "Top N:",
             "widget": widgets.Dropdown(
                     options=list(range(5, 51, 5)),
                     ensure_option=True,
-                    layout=Layout(width=WIDGET_WIDTH),
-                ),
-        },
-        # 3
-        {
-            "arg": "plot_type",
-            "desc": "View:",
-            "widget": widgets.Dropdown(
-                    options=["Bar plot", "Horizontal bar plot", "Pie plot", "Wordcloud", "Treemap", "Table"],
                     layout=Layout(width=WIDGET_WIDTH),
                 ),
         },
@@ -504,38 +506,43 @@ def __APP0__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     def server(**kwargs):
         #
+        output.clear_output()
+        with output:
+            display(widgets.HTML('Processing ...'))
+        #
+        view = kwargs['view']
         column = kwargs['column']
         top_by = kwargs['top_by']
         top_n = kwargs['top_n']
-        plot_type = kwargs['plot_type']
         cmap = kwargs['cmap']
         figsize_width = int(kwargs['figsize_width'])
         figsize_height = int(kwargs['figsize_height'])
         #
         plots = {
+            "Summary": None,
             "Bar plot": plt.bar,
             "Horizontal bar plot": plt.barh,
             "Pie plot": plt.pie,
             "Wordcloud": plt.wordcloud,
             "Treemap": plt.tree,
-            "Table": None
         }
         #
-        if plot_type == 'Table':
-            controls[3]["widget"].disabled = True
+        if view == 'Summary':
+            controls[4]["widget"].disabled = True
             controls[-1]["widget"].disabled = True
             controls[-2]["widget"].disabled = True
         else:
-            controls[3]["widget"].disabled = False
+            controls[4]["widget"].disabled = False
             controls[-1]["widget"].disabled = False
             controls[-2]["widget"].disabled = False
         #   
         df = summary_by_term(x, column=column, top_by=top_by, top_n = top_n, limit_to=limit_to, exclude=exclude)
         #
-        plot = plots[plot_type]
+        plot = plots[view]
         output.clear_output()
         with output:
             if plot is None:
+                df.pop('ID')
                 display(df)
             else:
                 display(plot(df, cmap=cmap, figsize=(figsize_width, figsize_height)))
