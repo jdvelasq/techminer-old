@@ -110,7 +110,6 @@ FONTSIZE = 13
 #
 #  View:
 
-#    Documents by year **
 #    Cum Documents by year
 #    Times cited by year **
 #    Cumulative times cited by year
@@ -204,6 +203,10 @@ def documents_by_year_bar(
         align=align,
         **({}),
         **kwargs,
+    )
+
+    ax.text(
+        0, table.Num_Documents.max(), "Color darkness is proportional to times cited",
     )
 
     ax.set_xticks(np.arange(len(table)))
@@ -310,10 +313,236 @@ Examples
         **kwargs,
     )
 
-    ax.invert_yaxis()
+    ax.text(
+        table.Num_Documents.max(),
+        0,
+        "Color darkness is proportional to times cited",
+        horizontalalignment="right",
+    )
+
+    # ax.invert_yaxis()
     ax.set_yticks(np.arange(len(table)))
     ax.set_yticklabels(table.Year)
     ax.set_xlabel("Num_Documents")
+    ax.set_ylabel("Year")
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(True)
+    ax.spines["bottom"].set_visible(False)
+
+    ax.grid(axis="x", color="gray", linestyle=":")
+
+    return fig
+
+
+def times_cited_by_year_bar(
+    x,
+    width=0.8,
+    bottom=None,
+    align="center",
+    style="default",
+    cmap="Greys",
+    figsize=(10, 6),
+    **kwargs
+):
+    """Creates a bar plot from a dataframe.
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
+    ...          "Cited_by": list(range(10,16)),
+    ...          "ID": list(range(6)),
+    ...     }
+    ... )
+    >>> df
+       Year  Cited_by  ID
+    0  2010        10   0
+    1  2010        11   1
+    2  2011        12   2
+    3  2011        13   3
+    4  2012        14   4
+    5  2016        15   5
+
+    >>> summary_by_year(df)[['Year', 'Cited_by', 'Num_Documents', 'ID']]
+       Year  Cited_by  Num_Documents      ID
+    0  2010        21              2  [0, 1]
+    1  2011        25              2  [2, 3]
+    2  2012        14              1     [4]
+    3  2013         0              0      []
+    4  2014         0              0      []
+    5  2015         0              0      []
+    6  2016        15              1     [5]
+
+
+    >>> fig = times_cited_by_year_bar(x=df, cmap="Blues")
+    >>> fig.savefig('sphinx/images/times_cited-by-year-barplot.png')
+
+    .. image:: images/times_cited-by-year-barplot.png
+        :width: 400px
+        :align: center
+
+
+    """
+    #
+    # Data
+    #
+    table = summary_by_year(x)
+
+    #
+    # Color as a function of Num_Documents
+    #
+    matplotlib.rc("font", size=FONTSIZE)
+    if cmap is not None:
+        cmap = pyplot.cm.get_cmap(cmap)
+        kwargs["color"] = [
+            cmap(
+                (
+                    0.2
+                    + 0.75
+                    * (value - table.Num_Documents.min())
+                    / (table.Num_Documents.max() - table.Num_Documents.min())
+                )
+            )
+            for value in table.Num_Documents
+        ]
+
+    fig = pyplot.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    ax.bar(
+        x=range(len(table)),
+        height=table.Cited_by,
+        width=width,
+        bottom=bottom,
+        align=align,
+        **({}),
+        **kwargs,
+    )
+
+    ax.text(
+        0, table.Cited_by.max(), "Color darkness is proportional to Num Documents",
+    )
+
+    ax.set_xticks(np.arange(len(table)))
+    ax.set_xticklabels(table.Year)
+    ax.tick_params(axis="x", labelrotation=90)
+
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Times_Cited")
+
+    if style == "default":
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.spines["left"].set_visible(False)
+        ax.spines["bottom"].set_visible(True)
+        ax.grid(axis="y", color="gray", linestyle=":")
+
+    return fig
+
+
+def times_cited_by_year_barh(
+    x,
+    height=0.8,
+    left=None,
+    figsize=(8, 5),
+    align="center",
+    style="default",
+    cmap=None,
+    **kwargs
+):
+    """Creates a bar plot from a dataframe.
+
+Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
+    ...          "Cited_by": list(range(10,16)),
+    ...          "ID": list(range(6)),
+    ...     }
+    ... )
+    >>> df
+       Year  Cited_by  ID
+    0  2010        10   0
+    1  2010        11   1
+    2  2011        12   2
+    3  2011        13   3
+    4  2012        14   4
+    5  2016        15   5
+
+    >>> summary_by_year(df)[['Year', 'Cited_by', 'Num_Documents', 'ID']]
+       Year  Cited_by  Num_Documents      ID
+    0  2010        21              2  [0, 1]
+    1  2011        25              2  [2, 3]
+    2  2012        14              1     [4]
+    3  2013         0              0      []
+    4  2014         0              0      []
+    5  2015         0              0      []
+    6  2016        15              1     [5]
+
+
+    >>> fig = documents_by_year_barh(x=df, cmap="Blues")
+    >>> fig.savefig('sphinx/images/times-cited-by-year-barhplot.png')
+
+    .. image:: images/times-cited-by-year-barhplot.png
+        :width: 400px
+        :align: center
+
+    """
+
+    #
+    # Data
+    #
+    table = summary_by_year(x)
+
+    #
+    # Color as a function of times cited
+    #
+    matplotlib.rc("font", size=FONTSIZE)
+    if cmap is not None:
+        cmap = pyplot.cm.get_cmap(cmap)
+        kwargs["color"] = [
+            cmap(
+                (
+                    0.2
+                    + 0.75
+                    * (value - table.Num_Documents.min())
+                    / (table.Num_Documents.max() - table.Num_Documents.min())
+                )
+            )
+            for value in table.Num_Documents
+        ]
+
+    fig = pyplot.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    ax.barh(
+        y=range(len(table.Year)),
+        width=table.Cited_by,
+        height=height,
+        left=left,
+        align=align,
+        **kwargs,
+    )
+
+    ax.text(
+        table.Cited_by.max(),
+        0,
+        "Color darkness is proportional to Num_Documents",
+        horizontalalignment="right",
+    )
+
+    #  ax.invert_yaxis()
+    ax.set_yticks(np.arange(len(table)))
+    ax.set_yticklabels(table.Year)
+    ax.set_xlabel("Times Cited")
     ax.set_ylabel("Year")
 
     ax.spines["top"].set_visible(False)
@@ -347,38 +576,30 @@ def __APP0__(df):
     controls = [
         # 0
         {
-            "arg": "selected_plot",
-            "desc": "Plot:",
+            "arg": "view",
+            "desc": "View:",
             "widget": widgets.Dropdown(
                 options=[
+                    "Summary",
                     "Documents by Year",
                     "Cum. Documents by Year",
                     "Times Cited by Year",
                     "Cum. Times Cited by Year",
                     "Avg. Times Cited by Year",
                 ],
-                value="Documents by Year",
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
         # 1
         {
             "arg": "plot_type",
-            "desc": "View:",
+            "desc": "Plot type:",
             "widget": widgets.Dropdown(
-                options=["Bar plot", "Horizontal bar plot", "Table"],
+                options=["Bar plot", "Horizontal bar plot"],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
         # 2
-        {
-            "arg": "style",
-            "desc": "Style:",
-            "widget": widgets.Dropdown(
-                options=STYLE, layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 3
         {
             "arg": "cmap",
             "desc": "Colors:",
@@ -386,7 +607,7 @@ def __APP0__(df):
                 options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 4
+        # 3
         {
             "arg": "figsize_width",
             "desc": "Figsize",
@@ -396,7 +617,7 @@ def __APP0__(df):
                 layout=Layout(width="88px"),
             ),
         },
-        # 5
+        # 4
         {
             "arg": "figsize_height",
             "desc": "Figsize",
@@ -416,50 +637,72 @@ def __APP0__(df):
         #
         # Logic
         #
-        plots = {"Bar plot": plt.bar, "Horizontal bar plot": plt.barh, "Table": None}
-        data = {
-            "Documents by Year": ["Year", "Num_Documents"],
-            "Cum. Documents by Year": ["Year", "Cum_Num_Documents"],
-            "Times Cited by Year": ["Year", "Cited_by"],
-            "Cum. Times Cited by Year": ["Year", "Cum_Cited_by"],
-            "Avg. Times Cited by Year": ["Year", "Avg_Cited_by"],
-        }
-        #
-        x = summary_by_year(df)
-        x = x[data[kwargs["selected_plot"]]]
-        plot = plots[kwargs["plot_type"]]
-        style = kwargs["style"]
+        view = kwargs["view"]
+        plot_type = kwargs["plot_type"]
         cmap = kwargs["cmap"]
         figsize_width = int(kwargs["figsize_width"])
         figsize_height = int(kwargs["figsize_height"])
         #
-        controls[2]["widget"].disabled = True if plot is None else False
-        controls[3]["widget"].disabled = True if plot is None else False
-        controls[-1]["widget"].disabled = True if plot is None else False
-        controls[-2]["widget"].disabled = True if plot is None else False
+        controls[1]["widget"].disabled = True if view == "Summary" else False
+        controls[2]["widget"].disabled = True if view == "Summary" else False
+        controls[-1]["widget"].disabled = True if view == "Summary" else False
+        controls[-2]["widget"].disabled = True if view == "Summary" else False
         #
-        if style == "default":
-            controls[3]["widget"].options = COLORMAPS
-        else:
-            with pyplot.style.context(style):
-                controls[3]["widget"].options = [
-                    a["color"] for a in pyplot.rcParams["axes.prop_cycle"]
-                ]
-                cmap = controls[3]["widget"].value
-
         output.clear_output()
         with output:
-            if plot is None:
+            #
+            if view == "Summary":
+                x = summary_by_year(df)
+                x.pop("ID")
                 display(x)
-            else:
-                display(
-                    plot(
-                        x,
-                        style=style,
-                        cmap=cmap,
-                        figsize=(figsize_width, figsize_height),
+                return
+            #
+            if view == "Documents by Year":
+                if plot_type == "Bar plot":
+                    display(
+                        documents_by_year_bar(
+                            df, cmap=cmap, figsize=(figsize_width, figsize_height)
+                        )
                     )
+                if plot_type == "Horizontal bar plot":
+                    display(
+                        documents_by_year_barh(
+                            df, cmap=cmap, figsize=(figsize_width, figsize_height)
+                        )
+                    )
+                return
+            #
+            if view == "Times Cited by Year":
+                if plot_type == "Bar plot":
+                    display(
+                        times_cited_by_year_bar(
+                            df, cmap=cmap, figsize=(figsize_width, figsize_height)
+                        )
+                    )
+                if plot_type == "Horizontal bar plot":
+                    display(
+                        times_cited_by_year_barh(
+                            df, cmap=cmap, figsize=(figsize_width, figsize_height)
+                        )
+                    )
+                return
+            #
+            x = summary_by_year(df)
+            if view == "Cum. Documents by Year":
+                x = x[["Year", "Cum_Num_Documents"]]
+            if view == "Cum. Times Cited by Year":
+                x = x[["Year", "Cum_Cited_by"]]
+            if view == "Avg. Times Cited by Year":
+                x = x[["Year", "Avg_Cited_by"]]
+            if plot_type == "Bar plot":
+                display(
+                    plt.bar(x=x, cmap=cmap, figsize=(figsize_width, figsize_height))
                 )
+            if plot_type == "Horizontal bar plot":
+                display(
+                    plt.barh(x=x, cmap=cmap, figsize=(figsize_width, figsize_height))
+                )
+            return
 
     # -------------------------------------------------------------------------
     #

@@ -138,14 +138,7 @@ STYLE = [
 
 
 def bar(
-    x,
-    width=0.8,
-    bottom=None,
-    align="center",
-    style="default",
-    cmap="Greys",
-    figsize=(10, 6),
-    **kwargs
+    x, width=0.8, bottom=None, align="center", cmap="Greys", figsize=(10, 6), **kwargs
 ):
     """Creates a bar plot from a dataframe.
 
@@ -181,7 +174,7 @@ def bar(
     if "ID" in x.columns:
         x.pop("ID")
 
-    if cmap is not None and style == "default":
+    if cmap is not None:
         cmap = plt.cm.get_cmap(cmap)
         kwargs["color"] = [
             cmap(
@@ -194,58 +187,44 @@ def bar(
             )
             for i in range(len(x[x.columns[1]]))
         ]
+
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    ax.bar(
+        x=range(len(x)),
+        height=x[x.columns[1]],
+        width=width,
+        bottom=bottom,
+        align=align,
+        **({}),
+        **kwargs,
+    )
+
+    if x[x.columns[0]].dtype != "int64":
+        xticklabels = [
+            textwrap.shorten(text=text, width=TEXTLEN) for text in x[x.columns[0]]
+        ]
     else:
-        kwargs["color"] = cmap
+        xticklabels = x[x.columns[0]]
 
-    with plt.style.context(style):
+    ax.set_xticks(np.arange(len(x[x.columns[0]])))
+    ax.set_xticklabels(xticklabels)
+    ax.tick_params(axis="x", labelrotation=90)
 
-        fig = plt.Figure(figsize=figsize)
-        ax = fig.subplots()
+    ax.set_xlabel(x.columns[0])
+    ax.set_ylabel(x.columns[1])
 
-        ax.bar(
-            x=range(len(x)),
-            height=x[x.columns[1]],
-            width=width,
-            bottom=bottom,
-            align=align,
-            **({}),
-            **kwargs,
-        )
-
-        if x[x.columns[0]].dtype != "int64":
-            xticklabels = [
-                textwrap.shorten(text=text, width=TEXTLEN) for text in x[x.columns[0]]
-            ]
-        else:
-            xticklabels = x[x.columns[0]]
-
-        ax.set_xticks(np.arange(len(x[x.columns[0]])))
-        ax.set_xticklabels(xticklabels)
-        ax.tick_params(axis="x", labelrotation=90)
-
-        ax.set_xlabel(x.columns[0])
-        ax.set_ylabel(x.columns[1])
-
-        if style == "default":
-            ax.spines["top"].set_visible(False)
-            ax.spines["right"].set_visible(False)
-            ax.spines["left"].set_visible(False)
-            ax.spines["bottom"].set_visible(True)
-            ax.grid(axis="y", color="gray", linestyle=":")
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_visible(True)
+    ax.grid(axis="y", color="gray", linestyle=":")
 
     return fig
 
 
-def barh(
-    x,
-    height=0.8,
-    left=None,
-    figsize=(8, 5),
-    align="center",
-    style="default",
-    cmap=None,
-    **kwargs
-):
+def barh(x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **kwargs):
     """Make a pie chart from a dataframe.
 
     Examples
@@ -279,7 +258,7 @@ def barh(
     if "ID" in x.columns:
         x.pop("ID")
 
-    if cmap is not None and style == "default":
+    if cmap is not None:
         cmap = plt.cm.get_cmap(cmap)
         kwargs["color"] = [
             cmap(
@@ -292,37 +271,33 @@ def barh(
             )
             for i in range(len(x))
         ]
-    else:
-        kwargs["color"] = cmap
 
-    with plt.style.context(style):
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
 
-        fig = plt.Figure(figsize=figsize)
-        ax = fig.subplots()
+    ax.barh(
+        y=range(len(x)),
+        width=x[x.columns[1]],
+        height=height,
+        left=left,
+        align=align,
+        **kwargs,
+    )
 
-        ax.barh(
-            y=range(len(x)),
-            width=x[x.columns[1]],
-            height=height,
-            left=left,
-            align=align,
-            **kwargs,
-        )
+    ax.invert_yaxis()
+    ax.set_yticks(np.arange(len(x[x.columns[0]])))
+    ax.set_yticklabels(x[x.columns[0]])
+    ax.set_xlabel(x.columns[1])
+    ax.set_ylabel(x.columns[0])
 
-        ax.invert_yaxis()
-        ax.set_yticks(np.arange(len(x[x.columns[0]])))
-        ax.set_yticklabels(x[x.columns[0]])
-        ax.set_xlabel(x.columns[1])
-        ax.set_ylabel(x.columns[0])
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(True)
+    ax.spines["bottom"].set_visible(False)
 
-        ax.spines["top"].set_visible(False)
-        ax.spines["right"].set_visible(False)
-        ax.spines["left"].set_visible(True)
-        ax.spines["bottom"].set_visible(False)
+    ax.grid(axis="x", color="gray", linestyle=":")
 
-        ax.grid(axis="x", color="gray", linestyle=":")
-
-        return fig
+    return fig
 
 
 def bubble(
