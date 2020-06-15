@@ -832,7 +832,7 @@ def __APP0__(x, limit_to, exclude):
             "arg": "plot_type",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Heatmap", "Bubble plot", "Gant diagram", 'Lines plot', "Table"],
+                options=["Table", "Heatmap", "Bubble plot", "Gant diagram", 'Lines plot', ],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
@@ -917,8 +917,7 @@ def __APP0__(x, limit_to, exclude):
             if plot_type == "Lines plot":
                 display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
             if plot_type == 'Table':
-                with pd.option_context("display.max_columns", 50):
-                    display(matrix)
+                display(matrix.style.background_gradient(cmap=cmap, axis=None))
 
 
     # -------------------------------------------------------------------------

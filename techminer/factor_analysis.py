@@ -15,7 +15,7 @@ from ipywidgets import AppLayout, Layout
 from sklearn.decomposition import PCA
 from techminer.by_term import summary_by_term
 
-#  from techminer.co_occurrence import compute_tfm, most_cited_by, most_frequent
+from techminer.co_occurrence import document_term_matrix, filter_index
 from techminer.keywords import Keywords
 from techminer.plots import COLORMAPS
 
@@ -118,7 +118,6 @@ def factor_analysis(
     )
 
     return result
-
 
 
 def factor_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)):
