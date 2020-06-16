@@ -150,7 +150,7 @@ def summary_by_term_per_year(x, column, top_by=None, top_n=None, limit_to=None, 
     return result
 
 
-def documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None):
+def num_documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None):
     """Computes the number of documents by term per year.
 
     Args:
@@ -184,7 +184,7 @@ def documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=
     4  2012                    author 4           14   4
     5  2014                    author 4           15   5
 
-    >>> documents_by_term_per_year(df, 'Authors')[['Authors', 'Year', 'Num_Documents', 'ID']]
+    >>> num_documents_by_term_per_year(df, 'Authors')[['Authors', 'Year', 'Num_Documents', 'ID']]
         Authors  Year  Num_Documents      ID
     0  author 0  2010              2  [0, 1]
     1  author 1  2010              1     [0]
@@ -195,7 +195,7 @@ def documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=
     6  author 4  2014              1     [5]
 
     
-    >>> documents_by_term_per_year(df, 'Authors', as_matrix=True)
+    >>> num_documents_by_term_per_year(df, 'Authors', as_matrix=True)
           author 0  author 1  author 2  author 3  author 4
     2010         2         1         1         0         0
     2011         0         1         0         1         0
@@ -203,7 +203,7 @@ def documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=
     2014         0         0         0         0         1
 
     >>> terms = ['author 1', 'author 2']
-    >>> documents_by_term_per_year(df, 'Authors', limit_to=terms, as_matrix=True)
+    >>> num_documents_by_term_per_year(df, 'Authors', limit_to=terms, as_matrix=True)
           author 1  author 2
     2010         1         1
     2011         1         0
@@ -233,7 +233,7 @@ def documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=
 
     return result
 
-def perc_documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None):
+def perc_num_documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None):
     """Computes the number of documents by term per year.
 
     Args:
@@ -267,7 +267,7 @@ def perc_documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limi
     4  2012                    author 4           14   4
     5  2014                    author 4           15   5
 
-    >>> documents_by_term_per_year(df, 'Authors')
+    >>> num_documents_by_term_per_year(df, 'Authors')
         Authors  Year  Num_Documents      ID
     0  author 0  2010              2  [0, 1]
     1  author 1  2010              1     [0]
@@ -278,7 +278,7 @@ def perc_documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limi
     6  author 4  2014              1     [5]
 
 
-    >>> documents_by_term_per_year(df, 'Authors')
+    >>> num_documents_by_term_per_year(df, 'Authors')
         Authors  Year  Num_Documents      ID
     0  author 0  2010              2  [0, 1]
     1  author 1  2010              1     [0]
@@ -288,7 +288,7 @@ def perc_documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limi
     5  author 4  2012              1     [4]
     6  author 4  2014              1     [5]
 
-    >>> documents_by_term_per_year(df, 'Authors', as_matrix=True)
+    >>> num_documents_by_term_per_year(df, 'Authors', as_matrix=True)
           author 0  author 1  author 2  author 3  author 4
     2010         2         1         1         0         0
     2011         0         1         0         1         0
@@ -296,12 +296,12 @@ def perc_documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limi
     2014         0         0         0         0         1
 
     >>> terms = ['author 1', 'author 2']
-    >>> documents_by_term_per_year(df, 'Authors', limit_to=terms, as_matrix=True)
+    >>> num_documents_by_term_per_year(df, 'Authors', limit_to=terms, as_matrix=True)
           author 1  author 2
     2010         1         1
     2011         1         0
 
-    >>> documents_by_term_per_year(df, 'Authors', exclude=terms, as_matrix=True)
+    >>> num_documents_by_term_per_year(df, 'Authors', exclude=terms, as_matrix=True)
           author 0  author 3  author 4
     2010         2         0         0
     2011         0         1         0
@@ -312,16 +312,16 @@ def perc_documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limi
 
     result = summary_by_term_per_year(x, column=column, limit_to=limit_to, exclude=exclude)
     result.pop("Times_Cited")
-    result.pop("Documents_by_year")
-    result.pop('Perc_Times_Cited_by_year')
+    result.pop("Num_Documents")
+    result.pop('Perc_Times_Cited')
     result.sort_values(
-        ["Year", "Perc_Num_Documents_by_year", column], ascending=[True, False, True], inplace=True,
+        ["Perc_Num_Documents", "Year", column], ascending=[False, True, True], inplace=True,
     )
     result = result.head(top_n)
     result.reset_index(drop=True)
     if as_matrix == True:
         result = pd.pivot_table(
-            result, values="Perc_Num_Documents_by_year", index="Year", columns=column, fill_value=0,
+            result, values="Perc_Num_Documents", index="Year", columns=column, fill_value=0,
         )
         result.columns = result.columns.tolist()
         result.index = result.index.tolist()
@@ -353,7 +353,7 @@ def gant(x, column, limit_to=None, exclude=None):
     ...          "ID": list(range(7)),
     ...     }
     ... )
-    >>> documents_by_term_per_year(df, 'Authors', as_matrix=True)
+    >>> num_documents_by_term_per_year(df, 'Authors', as_matrix=True)
           author 0  author 1  author 2  author 3  author 4
     2010         1         1         1         0         0
     2011         1         1         0         0         0
@@ -392,7 +392,7 @@ def gant(x, column, limit_to=None, exclude=None):
     """
 
 
-    result = documents_by_term_per_year(
+    result = num_documents_by_term_per_year(
         x, column=column, as_matrix=True, limit_to=limit_to, exclude=exclude
     )
     years = [year for year in range(result.index.min(), result.index.max() + 1)]
@@ -410,7 +410,7 @@ def gant(x, column, limit_to=None, exclude=None):
     return result
 
 
-def citations_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None):
+def times_cited_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None):
     """Computes the number of citations by term by year in a column.
 
     Args:
@@ -443,7 +443,7 @@ def citations_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=
     4  2012                    author 4           14   4
     5  2014                    author 4           15   5
 
-    >>> citations_by_term_per_year(df, 'Authors') [['Year', 'Authors', "Times_Cited", 'ID']]
+    >>> times_cited_by_term_per_year(df, 'Authors') [['Year', 'Authors', "Times_Cited", 'ID']]
        Year   Authors  Times_Cited      ID
     0  2010  author 0           21  [0, 1]
     1  2010  author 1           10     [0]
@@ -453,7 +453,7 @@ def citations_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=
     5  2012  author 4           14     [4]
     6  2014  author 4           15     [5]
 
-    >>> citations_by_term_per_year(df, 'Authors')[['Year', 'Authors', 'Perc_Num_Documents', 'Perc_Times_Cited']]
+    >>> times_cited_by_term_per_year(df, 'Authors')[['Year', 'Authors', 'Perc_Num_Documents', 'Perc_Times_Cited']]
        Year   Authors  Perc_Num_Documents  Perc_Times_Cited
     0  2010  author 0               100.0            100.00
     1  2010  author 1                50.0             47.62
@@ -463,7 +463,7 @@ def citations_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=
     5  2012  author 4               100.0            100.00
     6  2014  author 4               100.0            100.00
 
-    >>> citations_by_term_per_year(df, 'Authors', as_matrix=True)
+    >>> times_cited_by_term_per_year(df, 'Authors', as_matrix=True)
           author 0  author 1  author 2  author 3  author 4
     2010        21        10        10         0         0
     2011         0        12         0        13         0
@@ -471,26 +471,26 @@ def citations_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=
     2014         0         0         0         0        15
 
     >>> terms = ['author 1', 'author 2']
-    >>> citations_by_term_per_year(df, 'Authors', limit_to=terms)[['Year', 'Authors', "Times_Cited", 'ID']]
+    >>> times_cited_by_term_per_year(df, 'Authors', limit_to=terms)[['Year', 'Authors', "Times_Cited", 'ID']]
        Year   Authors  Times_Cited   ID
     0  2010  author 1           10  [0]
     1  2010  author 2           10  [0]
     2  2011  author 1           12  [2]
 
-    >>> citations_by_term_per_year(df, 'Authors', exclude=terms)[['Year', 'Authors', "Times_Cited", 'ID']]
+    >>> times_cited_by_term_per_year(df, 'Authors', exclude=terms)[['Year', 'Authors', "Times_Cited", 'ID']]
        Year   Authors  Times_Cited      ID
     0  2010  author 0           21  [0, 1]
     1  2011  author 3           13     [3]
     2  2012  author 4           14     [4]
     3  2014  author 4           15     [5]
 
-    >>> citations_by_term_per_year(df, 'Authors', limit_to=terms)[['Year', 'Authors', 'Perc_Num_Documents', 'Perc_Times_Cited']]
+    >>> times_cited_by_term_per_year(df, 'Authors', limit_to=terms)[['Year', 'Authors', 'Perc_Num_Documents', 'Perc_Times_Cited']]
        Year   Authors  Perc_Num_Documents  Perc_Times_Cited
     0  2010  author 1                50.0             47.62
     1  2010  author 2                50.0             47.62
     2  2011  author 1                50.0             48.00
 
-    >>> citations_by_term_per_year(df, 'Authors', exclude=terms)[['Year', 'Authors', 'Perc_Num_Documents', 'Perc_Times_Cited']]
+    >>> times_cited_by_term_per_year(df, 'Authors', exclude=terms)[['Year', 'Authors', 'Perc_Num_Documents', 'Perc_Times_Cited']]
        Year   Authors  Perc_Num_Documents  Perc_Times_Cited
     0  2010  author 0               100.0             100.0
     1  2011  author 3                50.0              52.0
@@ -498,7 +498,7 @@ def citations_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=
     3  2014  author 4               100.0             100.0
 
     """
-    result = summary_by_term_per_year(x, column, top_by="Times_Cited", top_n=top_n, limit_to=limit_to, exclude=exclude)
+    result = summary_by_term_per_year(x, column, top_by="Times Cited", top_n=top_n, limit_to=limit_to, exclude=exclude)
 
     result.pop("Num_Documents")
 
@@ -513,7 +513,7 @@ def citations_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=
     
     return result
 
-def perc_citations_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None):
+def perc_times_cited_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None):
     """Computes the number of citations by term by year in a column.
 
     Args:
@@ -546,7 +546,7 @@ def perc_citations_by_term_per_year(x, column, as_matrix=False, top_n=None, limi
     4  2012                    author 4           14   4
     5  2014                    author 4           15   5
 
-    >>> citations_by_term_per_year(df, 'Authors')[['Year', 'Authors', "Times_Cited", 'ID']]
+    >>> times_cited_by_term_per_year(df, 'Authors')[['Year', 'Authors', "Times_Cited", 'ID']]
        Year   Authors  Times_Cited      ID
     0  2010  author 0           21  [0, 1]
     1  2010  author 1           10     [0]
@@ -556,7 +556,7 @@ def perc_citations_by_term_per_year(x, column, as_matrix=False, top_n=None, limi
     5  2012  author 4           14     [4]
     6  2014  author 4           15     [5]
 
-    >>> citations_by_term_per_year(df, 'Authors')[['Year', 'Authors', 'Perc_Num_Documents', 'Perc_Times_Cited']]
+    >>> times_cited_by_term_per_year(df, 'Authors')[['Year', 'Authors', 'Perc_Num_Documents', 'Perc_Times_Cited']]
        Year   Authors  Perc_Num_Documents  Perc_Times_Cited
     0  2010  author 0               100.0            100.00
     1  2010  author 1                50.0             47.62
@@ -566,7 +566,7 @@ def perc_citations_by_term_per_year(x, column, as_matrix=False, top_n=None, limi
     5  2012  author 4               100.0            100.00
     6  2014  author 4               100.0            100.00
 
-    >>> citations_by_term_per_year(df, 'Authors', as_matrix=True)
+    >>> times_cited_by_term_per_year(df, 'Authors', as_matrix=True)
           author 0  author 1  author 2  author 3  author 4
     2010        21        10        10         0         0
     2011         0        12         0        13         0
@@ -574,13 +574,13 @@ def perc_citations_by_term_per_year(x, column, as_matrix=False, top_n=None, limi
     2014         0         0         0         0        15
 
     >>> terms = ['author 1', 'author 2']
-    >>> citations_by_term_per_year(df, 'Authors', limit_to=terms)[['Year', 'Authors', "Times_Cited", 'ID']]
+    >>> times_cited_by_term_per_year(df, 'Authors', limit_to=terms)[['Year', 'Authors', "Times_Cited", 'ID']]
        Year   Authors  Times_Cited   ID
     0  2010  author 1           10  [0]
     1  2010  author 2           10  [0]
     2  2011  author 1           12  [2]
 
-    >>> citations_by_term_per_year(df, 'Authors', exclude=terms)[['Year', 'Authors', "Times_Cited", 'ID']]
+    >>> times_cited_by_term_per_year(df, 'Authors', exclude=terms)[['Year', 'Authors', "Times_Cited", 'ID']]
        Year   Authors  Times_Cited      ID
     0  2010  author 0           21  [0, 1]
     1  2011  author 3           13     [3]
@@ -588,17 +588,18 @@ def perc_citations_by_term_per_year(x, column, as_matrix=False, top_n=None, limi
     3  2014  author 4           15     [5]
 
     """
-    result = summary_by_term_per_year(x, column, top_n=top_n, limit_to=limit_to, exclude=exclude)
+    result = summary_by_term_per_year(x, column, top_n=None, limit_to=limit_to, exclude=exclude)
     result.pop("Num_Documents")
     result.pop("Times_Cited")
     result.pop("Perc_Num_Documents")
     result.sort_values(
-        ["Year", "Perc_Cited_by", column], ascending=[True, False, False], inplace=True,
+        ["Perc_Times_Cited", "Year", column], ascending=[False, True, False], inplace=True,
     )
     result = result.reset_index(drop=True)
+    result = result.head(top_n)
     if as_matrix == True:
         result = pd.pivot_table(
-            result, values="Perc_Cited_by", index="Year", columns=column, fill_value=0,
+            result, values="Perc_Times_Cited", index="Year", columns=column, fill_value=0,
         )
         result.columns = result.columns.tolist()
         result.index = result.index.tolist()
@@ -640,7 +641,7 @@ def growth_indicators(x, column, timewindow=2, top_n = None, limit_to=None, excl
     6  2014           author 0;author 3           16   6
     7  2014           author 3;author 4           17   7
 
-    >>> documents_by_term_per_year(x, 'Authors', as_matrix=True)
+    >>> num_documents_by_term_per_year(x, 'Authors', as_matrix=True)
           author 0  author 1  author 2  author 3  author 4
     2010         2         1         1         0         0
     2011         0         1         0         1         0
@@ -668,7 +669,7 @@ def growth_indicators(x, column, timewindow=2, top_n = None, limit_to=None, excl
     """
 
     def compute_agr():
-        result = documents_by_term_per_year(
+        result = num_documents_by_term_per_year(
             x, column=column, limit_to=limit_to, exclude=exclude
         )
         years_agr = sorted(set(result.Year))[-(timewindow + 1) :]
@@ -694,7 +695,7 @@ def growth_indicators(x, column, timewindow=2, top_n = None, limit_to=None, excl
         return result
 
     def compute_ady():
-        result = documents_by_term_per_year(
+        result = num_documents_by_term_per_year(
             x, column=column, limit_to=limit_to, exclude=exclude
         )
         years_ady = sorted(set(result.Year))[-timewindow:]
@@ -708,7 +709,7 @@ def growth_indicators(x, column, timewindow=2, top_n = None, limit_to=None, excl
         return result
 
     def compute_num_documents():
-        result = documents_by_term_per_year(
+        result = num_documents_by_term_per_year(
             x, column=column, limit_to=limit_to, exclude=exclude
         )
         years_between = sorted(set(result.Year))[-timewindow:]
@@ -775,8 +776,7 @@ def __APP0__(x, limit_to, exclude):
             "arg": "analysis_by",
             "desc": "Analysis by:",
             "widget": widgets.Dropdown(
-                options=["Frequency", "Citation", "Perc. Frequency", "Perc. Times_Cited "],
-                value="Frequency",
+                options=["Num Documents", "Times Cited", "% Num Documents", "% Times Cited"],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
@@ -858,28 +858,28 @@ def __APP0__(x, limit_to, exclude):
         output.clear_output()
         with output:
 
-            if analysis_by == "Frequency":
-                matrix = documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+            if analysis_by == "Num Documents":
+                matrix = num_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
                 if view == "Gant diagram":
                     display(plot(matrix, figsize=(figsize_width, figsize_height)))
                     return
                 if view == "Bubble plot":
-                    z = citations_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
+                    z = times_cited_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
                     display(plot(matrix.transpose(), z.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
                     return
 
-            if analysis_by == "Citation":
-                matrix = citations_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+            if analysis_by == "Times Cited":
+                matrix = times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
                 if view == "Bubble plot":
-                    z = documents_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
+                    z = num_documents_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
                     display(plot(matrix.transpose(), z.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
                     return 
 
-            if analysis_by == "Perc. Frequency":
-                matrix = perc_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+            if analysis_by == "% Num Documents":
+                matrix = perc_num_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
 
-            if analysis_by == "Perc. Times_Cited ":
-                matrix = perc_citations_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+            if analysis_by == "% Times Cited":
+                matrix = perc_times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
 
             if view == 'Summary':
                 display(matrix.style.background_gradient(cmap=cmap, axis=None))
