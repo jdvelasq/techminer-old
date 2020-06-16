@@ -19,7 +19,7 @@ import numpy as np
 import pandas as pd
 from nltk import WordNetLemmatizer, pos_tag
 from nltk.corpus import stopwords
-from techminer.explode import MULTIVALUED_COLS
+from techminer.params import EXCLUDE_COLS, MULTIVALUED_COLS
 from techminer.text import remove_accents
 from techminer.thesaurus import text_clustering
 
@@ -418,10 +418,12 @@ def load_scopus(x):
     if "Author_Keywords" in x.columns:
         logging.info("Transforming Author Keywords to lower case ...")
         x['Author_Keywords'] = x.Author_Keywords.map(lambda w: w.lower() if not pd.isna(w) else w)
+        x['Author_Keywords'] = x.Author_Keywords.map(lambda w: ';'.join([z.strip() for z in w.split(';')]) if not pd.isna(w) else w)
 
     if "Index_Keywords" in x.columns:
         logging.info("Transforming Index Keywords to lower case ...")
         x['Index_Keywords'] = x.Index_Keywords.map(lambda w: w.lower() if not pd.isna(w) else w)
+        x['Index_Keywords'] = x.Index_Keywords.map(lambda w: ';'.join([z.strip() for z in w.split(';')]) if not pd.isna(w) else w)
 
     # keywords = []
     # if "Author_Keywords" in x.columns:
@@ -654,7 +656,7 @@ def descriptive_stats(x):
     y["Documents"] = str(len(x))
     #
     for column in x.columns:
-        if column[0] == '*':
+        if column in EXCLUDE_COLS:
             continue
         if column != 'Year':
             y[column] = count_terms(x, column)

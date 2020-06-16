@@ -19,7 +19,154 @@ import pandas as pd
 from nltk.stem import PorterStemmer, SnowballStemmer
 
 
-def steamming(pattern, text):
+def find_string(
+    patterns, x, ignore_case=True, full_match=False, use_re=False, explode=True
+):
+    r"""Find patterns in the elements of a list.
+
+    >>> x = ['aa;b', 'c;d', 'A', 'e', None]
+    >>> find_string('a', x)
+    ['A', 'aa']
+
+    >>> find_string('a', x, ignore_case=False)
+    ['aa']
+
+    >>> find_string('a', x, full_match=True)
+    ['A']
+
+    """
+    #
+    if explode is True:
+        x = [z for e in x if isinstance(e, str) for z in e.split(";")]
+    x = list(set(x))
+    #
+    if isinstance(patterns, str):
+        patterns = [patterns]
+    #
+    results = []
+    if use_re is False:
+        patterns = [re.escape(pattern) for pattern in patterns]
+    if full_match is True:
+        patterns = ["^" + pattern + "$" for pattern in patterns]
+    if ignore_case is True:
+        patterns = [re.compile(pattern, re.I) for pattern in patterns]
+    else:
+        patterns = [re.compile(pattern) for pattern in patterns]
+    for term in x:
+        for pattern in patterns:
+            result = pattern.findall(term)
+            if len(result):
+                results.append(term)
+    return sorted(set(results))
+
+
+def stemming_AND(patterns, x, stemmer="porter", explode=True):
+    """
+
+    >>> x = [
+    ...    'Computer vision',
+    ...    'Computer simulation',
+    ...    'computer theory',
+    ...    'control systems',
+    ...    'Computer control systems',
+    ...    'hardware',
+    ... ]
+    >>> stemming_AND('control systems', x)
+    ['Computer control systems', 'control systems']
+
+    """
+
+    def prepare(term):
+        term = remove_accents(term)
+        term = term.lower()
+        term = term.split()
+        term = [w.strip() for w in term]
+        term = [stemmer(w) for w in term]
+        term = sorted(set(term))
+        term = " ".join(term)
+        return term
+
+    if stemmer == "porter":
+        stemmer = stemmer_porter
+    else:
+        stemmer = stemmer_snowball
+
+    if explode is True:
+        x = [z for e in x if isinstance(e, str) for z in e.split(";")]
+
+    x = {prepare(t): t for t in x}
+
+    if not isinstance(patterns, list):
+        patterns = [patterns]
+    patterns = [prepare(pattern) for pattern in patterns]
+
+    results = []
+    for key in x.keys():
+        for pattern in patterns:
+            if pattern in key:
+                results.append(x[key])
+                continue
+
+    return sorted(set(results))
+
+
+def stemming_OR(patterns, x, stemmer="porter", explode=True):
+    """
+
+    >>> x = [
+    ...    'Computer vision',
+    ...    'Computer simulation',
+    ...    'computer theory',
+    ...    'control systems',
+    ...    'Computer control systems',
+    ...    'hardware',
+    ... ]
+    >>> stemming_OR('computer software', x)
+    ['Computer control systems', 'Computer simulation', 'Computer vision', 'computer theory']
+    
+    """
+
+    def prepare(term):
+        term = remove_accents(term)
+        term = term.lower()
+        term = term.split()
+        term = [w.strip() for w in term]
+        term = [stemmer(w) for w in term]
+        term = sorted(set(term))
+        term = " ".join(term)
+        return term
+
+    if stemmer == "porter":
+        stemmer = stemmer_porter
+    else:
+        stemmer = stemmer_snowball
+
+    if explode is True:
+        x = [z for e in x if isinstance(e, str) for z in e.split(";")]
+
+    x = {prepare(t): t for t in x}
+
+    if not isinstance(patterns, list):
+        patterns = [patterns]
+    patterns = [prepare(pattern) for pattern in patterns]
+
+    results = []
+    for key in x.keys():
+        for pattern in patterns:
+            found = None
+            for word_key in key.split():
+                for word_pattern in pattern.split():
+                    if word_pattern in word_key:
+                        found = x[key]
+                        continue
+                if found is not None:
+                    results.append(x[key])
+                    continue
+
+    return sorted(set(results))
+
+
+def steamming(pattern, text, stemmer=""):
     """
 
     Examples
@@ -74,44 +221,6 @@ def steamming_any(pattern, text):
 
     """
     return any(steamming(pattern, text))
-
-
-def find_string(
-    patterns, x, ignore_case=True, full_match=False, use_re=False, explode=True
-):
-    r"""Find patterns in the elements of a list.
-
-    >>> x = ['aa;b', 'c;d', 'A', 'e', None]
-    >>> find_string('a', x)
-    ['A', 'aa']
-
-    >>> find_string('a', x, ignore_case=False)
-    ['aa']
-
-    >>> find_string('a', x, full_match=True)
-    ['A']
-
-    """
-    #
-    if explode is True:
-        x = [z for e in x if isinstance(e, str) for z in e.split(";")]
-    x = list(set(x))
-    #
-    results = []
-    if use_re is False:
-        patterns = [re.escape(pattern) for pattern in patterns]
-    if full_match is True:
-        patterns = ["^" + pattern + "$" for pattern in patterns]
-    if ignore_case is True:
-        patterns = [re.compile(pattern, re.I) for pattern in patterns]
-    else:
-        patterns = [re.compile(pattern) for pattern in patterns]
-    for term in x:
-        for pattern in patterns:
-            result = pattern.findall(term)
-            if len(result):
-                results.append(term)
-    return sorted(set(results))
 
 
 # # def replace_string(

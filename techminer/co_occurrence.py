@@ -191,7 +191,7 @@ def co_occurrence(
        a  b  c
     A  2  1  1
     B  1  2  2
-    D  0  0  1
+    C  0  0  1
 
     >>> terms = ['A', 'B', 'c', 'd']
     >>> co_occurrence(df, column='Author_Keywords', by='Authors', limit_to=terms)
@@ -298,10 +298,10 @@ def occurrence(
     D  0  1  0  2
 
     >>> occurrence(df, column='Authors', top_by='Frequency', top_n=3)
-       A  B  D
-    A  4  2  0
+       A  B  C
+    A  4  2  1
     B  2  4  1
-    D  0  1  2
+    C  1  1  1
 
     >>> occurrence(df, column='Authors', limit_to=['A', 'B'])
        A  B

@@ -227,6 +227,13 @@ class Thesaurus:
 
         return self
 
+    def compile_as_dict(self):
+        self._dict = {}
+        for key in self._thesaurus:
+            for value in self._thesaurus[key]:
+                self._dict[value] = key
+        return self
+
     def apply(self, x):
         """Apply a thesaurus to a string x.
 

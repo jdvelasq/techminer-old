@@ -208,7 +208,7 @@ def num_documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limit
     2010         1         1
     2011         1         0
 
-    >>> documents_by_term_per_year(df, 'Authors', exclude=terms, as_matrix=True)
+    >>> num_documents_by_term_per_year(df, 'Authors', exclude=terms, as_matrix=True)
           author 0  author 3  author 4
     2010         2         0         0
     2011         0         1         0
@@ -771,21 +771,21 @@ def __APP0__(x, limit_to, exclude):
     COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
     #
     controls = [
-        # 0
-        {
-            "arg": "analysis_by",
-            "desc": "Analysis by:",
-            "widget": widgets.Dropdown(
-                options=["Num Documents", "Times Cited", "% Num Documents", "% Times Cited"],
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 1
+        # 0
         {
             "arg": "view",
             "desc": "View:",
             "widget": widgets.Dropdown(
                 options=["Summary", "Heatmap", "Bubble plot", "Gant diagram", 'Lines plot', ],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 1
+        {
+            "arg": "analysis_by",
+            "desc": "Analysis by:",
+            "widget": widgets.Dropdown(
+                options=["Num Documents", "Times Cited", "% Num Documents", "% Times Cited"],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
@@ -844,8 +844,8 @@ def __APP0__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     def server(**kwargs):
         #
-        analysis_by = kwargs["analysis_by"]
         view = kwargs["view"]
+        analysis_by = kwargs["analysis_by"]
         column = kwargs["column"]
         top_n = kwargs["top_n"] 
         cmap = kwargs["cmap"]
@@ -854,6 +854,9 @@ def __APP0__(x, limit_to, exclude):
         #
         plots = {"Heatmap": plt.heatmap, "Gant diagram": plt.gant, "Bubble plot": plt.bubble_prop, "Lines plot": plt.plot, "Summary":None}
         plot = plots[view]
+        #
+        controls[5]["widget"].disabled = True if view == "Summary" else False
+        controls[6]["widget"].disabled = True if view == "Summary" else False
         #
         output.clear_output()
         with output:
