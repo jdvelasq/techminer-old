@@ -212,7 +212,12 @@ def corr(
 
 
 def correlation_map(
-    matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12), min_link_value=0
+    matrix,
+    summary,
+    layout="Kamada Kawai",
+    cmap="Greys",
+    figsize=(17, 12),
+    min_link_value=0,
 ):
     """Computes the correlation map directly using networkx.
     """
@@ -224,11 +229,20 @@ def correlation_map(
     # Data preparation
     #
     terms = matrix.columns.tolist()
+    terms = [w[: w.find("[")].strip() if "[" in w else w for w in terms]
+    terms = [w.strip() for w in terms]
+
+    num_documents = {
+        k: v for k, v in zip(summary[summary.columns[0]], summary["Num_Documents"])
+    }
+    times_cited = {
+        k: v for k, v in zip(summary[summary.columns[0]], summary["Times_Cited"])
+    }
 
     #
     # Node sizes
     #
-    node_sizes = [int(w[w.find("[") + 1 : w.find("]")]) for w in terms if "[" in w]
+    node_sizes = [num_documents[t] for t in terms]
     if len(node_sizes) == 0:
         node_sizes = [500] * len(terms)
     else:
@@ -247,15 +261,16 @@ def correlation_map(
     #
 
     cmap = pyplot.cm.get_cmap(cmap)
+    node_colors = [times_cited[t] for t in terms]
     node_colors = [
-        cmap(0.2 + 0.75 * node_sizes[i] / max(node_sizes))
-        for i in range(len(node_sizes))
+        cmap(0.2 + 0.75 * node_colors[i] / max(node_colors))
+        for i in range(len(node_colors))
     ]
 
     #
     # Remove [...] from text
     #
-    terms = [w[: w.find("[")].strip() if "[" in w else w for w in terms]
+
     matrix.columns = terms
     matrix.index = terms
 
@@ -546,6 +561,17 @@ def __TAB0__(x, limit_to, exclude):
     controls = [
         # 0
         {
+            "arg": "view",
+            "desc": "View:",
+            "widget": widgets.Dropdown(
+                options=["Matrix", "Heatmap", "Correlation map", "Chord diagram"],
+                ensure_option=True,
+                continuous_update=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 1
+        {
             "arg": "term",
             "desc": "Term to analyze:",
             "widget": widgets.Dropdown(
@@ -554,7 +580,7 @@ def __TAB0__(x, limit_to, exclude):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 1
+        # 2
         {
             "arg": "by",
             "desc": "By Term:",
@@ -564,7 +590,7 @@ def __TAB0__(x, limit_to, exclude):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 2
+        # 3
         {
             "arg": "method",
             "desc": "Method:",
@@ -575,7 +601,7 @@ def __TAB0__(x, limit_to, exclude):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 3
+        # 4
         {
             "arg": "top_by",
             "desc": "Top by:",
@@ -583,7 +609,7 @@ def __TAB0__(x, limit_to, exclude):
                 options=["Frequency", "Times_Cited"], layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 4
+        # 5
         {
             "arg": "top_n",
             "desc": "Top N:",
@@ -591,7 +617,7 @@ def __TAB0__(x, limit_to, exclude):
                 options=list(range(5, 51, 5)), layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 5
+        # 6
         {
             "arg": "min_link_value",
             "desc": "Min link value:",
@@ -599,17 +625,6 @@ def __TAB0__(x, limit_to, exclude):
                 options="-1.00 -0.25 0.00 0.125 0.250 0.375 0.500 0.625 0.750 0.875".split(
                     " "
                 ),
-                ensure_option=True,
-                continuous_update=True,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 6
-        {
-            "arg": "view",
-            "desc": "View:",
-            "widget": widgets.Dropdown(
-                options=["Table", "Heatmap", "Correlation map", "Chord diagram"],
                 ensure_option=True,
                 continuous_update=True,
                 layout=Layout(width=WIDGET_WIDTH),
@@ -699,14 +714,20 @@ def __TAB0__(x, limit_to, exclude):
             controls[7]["widget"].disabled = False
             controls[8]["widget"].disabled = False
             controls[9]["widget"].disabled = True
+            controls[10]["widget"].disabled = True
+            controls[11]["widget"].disabled = True
         if view == "Correlation map":
             controls[7]["widget"].disabled = False
             controls[8]["widget"].disabled = True
             controls[9]["widget"].disabled = False
+            controls[10]["widget"].disabled = False
+            controls[11]["widget"].disabled = False
         if view == "Chord diagram":
             controls[7]["widget"].disabled = False
             controls[8]["widget"].disabled = True
             controls[9]["widget"].disabled = True
+            controls[10]["widget"].disabled = False
+            controls[11]["widget"].disabled = False
         #
         matrix = corr(
             x,
@@ -738,16 +759,19 @@ def __TAB0__(x, limit_to, exclude):
 
         output.clear_output()
         with output:
-            if view == "Table" or view == "Heatmap":
+            if view == "Matrix" or view == "Heatmap":
                 #
                 # Sort order
                 #
+                g = (
+                    lambda m: m[m.find("[") + 1 : m.find("]")].zfill(5)
+                    + " "
+                    + m[: m.find("[") - 1]
+                )
                 if sort_by == "Frequency/Cited by asc.":
-                    g = lambda m: int(m[m.find("[") + 1 : m.find("]")])
                     names = sorted(matrix.columns, key=g, reverse=False)
                     matrix = matrix.loc[names, names]
                 if sort_by == "Frequency/Cited by desc.":
-                    g = lambda m: int(m[m.find("[") + 1 : m.find("]")])
                     names = sorted(matrix.columns, key=g, reverse=True)
                     matrix = matrix.loc[names, names]
                 if sort_by == "Alphabetic asc.":
@@ -764,7 +788,7 @@ def __TAB0__(x, limit_to, exclude):
                 with pd.option_context(
                     "display.max_columns", 60, "display.max_rows", 60
                 ):
-                    if view == "Table":
+                    if view == "Matrix":
                         display(
                             matrix.style.format(
                                 lambda q: "{:+4.3f}".format(q)
@@ -784,6 +808,9 @@ def __TAB0__(x, limit_to, exclude):
                 display(
                     correlation_map(
                         matrix=matrix,
+                        summary=summary_by_term(
+                            x, column=column, top_by=None, top_n=None
+                        ),
                         layout=layout,
                         cmap=cmap,
                         figsize=(figsize_width, figsize_height),

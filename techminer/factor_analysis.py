@@ -158,9 +158,7 @@ def factor_map(matrix, summary, layout="Kamada Kawai", cmap="Greys", figsize=(17
     #
 
     cmap = pyplot.cm.get_cmap(cmap)
-
     node_colors = [times_cited[t] for t in terms]
-
     node_colors = [
         cmap(0.2 + 0.75 * node_colors[i] / max(node_colors))
         for i in range(len(node_colors))
