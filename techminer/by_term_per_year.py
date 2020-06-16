@@ -807,7 +807,21 @@ def __APP0__(x, limit_to, exclude):
                     layout=Layout(width=WIDGET_WIDTH),
                 ),
         },
-        # 4
+        # 4
+        {
+            "arg": "sort_by",
+            "desc": "Sort order:",
+            "widget": widgets.Dropdown(
+                options=[
+                    "Alphabetic asc.",
+                    "Alphabetic desc.",
+                    "Frequency/Cited by asc.",
+                    "Frequency/Cited by desc.",
+                ],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 5
         {
             "arg": "cmap",
             "desc": "Colormap:",
@@ -815,7 +829,7 @@ def __APP0__(x, limit_to, exclude):
                 options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 5
+        # 6
         {
             "arg": "figsize_width",
             "desc": "Figsize",
@@ -825,7 +839,7 @@ def __APP0__(x, limit_to, exclude):
                     layout=Layout(width="88px"),
                 ),
         },
-        # 6
+        # 7
         {
             "arg": "figsize_height",
             "desc": "Figsize",
@@ -846,7 +860,8 @@ def __APP0__(x, limit_to, exclude):
         view = kwargs["view"]
         analysis_by = kwargs["analysis_by"]
         column = kwargs["column"]
-        top_n = kwargs["top_n"] 
+        top_n = kwargs["top_n"]
+        sort_by = kwargs["sort_by"]
         cmap = kwargs["cmap"]
         figsize_width = int(kwargs['figsize_width'])
         figsize_height = int(kwargs['figsize_height'])
@@ -854,8 +869,8 @@ def __APP0__(x, limit_to, exclude):
         plots = {"Heatmap": plt.heatmap, "Gant diagram": plt.gant, "Bubble plot": plt.bubble_prop, "Lines plot": plt.plot, "Summary":None}
         plot = plots[view]
         #
-        controls[5]["widget"].disabled = True if view == "Summary" else False
-        controls[6]["widget"].disabled = True if view == "Summary" else False
+        controls[-2]["widget"].disabled = True if view == "Summary" else False
+        controls[-1]["widget"].disabled = True if view == "Summary" else False
         #
         output.clear_output()
         with output:
@@ -876,6 +891,14 @@ def __APP0__(x, limit_to, exclude):
                     for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
                 }
                 matrix = matrix.rename(columns=new_names)
+
+                s = summary_by_year(df=x)
+                new_names = {
+                    a: "{} [{:d}]".format(a, b)
+                    for a, b in zip(s['Year'].tolist(), s["Num_Documents"].tolist())
+                }
+                matrix = matrix.rename(index=new_names)
+
 
                 if view == "Gant diagram":
                     display(plot(matrix, figsize=(figsize_width, figsize_height)))
@@ -902,6 +925,13 @@ def __APP0__(x, limit_to, exclude):
                 }
                 matrix = matrix.rename(columns=new_names)
 
+                s = summary_by_year(df=x)
+                new_names = {
+                    a: "{} [{:d}]".format(a, b)
+                    for a, b in zip(s['Year'].tolist(), s["Times_Cited"].tolist())
+                }
+                matrix = matrix.rename(index=new_names)
+
                 if view == "Bubble plot":
                     z = num_documents_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
                     display(plot(matrix.transpose(), z.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
@@ -924,6 +954,14 @@ def __APP0__(x, limit_to, exclude):
                 }
                 matrix = matrix.rename(columns=new_names)
 
+                s = summary_by_year(df=x)
+                new_names = {
+                    a: "{} [{:d}]".format(a, b)
+                    for a, b in zip(s['Year'].tolist(), s["Num_Documents"].tolist())
+                }
+                matrix = matrix.rename(index=new_names)
+                
+
             if analysis_by == "% Times Cited":
                 matrix = perc_times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
 
@@ -940,6 +978,34 @@ def __APP0__(x, limit_to, exclude):
                     for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
                 }
                 matrix = matrix.rename(columns=new_names)
+
+                s = summary_by_year(df=x)
+                new_names = {
+                    a: "{} [{:d}]".format(a, b)
+                    for a, b in zip(s['Year'].tolist(), s["Times_Cited"].tolist())
+                }
+                matrix = matrix.rename(index=new_names)
+
+
+            #
+            # Sort order
+            #
+            g = (
+                lambda m: m[m.find("[") + 1 : m.find("]")].zfill(5)
+                + " "
+                + m[: m.find("[") - 1]
+            )
+            if sort_by == "Frequency/Cited by asc.":
+                col_names = sorted(matrix.columns, key=g, reverse=False)
+                matrix = matrix.loc[:, col_names]
+            if sort_by == "Frequency/Cited by desc.":
+                col_names = sorted(matrix.columns, key=g, reverse=True)
+                matrix = matrix.loc[:, col_names]
+            if sort_by == "Alphabetic asc.":
+                matrix = matrix.sort_index(axis=1, ascending=True)
+            if sort_by == "Alphabetic desc.":
+                matrix = matrix.sort_index(axis=1, ascending=False)
+            #
 
             if view == 'Summary':
                 display(matrix.style.background_gradient(cmap=cmap, axis=None))
