@@ -118,7 +118,7 @@ def factor_analysis(
     return result
 
 
-def factor_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)):
+def factor_map(matrix, summary, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)):
     """
     """
 
@@ -126,11 +126,20 @@ def factor_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)):
     # Data preparation
     #
     terms = matrix.index.tolist()
+    terms = [w[: w.find("[")].strip() if "[" in w else w for w in terms]
+    terms = [w.strip() for w in terms]
+
+    num_documents = {
+        k: v for k, v in zip(summary[summary.columns[0]], summary["Num_Documents"])
+    }
+    times_cited = {
+        k: v for k, v in zip(summary[summary.columns[0]], summary["Times_Cited"])
+    }
 
     #
     # Node sizes
     #
-    node_sizes = [int(w[w.find("[") + 1 : w.find("]")]) for w in terms if "[" in w]
+    node_sizes = [num_documents[t] for t in terms]
     if len(node_sizes) == 0:
         node_sizes = [500] * len(terms)
     else:
@@ -150,16 +159,13 @@ def factor_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)):
 
     cmap = pyplot.cm.get_cmap(cmap)
 
-    # node_colors = [
-    #     cmap(0.2 + 0.75 * node_sizes[i] / max(node_sizes))
-    #     for i in range(len(node_sizes))
-    # ]
+    node_colors = [times_cited[t] for t in terms]
 
-    #
-    # Remove [...] from text
-    #
-    terms = [w[: w.find("[")].strip() if "[" in w else w for w in terms]
-    node_colors = {t: cmap(0.03) for t in terms}
+    node_colors = [
+        cmap(0.2 + 0.75 * node_colors[i] / max(node_colors))
+        for i in range(len(node_colors))
+    ]
+
     matrix.index = terms
 
     #
@@ -195,9 +201,9 @@ def factor_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)):
         matrix = matrix.sort_values(column, ascending=False)
 
         x = matrix[column][matrix[column] >= 0.25]
-        if len(x) > 1:
-            for t in x.index:
-                node_colors[t] = cmap(0.05 + 0.9 * float(idx) / len(matrix.columns))
+        # if len(x) > 1:
+        #     for t in x.index:
+        #         node_colors[t] = cmap(0.05 + 0.9 * float(idx) / len(matrix.columns))
 
         if len(x) > 1:
             for t0 in range(len(x.index) - 1):
@@ -211,9 +217,9 @@ def factor_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)):
                         G.add_edge(x.index[t0], x.index[t1], width=1)
         #
         x = matrix[column][matrix[column] < -0.25]
-        if len(x) > 1:
-            for t in x.index:
-                node_colors[t] = cmap(0.1 + 0.9 * float(idx) / len(matrix.columns))
+        # if len(x) > 1:
+        #     for t in x.index:
+        #         node_colors[t] = cmap(0.1 + 0.9 * float(idx) / len(matrix.columns))
 
         if len(x) > 1:
             for t0 in range(len(x.index) - 1):
@@ -239,7 +245,7 @@ def factor_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)):
             width=dic["width"],
             edge_color="k",
             with_labels=False,
-            node_color=[node_colors[t] for t in terms],
+            node_color=node_colors,
             node_size=node_sizes,
             edgecolors="k",
             linewidths=1,
@@ -333,6 +339,16 @@ def __TAB0__(x, limit_to, exclude):
     controls = [
         # 0
         {
+            "arg": "view",
+            "desc": "View:",
+            "widget": widgets.Dropdown(
+                options=["Table", "Network"],
+                disable=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 1
+        {
             "arg": "term",
             "desc": "Term to analyze:",
             "widget": widgets.Dropdown(
@@ -342,7 +358,7 @@ def __TAB0__(x, limit_to, exclude):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 1
+        # 2
         {
             "arg": "n_components",
             "desc": "Number of factors:",
@@ -354,7 +370,7 @@ def __TAB0__(x, limit_to, exclude):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 2
+        # 3
         {
             "arg": "cmap",
             "desc": "Colormap:",
@@ -362,15 +378,16 @@ def __TAB0__(x, limit_to, exclude):
                 options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 3
+        # 4
         {
             "arg": "top_by",
             "desc": "Top by:",
             "widget": widgets.Dropdown(
-                options=["Frequency", "Times_Cited"], layout=Layout(width=WIDGET_WIDTH),
+                options=["Num Documents", "Times Cited"],
+                layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 4
+        # 5
         {
             "arg": "top_n",
             "desc": "Top N:",
@@ -380,7 +397,7 @@ def __TAB0__(x, limit_to, exclude):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 5
+        # 6
         {
             "arg": "sort_by",
             "desc": "Sort order:",
@@ -397,22 +414,12 @@ def __TAB0__(x, limit_to, exclude):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 6
+        # 7
         {
             "arg": "factor",
             "desc": "Sort by factor:",
             "widget": widgets.Dropdown(
                 options=[], disable=True, layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 7
-        {
-            "arg": "view",
-            "desc": "View:",
-            "widget": widgets.Dropdown(
-                options=["Matrix", "Network"],
-                disable=True,
-                layout=Layout(width=WIDGET_WIDTH),
             ),
         },
         #  8
@@ -460,6 +467,7 @@ def __TAB0__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     def server(**kwargs):
         #
+        view = kwargs["view"]
         term = kwargs["term"]
         n_components = int(kwargs["n_components"])
         cmap = kwargs["cmap"]
@@ -467,7 +475,6 @@ def __TAB0__(x, limit_to, exclude):
         top_n = int(kwargs["top_n"])
         sort_by = kwargs["sort_by"]
         factor = kwargs["factor"]
-        view = kwargs["view"]
         layout = kwargs["layout"]
         figsize_width = int(kwargs["figsize_width"])
         figsize_height = int(kwargs["figsize_height"])
@@ -482,20 +489,32 @@ def __TAB0__(x, limit_to, exclude):
             exclude=exclude,
         )
         #
-        controls[6]["widget"].options = matrix.columns
-        controls[6]["widget"].disabled = (
+        controls[7]["widget"].options = matrix.columns
+        controls[7]["widget"].disabled = (
             True if sort_by not in ["Factor asc.", "Factor desc."] else False
         )
         controls[8]["widget"].disabled = False if view == "Network" else True
+        controls[9]["widget"].disabled = False if view == "Network" else True
+        controls[10]["widget"].disabled = False if view == "Network" else True
         #
         s = summary_by_term(x, term)
-        new_names = {
-            a: "{} [{:d}]".format(a, b)
-            for a, b in zip(s[term].tolist(), s["Num_Documents"].tolist())
-        }
+        if top_by == "Num Documents":
+            new_names = {
+                a: "{} [{:d}]".format(a, b)
+                for a, b in zip(s[term].tolist(), s["Num_Documents"].tolist())
+            }
+        else:
+            new_names = {
+                a: "{} [{:d}]".format(a, b)
+                for a, b in zip(s[term].tolist(), s["Times_Cited"].tolist())
+            }
         matrix = matrix.rename(index=new_names)
         #
-        g = lambda m: int(m[m.find("[") + 1 : m.find("]")])
+        g = (
+            lambda m: m[m.find("[") + 1 : m.find("]")].zfill(5)
+            + " "
+            + m[: m.find("[") - 1]
+        )
         if sort_by == "Frequency/Cited by asc.":
             names = sorted(matrix.index, key=g, reverse=False)
             matrix = matrix.loc[names, :]
@@ -503,13 +522,9 @@ def __TAB0__(x, limit_to, exclude):
             names = sorted(matrix.index, key=g, reverse=True)
             matrix = matrix.loc[names, :]
         if sort_by == "Alphabetic asc.":
-            matrix = matrix.sort_index(axis=0, ascending=True).sort_index(
-                axis=1, ascending=True
-            )
+            matrix = matrix.sort_index(axis=0, ascending=True)
         if sort_by == "Alphabetic desc.":
-            matrix = matrix.sort_index(axis=0, ascending=False).sort_index(
-                axis=1, ascending=False
-            )
+            matrix = matrix.sort_index(axis=0, ascending=False)
         if sort_by == "Factor asc.":
             matrix = matrix.sort_values(factor, ascending=True)
         if sort_by == "Factor desc.":
@@ -517,7 +532,7 @@ def __TAB0__(x, limit_to, exclude):
         #
         output.clear_output()
         with output:
-            if view == "Matrix":
+            if view == "Table":
                 display(
                     matrix.style.format(
                         lambda q: "{:+4.3f}".format(q)
@@ -527,6 +542,7 @@ def __TAB0__(x, limit_to, exclude):
                 display(
                     factor_map(
                         matrix,
+                        summary_by_term(x, column=term, top_by=None, top_n=None),
                         layout=layout,
                         cmap=cmap,
                         figsize=(figsize_width, figsize_height),

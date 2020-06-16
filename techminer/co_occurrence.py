@@ -34,14 +34,14 @@ def filter_index(
     """
     top_terms = summary_by_term(x, column)
 
-    if top_by == 0 or top_by == "Frequency":
+    if top_by == 0 or top_by == "Num Documents":
         top_terms = top_terms.sort_values(
             ["Num_Documents", "Times_Cited", column],
             ascending=[False, False, True],
             ignore_index=True,
         )
 
-    if top_by == 1 or top_by == "Times_Cited":
+    if top_by == 1 or top_by == "Times Cited":
         top_terms = top_terms.sort_values(
             ["Times_Cited", "Num_Documents", column],
             ascending=[False, False, True],
