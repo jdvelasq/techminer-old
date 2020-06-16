@@ -324,6 +324,11 @@ def load_scopus(x):
     """Import filter for Scopus data.
     """
 
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    )
+
+
     scopus2tags = {
         "Abbreviated Source Title": "Abb_Source_Title",
         "Abstract": "Abstract",
@@ -472,6 +477,8 @@ def load_scopus(x):
     x["ID"] = range(len(x))
 
     x = x.applymap(lambda w: pd.NA if isinstance(w, str) and w == "" else w)
+
+    logging.getLogger().disabled = True 
 
     return x
 

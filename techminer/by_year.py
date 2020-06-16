@@ -183,7 +183,7 @@ def documents_by_year_bar(
         kwargs["color"] = [
             cmap(
                 (
-                    0.2
+                    0.25
                     + 0.75
                     * (value - table.Times_Cited.min())
                     / (table.Times_Cited.max() - table.Times_Cited.min())
@@ -292,7 +292,7 @@ Examples
         kwargs["color"] = [
             cmap(
                 (
-                    0.2
+                    0.25
                     + 0.75
                     * (value - table.Times_Cited.min())
                     / (table.Times_Cited.max() - table.Times_Cited.min())
@@ -402,7 +402,7 @@ def times_cited_by_year_bar(
         kwargs["color"] = [
             cmap(
                 (
-                    0.2
+                    0.25
                     + 0.75
                     * (value - table.Num_Documents.min())
                     / (table.Num_Documents.max() - table.Num_Documents.min())
@@ -511,7 +511,7 @@ Examples
         kwargs["color"] = [
             cmap(
                 (
-                    0.2
+                    0.25
                     + 0.75
                     * (value - table.Num_Documents.min())
                     / (table.Num_Documents.max() - table.Num_Documents.min())

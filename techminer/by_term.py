@@ -473,13 +473,23 @@ def __APP0__(x, limit_to, exclude):
         },
         # 4
         {
+            "arg": "sort_by",
+            "desc": "Sort by:",
+            "widget": widgets.Dropdown(
+                    options=["Num Documents asc.", "Num Documents desc.", "Times Cited asc.", "Times Cited desc.", "Column asc.", "Column desc"],
+                    value="Num Documents desc.",
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+        },
+        # 5
+        {
             "arg": "cmap",
             "desc": "Colormap:",
             "widget": widgets.Dropdown(
                 options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 5
+        # 6
         {
             "arg": "figsize_width",
             "desc": "Figsize",
@@ -489,7 +499,7 @@ def __APP0__(x, limit_to, exclude):
                     layout=Layout(width="88px"),
                 ),
         },
-        # 6
+        # 7
         {
             "arg": "figsize_height",
             "desc": "Figsize",
@@ -516,6 +526,7 @@ def __APP0__(x, limit_to, exclude):
         top_by = kwargs['top_by']
         top_n = kwargs['top_n']
         cmap = kwargs['cmap']
+        sort_by = kwargs['sort_by']
         figsize_width = int(kwargs['figsize_width'])
         figsize_height = int(kwargs['figsize_height'])
         #
@@ -529,15 +540,28 @@ def __APP0__(x, limit_to, exclude):
         }
         #
         if view == 'Summary':
-            controls[4]["widget"].disabled = True
+            controls[5]["widget"].disabled = True
             controls[-1]["widget"].disabled = True
             controls[-2]["widget"].disabled = True
         else:
-            controls[4]["widget"].disabled = False
+            controls[5]["widget"].disabled = False
             controls[-1]["widget"].disabled = False
             controls[-2]["widget"].disabled = False
         #   
         df = summary_by_term(x, column=column, top_by=top_by, top_n = top_n, limit_to=limit_to, exclude=exclude)
+        #
+        if sort_by == "Num Documents asc.":
+            df = df.sort_values(by=["Num_Documents", "Times_Cited", df.columns[0]], ascending=True)
+        if sort_by == "Num Documents desc.":
+            df = df.sort_values(by=["Num_Documents", "Times_Cited", df.columns[0]], ascending=False)
+        if sort_by == "Times Cited asc.":
+            df = df.sort_values(by=["Times_Cited", "Num_Documents", df.columns[0]], ascending=True)
+        if sort_by == "Times Cited desc.":
+            df = df.sort_values(by=["Times_Cited", "Num_Documents", df.columns[0]], ascending=False)
+        if sort_by == "Column asc.":
+            df = df.sort_values(by=[df.columns[0], "Times_Cited", "Num_Documents"], ascending=True)
+        if sort_by == "Column desc":
+            df = df.sort_values(by=[df.columns[0], "Times_Cited", "Num_Documents"], ascending=False)
         #
         plot = plots[view]
         output.clear_output()
@@ -599,11 +623,9 @@ def __APP1__(x, limit_to, exclude):
         # 0
         {
             "arg": "term",
-            "desc": "Term to analyze:",
-            "widget": widgets.Select(
+            "desc": "Column to analyze:",
+            "widget": widgets.Dropdown(
                     options=["Countries", "Country_1st_Author"],
-                    ensure_option=True,
-                    disabled=False,
                     layout=Layout(width=WIDGET_WIDTH),
                 ),
         },
@@ -612,9 +634,7 @@ def __APP1__(x, limit_to, exclude):
             "arg": "analysis_type",
             "desc": "Analysis type:",
             "widget": widgets.Dropdown(
-                    options=["Frequency", "Citation"],
-                    value="Frequency",
-                    disable=False,
+                    options=["Num Documents", "Times Cited"],
                     layout=Layout(width=WIDGET_WIDTH),
                 ),
         },
@@ -663,7 +683,7 @@ def __APP1__(x, limit_to, exclude):
         figsize_height = int(kwargs['figsize_height'])
         #
         df = summary_by_term(x, term)
-        if analysis_type == "Frequency":
+        if analysis_type == "Num Documents":
             df = df[[term, "Num_Documents"]]
         else:
             df = df[[term, "Times_Cited"]]
