@@ -236,17 +236,17 @@ def bar_prop(
     >>> df = pd.DataFrame(
     ...     {
     ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-    ...         "Cited_by": [1, 2, 3, 4],
+    ...         "Times_Cited": [1, 2, 3, 4],
     ...         "Num_Documents": [3, 2, 2, 1],
     ...         "ID": list(range(4)),
     ...     }
     ... )
     >>> df
-        Authors  Num_Documents  ID
-    0  author 3              3   0
-    1  author 1              2   1
-    2  author 0              2   2
-    3  author 2              1   3
+        Authors  Times_Cited  Num_Documents  ID
+    0  author 3            1              3   0
+    1  author 1            2              2   1
+    2  author 0            3              2   2
+    3  author 2            4              1   3
     >>> fig = bar(df, cmap=plt.cm.Blues)
     >>> fig.savefig('sphinx/images/barplot.png')
 

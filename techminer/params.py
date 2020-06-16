@@ -35,7 +35,7 @@ EXCLUDE_COLS = [
     "Art_No",
     "Authors_ID",
     "Authors_with_affiliations",
-    "Cited_by",
+    "Times_Cited",
     "CODEN",
     "Correspondence_Address",
     "DOI",

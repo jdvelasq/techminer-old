@@ -23,7 +23,6 @@ from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS, chord_diagram
 
 
-
 def corr(
     x,
     column,
@@ -67,21 +66,21 @@ def corr(
     ...    {
     ...       'Authors': x,
     ...       'Author_Keywords': y,
-    ...       'Cited_by': list(range(len(x))),
+    ...       "Times_Cited": list(range(len(x))),
     ...       'ID': list(range(len(x))),
     ...    }
     ... )
     >>> df
-      Authors Author_Keywords  Cited_by  ID
-    0       A               a         0   0
-    1     A;B             a;b         1   1
-    2       B               b         2   2
-    3   A;B;C               c         3   3
-    4     B;D             c;d         4   4
-    5     A;B               d         5   5
+      Authors Author_Keywords  Times_Cited  ID
+    0       A               a            0   0
+    1     A;B             a;b            1   1
+    2       B               b            2   2
+    3   A;B;C               c            3   3
+    4     B;D             c;d            4   4
+    5     A;B               d            5   5
 
 
-    >>> compute_tfm(df, 'Authors')
+    >>> document_term_matrix(df, 'Authors')
        A  B  C  D
     0  1  0  0  0
     1  1  1  0  0
@@ -90,7 +89,7 @@ def corr(
     4  0  1  0  1
     5  1  1  0  0
 
-    >>> compute_tfm(df, 'Author_Keywords')
+    >>> document_term_matrix(df, 'Author_Keywords')
        a  b  c  d
     0  1  0  0  0
     1  1  1  0  0
@@ -126,20 +125,20 @@ def corr(
     ...    {
     ...       'Authors': x,
     ...       'Author_Keywords': y,
-    ...       'Cited_by': list(range(len(x))),
+    ...       "Times_Cited": list(range(len(x))),
     ...       'ID': list(range(len(x))),
     ...    }
     ... )
     >>> df
-      Authors Author_Keywords  Cited_by  ID
-    0       A               a         0   0
-    1     A;B             a;b         1   1
-    2       B               b         2   2
-    3   A;B;C               c         3   3
-    4     B;D             c;d         4   4
-    5     A;B               d         5   5
+      Authors Author_Keywords  Times_Cited  ID
+    0       A               a            0   0
+    1     A;B             a;b            1   1
+    2       B               b            2   2
+    3   A;B;C               c            3   3
+    4     B;D             c;d            4   4
+    5     A;B               d            5   5
 
-    >>> compute_tfm(df, column='Authors')
+    >>> document_term_matrix(df, column='Authors')
        A  B  C  D
     0  1  0  0  0
     1  1  1  0  0
@@ -581,7 +580,7 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "top_by",
             "desc": "Top by:",
             "widget": widgets.Dropdown(
-                options=["Frequency", "Cited_by"], layout=Layout(width=WIDGET_WIDTH),
+                options=["Frequency", "Times_Cited"], layout=Layout(width=WIDGET_WIDTH),
             ),
         },
         # 4
@@ -733,7 +732,7 @@ def __TAB0__(x, limit_to, exclude):
             s = summary_by_term(x, column)
             new_names = {
                 a: "{} [{:d}]".format(a, b)
-                for a, b in zip(s[column].tolist(), s["Cited_by"].tolist())
+                for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
             }
         matrix = matrix.rename(columns=new_names, index=new_names)
 

@@ -334,7 +334,7 @@ def load_scopus(x):
         "Author(s) ID": "Authors_ID",
         "Authors with affiliations": "Authors_with_affiliations",
         "Authors": "Authors",
-        "Cited by": "Cited_by",
+        "Cited by": "Times_Cited",
         "CODEN": "CODEN",
         "Correspondence Address": "Correspondence_Address",
         "Document Type": "Document_Type",
@@ -626,7 +626,7 @@ def descriptive_stats(x):
     ...          'Author_Keywords': 'k0;k1, k0;k2, k3;k2;k1, k4, k5'.split(','),
     ...          'Index_Keywords': 'w0;w1, w0;w2, w3;k1;w1, w4, w5'.split(','),
     ...          'Year': [1990, 1991, 1992, 1993, 1994],
-    ...          'Cited_by': list(range(5)),
+    ...          "Times_Cited": list(range(5)),
     ...          'Num_Authors': [2, 2, 1, 1, 1],
     ...     }
     ... )
@@ -645,7 +645,7 @@ def descriptive_stats(x):
     Index_Keywords                                7
     Years                                 1990-1994
     Compound annual growth rate               0.0 %
-    Cited_by                                      5
+    Times_Cited                                   5
     Average citations per document             2.00
     Num_Authors                                   2
     
@@ -665,8 +665,8 @@ def descriptive_stats(x):
             Pn = len(x.Year[x.Year == max(x.Year)])
             cagr = str(round(100 * (np.power(Pn / Po, 1 / n) - 1), 2)) + " %"
             y["Compound annual growth rate"] = cagr
-        if  column == "Cited_by":
-            y["Average citations per document"] = "{:4.2f}".format(x["Cited_by"].mean())
+        if  column == "Times_Cited":
+            y["Average citations per document"] = "{:4.2f}".format(x["Times_Cited"].mean())
         if column == "Authors":
             y["Documents per author"] = round(len(x) / count_terms(x, "Authors"), 2)
             y["Authors per document"] = round(count_terms(x, "Authors") / len(x), 2)

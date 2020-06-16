@@ -5,22 +5,20 @@ Factor analysis
 
 
 """
-import networkx as nx
 import ipywidgets as widgets
 import matplotlib.pyplot as pyplot
+import networkx as nx
 import numpy as np
 import pandas as pd
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
 from sklearn.decomposition import PCA
-from techminer.by_term import summary_by_term
 
+from techminer.by_term import summary_by_term
 from techminer.co_occurrence import document_term_matrix, filter_index
+from techminer.explode import __explode
 from techminer.keywords import Keywords
 from techminer.plots import COLORMAPS
-
-
-from techminer.explode import __explode
 
 
 def factor_analysis(
@@ -47,22 +45,22 @@ def factor_analysis(
     >>> df = pd.DataFrame(
     ...    {
     ...       'Authors': x,
-    ...       'Author Keywords': y,
-    ...       'Cited by': list(range(len(x))),
+    ...       'Author_Keywords': y,
+    ...       "Times_Cited": list(range(len(x))),
     ...       'ID': list(range(len(x))),
     ...    }
     ... )
     >>> df
-      Authors Author Keywords  Cited by  ID
-    0       A               a         0   0
-    1     A;B             a;b         1   1
-    2       B               b         2   2
-    3   A;B;C               c         3   3
-    4     B;D             c;d         4   4
-    5     A;B               d         5   5
+      Authors Author_Keywords  Times_Cited  ID
+    0       A               a            0   0
+    1     A;B             a;b            1   1
+    2       B               b            2   2
+    3   A;B;C               c            3   3
+    4     B;D             c;d            4   4
+    5     A;B               d            5   5
 
 
-    >>> compute_tfm(df, 'Authors')
+    >>> document_term_matrix(df, 'Authors')
        A  B  C  D
     0  1  0  0  0
     1  1  1  0  0
@@ -80,10 +78,10 @@ def factor_analysis(
     D  0.516398  1.110223e-16  0.57735
 
     >>> factor_analysis(df, 'Authors', n_components=3, limit_to=['A', 'B', 'C'])
-             F0        F1        F2
-    A -0.888074  0.000000  0.459701
-    B  0.325058  0.707107  0.627963
-    C -0.325058  0.707107 -0.627963
+             F0        F1       F2
+    A -0.774597 -0.000000  0.00000
+    B  0.258199  0.707107 -0.57735
+    C -0.258199  0.707107  0.57735
 
     >>> factor_analysis(df, 'Authors', n_components=3, exclude=['C'])
              F0            F1       F2
@@ -369,7 +367,7 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "top_by",
             "desc": "Top by:",
             "widget": widgets.Dropdown(
-                options=["Frequency", "Cited_by"], layout=Layout(width=WIDGET_WIDTH),
+                options=["Frequency", "Times_Cited"], layout=Layout(width=WIDGET_WIDTH),
             ),
         },
         # 4

@@ -222,12 +222,12 @@ class Map:
     #     ...    {
     #     ...       'Authors': x,
     #     ...       'Author Keywords': y,
-    #     ...       'Cited by': list(range(len(x))),
+    #     ...       "Times_Cited": list(range(len(x))),
     #     ...       'ID': list(range(len(x))),
     #     ...    }
     #     ... )
     #     >>> df
-    #       Authors Author Keywords  Cited by  ID
+    #       Authors Author Keywords  Times_Cited   ID
     #     0       A               a         0   0
     #     1     A;C             a;b         1   1
     #     2       B               b         2   2

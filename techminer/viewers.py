@@ -38,7 +38,7 @@ def __record_to_HTML(x):
         "Abstract_words_CL",
         "Countries",
         "Institutions",
-        "Cited_by",
+        "Times_Cited",
     ]:
         if f not in x.index:
             continue
@@ -70,7 +70,7 @@ def __record_to_HTML(x):
                 HTML += "{:>18}: {}<br>".format(f, s[0])
                 for t in s[1:]:
                     HTML += "{}<br>".format(textwrap.indent(t, " " * 20))
-            elif f == "Cited_by":
+            elif f == "Times_Cited":
                 HTML += "{:>18}: {}<br>".format(f, int(z))
             else:
                 HTML += "{:>18}: {}<br>".format(f, z)
@@ -149,7 +149,7 @@ def column(df, top_n=50):
                 ]
             )
             top_terms_cited_by = set(
-                summary.sort_values("Cited_by", ascending=False).head(top_n)[column]
+                summary.sort_values("Times_Cited", ascending=False).head(top_n)[column]
             )
             top_terms = sorted(top_terms_freq | top_terms_cited_by)
             controls[1]["widget"].options = top_terms
@@ -303,7 +303,9 @@ def matrix(df, top_n=50):
                 ]
             )
             top_terms_cited_by = set(
-                summary.sort_values("Cited_by", ascending=False).head(top_n)["_key1_"]
+                summary.sort_values("Times_Cited", ascending=False).head(top_n)[
+                    "_key1_"
+                ]
             )
             top_terms = sorted(top_terms_freq | top_terms_cited_by)
             controls[1]["widget"].options = top_terms

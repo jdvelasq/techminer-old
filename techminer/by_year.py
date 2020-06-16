@@ -38,49 +38,49 @@ def summary_by_year(df):
     >>> df = pd.DataFrame(
     ...     {
     ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
-    ...          "Cited_by": list(range(10,16)),
+    ...          "Times_Cited": list(range(10,16)),
     ...          "ID": list(range(6)),
     ...     }
     ... )
     >>> df
-       Year  Cited_by  ID
-    0  2010        10   0
-    1  2010        11   1
-    2  2011        12   2
-    3  2011        13   3
-    4  2012        14   4
-    5  2016        15   5
+       Year  Times_Cited  ID
+    0  2010           10   0
+    1  2010           11   1
+    2  2011           12   2
+    3  2011           13   3
+    4  2012           14   4
+    5  2016           15   5
 
-    >>> summary_by_year(df)[['Year', 'Cited_by', 'Num_Documents', 'ID']]
-       Year  Cited_by  Num_Documents      ID
-    0  2010        21              2  [0, 1]
-    1  2011        25              2  [2, 3]
-    2  2012        14              1     [4]
-    3  2013         0              0      []
-    4  2014         0              0      []
-    5  2015         0              0      []
-    6  2016        15              1     [5]
+    >>> summary_by_year(df)[['Year', "Times_Cited", 'Num_Documents', 'ID']]
+       Year  Times_Cited  Num_Documents      ID
+    0  2010           21              2  [0, 1]
+    1  2011           25              2  [2, 3]
+    2  2012           14              1     [4]
+    3  2013            0              0      []
+    4  2014            0              0      []
+    5  2015            0              0      []
+    6  2016           15              1     [5]
 
-    >>> summary_by_year(df)[['Cum_Num_Documents', 'Cum_Cited_by', 'Avg_Cited_by']]
-       Cum_Num_Documents  Cum_Cited_by  Avg_Cited_by
-    0                  2            21          10.5
-    1                  4            46          12.5
-    2                  5            60          14.0
-    3                  5            60           0.0
-    4                  5            60           0.0
-    5                  5            60           0.0
-    6                  6            75          15.0
+    >>> summary_by_year(df)[['Cum_Num_Documents', 'Cum_Times_Cited', 'Avg_Times_Cited']]
+       Cum_Num_Documents  Cum_Times_Cited  Avg_Times_Cited
+    0                  2               21             10.5
+    1                  4               46             12.5
+    2                  5               60             14.0
+    3                  5               60              0.0
+    4                  5               60              0.0
+    5                  5               60              0.0
+    6                  6               75             15.0
 
     """
-    data = df[["Year", "Cited_by", "ID"]].explode("Year")
+    data = df[["Year", "Times_Cited", "ID"]].explode("Year")
     data["Num_Documents"] = 1
     result = data.groupby("Year", as_index=False).agg(
-        {"Cited_by": np.sum, "Num_Documents": np.size}
+        {"Times_Cited": np.sum, "Num_Documents": np.size}
     )
     result = result.assign(
         ID=data.groupby("Year").agg({"ID": list}).reset_index()["ID"]
     )
-    result["Cited_by"] = result["Cited_by"].map(lambda x: int(x))
+    result["Times_Cited"] = result["Times_Cited"].map(lambda x: int(x))
     years = [year for year in range(result.Year.min(), result.Year.max() + 1)]
     result = result.set_index("Year")
     result = result.reindex(years, fill_value=0)
@@ -89,9 +89,9 @@ def summary_by_year(df):
         "Year", ascending=True, inplace=True,
     )
     result["Cum_Num_Documents"] = result["Num_Documents"].cumsum()
-    result["Cum_Cited_by"] = result["Cited_by"].cumsum()
-    result["Avg_Cited_by"] = result["Cited_by"] / result["Num_Documents"]
-    result["Avg_Cited_by"] = result["Avg_Cited_by"].map(
+    result["Cum_Times_Cited"] = result["Times_Cited"].cumsum()
+    result["Avg_Times_Cited"] = result["Times_Cited"] / result["Num_Documents"]
+    result["Avg_Times_Cited"] = result["Avg_Times_Cited"].map(
         lambda x: 0 if pd.isna(x) else round(x, 2)
     )
     result = result.reset_index()
@@ -111,9 +111,9 @@ FONTSIZE = 13
 #  View:
 
 #    Cum Documents by year
-#    Times cited by year **
-#    Cumulative times cited by year
-#    Avg times cited by year
+#    Times Times_Cited  year **
+#    Cumulative times Times_Cited  year
+#    Avg times Times_Cited  year
 #
 
 
@@ -136,28 +136,28 @@ def documents_by_year_bar(
     >>> df = pd.DataFrame(
     ...     {
     ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
-    ...          "Cited_by": list(range(10,16)),
+    ...          "Times_Cited": list(range(10,16)),
     ...          "ID": list(range(6)),
     ...     }
     ... )
     >>> df
-       Year  Cited_by  ID
-    0  2010        10   0
-    1  2010        11   1
-    2  2011        12   2
-    3  2011        13   3
-    4  2012        14   4
-    5  2016        15   5
+       Year  Times_Cited  ID
+    0  2010           10   0
+    1  2010           11   1
+    2  2011           12   2
+    3  2011           13   3
+    4  2012           14   4
+    5  2016           15   5
 
-    >>> summary_by_year(df)[['Year', 'Cited_by', 'Num_Documents', 'ID']]
-       Year  Cited_by  Num_Documents      ID
-    0  2010        21              2  [0, 1]
-    1  2011        25              2  [2, 3]
-    2  2012        14              1     [4]
-    3  2013         0              0      []
-    4  2014         0              0      []
-    5  2015         0              0      []
-    6  2016        15              1     [5]
+    >>> summary_by_year(df)[['Year', "Times_Cited", 'Num_Documents', 'ID']]
+       Year  Times_Cited  Num_Documents      ID
+    0  2010           21              2  [0, 1]
+    1  2011           25              2  [2, 3]
+    2  2012           14              1     [4]
+    3  2013            0              0      []
+    4  2014            0              0      []
+    5  2015            0              0      []
+    6  2016           15              1     [5]
 
 
     >>> fig = documents_by_year_bar(x=df, cmap="Blues")
@@ -185,11 +185,11 @@ def documents_by_year_bar(
                 (
                     0.2
                     + 0.75
-                    * (value - table.Cited_by.min())
-                    / (table.Cited_by.max() - table.Cited_by.min())
+                    * (value - table.Times_Cited.min())
+                    / (table.Times_Cited.max() - table.Times_Cited.min())
                 )
             )
-            for value in table.Cited_by
+            for value in table.Times_Cited
         ]
 
     fig = pyplot.Figure(figsize=figsize)
@@ -245,28 +245,28 @@ Examples
     >>> df = pd.DataFrame(
     ...     {
     ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
-    ...          "Cited_by": list(range(10,16)),
+    ...          "Times_Cited": list(range(10,16)),
     ...          "ID": list(range(6)),
     ...     }
     ... )
     >>> df
-       Year  Cited_by  ID
-    0  2010        10   0
-    1  2010        11   1
-    2  2011        12   2
-    3  2011        13   3
-    4  2012        14   4
-    5  2016        15   5
+       Year  Times_Cited  ID
+    0  2010           10   0
+    1  2010           11   1
+    2  2011           12   2
+    3  2011           13   3
+    4  2012           14   4
+    5  2016           15   5
 
-    >>> summary_by_year(df)[['Year', 'Cited_by', 'Num_Documents', 'ID']]
-       Year  Cited_by  Num_Documents      ID
-    0  2010        21              2  [0, 1]
-    1  2011        25              2  [2, 3]
-    2  2012        14              1     [4]
-    3  2013         0              0      []
-    4  2014         0              0      []
-    5  2015         0              0      []
-    6  2016        15              1     [5]
+    >>> summary_by_year(df)[['Year', "Times_Cited", 'Num_Documents', 'ID']]
+       Year  Times_Cited  Num_Documents      ID
+    0  2010           21              2  [0, 1]
+    1  2011           25              2  [2, 3]
+    2  2012           14              1     [4]
+    3  2013            0              0      []
+    4  2014            0              0      []
+    5  2015            0              0      []
+    6  2016           15              1     [5]
 
 
     >>> fig = documents_by_year_barh(x=df, cmap="Blues")
@@ -294,11 +294,11 @@ Examples
                 (
                     0.2
                     + 0.75
-                    * (value - table.Cited_by.min())
-                    / (table.Cited_by.max() - table.Cited_by.min())
+                    * (value - table.Times_Cited.min())
+                    / (table.Times_Cited.max() - table.Times_Cited.min())
                 )
             )
-            for value in table.Cited_by
+            for value in table.Times_Cited
         ]
 
     fig = pyplot.Figure(figsize=figsize)
@@ -355,28 +355,28 @@ def times_cited_by_year_bar(
     >>> df = pd.DataFrame(
     ...     {
     ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
-    ...          "Cited_by": list(range(10,16)),
+    ...          "Times_Cited": list(range(10,16)),
     ...          "ID": list(range(6)),
     ...     }
     ... )
     >>> df
-       Year  Cited_by  ID
-    0  2010        10   0
-    1  2010        11   1
-    2  2011        12   2
-    3  2011        13   3
-    4  2012        14   4
-    5  2016        15   5
+       Year  Times_Cited  ID
+    0  2010           10   0
+    1  2010           11   1
+    2  2011           12   2
+    3  2011           13   3
+    4  2012           14   4
+    5  2016           15   5
 
-    >>> summary_by_year(df)[['Year', 'Cited_by', 'Num_Documents', 'ID']]
-       Year  Cited_by  Num_Documents      ID
-    0  2010        21              2  [0, 1]
-    1  2011        25              2  [2, 3]
-    2  2012        14              1     [4]
-    3  2013         0              0      []
-    4  2014         0              0      []
-    5  2015         0              0      []
-    6  2016        15              1     [5]
+    >>> summary_by_year(df)[['Year', "Times_Cited", 'Num_Documents', 'ID']]
+       Year  Times_Cited  Num_Documents      ID
+    0  2010           21              2  [0, 1]
+    1  2011           25              2  [2, 3]
+    2  2012           14              1     [4]
+    3  2013            0              0      []
+    4  2014            0              0      []
+    5  2015            0              0      []
+    6  2016           15              1     [5]
 
 
     >>> fig = times_cited_by_year_bar(x=df, cmap="Blues")
@@ -416,7 +416,7 @@ def times_cited_by_year_bar(
 
     ax.bar(
         x=range(len(table)),
-        height=table.Cited_by,
+        height=table.Times_Cited,
         width=width,
         bottom=bottom,
         align=align,
@@ -425,7 +425,7 @@ def times_cited_by_year_bar(
     )
 
     ax.text(
-        0, table.Cited_by.max(), "Color darkness is proportional to Num Documents",
+        0, table.Times_Cited.max(), "Color darkness is proportional to Num Documents",
     )
 
     ax.set_xticks(np.arange(len(table)))
@@ -464,28 +464,28 @@ Examples
     >>> df = pd.DataFrame(
     ...     {
     ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
-    ...          "Cited_by": list(range(10,16)),
+    ...          "Times_Cited": list(range(10,16)),
     ...          "ID": list(range(6)),
     ...     }
     ... )
     >>> df
-       Year  Cited_by  ID
-    0  2010        10   0
-    1  2010        11   1
-    2  2011        12   2
-    3  2011        13   3
-    4  2012        14   4
-    5  2016        15   5
+       Year  Times_Cited  ID
+    0  2010           10   0
+    1  2010           11   1
+    2  2011           12   2
+    3  2011           13   3
+    4  2012           14   4
+    5  2016           15   5
 
-    >>> summary_by_year(df)[['Year', 'Cited_by', 'Num_Documents', 'ID']]
-       Year  Cited_by  Num_Documents      ID
-    0  2010        21              2  [0, 1]
-    1  2011        25              2  [2, 3]
-    2  2012        14              1     [4]
-    3  2013         0              0      []
-    4  2014         0              0      []
-    5  2015         0              0      []
-    6  2016        15              1     [5]
+    >>> summary_by_year(df)[['Year', "Times_Cited", 'Num_Documents', 'ID']]
+       Year  Times_Cited  Num_Documents      ID
+    0  2010           21              2  [0, 1]
+    1  2011           25              2  [2, 3]
+    2  2012           14              1     [4]
+    3  2013            0              0      []
+    4  2014            0              0      []
+    5  2015            0              0      []
+    6  2016           15              1     [5]
 
 
     >>> fig = documents_by_year_barh(x=df, cmap="Blues")
@@ -525,7 +525,7 @@ Examples
 
     ax.barh(
         y=range(len(table.Year)),
-        width=table.Cited_by,
+        width=table.Times_Cited,
         height=height,
         left=left,
         align=align,
@@ -533,7 +533,7 @@ Examples
     )
 
     ax.text(
-        table.Cited_by.max(),
+        table.Times_Cited.max(),
         0,
         "Color darkness is proportional to Num_Documents",
         horizontalalignment="right",
@@ -583,9 +583,9 @@ def __APP0__(df):
                     "Summary",
                     "Documents by Year",
                     "Cum. Documents by Year",
-                    "Times Cited by Year",
-                    "Cum. Times Cited by Year",
-                    "Avg. Times Cited by Year",
+                    "Times Times_Cited  Year",
+                    "Cum. Times Times_Cited  Year",
+                    "Avg. Times Times_Cited  Year",
                 ],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
@@ -659,7 +659,7 @@ def __APP0__(df):
                 return
             #
             if view == "Documents by Year":
-                x = x[["Year", "Num_Documents", "Cited_by"]]
+                x = x[["Year", "Num_Documents", "Times_Cited"]]
                 if plot_type == "Bar plot":
                     display(
                         plt.bar_prop(
@@ -674,8 +674,8 @@ def __APP0__(df):
                     )
                 return
             #
-            if view == "Times Cited by Year":
-                x = x[["Year", "Cited_by", "Num_Documents"]]
+            if view == "Times Times_Cited  Year":
+                x = x[["Year", "Times_Cited", "Num_Documents"]]
                 if plot_type == "Bar plot":
                     display(
                         plt.bar_prop(

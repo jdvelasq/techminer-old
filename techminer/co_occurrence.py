@@ -36,14 +36,14 @@ def filter_index(
 
     if top_by == 0 or top_by == "Frequency":
         top_terms = top_terms.sort_values(
-            ["Num_Documents", "Cited_by", column],
+            ["Num_Documents", "Times_Cited", column],
             ascending=[False, False, True],
             ignore_index=True,
         )
 
-    if top_by == 1 or top_by == "Cited_by":
+    if top_by == 1 or top_by == "Times_Cited":
         top_terms = top_terms.sort_values(
-            ["Cited_by", "Num_Documents", column],
+            ["Times_Cited", "Num_Documents", column],
             ascending=[False, False, True],
             ignore_index=True,
         )
@@ -101,19 +101,19 @@ def document_term_matrix(x, column):
     ...    {
     ...       'Authors': x,
     ...       'Author_Keywords': y,
-    ...       'Cited_by': list(range(len(x))),
+    ...       "Times_Cited": list(range(len(x))),
     ...       'ID': list(range(len(x))),
     ...    }
     ... )
     >>> df
-      Authors Author_Keywords  Cited_by  ID
-    0       A               a         0   0
-    1     A;B             a;b         1   1
-    2       B               b         2   2
-    3   A;B;C               c         3   3
-    4     B;D             c;d         4   4
+      Authors Author_Keywords  Times_Cited  ID
+    0       A               a            0   0
+    1     A;B             a;b            1   1
+    2       B               b            2   2
+    3   A;B;C               c            3   3
+    4     B;D             c;d            4   4
 
-    >>> compute_tfm(df, 'Authors')
+    >>> document_term_matrix(df, 'Authors')
        A  B  C  D
     0  1  0  0  0
     1  1  1  0  0
@@ -121,7 +121,7 @@ def document_term_matrix(x, column):
     3  1  1  1  0
     4  0  1  0  1
 
-    >>> compute_tfm(df, 'Author_Keywords')
+    >>> document_term_matrix(df, 'Author_Keywords')
        a  b  c  d
     0  1  0  0  0
     1  1  1  0  0
@@ -129,21 +129,6 @@ def document_term_matrix(x, column):
     3  0  0  1  0
     4  0  0  1  1
 
-    >>> compute_tfm(df, 'Authors', limit_to=['A', 'B'])
-       A  B
-    0  1  0
-    1  1  1
-    2  0  1
-    3  1  1
-    4  0  1
-
-    >>> compute_tfm(df, 'Authors', exclude=['A', 'B'])
-       C  D
-    0  0  0
-    1  0  0
-    2  0  0
-    3  1  0
-    4  0  1
 
 
     """
@@ -154,6 +139,7 @@ def document_term_matrix(x, column):
         data=data, index="ID", columns=column, margins=False, fill_value=0.0,
     )
     result.columns = [b for _, b in result.columns]
+    result = result.reset_index(drop=True)
     return result
 
 
@@ -182,17 +168,17 @@ def co_occurrence(
     ...    {
     ...       'Authors': x,
     ...       'Author_Keywords': y,
-    ...       'Cited_by': list(range(len(x))),
+    ...       "Times_Cited": list(range(len(x))),
     ...       'ID': list(range(len(x))),
     ...    }
     ... )
     >>> df
-      Authors Author_Keywords  Cited_by  ID
-    0       A               a         0   0
-    1     A;B             a;b         1   1
-    2       B               b         2   2
-    3   A;B;C               c         3   3
-    4     B;D             c;d         4   4
+      Authors Author_Keywords  Times_Cited  ID
+    0       A               a            0   0
+    1     A;B             a;b            1   1
+    2       B               b            2   2
+    3   A;B;C               c            3   3
+    4     B;D             c;d            4   4
 
     >>> co_occurrence(df, column='Author_Keywords', by='Authors')
        a  b  c  d
@@ -290,19 +276,19 @@ def occurrence(
     >>> df = pd.DataFrame(
     ...    {
     ...       'Authors': x,
-    ...       'Cited_by': list(range(len(x))),
+    ...       "Times_Cited": list(range(len(x))),
     ...       'ID': list(range(len(x))),
     ...    }
     ... )
     >>> df
-      Authors  Cited_by  ID
-    0       A         0   0
-    1       A         1   1
-    2     A;B         2   2
-    3       B         3   3
-    4   A;B;C         4   4
-    5       D         5   5
-    6     B;D         6   6
+      Authors  Times_Cited  ID
+    0       A            0   0
+    1       A            1   1
+    2     A;B            2   2
+    3       B            3   3
+    4   A;B;C            4   4
+    5       D            5   5
+    6     B;D            6   6
 
     >>> occurrence(df, column='Authors')
        A  B  C  D
@@ -857,7 +843,7 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "top_by",
             "desc": "Top by:",
             "widget": widgets.Dropdown(
-                options=["Frequency", "Cited_by"], layout=Layout(width=WIDGET_WIDTH),
+                options=["Frequency", "Times_Cited"], layout=Layout(width=WIDGET_WIDTH),
             ),
         },
         # 5

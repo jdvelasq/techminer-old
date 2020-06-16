@@ -25,7 +25,7 @@ from techminer.plots import COLORMAPS
 
 #     if top_by == 0 or top_by == "Frequency":
         
-#     if top_by == 1 or top_by == "Cited_by":
+#     if top_by == 1 or top_by == "Times_Cited":
 
 
 
@@ -34,7 +34,7 @@ from techminer.plots import COLORMAPS
 
 # def most_frequent(x, column, top_n, limit_to, exclude):
 #     result = summary_by_term(x, column, limit_to=limit_to, exclude=exclude)
-#     result = result.sort_values(["Num_Documents", "Cited_by", column], ascending=False)
+#     result = result.sort_values(["Num_Documents", "Times_Cited", column], ascending=False)
 #     result = result[column].head(top_n)
 #     result = result.tolist()
 #     return result
@@ -42,7 +42,7 @@ from techminer.plots import COLORMAPS
 
 # def most_cited_by(x, column, top_n, limit_to, exclude):
 #     result = summary_by_term(x, column, limit_to=limit_to, exclude=exclude)
-#     result = result.sort_values(["Cited_by", "Num_Documents", column], ascending=False)
+#     result = result.sort_values(["Times_Cited", "Num_Documents", column], ascending=False)
 #     result = result[column].head(top_n)
 #     result = result.tolist()
 #     return result
@@ -67,34 +67,34 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
     >>> x = pd.DataFrame(
     ...     {
     ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3".split(","),
-    ...          "Cited_by": list(range(10,14)),
+    ...          "Times_Cited": list(range(10,14)),
     ...          "ID": list(range(4)),
     ...     }
     ... )
     >>> x
-                          Authors  Cited_by  ID
-    0  author 0;author 1;author 2        10   0
-    1                    author 0        11   1
-    2                    author 1        12   2
-    3                    author 3        13   3
+                          Authors  Times_Cited  ID
+    0  author 0;author 1;author 2           10   0
+    1                    author 0           11   1
+    2                    author 1           12   2
+    3                    author 3           13   3
 
     >>> summary_by_term(x, 'Authors')
-        Authors  Num_Documents  Cited_by      ID
-    0  author 0              2        21  [0, 1]
-    1  author 1              2        22  [0, 2]
-    2  author 2              1        10     [0]
-    3  author 3              1        13     [3]
+        Authors  Num_Documents  Times_Cited      ID
+    0  author 0              2           21  [0, 1]
+    1  author 1              2           22  [0, 2]
+    2  author 2              1           10     [0]
+    3  author 3              1           13     [3]
 
     >>> items = ['author 1', 'author 2']
     >>> summary_by_term(x, 'Authors', limit_to=items)
-        Authors  Num_Documents  Cited_by      ID
-    0  author 1              2        22  [0, 2]
-    1  author 2              1        10     [0]
+        Authors  Num_Documents  Times_Cited      ID
+    0  author 1              2           22  [0, 2]
+    1  author 2              1           10     [0]
 
     >>> summary_by_term(x, 'Authors', exclude=items)
-        Authors  Num_Documents  Cited_by      ID
-    0  author 0              2        21  [0, 1]
-    1  author 3              1        13     [3]
+        Authors  Num_Documents  Times_Cited      ID
+    0  author 0              2           21  [0, 1]
+    1  author 3              1           13     [3]
 
     """
 
@@ -103,13 +103,13 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
     #
 
     x = x.copy()
-    x = __explode(x[[column, "Cited_by", "ID"]], column)
+    x = __explode(x[[column, "Times_Cited", "ID"]], column)
     x["Num_Documents"] = 1
     result = x.groupby(column, as_index=False).agg(
-        {"Num_Documents": np.size, "Cited_by": np.sum}
+        {"Num_Documents": np.size, "Times_Cited": np.sum}
     )
     result = result.assign(ID=x.groupby(column).agg({"ID": list}).reset_index()["ID"])
-    result["Cited_by"] = result["Cited_by"].map(lambda x: int(x))
+    result["Times_Cited"] = result["Times_Cited"].map(lambda x: int(x))
 
     #
     # Filter
@@ -134,18 +134,18 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
         result = result[result[column].map(lambda w: w not in exclude)]
 
     if (top_by == 0 or top_by == "Frequency"):
-        result = result[[column, 'Num_Documents', 'Cited_by', 'ID']]
+        result = result[[column, 'Num_Documents', "Times_Cited", 'ID']]
         result.sort_values(
-            ["Num_Documents", "Cited_by", column],
+            ["Num_Documents", "Times_Cited", column],
             ascending=[False, False, True],
             inplace=True,
             ignore_index=True,
         )
 
     if (top_by == 1 or top_by == "Times_Cited"):
-        result = result[[column, 'Cited_by', 'Num_Documents', 'ID']]
+        result = result[[column, "Times_Cited", 'Num_Documents', 'ID']]
         result.sort_values(
-            ["Cited_by", "Num_Documents", column],
+            ["Times_Cited", "Num_Documents", column],
             ascending=[False, False, True],
             inplace=True,
             ignore_index=True,
@@ -153,7 +153,7 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
 
     if top_by is None:
         result.sort_values(
-            [column, "Num_Documents", "Cited_by"],
+            [column, "Num_Documents", "Times_Cited"],
             ascending=[True, False, False],
             inplace=True,
             ignore_index=True,
@@ -192,12 +192,12 @@ def get_top_by(x, column, top_by, top_n, limit_to, exclude):
 #     >>> x = pd.DataFrame(
 #     ...     {
 #     ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3".split(","),
-#     ...          "Cited_by": list(range(10,14)),
+#     ...          "Times_Cited": list(range(10,14)),
 #     ...          "ID": list(range(4)),
 #     ...     }
 #     ... )
 #     >>> x
-#                           Authors  Cited_by  ID
+#                           Authors  Times_Cited  ID
 #     0  author 0;author 1;author 2        10   0
 #     1                    author 0        11   1
 #     2                    author 1        12   2
@@ -219,7 +219,7 @@ def get_top_by(x, column, top_by, top_n, limit_to, exclude):
 #     """
 
 #     result = summary_by_term(x, column, limit_to, exclude)
-#     result.pop("Cited_by")
+#     result.pop("Times_Cited")
 #     result.sort_values(
 #         ["Num_Documents", column],
 #         ascending=[False, True],
@@ -248,19 +248,19 @@ def get_top_by(x, column, top_by, top_n, limit_to, exclude):
 #     >>> x = pd.DataFrame(
 #     ...     {
 #     ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3".split(","),
-#     ...          "Cited_by": list(range(10,14)),
+#     ...          "Times_Cited": list(range(10,14)),
 #     ...          "ID": list(range(4)),
 #     ...     }
 #     ... )
 #     >>> x
-#                           Authors  Cited_by  ID
+#                           Authors  Times_Cited  ID
 #     0  author 0;author 1;author 2        10   0
 #     1                    author 0        11   1
 #     2                    author 1        12   2
 #     3                    author 3        13   3
 
 #     >>> citations_by_term(x, 'Authors')
-#         Authors  Cited_by      ID
+#         Authors  Times_Cited      ID
 #     0  author 1        22  [0, 2]
 #     1  author 0        21  [0, 1]
 #     2  author 3        13     [3]
@@ -268,7 +268,7 @@ def get_top_by(x, column, top_by, top_n, limit_to, exclude):
 
 #     >>> terms = ['author 1', 'author 2']
 #     >>> citations_by_term(x, 'Authors', limit_to=terms)
-#         Authors  Cited_by      ID
+#         Authors  Times_Cited      ID
 #     0  author 1        22  [0, 2]
 #     1  author 2        10     [0]
 
@@ -277,7 +277,7 @@ def get_top_by(x, column, top_by, top_n, limit_to, exclude):
 #     result = summary_by_term(x, column, limit_to, exclude)
 #     result.pop("Num_Documents")
 #     result.sort_values(
-#         ["Cited_by", column], ascending=[False, True], inplace=True, ignore_index=True,
+#         ["Times_Cited", column], ascending=[False, True], inplace=True, ignore_index=True,
 #     )
 #     return result
 
@@ -294,10 +294,10 @@ def get_top_by(x, column, top_by, top_n, limit_to, exclude):
         
 
 #     """
-#     result = x.sort_values(by="Cited_by", ascending=False)[
-#         ["Title", "Authors", "Year", "Cited_by", "ID"]
+#     result = x.sort_values(by="Times_Cited", ascending=False)[
+#         ["Title", "Authors", "Year", "Times_Cited", "ID"]
 #     ]
-#     result["Cited_by"] = result["Cited_by"].map(
+#     result["Times_Cited"] = result["Times_Cited"].map(
 #         lambda w: int(w) if pd.isna(w) is False else 0
 #     )
 #     return result
@@ -321,12 +321,12 @@ def get_top_by(x, column, top_by, top_n, limit_to, exclude):
 #         ...    {
 #         ...       'Authors': x,
 #         ...       'Author Keywords': y,
-#         ...       'Cited by': list(range(len(x))),
+#         ...       "Times_Cited": list(range(len(x))),
 #         ...       'ID': list(range(len(x))),
 #         ...    }
 #         ... )
 #         >>> df
-#           Authors Author Keywords  Cited by  ID
+#           Authors Author Keywords  Times_Cited   ID
 #         0       A               a         0   0
 #         1     A;B             a;b         1   1
 #         2       B               b         2   2
@@ -335,7 +335,7 @@ def get_top_by(x, column, top_by, top_n, limit_to, exclude):
 #         5     A;B               d         5   5
 
 #         >>> DataFrame(df).most_frequent('Authors', top_n=1)
-#           Authors Author Keywords  Cited by  ID  top_1_Authors_freq
+#           Authors Author Keywords  Times_Cited   ID  top_1_Authors_freq
 #         0       A               a         0   0               False
 #         1     A;B             a;b         1   1                True
 #         2       B               b         2   2                True
@@ -358,7 +358,7 @@ def get_top_by(x, column, top_by, top_n, limit_to, exclude):
 #         return DataFrame(df)
 
 #     def most_cited_by(self, column, top_n=10, sep=None):
-#         """Creates a group for most items cited by
+#         """Creates a group for most items Times_Cited 
 
 #         Examples
 #         ----------------------------------------------------------------------------------------------
@@ -370,12 +370,12 @@ def get_top_by(x, column, top_by, top_n, limit_to, exclude):
 #         ...    {
 #         ...       'Authors': x,
 #         ...       'Author Keywords': y,
-#         ...       'Cited by': list(range(len(x))),
+#         ...       "Times_Cited": list(range(len(x))),
 #         ...       'ID': list(range(len(x))),
 #         ...    }
 #         ... )
 #         >>> df
-#           Authors Author Keywords  Cited by  ID
+#           Authors Author Keywords  Times_Cited   ID
 #         0       A               a         0   0
 #         1     A;B             a;b         1   1
 #         2       B               b         2   2
@@ -384,7 +384,7 @@ def get_top_by(x, column, top_by, top_n, limit_to, exclude):
 #         5     A;B               d         5   5
 
 #         >>> DataFrame(df).most_cited_by('Authors', top_n=1)
-#           Authors Author Keywords  Cited by  ID  top_1_Authors_cited_by
+#           Authors Author Keywords  Times_Cited   ID  top_1_Authors_cited_by
 #         0       A               a         0   0                   False
 #         1     A;B             a;b         1   1                    True
 #         2       B               b         2   2                    True
@@ -547,9 +547,9 @@ def __APP0__(x, limit_to, exclude):
                 display(df)
             else:
                 if top_by == "Frequency":
-                    df = df[[column, "Num_Documents", "Cited_by"]]
+                    df = df[[column, "Num_Documents", "Times_Cited"]]
                 else:
-                    df = df[[column, "Cited_by", "Num_Documents" ]]
+                    df = df[[column, "Times_Cited", "Num_Documents" ]]
 
                 display(plot(df, cmap=cmap, figsize=(figsize_width, figsize_height)))
             
@@ -666,7 +666,7 @@ def __APP1__(x, limit_to, exclude):
         if analysis_type == "Frequency":
             df = df[[term, "Num_Documents"]]
         else:
-            df = df[[term, "Cited_by"]]
+            df = df[[term, "Times_Cited"]]
         df = df.reset_index(drop=True)
         output.clear_output()
         with output:

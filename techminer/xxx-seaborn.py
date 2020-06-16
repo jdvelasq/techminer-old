@@ -28,7 +28,7 @@ Plots using Seaborn
 
 #         columns = self.columns.tolist()
 #         data = pd.DataFrame(self.copy())
-#         if data.columns[1] != 'Cited by':
+#         if data.columns[1] != "Times_Cited":
 #             data[columns[0]] = data[columns[0]].map(str) + ' [' + data[columns[1]].map(str) + ']'
 #             data[data.columns[0]] = data[data.columns[0]].map(lambda x: cut_text(x))
 

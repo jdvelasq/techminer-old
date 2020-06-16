@@ -67,7 +67,7 @@
 #      2   Author Keywords                1681 non-null   object
 #      3   Author(s) ID                   1714 non-null   object
 #      4   Authors                        1714 non-null   object
-#      5   Cited by                       1714 non-null   int64
+#      5   Times_Cited                        1714 non-null   int64
 #      6   Issue                          1714 non-null   object
 #      7   Language of Original Document  1714 non-null   object
 #      8   Page end                       1669 non-null   float64
@@ -155,7 +155,7 @@
 #      2   Author Keywords  155 non-null    object
 #      3   Author(s) ID     212 non-null    object
 #      4   Authors          212 non-null    object
-#      5   Cited by         212 non-null    int64
+#      5   Times_Cited          212 non-null    int64
 #      6   DOI              152 non-null    object
 #      7   Document Type    212 non-null    object
 #      8   EID              212 non-null    object
@@ -212,7 +212,7 @@
 #      2   Author Keywords  76 non-null     object
 #      3   Author(s) ID     95 non-null     object
 #      4   Authors          95 non-null     object
-#      5   Cited by         95 non-null     int64
+#      5   Times_Cited          95 non-null     int64
 #      6   DOI              82 non-null     object
 #      7   Document Type    95 non-null     object
 #      8   EID              95 non-null     object
