@@ -803,18 +803,17 @@ def __TAB0__(x, limit_to, exclude):
     controls = [
         # 0
         {
-            "arg": "term",
-            "desc": "Term to analyze:",
+            "arg": "view",
+            "desc": "View:",
             "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
-                ensure_option=True,
+                options=["Matrix", "Heatmap", "Bubble plot", "Network"],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
         # 1
         {
-            "arg": "by",
-            "desc": "By Term:",
+            "arg": "column",
+            "desc": "Column to analyze:",
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in x.columns],
                 ensure_option=True,
@@ -823,10 +822,11 @@ def __TAB0__(x, limit_to, exclude):
         },
         # 2
         {
-            "arg": "plot_type",
-            "desc": "View:",
+            "arg": "by",
+            "desc": "By Column:",
             "widget": widgets.Dropdown(
-                options=["Table", "Heatmap", "Bubble plot", "Network"],
+                options=[z for z in COLUMNS if z in x.columns],
+                ensure_option=True,
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
@@ -843,7 +843,8 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "top_by",
             "desc": "Top by:",
             "widget": widgets.Dropdown(
-                options=["Frequency", "Times_Cited"], layout=Layout(width=WIDGET_WIDTH),
+                options=["Num Documents", "Times Cited"],
+                layout=Layout(width=WIDGET_WIDTH),
             ),
         },
         # 5
@@ -925,9 +926,9 @@ def __TAB0__(x, limit_to, exclude):
         #
         # Logic
         #
-        term = kwargs["term"]
+        column = kwargs["column"]
         by = kwargs["by"]
-        plot_type = kwargs["plot_type"]
+        view = kwargs["view"]
         cmap = kwargs["cmap"]
         top_by = kwargs["top_by"]
         top_n = int(kwargs["top_n"])
@@ -939,7 +940,7 @@ def __TAB0__(x, limit_to, exclude):
         #
         matrix = co_occurrence(
             x,
-            column=term,
+            column=column,
             by=by,
             top_by=top_by,
             top_n=top_n,
@@ -947,38 +948,76 @@ def __TAB0__(x, limit_to, exclude):
             exclude=exclude,
         )
         #
-        controls[7]["widget"].disabled = (
-            False if plot_type == "Network" and term == by else True
-        )
-        controls[8]["widget"].disabled = False if plot_type == "Network" else True
-        #
-        s = summary_by_term(
-            x=x,
-            column=term,
-            top_by=top_by,
-            top_n=top_n,
-            limit_to=limit_to,
-            exclude=exclude,
-        )
-        new_names = {
-            a: "{} [{:d}]".format(a, b)
-            for a, b in zip(s[term].tolist(), s["Num_Documents"].tolist())
-        }
-        matrix = matrix.rename(columns=new_names)
-        #
-        if term == by:
-            matrix = matrix.rename(index=new_names)
+        if view == "Matrix":
+            controls[9]["widget"].disabled = True
+            controls[10]["widget"].disabled = True
         else:
-            s = summary_by_term(x, by)
+            controls[9]["widget"].disabled = False
+            controls[10]["widget"].disabled = False
+        if view == "Network":
+            controls[7]["widget"].disabled = False
+            controls[8]["widget"].disabled = False
+        else:
+            controls[7]["widget"].disabled = True
+            controls[8]["widget"].disabled = True
+        #
+        if top_by == "Num Documents":
+            s = summary_by_term(
+                x=x,
+                column=column,
+                top_by=top_by,
+                top_n=top_n,
+                limit_to=limit_to,
+                exclude=exclude,
+            )
             new_names = {
                 a: "{} [{:d}]".format(a, b)
-                for a, b in zip(s[by].tolist(), s["Num_Documents"].tolist())
+                for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
             }
-            matrix = matrix.rename(index=new_names)
+            matrix = matrix.rename(columns=new_names)
+            #
+            if column == by:
+                matrix = matrix.rename(index=new_names)
+            else:
+                s = summary_by_term(x, by)
+                new_names = {
+                    a: "{} [{:d}]".format(a, b)
+                    for a, b in zip(s[by].tolist(), s["Num_Documents"].tolist())
+                }
+                matrix = matrix.rename(index=new_names)
+        else:
+            s = summary_by_term(
+                x=x,
+                column=column,
+                top_by=top_by,
+                top_n=top_n,
+                limit_to=limit_to,
+                exclude=exclude,
+            )
+            new_names = {
+                a: "{} [{:d}]".format(a, b)
+                for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
+            }
+            matrix = matrix.rename(columns=new_names)
+            #
+            if column == by:
+                matrix = matrix.rename(index=new_names)
+            else:
+                s = summary_by_term(x, by)
+                new_names = {
+                    a: "{} [{:d}]".format(a, b)
+                    for a, b in zip(s[by].tolist(), s["Times_Cited"].tolist())
+                }
+                matrix = matrix.rename(index=new_names)
+
         #
         # Sort order
         #
-        g = lambda m: int(m[m.find("[") + 1 : m.find("]")])
+        g = (
+            lambda m: m[m.find("[") + 1 : m.find("]")].zfill(5)
+            + " "
+            + m[: m.find("[") - 1]
+        )
         if sort_by == "Frequency/Cited by asc.":
             col_names = sorted(matrix.columns, key=g, reverse=False)
             row_names = sorted(matrix.index, key=g, reverse=False)
@@ -996,7 +1035,7 @@ def __TAB0__(x, limit_to, exclude):
                 axis=1, ascending=False
             )
         #
-        if plot_type == "Network" and term == by:
+        if view == "Network" and column == by:
             matrix = normalize_matrix(matrix, normalization)
         #
         output.clear_output()
@@ -1004,18 +1043,18 @@ def __TAB0__(x, limit_to, exclude):
             #
             # View
             #
-            if plot_type == "Table":
+            if view == "Matrix":
                 with pd.option_context(
                     "display.max_columns", 50, "display.max_rows", 50
                 ):
                     display(matrix.style.background_gradient(cmap=cmap, axis=None))
-            if plot_type == "Heatmap":
+            if view == "Heatmap":
                 display(
                     plt.heatmap(
                         matrix, cmap=cmap, figsize=(figsize_width, figsize_height)
                     )
                 )
-            if plot_type == "Bubble plot":
+            if view == "Bubble plot":
                 display(
                     plt.bubble(
                         matrix.transpose(),
@@ -1024,7 +1063,7 @@ def __TAB0__(x, limit_to, exclude):
                         figsize=(figsize_width, figsize_height),
                     )
                 )
-            if plot_type == "Network" and term == by:
+            if view == "Network" and column == by:
                 display(
                     occurrence_map(
                         matrix,
@@ -1033,7 +1072,7 @@ def __TAB0__(x, limit_to, exclude):
                         figsize=(figsize_width, figsize_height),
                     )
                 )
-            if plot_type == "Network" and term != by:
+            if view == "Network" and column != by:
                 display(
                     co_occurrence_map(
                         matrix,

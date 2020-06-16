@@ -573,7 +573,7 @@ def __TAB0__(x, limit_to, exclude):
         # 1
         {
             "arg": "term",
-            "desc": "Term to analyze:",
+            "desc": "Column to analyze:",
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in x.columns],
                 ensure_option=True,
@@ -583,7 +583,7 @@ def __TAB0__(x, limit_to, exclude):
         # 2
         {
             "arg": "by",
-            "desc": "By Term:",
+            "desc": "By Column:",
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in x.columns],
                 ensure_option=True,
@@ -606,7 +606,8 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "top_by",
             "desc": "Top by:",
             "widget": widgets.Dropdown(
-                options=["Frequency", "Times_Cited"], layout=Layout(width=WIDGET_WIDTH),
+                options=["Num Documents", "Times Cited"],
+                layout=Layout(width=WIDGET_WIDTH),
             ),
         },
         # 5
@@ -743,7 +744,7 @@ def __TAB0__(x, limit_to, exclude):
         #
         #
         #
-        if top_by == "Frequency":
+        if top_by == "Num Documents":
             s = summary_by_term(x, column)
             new_names = {
                 a: "{} [{:d}]".format(a, b)
