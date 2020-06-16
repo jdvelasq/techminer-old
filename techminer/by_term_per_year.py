@@ -9,11 +9,10 @@ Analysis by Term per Year
 import ipywidgets as widgets
 import numpy as np
 import pandas as pd
+import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
-
-import techminer.plots as plt
-from techminer.by_term import get_top_by
+from techminer.by_term import get_top_by, summary_by_term
 from techminer.by_year import summary_by_year
 from techminer.explode import __explode
 from techminer.keywords import Keywords
@@ -863,6 +862,21 @@ def __APP0__(x, limit_to, exclude):
 
             if analysis_by == "Num Documents":
                 matrix = num_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+
+                s = summary_by_term(
+                    x=x,
+                    column=column,
+                    top_by="Num Documents",
+                    top_n=None,
+                    limit_to=limit_to,
+                    exclude=exclude,
+                )
+                new_names = {
+                    a: "{} [{:d}]".format(a, b)
+                    for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
+                }
+                matrix = matrix.rename(columns=new_names)
+
                 if view == "Gant diagram":
                     display(plot(matrix, figsize=(figsize_width, figsize_height)))
                     return
@@ -873,6 +887,21 @@ def __APP0__(x, limit_to, exclude):
 
             if analysis_by == "Times Cited":
                 matrix = times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+
+                s = summary_by_term(
+                    x=x,
+                    column=column,
+                    top_by="Times Cited",
+                    top_n=None,
+                    limit_to=limit_to,
+                    exclude=exclude,
+                )
+                new_names = {
+                    a: "{} [{:d}]".format(a, b)
+                    for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
+                }
+                matrix = matrix.rename(columns=new_names)
+
                 if view == "Bubble plot":
                     z = num_documents_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
                     display(plot(matrix.transpose(), z.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
@@ -881,8 +910,36 @@ def __APP0__(x, limit_to, exclude):
             if analysis_by == "% Num Documents":
                 matrix = perc_num_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
 
+                s = summary_by_term(
+                    x=x,
+                    column=column,
+                    top_by="Num Documents",
+                    top_n=None,
+                    limit_to=limit_to,
+                    exclude=exclude,
+                )
+                new_names = {
+                    a: "{} [{:d}]".format(a, b)
+                    for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
+                }
+                matrix = matrix.rename(columns=new_names)
+
             if analysis_by == "% Times Cited":
                 matrix = perc_times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+
+                s = summary_by_term(
+                    x=x,
+                    column=column,
+                    top_by="Times Cited",
+                    top_n=None,
+                    limit_to=limit_to,
+                    exclude=exclude,
+                )
+                new_names = {
+                    a: "{} [{:d}]".format(a, b)
+                    for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
+                }
+                matrix = matrix.rename(columns=new_names)
 
             if view == 'Summary':
                 display(matrix.style.background_gradient(cmap=cmap, axis=None))
