@@ -133,7 +133,7 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
     if exclude is not None:
         result = result[result[column].map(lambda w: w not in exclude)]
 
-    if (top_by == 0 or top_by == "Frequency"):
+    if (top_by == 0 or top_by == "Num Documents"):
         result = result[[column, 'Num_Documents', "Times_Cited", 'ID']]
         result.sort_values(
             ["Num_Documents", "Times_Cited", column],
@@ -142,7 +142,7 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
             ignore_index=True,
         )
 
-    if (top_by == 1 or top_by == "Times_Cited"):
+    if (top_by == 1 or top_by == "Times Cited"):
         result = result[[column, "Times_Cited", 'Num_Documents', 'ID']]
         result.sort_values(
             ["Times_Cited", "Num_Documents", column],
@@ -457,7 +457,7 @@ def __APP0__(x, limit_to, exclude):
             "arg": "top_by",
             "desc": "Top by:",
             "widget": widgets.Dropdown(
-                    options=["Frequency", "Times_Cited"],
+                    options=["Num Documents", "Times Cited"],
                     layout=Layout(width=WIDGET_WIDTH),
                 ),
         },
@@ -546,9 +546,9 @@ def __APP0__(x, limit_to, exclude):
                 df.pop('ID')
                 display(df)
             else:
-                if top_by == "Frequency":
+                if top_by == "Num Documents":
                     df = df[[column, "Num_Documents", "Times_Cited"]]
-                else:
+                if top_by == "Times Cited":
                     df = df[[column, "Times_Cited", "Num_Documents" ]]
 
                 display(plot(df, cmap=cmap, figsize=(figsize_width, figsize_height)))

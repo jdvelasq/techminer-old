@@ -581,11 +581,11 @@ def __APP0__(df):
             "widget": widgets.Dropdown(
                 options=[
                     "Summary",
-                    "Documents by Year",
-                    "Cum. Documents by Year",
-                    "Times Times_Cited  Year",
-                    "Cum. Times Times_Cited  Year",
-                    "Avg. Times Times_Cited  Year",
+                    "Num Documents by Year",
+                    "Cum Num Documents by Year",
+                    "Times Cited by Year",
+                    "Cum Times Cited by Year",
+                    "Avg Times Cited by Year",
                 ],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
@@ -674,7 +674,7 @@ def __APP0__(df):
                     )
                 return
             #
-            if view == "Times Times_Cited  Year":
+            if view == "Times Cited by Year":
                 x = x[["Year", "Times_Cited", "Num_Documents"]]
                 if plot_type == "Bar plot":
                     display(
@@ -691,12 +691,12 @@ def __APP0__(df):
                 return
             #
             x = summary_by_year(df)
-            if view == "Cum. Documents by Year":
+            if view == "Cum Num Documents by Year":
                 x = x[["Year", "Cum_Num_Documents"]]
-            if view == "Cum. Times Cited by Year":
-                x = x[["Year", "Cum_Cited_by"]]
-            if view == "Avg. Times Cited by Year":
-                x = x[["Year", "Avg_Cited_by"]]
+            if view == "Cum Times Cited by Year":
+                x = x[["Year", "Cum_Times_Cited"]]
+            if view == "Avg Times Cited by Year":
+                x = x[["Year", "Avg_Times_Cited"]]
             if plot_type == "Bar plot":
                 display(
                     plt.bar(x=x, cmap=cmap, figsize=(figsize_width, figsize_height))
