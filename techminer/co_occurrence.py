@@ -759,6 +759,8 @@ def slope_chart(matrix, x, column, by, top_by, figsize, cmap="Blues"):
     # Dibuja las conexiones
     #
     maxlink = matrix.max().max()
+    minlink = matrix.values.ravel()
+    minlink = min([v for v in minlink if v > 0])
     for idx, index in enumerate(matrix.index):
         for icol, col in enumerate(matrix.columns):
             link = matrix.loc[index, col]
@@ -767,7 +769,8 @@ def slope_chart(matrix, x, column, by, top_by, figsize, cmap="Blues"):
                     [1, 3],
                     [yleft[idx], yright[icol]],
                     c="k",
-                    linewidth=4 * link / maxlink,
+                    linewidth=0.5 + 4 * (link - minlink) / (maxlink - minlink),
+                    alpha=0.5 + 0.5 * (link - minlink) / (maxlink - minlink),
                 )
 
     #
@@ -820,6 +823,7 @@ def slope_chart(matrix, x, column, by, top_by, figsize, cmap="Blues"):
     for idx, text in enumerate(matrix.columns):
         ax.text(3.1, yright[idx], text, ha="left", va="center")
 
+    ax.invert_yaxis()
     ax.axis("off")
 
     return fig
