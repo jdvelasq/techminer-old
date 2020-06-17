@@ -769,13 +769,35 @@ def __APP2__(x, limit_to, exclude):
         },
         # 3
         {
+            "arg": "sort_by",
+            "desc": "Sort by:",
+            "widget": widgets.Dropdown(
+                    options=
+                        [
+                            "Num Documents asc",
+                            "Num Documents desc",
+                            "Frac Num Documents asc", 
+                            "Frac Num Documents desc",
+                            "Times Cited asc",
+                            "Times Cited desc",
+                            "H index asc",
+                            "H indes desc",
+                            "Authors asc", 
+                            "Authors desc",
+                        ],
+                    value="Num Documents desc",
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+        },
+        # 4
+        {
             "arg": "cmap",
             "desc": "Colormap:",
             "widget": widgets.Dropdown(
                 options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 4
+        # 5
         {
             "arg": "figsize_width",
             "desc": "Figsize",
@@ -785,7 +807,7 @@ def __APP2__(x, limit_to, exclude):
                     layout=Layout(width="88px"),
                 ),
         },
-        # 5
+        # 6
         {
             "arg": "figsize_height",
             "desc": "Figsize",
@@ -808,9 +830,19 @@ def __APP2__(x, limit_to, exclude):
         view = kwargs['view']
         top_by = kwargs['top_by']
         top_n = kwargs['top_n']
+        sort_by = kwargs['sort_by']
         cmap = kwargs['cmap']
         figsize_width = int(kwargs['figsize_width'])
         figsize_height = int(kwargs['figsize_height'])
+        #
+        if view == 'Summary':
+            controls[-1]["widget"].disabled = True
+            controls[-2]["widget"].disabled = True
+            controls[-3]["widget"].disabled = True
+        else:
+            controls[-1]["widget"].disabled = False
+            controls[-2]["widget"].disabled = False
+            controls[-3]["widget"].disabled = False
         #
         summary = summary_by_term(x, 'Authors')
         df = x.copy()
@@ -823,6 +855,9 @@ def __APP2__(x, limit_to, exclude):
         summary['Fractionalized_Num_Documents'] = summary.Authors.map(lambda w: round(d[w], 2) if not pd.isna(w) else w)
         summary.pop('ID')
 
+        #
+        # Preparation
+        #
 
         if top_by == 'Num Documents':
             summary = summary.sort_values(['Num_Documents', 'Times_Cited', 'Authors'], ascending=False)
@@ -837,6 +872,32 @@ def __APP2__(x, limit_to, exclude):
             pass
         
         summary = summary.head(top_n)
+        summary = summary.reset_index(drop=True)
+
+        #
+        # sort_by
+        # 
+        summary = summary[['Authors', 'Num_Documents', 'Fractionalized_Num_Documents', 'Times_Cited']]
+
+        if sort_by == "Num Documents asc":
+            summary = summary.sort_values(by=["Num_Documents", "Fractionalized_Num_Documents", 'Authors'], ascending=True)
+        if sort_by == "Num Documents desc":
+            summary = summary.sort_values(by=["Num_Documents", "Fractionalized_Num_Documents", 'Authors'], ascending=False)
+        if sort_by == "Times Cited asc":
+            summary = summary.sort_values(by=["Times_Cited", "Num_Documents", 'Authors'], ascending=True)
+        if sort_by == "Times Cited desc":
+            summary = summary.sort_values(by=["Times_Cited", "Num_Documents", 'Authors'], ascending=False)
+        if sort_by == "Frac Num Documents asc":
+            summary = summary.sort_values(by=['Fractionalized_Num_Documents', 'Times_Cited', 'Authors', ], ascending=True)
+        if sort_by == "Frac Num Documents desc":
+            summary = summary.sort_values(by=['Fractionalized_Num_Documents', 'Times_Cited', 'Authors'], ascending=False)
+        
+        
+        if sort_by == "Authors asc":
+            summary = summary.sort_values(by=['Authors', "Times_Cited", "Num_Documents"], ascending=True)
+        if sort_by == "Authors desc":
+            summary = summary.sort_values(by=['Authors', "Times_Cited", "Num_Documents"], ascending=False)
+
         summary = summary.reset_index(drop=True)
 
         output.clear_output()
