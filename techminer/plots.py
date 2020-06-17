@@ -277,7 +277,7 @@ def bar_prop(
                     / (column2.max() - column2.min())
                 )
             )
-            for i in range(len(x[x.columns[1]]))
+            for i in range(len(x))
         ]
 
     fig = plt.Figure(figsize=figsize)

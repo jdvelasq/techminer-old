@@ -563,6 +563,8 @@ def __APP0__(x, limit_to, exclude):
         if sort_by == "Column desc":
             df = df.sort_values(by=[df.columns[0], "Times_Cited", "Num_Documents"], ascending=False)
         #
+        df = df.reset_index(drop=True)
+        #
         plot = plots[view]
         output.clear_output()
         with output:
