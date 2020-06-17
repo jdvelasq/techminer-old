@@ -880,7 +880,8 @@ def __APP0__(x, limit_to, exclude):
             if analysis_by == "Num Documents":
                 matrix = num_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
 
-                if view == 'Summary':
+                if view in ['Summary', 'Heatmap']:
+
                     s = summary_by_term(
                         x=x,
                         column=column,
@@ -913,7 +914,8 @@ def __APP0__(x, limit_to, exclude):
             if analysis_by == "Times Cited":
                 matrix = times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
 
-                if view == 'Summary':
+                if view in ['Summary', 'Heatmap']:
+                    
                     s = summary_by_term(
                         x=x,
                         column=column,
@@ -995,7 +997,7 @@ def __APP0__(x, limit_to, exclude):
             #
             # Sort order
             #
-            if view == 'Summary':
+            if view in ['Summary', "Heatmap"]:
                 g = (
                     lambda m: m[m.find("[") + 1 : m.find("]")].zfill(5)
                     + " "
@@ -1012,12 +1014,14 @@ def __APP0__(x, limit_to, exclude):
                 if sort_by == "Alphabetic desc.":
                     matrix = matrix.sort_index(axis=1, ascending=False)
 
-                display(matrix.style.background_gradient(cmap=cmap, axis=None))
-                return
 
-            if view == "Heatmap":
-                display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
-                return
+                if view == "Summary":
+                    display(matrix.style.background_gradient(cmap=cmap, axis=None))
+                    return
+
+                if view == "Heatmap":
+                    display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
+                    return
 
             if view == "Lines plot":
                 display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
