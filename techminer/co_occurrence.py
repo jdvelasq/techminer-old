@@ -462,6 +462,8 @@ def occurrence_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)
             font_size=12,
             horizontalalignment="left",
             verticalalignment="baseline",
+            edgecolors="k",
+            linewidths=1,
         )
         first_time = False
 
@@ -489,6 +491,8 @@ def occurrence_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)
             node_size=node_sizes,
             node_color=node_colors,
             node_shape="o",
+            edgecolors="k",
+            linewidths=1,
         )
 
         ax.spines["top"].set_visible(False)
@@ -658,6 +662,8 @@ def co_occurrence_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 
         node_size=column_node_sizes,
         node_color=column_node_colors,
         node_shape="o",
+        edgecolors="k",
+        linewidths=1,
     )
 
     #
@@ -672,6 +678,8 @@ def co_occurrence_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 
         node_size=index_node_sizes,
         node_color=index_node_colors,
         node_shape="s",
+        edgecolors="k",
+        linewidths=1,
     )
 
     #
