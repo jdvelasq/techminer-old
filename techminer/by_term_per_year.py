@@ -747,7 +747,6 @@ def growth_indicators(x, column, timewindow=2, top_n = None, limit_to=None, excl
     return result
 
 
-
 ##
 ##
 ## APP

@@ -6,18 +6,19 @@ Co-occurrence Analysis
 
 """
 import ipywidgets as widgets
+import matplotlib
+import matplotlib.pyplot as pyplot
 import networkx as nx
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as pyplot
 import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
-from techminer.by_term import summary_by_term  # ,citations_by_term, documents_by_term,
+from techminer.by_term import summary_by_term
 from techminer.explode import MULTIVALUED_COLS, __explode
 from techminer.keywords import Keywords
-from techminer.plots import COLORMAPS
 from techminer.params import EXCLUDE_COLS
+from techminer.plots import COLORMAPS
 
 
 def filter_index(
@@ -710,6 +711,145 @@ def co_occurrence_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 
     return fig
 
 
+def slope_chart(matrix, x, column, by, top_by, figsize, cmap="Blues"):
+    """
+    """
+    matplotlib.rc("font", size=12)
+
+    fig = pyplot.Figure(figsize=figsize)
+    ax = fig.subplots()
+    cmap = pyplot.cm.get_cmap(cmap)
+
+    matrix.columns = [a[: a.find("[")].strip() for a in matrix.columns]
+    matrix.index = [a[: a.find("[")].strip() for a in matrix.index]
+
+    m = len(matrix.index)
+    n = len(matrix.columns)
+    maxmn = max(m, n)
+    yleft = (maxmn - m) / 2.0 + np.linspace(0, m, m)
+    yright = (maxmn - n) / 2.0 + np.linspace(0, n, n)
+
+    ax.vlines(
+        x=1,
+        ymin=-1,
+        ymax=maxmn + 1,
+        color="gray",
+        alpha=0.7,
+        linewidth=1,
+        linestyles="dotted",
+    )
+
+    ax.vlines(
+        x=3,
+        ymin=-1,
+        ymax=maxmn + 1,
+        color="gray",
+        alpha=0.7,
+        linewidth=1,
+        linestyles="dotted",
+    )
+
+    #
+    # Dibuja los ejes para las conexiones
+    #
+    ax.scatter(x=[1] * m, y=yleft, s=1)
+    ax.scatter(x=[3] * n, y=yright, s=1)
+
+    #
+    # Dibuja las conexiones
+    #
+    maxlink = matrix.max().max()
+    for idx, index in enumerate(matrix.index):
+        for icol, col in enumerate(matrix.columns):
+            link = matrix.loc[index, col]
+            if link > 0:
+                ax.plot(
+                    [1, 3],
+                    [yleft[idx], yright[icol]],
+                    c="k",
+                    linewidth=4 * link / maxlink,
+                )
+
+    #
+    # left y-axis
+    #
+
+    # sizes
+    z = summary_by_term(x, column=by, top_by=top_by, top_n=None)
+    dic = {key: value for key, value in zip(z[z.columns[0]], z["Num_Documents"])}
+    sizes = [dic[index] for index in matrix.index]
+    sizes = [80 + 300 * (w - min(sizes)) / (max(sizes) - min(sizes)) for w in sizes]
+
+    #  color
+    dic = {key: value for key, value in zip(z[z.columns[0]], z["Times_Cited"])}
+    colors = [dic[index] for index in matrix.index]
+    colors = [
+        cmap((0.25 + 0.75 * (value - min(colors)) / (max(colors) - min(colors))))
+        for value in colors
+    ]
+
+    ax.scatter(
+        x=[1] * m, y=yleft, s=sizes, c=colors, zorder=10, linewidths=1, edgecolors="k"
+    )
+
+    for idx, text in enumerate(matrix.index):
+        ax.text(0.9, yleft[idx], text, ha="right", va="center")
+
+    #
+    # right y-axis
+    #
+
+    #  sizes
+    z = summary_by_term(x, column=column, top_by=top_by, top_n=None)
+    dic = {key: value for key, value in zip(z[z.columns[0]], z["Num_Documents"])}
+    sizes = [dic[column] for column in matrix.columns]
+    sizes = [80 + 300 * (w - min(sizes)) / (max(sizes) - min(sizes)) for w in sizes]
+
+    #  color
+    dic = {key: value for key, value in zip(z[z.columns[0]], z["Times_Cited"])}
+    colors = [dic[col] for col in matrix.columns]
+    colors = [
+        cmap((0.25 + 0.75 * (value - min(colors)) / (max(colors) - min(colors))))
+        for value in colors
+    ]
+
+    ax.scatter(
+        x=[3] * n, y=yright, s=sizes, c=colors, zorder=10, linewidths=1, edgecolors="k"
+    )
+
+    for idx, text in enumerate(matrix.columns):
+        ax.text(3.1, yright[idx], text, ha="left", va="center")
+
+    ax.axis("off")
+
+    return fig
+
+
+# import matplotlib
+# import numpy as np
+
+# filepath = "../data/papers/urban-agriculture-CL.csv"
+# df = pd.read_csv(filepath)
+# matrix = co_occurrence(
+#     x=df,
+#     column="Authors",
+#     by="Source_title",
+#     top_by="Num Documents",
+#     top_n=10,
+#     limit_to=None,
+#     exclude=None,
+# )
+# slope_chart(
+#     matrix,
+#     x=df,
+#     column="Authors",
+#     by="Source_title",
+#     top_by=None,
+#     figsize=(6, 6),
+#     cmap="Blues",
+# )
+
+
 #     # def correspondence_matrix(
 #     #     self,
 #     #     column_IDX,
@@ -806,7 +946,7 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "view",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Matrix", "Heatmap", "Bubble plot", "Network"],
+                options=["Matrix", "Heatmap", "Bubble plot", "Network", "Slope chart"],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
@@ -1079,6 +1219,19 @@ def __TAB0__(x, limit_to, exclude):
                         layout=layout,
                         cmap=cmap,
                         figsize=(figsize_width, figsize_height),
+                    )
+                )
+
+            if view == "Slope chart":
+                display(
+                    slope_chart(
+                        matrix=matrix,
+                        x=x,
+                        column=column,
+                        by=by,
+                        top_by=top_by,
+                        figsize=(figsize_width, figsize_height),
+                        cmap=cmap,
                     )
                 )
 
