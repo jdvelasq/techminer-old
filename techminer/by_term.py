@@ -610,6 +610,7 @@ def __APP0__(x, limit_to, exclude):
         ]
     )
 
+
 #
 #
 #  Panel 1
@@ -727,14 +728,179 @@ def __APP1__(x, limit_to, exclude):
 
 
 
+#
+#
+#  Panel 2
+#
+#
+def __APP2__(x, limit_to, exclude):
+    # -------------------------------------------------------------------------
+    #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    controls = [
+        # 0
+        {
+            "arg": "view",
+            "desc": "View:",
+            "widget": widgets.Dropdown(
+                    options=["Summary", "Bar plot", "Horizontal bar plot"],
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+        },
+        # 1
+        {
+            "arg": "top_by",
+            "desc": "Top by:",
+            "widget": widgets.Dropdown(
+                    options=["Num Documents", "Times Cited", "Fractionalized Num Documents", "H index"],
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+        },
+        # 2
+        {
+            "arg": "top_n",
+            "desc": "Top N:",
+            "widget": widgets.Dropdown(
+                    options=list(range(5, 51, 5)),
+                    layout=Layout(width=WIDGET_WIDTH),
+                ),
+        },
+        # 3
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 4
+        {
+            "arg": "figsize_width",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                    options=range(15, 21, 1),
+                    ensure_option=True,
+                    layout=Layout(width="88px"),
+                ),
+        },
+        # 5
+        {
+            "arg": "figsize_height",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                    options=range(4, 9, 1),
+                    ensure_option=True,
+                    layout=Layout(width="88px"),
+                ),
+        },        
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
+    def server(**kwargs):
+        #
+        # Logic
+        #
+        view = kwargs['view']
+        top_by = kwargs['top_by']
+        top_n = kwargs['top_n']
+        cmap = kwargs['cmap']
+        figsize_width = int(kwargs['figsize_width'])
+        figsize_height = int(kwargs['figsize_height'])
+        #
+        summary = summary_by_term(x, 'Authors')
+        df = x.copy()
+        df['Frac_Authorship'] = df.Num_Authors.map(lambda w: 1 / w if not pd.isna(w) and w != 0 else w)
+        df = __explode(df[['Authors', "Frac_Authorship"]], 'Authors')
+        result = df.groupby('Authors', as_index=False).agg(
+            {"Frac_Authorship": np.sum}
+        )
+        d = {key: value for key, value in zip(result.Authors, result.Frac_Authorship)}
+        summary['Fractionalized_Num_Documents'] = summary.Authors.map(lambda w: round(d[w], 2) if not pd.isna(w) else w)
+        summary.pop('ID')
+
+
+        if top_by == 'Num Documents':
+            summary = summary.sort_values(['Num_Documents', 'Times_Cited', 'Authors'], ascending=False)
+
+        if top_by == 'Times Cited':
+            summary = summary.sort_values(['Times_Cited', 'Num_Documents', 'Authors'], ascending=False)
+
+        if top_by == 'Fractionalized Num Documents':
+            summary = summary.sort_values(['Fractionalized_Num_Documents', 'Times_Cited', 'Authors'], ascending=False)
+
+        if top_by == 'H index':
+            pass
+        
+        summary = summary.head(top_n)
+        summary = summary.reset_index(drop=True)
+
+        output.clear_output()
+        with output:
+            if view == 'Summary':
+                display(summary)  
+            if view == 'Bar plot':
+                if top_by == 'Num Documents':
+                    display(plt.bar(summary[['Authors', 'Num_Documents']], cmap=cmap, figsize=(figsize_width, figsize_height)))
+                if top_by == 'Times Cited':
+                    display(plt.bar(summary[['Authors', 'Times_Cited']], cmap=cmap, figsize=(figsize_width, figsize_height)))
+                if top_by == 'Fractionalized Num Documents':
+                    display(plt.bar(summary[['Authors', 'Fractionalized_Num_Documents']], cmap=cmap, figsize=(figsize_width, figsize_height)))
+            if view == 'Horizontal bar plot':
+                if top_by == 'Num Documents':
+                    display(plt.barh(summary[['Authors', 'Num_Documents']], cmap=cmap, figsize=(figsize_width, figsize_height)))
+                if top_by == 'Times Cited':
+                    display(plt.barh(summary[['Authors', 'Times_Cited']], cmap=cmap, figsize=(figsize_width, figsize_height)))
+                if top_by == 'Fractionalized Num Documents':
+                    display(plt.barh(summary[['Authors', 'Fractionalized_Num_Documents']], cmap=cmap, figsize=(figsize_width, figsize_height)))
+                
+        
+    # -------------------------------------------------------------------------
+    #
+    # Generic
+    #
+    # -------------------------------------------------------------------------
+    args = {control["arg"]: control["widget"] for control in controls}
+    output = widgets.Output()
+    with output:
+        display(widgets.interactive_output(server, args,))
+    return widgets.HBox(
+        [
+            widgets.VBox(
+                [
+                    widgets.VBox(
+                        [widgets.Label(value=control["desc"]), control["widget"]]
+                    )
+                    for control in controls
+                    if control["desc"] not in ["Figsize"]
+                ] + [
+                    widgets.Label(value="Figure Size"),
+                    widgets.HBox([
+                        controls[-2]["widget"],
+                        controls[-1]["widget"],
+                    ])
+                ],
+                layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
+            ),
+            widgets.VBox([output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")),
+        ]
+    )
+
+
+
 def app(df, limit_to=None, exclude=None):
     """Jupyter Lab dashboard.
     """
     #
     body = widgets.Tab()
-    body.children = [__APP0__(df, limit_to, exclude), __APP1__(df, limit_to, exclude)]
+    body.children = [__APP0__(df, limit_to, exclude), __APP1__(df, limit_to, exclude), __APP2__(df, limit_to, exclude)]
     body.set_title(0, "Term Analysis")
     body.set_title(1, "Worldmap")
+    body.set_title(2, "Authors")
     #
     return AppLayout(
         header=widgets.HTML(
