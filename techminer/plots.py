@@ -1848,7 +1848,8 @@ def tree(x, cmap="Blues", figsize=(8, 8), alpha=0.9):
     column0 = ["\n".join(text.split()) for text in column0]
     column1 = x[x.columns[1]]
     colors = [
-        cmap(0.4 + 0.60 * (column1[i] - min(column1))/ (max(column1) - min(column1))) for i in range(len(column1))
+        cmap(0.35 + 0.65 * (column1[i] - min(column1)) / (max(column1) - min(column1)))
+        for i in range(len(column1))
     ]
 
     squarify.plot(
