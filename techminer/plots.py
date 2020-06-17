@@ -679,7 +679,7 @@ def pie_prop(
 def bubble(
     x,
     axis=0,
-    rmax=80,
+    rmax=100,
     figsize=(9, 9),
     cmap="Blues",
     grid_lw=1.0,
@@ -746,6 +746,28 @@ def bubble(
 
     rmin = 0
 
+    for idx, row in enumerate(x.iterrows()):
+        ax.hlines(
+            idx,
+            -1,
+            len(x.columns),
+            linewidth=grid_lw,
+            color=grid_c,
+            linestyle=grid_ls,
+            zorder=0,
+        )
+
+    for idx, col in enumerate(x.columns):
+        ax.vlines(
+            idx,
+            -1,
+            len(x.index),
+            linewidth=grid_lw,
+            color=grid_c,
+            linestyle=grid_ls,
+            zorder=0,
+        )
+
     if axis == 0:
         for idx, row in enumerate(x.iterrows()):
             values = [
@@ -756,6 +778,7 @@ def bubble(
                 [idx] * len(x.columns),
                 marker="o",
                 s=values,
+                zorder=10,
                 **kwargs,
             )
 
@@ -767,24 +790,17 @@ def bubble(
                 range(len(x.index)),
                 marker="o",
                 s=values,
+                zorder=10,
                 **kwargs,
             )
-
-    for idx, row in enumerate(x.iterrows()):
-        ax.hlines(
-            idx, -1, len(x.columns), linewidth=grid_lw, color=grid_c, linestyle=grid_ls,
-        )
-
-    for idx, col in enumerate(x.columns):
-        ax.vlines(
-            idx, -1, len(x.index), linewidth=grid_lw, color=grid_c, linestyle=grid_ls,
-        )
 
     for idx_col, col in enumerate(x.columns):
         for idx_row, row in enumerate(x.index):
 
             if x[col][row] != 0:
-                ax.text(idx_col, idx_row, x[col][row], va="center", ha="center")
+                ax.text(
+                    idx_col, idx_row, x[col][row], va="center", ha="center", zorder=11
+                )
 
     ax.set_aspect("equal")
 
@@ -895,9 +911,10 @@ def bubble_prop(
             [idx] * len(x.columns),
             marker="o",
             s=sizes,
-            alpha=0.6,
+            alpha=1.0,
             c=colors,
             edgecolors="k",
+            zorder=11,
             #  **kwargs,
         )
 
@@ -915,7 +932,9 @@ def bubble_prop(
         for idx_row, row in enumerate(x.index):
 
             if x[col][row] != 0:
-                ax.text(idx_col, idx_row, x[col][row], va="center", ha="center")
+                ax.text(
+                    idx_col, idx_row, x[col][row], va="center", ha="center", zorder=12
+                )
 
     ax.set_aspect("equal")
 
