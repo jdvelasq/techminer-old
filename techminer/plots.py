@@ -1174,21 +1174,18 @@ def gant(x, figsize=(8, 8), grid_lw=1.0, grid_c="gray", grid_ls=":", *args, **kw
         w = w[w > 0]
         ax.plot(w.index, [idx] * len(w.index), **kwargs)
 
-    # ax.hlines(
-    #     range(len(x.columns)),
-    #     x.index.min(),
-    #     x.index.max(),
-    #     linewidth=hlines_lw,
-    #     color=hlines_c,
-    #     linestyle=hlines_ls,
-    # )
-
     ax.grid(axis="both", color=grid_c, linestyle=grid_ls, linewidth=grid_lw)
 
     ax.set_yticks(np.arange(len(x.columns)))
-    ax.tick_params(axis="x", labelrotation=90)
     ax.set_yticklabels(x.columns)
     ax.invert_yaxis()
+
+    years = list(range(min(x.index), max(x.index) + 1))
+
+    ax.set_xticks(years)
+    ax.set_xticklabels(years)
+    ax.tick_params(axis="x", labelrotation=90)
+
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)

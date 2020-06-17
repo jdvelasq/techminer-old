@@ -783,19 +783,19 @@ def __APP0__(x, limit_to, exclude):
         },
         # 1
         {
-            "arg": "analysis_by",
-            "desc": "Analysis by:",
+            "arg": "column",
+            "desc": "Column to analyze:",
             "widget": widgets.Dropdown(
-                options=["Num Documents", "Times Cited", "% Num Documents", "% Times Cited"],
+                options=[z for z in COLUMNS if z in x.columns],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
         # 2
         {
-            "arg": "column",
-            "desc": "Column to analyze:",
+            "arg": "top_by",
+            "desc": "Top by:",
             "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
+                options=["Num Documents", "Times Cited", "% Num Documents", "% Times Cited"],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
@@ -860,8 +860,8 @@ def __APP0__(x, limit_to, exclude):
     def server(**kwargs):
         #
         view = kwargs["view"]
-        analysis_by = kwargs["analysis_by"]
         column = kwargs["column"]
+        top_by = kwargs["top_by"]
         top_n = kwargs["top_n"]
         sort_by = kwargs["sort_by"]
         cmap = kwargs["cmap"]
@@ -873,161 +873,273 @@ def __APP0__(x, limit_to, exclude):
         #
         controls[-2]["widget"].disabled = True if view == "Summary" else False
         controls[-1]["widget"].disabled = True if view == "Summary" else False
+
+        if top_by == "Num Documents":
+            matrix = num_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+        if top_by == "Times Cited":
+            matrix = times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+        if top_by == "% Num Documents":
+            matrix = perc_num_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+        if top_by == "% Times Cited":
+            matrix = perc_times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+
+
+        #
+        # Adds [...] to columns and index
+        #
+        if top_by in ["Num Documents", "% Num Documents"]:
+            s = summary_by_term(
+                x=x,
+                column=column,
+                top_by="Num Documents",
+                top_n=None,
+                limit_to=limit_to,
+                exclude=exclude,
+            )
+            new_names = {
+                a: "{} [{:d}]".format(textwrap.shorten(text=a, width=TEXTLEN), b)
+                for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
+            }
+            matrix = matrix.rename(columns=new_names)
+
+            s = summary_by_year(df=x)
+            new_names = {
+                a: "{} [{:d}]".format(a, b)
+                for a, b in zip(s['Year'].tolist(), s["Num_Documents"].tolist())
+            }
+            matrix = matrix.rename(index=new_names)
+
+        if top_by in ["Times Cited", "% Times Cited"]:
+
+            s = summary_by_term(
+                x=x,
+                column=column,
+                top_by="Times Cited",
+                top_n=None,
+                limit_to=limit_to,
+                exclude=exclude,
+            )
+            new_names = {
+                a: "{} [{:d}]".format(textwrap.shorten(text=a, width=TEXTLEN), b)
+                for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
+            }
+            matrix = matrix.rename(columns=new_names)
+
+            s = summary_by_year(df=x)
+            new_names = {
+                a: "{} [{:d}]".format(a, b)
+                for a, b in zip(s['Year'].tolist(), s["Times_Cited"].tolist())
+            }
+            matrix = matrix.rename(index=new_names)
+
+        #
+        # Sort by
+        #
+        g = (
+            lambda m: m[m.find("[") + 1 : m.find("]")].zfill(5)
+            + " "
+            + m[: m.find("[") - 1]
+        )
+        if sort_by == "Frequency/Cited by asc.":
+            col_names = sorted(matrix.columns, key=g, reverse=False)
+            matrix = matrix.loc[:, col_names]
+        if sort_by == "Frequency/Cited by desc.":
+            col_names = sorted(matrix.columns, key=g, reverse=True)
+            matrix = matrix.loc[:, col_names]
+        if sort_by == "Alphabetic asc.":
+            matrix = matrix.sort_index(axis=1, ascending=True)
+        if sort_by == "Alphabetic desc.":
+            matrix = matrix.sort_index(axis=1, ascending=False)
+
+
+        #
+        # Output
         #
         output.clear_output()
         with output:
+            if view == "Summary":
+                display(matrix.style.background_gradient(cmap=cmap, axis=None))
+                return
 
-            if analysis_by == "Num Documents":
-                matrix = num_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
-
-                if view in ['Summary', 'Heatmap']:
-
-                    s = summary_by_term(
-                        x=x,
-                        column=column,
-                        top_by="Num Documents",
-                        top_n=None,
-                        limit_to=limit_to,
-                        exclude=exclude,
-                    )
-                    new_names = {
-                        a: "{} [{:d}]".format(textwrap.shorten(text=a, width=TEXTLEN), b)
-                        for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
-                    }
-                    matrix = matrix.rename(columns=new_names)
-
-                    s = summary_by_year(df=x)
-                    new_names = {
-                        a: "{} [{:d}]".format(a, b)
-                        for a, b in zip(s['Year'].tolist(), s["Num_Documents"].tolist())
-                    }
-                    matrix = matrix.rename(index=new_names)
-
-                if view == "Gant diagram":
-                    display(plot(matrix, figsize=(figsize_width, figsize_height)))
-                    return
-                if view == "Bubble plot":
-                    z = times_cited_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
-                    display(plot(matrix.transpose(), z.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
-                    return
-
-            if analysis_by == "Times Cited":
-                matrix = times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
-
-                if view in ['Summary', 'Heatmap']:
-                    
-                    s = summary_by_term(
-                        x=x,
-                        column=column,
-                        top_by="Times Cited",
-                        top_n=None,
-                        limit_to=limit_to,
-                        exclude=exclude,
-                    )
-                    new_names = {
-                        a: "{} [{:d}]".format(textwrap.shorten(text=a, width=TEXTLEN), b)
-                        for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
-                    }
-                    matrix = matrix.rename(columns=new_names)
-
-                    s = summary_by_year(df=x)
-                    new_names = {
-                        a: "{} [{:d}]".format(a, b)
-                        for a, b in zip(s['Year'].tolist(), s["Times_Cited"].tolist())
-                    }
-                    matrix = matrix.rename(index=new_names)
-
-                if view == "Bubble plot":
-                    z = num_documents_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
-                    display(plot(matrix.transpose(), z.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
-                    return 
-
-            if analysis_by == "% Num Documents":
-                matrix = perc_num_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
-
-                if view == 'Summary':
-                    s = summary_by_term(
-                        x=x,
-                        column=column,
-                        top_by="Num Documents",
-                        top_n=None,
-                        limit_to=limit_to,
-                        exclude=exclude,
-                    )
-                    new_names = {
-                        a: "{} [{:d}]".format(textwrap.shorten(text=a, width=TEXTLEN), b)
-                        for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
-                    }
-                    matrix = matrix.rename(columns=new_names)
-
-                    s = summary_by_year(df=x)
-                    new_names = {
-                        a: "{} [{:d}]".format(a, b)
-                        for a, b in zip(s['Year'].tolist(), s["Num_Documents"].tolist())
-                    }
-                    matrix = matrix.rename(index=new_names)
-                    
-
-            if analysis_by == "% Times Cited":
-                matrix = perc_times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
-
-                if view == 'Summary':
-                    s = summary_by_term(
-                        x=x,
-                        column=column,
-                        top_by="Times Cited",
-                        top_n=None,
-                        limit_to=limit_to,
-                        exclude=exclude,
-                    )
-                    new_names = {
-                        a: "{} [{:d}]".format(textwrap.shorten(text=a, width=TEXTLEN), b)
-                        for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
-                    }
-                    matrix = matrix.rename(columns=new_names)
-
-                    s = summary_by_year(df=x)
-                    new_names = {
-                        a: "{} [{:d}]".format(a, b)
-                        for a, b in zip(s['Year'].tolist(), s["Times_Cited"].tolist())
-                    }
-                    matrix = matrix.rename(index=new_names)
-
-
-            #
-            # Sort order
-            #
-            if view in ['Summary', "Heatmap"]:
-                g = (
-                    lambda m: m[m.find("[") + 1 : m.find("]")].zfill(5)
-                    + " "
-                    + m[: m.find("[") - 1]
-                )
-                if sort_by == "Frequency/Cited by asc.":
-                    col_names = sorted(matrix.columns, key=g, reverse=False)
-                    matrix = matrix.loc[:, col_names]
-                if sort_by == "Frequency/Cited by desc.":
-                    col_names = sorted(matrix.columns, key=g, reverse=True)
-                    matrix = matrix.loc[:, col_names]
-                if sort_by == "Alphabetic asc.":
-                    matrix = matrix.sort_index(axis=1, ascending=True)
-                if sort_by == "Alphabetic desc.":
-                    matrix = matrix.sort_index(axis=1, ascending=False)
-
-
-                if view == "Summary":
-                    display(matrix.style.background_gradient(cmap=cmap, axis=None))
-                    return
-
-                if view == "Heatmap":
-                    display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
-                    return
+            if view == "Heatmap":
+                display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
+                return
 
             if view == "Lines plot":
                 display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
                 return
 
-            display(widgets.HTML('The view not is available for this analysis'))
+            if view == "Gant diagram" and top_by == "Num Documents":
+                matrix.index = [int(w[: w.find("[")].strip()) for w in matrix.index]
+                display(plot(matrix, figsize=(figsize_width, figsize_height)))
+                return
+
+            if view == "Bubble plot" and (top_by == "Num Documents" or top_by == "Times Cited"):
+                matrix.columns = [w[: w.find("[")].strip() for w in matrix.columns]
+                matrix.index = [int(w[: w.find("[")].strip()) for w in matrix.index]
+                z = times_cited_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
+                display(plot(matrix.transpose(), z.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
+                return
+
+            display(widgets.HTML('The view not is available for this analysis'))        
+
+        ###
+
+
+        # output.clear_output()
+        # with output:
+
+        #     if analysis_by == "Num Documents":
+        #         matrix = num_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+
+        #         if view in ['Summary', 'Heatmap']:
+
+        #             s = summary_by_term(
+        #                 x=x,
+        #                 column=column,
+        #                 top_by="Num Documents",
+        #                 top_n=None,
+        #                 limit_to=limit_to,
+        #                 exclude=exclude,
+        #             )
+        #             new_names = {
+        #                 a: "{} [{:d}]".format(textwrap.shorten(text=a, width=TEXTLEN), b)
+        #                 for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
+        #             }
+        #             matrix = matrix.rename(columns=new_names)
+
+        #             s = summary_by_year(df=x)
+        #             new_names = {
+        #                 a: "{} [{:d}]".format(a, b)
+        #                 for a, b in zip(s['Year'].tolist(), s["Num_Documents"].tolist())
+        #             }
+        #             matrix = matrix.rename(index=new_names)
+
+        #         if view == "Gant diagram":
+        #             display(plot(matrix, figsize=(figsize_width, figsize_height)))
+        #             return
+        #         if view == "Bubble plot":
+        #             z = times_cited_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
+        #             display(plot(matrix.transpose(), z.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
+        #             return
+
+        #     if analysis_by == "Times Cited":
+        #         matrix = times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+
+        #         if view in ['Summary', 'Heatmap']:
+
+        #             s = summary_by_term(
+        #                 x=x,
+        #                 column=column,
+        #                 top_by="Times Cited",
+        #                 top_n=None,
+        #                 limit_to=limit_to,
+        #                 exclude=exclude,
+        #             )
+        #             new_names = {
+        #                 a: "{} [{:d}]".format(textwrap.shorten(text=a, width=TEXTLEN), b)
+        #                 for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
+        #             }
+        #             matrix = matrix.rename(columns=new_names)
+
+        #             s = summary_by_year(df=x)
+        #             new_names = {
+        #                 a: "{} [{:d}]".format(a, b)
+        #                 for a, b in zip(s['Year'].tolist(), s["Times_Cited"].tolist())
+        #             }
+        #             matrix = matrix.rename(index=new_names)
+
+        #         if view == "Bubble plot":
+        #             z = num_documents_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
+        #             display(plot(matrix.transpose(), z.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
+        #             return 
+
+        #     if analysis_by == "% Num Documents":
+        #         matrix = perc_num_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+
+        #         if view == 'Summary':
+        #             s = summary_by_term(
+        #                 x=x,
+        #                 column=column,
+        #                 top_by="Num Documents",
+        #                 top_n=None,
+        #                 limit_to=limit_to,
+        #                 exclude=exclude,
+        #             )
+        #             new_names = {
+        #                 a: "{} [{:d}]".format(textwrap.shorten(text=a, width=TEXTLEN), b)
+        #                 for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
+        #             }
+        #             matrix = matrix.rename(columns=new_names)
+
+        #             s = summary_by_year(df=x)
+        #             new_names = {
+        #                 a: "{} [{:d}]".format(a, b)
+        #                 for a, b in zip(s['Year'].tolist(), s["Num_Documents"].tolist())
+        #             }
+        #             matrix = matrix.rename(index=new_names)
+                    
+
+        #     if analysis_by == "% Times Cited":
+        #         matrix = perc_times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+
+        #         if view == 'Summary':
+        #             s = summary_by_term(
+        #                 x=x,
+        #                 column=column,
+        #                 top_by="Times Cited",
+        #                 top_n=None,
+        #                 limit_to=limit_to,
+        #                 exclude=exclude,
+        #             )
+        #             new_names = {
+        #                 a: "{} [{:d}]".format(textwrap.shorten(text=a, width=TEXTLEN), b)
+        #                 for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
+        #             }
+        #             matrix = matrix.rename(columns=new_names)
+
+        #             s = summary_by_year(df=x)
+        #             new_names = {
+        #                 a: "{} [{:d}]".format(a, b)
+        #                 for a, b in zip(s['Year'].tolist(), s["Times_Cited"].tolist())
+        #             }
+        #             matrix = matrix.rename(index=new_names)
+
+
+        #     #
+        #     # Sort order
+        #     #
+        #     if view in ['Summary', "Heatmap"]:
+        #         g = (
+        #             lambda m: m[m.find("[") + 1 : m.find("]")].zfill(5)
+        #             + " "
+        #             + m[: m.find("[") - 1]
+        #         )
+        #         if sort_by == "Frequency/Cited by asc.":
+        #             col_names = sorted(matrix.columns, key=g, reverse=False)
+        #             matrix = matrix.loc[:, col_names]
+        #         if sort_by == "Frequency/Cited by desc.":
+        #             col_names = sorted(matrix.columns, key=g, reverse=True)
+        #             matrix = matrix.loc[:, col_names]
+        #         if sort_by == "Alphabetic asc.":
+        #             matrix = matrix.sort_index(axis=1, ascending=True)
+        #         if sort_by == "Alphabetic desc.":
+        #             matrix = matrix.sort_index(axis=1, ascending=False)
+
+
+        #         if view == "Summary":
+        #             display(matrix.style.background_gradient(cmap=cmap, axis=None))
+        #             return
+
+        #         if view == "Heatmap":
+        #             display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
+        #             return
+
+        #     if view == "Lines plot":
+        #         display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
+        #         return
+
+        #     display(widgets.HTML('The view not is available for this analysis'))
             
             
 
