@@ -282,9 +282,8 @@ def __NLP(text):
         text = [[lem.lemmatize(word) for word in phrase] for phrase in text]
         text = [[word for word in phrase if word != ''] for phrase in text]
         text = [' '.join(phrase)  for phrase in text if len(phrase)]
-        
         return text
-        return sorted(set(text))
+
         
     from nltk.corpus import stopwords
  
@@ -301,7 +300,6 @@ def __NLP(text):
     two_grams = [obtain_n_grams(phrase, 2) for phrase in text]
     two_grams = [word for phrase in two_grams for word in phrase]
     two_grams = [phrase  for phrase in two_grams if phrase != '']
-    two_grams = sorted(set(two_grams))
     
     three_grams = [obtain_n_grams(phrase, 3) for phrase in text]
     three_grams = [word for phrase in three_grams for word in phrase]
@@ -312,9 +310,19 @@ def __NLP(text):
     text = [word for word in text if word not in stopwords]
     text = [word for word in text if word != '']
     
-    lem = WordNetLemmatizer()
-    text = sorted(set([lem.lemmatize(word) for word in text]))
+    ###
+    #text = sorted(set(text + two_grams + three_grams))
+    #text = [w.split() for w in text]
+    #text = [nltk.pos_tag(w) for w in text]
+    #tags = [ ' '.join([t for _, t in v]) for v in text]
+    #text = [ ' '.join([t for t, _ in v]) for v in text]
+    #text = [t    for k, t in zip(tags, text) if k in ['NN', 'JJ NN', 'NN NN', 'NNS', 'NN NNS', 'JJ NNS', 'NN NNS',]] 
+    ###
+
+    #lem = WordNetLemmatizer()
+    # text = sorted(set([lem.lemmatize(word) for word in text]))
     return ';'.join(sorted(set(text + two_grams + three_grams)))
+
     
 
 
@@ -430,27 +438,6 @@ def load_scopus(x):
         x['Index_Keywords'] = x.Index_Keywords.map(lambda w: w.lower() if not pd.isna(w) else w)
         x['Index_Keywords'] = x.Index_Keywords.map(lambda w: ';'.join([z.strip() for z in w.split(';')]) if not pd.isna(w) else w)
 
-    # keywords = []
-    # if "Author_Keywords" in x.columns:
-    #     keywords += x.Author_Keywords.tolist()
-    # if "Index_Keywords" in x.columns:
-    #     keywords += x.Index_Keywords.tolist()
-    # if len(keywords) > 0:
-    #     keywords = pd.Series(keywords)
-    #     keywords = keywords.map(lambda w: w.split(';') if isinstance(w, str) else w)
-    #     keywords = keywords.explode()
-    #     keywords = keywords.reset_index(drop=True)
-    #     logging.info("Clustering keywords ...")
-    #     thesaurus = text_clustering(keywords, transformer=lambda u: u.lower())
-    #     thesaurus = thesaurus.compile()
-    #     if "Author_Keywords" in x.columns:
-    #         logging.info("Cleaning Author Keywords ...")
-    #         x["Author_Keywords_CL"] = __MAP(x, "Author_Keywords", thesaurus.apply)
-    #         x["Author_Keywords_CL"] = __MAP(x, "Author_Keywords_CL", lambda w: w.strip() if not pd.isna(w) else w)
-    #     if "Index_Keywords" in x.columns:
-    #         logging.info("Cleaning Index Keywords ...")
-    #         x["Index_Keywords_CL"] = __MAP(x, "Index_Keywords", thesaurus.apply)
-    #         x["Index_Keywords_CL"] = __MAP(x, "Index_Keywords_CL", lambda w: w.strip() if not pd.isna(w) else w)    
     
     if "Abstract" in x.columns:
 
