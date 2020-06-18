@@ -739,18 +739,38 @@ def __APP1__(x, limit_to, exclude):
 #
 def __APP2__(x):
 
-
+    #
+    # Numero de documentos escritos por author
+    #
     z = summary_by_term(x, 'Authors', top_by=None, top_n=None, limit_to=None, exclude=None)
     z = z[['Num_Documents']]
     z = z.groupby(['Num_Documents']).size()
     w = [str(round(100 * a / sum(z), 2)) + ' %'    for a in z]
     z = pd.DataFrame({'Num Authors': z.tolist(), "%": w, "Documents written": z.index})
+    z = z.sort_values(['Documents written'], ascending=False)
+    z['Acum Num Authors'] = z['Num Authors'].cumsum()
+    z['% Acum'] = [str(round(100 * a / sum(z['Num Authors']), 2)) + ' %'    for a in z["Acum Num Authors"]]
+    z = z[['Num Authors', '%', 'Acum Num Authors', '% Acum', 'Documents written']]
 
-    # z['Lotka'] = [ round(z["Documents written"][0] / ((i+1)**2), 2)   for i in range(len(z))]
+
+    m = summary_by_term(x, 'Source_title', top_by=None, top_n=None, limit_to=None, exclude=None)
+    m = m[['Num_Documents']]
+    m = m.groupby(['Num_Documents']).size()
+    w = [str(round(100 * a / sum(m), 2)) + ' %'    for a in m]
+    m = pd.DataFrame({'Num Sources': m.tolist(), "%": w, "Documents published": m.index})
+
+    m = m.sort_values(['Documents published'], ascending=False)
+    m['Acum Num Sources'] = m['Num Sources'].cumsum()
+    m['% Acum'] = [str(round(100 * a / sum(m['Num Sources']), 2)) + ' %' for a in m["Acum Num Sources"]]
+    m = m[['Num Sources', '%', 'Acum Num Sources', '% Acum', 'Documents published']]
+
 
     output = widgets.Output()
     with output:
+        display(widgets.HTML('<h3>Authors</h3>'))
         display(z)
+        display(widgets.HTML('<h3>Source titles</h3>'))
+        display(m)
 
     return widgets.HBox([output])
 
