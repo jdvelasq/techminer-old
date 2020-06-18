@@ -732,6 +732,28 @@ def __APP1__(x, limit_to, exclude):
 
 
 
+#
+#
+#  Panel 2
+#
+#
+def __APP2__(x):
+
+
+    z = summary_by_term(x, 'Authors', top_by=None, top_n=None, limit_to=None, exclude=None)
+    z = z[['Num_Documents']]
+    z = z.groupby(['Num_Documents']).size()
+    w = [str(round(100 * a / sum(z), 2)) + ' %'    for a in z]
+    z = pd.DataFrame({'Num Authors': z.tolist(), "%": w, "Documents written": z.index})
+
+    # z['Lotka'] = [ round(z["Documents written"][0] / ((i+1)**2), 2)   for i in range(len(z))]
+
+    output = widgets.Output()
+    with output:
+        display(z)
+
+    return widgets.HBox([output])
+
 
 
 def app(df, limit_to=None, exclude=None):
@@ -739,9 +761,10 @@ def app(df, limit_to=None, exclude=None):
     """
     #
     body = widgets.Tab()
-    body.children = [__APP0__(df, limit_to, exclude), __APP1__(df, limit_to, exclude), ]
+    body.children = [__APP0__(df, limit_to, exclude), __APP1__(df, limit_to, exclude), __APP2__(df)]
     body.set_title(0, "Term Analysis")
     body.set_title(1, "Worldmap")
+    body.set_title(2, "Productivity")
     #
     return AppLayout(
         header=widgets.HTML(
