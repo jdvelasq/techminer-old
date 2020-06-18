@@ -311,17 +311,17 @@ def __NLP(text):
     text = [word for word in text if word != '']
     
     ###
-    #text = sorted(set(text + two_grams + three_grams))
-    #text = [w.split() for w in text]
-    #text = [nltk.pos_tag(w) for w in text]
-    #tags = [ ' '.join([t for _, t in v]) for v in text]
-    #text = [ ' '.join([t for t, _ in v]) for v in text]
-    #text = [t    for k, t in zip(tags, text) if k in ['NN', 'JJ NN', 'NN NN', 'NNS', 'NN NNS', 'JJ NNS', 'NN NNS',]] 
+    text = sorted(set(text + two_grams + three_grams))
+    text = [w.split() for w in text]
+    text = [nltk.pos_tag(w) for w in text]
+    tags = [ ' '.join([t for _, t in v]) for v in text]
+    text = [ ' '.join([t for t, _ in v]) for v in text]
+    text = [t for k, t in zip(tags, text) if k in ['NN', 'JJ NN', 'NN NN', 'NNS', 'NN NNS', 'JJ NNS', 'NN NNS',]] 
     ###
 
     #lem = WordNetLemmatizer()
     # text = sorted(set([lem.lemmatize(word) for word in text]))
-    return ';'.join(sorted(set(text + two_grams + three_grams)))
+    return ';'.join(sorted(set(text)))
 
     
 
