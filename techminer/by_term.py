@@ -743,14 +743,51 @@ def __APP2__(x):
     # Numero de documentos escritos por author
     #
     z = summary_by_term(x, 'Authors', top_by=None, top_n=None, limit_to=None, exclude=None)
+
+    authors_dict = {author: num_docs   for author, num_docs in zip(z.Authors, z.Num_Documents) if not pd.isna(author)}
+
     z = z[['Num_Documents']]
     z = z.groupby(['Num_Documents']).size()
     w = [str(round(100 * a / sum(z), 2)) + ' %'    for a in z]
-    z = pd.DataFrame({'Num Authors': z.tolist(), "%": w, "Documents written": z.index})
-    z = z.sort_values(['Documents written'], ascending=False)
+    z = pd.DataFrame({'Num Authors': z.tolist(), "%": w, "Documents written per Author": z.index})
+    z = z.sort_values(['Documents written per Author'], ascending=False)
     z['Acum Num Authors'] = z['Num Authors'].cumsum()
     z['% Acum'] = [str(round(100 * a / sum(z['Num Authors']), 2)) + ' %'    for a in z["Acum Num Authors"]]
-    z = z[['Num Authors', '%', 'Acum Num Authors', '% Acum', 'Documents written']]
+
+    m = __explode(x[['Authors', 'ID']], 'Authors')
+    m = m.dropna()
+    m['Documents_written'] = m.Authors.map(lambda w: authors_dict[w])
+    n = []
+    for k in z['Documents written per Author']:
+        s = m.query("Documents_written >= " + str(k))
+        s = s[['ID']]
+        s = s.drop_duplicates()
+        n.append(len(s))
+
+    k = []
+    for index in range(len(n) - 1):
+        k.append(n[index + 1] - n[index])
+    k = [n[0]] + k
+    z['Num Documents'] = k
+    z['Acum Num Documents'] = n
+
+
+    z = z[['Num Authors', '%', 'Acum Num Authors', '% Acum', 'Documents written per Author', 'Num Documents', 'Acum Num Documents']]
+
+
+    output = widgets.Output()
+    with output:
+        display(z.head(50))
+
+    return widgets.HBox([output])
+
+#
+#
+#  Panel 3
+#
+#
+def __APP3__(x):
+
 
 
     m = summary_by_term(x, 'Source_title', top_by=None, top_n=None, limit_to=None, exclude=None)
@@ -762,26 +799,30 @@ def __APP2__(x):
     m = m.sort_values(['Documents published'], ascending=False)
     m['Acum Num Sources'] = m['Num Sources'].cumsum()
     m['% Acum'] = [str(round(100 * a / sum(m['Num Sources']), 2)) + ' %' for a in m["Acum Num Sources"]]
-    m = m[['Num Sources', '%', 'Acum Num Sources', '% Acum', 'Documents published']]
+    
+    m['Tot Documents published'] = m['Num Sources'] * m['Documents published']
+    m['Num Documents'] = m['Tot Documents published'].cumsum()
+    m['Tot Documents'] = m['Num Documents'].map(lambda w: str(round(w / m['Num Documents'].max() * 100, 2)) + ' %')
 
+    m = m[['Num Sources', '%', 'Acum Num Sources', '% Acum', 'Documents published', 'Tot Documents published', 'Num Documents', 'Tot Documents']]
 
     output = widgets.Output()
     with output:
-        display(widgets.HTML('<h3>Authors</h3>'))
-        display(z)
-        display(widgets.HTML('<h3>Source titles</h3>'))
         display(m)
 
     return widgets.HBox([output])
 
 
 
+
+
+
 #
 #
-#  Panel 2
+#  Panel 4
 #
 #
-def __APP3__(x):
+def __APP4__(x):
 
     z = x.sort_values(['Times_Cited', 'Year'], ascending=[False, True])
     z = z.head(50)
@@ -801,11 +842,12 @@ def app(df, limit_to=None, exclude=None):
     """
     #
     body = widgets.Tab()
-    body.children = [__APP0__(df, limit_to, exclude), __APP1__(df, limit_to, exclude), __APP2__(df), __APP3__(df)]
+    body.children = [__APP0__(df, limit_to, exclude), __APP1__(df, limit_to, exclude), __APP2__(df), __APP3__(df), __APP4__(df)]
     body.set_title(0, "Term Analysis")
     body.set_title(1, "Worldmap")
-    body.set_title(2, "Productivity")
-    body.set_title(3, "Top Documents")
+    body.set_title(2, "Core Authors")
+    body.set_title(3, "Core Source titles")
+    body.set_title(4, "Top Documents")
 
     #
     return AppLayout(
