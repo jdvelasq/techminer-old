@@ -1446,7 +1446,7 @@ def stacked_bar(
     ax.tick_params(axis="x", labelrotation=90)
 
     ax.set_xlabel(x.columns[0])
-    ax.set_ylabel(x.columns[1])
+    #  ax.set_ylabel(x.columns[1])
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)
@@ -1538,10 +1538,12 @@ def stacked_barh(
         )
         left = left + x[col]
 
+    ax.legend()
+
     ax.invert_yaxis()
     ax.set_yticks(np.arange(len(x[x.columns[0]])))
     ax.set_yticklabels(x[x.columns[0]])
-    ax.set_xlabel(x.columns[1])
+    # ax.set_xlabel(x.columns[1])
     ax.set_ylabel(x.columns[0])
     #
     ax.spines["top"].set_visible(False)
