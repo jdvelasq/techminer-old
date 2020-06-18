@@ -756,15 +756,37 @@ def __APP2__(x):
 
 
 
+#
+#
+#  Panel 2
+#
+#
+def __APP3__(x):
+
+    z = x.sort_values(['Times_Cited', 'Year'], ascending=[False, True])
+    z = z.head(50)
+    z['Times_Cited'] = z.Times_Cited.map(lambda w: int(w))
+    z = z.reset_index(drop=True)
+
+    output = widgets.Output()
+    with output:
+        display(z[["Authors", "Year", "Title", "Source_title", "Times_Cited"]])
+
+    return widgets.HBox([output])
+
+
+
 def app(df, limit_to=None, exclude=None):
     """Jupyter Lab dashboard.
     """
     #
     body = widgets.Tab()
-    body.children = [__APP0__(df, limit_to, exclude), __APP1__(df, limit_to, exclude), __APP2__(df)]
+    body.children = [__APP0__(df, limit_to, exclude), __APP1__(df, limit_to, exclude), __APP2__(df), __APP3__(df)]
     body.set_title(0, "Term Analysis")
     body.set_title(1, "Worldmap")
     body.set_title(2, "Productivity")
+    body.set_title(3, "Top Documents")
+
     #
     return AppLayout(
         header=widgets.HTML(
