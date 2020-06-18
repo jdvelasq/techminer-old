@@ -774,6 +774,7 @@ def __APP2__(x):
 
     z = z[['Num Authors', '%', 'Acum Num Authors', '% Acum', 'Documents written per Author', 'Num Documents', 'Acum Num Documents']]
 
+    z = z.reset_index(drop=True)
 
     output = widgets.Output()
     with output:
@@ -804,7 +805,29 @@ def __APP3__(x):
     m['Num Documents'] = m['Tot Documents published'].cumsum()
     m['Tot Documents'] = m['Num Documents'].map(lambda w: str(round(w / m['Num Documents'].max() * 100, 2)) + ' %')
 
-    m = m[['Num Sources', '%', 'Acum Num Sources', '% Acum', 'Documents published', 'Tot Documents published', 'Num Documents', 'Tot Documents']]
+    bradford1 = int(len(x) / 3)
+    bradford2 = 2 * bradford1
+
+
+    m["Bradford's Group"] = m['Num Documents'].map(lambda w: 3 if w > bradford2 else (2 if w > bradford1 else 1))
+    
+    
+
+    m = m[
+            [
+                'Num Sources', 
+                '%', 
+                'Acum Num Sources', 
+                '% Acum', 
+                'Documents published', 
+                'Tot Documents published', 
+                'Num Documents', 
+                'Tot Documents',
+                "Bradford's Group",
+            ]
+        ]
+
+    m = m.reset_index(drop = True)
 
     output = widgets.Output()
     with output:
