@@ -128,6 +128,7 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
     result["Times_Cited_per_Year"] = result["Times_Cited_per_Year"].map(lambda w: round(w, 2))
     result = result.assign(Avg_Times_Cited = result.Times_Cited / result.Num_Documents)
     result["Avg_Times_Cited"] = result["Avg_Times_Cited"].map(lambda w: round(w, 2))
+    
     result["Times_Cited"] = result["Times_Cited"].map(lambda x: int(x))
 
     result["SMR"] = [ round(MD / max(SD, 1), 2) for SD, MD in zip(result.SD, result.MD)]
@@ -138,19 +139,37 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
     # Indice H
     #
     z = x[[column, 'Times_Cited', "ID"]].copy()
-    z = __explode(z, column)
     z = (
         x.assign(
             rn=x.sort_values('Times_Cited', ascending=False).groupby(column).cumcount() + 1
         )
     ).sort_values([column, 'Times_Cited', 'rn'], ascending=[False,False,True])
-    z = z.query('Times_Cited >= rn')
-    z = z.groupby(column, as_index=False).agg({'rn': np.max})
-    h_dict = {key: value for key, value in zip(z[column], z.rn)}
+    z['rn2'] = z.rn.map(lambda w: w * w)
+
+    q = z.query('Times_Cited >= rn')
+    q = q.groupby(column, as_index=False).agg({'rn': np.max})
+    h_dict = {key: value for key, value in zip(q[column], q.rn)}
 
     result['H_index'] = result[column].map(lambda w: h_dict[w] if w in h_dict.keys() else 0)
 
+    #
+    # indice M
+    #
+    result = result.assign(M_index=result.H_index / result.Years)
+    result["M_index"] = result["M_index"].map(lambda w: round(w, 2))
 
+    #
+    # indice G
+    #
+    q = z.query('Times_Cited >= rn2')
+    q = q.groupby(column, as_index=False).agg({'rn': np.max})
+    h_dict = {key: value for key, value in zip(q[column], q.rn)}
+    result['G_index'] = result[column].map(lambda w: h_dict[w] if w in h_dict.keys() else 0)
+
+
+    #
+    # Orden de las columnas
+    #
     result = result[
         [
             column, 
@@ -160,6 +179,8 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
             "Times_Cited_per_Year", 
             "Avg_Times_Cited",
             "H_index",
+            "M_index",
+            "G_index",
             "SD",
             "MD",
             "SMR",
@@ -234,11 +255,28 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
 
     if (top_by == 5 or top_by == "H index"):
         result.sort_values(
-            ["H_index", "Times_Cited", "Num_Documents", column],
+            ["H_index", "G_index", "Times_Cited", column],
             ascending=[False, False, False, True],
             inplace=True,
             ignore_index=True,
         )
+
+    if (top_by == 6 or top_by == "M index"):
+        result.sort_values(
+            ["M_index", "G_index", "Times_Cited", column],
+            ascending=[False, False, False, True],
+            inplace=True,
+            ignore_index=True,
+        )
+
+    if (top_by == 7 or top_by == "G index"):
+        result.sort_values(
+            ["G_index", "H_index", "Times_Cited", column],
+            ascending=[False, False, False, True],
+            inplace=True,
+            ignore_index=True,
+        )
+
 
     if top_by is None:
         result.sort_values(
@@ -351,6 +389,8 @@ def __APP0__(x, limit_to, exclude):
                         "Times Cited per Year",
                         "Avg Times Cited",
                         "H index",
+                        "M index",
+                        "G index",
                     ],
                     layout=Layout(width=WIDGET_WIDTH),
                 ),
@@ -383,6 +423,10 @@ def __APP0__(x, limit_to, exclude):
                         "Avg Times Cited desc",
                         "H index asc",
                         "H index desc",
+                        "M index asc",
+                        "M index desc",
+                        "G index asc",
+                        "G index desc",
                         "Column asc",
                         "Column desc",
                     ],
@@ -485,10 +529,20 @@ def __APP0__(x, limit_to, exclude):
             df = df.sort_values(by=[df.columns[0], "Times_Cited", "Num_Documents"], ascending=True)
         if sort_by == "Column desc":
             df = df.sort_values(by=[df.columns[0], "Times_Cited", "Num_Documents"], ascending=False)
+
         if sort_by == "H index asc":
-            df = df.sort_values(by=["H_index", "Times_Cited", "Num_Documents"], ascending=True)
+            df = df.sort_values(by=["H_index", "G_index", "Times_Cited", "Num_Documents"], ascending=True)
         if sort_by == "H index desc":
-            df = df.sort_values(by=["H_index", "Times_Cited", "Num_Documents"], ascending=False)
+            df = df.sort_values(by=["H_index", "G_index", "Times_Cited", "Num_Documents"], ascending=False)
+        if sort_by == "M index asc":
+            df = df.sort_values(by=["M_index", "G_index", "Times_Cited", "Num_Documents"], ascending=True)
+        if sort_by == "M index desc":
+            df = df.sort_values(by=["M_index", "G_index", "Times_Cited", "Num_Documents"], ascending=False)
+        if sort_by == "G index asc":
+            df = df.sort_values(by=["G_index", "H_index", "Times_Cited", "Num_Documents"], ascending=True)
+        if sort_by == "G index desc":
+            df = df.sort_values(by=["G_index", "H_index", "Times_Cited", "Num_Documents"], ascending=False)
+
         #
         df = df.reset_index(drop=True)
         #
@@ -520,6 +574,11 @@ def __APP0__(x, limit_to, exclude):
                     df = df[[column, "Avg_Times_Cited", "Num_Documents"]]
                 if top_by == "H index":
                     df = df[[column, "H_index", "Avg_Times_Cited"]]
+                if top_by == "M index":
+                    df = df[[column, "M_index", "Avg_Times_Cited"]]
+                if top_by == "G index":
+                    df = df[[column, "G_index", "Avg_Times_Cited"]]
+
     
                 display(plot(df, cmap=cmap, figsize=(figsize_width, figsize_height)))
             
