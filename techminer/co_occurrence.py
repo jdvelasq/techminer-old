@@ -20,6 +20,10 @@ from techminer.keywords import Keywords
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
 
+import warnings
+
+warnings.filterwarnings("ignore", category=UserWarning)
+
 
 def filter_index(
     x, column, matrix, axis, top_by=0, top_n=10, limit_to=None, exclude=None
@@ -248,114 +252,343 @@ def co_occurrence(
     return result
 
 
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.manifold import MDS
+
+
 def occurrence(
     x,
     column,
-    as_matrix=False,
     normalization=None,
-    top_by=None,
-    top_n=None,
+    linkage="ward",
+    n_clusters=3,
+    n_components=2,
+    n_dim=1,
+    view="network",
+    top_by="Num Documents",
+    top_n=50,
     limit_to=None,
     exclude=None,
+    layout="Kamada Kawai",
+    cmap="Greys",
+    figsize=(17, 12),
 ):
-    """Computes the occurrence between the terms in a column.
-
-    Args:
-        column (str): the column to explode.
-        sep (str): Character used as internal separator for the elements in the column.
-        as_matrix (bool): Results are returned as a matrix.
-        keywords (list, Keywords): filter the result using the specified Keywords object.
-
-    Returns:
-        DataFrame.
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> import pandas as pd
-    >>> x = [ 'A', 'A', 'A;B', 'B', 'A;B;C', 'D', 'B;D']
-    >>> df = pd.DataFrame(
-    ...    {
-    ...       'Authors': x,
-    ...       "Times_Cited": list(range(len(x))),
-    ...       'ID': list(range(len(x))),
-    ...    }
-    ... )
-    >>> df
-      Authors  Times_Cited  ID
-    0       A            0   0
-    1       A            1   1
-    2     A;B            2   2
-    3       B            3   3
-    4   A;B;C            4   4
-    5       D            5   5
-    6     B;D            6   6
-
-    >>> occurrence(df, column='Authors')
-       A  B  C  D
-    A  4  2  1  0
-    B  2  4  1  1
-    C  1  1  1  0
-    D  0  1  0  2
-
-    >>> occurrence(df, column='Authors', top_by='Frequency', top_n=3)
-       A  B  C
-    A  4  2  1
-    B  2  4  1
-    C  1  1  1
-
-    >>> occurrence(df, column='Authors', limit_to=['A', 'B'])
-       A  B
-    A  4  2
-    B  2  4
-
-    >>> occurrence(df, column='Authors', exclude=['A', 'B'])
-       C  D
-    C  1  0
-    D  0  2
-
     """
-    return co_occurrence(
-        x,
+    """
+
+    def normalize(matrix, normalization=None):
+        """
+        """
+        matrix = matrix.applymap(lambda w: float(w))
+        m = matrix.copy()
+        if normalization == "association":
+            for col in m.columns:
+                for row in m.index:
+                    matrix.at[row, col] = m.at[row, col] / (
+                        m.loc[row, row] * m.at[col, col]
+                    )
+        if normalization == "inclusion":
+            for col in m.columns:
+                for row in m.index:
+                    matrix.at[row, col] = m.at[row, col] / min(
+                        m.loc[row, row], m.at[col, col]
+                    )
+        if normalization == "jaccard":
+            for col in m.columns:
+                for row in m.index:
+                    matrix.at[row, col] = m.at[row, col] / (
+                        m.loc[row, row] + m.at[col, col] - m.at[row, col]
+                    )
+        if normalization == "salton":
+            for col in m.columns:
+                for row in m.index:
+                    matrix.at[row, col] = m.at[row, col] / np.sqrt(
+                        (m.loc[row, row] * m.at[col, col])
+                    )
+        return matrix
+
+    #
+    # MDS
+    #
+    def mds(x, cmap):
+
+        matplotlib.rc("font", size=10)
+        fig = pyplot.Figure(figsize=figsize)
+        ax = fig.subplots()
+        cmap = pyplot.cm.get_cmap(cmap)
+
+        summary = summary_by_term(
+            x,
+            column=column,
+            top_by=top_by,
+            top_n=top_n,
+            limit_to=limit_to,
+            exclude=exclude,
+        )
+        terms = summary[column]
+
+        m = matrix.loc[terms, terms]
+
+        # Node sizes prop to Num_Documents
+        s = {key: value for key, value in zip(summary[column], summary.Num_Documents)}
+        node_sizes = [s[t] for t in terms]
+        max_size = max(node_sizes)
+        min_size = min(node_sizes)
+        node_sizes = [
+            600 + int(2500 * (w - min_size) / (max_size - min_size)) for w in node_sizes
+        ]
+
+        node_colors = [cluster_dict[t] for t in terms]
+        cmap = pyplot.cm.get_cmap(cmap)
+        node_colors = [cmap(0.2 + 0.75 * i / (n_clusters - 1)) for i in node_colors]
+
+        embedding = MDS(n_components=n_components)
+        m_transformed = embedding.fit_transform(m,)
+        x0 = [row[0] for row in m_transformed]
+        x1 = [row[n_dim] for row in m_transformed]
+
+        ax.scatter(x0, x1, s=node_sizes, linewidths=1, edgecolors="k", c=node_colors)
+
+        xlim = ax.get_xlim()
+        ylim = ax.get_ylim()
+
+        dx = 0.1 * (xlim[1] - xlim[0])
+        dy = 0.1 * (ylim[1] - ylim[0])
+
+        ax.set_xlim(xlim[0] - dx, xlim[1] + dx)
+        ax.set_ylim(ylim[0] - dy, ylim[1] + dy)
+
+        for idx, term in enumerate(terms):
+            x, y = x0[idx], x1[idx]
+            ax.text(
+                x
+                + 0.01 * (xlim[1] - xlim[0])
+                + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
+                y
+                - 0.01 * (ylim[1] - ylim[0])
+                - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
+                s=term,
+                fontsize=10,
+                bbox=dict(
+                    facecolor="w",
+                    alpha=1.0,
+                    edgecolor="gray",
+                    boxstyle="round,pad=0.5",
+                ),
+                horizontalalignment="left",
+                verticalalignment="top",
+            )
+
+        ax.axhline(y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
+        ax.axvline(x=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
+
+        ax.set_aspect("equal")
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.spines["left"].set_visible(False)
+        ax.spines["bottom"].set_visible(False)
+
+        return fig
+
+    #
+    #
+    #  Network map
+    #
+    #
+    def network_map(x, cmap):
+
+        summary = summary_by_term(
+            x,
+            column=column,
+            top_by=top_by,
+            top_n=top_n,
+            limit_to=limit_to,
+            exclude=exclude,
+        )
+        terms = summary[column]
+
+        m = matrix.loc[terms, terms]
+
+        # Node sizes prop to Num_Documents
+        s = {key: value for key, value in zip(summary[column], summary.Num_Documents)}
+        node_sizes = [s[t] for t in terms]
+        max_size = max(node_sizes)
+        min_size = min(node_sizes)
+        node_sizes = [
+            600 + int(2500 * (w - min_size) / (max_size - min_size)) for w in node_sizes
+        ]
+
+        # Node colors based on clusters
+        node_colors = [cluster_dict[t] for t in terms]
+        cmap = pyplot.cm.get_cmap(cmap)
+        node_colors = [cmap(0.2 + 0.75 * i / (n_clusters - 1)) for i in node_colors]
+
+        # Draw the network
+        fig = pyplot.Figure(figsize=figsize)
+        ax = fig.subplots()
+
+        G = nx.Graph(ax=ax)
+        G.clear()
+
+        # create network nodes
+        G.add_nodes_from(terms)
+
+        # create network edges
+        n = len(m.columns)
+
+        max_width = 0
+        for icol in range(n - 1):
+            for irow in range(icol + 1, n):
+                link = m.at[m.columns[irow], m.columns[icol]]
+                if link > 0:
+                    G.add_edge(terms[icol], terms[irow], width=link)
+                    if max_width < link:
+                        max_width = link
+
+        # Draw edges
+        draw_dict = {
+            "Circular": nx.draw_circular,
+            "Kamada Kawai": nx.draw_kamada_kawai,
+            "Planar": nx.draw_planar,
+            "Random": nx.draw_random,
+            "Spectral": nx.draw_spectral,
+            "Spring": nx.draw_spring,
+            "Shell": nx.draw_shell,
+        }
+        draw = draw_dict[layout]
+
+        draw_edges = False
+        for e in G.edges.data():
+            a, b, width = e
+            edge = [(a, b)]
+            width = 0.2 + 4.0 * width["width"] / max_width
+            draw(
+                G,
+                ax=ax,
+                edgelist=edge,
+                width=width,
+                edge_color="k",
+                with_labels=False,
+                node_color=node_colors,
+                node_size=node_sizes,
+                edgecolors="k",
+                linewidths=1,
+            )
+            draw_edges = True
+
+        layout_dict = {
+            "Circular": nx.circular_layout,
+            "Kamada Kawai": nx.kamada_kawai_layout,
+            "Planar": nx.planar_layout,
+            "Random": nx.random_layout,
+            "Spectral": nx.spectral_layout,
+            "Spring": nx.spring_layout,
+            "Shell": nx.shell_layout,
+        }
+        label_pos = layout_dict[layout](G)
+
+        if draw_edges is False:
+            nx.draw_networkx_nodes(
+                G,
+                label_pos,
+                ax=ax,
+                edge_color="k",
+                nodelist=terms,
+                node_size=node_sizes,
+                node_color=node_colors,
+                node_shape="o",
+                edgecolors="k",
+                linewidths=1,
+            )
+
+            ax.spines["top"].set_visible(False)
+            ax.spines["right"].set_visible(False)
+            ax.spines["left"].set_visible(False)
+            ax.spines["bottom"].set_visible(False)
+
+        # Labels
+        xlim = ax.get_xlim()
+        ylim = ax.get_ylim()
+        for idx, term in enumerate(terms):
+            x, y = label_pos[term]
+            ax.text(
+                x
+                + 0.01 * (xlim[1] - xlim[0])
+                + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
+                y
+                - 0.01 * (ylim[1] - ylim[0])
+                - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
+                s=term,
+                fontsize=10,
+                bbox=dict(
+                    facecolor="w",
+                    alpha=1.0,
+                    edgecolor="gray",
+                    boxstyle="round,pad=0.5",
+                ),
+                horizontalalignment="left",
+                verticalalignment="top",
+            )
+
+        # Figure size
+        ax.set_xlim(
+            xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
+        )
+        ax.set_ylim(
+            ylim[0] - 0.15 * (ylim[1] - ylim[0]), ylim[1] + 0.15 * (ylim[1] - ylim[0])
+        )
+        ax.set_aspect("equal")
+        return fig
+
+    ##
+    ## Main
+    ##
+    matrix = co_occurrence(
+        x=x,
         column=column,
-        by=None,
+        by=column,
         top_by=top_by,
         top_n=top_n,
-        limit_to=limit_to,
-        exclude=exclude,
+        limit_to=None,
+        exclude=None,
     )
 
+    n_dim = min(n_dim, n_components - 1)
 
-def normalize_matrix(matrix, normalization=None):
-    """
-    """
-    matrix = matrix.applymap(lambda w: float(w))
-    m = matrix.copy()
-    if normalization == "association":
-        for col in m.columns:
-            for row in m.index:
-                matrix.at[row, col] = m.at[row, col] / (
-                    m.loc[row, row] * m.at[col, col]
-                )
-    if normalization == "inclusion":
-        for col in m.columns:
-            for row in m.index:
-                matrix.at[row, col] = m.at[row, col] / min(
-                    m.loc[row, row], m.at[col, col]
-                )
-    if normalization == "jaccard":
-        for col in m.columns:
-            for row in m.index:
-                matrix.at[row, col] = m.at[row, col] / (
-                    m.loc[row, row] + m.at[col, col] - m.at[row, col]
-                )
-    if normalization == "salton":
-        for col in m.columns:
-            for row in m.index:
-                matrix.at[row, col] = m.at[row, col] / np.sqrt(
-                    (m.loc[row, row] * m.at[col, col])
-                )
-    return matrix
+    matrix = normalize(matrix, normalization=normalization)
+
+    clustering = AgglomerativeClustering(linkage=linkage, n_clusters=n_clusters)
+    clustering.fit(matrix)
+    cluster_dict = {
+        key: value for key, value in zip(matrix.columns, clustering.labels_)
+    }
+
+    if view == "Network":
+        return network_map(x=x, cmap=cmap)
+
+    return mds(x=x, cmap=cmap)
+
+
+#
+#
+#
+filepath = "../data/papers/urban-agriculture-CL.csv"
+df = pd.read_csv(filepath)
+# occurrence(
+#     x=df,
+#     column="Authors",
+#     normalization=None,
+#     linkage="ward",
+#     n_clusters=3,
+#     view="network",
+#     top_by="Num Documents",
+#     top_n=15,
+#     limit_to=None,
+#     exclude=None,
+#     layout="Kamada Kawai",
+#     cmap="Greys",
+#     figsize=(17, 12),
+# )
 
 
 def occurrence_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)):
@@ -862,61 +1095,56 @@ def slope_chart(matrix, x, column, by, top_by, figsize, cmap="Blues"):
 # )
 
 
-#     # def correspondence_matrix(
-#     #     self,
-#     #     column_IDX,
-#     #     column_COL,
-#     #     sep_IDX=None,
-#     #     sep_COL=None,
-#     #     as_matrix=False,
-#     #     keywords=None,
-#     # ):
-#     #     """
+def correspondence_matrix(
+    x,
+    column_IDX,
+    column_COL,
+    sep_IDX=None,
+    sep_COL=None,
+    as_matrix=False,
+    keywords=None,
+):
+    """
 
-#     #     """
-#     #     result = self.co_occurrence(
-#     #         column_IDX=column_IDX,
-#     #         column_COL=column_COL,
-#     #         sep_IDX=sep_IDX,
-#     #         sep_COL=sep_COL,
-#     #         as_matrix=True,
-#     #         minmax=None,
-#     #         keywords=keywords,
-#     #     )
+    """
+    result = co_occurrence(
+        x,
+        column_IDX=column_IDX,
+        column_COL=column_COL,
+        sep_IDX=sep_IDX,
+        sep_COL=sep_COL,
+        as_matrix=True,
+        minmax=None,
+        keywords=keywords,
+    )
 
-#     #     matrix = result.transpose().values
-#     #     grand_total = np.sum(matrix)
-#     #     correspondence_matrix = np.divide(matrix, grand_total)
-#     #     row_totals = np.sum(correspondence_matrix, axis=1)
-#     #     col_totals = np.sum(correspondence_matrix, axis=0)
-#     #     independence_model = np.outer(row_totals, col_totals)
-#     #     norm_correspondence_matrix = np.divide(
-#     #         correspondence_matrix, row_totals[:, None]
-#     #     )
-#     #     distances = np.zeros(
-#     #         (correspondence_matrix.shape[0], correspondence_matrix.shape[0])
-#     #     )
-#     #     norm_col_totals = np.sum(norm_correspondence_matrix, axis=0)
-#     #     for row in range(correspondence_matrix.shape[0]):
-#     #         distances[row] = np.sqrt(
-#     #             np.sum(
-#     #                 np.square(
-#     #                     norm_correspondence_matrix - norm_correspondence_matrix[row]
-#     #                 )
-#     #                 / col_totals,
-#     #                 axis=1,
-#     #             )
-#     #         )
-#     #     std_residuals = np.divide(
-#     #         (correspondence_matrix - independence_model), np.sqrt(independence_model)
-#     #     )
-#     #     u, s, vh = np.linalg.svd(std_residuals, full_matrices=False)
-#     #     deltaR = np.diag(np.divide(1.0, np.sqrt(row_totals)))
-#     #     rowScores = np.dot(np.dot(deltaR, u), np.diag(s))
+    matrix = result.transpose().values
+    grand_total = np.sum(matrix)
+    correspondence_matrix = np.divide(matrix, grand_total)
+    row_totals = np.sum(correspondence_matrix, axis=1)
+    col_totals = np.sum(correspondence_matrix, axis=0)
+    independence_model = np.outer(row_totals, col_totals)
+    norm_correspondence_matrix = np.divide(correspondence_matrix, row_totals[:, None])
+    distances = np.zeros(
+        (correspondence_matrix.shape[0], correspondence_matrix.shape[0])
+    )
+    norm_col_totals = np.sum(norm_correspondence_matrix, axis=0)
+    for row in range(correspondence_matrix.shape[0]):
+        distances[row] = np.sqrt(
+            np.sum(
+                np.square(norm_correspondence_matrix - norm_correspondence_matrix[row])
+                / col_totals,
+                axis=1,
+            )
+        )
+    std_residuals = np.divide(
+        (correspondence_matrix - independence_model), np.sqrt(independence_model)
+    )
+    u, s, vh = np.linalg.svd(std_residuals, full_matrices=False)
+    deltaR = np.diag(np.divide(1.0, np.sqrt(row_totals)))
+    rowScores = np.dot(np.dot(deltaR, u), np.diag(s))
 
-#     #     return pd.DataFrame(
-#     #         data=rowScores, columns=result.columns, index=result.columns
-#     #     )
+    return pd.DataFrame(data=rowScores, columns=result.columns, index=result.columns)
 
 
 # def relationship(x, y):
@@ -933,9 +1161,9 @@ def slope_chart(matrix, x, column, by, top_by, figsize, cmap="Blues"):
 ###############################################################################
 
 WIDGET_WIDTH = "180px"
-LEFT_PANEL_HEIGHT = "655px"
+LEFT_PANEL_HEIGHT = "710px"
 RIGHT_PANEL_WIDTH = "1200px"
-PANE_HEIGHTS = ["80px", "720px", 0]
+PANE_HEIGHTS = ["80px", "770px", 0]
 
 #
 #
@@ -1023,16 +1251,6 @@ def __TAB0__(x, limit_to, exclude):
         },
         # 7
         {
-            "arg": "normalization",
-            "desc": "Normalization:",
-            "widget": widgets.Dropdown(
-                options=["None", "association", "inclusion", "jaccard", "salton"],
-                ensure_option=True,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 8
-        {
             "arg": "layout",
             "desc": "Map layout:",
             "widget": widgets.Dropdown(
@@ -1048,7 +1266,7 @@ def __TAB0__(x, limit_to, exclude):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 9
+        # 8
         {
             "arg": "figsize_width",
             "desc": "Figsize",
@@ -1058,7 +1276,7 @@ def __TAB0__(x, limit_to, exclude):
                 layout=Layout(width="88px"),
             ),
         },
-        # 10
+        # 9
         {
             "arg": "figsize_height",
             "desc": "Figsize",
@@ -1085,7 +1303,6 @@ def __TAB0__(x, limit_to, exclude):
         top_by = kwargs["top_by"]
         top_n = int(kwargs["top_n"])
         sort_by = kwargs["sort_by"]
-        normalization = kwargs["normalization"]
         layout = kwargs["layout"]
         figsize_width = int(kwargs["figsize_width"])
         figsize_height = int(kwargs["figsize_height"])
@@ -1101,17 +1318,15 @@ def __TAB0__(x, limit_to, exclude):
         )
         #
         if view == "Matrix":
-            controls[9]["widget"].disabled = True
-            controls[10]["widget"].disabled = True
+            controls[-2]["widget"].disabled = True
+            controls[-1]["widget"].disabled = True
         else:
-            controls[9]["widget"].disabled = False
-            controls[10]["widget"].disabled = False
+            controls[-2]["widget"].disabled = False
+            controls[-1]["widget"].disabled = False
         if view == "Network":
             controls[7]["widget"].disabled = False
-            controls[8]["widget"].disabled = False
         else:
             controls[7]["widget"].disabled = True
-            controls[8]["widget"].disabled = True
         #
         if top_by == "Num Documents":
             s = summary_by_term(
@@ -1186,9 +1401,6 @@ def __TAB0__(x, limit_to, exclude):
             matrix = matrix.sort_index(axis=0, ascending=False).sort_index(
                 axis=1, ascending=False
             )
-        #
-        if view == "Network" and column == by:
-            matrix = normalize_matrix(matrix, normalization)
         #
         output.clear_output()
         with output:
@@ -1279,6 +1491,240 @@ def __TAB0__(x, limit_to, exclude):
     )
 
 
+def __TAB1__(x, limit_to, exclude):
+    # -------------------------------------------------------------------------
+    #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
+    #
+    controls = [
+        # 0
+        {
+            "arg": "view",
+            "desc": "View:",
+            "widget": widgets.Dropdown(
+                options=["Network", "MDS"], layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 1
+        {
+            "arg": "column",
+            "desc": "Column to analyze:",
+            "widget": widgets.Dropdown(
+                options=[z for z in COLUMNS if z in x.columns],
+                ensure_option=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 2
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 3
+        {
+            "arg": "top_by",
+            "desc": "Top by:",
+            "widget": widgets.Dropdown(
+                options=["Num Documents", "Times Cited"],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 4
+        {
+            "arg": "top_n",
+            "desc": "Top N:",
+            "widget": widgets.Dropdown(
+                options=list(range(5, 81, 5)), layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 5
+        {
+            "arg": "normalization",
+            "desc": "Normalization:",
+            "widget": widgets.Dropdown(
+                options=["None", "association", "inclusion", "jaccard", "salton"],
+                ensure_option=True,
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 6
+        {
+            "arg": "n_clusters",
+            "desc": "Num clusters:",
+            "widget": widgets.Dropdown(
+                options=list(range(3, 21)), layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 7
+        {
+            "arg": "n_components",
+            "desc": "Num components:",
+            "widget": widgets.Dropdown(
+                options=list(range(2, 10)), layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 8
+        {
+            "arg": "n_dim",
+            "desc": "Dim for plotting:",
+            "widget": widgets.Dropdown(
+                options=list(range(1, 10)), layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 9
+        {
+            "arg": "layout",
+            "desc": "Map layout:",
+            "widget": widgets.Dropdown(
+                options=[
+                    "Circular",
+                    "Kamada Kawai",
+                    "Planar",
+                    "Random",
+                    "Spectral",
+                    "Spring",
+                    "Shell",
+                ],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 10
+        {
+            "arg": "figsize_width",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1),
+                ensure_option=True,
+                layout=Layout(width="88px"),
+            ),
+        },
+        # 11
+        {
+            "arg": "figsize_height",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1),
+                ensure_option=True,
+                layout=Layout(width="88px"),
+            ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
+    def server(**kwargs):
+        #
+        # Logic
+        #
+        column = kwargs["column"]
+        view = kwargs["view"]
+        cmap = kwargs["cmap"]
+        top_by = kwargs["top_by"]
+        top_n = int(kwargs["top_n"])
+        n_clusters = int(kwargs["n_clusters"])
+        n_components = int(kwargs["n_components"])
+        n_dim = int(kwargs["n_dim"])
+        normalization = kwargs["normalization"]
+        layout = kwargs["layout"]
+        figsize_width = int(kwargs["figsize_width"])
+        figsize_height = int(kwargs["figsize_height"])
+        #
+        if view == "Network":
+            controls[7]["widget"].disabled = True
+            controls[8]["widget"].disabled = True
+            controls[9]["widget"].disabled = False
+        if view == "MDS":
+            controls[7]["widget"].disabled = False
+            controls[8]["widget"].disabled = False
+            controls[9]["widget"].disabled = True
+
+        #
+        output.clear_output()
+        with output:
+            #
+            # View
+            #
+            if view == "Network":
+                display(
+                    occurrence(
+                        x,
+                        column=column,
+                        normalization=normalization,
+                        linkage="ward",
+                        n_clusters=n_clusters,
+                        view=view,
+                        top_by=top_by,
+                        top_n=top_n,
+                        limit_to=None,
+                        exclude=None,
+                        layout=layout,
+                        cmap=cmap,
+                        figsize=(figsize_width, figsize_height),
+                    )
+                )
+                return
+            if view == "MDS":
+                display(
+                    occurrence(
+                        x,
+                        column=column,
+                        normalization=normalization,
+                        linkage="ward",
+                        n_clusters=n_clusters,
+                        n_components=n_components,
+                        n_dim=n_dim,
+                        view=view,
+                        top_by=top_by,
+                        top_n=top_n,
+                        limit_to=None,
+                        exclude=None,
+                        layout=layout,
+                        cmap=cmap,
+                        figsize=(figsize_width, figsize_height),
+                    )
+                )
+                return
+
+    # -------------------------------------------------------------------------
+    #
+    # Generic
+    #
+    # -------------------------------------------------------------------------
+    args = {control["arg"]: control["widget"] for control in controls}
+    output = widgets.Output()
+    with output:
+        display(widgets.interactive_output(server, args,))
+    return widgets.HBox(
+        [
+            widgets.VBox(
+                [
+                    widgets.VBox(
+                        [widgets.Label(value=control["desc"]), control["widget"]]
+                    )
+                    for control in controls
+                    if control["desc"] not in ["Figsize"]
+                ]
+                + [
+                    widgets.Label(value="Figure Size"),
+                    widgets.HBox([controls[-2]["widget"], controls[-1]["widget"],]),
+                ],
+                layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
+            ),
+            widgets.VBox(
+                [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")
+            ),
+        ]
+    )
+
+
 #
 #
 #  Occurrence Network
@@ -1291,7 +1737,7 @@ def app(df, limit_to=None, exclude=None):
     """
     #
     body = widgets.Tab()
-    body.children = [__TAB0__(df, limit_to, exclude)]
+    body.children = [__TAB0__(df, limit_to, exclude), __TAB1__(df, limit_to, exclude)]
     body.set_title(0, "Co-occurrence")
     body.set_title(1, "Occurrence")
     #
