@@ -48,16 +48,17 @@ def factor_analysis(
     ...       'Author_Keywords': y,
     ...       "Times_Cited": list(range(len(x))),
     ...       'ID': list(range(len(x))),
+    ...       'Year': [1990, 1990, 1991, 1991, 1992, 1992],
     ...    }
     ... )
     >>> df
-      Authors Author_Keywords  Times_Cited  ID
-    0       A               a            0   0
-    1     A;B             a;b            1   1
-    2       B               b            2   2
-    3   A;B;C               c            3   3
-    4     B;D             c;d            4   4
-    5     A;B               d            5   5
+      Authors Author_Keywords  Times_Cited  ID  Year
+    0       A               a            0   0  1990
+    1     A;B             a;b            1   1  1990
+    2       B               b            2   2  1991
+    3   A;B;C               c            3   3  1991
+    4     B;D             c;d            4   4  1992
+    5     A;B               d            5   5  1992
 
 
     >>> document_term_matrix(df, 'Authors')

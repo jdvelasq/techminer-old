@@ -149,8 +149,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for techminer.data</h1><div class="highlight"><pre>
-<span></span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Data Importation and Manipulation Functions</span>
 <span class="sd">==================================================================================================</span>
 
@@ -161,6 +160,7 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">string</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">join</span>
 
 <span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">widgets</span>
@@ -169,13 +169,13 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">nltk</span> <span class="kn">import</span> <span class="n">WordNetLemmatizer</span><span class="p">,</span> <span class="n">pos_tag</span>
 <span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
-
+<span class="kn">from</span> <span class="nn">techminer.params</span> <span class="kn">import</span> <span class="n">EXCLUDE_COLS</span><span class="p">,</span> <span class="n">MULTIVALUED_COLS</span>
 <span class="kn">from</span> <span class="nn">techminer.text</span> <span class="kn">import</span> <span class="n">remove_accents</span>
 <span class="kn">from</span> <span class="nn">techminer.thesaurus</span> <span class="kn">import</span> <span class="n">text_clustering</span>
 
-<span class="c1"># from IPython.display import HTML, clear_output, display</span>
+<span class="c1">#  from IPython.display import HTML, clear_output, display</span>
 <span class="c1"># from ipywidgets import AppLayout, Layout</span>
-<span class="c1"># from techminer.explode import MULTIVALUED_COLS, __explode</span>
+<span class="c1">#  from techminer.explode import MULTIVALUED_COLS, __explode</span>
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
     <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2">&quot;</span>
@@ -187,7 +187,6 @@
 <span class="c1">##  Data importation</span>
 <span class="c1">##</span>
 <span class="c1">##</span>
-
 
 
 <span class="k">def</span> <span class="nf">__disambiguate_authors</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
@@ -284,26 +283,16 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">column</span> <span class="ow">in</span> <span class="p">[</span>
-        <span class="s2">&quot;Affiliations&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Author_Keywords_ID&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Author_Keywords&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Authors_ID&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Authors&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Countries&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Index_Keywords_ID&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Index_Keywords&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Institutions&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Abstract_CL&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Title_CL&quot;</span><span class="p">,</span>
-    <span class="p">]:</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">MULTIVALUED_COLS</span><span class="p">:</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
         <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">w</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="p">[</span><span class="n">z</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">w</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">z</span><span class="p">)]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="s1">&#39;;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="p">[</span><span class="n">z</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">w</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">z</span><span class="p">)]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">z</span>
     <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">f</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
-    
+
 
 <span class="k">def</span> <span class="nf">__extract_country</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Extracts country name from a string,</span>
@@ -322,7 +311,7 @@
 
 <span class="sd">    &gt;&gt;&gt; __extract_country(&#39;Russian Federation&#39;)</span>
 <span class="sd">    &#39;Russia&#39;</span>
-<span class="sd">    </span>
+
 <span class="sd">    &gt;&gt;&gt; __extract_country(&#39;xxx&#39;)</span>
 <span class="sd">    &lt;NA&gt;</span>
 
@@ -339,7 +328,7 @@
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">module_path</span><span class="p">,</span> <span class="s2">&quot;data/worldmap.data&quot;</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">countries</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
     <span class="n">country_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">countries</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    
+
     <span class="c1"># paises faltantes</span>
     <span class="n">country_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Singapore&quot;</span><span class="p">)</span>
     <span class="n">country_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Malta&quot;</span><span class="p">)</span>
@@ -360,15 +349,15 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;macau&quot;</span><span class="p">,</span> <span class="s2">&quot;china&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;macao&quot;</span><span class="p">,</span> <span class="s2">&quot;china&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
     <span class="c1">#</span>
-    <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)):</span>
+    <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)):</span>
         <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">z</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">country_names</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">return</span> <span class="n">country_names</span><span class="p">[</span><span class="n">z</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
         <span class="c1"># descarta espaciado</span>
         <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
         <span class="n">z</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">z</span><span class="p">]</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">z</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">country_names</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">return</span> <span class="n">country_names</span><span class="p">[</span><span class="n">z</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span>
@@ -377,6 +366,7 @@
 <span class="k">def</span> <span class="nf">__extract_institution</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">search_name</span><span class="p">(</span><span class="n">affiliation</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">affiliation</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -426,158 +416,80 @@
     <span class="k">return</span> <span class="n">institution</span>
 
 
-
 <span class="k">def</span> <span class="nf">__NLP</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Extracts keywords from phrases.</span>
+    <span class="sd">&quot;&quot;&quot;Extracts words  and 2-grams from phrases.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">obtain_n_grams</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+
+        <span class="n">stopwords</span> <span class="o">=</span> <span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">&quot;english&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+        <span class="n">words</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">words</span><span class="p">[</span><span class="n">index</span> <span class="p">:</span> <span class="n">index</span> <span class="o">+</span> <span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)</span> <span class="o">-</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">phrase</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="n">word</span> <span class="ow">in</span> <span class="n">stopwords</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">phrase</span><span class="p">])</span>
+        <span class="p">]</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="p">[[</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">phrase</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">word</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()]</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
+        <span class="n">lem</span> <span class="o">=</span> <span class="n">WordNetLemmatizer</span><span class="p">()</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="p">[[</span><span class="n">lem</span><span class="o">.</span><span class="n">lemmatize</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">phrase</span><span class="p">]</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="p">[[</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">phrase</span> <span class="k">if</span> <span class="n">word</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">phrase</span><span class="p">)</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">phrase</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">text</span>
+
     <span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
-    
 
-    <span class="n">stopwords</span> <span class="o">=</span> <span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">)</span>
-    <span class="n">stopwords</span> <span class="o">+=</span> <span class="p">[</span>
-        <span class="s1">&#39;herein&#39;</span><span class="p">,</span>
+    <span class="n">stopwords</span> <span class="o">=</span> <span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">&quot;english&quot;</span><span class="p">)</span>
 
-    <span class="p">]</span>
+    <span class="n">nlp_result</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">phrase</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)]</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">phrase</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
-   
-    <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">stopwords</span><span class="p">:</span>
-         <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">phrase</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">st</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">)]</span>
-    
-    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
-        <span class="n">phrase</span> <span class="o">=</span> <span class="n">phrase</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">stopwords</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">phrase</span><span class="p">)</span> <span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">st</span> <span class="o">==</span> <span class="n">phrase</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-                <span class="n">phrase</span> <span class="o">=</span> <span class="n">phrase</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">phrase</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">st</span> <span class="o">==</span> <span class="n">phrase</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-                <span class="n">phrase</span> <span class="o">=</span> <span class="n">phrase</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">phrase</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">phrase</span><span class="p">))</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">result</span>
-
-    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">phrase</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;(&#39;</span><span class="p">)]</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">phrase</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">)]</span>
-    
-    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">phrase</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">phrase</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()]</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">phrase</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">phrase</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="n">phrase</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">]</span>
-    
-    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
-        <span class="n">tags</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">pos_tag</span><span class="p">(</span><span class="n">phrase</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span>
-        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span> <span class="k">if</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;CD&#39;</span><span class="p">,</span> <span class="s1">&#39;VB&#39;</span><span class="p">,</span> <span class="s1">&#39;VBD&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;VBG&#39;</span><span class="p">,</span> <span class="s1">&#39;VBN&#39;</span><span class="p">,</span> <span class="s1">&#39;VBP&#39;</span><span class="p">,</span> <span class="s1">&#39;VBZ&#39;</span><span class="p">,</span> <span class="s1">&#39;JJ&#39;</span><span class="p">,</span> <span class="s1">&#39;RB&#39;</span><span class="p">]</span>
-        <span class="p">]</span>
-        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">]</span>
-        <span class="n">phrase</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phrase</span><span class="p">)</span>
-
-    <span class="n">text</span> <span class="o">=</span> <span class="n">result</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">phrase</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="n">phrase</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">]</span>
-    
-
-    <span class="n">lem</span> <span class="o">=</span> <span class="n">WordNetLemmatizer</span><span class="p">()</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">phrase</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)]</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">phrase</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
     <span class="n">text</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">lem</span><span class="o">.</span><span class="n">lemmatize</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">phrase</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)])</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">phrase</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">phrase</span>
-        
-        <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span>
+        <span class="n">phrase</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">string</span><span class="o">.</span><span class="n">punctuation</span><span class="p">))</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span>
     <span class="p">]</span>
 
-    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">phrase</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="n">phrase</span> <span class="o">!=</span> <span class="s1">&#39;%&#39;</span><span class="p">]</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">phrase</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">phrase</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()]</span>
+    <span class="n">two_grams</span> <span class="o">=</span> <span class="p">[</span><span class="n">obtain_n_grams</span><span class="p">(</span><span class="n">phrase</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
+    <span class="n">two_grams</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">two_grams</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">phrase</span><span class="p">]</span>
+    <span class="n">two_grams</span> <span class="o">=</span> <span class="p">[</span><span class="n">phrase</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">two_grams</span> <span class="k">if</span> <span class="n">phrase</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="s1">&#39;;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+    <span class="n">three_grams</span> <span class="o">=</span> <span class="p">[</span><span class="n">obtain_n_grams</span><span class="p">(</span><span class="n">phrase</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
+    <span class="n">three_grams</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">three_grams</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">phrase</span><span class="p">]</span>
+    <span class="n">three_grams</span> <span class="o">=</span> <span class="p">[</span><span class="n">phrase</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">three_grams</span> <span class="k">if</span> <span class="n">phrase</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
+    <span class="n">three_grams</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">three_grams</span><span class="p">))</span>
 
-    <span class="c1">##</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">phrase</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">word</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()]</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stopwords</span><span class="p">]</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="n">word</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
 
-    
+    <span class="c1">###</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">text</span> <span class="o">+</span> <span class="n">two_grams</span> <span class="o">+</span> <span class="n">three_grams</span><span class="p">))</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">nltk</span><span class="o">.</span><span class="n">pos_tag</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">t</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">t</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;NN&quot;</span><span class="p">,</span> <span class="s2">&quot;JJ NN&quot;</span><span class="p">,</span> <span class="s2">&quot;NN NN&quot;</span><span class="p">,</span> <span class="s2">&quot;NNS&quot;</span><span class="p">,</span> <span class="s2">&quot;NN NNS&quot;</span><span class="p">,</span> <span class="s2">&quot;JJ NNS&quot;</span><span class="p">,</span> <span class="s2">&quot;NN NNS&quot;</span><span class="p">,]</span>
+    <span class="p">]</span>
+    <span class="c1">###</span>
 
-
-
-
-
-    <span class="c1"># #text = text.split(&#39;.&#39;)</span>
-    <span class="c1"># text = [w for phrase in text for w in phrase.split(&#39;;&#39;)]</span>
-    <span class="c1"># text = [w for phrase in text for w in phrase.split(&#39;,&#39;)]</span>
-    <span class="c1"># for st in stopwords:</span>
-    <span class="c1">#     text = [w.strip() for phrase in text for w in phrase.split(&quot; &quot; + st + &quot; &quot;)]</span>
-    <span class="c1"># text = [phrase for phrase in text if phrase != &#39;&#39;]</span>
-
-
-
-
-    <span class="c1"># expressions = [</span>
-    <span class="c1">#     &#39;applied&#39;,</span>
-    <span class="c1">#     &#39;despite&#39;,</span>
-    <span class="c1">#     &#39;direct&#39;,</span>
-    <span class="c1">#     &#39;discussed&#39;,</span>
-    <span class="c1">#     &#39;evaluate&#39;,</span>
-    <span class="c1">#     &#39;found&#39;,</span>
-    <span class="c1">#     &#39;near future&#39;,</span>
-    <span class="c1">#     &#39;obtain&#39;,</span>
-    <span class="c1">#     &#39;often limited&#39;,</span>
-    <span class="c1">#     &#39;presents&#39;,</span>
-    <span class="c1">#     &#39;produce&#39;,</span>
-    <span class="c1">#     &#39;significantly reduced&#39;, </span>
-    <span class="c1">#     &#39;study aimed&#39;,</span>
-    <span class="c1">#     &#39;widely applied&#39;,</span>
-    <span class="c1">#     &#39;worse&#39;,</span>
-    <span class="c1">#     &#39;one&#39;,</span>
-    <span class="c1">#     &#39;two&#39;,</span>
-    <span class="c1">#     &#39;three&#39;,</span>
-    <span class="c1">#     &#39;four&#39;,</span>
-    <span class="c1">#     &#39;five&#39;,</span>
-    <span class="c1">#     &#39;six&#39;,</span>
-    <span class="c1">#     &#39;seven&#39;,</span>
-    <span class="c1">#     &#39;eight&#39;,</span>
-    <span class="c1">#     &#39;nine&#39;,</span>
-    <span class="c1">#     &#39;among&#39;</span>
-
-
-    <span class="c1"># ]</span>
-
-    <span class="c1"># text = [phrase for phrase in text if phrase not in expressions]</span>
-
-    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-
-
-    <span class="c1"># build n-grams</span>
-    <span class="c1"># result = []</span>
-    <span class="c1"># for phrase in text:</span>
-    <span class="c1">#     words = phrase.split()</span>
-    <span class="c1">#     for n in range(len(words) - max_length):</span>
-    <span class="c1">#         result.append(&#39; &#39;.join(words[n: n + max_length]))</span>
-
-    <span class="c1"># result1 = []</span>
-    <span class="c1"># for stop in english_stopwords:</span>
-
-
-    <span class="c1"># for w in stopwords.words(&#39;english&#39;):</span>
-    <span class="c1"># result1 = []</span>
-    <span class="c1"># for phrase in result:</span>
-    <span class="c1">#     for word in phrase:</span>
-    <span class="c1">#         if word in english_stopwords:</span>
-
-
-
-    <span class="k">return</span> <span class="n">result</span>
-
-
-
-
-
-
-
+    <span class="c1"># lem = WordNetLemmatizer()</span>
+    <span class="c1"># text = sorted(set([lem.lemmatize(word) for word in text]))</span>
+    <span class="k">return</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
 
 
 <div class="viewcode-block" id="load_scopus"><a class="viewcode-back" href="../../data.html#techminer.data.load_scopus">[docs]</a><span class="k">def</span> <span class="nf">load_scopus</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Import filter for Scopus data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+        <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
 
     <span class="n">scopus2tags</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;Abbreviated Source Title&quot;</span><span class="p">:</span> <span class="s2">&quot;Abb_Source_Title&quot;</span><span class="p">,</span>
@@ -589,7 +501,7 @@
         <span class="s2">&quot;Author(s) ID&quot;</span><span class="p">:</span> <span class="s2">&quot;Authors_ID&quot;</span><span class="p">,</span>
         <span class="s2">&quot;Authors with affiliations&quot;</span><span class="p">:</span> <span class="s2">&quot;Authors_with_affiliations&quot;</span><span class="p">,</span>
         <span class="s2">&quot;Authors&quot;</span><span class="p">:</span> <span class="s2">&quot;Authors&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="s2">&quot;Cited_by&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Cited by&quot;</span><span class="p">:</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span>
         <span class="s2">&quot;CODEN&quot;</span><span class="p">:</span> <span class="s2">&quot;CODEN&quot;</span><span class="p">,</span>
         <span class="s2">&quot;Correspondence Address&quot;</span><span class="p">:</span> <span class="s2">&quot;Correspondence_Address&quot;</span><span class="p">,</span>
         <span class="s2">&quot;Document Type&quot;</span><span class="p">:</span> <span class="s2">&quot;Document_Type&quot;</span><span class="p">,</span>
@@ -599,7 +511,7 @@
         <span class="s2">&quot;Index Keywords&quot;</span><span class="p">:</span> <span class="s2">&quot;Index_Keywords&quot;</span><span class="p">,</span>
         <span class="s2">&quot;ISBN&quot;</span><span class="p">:</span> <span class="s2">&quot;ISBN&quot;</span><span class="p">,</span>
         <span class="s2">&quot;ISSN&quot;</span><span class="p">:</span> <span class="s2">&quot;ISSN&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Issue&quot;</span><span class="p">:</span> <span class="s1">&#39;Issue&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;Issue&quot;</span><span class="p">:</span> <span class="s2">&quot;Issue&quot;</span><span class="p">,</span>
         <span class="s2">&quot;Language of Original Document&quot;</span><span class="p">:</span> <span class="s2">&quot;Language_of_Original_Document&quot;</span><span class="p">,</span>
         <span class="s2">&quot;Link&quot;</span><span class="p">:</span> <span class="s2">&quot;Link&quot;</span><span class="p">,</span>
         <span class="s2">&quot;Page count&quot;</span><span class="p">:</span> <span class="s2">&quot;Page_count&quot;</span><span class="p">,</span>
@@ -616,14 +528,14 @@
     <span class="p">}</span>
 
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Renaming and selecting columns ...&quot;</span><span class="p">)</span>    
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Renaming and selecting columns ...&quot;</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">scopus2tags</span><span class="p">)</span>
-    
+
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Removing accents ...&quot;</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">remove_accents</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
-    
+
     <span class="k">if</span> <span class="s2">&quot;Authors&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-    
+
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Removing  &quot;[No author name available]&quot; ...&#39;</span><span class="p">)</span>
         <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Authors</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span> <span class="k">if</span> <span class="n">w</span> <span class="o">==</span> <span class="s2">&quot;[No author name available]&quot;</span> <span class="k">else</span> <span class="n">w</span>
@@ -633,21 +545,21 @@
         <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Authors</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span> <span class="k">else</span> <span class="n">w</span>
         <span class="p">)</span>
-    
+
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Counting number of authors per document...&quot;</span><span class="p">)</span>
         <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Num_Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Authors</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">))</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
-        <span class="p">)</span>        
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="s2">&quot;Authors_ID&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Authors_ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Authors_ID</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span> <span class="k">if</span> <span class="n">w</span> <span class="o">==</span> <span class="s2">&quot;[No author id available]&quot;</span> <span class="k">else</span> <span class="n">w</span>
         <span class="p">)</span>
-    
+
     <span class="k">if</span> <span class="s2">&quot;Authors&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="s2">&quot;Authors_ID&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Disambiguate author names ...&quot;</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">__disambiguate_authors</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    
+
     <span class="k">if</span> <span class="s2">&quot;Title&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Removing part of titles in foreing languages ...&quot;</span><span class="p">)</span>
         <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
@@ -659,75 +571,75 @@
         <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Countries&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__MAP</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Affiliations&quot;</span><span class="p">,</span> <span class="n">__extract_country</span><span class="p">)</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting country of first author ...&quot;</span><span class="p">)</span>
-        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Country_1st_Author&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Countries</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Country_1st_Author&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Countries</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting institutions from affiliations ...&quot;</span><span class="p">)</span>
         <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Institutions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__MAP</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Affiliations&quot;</span><span class="p">,</span> <span class="n">__extract_institution</span><span class="p">)</span>
-        
+
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting institution of first author ...&quot;</span><span class="p">)</span>
-        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Institution_1st_Author&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Institutions</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Institution_1st_Author&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Institutions</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Reducing list of countries ...&quot;</span><span class="p">)</span>
-        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Countries&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Countries</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="s1">&#39;;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)))</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Countries&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Countries</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)))</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="s2">&quot;Author_Keywords&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Transforming Author Keywords to lower case ...&quot;</span><span class="p">)</span>
-        <span class="n">x</span><span class="p">[</span><span class="s1">&#39;Author_Keywords&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Author_Keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Author_Keywords&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Author_Keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Author_Keywords&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Author_Keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">z</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)])</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+            <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="s2">&quot;Index_Keywords&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Transforming Index Keywords to lower case ...&quot;</span><span class="p">)</span>
-        <span class="n">x</span><span class="p">[</span><span class="s1">&#39;Index_Keywords&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Index_Keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Index_Keywords&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Index_Keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Index_Keywords&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Index_Keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">z</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)])</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+            <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
 
-    <span class="n">keywords</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">if</span> <span class="s2">&quot;Author_Keywords&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">keywords</span> <span class="o">+=</span> <span class="n">x</span><span class="o">.</span><span class="n">Author_Keywords</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="k">if</span> <span class="s2">&quot;Index_Keywords&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">keywords</span> <span class="o">+=</span> <span class="n">x</span><span class="o">.</span><span class="n">Index_Keywords</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">keywords</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span>
-        <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
-        <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">explode</span><span class="p">()</span>
-        <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Clustering keywords ...&quot;</span><span class="p">)</span>
-        <span class="n">thesaurus</span> <span class="o">=</span> <span class="n">text_clustering</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="n">transformer</span><span class="o">=</span><span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
-        <span class="n">thesaurus</span> <span class="o">=</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s2">&quot;Author_Keywords&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Cleaning Author Keywords ...&quot;</span><span class="p">)</span>
-            <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Author_Keywords_CL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__MAP</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Author_Keywords&quot;</span><span class="p">,</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">apply</span><span class="p">)</span>
-            <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Author_Keywords_CL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__MAP</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Author_Keywords_CL&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;Index_Keywords&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Cleaning Index Keywords ...&quot;</span><span class="p">)</span>
-            <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Index_Keywords_CL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__MAP</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Index_Keywords&quot;</span><span class="p">,</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">apply</span><span class="p">)</span>
-            <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Index_Keywords_CL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__MAP</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Index_Keywords_CL&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>    
-    
     <span class="k">if</span> <span class="s2">&quot;Abstract&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
 
-        <span class="n">x</span><span class="o">.</span><span class="n">Abstract</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Abstract</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">w</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\u00a9</span><span class="s1">&#39;</span><span class="p">)]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
-        
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting Abstract Keywords ...&quot;</span><span class="p">)</span>
-        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Abstract_CL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__MAP</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Abstract&quot;</span><span class="p">,</span> <span class="n">__NLP</span><span class="p">)</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Clustering Abstract Keywords ...&quot;</span><span class="p">)</span>
-        <span class="n">thesaurus</span> <span class="o">=</span> <span class="n">text_clustering</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Abstract_CL</span><span class="p">,</span> <span class="n">transformer</span><span class="o">=</span><span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Cleaning Abstract Keywords ...&quot;</span><span class="p">)</span>
-        <span class="n">thesaurus</span> <span class="o">=</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Abstract_CL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__MAP</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Abstract_CL&quot;</span><span class="p">,</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">apply</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">Abstract</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Abstract</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\u00a9</span><span class="s2">&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span>
+        <span class="p">)</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting Abstract words ...&quot;</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Abstract_words&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__MAP</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Abstract&quot;</span><span class="p">,</span> <span class="n">__NLP</span><span class="p">)</span>
+        <span class="c1"># logging.info(&quot;Clustering Abstract Keywords ...&quot;)</span>
+        <span class="c1">#  thesaurus = text_clustering(x.Abstract_CL, transformer=lambda u: u.lower())</span>
+        <span class="c1">#  logging.info(&quot;Cleaning Abstract Keywords ...&quot;)</span>
+        <span class="c1">#  thesaurus = thesaurus.compile()</span>
+        <span class="c1"># x[&quot;Abstract_CL&quot;] = __MAP(x, &quot;Abstract_CL&quot;, thesaurus.apply)</span>
 
     <span class="k">if</span> <span class="s2">&quot;Title&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting Title Keywords ...&quot;</span><span class="p">)</span>
-        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Title_CL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__MAP</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Title&quot;</span><span class="p">,</span> <span class="n">__NLP</span><span class="p">)</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Clustering Title Keywords ...&quot;</span><span class="p">)</span>
-        <span class="n">thesaurus</span> <span class="o">=</span> <span class="n">text_clustering</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Title_CL</span><span class="p">,</span> <span class="n">transformer</span><span class="o">=</span><span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Cleaning Title Keywords ...&quot;</span><span class="p">)</span>
-        <span class="n">thesaurus</span> <span class="o">=</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Title_CL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__MAP</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Title_CL&quot;</span><span class="p">,</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">apply</span><span class="p">)</span>
-
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting Title words ...&quot;</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Title_words&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__MAP</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Title&quot;</span><span class="p">,</span> <span class="n">__NLP</span><span class="p">)</span>
+        <span class="c1"># logging.info(&quot;Clustering Title Keywords ...&quot;)</span>
+        <span class="c1">#  thesaurus = text_clustering(x.Title_CL, transformer=lambda u: u.lower())</span>
+        <span class="c1">#  logging.info(&quot;Cleaning Title Keywords ...&quot;)</span>
+        <span class="c1">#  thesaurus = thesaurus.compile()</span>
+        <span class="c1">#  x[&quot;Title_CL&quot;] = __MAP(x, &quot;Title_CL&quot;, thesaurus.apply)</span>
 
     <span class="n">x</span><span class="p">[</span><span class="s2">&quot;ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">w</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">x</span></div>
+    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">True</span>
 
+    <span class="k">return</span> <span class="n">x</span></div>
 
 
 <span class="c1">##</span>
@@ -735,6 +647,7 @@
 <span class="c1">## Term extraction and count</span>
 <span class="c1">##</span>
 <span class="c1">##</span>
+
 
 <div class="viewcode-block" id="extract_terms"><a class="viewcode-back" href="../../data.html#techminer.data.extract_terms">[docs]</a><span class="k">def</span> <span class="nf">extract_terms</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Extracts unique terms in a column, exploding multvalued columns.</span>
@@ -765,7 +678,9 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span>
+    <span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
     <span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span>
@@ -800,7 +715,6 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">extract_terms</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">))</span></div>
-
 
 
 <span class="c1">##</span>
@@ -881,7 +795,7 @@
 <span class="sd">    ...          &#39;Author_Keywords&#39;: &#39;k0;k1, k0;k2, k3;k2;k1, k4, k5&#39;.split(&#39;,&#39;),</span>
 <span class="sd">    ...          &#39;Index_Keywords&#39;: &#39;w0;w1, w0;w2, w3;k1;w1, w4, w5&#39;.split(&#39;,&#39;),</span>
 <span class="sd">    ...          &#39;Year&#39;: [1990, 1991, 1992, 1993, 1994],</span>
-<span class="sd">    ...          &#39;Cited_by&#39;: list(range(5)),</span>
+<span class="sd">    ...          &quot;Times_Cited&quot;: list(range(5)),</span>
 <span class="sd">    ...          &#39;Num_Authors&#39;: [2, 2, 1, 1, 1],</span>
 <span class="sd">    ...     }</span>
 <span class="sd">    ... )</span>
@@ -900,7 +814,7 @@
 <span class="sd">    Index_Keywords                                7</span>
 <span class="sd">    Years                                 1990-1994</span>
 <span class="sd">    Compound annual growth rate               0.0 %</span>
-<span class="sd">    Cited_by                                      5</span>
+<span class="sd">    Times_Cited                                   5</span>
 <span class="sd">    Average citations per document             2.00</span>
 <span class="sd">    Num_Authors                                   2</span>
 <span class="sd">    </span>
@@ -909,9 +823,9 @@
     <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Documents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
     <span class="c1">#</span>
     <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">column</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;*&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">EXCLUDE_COLS</span><span class="p">:</span>
             <span class="k">continue</span>
-        <span class="k">if</span> <span class="n">column</span> <span class="o">!=</span> <span class="s1">&#39;Year&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">column</span> <span class="o">!=</span> <span class="s2">&quot;Year&quot;</span><span class="p">:</span>
             <span class="n">y</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">count_terms</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;Year&quot;</span><span class="p">:</span>
             <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Years&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Year</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Year</span><span class="p">))</span>
@@ -920,8 +834,10 @@
             <span class="n">Pn</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Year</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">Year</span> <span class="o">==</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Year</span><span class="p">)])</span>
             <span class="n">cagr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">Pn</span> <span class="o">/</span> <span class="n">Po</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; %&quot;</span>
             <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Compound annual growth rate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cagr</span>
-        <span class="k">if</span>  <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;Cited_by&quot;</span><span class="p">:</span>
-            <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Average citations per document&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:4.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;Cited_by&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">:</span>
+            <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Average citations per document&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:4.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Times_Cited&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s2">&quot;Authors&quot;</span><span class="p">:</span>
             <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Documents per author&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">count_terms</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Authors&quot;</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
             <span class="n">y</span><span class="p">[</span><span class="s2">&quot;Authors per document&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">count_terms</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Authors&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
@@ -937,8 +853,6 @@
     <span class="n">d</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">y</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
     <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">y</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">d</span><span class="p">)</span></div>
-
-
 
 
 <span class="c1">#     def keywords_completation(self):</span>
@@ -966,10 +880,6 @@
 <span class="c1">#         cp.loc[idx, &quot;Keywords&quot;] = keywords[idx]</span>
 
 <span class="c1">#         return DataFrame(cp)</span>
-
-
-
-
 
 
 <span class="c1">#</span>

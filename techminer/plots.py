@@ -138,9 +138,35 @@ STYLE = [
 
 
 def bar(
-    x, width=0.8, bottom=None, align="center", cmap="Greys", figsize=(10, 6), **kwargs
+    data,
+    column,
+    width=0.8,
+    bottom=None,
+    align="center",
+    prop_to=None,
+    cmap="Greys",
+    figsize=(10, 6),
+    fontsize=13,
+    **kwargs,
 ):
-    """Creates a bar plot from a dataframe.
+    """[summary]
+
+    Args:
+        data (pandas.DataFrame): A biblographic dataframe.
+        column (int or string): Column with the height(s) of the bars.
+        width (float, optional): scalar or array-like. The width(s) of the bars. Defaults to 0.8.
+        bottom (scalar or array-like, optional): The y coordinate(s) of the bars bases. Defaults to None.
+        align ({'center', 'edge'}, optional): Alignment of the bars to the x coordinates. Defaults to 'center'.
+
+            * 'center': Center the base on the `x` positions.
+
+            * 'edge': Align the left edges of the bars with the `x` positions. To align the bars on the right edge pass a negative width and align='edge'.
+
+        prop_to (array-like, optional): Bar colors proportional to values in this array. Defaults to None.
+        cmap (str, optional): Colormap used to build the plot. Defaults to 'Greys'.
+        figsize (tuple, optional): Figure size. Defaults to (10, 6)
+        fontsize (int): fonsize for plots.
+        **kwargs: Optional arguments pased to matplotlib's bar function.
 
     Examples
     ----------------------------------------------------------------------------------------------
@@ -150,6 +176,7 @@ def bar(
     ...     {
     ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
     ...         "Num_Documents": [3, 2, 2, 1],
+    ...         "Colors": [1, 2, 3, 4],
     ...         "ID": list(range(4)),
     ...     }
     ... )
@@ -159,12 +186,184 @@ def bar(
     1  author 1              2   1
     2  author 0              2   2
     3  author 2              1   3
-    >>> fig = bar(df, cmap=plt.cm.Blues)
-    >>> fig.savefig('sphinx/images/barplot.png')
+    >>> fig = bar(df['Num_Documents], cmap='Blues')
+    >>> fig.savefig('sphinx/images/barplot1.png')
 
-    .. image:: images/barplot.png
+    .. image:: images/barplot1.png
         :width: 400px
         :align: center
+
+    >>> fig = bar(df['Num_Documents], prop_to=df['Colors', cmap='Blues')
+    >>> fig.savefig('sphinx/images/barplot2.png')
+
+    .. image:: images/barplot2.png
+        :width: 400px
+        :align: center
+
+    """
+    matplotlib.rc("font", size=fontsize)
+
+    if isinstance(column, int):
+        column = data.columns[column]
+
+    if isinstance(prop_to, int):
+        prop_to = data.columns[prop_to]
+
+    cmap = plt.cm.get_cmap(cmap)
+    color = data[prop_to] if prop_to is not None else data[column]
+    kwargs["color"] = [
+        cmap(0.1 + 0.90 * (v - min(color)) / (max(color) - min(color))) for v in color
+    ]
+
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    ax.bar(
+        x=range(len(data)),
+        height=data[column],
+        width=width,
+        bottom=bottom,
+        align=align,
+        edgecolor="k",
+        linewidth=0.5,
+        zorder=1,
+        **({}),
+        **kwargs,
+    )
+
+    x = data[data.columns[0]]
+    if x.dtype != "int64":
+        xticklabels = [textwrap.shorten(text=text, width=TEXTLEN) for text in x]
+    else:
+        xticklabels = x
+
+    ax.set_xticks(np.arange(len(data)))
+    ax.set_xticklabels(xticklabels)
+    ax.tick_params(axis="x", labelrotation=90)
+
+    ax.set_xlabel(data.columns[0])
+    ax.set_ylabel(column)
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_visible(True)
+    ax.grid(axis="y", color="gray", linestyle=":")
+
+    return fig
+
+
+def barh(
+    data,
+    column,
+    height=0.8,
+    left=None,
+    align="center",
+    prop_to=None,
+    cmap="Greys",
+    figsize=(10, 6),
+    fontsize=13,
+    **kwargs,
+):
+    """[summary]
+
+    Args:
+        data ([type]): [description]
+        column ([type]): [description]
+        height (float, optional): [description]. Defaults to 0.8.
+        left ([type], optional): [description]. Defaults to None.
+        align (str, optional): [description]. Defaults to "center".
+        prop_to ([type], optional): [description]. Defaults to None.
+        cmap (str, optional): [description]. Defaults to "Greys".
+        figsize (tuple, optional): [description]. Defaults to (10, 6).
+        fontsize (int, optional): [description]. Defaults to 10.
+
+    Returns:
+        [type]: [description]
+
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = pd.DataFrame(
+    ...     {
+    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
+    ...         "Num_Documents": [3, 2, 2, 1],
+    ...         "ID": list(range(4)),
+    ...     }
+    ... )
+    >>> x
+        Authors  Num_Documents  ID
+    0  author 3              3   0
+    1  author 1              2   1
+    2  author 0              2   2
+    3  author 2              1   3
+    >>> fig = barh(x, cmap='Blues')
+    >>> fig.savefig('sphinx/images/barhplot.png')
+
+    .. image:: images/barhplot.png
+        :width: 400px
+        :align: center
+
+    """
+    matplotlib.rc("font", size=fontsize)
+
+    if isinstance(column, int):
+        column = data.columns[column]
+
+    if isinstance(prop_to, int):
+        prop_to = data.columns[prop_to]
+
+    cmap = plt.cm.get_cmap(cmap)
+    color = data[prop_to] if prop_to is not None else data[column]
+    kwargs["color"] = [
+        cmap(0.1 + 0.90 * (v - min(color)) / (max(color) - min(color))) for v in color
+    ]
+
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    ax.barh(
+        y=range(len(data)),
+        width=data[column],
+        height=height,
+        left=left,
+        align=align,
+        edgecolor="k",
+        linewidth=0.5,
+        zorder=10,
+        **({}),
+        **kwargs,
+    )
+
+    y = data[data.columns[0]]
+
+    if y.dtype != "int64":
+        yticklabels = [textwrap.shorten(text=text, width=TEXTLEN) for text in y]
+    else:
+        yticklabels = y
+
+    ax.invert_yaxis()
+    ax.set_yticks(np.arange(len(data)))
+    ax.set_yticklabels(yticklabels)
+    ax.set_xlabel(column)
+    ax.set_ylabel(data.columns[0])
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(True)
+    ax.spines["bottom"].set_visible(False)
+
+    ax.grid(axis="x", color="gray", linestyle=":")
+
+    return fig
+
+
+def __bar(
+    x, width=0.8, bottom=None, align="center", cmap="Greys", figsize=(10, 6), **kwargs
+):
+    """Creates a bar plot from a dataframe.
 
 
     """
@@ -322,7 +521,9 @@ def bar_prop(
     return fig
 
 
-def barh(x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **kwargs):
+def __barh(
+    x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **kwargs
+):
     """Make a pie chart from a dataframe.
 
     Examples
@@ -685,7 +886,7 @@ def bubble(
     grid_lw=1.0,
     grid_c="gray",
     grid_ls=":",
-    **kwargs
+    **kwargs,
 ):
 
     """Creates a gant activity plot from a dataframe.
@@ -832,7 +1033,7 @@ def bubble_prop(
     grid_lw=1.0,
     grid_c="gray",
     grid_ls=":",
-    **kwargs
+    **kwargs,
 ):
 
     """Creates a gant activity plot from a dataframe.

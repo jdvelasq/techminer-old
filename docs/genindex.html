@@ -164,7 +164,6 @@
  | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
- | <a href="#N"><strong>N</strong></a>
  | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
@@ -207,11 +206,11 @@
       <li><a href="by_term.html#techminer.by_term.app">app() (in module techminer.by_term)</a>
 
       <ul>
-        <li><a href="by_term_per_year.html#techminer.by_term_per_year.app">(in module techminer.by_term_per_year)</a>
-</li>
         <li><a href="by_year.html#techminer.by_year.app">(in module techminer.by_year)</a>
 </li>
         <li><a href="co_occurrence.html#techminer.co_occurrence.app">(in module techminer.co_occurrence)</a>
+</li>
+        <li><a href="correlation.html#techminer.correlation.app">(in module techminer.correlation)</a>
 </li>
       </ul></li>
       <li><a href="thesaurus.html#techminer.thesaurus.Thesaurus.apply">apply() (techminer.thesaurus.Thesaurus method)</a>
@@ -226,11 +225,17 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="plots.html#techminer.plots.bar">bar() (in module techminer.plots)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="plots.html#techminer.plots.bar_prop">bar_prop() (in module techminer.plots)</a>
+</li>
       <li><a href="plots.html#techminer.plots.barh">barh() (in module techminer.plots)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="plots.html#techminer.plots.barh_prop">barh_prop() (in module techminer.plots)</a>
+</li>
       <li><a href="plots.html#techminer.plots.bubble">bubble() (in module techminer.plots)</a>
+</li>
+      <li><a href="plots.html#techminer.plots.bubble_prop">bubble_prop() (in module techminer.plots)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -244,15 +249,9 @@
 </li>
       <li><a href="chord_diagram.html#techminer.chord_diagram.ChordDiagram">ChordDiagram (class in techminer.chord_diagram)</a>
 </li>
-      <li><a href="by_term.html#techminer.by_term.citations_by_term">citations_by_term() (in module techminer.by_term)</a>
-</li>
-      <li><a href="by_term_per_year.html#techminer.by_term_per_year.citations_by_term_per_year">citations_by_term_per_year() (in module techminer.by_term_per_year)</a>
-</li>
-      <li><a href="by_year.html#techminer.by_year.citations_by_year">citations_by_year() (in module techminer.by_year)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="co_occurrence.html#techminer.co_occurrence.co_occurrence">co_occurrence() (in module techminer.co_occurrence)</a>
+</li>
+      <li><a href="co_occurrence.html#techminer.co_occurrence.co_occurrence_map">co_occurrence_map() (in module techminer.co_occurrence)</a>
 </li>
       <li><a href="keywords.html#techminer.keywords.Keywords.compile">compile() (techminer.keywords.Keywords method)</a>
 
@@ -260,7 +259,15 @@
         <li><a href="thesaurus.html#techminer.thesaurus.Thesaurus.compile">(techminer.thesaurus.Thesaurus method)</a>
 </li>
       </ul></li>
-      <li><a href="co_occurrence.html#techminer.co_occurrence.compute_tfm">compute_tfm() (in module techminer.co_occurrence)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="thesaurus.html#techminer.thesaurus.Thesaurus.compile_as_dict">compile_as_dict() (techminer.thesaurus.Thesaurus method)</a>
+</li>
+      <li><a href="correlation.html#techminer.correlation.corr">corr() (in module techminer.correlation)</a>
+</li>
+      <li><a href="correlation.html#techminer.correlation.correlation_map">correlation_map() (in module techminer.correlation)</a>
+</li>
+      <li><a href="co_occurrence.html#techminer.co_occurrence.correspondence_matrix">correspondence_matrix() (in module techminer.co_occurrence)</a>
 </li>
       <li><a href="data.html#techminer.data.count_terms">count_terms() (in module techminer.data)</a>
 </li>
@@ -274,13 +281,9 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="data.html#techminer.data.descriptive_stats">descriptive_stats() (in module techminer.data)</a>
 </li>
-      <li><a href="by_term.html#techminer.by_term.documents_by_term">documents_by_term() (in module techminer.by_term)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="by_term_per_year.html#techminer.by_term_per_year.documents_by_term_per_year">documents_by_term_per_year() (in module techminer.by_term_per_year)</a>
-</li>
-      <li><a href="by_year.html#techminer.by_year.documents_by_year">documents_by_year() (in module techminer.by_year)</a>
+      <li><a href="co_occurrence.html#techminer.co_occurrence.document_term_matrix">document_term_matrix() (in module techminer.co_occurrence)</a>
 </li>
       <li><a href="maps.html#techminer.maps.Map.draw_network_labels">draw_network_labels() (techminer.maps.Map method)</a>
 </li>
@@ -312,6 +315,8 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="co_occurrence.html#techminer.co_occurrence.filter_index">filter_index() (in module techminer.co_occurrence)</a>
+</li>
       <li><a href="thesaurus.html#techminer.thesaurus.Thesaurus.find_and_replace">find_and_replace() (techminer.thesaurus.Thesaurus method)</a>
 </li>
   </ul></td>
@@ -326,19 +331,15 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="by_term_per_year.html#techminer.by_term_per_year.gant">gant() (in module techminer.by_term_per_year)</a>
-
-      <ul>
-        <li><a href="plots.html#techminer.plots.gant">(in module techminer.plots)</a>
+      <li><a href="plots.html#techminer.plots.gant">gant() (in module techminer.plots)</a>
 </li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="chord_diagram.html#techminer.chord_diagram.ChordDiagram.get_edge_data">get_edge_data() (techminer.chord_diagram.ChordDiagram method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="chord_diagram.html#techminer.chord_diagram.ChordDiagram.get_node_data">get_node_data() (techminer.chord_diagram.ChordDiagram method)</a>
 </li>
-      <li><a href="by_term_per_year.html#techminer.by_term_per_year.growth_indicators">growth_indicators() (in module techminer.by_term_per_year)</a>
+      <li><a href="by_term.html#techminer.by_term.get_top_by">get_top_by() (in module techminer.by_term)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -410,22 +411,6 @@
 </li>
       </ul></li>
   </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="co_occurrence.html#techminer.co_occurrence.most_cited_by">most_cited_by() (in module techminer.co_occurrence)</a>
-</li>
-      <li><a href="by_term.html#techminer.by_term.most_cited_documents">most_cited_documents() (in module techminer.by_term)</a>
-</li>
-      <li><a href="co_occurrence.html#techminer.co_occurrence.most_frequent">most_frequent() (in module techminer.co_occurrence)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="N">N</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="co_occurrence.html#techminer.co_occurrence.normalize_matrix">normalize_matrix() (in module techminer.co_occurrence)</a>
-</li>
-  </ul></td>
 </tr></table>
 
 <h2 id="O">O</h2>
@@ -445,11 +430,9 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="by_term_per_year.html#techminer.by_term_per_year.perc_citations_by_term_per_year">perc_citations_by_term_per_year() (in module techminer.by_term_per_year)</a>
-</li>
-      <li><a href="by_term_per_year.html#techminer.by_term_per_year.perc_documents_by_term_per_year">perc_documents_by_term_per_year() (in module techminer.by_term_per_year)</a>
-</li>
       <li><a href="plots.html#techminer.plots.pie">pie() (in module techminer.plots)</a>
+</li>
+      <li><a href="plots.html#techminer.plots.pie_prop">pie_prop() (in module techminer.plots)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -467,10 +450,12 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="text.html#techminer.text.remove_accents">remove_accents() (in module techminer.text)</a>
+      <li><a href="thesaurus.html#techminer.thesaurus.read_textfile">read_textfile() (in module techminer.thesaurus)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="text.html#techminer.text.remove_accents">remove_accents() (in module techminer.text)</a>
+</li>
       <li><a href="keywords.html#techminer.keywords.Keywords.remove_from_text">remove_from_text() (techminer.keywords.Keywords method)</a>
 </li>
   </ul></td>
@@ -479,6 +464,8 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="co_occurrence.html#techminer.co_occurrence.slope_chart">slope_chart() (in module techminer.co_occurrence)</a>
+</li>
       <li><a href="plots.html#techminer.plots.stacked_bar">stacked_bar() (in module techminer.plots)</a>
 </li>
       <li><a href="plots.html#techminer.plots.stacked_barh">stacked_barh() (in module techminer.plots)</a>
@@ -495,11 +482,13 @@
 </li>
       <li><a href="text.html#techminer.text.stemmer_snowball">stemmer_snowball() (in module techminer.text)</a>
 </li>
+      <li><a href="text.html#techminer.text.stemming_AND">stemming_AND() (in module techminer.text)</a>
+</li>
+      <li><a href="text.html#techminer.text.stemming_OR">stemming_OR() (in module techminer.text)</a>
+</li>
+      <li><a href="by_year.html#techminer.by_year.summary">summary() (in module techminer.by_year)</a>
+</li>
       <li><a href="by_term.html#techminer.by_term.summary_by_term">summary_by_term() (in module techminer.by_term)</a>
-</li>
-      <li><a href="by_term_per_year.html#techminer.by_term_per_year.summary_by_term_per_year">summary_by_term_per_year() (in module techminer.by_term_per_year)</a>
-</li>
-      <li><a href="by_year.html#techminer.by_year.summary_by_year">summary_by_year() (in module techminer.by_year)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -607,6 +596,8 @@
       <li><a href="thesaurus.html#techminer.thesaurus.Thesaurus.thesaurus">thesaurus() (techminer.thesaurus.Thesaurus property)</a>
 </li>
       <li><a href="thesaurus.html#techminer.thesaurus.Thesaurus.to_dict">to_dict() (techminer.thesaurus.Thesaurus method)</a>
+</li>
+      <li><a href="thesaurus.html#techminer.thesaurus.Thesaurus.to_textfile">to_textfile() (techminer.thesaurus.Thesaurus method)</a>
 </li>
       <li><a href="keywords.html#techminer.keywords.Keywords.tolist">tolist() (techminer.keywords.Keywords method)</a>
 </li>

@@ -90,8 +90,8 @@
 <li class="toctree-l2"><a class="reference internal" href="data.html">Data Importation and Manipulation Functions</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Analysis by Year</a></li>
 <li class="toctree-l2"><a class="reference internal" href="by_term.html">Analysis by Term</a></li>
-<li class="toctree-l2"><a class="reference internal" href="by_term_per_year.html">Analysis by Term per Year</a></li>
 <li class="toctree-l2"><a class="reference internal" href="co_occurrence.html">Co-occurrence Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="correlation.html">Correlation Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="text.html">Text manipulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="keywords.html">Keywords manipulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="thesaurus.html">Thesaurus</a></li>
@@ -197,89 +197,122 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="techminer.by_year.citations_by_year">
-<code class="sig-prename descclassname">techminer.by_year.</code><code class="sig-name descname">citations_by_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">cumulative</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/by_year.html#citations_by_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.by_year.citations_by_year" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the number of citations by year.
-This function adds the missing years in the sequence.</p>
+<dt id="techminer.by_year.summary">
+<code class="sig-prename descclassname">techminer.by_year.</code><code class="sig-name descname">summary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">output</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">plot</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">cmap</span><span class="o">=</span><span class="default_value">'Greys'</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">10, 4</span></em>, <em class="sig-param"><span class="n">fontsize</span><span class="o">=</span><span class="default_value">12</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/by_year.html#summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.by_year.summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes analysis by year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>cumulative</strong> (<em>bool</em>) – cumulate values per year.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>pandas.DataFrame</em>) – A bibliographic dataframe.</p></li>
+<li><p><strong>output</strong> (<em>int</em><em>, </em><em>optional</em>) – <p>[description]. Defaults to 0.</p>
+<ul>
+<li><p>0– Summary dataframe.</p></li>
+<li><p>1– Num Documents by year plot.</p></li>
+<li><p>2– Times Cited by year plot.</p></li>
+<li><p>3– Cum Num Documents by year plot.</p></li>
+<li><p>4– Cum Times Cited by year plot.</p></li>
+<li><p>5– Avg Times Cited by year plot.</p></li>
+</ul>
+</p></li>
+<li><p><strong>plot</strong> (<em>int</em><em>, </em><em>optional</em>) – <p>Plot type. Defaults to 0.</p>
+<ul>
+<li><p>0– Bar plot.</p></li>
+<li><p>1– Horizontal bar plot.</p></li>
+</ul>
+</p></li>
+<li><p><strong>cmap</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – Colormap name. Defaults to ‘Grays’.</p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – figsize parameter for plots. Defaults to (10, 4).</p></li>
+<li><p><strong>fontsize</strong> (<em>int</em>) – Plot font size.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>DataFrame.</p>
+<dd class="field-even"><p>Summary table or plot.</p>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="techminer.by_year.documents_by_year">
-<code class="sig-prename descclassname">techminer.by_year.</code><code class="sig-name descname">documents_by_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">cumulative</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/by_year.html#documents_by_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.by_year.documents_by_year" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the number of documents per year.
-This function adds the missing years in the sequence.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>cumulative</strong> (<em>bool</em>) – cumulate values per year.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>DataFrame.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="techminer.by_year.summary_by_year">
-<code class="sig-prename descclassname">techminer.by_year.</code><code class="sig-name descname">summary_by_year</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/by_year.html#summary_by_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.by_year.summary_by_year" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the number of document and the number of total citations per year.
-This funciton adds the missing years in the sequence.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>df</strong> (<em>pandas.DataFrame</em>) – bibliographic dataframe.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pandas.DataFrame.</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[pandas.DataFrame or matplotlib.figure.Figure]</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">{</span>
 <span class="gp">... </span>         <span class="s2">&quot;Year&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2010</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2011</span><span class="p">,</span> <span class="mi">2012</span><span class="p">,</span> <span class="mi">2016</span><span class="p">],</span>
-<span class="gp">... </span>         <span class="s2">&quot;Cited_by&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">)),</span>
+<span class="gp">... </span>         <span class="s2">&quot;Times_Cited&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">)),</span>
 <span class="gp">... </span>         <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)),</span>
 <span class="gp">... </span>    <span class="p">}</span>
 <span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
-<span class="go">   Year  Cited_by  ID</span>
-<span class="go">0  2010        10   0</span>
-<span class="go">1  2010        11   1</span>
-<span class="go">2  2011        12   2</span>
-<span class="go">3  2011        13   3</span>
-<span class="go">4  2012        14   4</span>
-<span class="go">5  2016        15   5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span>
+<span class="go">   Year  Times_Cited  ID</span>
+<span class="go">0  2010           10   0</span>
+<span class="go">1  2010           11   1</span>
+<span class="go">2  2011           12   2</span>
+<span class="go">3  2011           13   3</span>
+<span class="go">4  2012           14   4</span>
+<span class="go">5  2016           15   5</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">summary_by_year</span><span class="p">(</span><span class="n">df</span><span class="p">)[[</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span> <span class="s1">&#39;Cited_by&#39;</span><span class="p">,</span> <span class="s1">&#39;Num_Documents&#39;</span><span class="p">,</span> <span class="s1">&#39;ID&#39;</span><span class="p">]]</span>
-<span class="go">   Year  Cited_by  Num_Documents      ID</span>
-<span class="go">0  2010        21              2  [0, 1]</span>
-<span class="go">1  2011        25              2  [2, 3]</span>
-<span class="go">2  2012        14              1     [4]</span>
-<span class="go">3  2013         0              0      []</span>
-<span class="go">4  2014         0              0      []</span>
-<span class="go">5  2015         0              0      []</span>
-<span class="go">6  2016        15              1     [5]</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">summary</span><span class="p">(</span><span class="n">data</span><span class="p">)[[</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s1">&#39;Num_Documents&#39;</span><span class="p">,</span> <span class="s1">&#39;ID&#39;</span><span class="p">]]</span>
+<span class="go">   Year  Times_Cited  Num_Documents      ID</span>
+<span class="go">0  2010           21              2  [0, 1]</span>
+<span class="go">1  2011           25              2  [2, 3]</span>
+<span class="go">2  2012           14              1     [4]</span>
+<span class="go">3  2013            0              0      []</span>
+<span class="go">4  2014            0              0      []</span>
+<span class="go">5  2015            0              0      []</span>
+<span class="go">6  2016           15              1     [5]</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">summary_by_year</span><span class="p">(</span><span class="n">df</span><span class="p">)[[</span><span class="s1">&#39;Cum_Num_Documents&#39;</span><span class="p">,</span> <span class="s1">&#39;Cum_Cited_by&#39;</span><span class="p">,</span> <span class="s1">&#39;Avg_Cited_by&#39;</span><span class="p">]]</span>
-<span class="go">   Cum_Num_Documents  Cum_Cited_by  Avg_Cited_by</span>
-<span class="go">0                  2            21          10.5</span>
-<span class="go">1                  4            46          12.5</span>
-<span class="go">2                  5            60          14.0</span>
-<span class="go">3                  5            60           0.0</span>
-<span class="go">4                  5            60           0.0</span>
-<span class="go">5                  5            60           0.0</span>
-<span class="go">6                  6            75          15.0</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">summary</span><span class="p">(</span><span class="n">data</span><span class="p">)[[</span><span class="s1">&#39;Cum_Num_Documents&#39;</span><span class="p">,</span> <span class="s1">&#39;Cum_Times_Cited&#39;</span><span class="p">,</span> <span class="s1">&#39;Avg_Times_Cited&#39;</span><span class="p">]]</span>
+<span class="go">   Cum_Num_Documents  Cum_Times_Cited  Avg_Times_Cited</span>
+<span class="go">0                  2               21             10.5</span>
+<span class="go">1                  4               46             12.5</span>
+<span class="go">2                  5               60             14.0</span>
+<span class="go">3                  5               60              0.0</span>
+<span class="go">4                  5               60              0.0</span>
+<span class="go">5                  5               60              0.0</span>
+<span class="go">6                  6               75             15.0</span>
 </pre></div>
 </div>
+<ul class="simple">
+<li><p>1– Num Documents by year plot.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">summary</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sphinx/images/by-year-summary-1-barplot.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/by-year-summary-1-barplot.png"><img alt="_images/by-year-summary-1-barplot.png" class="align-center" src="_images/by-year-summary-1-barplot.png" style="width: 700px;" /></a>
+<ul class="simple">
+<li><p>2– Times Cited by year plot.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">summary</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sphinx/images/by-year-summary-2-barplot.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/by-year-summary-2-barplot.png"><img alt="_images/by-year-summary-2-barplot.png" class="align-center" src="_images/by-year-summary-2-barplot.png" style="width: 700px;" /></a>
+<ul class="simple">
+<li><p>3– Cum Num Documents by year plot.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">summary</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sphinx/images/by-year-summary-3-barplot.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/by-year-summary-3-barplot.png"><img alt="_images/by-year-summary-3-barplot.png" class="align-center" src="_images/by-year-summary-3-barplot.png" style="width: 700px;" /></a>
+<ul class="simple">
+<li><p>4– Cum Times Cited by year plot.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">summary</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sphinx/images/by-year-summary-4-barplot.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/by-year-summary-4-barplot.png"><img alt="_images/by-year-summary-4-barplot.png" class="align-center" src="_images/by-year-summary-4-barplot.png" style="width: 700px;" /></a>
+<ul class="simple">
+<li><p>5– Avg Times Cited by year plot.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">summary</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sphinx/images/by-year-summary-5-barplot.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/by-year-summary-5-barplot.png"><img alt="_images/by-year-summary-5-barplot.png" class="align-center" src="_images/by-year-summary-5-barplot.png" style="width: 700px;" /></a>
 </dd></dl>
 
 </div>

@@ -1,4 +1,3 @@
-
 """
 Data Importation and Manipulation Functions
 ==================================================================================================
@@ -23,9 +22,9 @@ from techminer.params import EXCLUDE_COLS, MULTIVALUED_COLS
 from techminer.text import remove_accents
 from techminer.thesaurus import text_clustering
 
-# from IPython.display import HTML, clear_output, display
+#  from IPython.display import HTML, clear_output, display
 # from ipywidgets import AppLayout, Layout
-# from techminer.explode import MULTIVALUED_COLS, __explode
+#  from techminer.explode import MULTIVALUED_COLS, __explode
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -37,7 +36,6 @@ logging.basicConfig(
 ##  Data importation
 ##
 ##
-
 
 
 def __disambiguate_authors(x):
@@ -135,13 +133,15 @@ def __MAP(x, column, f):
     """
     x = x.copy()
     if column in MULTIVALUED_COLS:
-        z = x[column].map(lambda w: w.split(';') if not pd.isna(w) else w)
+        z = x[column].map(lambda w: w.split(";") if not pd.isna(w) else w)
         z = z.map(lambda w: [f(z) for z in w] if isinstance(w, list) else w)
-        z = z.map(lambda w: [z for z in w if not pd.isna(z)] if isinstance(w, list) else w)
-        z = z.map(lambda w: ';'.join(w) if isinstance(w, list) else w)
+        z = z.map(
+            lambda w: [z for z in w if not pd.isna(z)] if isinstance(w, list) else w
+        )
+        z = z.map(lambda w: ";".join(w) if isinstance(w, list) else w)
         return z
     return x[column].map(lambda w: f(w))
-    
+
 
 def __extract_country(x):
     """Extracts country name from a string,
@@ -160,7 +160,7 @@ def __extract_country(x):
 
     >>> __extract_country('Russian Federation')
     'Russia'
-    
+
     >>> __extract_country('xxx')
     <NA>
 
@@ -177,7 +177,7 @@ def __extract_country(x):
     with open(join(module_path, "data/worldmap.data"), "r") as f:
         countries = json.load(f)
     country_names = list(countries.keys())
-    
+
     # paises faltantes
     country_names.append("Singapore")
     country_names.append("Malta")
@@ -198,15 +198,15 @@ def __extract_country(x):
     x = re.sub("macau", "china", x)
     x = re.sub("macao", "china", x)
     #
-    for z in reversed(x.split(',')):
+    for z in reversed(x.split(",")):
         z = z.strip()
         if z.lower() in country_names.keys():
             return country_names[z.lower()]
         # descarta espaciado
         z = z.lower()
-        z = z.split(' ')
+        z = z.split(" ")
         z = [w.strip() for w in z]
-        z = ' '.join(z)
+        z = " ".join(z)
         if z.lower() in country_names.keys():
             return country_names[z.lower()]
     return pd.NA
@@ -215,6 +215,7 @@ def __extract_country(x):
 def __extract_institution(x):
     """
     """
+
     def search_name(affiliation):
         if len(affiliation.split(",")) == 1:
             return x.strip()
@@ -264,68 +265,71 @@ def __extract_institution(x):
     return institution
 
 
-
 def __NLP(text):
     """Extracts words  and 2-grams from phrases.
     """
-    
+
     def obtain_n_grams(x, n):
         from nltk.corpus import stopwords
-        stopwords = stopwords.words('english')
-        if len(x.split()) < n+1:
+
+        stopwords = stopwords.words("english")
+        if len(x.split()) < n + 1:
             return [x.strip()]
         words = x.split()
-        text = [words[index:index+n] for index in range(len(words) - n +1)]
-        text = [phrase for phrase in text if not any([word in stopwords for word in phrase])]
-        text = [ [word for word in phrase if not word.isdigit()] for phrase in text]
+        text = [words[index : index + n] for index in range(len(words) - n + 1)]
+        text = [
+            phrase for phrase in text if not any([word in stopwords for word in phrase])
+        ]
+        text = [[word for word in phrase if not word.isdigit()] for phrase in text]
         lem = WordNetLemmatizer()
         text = [[lem.lemmatize(word) for word in phrase] for phrase in text]
-        text = [[word for word in phrase if word != ''] for phrase in text]
-        text = [' '.join(phrase)  for phrase in text if len(phrase)]
+        text = [[word for word in phrase if word != ""] for phrase in text]
+        text = [" ".join(phrase) for phrase in text if len(phrase)]
         return text
 
-        
     from nltk.corpus import stopwords
- 
-    stopwords = stopwords.words('english')
+
+    stopwords = stopwords.words("english")
 
     nlp_result = []
 
     text = text.lower()
-    text = text.split('.')
-    text = [word for phrase in text for word in phrase.split(';')]
-    text = [word for phrase in text for word in phrase.split(',')]
-    text = [phrase.translate(str.maketrans('', '', string.punctuation)) for phrase in text]
-    
+    text = text.split(".")
+    text = [word for phrase in text for word in phrase.split(";")]
+    text = [word for phrase in text for word in phrase.split(",")]
+    text = [
+        phrase.translate(str.maketrans("", "", string.punctuation)) for phrase in text
+    ]
+
     two_grams = [obtain_n_grams(phrase, 2) for phrase in text]
     two_grams = [word for phrase in two_grams for word in phrase]
-    two_grams = [phrase  for phrase in two_grams if phrase != '']
-    
+    two_grams = [phrase for phrase in two_grams if phrase != ""]
+
     three_grams = [obtain_n_grams(phrase, 3) for phrase in text]
     three_grams = [word for phrase in three_grams for word in phrase]
-    three_grams = [phrase  for phrase in three_grams if phrase != '']
+    three_grams = [phrase for phrase in three_grams if phrase != ""]
     three_grams = sorted(set(three_grams))
-    
+
     text = [word for phrase in text for word in phrase.split() if not word.isdigit()]
     text = [word for word in text if word not in stopwords]
-    text = [word for word in text if word != '']
-    
+    text = [word for word in text if word != ""]
+
     ###
     text = sorted(set(text + two_grams + three_grams))
     text = [w.split() for w in text]
     text = [nltk.pos_tag(w) for w in text]
-    tags = [ ' '.join([t for _, t in v]) for v in text]
-    text = [ ' '.join([t for t, _ in v]) for v in text]
-    text = [t for k, t in zip(tags, text) if k in ['NN', 'JJ NN', 'NN NN', 'NNS', 'NN NNS', 'JJ NNS', 'NN NNS',]] 
+    tags = [" ".join([t for _, t in v]) for v in text]
+    text = [" ".join([t for t, _ in v]) for v in text]
+    text = [
+        t
+        for k, t in zip(tags, text)
+        if k in ["NN", "JJ NN", "NN NN", "NNS", "NN NNS", "JJ NNS", "NN NNS",]
+    ]
     ###
 
-    #lem = WordNetLemmatizer()
+    # lem = WordNetLemmatizer()
     # text = sorted(set([lem.lemmatize(word) for word in text]))
-    return ';'.join(sorted(set(text)))
-
-    
-
-
+    return ";".join(sorted(set(text)))
 
 
 def load_scopus(x):
@@ -335,7 +339,6 @@ def load_scopus(x):
     logging.basicConfig(
         level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
     )
-
 
     scopus2tags = {
         "Abbreviated Source Title": "Abb_Source_Title",
@@ -357,7 +360,7 @@ def load_scopus(x):
         "Index Keywords": "Index_Keywords",
         "ISBN": "ISBN",
         "ISSN": "ISSN",
-        "Issue": 'Issue',
+        "Issue": "Issue",
         "Language of Original Document": "Language_of_Original_Document",
         "Link": "Link",
         "Page count": "Page_count",
@@ -374,14 +377,14 @@ def load_scopus(x):
     }
 
     x = x.copy()
-    logging.info("Renaming and selecting columns ...")    
+    logging.info("Renaming and selecting columns ...")
     x = x.rename(columns=scopus2tags)
-    
+
     logging.info("Removing accents ...")
     x = x.applymap(lambda w: remove_accents(w) if isinstance(w, str) else w)
-    
+
     if "Authors" in x.columns:
-    
+
         logging.info('Removing  "[No author name available]" ...')
         x["Authors"] = x.Authors.map(
             lambda w: pd.NA if w == "[No author name available]" else w
@@ -391,21 +394,21 @@ def load_scopus(x):
         x["Authors"] = x.Authors.map(
             lambda w: w.replace(",", ";").replace(".", "") if pd.isna(w) is False else w
         )
-    
+
         logging.info("Counting number of authors per document...")
         x["Num_Authors"] = x.Authors.map(
             lambda w: len(w.split(";")) if not pd.isna(w) else 0
-        )        
+        )
 
     if "Authors_ID" in x.columns:
         x["Authors_ID"] = x.Authors_ID.map(
             lambda w: pd.NA if w == "[No author id available]" else w
         )
-    
+
     if "Authors" in x.columns and "Authors_ID" in x.columns:
         logging.info("Disambiguate author names ...")
         x = __disambiguate_authors(x)
-    
+
     if "Title" in x.columns:
         logging.info("Removing part of titles in foreing languages ...")
         x["Title"] = x.Title.map(
@@ -417,58 +420,75 @@ def load_scopus(x):
         x["Countries"] = __MAP(x, "Affiliations", __extract_country)
 
         logging.info("Extracting country of first author ...")
-        x["Country_1st_Author"] = x.Countries.map(lambda w: w.split(';')[0] if isinstance(w, str) else w)
+        x["Country_1st_Author"] = x.Countries.map(
+            lambda w: w.split(";")[0] if isinstance(w, str) else w
+        )
 
         logging.info("Extracting institutions from affiliations ...")
         x["Institutions"] = __MAP(x, "Affiliations", __extract_institution)
-        
+
         logging.info("Extracting institution of first author ...")
-        x["Institution_1st_Author"] = x.Institutions.map(lambda w: w.split(';')[0] if isinstance(w, str) else w)
+        x["Institution_1st_Author"] = x.Institutions.map(
+            lambda w: w.split(";")[0] if isinstance(w, str) else w
+        )
 
         logging.info("Reducing list of countries ...")
-        x["Countries"] = x.Countries.map(lambda w: ';'.join(set(w.split(';'))) if isinstance(w, str) else w)
+        x["Countries"] = x.Countries.map(
+            lambda w: ";".join(set(w.split(";"))) if isinstance(w, str) else w
+        )
 
     if "Author_Keywords" in x.columns:
         logging.info("Transforming Author Keywords to lower case ...")
-        x['Author_Keywords'] = x.Author_Keywords.map(lambda w: w.lower() if not pd.isna(w) else w)
-        x['Author_Keywords'] = x.Author_Keywords.map(lambda w: ';'.join([z.strip() for z in w.split(';')]) if not pd.isna(w) else w)
+        x["Author_Keywords"] = x.Author_Keywords.map(
+            lambda w: w.lower() if not pd.isna(w) else w
+        )
+        x["Author_Keywords"] = x.Author_Keywords.map(
+            lambda w: ";".join([z.strip() for z in w.split(";")])
+            if not pd.isna(w)
+            else w
+        )
 
     if "Index_Keywords" in x.columns:
         logging.info("Transforming Index Keywords to lower case ...")
-        x['Index_Keywords'] = x.Index_Keywords.map(lambda w: w.lower() if not pd.isna(w) else w)
-        x['Index_Keywords'] = x.Index_Keywords.map(lambda w: ';'.join([z.strip() for z in w.split(';')]) if not pd.isna(w) else w)
+        x["Index_Keywords"] = x.Index_Keywords.map(
+            lambda w: w.lower() if not pd.isna(w) else w
+        )
+        x["Index_Keywords"] = x.Index_Keywords.map(
+            lambda w: ";".join([z.strip() for z in w.split(";")])
+            if not pd.isna(w)
+            else w
+        )
 
-    
     if "Abstract" in x.columns:
 
-        x.Abstract = x.Abstract.map(lambda w: w[0:w.find('\u00a9')] if not pd.isna(w) else w)
-        
+        x.Abstract = x.Abstract.map(
+            lambda w: w[0 : w.find("\u00a9")] if not pd.isna(w) else w
+        )
+
         logging.info("Extracting Abstract words ...")
         x["Abstract_words"] = __MAP(x, "Abstract", __NLP)
         # logging.info("Clustering Abstract Keywords ...")
-        # thesaurus = text_clustering(x.Abstract_CL, transformer=lambda u: u.lower())
-        # logging.info("Cleaning Abstract Keywords ...")
-        # thesaurus = thesaurus.compile()
+        #  thesaurus = text_clustering(x.Abstract_CL, transformer=lambda u: u.lower())
+        #  logging.info("Cleaning Abstract Keywords ...")
+        #  thesaurus = thesaurus.compile()
         # x["Abstract_CL"] = __MAP(x, "Abstract_CL", thesaurus.apply)
 
     if "Title" in x.columns:
         logging.info("Extracting Title words ...")
         x["Title_words"] = __MAP(x, "Title", __NLP)
         # logging.info("Clustering Title Keywords ...")
-        # thesaurus = text_clustering(x.Title_CL, transformer=lambda u: u.lower())
-        # logging.info("Cleaning Title Keywords ...")
-        # thesaurus = thesaurus.compile()
-        # x["Title_CL"] = __MAP(x, "Title_CL", thesaurus.apply)
-
+        #  thesaurus = text_clustering(x.Title_CL, transformer=lambda u: u.lower())
+        #  logging.info("Cleaning Title Keywords ...")
+        #  thesaurus = thesaurus.compile()
+        #  x["Title_CL"] = __MAP(x, "Title_CL", thesaurus.apply)
 
     x["ID"] = range(len(x))
 
     x = x.applymap(lambda w: pd.NA if isinstance(w, str) and w == "" else w)
 
-    logging.getLogger().disabled = True 
+    logging.getLogger().disabled = True
 
     return x
-
 
 
 ##
@@ -476,6 +496,7 @@ def load_scopus(x):
 ## Term extraction and count
 ##
 ##
+
 
 def extract_terms(x, column):
     """Extracts unique terms in a column, exploding multvalued columns.
@@ -506,7 +527,9 @@ def extract_terms(x, column):
 
     """
     x = x.copy()
-    x[column] = x[column].map(lambda w: w.split(";") if not pd.isna(w) and isinstance(w, str) else w)
+    x[column] = x[column].map(
+        lambda w: w.split(";") if not pd.isna(w) and isinstance(w, str) else w
+    )
     x = x.explode(column)
     x[column] = x[column].map(lambda w: w.strip() if isinstance(w, str) else w)
     x = pd.unique(x[column].dropna())
@@ -541,7 +564,6 @@ def count_terms(x, column):
 
     """
     return len(extract_terms(x, column))
-
 
 
 ##
@@ -652,7 +674,7 @@ def descriptive_stats(x):
     for column in x.columns:
         if column in EXCLUDE_COLS:
             continue
-        if column != 'Year':
+        if column != "Year":
             y[column] = count_terms(x, column)
         if column == "Year":
             y["Years"] = str(min(x.Year)) + "-" + str(max(x.Year))
@@ -661,8 +683,10 @@ def descriptive_stats(x):
             Pn = len(x.Year[x.Year == max(x.Year)])
             cagr = str(round(100 * (np.power(Pn / Po, 1 / n) - 1), 2)) + " %"
             y["Compound annual growth rate"] = cagr
-        if  column == "Times_Cited":
-            y["Average citations per document"] = "{:4.2f}".format(x["Times_Cited"].mean())
+        if column == "Times_Cited":
+            y["Average citations per document"] = "{:4.2f}".format(
+                x["Times_Cited"].mean()
+            )
         if column == "Authors":
             y["Documents per author"] = round(len(x) / count_terms(x, "Authors"), 2)
             y["Authors per document"] = round(count_terms(x, "Authors") / len(x), 2)
@@ -678,8 +702,6 @@ def descriptive_stats(x):
     d = [key for key in y.keys()]
     v = [y[key] for key in y.keys()]
     return pd.DataFrame(v, columns=["value"], index=d)
-
-
 
 
 #     def keywords_completation(self):
@@ -707,10 +729,6 @@ def descriptive_stats(x):
 #         cp.loc[idx, "Keywords"] = keywords[idx]
 
 #         return DataFrame(cp)
-
-
-
-
 
 
 #

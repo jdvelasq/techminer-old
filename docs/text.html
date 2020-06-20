@@ -37,7 +37,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Keywords manipulation" href="keywords.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="correlation.html" /> 
+    <link rel="prev" title="Correlation Analysis" href="correlation.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -90,8 +90,8 @@
 <li class="toctree-l2"><a class="reference internal" href="data.html">Data Importation and Manipulation Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="by_year.html">Analysis by Year</a></li>
 <li class="toctree-l2"><a class="reference internal" href="by_term.html">Analysis by Term</a></li>
-<li class="toctree-l2"><a class="reference internal" href="by_term_per_year.html">Analysis by Term per Year</a></li>
 <li class="toctree-l2"><a class="reference internal" href="co_occurrence.html">Co-occurrence Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="correlation.html">Correlation Analysis</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Text manipulation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#functions-in-this-module">Functions in this module</a></li>
 </ul>
@@ -276,7 +276,7 @@
 
 <dl class="py function">
 <dt id="techminer.text.steamming">
-<code class="sig-prename descclassname">techminer.text.</code><code class="sig-name descname">steamming</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/text.html#steamming"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.text.steamming" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">techminer.text.</code><code class="sig-name descname">steamming</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pattern</span></em>, <em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">stemmer</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/text.html#steamming"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.text.steamming" title="Permalink to this definition">¶</a></dt>
 <dd><p class="rubric">Examples</p>
 </dd></dl>
 
@@ -335,6 +335,40 @@
 </dd></dl>
 
 <dl class="py function">
+<dt id="techminer.text.stemming_AND">
+<code class="sig-prename descclassname">techminer.text.</code><code class="sig-name descname">stemming_AND</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">patterns</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">stemmer</span><span class="o">=</span><span class="default_value">'porter'</span></em>, <em class="sig-param"><span class="n">explode</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/text.html#stemming_AND"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.text.stemming_AND" title="Permalink to this definition">¶</a></dt>
+<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>   <span class="s1">&#39;Computer vision&#39;</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="s1">&#39;Computer simulation&#39;</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="s1">&#39;computer theory&#39;</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="s1">&#39;control systems&#39;</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="s1">&#39;Computer control systems&#39;</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="s1">&#39;hardware&#39;</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stemming_AND</span><span class="p">(</span><span class="s1">&#39;control systems&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="go">[&#39;Computer control systems&#39;, &#39;control systems&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.text.stemming_OR">
+<code class="sig-prename descclassname">techminer.text.</code><code class="sig-name descname">stemming_OR</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">patterns</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">stemmer</span><span class="o">=</span><span class="default_value">'porter'</span></em>, <em class="sig-param"><span class="n">explode</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/text.html#stemming_OR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.text.stemming_OR" title="Permalink to this definition">¶</a></dt>
+<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>   <span class="s1">&#39;Computer vision&#39;</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="s1">&#39;Computer simulation&#39;</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="s1">&#39;computer theory&#39;</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="s1">&#39;control systems&#39;</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="s1">&#39;Computer control systems&#39;</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="s1">&#39;hardware&#39;</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stemming_OR</span><span class="p">(</span><span class="s1">&#39;computer software&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="go">[&#39;Computer control systems&#39;, &#39;Computer simulation&#39;, &#39;Computer vision&#39;, &#39;computer theory&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt id="techminer.text.two_gram">
 <code class="sig-prename descclassname">techminer.text.</code><code class="sig-name descname">two_gram</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/text.html#two_gram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.text.two_gram" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the 2-gram representation of string x.</p>
@@ -359,7 +393,7 @@
         <a href="keywords.html" class="btn btn-neutral float-right" title="Keywords manipulation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="correlation.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="correlation.html" class="btn btn-neutral float-left" title="Correlation Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

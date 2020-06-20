@@ -36,8 +36,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="correlation.html" />
-    <link rel="prev" title="Analysis by Term per Year" href="by_term_per_year.html" /> 
+    <link rel="next" title="Correlation Analysis" href="correlation.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="by_term_per_year.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -90,8 +90,8 @@
 <li class="toctree-l2"><a class="reference internal" href="data.html">Data Importation and Manipulation Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="by_year.html">Analysis by Year</a></li>
 <li class="toctree-l2"><a class="reference internal" href="by_term.html">Analysis by Term</a></li>
-<li class="toctree-l2"><a class="reference internal" href="by_term_per_year.html">Analysis by Term per Year</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Co-occurrence Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="correlation.html">Correlation Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="text.html">Text manipulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="keywords.html">Keywords manipulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="thesaurus.html">Thesaurus</a></li>
@@ -192,13 +192,13 @@
 <h1>Co-occurrence Analysis<a class="headerlink" href="#co-occurrence-analysis" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="techminer.co_occurrence.app">
-<code class="sig-prename descclassname">techminer.co_occurrence.</code><code class="sig-name descname">app</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/co_occurrence.html#app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.co_occurrence.app" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">techminer.co_occurrence.</code><code class="sig-name descname">app</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">limit_to</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/co_occurrence.html#app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.co_occurrence.app" title="Permalink to this definition">¶</a></dt>
 <dd><p>Jupyter Lab dashboard.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="techminer.co_occurrence.co_occurrence">
-<code class="sig-prename descclassname">techminer.co_occurrence.</code><code class="sig-name descname">co_occurrence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_n</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">selected_columns</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/co_occurrence.html#co_occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.co_occurrence.co_occurrence" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">techminer.co_occurrence.</code><code class="sig-name descname">co_occurrence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_n</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limit_to</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/co_occurrence.html#co_occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.co_occurrence.co_occurrence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summary occurrence and citations by terms in two different columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -222,17 +222,17 @@
 <span class="gp">... </span>   <span class="p">{</span>
 <span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
 <span class="gp">... </span>      <span class="s1">&#39;Author_Keywords&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
-<span class="gp">... </span>      <span class="s1">&#39;Cited_by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>      <span class="s2">&quot;Times_Cited&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
 <span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
 <span class="gp">... </span>   <span class="p">}</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
-<span class="go">  Authors Author_Keywords  Cited_by  ID</span>
-<span class="go">0       A               a         0   0</span>
-<span class="go">1     A;B             a;b         1   1</span>
-<span class="go">2       B               b         2   2</span>
-<span class="go">3   A;B;C               c         3   3</span>
-<span class="go">4     B;D             c;d         4   4</span>
+<span class="go">  Authors Author_Keywords  Times_Cited  ID</span>
+<span class="go">0       A               a            0   0</span>
+<span class="go">1     A;B             a;b            1   1</span>
+<span class="go">2       B               b            2   2</span>
+<span class="go">3   A;B;C               c            3   3</span>
+<span class="go">4     B;D             c;d            4   4</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">co_occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;Author_Keywords&#39;</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
@@ -243,18 +243,42 @@
 <span class="go">D  0  0  1  1</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">selected_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">co_occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;Author_Keywords&#39;</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">selected_columns</span><span class="o">=</span><span class="n">selected_columns</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">co_occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;Author_Keywords&#39;</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">top_by</span><span class="o">=</span><span class="s1">&#39;Frequency&#39;</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">   a  b  c</span>
+<span class="go">A  2  1  1</span>
+<span class="go">B  1  2  2</span>
+<span class="go">C  0  0  1</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">terms</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">co_occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;Author_Keywords&#39;</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">limit_to</span><span class="o">=</span><span class="n">terms</span><span class="p">)</span>
 <span class="go">   c  d</span>
 <span class="go">A  1  0</span>
 <span class="go">B  2  1</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">co_occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;Author_Keywords&#39;</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="n">terms</span><span class="p">)</span>
+<span class="go">   a  b</span>
+<span class="go">C  0  0</span>
+<span class="go">D  0  0</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
-<dt id="techminer.co_occurrence.compute_tfm">
-<code class="sig-prename descclassname">techminer.co_occurrence.</code><code class="sig-name descname">compute_tfm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">selected_columns</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/co_occurrence.html#compute_tfm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.co_occurrence.compute_tfm" title="Permalink to this definition">¶</a></dt>
+<dt id="techminer.co_occurrence.co_occurrence_map">
+<code class="sig-prename descclassname">techminer.co_occurrence.</code><code class="sig-name descname">co_occurrence_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">matrix</span></em>, <em class="sig-param"><span class="n">layout</span><span class="o">=</span><span class="default_value">'Kamada Kawai'</span></em>, <em class="sig-param"><span class="n">cmap</span><span class="o">=</span><span class="default_value">'Greys'</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">17, 12</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/co_occurrence.html#co_occurrence_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.co_occurrence.co_occurrence_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the occurrence map directly using networkx.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="techminer.co_occurrence.correspondence_matrix">
+<code class="sig-prename descclassname">techminer.co_occurrence.</code><code class="sig-name descname">correspondence_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column_IDX</span></em>, <em class="sig-param"><span class="n">column_COL</span></em>, <em class="sig-param"><span class="n">sep_IDX</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sep_COL</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">keywords</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/co_occurrence.html#correspondence_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.co_occurrence.correspondence_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="techminer.co_occurrence.document_term_matrix">
+<code class="sig-prename descclassname">techminer.co_occurrence.</code><code class="sig-name descname">document_term_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/co_occurrence.html#document_term_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.co_occurrence.document_term_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the term-frequency matrix for the terms in a column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -272,20 +296,20 @@
 <span class="gp">... </span>   <span class="p">{</span>
 <span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
 <span class="gp">... </span>      <span class="s1">&#39;Author_Keywords&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
-<span class="gp">... </span>      <span class="s1">&#39;Cited_by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+<span class="gp">... </span>      <span class="s2">&quot;Times_Cited&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
 <span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
 <span class="gp">... </span>   <span class="p">}</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
-<span class="go">  Authors Author_Keywords  Cited_by  ID</span>
-<span class="go">0       A               a         0   0</span>
-<span class="go">1     A;B             a;b         1   1</span>
-<span class="go">2       B               b         2   2</span>
-<span class="go">3   A;B;C               c         3   3</span>
-<span class="go">4     B;D             c;d         4   4</span>
+<span class="go">  Authors Author_Keywords  Times_Cited  ID</span>
+<span class="go">0       A               a            0   0</span>
+<span class="go">1     A;B             a;b            1   1</span>
+<span class="go">2       B               b            2   2</span>
+<span class="go">3   A;B;C               c            3   3</span>
+<span class="go">4     B;D             c;d            4   4</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">compute_tfm</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">document_term_matrix</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
 <span class="go">   A  B  C  D</span>
 <span class="go">0  1  0  0  0</span>
 <span class="go">1  1  1  0  0</span>
@@ -294,7 +318,7 @@
 <span class="go">4  0  1  0  1</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">compute_tfm</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Author_Keywords&#39;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">document_term_matrix</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Author_Keywords&#39;</span><span class="p">)</span>
 <span class="go">   a  b  c  d</span>
 <span class="go">0  1  0  0  0</span>
 <span class="go">1  1  1  0  0</span>
@@ -303,92 +327,39 @@
 <span class="go">4  0  0  1  1</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">compute_tfm</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">selected_columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">])</span>
-<span class="go">   A  B</span>
-<span class="go">0  1  0</span>
-<span class="go">1  1  1</span>
-<span class="go">2  0  1</span>
-<span class="go">3  1  1</span>
-<span class="go">4  0  1</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="py function">
-<dt id="techminer.co_occurrence.most_cited_by">
-<code class="sig-prename descclassname">techminer.co_occurrence.</code><code class="sig-name descname">most_cited_by</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">top_n</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/co_occurrence.html#most_cited_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.co_occurrence.most_cited_by" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="techminer.co_occurrence.most_frequent">
-<code class="sig-prename descclassname">techminer.co_occurrence.</code><code class="sig-name descname">most_frequent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">top_n</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/co_occurrence.html#most_frequent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.co_occurrence.most_frequent" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="techminer.co_occurrence.normalize_matrix">
-<code class="sig-prename descclassname">techminer.co_occurrence.</code><code class="sig-name descname">normalize_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">matrix</span></em>, <em class="sig-param"><span class="n">normalization</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/co_occurrence.html#normalize_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.co_occurrence.normalize_matrix" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="techminer.co_occurrence.filter_index">
+<code class="sig-prename descclassname">techminer.co_occurrence.</code><code class="sig-name descname">filter_index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">matrix</span></em>, <em class="sig-param"><span class="n">axis</span></em>, <em class="sig-param"><span class="n">top_by</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">top_n</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">limit_to</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/co_occurrence.html#filter_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.co_occurrence.filter_index" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – bibliographic database</p></li>
+<li><p><strong>column</strong> – column analyzed</p></li>
+<li><p><strong>matrix</strong> – result</p></li>
+<li><p><strong>axis</strong> – 0=rows, 1=columns</p></li>
+<li><p><strong>top_by</strong> – 0=frequency, 1=cited_by</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt id="techminer.co_occurrence.occurrence">
-<code class="sig-prename descclassname">techminer.co_occurrence.</code><code class="sig-name descname">occurrence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">as_matrix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">normalization</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">top_n</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">selected_columns</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/co_occurrence.html#occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.co_occurrence.occurrence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the occurrence between the terms in a column.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>column</strong> (<em>str</em>) – the column to explode.</p></li>
-<li><p><strong>sep</strong> (<em>str</em>) – Character used as internal separator for the elements in the column.</p></li>
-<li><p><strong>as_matrix</strong> (<em>bool</em>) – Results are returned as a matrix.</p></li>
-<li><p><strong>keywords</strong> (<em>list</em><em>, </em><a class="reference internal" href="keywords.html#techminer.keywords.Keywords" title="techminer.keywords.Keywords"><em>Keywords</em></a>) – filter the result using the specified Keywords object.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>DataFrame.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;A;B;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;B;D&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-<span class="gp">... </span>   <span class="p">{</span>
-<span class="gp">... </span>      <span class="s1">&#39;Authors&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
-<span class="gp">... </span>      <span class="s1">&#39;Cited_by&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
-<span class="gp">... </span>      <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
-<span class="gp">... </span>   <span class="p">}</span>
-<span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
-<span class="go">  Authors  Cited_by  ID</span>
-<span class="go">0       A         0   0</span>
-<span class="go">1       A         1   1</span>
-<span class="go">2     A;B         2   2</span>
-<span class="go">3       B         3   3</span>
-<span class="go">4   A;B;C         4   4</span>
-<span class="go">5       D         5   5</span>
-<span class="go">6     B;D         6   6</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">)</span>
-<span class="go">   A  B  C  D</span>
-<span class="go">A  4  2  1  0</span>
-<span class="go">B  2  4  1  1</span>
-<span class="go">C  1  1  1  0</span>
-<span class="go">D  0  1  0  2</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">occurrence</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;Authors&#39;</span><span class="p">,</span> <span class="n">selected_columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">])</span>
-<span class="go">   A  B  D</span>
-<span class="go">A  4  2  0</span>
-<span class="go">B  2  4  1</span>
-<span class="go">D  0  1  2</span>
-</pre></div>
-</div>
-</dd></dl>
+<code class="sig-prename descclassname">techminer.co_occurrence.</code><code class="sig-name descname">occurrence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">normalization</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">linkage</span><span class="o">=</span><span class="default_value">'ward'</span></em>, <em class="sig-param"><span class="n">n_clusters</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">n_components</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">n_dim</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">view</span><span class="o">=</span><span class="default_value">'network'</span></em>, <em class="sig-param"><span class="n">top_by</span><span class="o">=</span><span class="default_value">'Num Documents'</span></em>, <em class="sig-param"><span class="n">top_n</span><span class="o">=</span><span class="default_value">50</span></em>, <em class="sig-param"><span class="n">limit_to</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">layout</span><span class="o">=</span><span class="default_value">'Kamada Kawai'</span></em>, <em class="sig-param"><span class="n">cmap</span><span class="o">=</span><span class="default_value">'Greys'</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">17, 12</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/co_occurrence.html#occurrence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.co_occurrence.occurrence" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt id="techminer.co_occurrence.occurrence_map">
 <code class="sig-prename descclassname">techminer.co_occurrence.</code><code class="sig-name descname">occurrence_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">matrix</span></em>, <em class="sig-param"><span class="n">layout</span><span class="o">=</span><span class="default_value">'Kamada Kawai'</span></em>, <em class="sig-param"><span class="n">cmap</span><span class="o">=</span><span class="default_value">'Greys'</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">17, 12</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/co_occurrence.html#occurrence_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.co_occurrence.occurrence_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the occurrence map directly using networkx.</p>
 </dd></dl>
+
+<dl class="py function">
+<dt id="techminer.co_occurrence.slope_chart">
+<code class="sig-prename descclassname">techminer.co_occurrence.</code><code class="sig-name descname">slope_chart</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">matrix</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">by</span></em>, <em class="sig-param"><span class="n">top_by</span></em>, <em class="sig-param"><span class="n">figsize</span></em>, <em class="sig-param"><span class="n">cmap</span><span class="o">=</span><span class="default_value">'Blues'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/techminer/co_occurrence.html#slope_chart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#techminer.co_occurrence.slope_chart" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 
@@ -400,10 +371,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="correlation.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="correlation.html" class="btn btn-neutral float-right" title="Correlation Analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="by_term_per_year.html" class="btn btn-neutral float-left" title="Analysis by Term per Year" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="by_term_per_year.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
