@@ -21,7 +21,8 @@
 
 # TEXTLEN = 40
 
-# def summary_by_term_per_year(x, column, top_by=None, top_n=None, limit_to=None, exclude=None):
+
+# def summary(x, column, top_by=None, top_n=None, limit_to=None, exclude=None):
 #     """Computes the number of documents and citations by term per year.
 
 #     Args:
@@ -118,25 +119,51 @@
 #     #
 #     # Indicators from scientoPy
 #     #
-#     num_documents_by_year = {key: value for key, value in zip(summary.Year, summary.Num_Documents)}
-#     times_cited_by_year = {key: value for key, value in zip(summary.Year, summary.Times_Cited)}
+#     num_documents_by_year = {
+#         key: value for key, value in zip(summary.Year, summary.Num_Documents)
+#     }
+#     times_cited_by_year = {
+#         key: value for key, value in zip(summary.Year, summary.Times_Cited)
+#     }
 
+#     result["summary_documents_by_year"] = result.Year.apply(
+#         lambda w: num_documents_by_year[w]
+#     )
+#     result["summary_documents_by_year"] = result.summary_documents_by_year.map(
+#         lambda w: 1 if w == 0 else w
+#     )
+#     result["summary_times_cited_by_year"] = result.Year.apply(
+#         lambda w: times_cited_by_year[w]
+#     )
+#     result["summary_times_cited_by_year"] = result.summary_times_cited_by_year.map(
+#         lambda w: 1 if w == 0 else w
+#     )
 
-#     result['summary_documents_by_year'] = result.Year.apply(lambda w: num_documents_by_year[w])
-#     result['summary_documents_by_year'] = result.summary_documents_by_year.map(lambda w: 1 if w == 0 else w)
-#     result['summary_times_cited_by_year'] = result.Year.apply(lambda w: times_cited_by_year[w])
-#     result['summary_times_cited_by_year'] = result.summary_times_cited_by_year.map(lambda w: 1 if w == 0 else w)
+#     result = result.assign(
+#         Perc_Num_Documents=round(
+#             result.Num_Documents / result.summary_documents_by_year * 100, 2
+#         )
+#     )
+#     result = result.assign(
+#         Perc_Times_Cited=round(
+#             result.Times_Cited / result.summary_times_cited_by_year * 100, 2
+#         )
+#     )
 
-#     result = result.assign(Perc_Num_Documents=round(result.Num_Documents / result.summary_documents_by_year * 100, 2))
-#     result = result.assign(Perc_Times_Cited=round(result.Times_Cited / result.summary_times_cited_by_year * 100, 2))
-
-#     result.pop('summary_documents_by_year')
-#     result.pop('summary_times_cited_by_year')
+#     result.pop("summary_documents_by_year")
+#     result.pop("summary_times_cited_by_year")
 
 #     #
 #     # Filter
 #     #
-#     top_terms = get_top_by(x=x, column=column, top_by=top_by, top_n=top_n, limit_to=limit_to, exclude=exclude)
+#     top_terms = get_top_by(
+#         x=x,
+#         column=column,
+#         top_by=top_by,
+#         top_n=top_n,
+#         limit_to=limit_to,
+#         exclude=exclude,
+#     )
 
 #     result = result[result[column].map(lambda w: w in top_terms)]
 #     result.sort_values(
@@ -150,7 +177,12 @@
 #     return result
 
 
-# def num_documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None):
+# #####################################
+
+
+# def num_documents_by_term_per_year(
+#     x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None
+# ):
 #     """Computes the number of documents by term per year.
 
 #     Args:
@@ -217,7 +249,9 @@
 
 #     """
 
-#     result = summary_by_term_per_year(x, column, top_by=0, top_n=top_n, limit_to=limit_to, exclude=exclude)
+#     result = summary_by_term_per_year(
+#         x, column, top_by=0, top_n=top_n, limit_to=limit_to, exclude=exclude
+#     )
 
 #     result.pop("Times_Cited")
 #     result.pop("Perc_Num_Documents")
@@ -233,7 +267,10 @@
 
 #     return result
 
-# def perc_num_documents_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None):
+
+# def perc_num_documents_by_term_per_year(
+#     x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None
+# ):
 #     """Computes the number of documents by term per year.
 
 #     Args:
@@ -310,18 +347,26 @@
 
 #     """
 
-#     result = summary_by_term_per_year(x, column=column, limit_to=limit_to, exclude=exclude)
+#     result = summary_by_term_per_year(
+#         x, column=column, limit_to=limit_to, exclude=exclude
+#     )
 #     result.pop("Times_Cited")
 #     result.pop("Num_Documents")
-#     result.pop('Perc_Times_Cited')
+#     result.pop("Perc_Times_Cited")
 #     result.sort_values(
-#         ["Perc_Num_Documents", "Year", column], ascending=[False, True, True], inplace=True,
+#         ["Perc_Num_Documents", "Year", column],
+#         ascending=[False, True, True],
+#         inplace=True,
 #     )
 #     result = result.head(top_n)
 #     result.reset_index(drop=True)
 #     if as_matrix == True:
 #         result = pd.pivot_table(
-#             result, values="Perc_Num_Documents", index="Year", columns=column, fill_value=0,
+#             result,
+#             values="Perc_Num_Documents",
+#             index="Year",
+#             columns=column,
+#             fill_value=0,
 #         )
 #         result.columns = result.columns.tolist()
 #         result.index = result.index.tolist()
@@ -391,7 +436,6 @@
 
 #     """
 
-
 #     result = num_documents_by_term_per_year(
 #         x, column=column, as_matrix=True, limit_to=limit_to, exclude=exclude
 #     )
@@ -410,7 +454,9 @@
 #     return result
 
 
-# def times_cited_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None):
+# def times_cited_by_term_per_year(
+#     x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None
+# ):
 #     """Computes the number of citations by term by year in a column.
 
 #     Args:
@@ -498,7 +544,9 @@
 #     3  2014  author 4               100.0             100.0
 
 #     """
-#     result = summary_by_term_per_year(x, column, top_by="Times Cited", top_n=top_n, limit_to=limit_to, exclude=exclude)
+#     result = summary_by_term_per_year(
+#         x, column, top_by="Times Cited", top_n=top_n, limit_to=limit_to, exclude=exclude
+#     )
 
 #     result.pop("Num_Documents")
 
@@ -513,7 +561,10 @@
 
 #     return result
 
-# def perc_times_cited_by_term_per_year(x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None):
+
+# def perc_times_cited_by_term_per_year(
+#     x, column, as_matrix=False, top_n=None, limit_to=None, exclude=None
+# ):
 #     """Computes the number of citations by term by year in a column.
 
 #     Args:
@@ -588,25 +639,33 @@
 #     3  2014  author 4           15     [5]
 
 #     """
-#     result = summary_by_term_per_year(x, column, top_n=None, limit_to=limit_to, exclude=exclude)
+#     result = summary_by_term_per_year(
+#         x, column, top_n=None, limit_to=limit_to, exclude=exclude
+#     )
 #     result.pop("Num_Documents")
 #     result.pop("Times_Cited")
 #     result.pop("Perc_Num_Documents")
 #     result.sort_values(
-#         ["Perc_Times_Cited", "Year", column], ascending=[False, True, False], inplace=True,
+#         ["Perc_Times_Cited", "Year", column],
+#         ascending=[False, True, False],
+#         inplace=True,
 #     )
 #     result = result.reset_index(drop=True)
 #     result = result.head(top_n)
 #     if as_matrix == True:
 #         result = pd.pivot_table(
-#             result, values="Perc_Times_Cited", index="Year", columns=column, fill_value=0,
+#             result,
+#             values="Perc_Times_Cited",
+#             index="Year",
+#             columns=column,
+#             fill_value=0,
 #         )
 #         result.columns = result.columns.tolist()
 #         result.index = result.index.tolist()
 #     return result
 
 
-# def growth_indicators(x, column, timewindow=2, top_n = None, limit_to=None, exclude=None):
+# def growth_indicators(x, column, timewindow=2, top_n=None, limit_to=None, exclude=None):
 #     """Computes the average growth rate of a group of terms.
 
 #     Args:
@@ -677,11 +736,7 @@
 #         result = result[result.Year.map(lambda w: w in years_agr)]
 #         result.pop("ID")
 #         result = pd.pivot_table(
-#             result,
-#             columns="Year",
-#             index=column,
-#             values="Num_Documents",
-#             fill_value=0,
+#             result, columns="Year", index=column, values="Num_Documents", fill_value=0,
 #         )
 #         result["AGR"] = 0.0
 #         result = result.assign(
@@ -700,9 +755,7 @@
 #         )
 #         years_ady = sorted(set(result.Year))[-timewindow:]
 #         result = result[result.Year.map(lambda w: w in years_ady)]
-#         result = result.groupby([column], as_index=False).agg(
-#             {"Num_Documents": np.sum}
-#         )
+#         result = result.groupby([column], as_index=False).agg({"Num_Documents": np.sum})
 #         result = result.rename(columns={"Num_Documents": "ADY"})
 #         result["ADY"] = result.ADY.map(lambda w: w / timewindow)
 #         result = result.reset_index(drop=True)
@@ -726,9 +779,7 @@
 #                 )
 #             }
 #         )
-#         before = before.groupby([column], as_index=False).agg(
-#             {"Num_Documents": np.sum}
-#         )
+#         before = before.groupby([column], as_index=False).agg({"Num_Documents": np.sum})
 #         before = before.rename(
 #             columns={"Num_Documents": "Before {}".format(years_between[0])}
 #         )
@@ -770,12 +821,18 @@
 #     COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
 #     #
 #     controls = [
-#         # 0
+#         #  0
 #         {
 #             "arg": "view",
 #             "desc": "View:",
 #             "widget": widgets.Dropdown(
-#                 options=["Summary", "Heatmap", "Bubble plot", "Gant diagram", 'Lines plot', ],
+#                 options=[
+#                     "Summary",
+#                     "Heatmap",
+#                     "Bubble plot",
+#                     "Gant diagram",
+#                     "Lines plot",
+#                 ],
 #                 layout=Layout(width=WIDGET_WIDTH),
 #             ),
 #         },
@@ -793,7 +850,12 @@
 #             "arg": "top_by",
 #             "desc": "Top by:",
 #             "widget": widgets.Dropdown(
-#                 options=["Num Documents", "Times Cited", "% Num Documents", "% Times Cited"],
+#                 options=[
+#                     "Num Documents",
+#                     "Times Cited",
+#                     "% Num Documents",
+#                     "% Times Cited",
+#                 ],
 #                 layout=Layout(width=WIDGET_WIDTH),
 #             ),
 #         },
@@ -802,10 +864,10 @@
 #             "arg": "top_n",
 #             "desc": "Top N:",
 #             "widget": widgets.Dropdown(
-#                     options=list(range(5, 51, 5)),
-#                     ensure_option=True,
-#                     layout=Layout(width=WIDGET_WIDTH),
-#                 ),
+#                 options=list(range(5, 51, 5)),
+#                 ensure_option=True,
+#                 layout=Layout(width=WIDGET_WIDTH),
+#             ),
 #         },
 #         # 4
 #         {
@@ -821,7 +883,7 @@
 #                 layout=Layout(width=WIDGET_WIDTH),
 #             ),
 #         },
-#         # 5
+#         #  5
 #         {
 #             "arg": "cmap",
 #             "desc": "Colormap:",
@@ -834,20 +896,20 @@
 #             "arg": "figsize_width",
 #             "desc": "Figsize",
 #             "widget": widgets.Dropdown(
-#                     options=range(5,15, 1),
-#                     ensure_option=True,
-#                     layout=Layout(width="88px"),
-#                 ),
+#                 options=range(5, 15, 1),
+#                 ensure_option=True,
+#                 layout=Layout(width="88px"),
+#             ),
 #         },
 #         # 7
 #         {
 #             "arg": "figsize_height",
 #             "desc": "Figsize",
 #             "widget": widgets.Dropdown(
-#                     options=range(5,15, 1),
-#                     ensure_option=True,
-#                     layout=Layout(width="88px"),
-#                 ),
+#                 options=range(5, 15, 1),
+#                 ensure_option=True,
+#                 layout=Layout(width="88px"),
+#             ),
 #         },
 #     ]
 #     # -------------------------------------------------------------------------
@@ -863,24 +925,57 @@
 #         top_n = kwargs["top_n"]
 #         sort_by = kwargs["sort_by"]
 #         cmap = kwargs["cmap"]
-#         figsize_width = int(kwargs['figsize_width'])
-#         figsize_height = int(kwargs['figsize_height'])
+#         figsize_width = int(kwargs["figsize_width"])
+#         figsize_height = int(kwargs["figsize_height"])
 #         #
-#         plots = {"Heatmap": plt.heatmap, "Gant diagram": plt.gant, "Bubble plot": plt.bubble_prop, "Lines plot": plt.plot, "Summary":None}
+#         plots = {
+#             "Heatmap": plt.heatmap,
+#             "Gant diagram": plt.gant,
+#             "Bubble plot": plt.bubble_prop,
+#             "Lines plot": plt.plot,
+#             "Summary": None,
+#         }
 #         plot = plots[view]
 #         #
 #         controls[-2]["widget"].disabled = True if view == "Summary" else False
 #         controls[-1]["widget"].disabled = True if view == "Summary" else False
 
 #         if top_by == "Num Documents":
-#             matrix = num_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+#             matrix = num_documents_by_term_per_year(
+#                 x,
+#                 column,
+#                 as_matrix=True,
+#                 top_n=top_n,
+#                 limit_to=limit_to,
+#                 exclude=exclude,
+#             )
 #         if top_by == "Times Cited":
-#             matrix = times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+#             matrix = times_cited_by_term_per_year(
+#                 x,
+#                 column,
+#                 as_matrix=True,
+#                 top_n=top_n,
+#                 limit_to=limit_to,
+#                 exclude=exclude,
+#             )
 #         if top_by == "% Num Documents":
-#             matrix = perc_num_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
+#             matrix = perc_num_documents_by_term_per_year(
+#                 x,
+#                 column,
+#                 as_matrix=True,
+#                 top_n=top_n,
+#                 limit_to=limit_to,
+#                 exclude=exclude,
+#             )
 #         if top_by == "% Times Cited":
-#             matrix = perc_times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
-
+#             matrix = perc_times_cited_by_term_per_year(
+#                 x,
+#                 column,
+#                 as_matrix=True,
+#                 top_n=top_n,
+#                 limit_to=limit_to,
+#                 exclude=exclude,
+#             )
 
 #         #
 #         # Adds [...] to columns and index
@@ -903,7 +998,7 @@
 #             s = summary_by_year(df=x)
 #             new_names = {
 #                 a: "{} [{:d}]".format(a, b)
-#                 for a, b in zip(s['Year'].tolist(), s["Num_Documents"].tolist())
+#                 for a, b in zip(s["Year"].tolist(), s["Num_Documents"].tolist())
 #             }
 #             matrix = matrix.rename(index=new_names)
 
@@ -926,7 +1021,7 @@
 #             s = summary_by_year(df=x)
 #             new_names = {
 #                 a: "{} [{:d}]".format(a, b)
-#                 for a, b in zip(s['Year'].tolist(), s["Times_Cited"].tolist())
+#                 for a, b in zip(s["Year"].tolist(), s["Times_Cited"].tolist())
 #             }
 #             matrix = matrix.rename(index=new_names)
 
@@ -949,7 +1044,6 @@
 #         if sort_by == "Alphabetic desc.":
 #             matrix = matrix.sort_index(axis=1, ascending=False)
 
-
 #         #
 #         # Output
 #         #
@@ -960,11 +1054,15 @@
 #                 return
 
 #             if view == "Heatmap":
-#                 display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
+#                 display(
+#                     plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height))
+#                 )
 #                 return
 
 #             if view == "Lines plot":
-#                 display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
+#                 display(
+#                     plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height))
+#                 )
 #                 return
 
 #             if view == "Gant diagram" and top_by == "Num Documents":
@@ -972,17 +1070,33 @@
 #                 display(plot(matrix, figsize=(figsize_width, figsize_height)))
 #                 return
 
-#             if view == "Bubble plot" and (top_by == "Num Documents" or top_by == "Times Cited"):
+#             if view == "Bubble plot" and (
+#                 top_by == "Num Documents" or top_by == "Times Cited"
+#             ):
 #                 matrix.columns = [w[: w.find("[")].strip() for w in matrix.columns]
 #                 matrix.index = [int(w[: w.find("[")].strip()) for w in matrix.index]
-#                 z = times_cited_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
-#                 display(plot(matrix.transpose(), z.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
+#                 z = times_cited_by_term_per_year(
+#                     x,
+#                     column,
+#                     as_matrix=True,
+#                     top_n=None,
+#                     limit_to=limit_to,
+#                     exclude=exclude,
+#                 )
+#                 display(
+#                     plot(
+#                         matrix.transpose(),
+#                         z.transpose(),
+#                         axis=0,
+#                         cmap=cmap,
+#                         figsize=(figsize_width, figsize_height),
+#                     )
+#                 )
 #                 return
 
-#             display(widgets.HTML('The view not is available for this analysis'))
+#             display(widgets.HTML("The view not is available for this analysis"))
 
 #         ###
-
 
 #         # output.clear_output()
 #         # with output:
@@ -1077,7 +1191,6 @@
 #         #             }
 #         #             matrix = matrix.rename(index=new_names)
 
-
 #         #     if analysis_by == "% Times Cited":
 #         #         matrix = perc_times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
 
@@ -1103,7 +1216,6 @@
 #         #             }
 #         #             matrix = matrix.rename(index=new_names)
 
-
 #         #     #
 #         #     # Sort order
 #         #     #
@@ -1124,7 +1236,6 @@
 #         #         if sort_by == "Alphabetic desc.":
 #         #             matrix = matrix.sort_index(axis=1, ascending=False)
 
-
 #         #         if view == "Summary":
 #         #             display(matrix.style.background_gradient(cmap=cmap, axis=None))
 #         #             return
@@ -1138,7 +1249,6 @@
 #         #         return
 
 #         #     display(widgets.HTML('The view not is available for this analysis'))
-
 
 #     # -------------------------------------------------------------------------
 #     #
@@ -1158,16 +1268,16 @@
 #                     )
 #                     for control in controls
 #                     if control["desc"] not in ["Figsize"]
-#                 ] + [
+#                 ]
+#                 + [
 #                     widgets.Label(value="Figure Size"),
-#                     widgets.HBox([
-#                         controls[-2]["widget"],
-#                         controls[-1]["widget"],
-#                     ])
+#                     widgets.HBox([controls[-2]["widget"], controls[-1]["widget"],]),
 #                 ],
 #                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
 #             ),
-#             widgets.VBox([output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")),
+#             widgets.VBox(
+#                 [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")
+#             ),
 #         ]
 #     )
 
@@ -1191,44 +1301,43 @@
 #             "arg": "term",
 #             "desc": "Term to analyze:",
 #             "widget": widgets.Dropdown(
-#                     options=[z for z in COLUMNS if z in x.columns],
-#                     ensure_option=True,
-#                     layout=Layout(width=WIDGET_WIDTH),
-#                 ),
+#                 options=[z for z in COLUMNS if z in x.columns],
+#                 ensure_option=True,
+#                 layout=Layout(width=WIDGET_WIDTH),
+#             ),
 #         },
 #         # 1
 #         {
 #             "arg": "analysis_type",
 #             "desc": "Analysis type:",
 #             "widget": widgets.Dropdown(
-#                     options=[
-#                         "Average Growth Rate",
-#                         "Average Documents per Year",
-#                         "Percentage of Documents in Last Years",
-#                         "Number of Document Published",
-#                     ],
-#                     value="Average Growth Rate",
-#                     layout=Layout(width=WIDGET_WIDTH),
-#                 ),
+#                 options=[
+#                     "Average Growth Rate",
+#                     "Average Documents per Year",
+#                     "Percentage of Documents in Last Years",
+#                     "Number of Document Published",
+#                 ],
+#                 value="Average Growth Rate",
+#                 layout=Layout(width=WIDGET_WIDTH),
+#             ),
 #         },
 #         # 2
 #         {
 #             "arg": "time_window",
 #             "desc": "Time window:",
 #             "widget": widgets.Dropdown(
-#                     options=["2", "3", "4", "5"],
-#                     value="2",
-#                     layout=Layout(width=WIDGET_WIDTH),
-#                 ),
+#                 options=["2", "3", "4", "5"],
+#                 value="2",
+#                 layout=Layout(width=WIDGET_WIDTH),
+#             ),
 #         },
 #         # 3
 #         {
 #             "arg": "plot_type",
 #             "desc": "Plot type:",
 #             "widget": widgets.Dropdown(
-#                     options=["bar", "barh"],
-#                     layout=Layout(width=WIDGET_WIDTH),
-#                 ),
+#                 options=["bar", "barh"], layout=Layout(width=WIDGET_WIDTH),
+#             ),
 #         },
 #         # 4
 #         {
@@ -1243,30 +1352,27 @@
 #             "arg": "top_n",
 #             "desc": "Top N:",
 #             "widget": widgets.Dropdown(
-#                     options=list(range(5, 51, 5)),
-#                     ensure_option=True,
-#                     layout=Layout(width=WIDGET_WIDTH),
-#                 ),
+#                 options=list(range(5, 51, 5)),
+#                 ensure_option=True,
+#                 layout=Layout(width=WIDGET_WIDTH),
+#             ),
 #         },
 #         # 6
 #         {
 #             "arg": "figsize_width",
 #             "desc": "Figsize",
 #             "widget": widgets.Dropdown(
-#                     options=range(5,15, 1),
-#                     layout=Layout(width="88px"),
-#                 ),
+#                 options=range(5, 15, 1), layout=Layout(width="88px"),
+#             ),
 #         },
 #         # 7
 #         {
 #             "arg": "figsize_height",
 #             "desc": "Figsize",
 #             "widget": widgets.Dropdown(
-#                     options=range(5,15, 1),
-#                     layout=Layout(width="88px"),
-#                 ),
+#                 options=range(5, 15, 1), layout=Layout(width="88px"),
+#             ),
 #         },
-
 #     ]
 #     # -------------------------------------------------------------------------
 #     #
@@ -1275,44 +1381,75 @@
 #     # -------------------------------------------------------------------------
 #     def server(**kwargs):
 #         #
-#         term = kwargs['term']
-#         cmap = kwargs['cmap']
-#         analysis_type = kwargs['analysis_type']
-#         top_n = kwargs['top_n']
-#         plot_type = kwargs['plot_type']
-#         time_window = int(kwargs['time_window'])
-#         figsize_width = int(kwargs['figsize_width'])
-#         figsize_height = int(kwargs['figsize_height'])
+#         term = kwargs["term"]
+#         cmap = kwargs["cmap"]
+#         analysis_type = kwargs["analysis_type"]
+#         top_n = kwargs["top_n"]
+#         plot_type = kwargs["plot_type"]
+#         time_window = int(kwargs["time_window"])
+#         figsize_width = int(kwargs["figsize_width"])
+#         figsize_height = int(kwargs["figsize_height"])
 #         #
 #         plots = {"bar": plt.bar, "barh": plt.barh}
 #         plot = plots[plot_type]
 #         #
-#         df = growth_indicators(x, term, timewindow=time_window, limit_to=limit_to, exclude=exclude)
+#         df = growth_indicators(
+#             x, term, timewindow=time_window, limit_to=limit_to, exclude=exclude
+#         )
 #         output.clear_output()
 
 #         with output:
 #             if analysis_type == "Average Growth Rate":
-#                 df = df.sort_values('AGR', ascending=False).head(top_n)
+#                 df = df.sort_values("AGR", ascending=False).head(top_n)
 #                 df = df.reset_index(drop=True)
-#                 display(plot(df[[term, 'AGR']], cmap=cmap, figsize=(figsize_width, figsize_height)))
+#                 display(
+#                     plot(
+#                         df[[term, "AGR"]],
+#                         cmap=cmap,
+#                         figsize=(figsize_width, figsize_height),
+#                     )
+#                 )
 #             if analysis_type == "Average Documents per Year":
-#                 df = df.sort_values('ADY', ascending=False).head(top_n)
+#                 df = df.sort_values("ADY", ascending=False).head(top_n)
 #                 df = df.reset_index(drop=True)
-#                 display(plot(df[[term, 'ADY']], cmap=cmap, figsize=(figsize_width, figsize_height)))
+#                 display(
+#                     plot(
+#                         df[[term, "ADY"]],
+#                         cmap=cmap,
+#                         figsize=(figsize_width, figsize_height),
+#                     )
+#                 )
 #             if analysis_type == "Percentage of Documents in Last Years":
-#                 df = df.sort_values('PDLY', ascending=False).head(top_n)
+#                 df = df.sort_values("PDLY", ascending=False).head(top_n)
 #                 df = df.reset_index(drop=True)
-#                 display(plot(df[[term, 'PDLY']], cmap=cmap, figsize=(figsize_width, figsize_height)))
+#                 display(
+#                     plot(
+#                         df[[term, "PDLY"]],
+#                         cmap=cmap,
+#                         figsize=(figsize_width, figsize_height),
+#                     )
+#                 )
 #             if analysis_type == "Number of Document Published":
-#                 df['Num_Documents'] = df[df.columns[-2]] + df[df.columns[-1]]
-#                 df = df.sort_values('Num_Documents', ascending=False).head(top_n)
+#                 df["Num_Documents"] = df[df.columns[-2]] + df[df.columns[-1]]
+#                 df = df.sort_values("Num_Documents", ascending=False).head(top_n)
 #                 df = df.reset_index(drop=True)
-#                 df.pop('Num_Documents')
-#                 if plot_type == 'bar':
-#                     display(plt.stacked_bar(df[[term, df.columns[-2], df.columns[-1]]], figsize=(figsize_width, figsize_height), cmap=cmap))
-#                 if plot_type == 'barh':
-#                     display(plt.stacked_barh(df[[term, df.columns[-2], df.columns[-1]]], figsize=(figsize_width, figsize_height), cmap=cmap))
-
+#                 df.pop("Num_Documents")
+#                 if plot_type == "bar":
+#                     display(
+#                         plt.stacked_bar(
+#                             df[[term, df.columns[-2], df.columns[-1]]],
+#                             figsize=(figsize_width, figsize_height),
+#                             cmap=cmap,
+#                         )
+#                     )
+#                 if plot_type == "barh":
+#                     display(
+#                         plt.stacked_barh(
+#                             df[[term, df.columns[-2], df.columns[-1]]],
+#                             figsize=(figsize_width, figsize_height),
+#                             cmap=cmap,
+#                         )
+#                     )
 
 #     # -------------------------------------------------------------------------
 #     #
@@ -1332,16 +1469,16 @@
 #                     )
 #                     for control in controls
 #                     if control["desc"] not in ["Figsize"]
-#                 ] + [
+#                 ]
+#                 + [
 #                     widgets.Label(value="Figure Size"),
-#                     widgets.HBox([
-#                         controls[-2]["widget"],
-#                         controls[-1]["widget"],
-#                     ])
+#                     widgets.HBox([controls[-2]["widget"], controls[-1]["widget"],]),
 #                 ],
 #                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
 #             ),
-#             widgets.VBox([output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")),
+#             widgets.VBox(
+#                 [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")
+#             ),
 #         ]
 #     )
 

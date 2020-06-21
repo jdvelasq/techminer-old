@@ -106,36 +106,6 @@ COLORMAPS = [
     "gist_ncar",
 ]
 
-STYLE = [
-    "default",
-    "classic",
-    "Solarize_Light2",
-    "_classic_test_patch",
-    "bmh",
-    "dark_background",
-    "fast",
-    "fivethirtyeight",
-    "ggplot",
-    "grayscale",
-    "seaborn",
-    "seaborn-bright",
-    "seaborn-colorblind",
-    "seaborn-dark",
-    "seaborn-dark-palette",
-    "seaborn-darkgrid",
-    "seaborn-deep",
-    "seaborn-muted",
-    "seaborn-notebook",
-    "seaborn-paper",
-    "seaborn-pastel",
-    "seaborn-poster",
-    "seaborn-talk",
-    "seaborn-ticks",
-    "seaborn-white",
-    "seaborn-whitegrid",
-    "tableau-colorblind10",
-]
-
 
 def bar(
     data,
@@ -360,171 +330,10 @@ def barh(
     return fig
 
 
-def __bar(
-    x, width=0.8, bottom=None, align="center", cmap="Greys", figsize=(10, 6), **kwargs
+def worldmap(
+    data, cmap="Pastel2", figsize=(10, 5), legend=True, fontsize=12, *args, **kwargs,
 ):
-    """Creates a bar plot from a dataframe.
-
-
-    """
-    matplotlib.rc("font", size=FONT_SIZE)
-
-    x = x.copy()
-    if "ID" in x.columns:
-        x.pop("ID")
-
-    if cmap is not None:
-        cmap = plt.cm.get_cmap(cmap)
-        kwargs["color"] = [
-            cmap(
-                (
-                    0.2
-                    + 0.75
-                    * (x[x.columns[1]][i] - min(x[x.columns[1]]))
-                    / (max(x[x.columns[1]]) - min(x[x.columns[1]]))
-                )
-            )
-            for i in range(len(x[x.columns[1]]))
-        ]
-
-    fig = plt.Figure(figsize=figsize)
-    ax = fig.subplots()
-
-    ax.bar(
-        x=range(len(x)),
-        height=x[x.columns[1]],
-        width=width,
-        bottom=bottom,
-        align=align,
-        **({}),
-        **kwargs,
-    )
-
-    if x[x.columns[0]].dtype != "int64":
-        xticklabels = [
-            textwrap.shorten(text=text, width=TEXTLEN) for text in x[x.columns[0]]
-        ]
-    else:
-        xticklabels = x[x.columns[0]]
-
-    ax.set_xticks(np.arange(len(x[x.columns[0]])))
-    ax.set_xticklabels(xticklabels)
-    ax.tick_params(axis="x", labelrotation=90)
-
-    ax.set_xlabel(x.columns[0])
-    ax.set_ylabel(x.columns[1])
-
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(True)
-    ax.grid(axis="y", color="gray", linestyle=":")
-
-    return fig
-
-
-def bar_prop(
-    x, width=0.8, bottom=None, align="center", cmap="Greys", figsize=(10, 6), **kwargs
-):
-    """Creates a bar plot from a dataframe with proportional colors.
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> import pandas as pd
-    >>> df = pd.DataFrame(
-    ...     {
-    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-    ...         "Times_Cited": [1, 2, 3, 4],
-    ...         "Num_Documents": [3, 2, 2, 1],
-    ...         "ID": list(range(4)),
-    ...     }
-    ... )
-    >>> df
-        Authors  Times_Cited  Num_Documents  ID
-    0  author 3            1              3   0
-    1  author 1            2              2   1
-    2  author 0            3              2   2
-    3  author 2            4              1   3
-    >>> fig = bar(df, cmap=plt.cm.Blues)
-    >>> fig.savefig('sphinx/images/barplot.png')
-
-    .. image:: images/barplot.png
-        :width: 400px
-        :align: center
-
-
-    """
-    matplotlib.rc("font", size=FONT_SIZE)
-
-    x = x.copy()
-    if "ID" in x.columns:
-        x.pop("ID")
-
-    column0 = x[x.columns[0]]
-    column1 = x[x.columns[1]]
-    column2 = x[x.columns[2]]
-
-    if cmap is not None:
-        cmap = plt.cm.get_cmap(cmap)
-        kwargs["color"] = [
-            cmap(
-                (
-                    0.2
-                    + 0.75
-                    * (column2[i] - column2.min())
-                    / (column2.max() - column2.min())
-                )
-            )
-            for i in range(len(x))
-        ]
-
-    fig = plt.Figure(figsize=figsize)
-    ax = fig.subplots()
-
-    ax.bar(
-        x=range(len(x)),
-        height=column1,
-        width=width,
-        bottom=bottom,
-        align=align,
-        **({}),
-        **kwargs,
-    )
-
-    ax.text(
-        0,
-        column1.max(),
-        "Color darkness is proportional to " + x.columns[2],
-        fontsize="x-small",
-        verticalalignment="bottom",
-    )
-
-    if column0.dtype != "int64":
-        xticklabels = [textwrap.shorten(text=text, width=TEXTLEN) for text in column0]
-    else:
-        xticklabels = column0
-
-    ax.set_xticks(np.arange(len(x)))
-    ax.set_xticklabels(xticklabels)
-    ax.tick_params(axis="x", labelrotation=90)
-
-    ax.set_xlabel(x.columns[0])
-    ax.set_ylabel(x.columns[1])
-
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(True)
-    ax.grid(axis="y", color="gray", linestyle=":")
-
-    return fig
-
-
-def __barh(
-    x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **kwargs
-):
-    """Make a pie chart from a dataframe.
+    """Worldmap plot with the number of documents per country.
 
     Examples
     ----------------------------------------------------------------------------------------------
@@ -532,180 +341,106 @@ def __barh(
     >>> import pandas as pd
     >>> x = pd.DataFrame(
     ...     {
-    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-    ...         "Num_Documents": [3, 2, 2, 1],
-    ...         "ID": list(range(4)),
-    ...     }
+    ...         "AU_CO": ["China", "Taiwan", "United States", "United Kingdom", "India", "Colombia"],
+    ...         "Num_Documents": [1000, 900, 800, 700, 600, 1000],
+    ...     },
     ... )
     >>> x
-        Authors  Num_Documents  ID
-    0  author 3              3   0
-    1  author 1              2   1
-    2  author 0              2   2
-    3  author 2              1   3
-    >>> fig = barh(x, cmap='Blues')
-    >>> fig.savefig('sphinx/images/barhplot.png')
+                AU_CO  Num_Documents
+    0           China           1000
+    1          Taiwan            900
+    2   United States            800
+    3  United Kingdom            700
+    4           India            600
+    5        Colombia           1000
+    >>> fig = worldmap(x, figsize=(15, 6))
+    >>> fig.savefig('sphinx/images/worldmap.png')
 
-    .. image:: images/barhplot.png
-        :width: 400px
+    .. image:: images/worldmap.png
+        :width: 2000px
         :align: center
 
+
     """
-    matplotlib.rc("font", size=FONT_SIZE)
-
-    x = x.copy()
-    if "ID" in x.columns:
-        x.pop("ID")
-
-    if cmap is not None:
-        cmap = plt.cm.get_cmap(cmap)
-        kwargs["color"] = [
-            cmap(
-                (
-                    0.2
-                    + 0.75
-                    * (x[x.columns[1]][i] - min(x[x.columns[1]]))
-                    / (max(x[x.columns[1]]) - min(x[x.columns[1]]))
-                )
-            )
-            for i in range(len(x))
-        ]
-
+    matplotlib.rc("font", size=fontsize)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
+    cmap = plt.cm.get_cmap(cmap)
 
-    ax.barh(
-        y=range(len(x)),
-        width=x[x.columns[1]],
-        height=height,
-        left=left,
-        align=align,
-        **kwargs,
-    )
-
-    if x[x.columns[0]].dtype != "int64":
-        yticklabels = [
-            textwrap.shorten(text=text, width=TEXTLEN) for text in x[x.columns[0]]
-        ]
-    else:
-        yticklabels = x[x.columns[0]]
-
-    ax.invert_yaxis()
-    ax.set_yticks(np.arange(len(x[x.columns[0]])))
-    ax.set_yticklabels(yticklabels)
-    ax.set_xlabel(x.columns[1])
-    ax.set_ylabel(x.columns[0])
-
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(True)
-    ax.spines["bottom"].set_visible(False)
-
-    ax.grid(axis="x", color="gray", linestyle=":")
-
-    return fig
-
-
-def barh_prop(
-    x, height=0.8, left=None, figsize=(8, 5), align="center", cmap=None, **kwargs
-):
-    """Make a pie chart from a dataframe.
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> import pandas as pd
-    >>> x = pd.DataFrame(
-    ...     {
-    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-    ...         "Num_Documents": [3, 2, 2, 1],
-    ...         "ID": list(range(4)),
-    ...     }
-    ... )
-    >>> x
-        Authors  Num_Documents  ID
-    0  author 3              3   0
-    1  author 1              2   1
-    2  author 0              2   2
-    3  author 2              1   3
-    >>> fig = barh(x, cmap='Blues')
-    >>> fig.savefig('sphinx/images/barhplot.png')
-
-    .. image:: images/barhplot.png
-        :width: 400px
-        :align: center
-
-    """
-    matplotlib.rc("font", size=FONT_SIZE)
-
-    x = x.copy()
-    if "ID" in x.columns:
-        x.pop("ID")
-
+    x = data.copy()
     column0 = x[x.columns[0]]
     column1 = x[x.columns[1]]
-    column2 = x[x.columns[2]]
-
-    if cmap is not None:
-        cmap = plt.cm.get_cmap(cmap)
-        kwargs["color"] = [
-            cmap(
-                (
-                    0.2
-                    + 0.75
-                    * (column2[i] - column2.min())
-                    / (column2.max() - column2.min())
-                )
-            )
-            for i in range(len(x))
-        ]
-
-    fig = plt.Figure(figsize=figsize)
-    ax = fig.subplots()
-
-    ax.barh(
-        y=range(len(x)),
-        width=x[x.columns[1]],
-        height=height,
-        left=left,
-        align=align,
-        **kwargs,
+    x["color"] = x[x.columns[1]].map(
+        lambda w: 0.1 + 0.9 * (w - column1.min()) / (column1.max() - column1.min())
     )
+    x = x.set_index(column0)
 
-    ax.text(
-        column1.max(),
-        -0.5,
-        "Color darkness is proportional to " + x.columns[2],
-        fontsize="x-small",
-        verticalalignment="bottom",
-        horizontalalignment="right",
+    module_path = dirname(__file__)
+    with open(join(module_path, "data/worldmap.data"), "r") as f:
+        countries = json.load(f)
+    for country in countries.keys():
+        data = countries[country]
+        for item in data:
+            ax.plot(item[0], item[1], "-k", linewidth=0.5)
+            if country in x.index.tolist():
+                ax.fill(item[0], item[1], color=cmap(x.color[country]))
+    #
+    xmin, xmax = ax.get_xlim()
+    ymin, ymax = ax.get_ylim()
+    xleft = xmax - 0.02 * (xmax - xmin)
+    xright = xmax
+    xbar = np.linspace(xleft, xright, 10)
+    ybar = np.linspace(ymin, ymin + (ymax - ymin), 100)
+    xv, yv = np.meshgrid(xbar, ybar)
+    z = yv / (ymax - ymin) - ymin
+    ax.pcolormesh(xv, yv, z, cmap=cmap)
+    #
+    pos = np.linspace(ymin, ymin + (ymax - ymin), 11)
+    value = [
+        round(column1.min() + (column1.max() - column1.min()) * i / 10, 0)
+        for i in range(11)
+    ]
+    for i in range(11):
+        ax.text(
+            xright + 0.4 * (xright - xleft),
+            pos[i],
+            str(int(value[i])),
+            ha="left",
+            va="center",
+        )
+
+    ax.plot(
+        [xleft - 0.1 * (xright - xleft), xleft - 0.1 * (xright - xleft)],
+        [ymin, ymax],
+        color="gray",
+        linewidth=1,
     )
+    for i in range(11):
+        ax.plot(
+            [xleft - 0.0 * (xright - xleft), xright],
+            [pos[i], pos[i]],
+            linewidth=2.0,
+            color=cmap((11 - i) / 11),
+        )
 
-    if x[x.columns[0]].dtype != "int64":
-        yticklabels = [
-            textwrap.shorten(text=text, width=TEXTLEN) for text in x[x.columns[0]]
-        ]
-    else:
-        yticklabels = x[x.columns[0]]
+    ax.set_aspect("equal")
+    ax.axis("on")
+    ax.set_xticks([])
+    ax.set_yticks([])
 
-    ax.invert_yaxis()
-    ax.set_yticks(np.arange(len(x[x.columns[0]])))
-    ax.set_yticklabels(yticklabels)
-    ax.set_xlabel(x.columns[1])
-    ax.set_ylabel(x.columns[0])
-
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(True)
-    ax.spines["bottom"].set_visible(False)
-
-    ax.grid(axis="x", color="gray", linestyle=":")
+    ax.spines["bottom"].set_color("gray")
+    ax.spines["top"].set_color("gray")
+    ax.spines["right"].set_color("gray")
+    ax.spines["left"].set_color("gray")
 
     return fig
 
 
 def pie(
-    x,
+    data,
+    column,
+    prop_to=None,
+    fontsize=12,
     figsize=(8, 8),
     cmap="Greys",
     explode=None,
@@ -716,7 +451,13 @@ def pie(
     startangle=None,
     radius=None,
     counterclock=True,
-    wedgeprops=None,
+    wedgeprops={
+        "width": 0.6,
+        "edgecolor": "k",
+        "linewidth": 0.5,
+        "linestyle": "-",
+        "antialiased": True,
+    },
     textprops=None,
     center=(0, 0),
     frame=False,
@@ -750,17 +491,25 @@ def pie(
 
 
     """
-    matplotlib.rc("font", size=FONT_SIZE)
+    matplotlib.rc("font", size=fontsize)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
     cmap = plt.cm.get_cmap(cmap)
 
-    x = x.copy()
+    x = data.copy()
     if "ID" in x.columns:
         x.pop("ID")
+    if prop_to is None:
+        prop_to = column
     colors = None
     if cmap is not None:
-        colors = [cmap(1.0 - 0.9 * (i / len(x))) for i in range(len(x[x.columns[1]]))]
+        colors = [
+            cmap(
+                0.1
+                + 0.9 * (v - x[prop_to].min()) / (x[prop_to].max() - x[prop_to].min())
+            )
+            for v in x[prop_to]
+        ]
     ax.pie(
         x=x[x.columns[1]],
         explode=explode,
@@ -782,250 +531,7 @@ def pie(
     return fig
 
 
-def pie_prop(
-    x,
-    figsize=(8, 8),
-    cmap="Greys",
-    explode=None,
-    autopct=None,
-    pctdistance=0.6,
-    shadow=False,
-    labeldistance=1.1,
-    startangle=None,
-    radius=None,
-    counterclock=True,
-    wedgeprops=None,
-    textprops=None,
-    center=(0, 0),
-    frame=False,
-    rotatelabels=False,
-):
-    """Creates a pie plot from a dataframe.
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> import pandas as pd
-    >>> df = pd.DataFrame(
-    ...     {
-    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-    ...         "Num_Documents": [3, 2, 2, 1],
-    ...         "ID": list(range(4)),
-    ...     }
-    ... )
-    >>> df
-        Authors  Num_Documents  ID
-    0  author 3              3   0
-    1  author 1              2   1
-    2  author 0              2   2
-    3  author 2              1   3
-    >>> fig = pie(df, cmap="Blues")
-    >>> fig.savefig('sphinx/images/pieplot.png')
-
-    .. image:: images/pieplot.png
-        :width: 400px
-        :align: center
-
-
-    """
-    matplotlib.rc("font", size=FONT_SIZE)
-    fig = plt.Figure(figsize=figsize)
-    ax = fig.subplots()
-    cmap = plt.cm.get_cmap(cmap)
-
-    x = x.copy()
-    if "ID" in x.columns:
-        x.pop("ID")
-
-    column0 = x[x.columns[0]]
-    column1 = x[x.columns[1]]
-    column2 = x[x.columns[2]]
-
-    colors = None
-    if cmap is not None:
-        cmap = plt.cm.get_cmap(cmap)
-        colors = [
-            cmap(
-                (
-                    0.2
-                    + 0.75
-                    * (column2[i] - column2.min())
-                    / (column2.max() - column2.min())
-                )
-            )
-            for i in range(len(x))
-        ]
-
-    ax.pie(
-        x=column1,
-        explode=explode,
-        labels=x[x.columns[0]],
-        colors=colors,
-        autopct=autopct,
-        pctdistance=pctdistance,
-        shadow=shadow,
-        labeldistance=labeldistance,
-        startangle=startangle,
-        radius=radius,
-        counterclock=counterclock,
-        wedgeprops=wedgeprops,
-        textprops=textprops,
-        center=center,
-        frame=frame,
-        rotatelabels=rotatelabels,
-    )
-    return fig
-
-
 def bubble(
-    x,
-    axis=0,
-    rmax=100,
-    figsize=(9, 9),
-    cmap="Blues",
-    grid_lw=1.0,
-    grid_c="gray",
-    grid_ls=":",
-    **kwargs,
-):
-
-    """Creates a gant activity plot from a dataframe.
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> import pandas as pd
-    >>> df = pd.DataFrame(
-    ...     {
-    ...         "author 0": [ 1, 2, 3, 4, 5, 6, 7],
-    ...         "author 1": [14, 13, 12, 11, 10, 9, 8],
-    ...         "author 2": [1, 5, 8, 9, 0, 0, 0],
-    ...         "author 3": [0, 0, 1, 1, 1, 0, 0],
-    ...         "author 4": [0, 10, 0, 4, 2, 0, 1],
-    ...     },
-    ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
-    ... )
-    >>> df
-          author 0  author 1  author 2  author 3  author 4
-    2010         1        14         1         0         0
-    2011         2        13         5         0        10
-    2012         3        12         8         1         0
-    2013         4        11         9         1         4
-    2014         5        10         0         1         2
-    2015         6         9         0         0         0
-    2016         7         8         0         0         1
-
-    >>> fig = bubble(df, axis=0, alpha=0.5, rmax=150)
-    >>> fig.savefig('sphinx/images/bubbleplot0.png')
-
-    .. image:: images/bubbleplot0.png
-        :width: 400px
-        :align: center
-
-    >>> fig = bubble(df, axis=1, alpha=0.5, rmax=150)
-    >>> fig.savefig('sphinx/images/bubbleplot1.png')
-
-    .. image:: images/bubbleplot1.png
-        :width: 400px
-        :align: center
-
-
-    """
-    matplotlib.rc("font", size=FONT_SIZE)
-    fig = plt.Figure(figsize=figsize)
-    ax = fig.subplots()
-    cmap = plt.cm.get_cmap(cmap)
-
-    if axis == "index":
-        axis = 0
-    if axis == "columns":
-        axis = 1
-
-    x = x.copy()
-    vmax = x.max().max()
-    vmin = x.min().min()
-
-    rmin = 0
-
-    for idx, row in enumerate(x.iterrows()):
-        ax.hlines(
-            idx,
-            -1,
-            len(x.columns),
-            linewidth=grid_lw,
-            color=grid_c,
-            linestyle=grid_ls,
-            zorder=0,
-        )
-
-    for idx, col in enumerate(x.columns):
-        ax.vlines(
-            idx,
-            -1,
-            len(x.index),
-            linewidth=grid_lw,
-            color=grid_c,
-            linestyle=grid_ls,
-            zorder=0,
-        )
-
-    if axis == 0:
-        for idx, row in enumerate(x.iterrows()):
-            values = [
-                10 * (rmin + (rmax - rmin) * w / (vmax - vmin)) for w in row[1].tolist()
-            ]
-            ax.scatter(
-                range(len(x.columns)),
-                [idx] * len(x.columns),
-                marker="o",
-                s=values,
-                zorder=10,
-                **kwargs,
-            )
-
-    else:
-        for idx, col in enumerate(x.columns):
-            values = [10 * (rmin + (rmax - rmin) * w / (vmax - vmin)) for w in x[col]]
-            ax.scatter(
-                [idx] * len(x.index),
-                range(len(x.index)),
-                marker="o",
-                s=values,
-                zorder=10,
-                **kwargs,
-            )
-
-    for idx_col, col in enumerate(x.columns):
-        for idx_row, row in enumerate(x.index):
-
-            if x[col][row] != 0:
-                ax.text(
-                    idx_col, idx_row, x[col][row], va="center", ha="center", zorder=11
-                )
-
-    ax.set_aspect("equal")
-
-    ax.set_xlim(-1, len(x.columns))
-    ax.set_ylim(-1, len(x.index) + 1)
-
-    ax.set_xticks(np.arange(len(x.columns)))
-    ax.set_xticklabels(x.columns)
-    ax.tick_params(axis="x", labelrotation=90)
-    ax.xaxis.tick_top()
-
-    ax.invert_yaxis()
-    ax.set_yticks(np.arange(len(x.index)))
-    ax.set_yticklabels(x.index)
-
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
-
-    return fig
-
-
-def bubble_prop(
     x,
     y,
     figsize=(9, 9),
@@ -1234,7 +740,9 @@ def plot(x, *args, figsize=(9, 9), cmap="Blues", scalex=True, scaley=True, **kwa
 
 
 def wordcloud(
-    x,
+    data,
+    column,
+    prop_to=None,
     figsize=(8, 8),
     font_path=None,
     width=400,
@@ -1244,7 +752,6 @@ def wordcloud(
     prefer_horizontal=0.9,
     mask=None,
     scale=1,
-    color_func=None,
     max_words=200,
     min_font_size=4,
     stopwords=None,
@@ -1291,13 +798,44 @@ def wordcloud(
         :align: center
 
     """
+
+    def color_func(word, font_size, position, orientation, font_path, random_state):
+        return color_dic[word]
+
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
+    cmap = plt.cm.get_cmap(cmap)
 
-    x = x.copy()
-    if "ID" in x.columns:
-        x.pop("ID")
-    words = {row[0]: row[1] for _, row in x.iterrows()}
+    x = data.copy()
+    words = {key: value for key, value in zip(x[x.columns[0]], x[column])}
+
+    if prop_to is None:
+        prop_to = column
+    color_dic = {
+        key: cmap(
+            0.5
+            + 0.5 * (value - x[prop_to].min()) / (x[prop_to].max() - x[prop_to].min())
+        )
+        for key, value in zip(x[x.columns[0]], x[prop_to])
+    }
+
+    for key in color_dic.keys():
+        a, b, c, d = color_dic[key]
+        color_dic[key] = (
+            np.uint8(a * 255),
+            np.uint8(b * 255),
+            np.uint8(c * 255),
+            np.uint8(d * 255),
+        )
+
+    # a, b, c, d = cmap(0.1)
+    # background_color = (
+    #     np.uint8(a * 255),
+    #     np.uint8(b * 255),
+    #     np.uint8(c * 255),
+    #     np.uint8(d * 255),
+    # )
+
     wordcloud = WordCloud(
         font_path=font_path,
         width=width,
@@ -1418,7 +956,7 @@ def gant(x, figsize=(8, 8), grid_lw=1.0, grid_c="gray", grid_ls=":", *args, **kw
 def heatmap(x, figsize=(8, 8), **kwargs):
     """Plots a heatmap from a matrix.
 
-    
+
     Examples
     ----------------------------------------------------------------------------------------------
 
@@ -1555,7 +1093,15 @@ def heatmap(x, figsize=(8, 8), **kwargs):
 
 
 def stacked_bar(
-    x, figsize=(10, 10), width=0.8, bottom=None, align="center", cmap="Greys", **kwargs
+    data,
+    columns,
+    figsize=(10, 10),
+    fontsize=12,
+    width=0.8,
+    bottom=None,
+    align="center",
+    cmap="Greys",
+    **kwargs,
 ):
     """Stacked vertical bar plot.
 
@@ -1613,19 +1159,19 @@ def stacked_bar(
         :align: center
 
     """
-    matplotlib.rc("font", size=FONT_SIZE)
+    matplotlib.rc("font", size=fontsize)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
     cmap = plt.cm.get_cmap(cmap)
 
-    x = x.copy()
-    if "ID" in x.columns:
-        x.pop("ID")
+    x = data.copy()
+
     if bottom is None:
-        bottom = x[x.columns[1]].map(lambda w: 0.0)
-    for icol, col in enumerate(x.columns[1:]):
+        bottom = data[columns[0]].map(lambda w: 0.0)
+
+    for icol, col in enumerate(columns):
         if cmap is not None:
-            kwargs["color"] = cmap((0.2 + 0.75 * icol / (len(x.columns) - 1)))
+            kwargs["color"] = cmap((0.3 + 0.50 * icol / (len(columns) - 1)))
         ax.bar(
             x=range(len(x)),
             height=x[col],
@@ -1645,9 +1191,8 @@ def stacked_bar(
     ax.set_xticks(np.arange(len(x[x.columns[0]])))
     ax.set_xticklabels(x[x.columns[0]])
     ax.tick_params(axis="x", labelrotation=90)
-
     ax.set_xlabel(x.columns[0])
-    #  ax.set_ylabel(x.columns[1])
+
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)
@@ -1657,7 +1202,14 @@ def stacked_bar(
 
 
 def stacked_barh(
-    x, figsize=(10, 10), height=0.8, left=None, align="center", cmap=None, **kwargs
+    data,
+    columns,
+    figsize=(10, 10),
+    height=0.8,
+    left=None,
+    align="center",
+    cmap=None,
+    **kwargs,
 ):
     """Stacked horzontal bar plot.
 
@@ -1720,20 +1272,20 @@ def stacked_barh(
     ax = fig.subplots()
     cmap = plt.cm.get_cmap(cmap)
 
-    x = x.copy()
-    if "ID" in x.columns:
-        x.pop("ID")
+    x = data.copy()
+
     if left is None:
         left = x[x.columns[1]].map(lambda w: 0.0)
-    for icol, col in enumerate(x.columns[1:]):
+    for icol, col in enumerate(columns):
         if cmap is not None:
-            kwargs["color"] = cmap((0.2 + 0.75 * icol / (len(x.columns) - 1)))
+            kwargs["color"] = cmap((0.3 + 0.50 * icol / (len(columns) - 1)))
         ax.barh(
             y=range(len(x)),
             width=x[col],
             height=height,
             left=left,
             align=align,
+            label=col,
             **({}),
             **kwargs,
         )
@@ -1744,9 +1296,8 @@ def stacked_barh(
     ax.invert_yaxis()
     ax.set_yticks(np.arange(len(x[x.columns[0]])))
     ax.set_yticklabels(x[x.columns[0]])
-    # ax.set_xlabel(x.columns[1])
     ax.set_ylabel(x.columns[0])
-    #
+
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(True)
@@ -1919,114 +1470,9 @@ def chord_diagram(
     return cd.plot(figsize=figsize)
 
 
-def worldmap(x, figsize=(10, 5), cmap="Pastel2", legend=True, *args, **kwargs):
-    """Worldmap plot with the number of documents per country.
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> import pandas as pd
-    >>> x = pd.DataFrame(
-    ...     {
-    ...         "AU_CO": ["China", "Taiwan", "United States", "United Kingdom", "India", "Colombia"],
-    ...         "Num_Documents": [1000, 900, 800, 700, 600, 1000],
-    ...     },
-    ... )
-    >>> x
-                AU_CO  Num_Documents
-    0           China           1000
-    1          Taiwan            900
-    2   United States            800
-    3  United Kingdom            700
-    4           India            600
-    5        Colombia           1000
-    >>> fig = worldmap(x, figsize=(15, 6))
-    >>> fig.savefig('sphinx/images/worldmap.png')
-
-    .. image:: images/worldmap.png
-        :width: 2000px
-        :align: center
-
-
-    """
-    matplotlib.rc("font", size=FONT_SIZE)
-    fig = plt.Figure(figsize=figsize)
-    ax = fig.subplots()
-    cmap = plt.cm.get_cmap(cmap)
-
-    x = x.copy()
-    column0 = x[x.columns[0]]
-    column1 = x[x.columns[1]]
-    x["color"] = x[x.columns[1]].map(
-        lambda w: (w - column1.min()) / (column1.max() - column1.min())
-    )
-    x = x.set_index(column0)
-
-    module_path = dirname(__file__)
-    with open(join(module_path, "data/worldmap.data"), "r") as f:
-        countries = json.load(f)
-    for country in countries.keys():
-        data = countries[country]
-        for item in data:
-            ax.plot(item[0], item[1], "-k", linewidth=0.5)
-            if country in x.index.tolist():
-                ax.fill(item[0], item[1], color=cmap(x.color[country]))
-    #
-    xmin, xmax = ax.get_xlim()
-    ymin, ymax = ax.get_ylim()
-    xleft = xmax - 0.02 * (xmax - xmin)
-    xright = xmax
-    xbar = np.linspace(xleft, xright, 10)
-    ybar = np.linspace(ymin, ymin + (ymax - ymin), 100)
-    xv, yv = np.meshgrid(xbar, ybar)
-    z = yv / (ymax - ymin) - ymin
-    ax.pcolormesh(xv, yv, z, cmap=cmap)
-    #
-    pos = np.linspace(ymin, ymin + (ymax - ymin), 11)
-    value = [
-        round(column1.min() + (column1.max() - column1.min()) * i / 10, 0)
-        for i in range(11)
-    ]
-    for i in range(11):
-        ax.text(
-            xright + 0.4 * (xright - xleft),
-            pos[i],
-            str(int(value[i])),
-            ha="left",
-            va="center",
-        )
-
-    ax.plot(
-        [xleft - 0.1 * (xright - xleft), xleft - 0.1 * (xright - xleft)],
-        [ymin, ymax],
-        color="gray",
-        linewidth=1,
-    )
-    for i in range(11):
-        ax.plot(
-            [xleft - 0.0 * (xright - xleft), xright],
-            [pos[i], pos[i]],
-            linewidth=2.0,
-            color=cmap((11 - i) / 11),
-        )
-
-    # ax.text(xright, ymin, "0", ha="left")
-    # ax.text(xright, ymax, str(x[x.columns[0]].max()), ha="left")
-
-    ax.set_aspect("equal")
-    ax.axis("on")
-    ax.set_xticks([])
-    ax.set_yticks([])
-
-    ax.spines["bottom"].set_color("gray")
-    ax.spines["top"].set_color("gray")
-    ax.spines["right"].set_color("gray")
-    ax.spines["left"].set_color("gray")
-
-    return fig
-
-
-def tree(x, cmap="Blues", figsize=(8, 8), alpha=0.9):
+def treemap(
+    data, column, prop_to=None, fontsize=12, cmap="Blues", figsize=(8, 8), alpha=0.9
+):
     """Creates a classification plot from a dataframe.
 
     Examples
@@ -2047,7 +1493,7 @@ def tree(x, cmap="Blues", figsize=(8, 8), alpha=0.9):
     2  author 0              2   2
     3  author 2              1   3
 
-    >>> fig = tree(df)
+    >>> fig = treemap(df)
     >>> fig.savefig('sphinx/images/treeplot.png')
 
     .. image:: images/treeplot.png
@@ -2056,19 +1502,29 @@ def tree(x, cmap="Blues", figsize=(8, 8), alpha=0.9):
 
 
     """
-    matplotlib.rc("font", size=FONT_SIZE)
+    matplotlib.rc("font", size=fontsize)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
     cmap = plt.cm.get_cmap(cmap)
 
-    x = x.copy()
+    x = data.copy()
     column0 = x[x.columns[0]]
     column0 = [textwrap.shorten(text=text, width=TEXTLEN) for text in column0]
-    column0 = ["\n".join(text.split()) for text in column0]
-    column1 = x[x.columns[1]]
+    column0 = [textwrap.wrap(text=text, width=15) for text in column0]
+    column0 = ["\n".join(text) for text in column0]
+    column1 = x[column]
+
+    if prop_to is None:
+        prop_to = column
+
     colors = [
-        cmap(0.35 + 0.65 * (column1[i] - min(column1)) / (max(column1) - min(column1)))
-        for i in range(len(column1))
+        cmap(
+            0.4
+            + 0.6
+            * (value - data[prop_to].min())
+            / (data[prop_to].max() - data[prop_to].min())
+        )
+        for value in data[prop_to]
     ]
 
     squarify.plot(
@@ -2079,7 +1535,7 @@ def tree(x, cmap="Blues", figsize=(8, 8), alpha=0.9):
         ax=ax,
         pad=True,
         bar_kwargs={"edgecolor": "k", "linewidth": 0.5},
-        text_kwargs={"color": "w", "fontsize": 9},
+        text_kwargs={"color": "w", "fontsize": 10},
     )
     ax.axis("off")
     return fig

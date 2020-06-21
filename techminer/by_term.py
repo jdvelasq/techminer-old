@@ -2,7 +2,7 @@
 Analysis by Term
 ==================================================================================================
 
- 
+
 
 """
 import ipywidgets as widgets
@@ -16,32 +16,336 @@ from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
 
 
-# def get_top_terms(x, column, top_by=0, top_n=None, limit_to=None, exclude=None):
+#
+#
+#  Top documents
+#
+#
+def top_documents(data):
+    """Returns the top 50 documents by Times Cited.
 
-#     result = summary_by_term(x, column)
+    Args:
+        data (pandas.DataFrame): A bibliographic dataframe.
 
-#     if top_by == 0 or top_by == "Frequency":
-
-#     if top_by == 1 or top_by == "Times_Cited":
-
-
-# def most_frequent(x, column, top_n, limit_to, exclude):
-#     result = summary_by_term(x, column, limit_to=limit_to, exclude=exclude)
-#     result = result.sort_values(["Num_Documents", "Times_Cited", column], ascending=False)
-#     result = result[column].head(top_n)
-#     result = result.tolist()
-#     return result
-
-
-# def most_cited_by(x, column, top_n, limit_to, exclude):
-#     result = summary_by_term(x, column, limit_to=limit_to, exclude=exclude)
-#     result = result.sort_values(["Times_Cited", "Num_Documents", column], ascending=False)
-#     result = result[column].head(top_n)
-#     result = result.tolist()
-#     return result
+    Returns:
+    """
+    data = data.sort_values(["Times_Cited", "Year"], ascending=[False, True])
+    data = data.head(50)
+    data["Times_Cited"] = data.Times_Cited.map(lambda w: int(w))
+    data = data.reset_index(drop=True)
+    return data
 
 
-def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=None):
+def __APP4__(data):
+    """
+    # >>> import pandas as pd
+    # >>> data = pd.DataFrame(
+    # ...     {
+    # ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
+    # ...          "Times_Cited": list(range(10,16)),
+    # ...          "ID": list(range(6)),
+    # ...     }
+    # ... )
+    # >>> __APP4__(data)
+
+
+    """
+    result = data.sort_values(["Times_Cited", "Title"], ascending=[False, True])
+    result = result[["Authors", "Year", "Title", "Source_title", "Times_Cited"]]
+    result = result.head(50)
+    output = widgets.Output()
+    with output:
+        display(result)
+
+    return widgets.HBox([output])
+
+
+#
+#
+#  Core source titles
+#
+#
+
+
+def core_source_titles(data):
+    """[summary]
+
+    Args:
+        data ([type]): [description]
+    """
+    m = summary(
+        data, "Source_title", top_by=None, top_n=None, limit_to=None, exclude=None
+    )
+    m = m[["Num_Documents"]]
+    m = m.groupby(["Num_Documents"]).size()
+    w = [str(round(100 * a / sum(m), 2)) + " %" for a in m]
+    m = pd.DataFrame(
+        {"Num Sources": m.tolist(), "%": w, "Documents published": m.index}
+    )
+
+    m = m.sort_values(["Documents published"], ascending=False)
+    m["Acum Num Sources"] = m["Num Sources"].cumsum()
+    m["% Acum"] = [
+        str(round(100 * a / sum(m["Num Sources"]), 2)) + " %"
+        for a in m["Acum Num Sources"]
+    ]
+
+    m["Tot Documents published"] = m["Num Sources"] * m["Documents published"]
+    m["Num Documents"] = m["Tot Documents published"].cumsum()
+    m["Tot Documents"] = m["Num Documents"].map(
+        lambda w: str(round(w / m["Num Documents"].max() * 100, 2)) + " %"
+    )
+
+    bradford1 = int(len(data) / 3)
+    bradford2 = 2 * bradford1
+
+    m["Bradford's Group"] = m["Num Documents"].map(
+        lambda w: 3 if w > bradford2 else (2 if w > bradford1 else 1)
+    )
+
+    m = m[
+        [
+            "Num Sources",
+            "%",
+            "Acum Num Sources",
+            "% Acum",
+            "Documents published",
+            "Tot Documents published",
+            "Num Documents",
+            "Tot Documents",
+            "Bradford's Group",
+        ]
+    ]
+
+    m = m.reset_index(drop=True)
+    return m
+
+
+def __APP3__(data):
+    output = widgets.Output()
+    with output:
+        display(core_source_titles(data))
+    return widgets.HBox([output])
+
+
+#
+#
+#  Core Authors
+#
+#
+def core_authors(data):
+    """
+    """
+    #
+    # Numero de documentos escritos por author
+    #
+    z = summary(data, "Authors", top_by=None, top_n=None, limit_to=None, exclude=None)
+
+    authors_dict = {
+        author: num_docs
+        for author, num_docs in zip(z.Authors, z.Num_Documents)
+        if not pd.isna(author)
+    }
+
+    z = z[["Num_Documents"]]
+    z = z.groupby(["Num_Documents"]).size()
+    w = [str(round(100 * a / sum(z), 2)) + " %" for a in z]
+    z = pd.DataFrame(
+        {"Num Authors": z.tolist(), "%": w, "Documents written per Author": z.index}
+    )
+    z = z.sort_values(["Documents written per Author"], ascending=False)
+    z["Acum Num Authors"] = z["Num Authors"].cumsum()
+    z["% Acum"] = [
+        str(round(100 * a / sum(z["Num Authors"]), 2)) + " %"
+        for a in z["Acum Num Authors"]
+    ]
+
+    m = __explode(data[["Authors", "ID"]], "Authors")
+    m = m.dropna()
+    m["Documents_written"] = m.Authors.map(lambda w: authors_dict[w])
+    n = []
+    for k in z["Documents written per Author"]:
+        s = m.query("Documents_written >= " + str(k))
+        s = s[["ID"]]
+        s = s.drop_duplicates()
+        n.append(len(s))
+
+    k = []
+    for index in range(len(n) - 1):
+        k.append(n[index + 1] - n[index])
+    k = [n[0]] + k
+    z["Num Documents"] = k
+    z["Acum Num Documents"] = n
+
+    z = z[
+        [
+            "Num Authors",
+            "%",
+            "Acum Num Authors",
+            "% Acum",
+            "Documents written per Author",
+            "Num Documents",
+            "Acum Num Documents",
+        ]
+    ]
+
+    z = z.reset_index(drop=True)
+    return z
+
+
+#
+#
+#  Panel 2
+#
+#
+def __APP2__(data):
+    output = widgets.Output()
+    with output:
+        display(core_authors(data).head(50))
+    return widgets.HBox([output])
+
+
+#
+#
+#  worldmap
+#
+#
+def worldmap(
+    result, top_by="Num_Documents", cmap="Greys", figsize=(10, 5), fontsize=12,
+):
+    """
+    """
+    return plt.worldmap(
+        result[[result.columns[0], top_by]],
+        cmap=cmap,
+        figsize=figsize,
+        fontsize=fontsize,
+    )
+
+
+def __APP1__(data, limit_to, exclude):
+    # -------------------------------------------------------------------------
+    #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    controls = [
+        # 0
+        {
+            "arg": "column",
+            "desc": "Column to analyze:",
+            "widget": widgets.Dropdown(
+                options=["Countries", "Country_1st_Author"],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 1
+        {
+            "arg": "top_by",
+            "desc": "Top by:",
+            "widget": widgets.Dropdown(
+                options=["Num_Documents", "Times_Cited"],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 2
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 3
+        {
+            "arg": "width",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                options=range(15, 21, 1),
+                ensure_option=True,
+                layout=Layout(width="88px"),
+            ),
+        },
+        # 4
+        {
+            "arg": "height",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                options=range(4, 9, 1), ensure_option=True, layout=Layout(width="88px"),
+            ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
+    def server(**kwargs):
+        #
+        # Logic
+        #
+        column = kwargs["column"]
+        top_by = kwargs["top_by"]
+        cmap = kwargs["cmap"]
+        width = int(kwargs["width"])
+        height = int(kwargs["height"])
+        #
+        result = summary(
+            data, column=column, output=0, top_by="Num_Documents", top_n=None,
+        )
+        #
+        output.clear_output()
+        with output:
+            display(
+                worldmap(result, top_by=top_by, figsize=(width, height), cmap=cmap,)
+            )
+
+    # -------------------------------------------------------------------------
+    #
+    # Generic
+    #
+    # -------------------------------------------------------------------------
+    args = {control["arg"]: control["widget"] for control in controls}
+    output = widgets.Output()
+    with output:
+        display(widgets.interactive_output(server, args,))
+    return widgets.HBox(
+        [
+            widgets.VBox(
+                [
+                    widgets.VBox(
+                        [widgets.Label(value=control["desc"]), control["widget"]]
+                    )
+                    for control in controls
+                    if control["desc"] not in ["Figsize"]
+                ]
+                + [
+                    widgets.Label(value="Figure Size"),
+                    widgets.HBox([controls[-2]["widget"], controls[-1]["widget"],]),
+                ],
+                layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
+            ),
+            widgets.VBox(
+                [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")
+            ),
+        ]
+    )
+
+
+def summary(
+    data,
+    column,
+    output=0,
+    top_by="None",
+    top_n=None,
+    sort_by="Num_Documents",
+    ascending=True,
+    cmap="Greys",
+    limit_to=None,
+    exclude=None,
+    fontsize=12,
+    figsize=(10, 5),
+):
     """Summarize the number of documents and citations by term in a dataframe.
 
     Args:
@@ -72,7 +376,7 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
     2                    author 1           12  1991   2
     3                    author 3           13  1991   3
 
-    >>> summary_by_term(x, 'Authors')
+    >>> summary(x, 'Authors')
         Authors  Num_Documents  Times_Cited      ID
     0  author 0              2           21  [0, 1]
     1  author 1              2           22  [0, 2]
@@ -80,12 +384,12 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
     3  author 3              1           13     [3]
 
     >>> items = ['author 1', 'author 2']
-    >>> summary_by_term(x, 'Authors', limit_to=items)
+    >>> summary(x, 'Authors', limit_to=items)
         Authors  Num_Documents  Times_Cited      ID
     0  author 1              2           22  [0, 2]
     1  author 2              1           10     [0]
 
-    >>> summary_by_term(x, 'Authors', exclude=items)
+    >>> summary(x, 'Authors', exclude=items)
         Authors  Num_Documents  Times_Cited      ID
     0  author 0              2           21  [0, 1]
     1  author 3              1           13     [3]
@@ -95,7 +399,7 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
     #
     # Computation
     #
-    x = x.copy()
+    x = data.copy()
     last_year = x.Year.max()
 
     x["SD"] = x[column].map(
@@ -231,71 +535,56 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
     if exclude is not None:
         result = result[result[column].map(lambda w: w not in exclude)]
 
-    if top_by == 0 or top_by == "Num Documents":
+    #
+    # Top by
+    #
+    if isinstance(top_by, str):
+        top_by = top_by.replace(" ", "_")
+        top_by = {
+            "Num_Documents": 0,
+            "Times_Cited": 1,
+            "Frac_Num_Documents": 2,
+            "Times_Cited_per_Year": 3,
+            "Avg_Times_Cited": 4,
+            "H_index": 5,
+            "M_index": 6,
+            "G_index": 7,
+        }[top_by]
+
+    if top_by is not None:
+
+        by, ascending_top_by = {
+            0: (["Num_Documents", "Times_Cited", column], [False, False, True]),
+            1: (["Times_Cited", "Frac_Num_Documents", column], [False, False, True]),
+            2: (["Frac_Num_Documents", "Times_Cited", column], [False, False, True]),
+            3: (
+                ["Times_Cited_per_Year", "Frac_Num_Documents", column],
+                [False, False, True],
+            ),
+            4: (
+                ["Avg_Times_Cited", "Frac_Num_Documents", column],
+                [False, False, True],
+            ),
+            5: (
+                ["H_index", "G_index", "Times_Cited", column],
+                [False, False, False, True],
+            ),
+            6: (
+                ["M_index", "G_index", "Times_Cited", column],
+                [False, False, False, True],
+            ),
+            7: (
+                ["G_index", "H_index", "Times_Cited", column],
+                [False, False, False, True],
+            ),
+        }[top_by]
+
         result.sort_values(
-            ["Num_Documents", "Times_Cited", column],
-            ascending=[False, False, True],
-            inplace=True,
-            ignore_index=True,
+            by=by, ascending=ascending_top_by, inplace=True, ignore_index=True,
         )
 
-    if top_by == 1 or top_by == "Times Cited":
-        result.sort_values(
-            ["Times_Cited", "Frac_Num_Documents", column],
-            ascending=[False, False, True],
-            inplace=True,
-            ignore_index=True,
-        )
+    else:
 
-    if top_by == 2 or top_by == "Frac Num Documents":
-        result.sort_values(
-            ["Frac_Num_Documents", "Times_Cited", column],
-            ascending=[False, False, True],
-            inplace=True,
-            ignore_index=True,
-        )
-
-    if top_by == 3 or top_by == "Times Cited per Year":
-        result.sort_values(
-            ["Times_Cited_per_Year", "Frac_Num_Documents", column],
-            ascending=[False, False, True],
-            inplace=True,
-            ignore_index=True,
-        )
-
-    if top_by == 4 or top_by == "Avg Times Cited":
-        result.sort_values(
-            ["Avg_Times_Cited", "Frac_Num_Documents", column],
-            ascending=[False, False, True],
-            inplace=True,
-            ignore_index=True,
-        )
-
-    if top_by == 5 or top_by == "H index":
-        result.sort_values(
-            ["H_index", "G_index", "Times_Cited", column],
-            ascending=[False, False, False, True],
-            inplace=True,
-            ignore_index=True,
-        )
-
-    if top_by == 6 or top_by == "M index":
-        result.sort_values(
-            ["M_index", "G_index", "Times_Cited", column],
-            ascending=[False, False, False, True],
-            inplace=True,
-            ignore_index=True,
-        )
-
-    if top_by == 7 or top_by == "G index":
-        result.sort_values(
-            ["G_index", "H_index", "Times_Cited", column],
-            ascending=[False, False, False, True],
-            inplace=True,
-            ignore_index=True,
-        )
-
-    if top_by is None:
         result.sort_values(
             [column, "Num_Documents", "Times_Cited"],
             ascending=[True, False, False],
@@ -306,40 +595,104 @@ def summary_by_term(x, column, top_by=None, top_n=None, limit_to=None, exclude=N
     if top_n is not None:
         result = result.head(top_n)
 
-    return result
+    #
+    #
+    #  Sort by
+    #
+    #
+    if isinstance(sort_by, str):
+        sort_by = sort_by.replace(" ", "_")
+        sort_by = {
+            "Column": 0,
+            "Num_Documents": 1,
+            "Frac_Num_Documents": 2,
+            "Times_Cited": 3,
+            "Times_Cited_per_Year": 4,
+            "Avg_Times_Cited": 5,
+            "H_index": 6,
+            "M_index": 7,
+            "G_index": 8,
+        }[sort_by]
 
+    column0 = result.columns[0]
+    sort_by = {
+        0: [column0, "Times_Cited", "Num_Documents"],
+        1: ["Num_Documents", "Times_Cited", column0],
+        2: ["Frac_Num_Documents", "Times_Cited", column0],
+        3: ["Times_Cited", "Num_Documents", column0],
+        4: ["Times_Cited_per_Year", "Num_Documents", column0],
+        5: ["Avg_Times_Cited", "Num_Documents", column0],
+        6: ["H_index", "G_index", "Times_Cited", "Num_Documents"],
+        7: ["M_index", "G_index", "Times_Cited", "Num_Documents"],
+        8: ["G_index", "H_index", "Times_Cited", "Num_Documents"],
+    }[sort_by]
 
-def get_top_by(x, column, top_by, top_n, limit_to, exclude):
-    """Return a list with the top_n terms of column
-    """
-    return summary_by_term(
-        x=x,
-        column=column,
-        top_by=top_by,
-        top_n=top_n,
-        limit_to=limit_to,
-        exclude=exclude,
-    )[column].tolist()
+    result = result.sort_values(by=sort_by, ascending=ascending)
 
+    result = result.reset_index(drop=True)
 
-# def most_cited_documents(x):
-#     """ Returns the most cited documents.
+    #
+    #
+    # Output
+    #
+    #
+    if isinstance(output, str):
+        output = output.replace(" ", "_")
+        output = {
+            "Summary": 0,
+            "Bar_plot": 1,
+            "Horizontal_bar_plot": 2,
+            "Pie_plot": 3,
+            "Wordcloud": 4,
+            "Treemap": 5,
+            "S/D_Ratio_(bar)": 6,
+            "S/D_Ratio_(barh)": 7,
+        }[output]
 
-#     Args:
-#         x (pandas.DataFrame): bibliographic dataframe.
+    if output == 0:
+        result.pop("ID")
+        return result
 
-#     Results:
-#         A pandas.DataFrame.
+    values, prop_to = {
+        0: ("Num_Documents", "Times_Cited"),
+        1: ("Times_Cited", "Num_Documents"),
+        2: ("Frac_Num_Documents", "Times_Cited"),
+        3: ("Times_Cited_per_Year", "Num_Documents"),
+        4: ("Avg_Times_Cited", "Num_Documents"),
+        5: ("H_index", "Avg_Times_Cited"),
+        6: ("M_index", "Avg_Times_Cited"),
+        7: ("G_index", "Avg_Times_Cited"),
+    }[top_by]
 
+    if output in [1, 2, 3]:
 
-#     """
-#     result = x.sort_values(by="Times_Cited", ascending=False)[
-#         ["Title", "Authors", "Year", "Times_Cited", "ID"]
-#     ]
-#     result["Times_Cited"] = result["Times_Cited"].map(
-#         lambda w: int(w) if pd.isna(w) is False else 0
-#     )
-#     return result
+        plot = {1: plt.bar, 2: plt.barh, 3: plt.pie,}[output]
+
+        return plot(
+            data=result,
+            column=values,
+            prop_to=prop_to,
+            cmap=cmap,
+            figsize=figsize,
+            fontsize=fontsize,
+        )
+
+    if output in [4, 5]:
+        plot = {4: plt.wordcloud, 5: plt.treemap,}[output]
+        return plot(
+            data=result, column=values, prop_to=prop_to, cmap=cmap, figsize=figsize
+        )
+
+    if output in [6, 7]:
+        plot = {6: plt.stacked_bar, 7: plt.stacked_barh,}[output]
+        return plot(
+            result[[column, "SD", "MD"]],
+            columns=["SD", "MD"],
+            figsize=figsize,
+            cmap=cmap,
+        )
+
+    return "ERROR: Output code unknown"
 
 
 ###############################################################################
@@ -359,13 +712,13 @@ PANE_HEIGHTS = ["80px", "720px", 0]
 ##  Panel 0
 ##
 ##
-def __APP0__(x, limit_to, exclude):
+def __APP0__(data, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
     #
     # -------------------------------------------------------------------------
-    COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
+    COLUMNS = sorted([column for column in data.columns if column not in EXCLUDE_COLS])
     #
     controls = [
         # 0
@@ -391,7 +744,7 @@ def __APP0__(x, limit_to, exclude):
             "arg": "column",
             "desc": "Column to analyze:",
             "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
+                options=[z for z in COLUMNS if z in data.columns],
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
@@ -429,30 +782,28 @@ def __APP0__(x, limit_to, exclude):
             "desc": "Sort by:",
             "widget": widgets.Dropdown(
                 options=[
-                    "Num Documents asc",
-                    "Num Documents desc",
-                    "Frac Num Documents asc",
-                    "Frac Num Documents desc",
-                    "Times Cited asc",
-                    "Times Cited desc",
-                    "Times Cited per Year asc",
-                    "Times Cited per Year desc",
-                    "Avg Times Cited asc",
-                    "Avg Times Cited desc",
-                    "H index asc",
-                    "H index desc",
-                    "M index asc",
-                    "M index desc",
-                    "G index asc",
-                    "G index desc",
-                    "Column asc",
-                    "Column desc",
+                    "Num Documents",
+                    "Frac Num Documents",
+                    "Times Cited",
+                    "Times Cited per Year",
+                    "Avg Times Cited",
+                    "H index",
+                    "M index",
+                    "G index",
+                    "Column",
                 ],
-                value="Num Documents desc",
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
         # 5
+        {
+            "arg": "ascending",
+            "desc": "Ascending:",
+            "widget": widgets.Dropdown(
+                options=["True", "False"], layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 6
         {
             "arg": "cmap",
             "desc": "Colormap:",
@@ -460,9 +811,9 @@ def __APP0__(x, limit_to, exclude):
                 options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 6
+        # 7
         {
-            "arg": "figsize_width",
+            "arg": "width",
             "desc": "Figsize",
             "widget": widgets.Dropdown(
                 options=range(5, 15, 1),
@@ -470,9 +821,9 @@ def __APP0__(x, limit_to, exclude):
                 layout=Layout(width="88px"),
             ),
         },
-        # 7
+        # 8
         {
-            "arg": "figsize_height",
+            "arg": "height",
             "desc": "Figsize",
             "widget": widgets.Dropdown(
                 options=range(5, 15, 1),
@@ -498,169 +849,36 @@ def __APP0__(x, limit_to, exclude):
         top_n = kwargs["top_n"]
         cmap = kwargs["cmap"]
         sort_by = kwargs["sort_by"]
-        figsize_width = int(kwargs["figsize_width"])
-        figsize_height = int(kwargs["figsize_height"])
-        #
-        plots = {
-            "Summary": None,
-            "Bar plot": plt.bar_prop,
-            "Horizontal bar plot": plt.barh_prop,
-            "Pie plot": plt.pie_prop,
-            "Wordcloud": plt.wordcloud,
-            "Treemap": plt.tree,
-            "S/D Ratio (bar)": None,
-            "S/D Ratio (barh)": None,
-        }
-        #
+        ascending = {"True": True, "False": False}[kwargs["ascending"]]
+        width = int(kwargs["width"])
+        height = int(kwargs["height"])
+
         if view == "Summary":
-            controls[5]["widget"].disabled = True
+            controls[6]["widget"].disabled = True
             controls[-1]["widget"].disabled = True
             controls[-2]["widget"].disabled = True
         else:
-            controls[5]["widget"].disabled = False
+            controls[6]["widget"].disabled = False
             controls[-1]["widget"].disabled = False
             controls[-2]["widget"].disabled = False
-        #
-        df = summary_by_term(
-            x,
-            column=column,
-            top_by=top_by,
-            top_n=top_n,
-            limit_to=limit_to,
-            exclude=exclude,
-        )
-        #
-        if sort_by == "Num Documents asc":
-            df = df.sort_values(
-                by=["Num_Documents", "Times_Cited", df.columns[0]], ascending=True
-            )
-        if sort_by == "Num Documents desc":
-            df = df.sort_values(
-                by=["Num_Documents", "Times_Cited", df.columns[0]], ascending=False
-            )
-        if sort_by == "Frac Num Documents asc":
-            df = df.sort_values(
-                by=["Frac_Num_Documents", "Times_Cited", df.columns[0]], ascending=True
-            )
-        if sort_by == "Frac Num Documents desc":
-            df = df.sort_values(
-                by=["Frac_Num_Documents", "Times_Cited", df.columns[0]], ascending=False
-            )
-        if sort_by == "Times Cited asc":
-            df = df.sort_values(
-                by=["Times_Cited", "Num_Documents", df.columns[0]], ascending=True
-            )
-        if sort_by == "Times Cited desc":
-            df = df.sort_values(
-                by=["Times_Cited", "Num_Documents", df.columns[0]], ascending=False
-            )
-        if sort_by == "Times Cited per Year asc":
-            df = df.sort_values(
-                by=["Times_Cited_per_Year", "Num_Documents", df.columns[0]],
-                ascending=True,
-            )
-        if sort_by == "Times Cited per Year desc":
-            df = df.sort_values(
-                by=["Times_Cited_per_Year", "Num_Documents", df.columns[0]],
-                ascending=False,
-            )
-        if sort_by == "Avg Times Cited asc":
-            df = df.sort_values(
-                by=["Avg_Times_Cited", "Num_Documents", df.columns[0]], ascending=True
-            )
-        if sort_by == "Avg Times Cited desc":
-            df = df.sort_values(
-                by=["Avg_Times_Cited", "Num_Documents", df.columns[0]], ascending=False
-            )
-        if sort_by == "Column asc":
-            df = df.sort_values(
-                by=[df.columns[0], "Times_Cited", "Num_Documents"], ascending=True
-            )
-        if sort_by == "Column desc":
-            df = df.sort_values(
-                by=[df.columns[0], "Times_Cited", "Num_Documents"], ascending=False
-            )
 
-        if sort_by == "H index asc":
-            df = df.sort_values(
-                by=["H_index", "G_index", "Times_Cited", "Num_Documents"],
-                ascending=True,
-            )
-        if sort_by == "H index desc":
-            df = df.sort_values(
-                by=["H_index", "G_index", "Times_Cited", "Num_Documents"],
-                ascending=False,
-            )
-        if sort_by == "M index asc":
-            df = df.sort_values(
-                by=["M_index", "G_index", "Times_Cited", "Num_Documents"],
-                ascending=True,
-            )
-        if sort_by == "M index desc":
-            df = df.sort_values(
-                by=["M_index", "G_index", "Times_Cited", "Num_Documents"],
-                ascending=False,
-            )
-        if sort_by == "G index asc":
-            df = df.sort_values(
-                by=["G_index", "H_index", "Times_Cited", "Num_Documents"],
-                ascending=True,
-            )
-        if sort_by == "G index desc":
-            df = df.sort_values(
-                by=["G_index", "H_index", "Times_Cited", "Num_Documents"],
-                ascending=False,
-            )
-
-        #
-        df = df.reset_index(drop=True)
-        #
-        plot = plots[view]
         output.clear_output()
         with output:
-            if view == "Summary":
-                df.pop("ID")
-                display(df)
-            else:
-
-                if view == "S/D Ratio (bar)":
-                    display(
-                        plt.stacked_bar(
-                            df[[column, "SD", "MD"]],
-                            figsize=(figsize_width, figsize_height),
-                            cmap=cmap,
-                        )
-                    )
-                    return
-
-                if view == "S/D Ratio (barh)":
-                    display(
-                        plt.stacked_barh(
-                            df[[column, "SD", "MD"]],
-                            figsize=(figsize_width, figsize_height),
-                            cmap=cmap,
-                        )
-                    )
-                    return
-
-                if top_by == "Num Documents":
-                    df = df[[column, "Num_Documents", "Times_Cited"]]
-                if top_by == "Times Cited":
-                    df = df[[column, "Times_Cited", "Num_Documents"]]
-                if top_by == "Frac Num Documents":
-                    df = df[[column, "Frac_Num_Documents", "Times_Cited"]]
-                if top_by == "Times Cited per Year":
-                    df = df[[column, "Times_Cited_per_Year", "Num_Documents"]]
-                if top_by == "Avg Times Cited":
-                    df = df[[column, "Avg_Times_Cited", "Num_Documents"]]
-                if top_by == "H index":
-                    df = df[[column, "H_index", "Avg_Times_Cited"]]
-                if top_by == "M index":
-                    df = df[[column, "M_index", "Avg_Times_Cited"]]
-                if top_by == "G index":
-                    df = df[[column, "G_index", "Avg_Times_Cited"]]
-
-                display(plot(df, cmap=cmap, figsize=(figsize_width, figsize_height)))
+            display(
+                summary(
+                    data=data,
+                    column=column,
+                    output=view,
+                    top_by=top_by,
+                    top_n=top_n,
+                    sort_by=sort_by,
+                    ascending=ascending,
+                    cmap=cmap,
+                    limit_to=limit_to,
+                    exclude=exclude,
+                    figsize=(width, height),
+                )
+            )
 
     # -------------------------------------------------------------------------
     #
@@ -699,265 +917,6 @@ def __APP0__(x, limit_to, exclude):
 #  Panel 1
 #
 #
-def __APP1__(x, limit_to, exclude):
-    # -------------------------------------------------------------------------
-    #
-    # UI
-    #
-    # -------------------------------------------------------------------------
-    controls = [
-        # 0
-        {
-            "arg": "term",
-            "desc": "Column to analyze:",
-            "widget": widgets.Dropdown(
-                options=["Countries", "Country_1st_Author"],
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 1
-        {
-            "arg": "analysis_type",
-            "desc": "Analysis type:",
-            "widget": widgets.Dropdown(
-                options=["Num Documents", "Times Cited"],
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 2
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(
-                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 3
-        {
-            "arg": "figsize_width",
-            "desc": "Figsize",
-            "widget": widgets.Dropdown(
-                options=range(15, 21, 1),
-                ensure_option=True,
-                layout=Layout(width="88px"),
-            ),
-        },
-        # 4
-        {
-            "arg": "figsize_height",
-            "desc": "Figsize",
-            "widget": widgets.Dropdown(
-                options=range(4, 9, 1), ensure_option=True, layout=Layout(width="88px"),
-            ),
-        },
-    ]
-    # -------------------------------------------------------------------------
-    #
-    # Logic
-    #
-    # -------------------------------------------------------------------------
-    def server(**kwargs):
-        #
-        # Logic
-        #
-        term = kwargs["term"]
-        analysis_type = kwargs["analysis_type"]
-        cmap = kwargs["cmap"]
-        figsize_width = int(kwargs["figsize_width"])
-        figsize_height = int(kwargs["figsize_height"])
-        #
-        df = summary_by_term(x, term)
-        if analysis_type == "Num Documents":
-            df = df[[term, "Num_Documents"]]
-        else:
-            df = df[[term, "Times_Cited"]]
-        df = df.reset_index(drop=True)
-        output.clear_output()
-        with output:
-            display(
-                plt.worldmap(df, figsize=(figsize_width, figsize_height), cmap=cmap)
-            )
-
-    # -------------------------------------------------------------------------
-    #
-    # Generic
-    #
-    # -------------------------------------------------------------------------
-    args = {control["arg"]: control["widget"] for control in controls}
-    output = widgets.Output()
-    with output:
-        display(widgets.interactive_output(server, args,))
-    return widgets.HBox(
-        [
-            widgets.VBox(
-                [
-                    widgets.VBox(
-                        [widgets.Label(value=control["desc"]), control["widget"]]
-                    )
-                    for control in controls
-                    if control["desc"] not in ["Figsize"]
-                ]
-                + [
-                    widgets.Label(value="Figure Size"),
-                    widgets.HBox([controls[-2]["widget"], controls[-1]["widget"],]),
-                ],
-                layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
-            ),
-            widgets.VBox(
-                [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")
-            ),
-        ]
-    )
-
-
-#
-#
-#  Panel 2
-#
-#
-def __APP2__(x):
-
-    #
-    # Numero de documentos escritos por author
-    #
-    z = summary_by_term(
-        x, "Authors", top_by=None, top_n=None, limit_to=None, exclude=None
-    )
-
-    authors_dict = {
-        author: num_docs
-        for author, num_docs in zip(z.Authors, z.Num_Documents)
-        if not pd.isna(author)
-    }
-
-    z = z[["Num_Documents"]]
-    z = z.groupby(["Num_Documents"]).size()
-    w = [str(round(100 * a / sum(z), 2)) + " %" for a in z]
-    z = pd.DataFrame(
-        {"Num Authors": z.tolist(), "%": w, "Documents written per Author": z.index}
-    )
-    z = z.sort_values(["Documents written per Author"], ascending=False)
-    z["Acum Num Authors"] = z["Num Authors"].cumsum()
-    z["% Acum"] = [
-        str(round(100 * a / sum(z["Num Authors"]), 2)) + " %"
-        for a in z["Acum Num Authors"]
-    ]
-
-    m = __explode(x[["Authors", "ID"]], "Authors")
-    m = m.dropna()
-    m["Documents_written"] = m.Authors.map(lambda w: authors_dict[w])
-    n = []
-    for k in z["Documents written per Author"]:
-        s = m.query("Documents_written >= " + str(k))
-        s = s[["ID"]]
-        s = s.drop_duplicates()
-        n.append(len(s))
-
-    k = []
-    for index in range(len(n) - 1):
-        k.append(n[index + 1] - n[index])
-    k = [n[0]] + k
-    z["Num Documents"] = k
-    z["Acum Num Documents"] = n
-
-    z = z[
-        [
-            "Num Authors",
-            "%",
-            "Acum Num Authors",
-            "% Acum",
-            "Documents written per Author",
-            "Num Documents",
-            "Acum Num Documents",
-        ]
-    ]
-
-    z = z.reset_index(drop=True)
-
-    output = widgets.Output()
-    with output:
-        display(z.head(50))
-
-    return widgets.HBox([output])
-
-
-#
-#
-#  Panel 3
-#
-#
-def __APP3__(x):
-
-    m = summary_by_term(
-        x, "Source_title", top_by=None, top_n=None, limit_to=None, exclude=None
-    )
-    m = m[["Num_Documents"]]
-    m = m.groupby(["Num_Documents"]).size()
-    w = [str(round(100 * a / sum(m), 2)) + " %" for a in m]
-    m = pd.DataFrame(
-        {"Num Sources": m.tolist(), "%": w, "Documents published": m.index}
-    )
-
-    m = m.sort_values(["Documents published"], ascending=False)
-    m["Acum Num Sources"] = m["Num Sources"].cumsum()
-    m["% Acum"] = [
-        str(round(100 * a / sum(m["Num Sources"]), 2)) + " %"
-        for a in m["Acum Num Sources"]
-    ]
-
-    m["Tot Documents published"] = m["Num Sources"] * m["Documents published"]
-    m["Num Documents"] = m["Tot Documents published"].cumsum()
-    m["Tot Documents"] = m["Num Documents"].map(
-        lambda w: str(round(w / m["Num Documents"].max() * 100, 2)) + " %"
-    )
-
-    bradford1 = int(len(x) / 3)
-    bradford2 = 2 * bradford1
-
-    m["Bradford's Group"] = m["Num Documents"].map(
-        lambda w: 3 if w > bradford2 else (2 if w > bradford1 else 1)
-    )
-
-    m = m[
-        [
-            "Num Sources",
-            "%",
-            "Acum Num Sources",
-            "% Acum",
-            "Documents published",
-            "Tot Documents published",
-            "Num Documents",
-            "Tot Documents",
-            "Bradford's Group",
-        ]
-    ]
-
-    m = m.reset_index(drop=True)
-
-    output = widgets.Output()
-    with output:
-        display(m)
-
-    return widgets.HBox([output])
-
-
-#
-#
-#  Panel 4
-#
-#
-def __APP4__(x):
-
-    z = x.sort_values(["Times_Cited", "Year"], ascending=[False, True])
-    z = z.head(50)
-    z["Times_Cited"] = z.Times_Cited.map(lambda w: int(w))
-    z = z.reset_index(drop=True)
-
-    output = widgets.Output()
-    with output:
-        display(z[["Authors", "Year", "Title", "Source_title", "Times_Cited"]])
-
-    return widgets.HBox([output])
 
 
 def app(df, limit_to=None, exclude=None):
