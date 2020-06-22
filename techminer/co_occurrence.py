@@ -26,7 +26,16 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 
 def filter_index(
-    x, column, matrix, axis, top_by=0, top_n=10, limit_to=None, exclude=None
+    x,
+    column,
+    matrix,
+    axis,
+    top_by=0,
+    top_n=10,
+    sort_by=0,
+    ascending=True,
+    limit_to=None,
+    exclude=None,
 ):
     """
     Args:
@@ -34,26 +43,31 @@ def filter_index(
         column: column analyzed
         matrix: result
         axis: 0=rows, 1=columns
-        top_by: 0=frequency, 1=cited_by
+        top_by: 0=Num_Documents, 1=Times_Cited
+        sort_by: 0=Alphabetic, 1=Num_Documents, 2=Times_Cited
 
     """
     top_terms = by_term.summary(x, column)
 
-    if top_by == 0 or top_by == "Num Documents":
+    if isinstance(top_by, str):
+        top_by = top_by.replace(" ", "_")
+        top_by = {"Num_Documents": 0, "Times_Cited": 1,}[top_by]
+
+    if top_by == 0:
         top_terms = top_terms.sort_values(
             ["Num_Documents", "Times_Cited", column],
             ascending=[False, False, True],
             ignore_index=True,
         )
 
-    if top_by == 1 or top_by == "Times Cited":
+    if top_by == 1:
         top_terms = top_terms.sort_values(
             ["Times_Cited", "Num_Documents", column],
             ascending=[False, False, True],
             ignore_index=True,
         )
 
-    top_terms = top_terms[column]
+    #  top_terms = top_terms[column]
 
     if isinstance(limit_to, dict):
         if column in limit_to.keys():
@@ -62,7 +76,7 @@ def filter_index(
             limit_to = None
 
     if limit_to is not None:
-        top_terms = top_terms[top_terms.map(lambda w: w in limit_to)]
+        top_terms = top_terms[top_terms[column].map(lambda w: w in limit_to)]
 
     if isinstance(exclude, dict):
         if column in exclude.keys():
@@ -71,12 +85,29 @@ def filter_index(
             exclude = None
 
     if exclude is not None:
-        top_terms = top_terms[top_terms.map(lambda w: w not in exclude)]
+        top_terms = top_terms[top_terms[column].map(lambda w: w not in exclude)]
 
     if top_n is not None:
         top_terms = top_terms.head(top_n)
 
-    top_terms = top_terms.tolist()
+    if isinstance(sort_by, str):
+        sort_by = sort_by.replace(" ", "_")
+        sort_by = {"Alphabetic": 0, "Num_Documents": 1, "Times_Cited": 2,}[sort_by]
+
+    if sort_by == 0:
+        top_terms = top_terms.sort_values(column, ascending=ascending)
+
+    if sort_by == 1:
+        top_terms = top_terms.sort_values(
+            ["Num_Documents", "Times_Cited"], ascending=ascending
+        )
+
+    if sort_by == 2:
+        top_terms = top_terms.sort_values(
+            ["Times_Cited", "Num_Documents"], ascending=ascending
+        )
+
+    top_terms = top_terms[column].tolist()
 
     if axis == 0 or axis == 2:
         matrix = matrix.loc[top_terms, :]

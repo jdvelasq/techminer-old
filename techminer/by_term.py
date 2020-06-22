@@ -336,7 +336,7 @@ def summary(
     data,
     column,
     output=0,
-    top_by="None",
+    top_by=None,
     top_n=None,
     sort_by="Num_Documents",
     ascending=True,

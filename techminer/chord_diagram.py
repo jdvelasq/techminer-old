@@ -213,7 +213,14 @@ class ChordDiagram:
 
                 x = node_properties["node_x"][node]
                 y = node_properties["node_y"][node]
-                ax.scatter(x, y, zorder=10, **self.get_node_data(node))
+                ax.scatter(
+                    x,
+                    y,
+                    zorder=10,
+                    edgecolors="k",
+                    linewidths=0.5,
+                    **self.get_node_data(node),
+                )
 
             for label in self._nodes:
 
@@ -231,6 +238,13 @@ class ChordDiagram:
                     ha=ha,
                     va="center",
                     rotation_mode="anchor",
+                    bbox=dict(
+                        facecolor="w",
+                        alpha=1.0,
+                        edgecolor="gray",
+                        boxstyle="round,pad=0.5",
+                    ),
+                    zorder=11,
                     **attr,
                 )
 
@@ -295,8 +309,20 @@ class ChordDiagram:
         draw_points()
         draw_edges()
 
+        #
+        # Figure size
+        #
+
+        xlim = ax.get_xlim()
+        ylim = ax.get_ylim()
+        ax.set_xlim(
+            xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
+        )
+        ax.set_ylim(
+            ylim[0] - 0.15 * (ylim[1] - ylim[0]), ylim[1] + 0.15 * (ylim[1] - ylim[0])
+        )
+
         ax.set_axis_off()
         ax.set_aspect("equal")
-        # , "box"
 
         return fig

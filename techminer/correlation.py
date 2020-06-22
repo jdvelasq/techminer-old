@@ -15,22 +15,29 @@ from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
 
 from techminer.co_occurrence import co_occurrence, document_term_matrix, filter_index
-from techminer.by_term import summary_by_term
+import techminer.by_term as by_term
 from techminer.explode import MULTIVALUED_COLS, __explode
 from techminer.keywords import Keywords
 from techminer.maps import Map
 from techminer.params import EXCLUDE_COLS
-from techminer.plots import COLORMAPS, chord_diagram
+from techminer.plots import COLORMAPS
+from techminer.chord_diagram import ChordDiagram
 
 
 def corr(
-    x,
+    data,
     column,
     by=None,
     method="pearson",
+    output=0,
     top_by=None,
     top_n=None,
+    sort_by=None,
+    ascending=True,
     cmap=None,
+    layout="Circular",
+    min_link_value=-1,
+    figsize=(8, 8),
     limit_to=None,
     exclude=None,
 ):
@@ -165,12 +172,10 @@ def corr(
 
 
     """
+    x = data.copy()
+
     if by is None:
         by = column
-        # if isinstance(limit_to, dict) and column in limit_to.keys():
-        #     limit_to[by] = limit_to[column]
-        # if isinstance(exclude, dict) and column in exclude.keys():
-        #     exclude[by] = exclude[column]
 
     if column == by:
 
@@ -182,6 +187,8 @@ def corr(
             axis=1,
             top_by=0,
             top_n=top_n,
+            sort_by=sort_by,
+            ascending=ascending,
             limit_to=limit_to,
             exclude=exclude,
         )
@@ -198,6 +205,8 @@ def corr(
             axis=1,
             top_by=0,
             top_n=top_n,
+            sort_by=sort_by,
+            ascending=ascending,
             limit_to=limit_to,
             exclude=exclude,
         )
@@ -206,9 +215,155 @@ def corr(
         matrix = pd.DataFrame(matrix, columns=A.columns, index=B.columns)
         result = matrix.corr(method=method)
 
-    result = result.sort_index(axis=0, ascending=True)
-    result = result.sort_index(axis=1, ascending=True)
+    if isinstance(output, str):
+        output = {"Matrix": 0, "Heatmap": 1, "Correlation map": 2, "Chord diagram": 3,}[
+            output
+        ]
+
+    if output == 0:
+        if cmap is None:
+            return result
+        else:
+            return result.style.format(
+                lambda q: "{:+4.3f}".format(q) if q >= min_link_value else ""
+            ).background_gradient(cmap=cmap)
+
+    if output == 1:
+        return plt.heatmap(result, cmap=cmap, figsize=figsize)
+
+    if output == 2:
+        return correlation_map(
+            matrix=result,
+            summary=by_term.summary(x, column=column, top_by=None, top_n=None),
+            layout=layout,
+            cmap=cmap,
+            figsize=figsize,
+            min_link_value=min_link_value,
+        )
+
+    if output == 3:
+        return correlation_chord_diagram(
+            matrix=result,
+            summary=by_term.summary(x, column=column, top_by=None, top_n=None),
+            cmap=cmap,
+            figsize=figsize,
+            min_link_value=min_link_value,
+        )
+
     return result
+
+
+def correlation_chord_diagram(
+    matrix, summary, cmap="Greys", figsize=(17, 12), min_link_value=0,
+):
+    x = matrix.copy()
+    # ---------------------------------------------------
+    #
+    # Node sizes
+    #
+    #
+    # Data preparation
+    #
+    terms = matrix.columns.tolist()
+    terms = [w[: w.find("[")].strip() if "[" in w else w for w in terms]
+    terms = [w.strip() for w in terms]
+
+    num_documents = {
+        k: v for k, v in zip(summary[summary.columns[0]], summary["Num_Documents"])
+    }
+    times_cited = {
+        k: v for k, v in zip(summary[summary.columns[0]], summary["Times_Cited"])
+    }
+
+    #
+    # Node sizes
+    #
+    node_sizes = [num_documents[t] for t in terms]
+    min_size = min(node_sizes)
+    max_size = max(node_sizes)
+    if min_size == max_size:
+        node_sizes = [500 for t in terms]
+    else:
+        node_sizes = [
+            600 + int(2500 * (t - min_size) / (max_size - min_size)) for t in node_sizes
+        ]
+
+    #
+    # Node colors
+    #
+    cmap = pyplot.cm.get_cmap(cmap)
+    node_colors = [times_cited[t] for t in terms]
+    min_color = min(node_colors)
+    max_color = max(node_colors)
+    if min_color == max_color:
+        node_colors = [cmap(0.8) for t in terms]
+    else:
+        node_colors = [
+            cmap(0.2 + 0.75 * (t - min_color) / (max_color - min_color))
+            for t in node_colors
+        ]
+
+    #
+    # ---------------------------------------------------
+
+    cd = ChordDiagram()
+    for idx, term in enumerate(x.columns):
+        cd.add_node(term, color=node_colors[idx], s=node_sizes[idx])
+
+    style = ["-", "-", "--", ":"]
+    #  if solid_lines is True:
+    #      style = list("----")
+
+    width = [4, 2, 1, 1]
+    #  if solid_lines is True:
+    #      width = [4, 2, 1, 1]
+
+    links = 0
+    for idx_col in range(len(x.columns) - 1):
+        for idx_row in range(idx_col + 1, len(x.columns)):
+
+            node_a = x.index[idx_row]
+            node_b = x.columns[idx_col]
+            value = x[node_b][node_a]
+
+            if value > 0.75 and value >= min_link_value:
+                cd.add_edge(
+                    node_a,
+                    node_b,
+                    linestyle=style[0],
+                    linewidth=width[0],
+                    color="black",
+                )
+                links += 1
+            elif value > 0.50 and value >= min_link_value:
+                cd.add_edge(
+                    node_a,
+                    node_b,
+                    linestyle=style[1],
+                    linewidth=width[1],
+                    color="black",
+                )
+                links += 1
+            elif value > 0.25 and value >= min_link_value:
+                cd.add_edge(
+                    node_a,
+                    node_b,
+                    linestyle=style[2],
+                    linewidth=width[2],
+                    color="black",
+                )
+                links += 1
+            elif value <= 0.25 and value >= min_link_value and value > 0.0:
+                cd.add_edge(
+                    node_a,
+                    node_b,
+                    linestyle=style[3],
+                    linewidth=width[3],
+                    color="black",
+                )
+                links += 1
+
+    return cd.plot(figsize=figsize)
 
 
 def correlation_map(
@@ -224,6 +379,14 @@ def correlation_map(
 
     if len(matrix.columns) > 50:
         return "Maximum number of nodex exceded!"
+
+    #
+    # Networkx
+    #
+    fig = pyplot.Figure(figsize=figsize)
+    ax = fig.subplots()
+    G = nx.Graph(ax=ax)
+    G.clear()
 
     #
     # Data preparation
@@ -243,45 +406,46 @@ def correlation_map(
     # Node sizes
     #
     node_sizes = [num_documents[t] for t in terms]
-    if len(node_sizes) == 0:
-        node_sizes = [500] * len(terms)
+    min_size = min(node_sizes)
+    max_size = max(node_sizes)
+    if min_size == max_size:
+        node_sizes = [500 for t in terms]
     else:
-        max_size = max(node_sizes)
-        min_size = min(node_sizes)
-        if min_size == max_size:
-            node_sizes = [500] * len(terms)
-        else:
-            node_sizes = [
-                600 + int(2500 * (w - min_size) / (max_size - min_size))
-                for w in node_sizes
-            ]
+        node_sizes = [
+            600 + int(2500 * (t - min_size) / (max_size - min_size)) for t in node_sizes
+        ]
 
     #
     # Node colors
     #
-
     cmap = pyplot.cm.get_cmap(cmap)
     node_colors = [times_cited[t] for t in terms]
-    node_colors = [
-        cmap(0.2 + 0.75 * node_colors[i] / max(node_colors))
-        for i in range(len(node_colors))
-    ]
-
-    #
-    # Remove [...] from text
-    #
-
+    min_color = min(node_colors)
+    max_color = max(node_colors)
+    if min_color == max_color:
+        node_colors = [cmap(0.8) for t in terms]
+    else:
+        node_colors = [
+            cmap(0.2 + 0.75 * (t - min_color) / (max_color - min_color))
+            for t in node_colors
+        ]
     matrix.columns = terms
     matrix.index = terms
+
+    #
+    # Add nodes
+    #
+    G.add_nodes_from(terms)
 
     #
     # Draw the network
     #
     n = len(matrix.columns)
-    edges_75 = []
-    edges_50 = []
-    edges_25 = []
-    other_edges = []
+    edges = []
+    n_edges_75 = 0
+    n_edges_50 = 0
+    n_edges_25 = 0
+    n_edges_0 = 0
 
     for icol in range(n):
         for irow in range(icol + 1, n):
@@ -289,29 +453,24 @@ def correlation_map(
                 min_link_value is None
                 or matrix[terms[icol]][terms[irow]] >= min_link_value
             ):
+                link = None
                 if matrix[terms[icol]][terms[irow]] > 0.75:
-                    edges_75.append((terms[icol], terms[irow]))
+                    link = 1
+                    n_edges_75 += 1
                 elif matrix[terms[icol]][terms[irow]] > 0.50:
-                    edges_50.append((terms[icol], terms[irow]))
+                    link = 2
+                    n_edges_50 += 1
                 elif matrix[terms[icol]][terms[irow]] > 0.25:
-                    edges_25.append((terms[icol], terms[irow]))
-                elif matrix[terms[icol]][terms[irow]] > 0.0:
-                    other_edges.append((terms[icol], terms[irow]))
-
-    if len(edges_75) == 0:
-        edges_75 = None
-    if len(edges_50) == 0:
-        edges_50 = None
-    if len(edges_25) == 0:
-        edges_25 = None
-    if len(other_edges) == 0:
-        other_edges = None
+                    link = 3
+                    n_edges_25 += 1
+                elif matrix[terms[icol]][terms[irow]] > 0.00:
+                    link = 4
+                    n_edges_0 += 1
+                if link is not None:
+                    G.add_edge(terms[icol], terms[irow], link=link)
 
     #
     # Network drawing
-    #
-    fig = pyplot.Figure(figsize=figsize)
-    ax = fig.subplots()
     #
     draw_dict = {
         "Circular": nx.draw_circular,
@@ -324,127 +483,43 @@ def correlation_map(
     }
     draw = draw_dict[layout]
 
-    G = nx.Graph(ax=ax)
-    G.clear()
-    #
-    G.add_nodes_from(terms)
-    #
-    if edges_75 is not None:
-        G.add_edges_from(edges_75)
-    if edges_50 is not None:
-        G.add_edges_from(edges_50)
-    if edges_25 is not None:
-        G.add_edges_from(edges_25)
-    if other_edges is not None:
-        G.add_edges_from(other_edges)
-    #
-    with_labels = True
-    if edges_75 is not None:
-        draw(
-            G,
-            ax=ax,
-            edgelist=edges_75,
-            width=4,
-            edge_color="k",
-            with_labels=False,
-            font_weight="bold",
-            node_color=node_colors,
-            node_size=node_sizes,
-            bbox=dict(facecolor="white", alpha=1.0),
-            font_size=10,
-            horizontalalignment="left",
-            verticalalignment="baseline",
-            edgecolors="k",
-            linewidths=2,
-        )
-        with_labels = False
-    #
-    if edges_50 is not None:
-        draw(
-            G,
-            ax=ax,
-            edgelist=edges_50,
-            edge_color="k",
-            width=2,
-            with_labels=False,
-            font_weight=with_labels,
-            node_color=node_colors,
-            node_size=node_sizes,
-            bbox=dict(facecolor="white", alpha=1.0),
-            font_size=10,
-            horizontalalignment="left",
-            verticalalignment="baseline",
-            edgecolors="k",
-            linewidths=2,
-        )
-        with_labels = False
-    #
-    if edges_25 is not None:
-        draw(
-            G,
-            ax=ax,
-            edgelist=edges_25,
-            edge_color="k",
-            width=1,
-            style="dashed",
-            alpha=1.0,
-            with_labels=False,
-            font_weight=with_labels,
-            node_color=node_colors,
-            node_size=node_sizes,
-            bbox=dict(facecolor="white", alpha=1.0),
-            font_size=10,
-            horizontalalignment="left",
-            verticalalignment="baseline",
-            edgecolors="k",
-            linewidths=2,
-        )
-        with_labels = False
-    if other_edges is not None:
-        draw(
-            G,
-            ax=ax,
-            edgelist=other_edges,
-            edge_color="k",
-            width=1,
-            alpha=1.0,
-            style="dotted",
-            with_labels=False,
-            font_weight=with_labels,
-            node_color=node_colors,
-            node_size=node_sizes,
-            bbox=dict(facecolor="white", alpha=1.0),
-            font_size=10,
-            horizontalalignment="left",
-            verticalalignment="baseline",
-            edgecolors="k",
-            linewidths=2,
-        )
-        with_labels = False
+    for e in G.edges.data():
+        a, b, link = e
+        edge = [(a, b)]
+        link = link["link"]
+        #  width = 4
+        #  style = "solid"
+        #  edge_color = "k"
+        if link == 1:
+            width = 4
+            style = "solid"
+            edge_color = "k"
+        if link == 2:
+            width = 2
+            style = "solid"
+            edge_color = "k"
+        if link == 3:
+            width = 1
+            style = "dashed"
+            edge_color = "k"
+        if link == 4:
+            width = 1
+            style = "dotted"
+            edge_color = "k"
 
-    if with_labels is True:
         draw(
             G,
             ax=ax,
-            edgelist=None,
-            edge_color="k",
-            width=1,
-            alpha=1.0,
-            style="dotted",
+            edgelist=edge,
+            width=width,
+            edge_color=edge_color,
+            style=style,
             with_labels=False,
-            font_weight=with_labels,
-            node_color=node_colors,
-            node_size=node_sizes,
-            bbox=dict(facecolor="white", alpha=1.0),
-            font_size=10,
-            horizontalalignment="left",
-            verticalalignment="baseline",
-            edgecolors="k",
-            linewidths=2,
+            node_size=1,
         )
 
     #
-    # Labels
+    # Draw column nodes
     #
     layout_dict = {
         "Circular": nx.circular_layout,
@@ -456,6 +531,19 @@ def correlation_map(
         "Shell": nx.shell_layout,
     }
     label_pos = layout_dict[layout](G)
+
+    nx.draw_networkx_nodes(
+        G,
+        label_pos,
+        ax=ax,
+        edge_color="k",
+        nodelist=matrix.columns,
+        node_size=node_sizes,
+        node_color=node_colors,
+        node_shape="o",
+        edgecolors="k",
+        linewidths=1,
+    )
 
     #
     # Figure size
@@ -487,53 +575,59 @@ def correlation_map(
     xlim = ax.get_xlim()
     ylim = ax.get_ylim()
     ax.set_xlim(
-        xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
+        xlim[0] - 0.10 * (xlim[1] - xlim[0]), xlim[1] + 0.10 * (xlim[1] - xlim[0])
     )
     ax.set_ylim(
-        ylim[0] - 0.15 * (ylim[1] - ylim[0]), ylim[1] + 0.15 * (ylim[1] - ylim[0])
+        ylim[0] - 0.10 * (ylim[1] - ylim[0]), ylim[1] + 0.10 * (ylim[1] - ylim[0])
     )
+
     #
     # Legend
     #
     xlim = ax.get_xlim()
     ylim = ax.get_ylim()
-    x_len = (xlim[1] - xlim[0]) / 40
-    y_len = (ylim[1] - ylim[0]) / 40
+    x_len = (xlim[1] - xlim[0]) / 50
+    y_len = (ylim[1] - ylim[0]) / 50
+    text_len = max(x_len, y_len)
     #
-    text_75 = "> 0.75 ({})".format(len(edges_75) if edges_75 is not None else 0)
-    text_50 = "0.50-0.75 ({})".format(len(edges_50) if edges_50 is not None else 0)
-    text_25 = "0.25-0.50 ({})".format(len(edges_25) if edges_25 is not None else 0)
-    text_0 = "< 0.25 ({})".format(len(other_edges) if other_edges is not None else 0)
+    text_75 = "> 0.75 ({})".format(n_edges_75)
+    text_50 = "0.50-0.75 ({})".format(n_edges_50)
+    text_25 = "0.25-0.50 ({})".format(n_edges_25)
+    text_0 = "< 0.25 ({})".format(n_edges_0)
     #
-    ax.text(xlim[0] + 2.5 * x_len, ylim[0] + y_len * 3, text_75)
-    ax.text(xlim[0] + 2.5 * x_len, ylim[0] + y_len * 2, text_50)
-    ax.text(xlim[0] + 2.5 * x_len, ylim[0] + y_len * 1, text_25)
-    ax.text(xlim[0] + 2.5 * x_len, ylim[0] + y_len * 0, text_0)
+
+    #
+    ax.text(xlim[0] + 2.5 * text_len, ylim[0] + text_len * 3, text_75)
+    ax.text(xlim[0] + 2.5 * text_len, ylim[0] + text_len * 2, text_50)
+    ax.text(xlim[0] + 2.5 * text_len, ylim[0] + text_len * 1, text_25)
+    ax.text(xlim[0] + 2.5 * text_len, ylim[0] + text_len * 0, text_0)
     #
     ax.plot(
-        [xlim[0], xlim[0] + 2.0 * x_len],
-        [ylim[0] + y_len * 0.25, ylim[0] + y_len * 0.25],
+        [xlim[0], xlim[0] + 2.0 * text_len],
+        [ylim[0] + text_len * 0.25, ylim[0] + text_len * 0.25],
         "k:",
         linewidth=1,
     )
     ax.plot(
-        [xlim[0], xlim[0] + 2.0 * x_len],
-        [ylim[0] + y_len * 1.25, ylim[0] + y_len * 1.25],
+        [xlim[0], xlim[0] + 2.0 * text_len],
+        [ylim[0] + text_len * 1.25, ylim[0] + text_len * 1.25],
         "k--",
         linewidth=1,
     )
     ax.plot(
-        [xlim[0], xlim[0] + 2.0 * x_len],
-        [ylim[0] + y_len * 2.25, ylim[0] + y_len * 2.25],
+        [xlim[0], xlim[0] + 2.0 * text_len],
+        [ylim[0] + text_len * 2.25, ylim[0] + text_len * 2.25],
         "k-",
         linewidth=2,
     )
     ax.plot(
-        [xlim[0], xlim[0] + 2.0 * x_len],
-        [ylim[0] + y_len * 3.25, ylim[0] + y_len * 3.25],
+        [xlim[0], xlim[0] + 2.0 * text_len],
+        [ylim[0] + text_len * 3.25, ylim[0] + text_len * 3.25],
         "k-",
         linewidth=4,
     )
+
+    ax.axis("off")
 
     return fig
 
@@ -545,9 +639,9 @@ def correlation_map(
 ###############################################################################
 
 WIDGET_WIDTH = "180px"
-LEFT_PANEL_HEIGHT = "710px"
+LEFT_PANEL_HEIGHT = "770px"
 RIGHT_PANEL_WIDTH = "1200px"
-PANE_HEIGHTS = ["80px", "770px", 0]
+PANE_HEIGHTS = ["80px", "830px", 0]
 
 
 def __TAB0__(x, limit_to, exclude):
@@ -620,18 +714,33 @@ def __TAB0__(x, limit_to, exclude):
         },
         # 6
         {
+            "arg": "sort_by",
+            "desc": "Sort order:",
+            "widget": widgets.Dropdown(
+                options=["Alphabetic", "Num Documents", "Times Cited",],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 7
+        {
+            "arg": "ascending",
+            "desc": "Ascending:",
+            "widget": widgets.Dropdown(
+                options=[True, False], layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 8
+        {
             "arg": "min_link_value",
             "desc": "Min link value:",
             "widget": widgets.Dropdown(
-                options="-1.00 -0.25 0.00 0.125 0.250 0.375 0.500 0.625 0.750 0.875".split(
-                    " "
-                ),
+                options="0.00 0.25 0.50 0.75".split(" "),
                 ensure_option=True,
                 continuous_update=True,
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 7
+        # 9
         {
             "arg": "cmap",
             "desc": "Matrix colormap:",
@@ -639,21 +748,7 @@ def __TAB0__(x, limit_to, exclude):
                 options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH), disabled=False,
             ),
         },
-        # 8
-        {
-            "arg": "sort_by",
-            "desc": "Sort order:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Alphabetic asc.",
-                    "Alphabetic desc.",
-                    "Frequency/Cited by asc.",
-                    "Frequency/Cited by desc.",
-                ],
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 9
+        # 10
         {
             "arg": "layout",
             "desc": "Map layout:",
@@ -670,9 +765,9 @@ def __TAB0__(x, limit_to, exclude):
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
-        # 10
+        # 11
         {
-            "arg": "figsize_width",
+            "arg": "width",
             "desc": "Figsize",
             "widget": widgets.Dropdown(
                 options=range(5, 15, 1),
@@ -680,9 +775,9 @@ def __TAB0__(x, limit_to, exclude):
                 layout=Layout(width="88px"),
             ),
         },
-        # 11
+        # 12
         {
-            "arg": "figsize_height",
+            "arg": "height",
             "desc": "Figsize",
             "widget": widgets.Dropdown(
                 options=range(5, 15, 1),
@@ -707,40 +802,64 @@ def __TAB0__(x, limit_to, exclude):
         top_n = int(kwargs["top_n"])
         view = kwargs["view"]
         sort_by = kwargs["sort_by"]
+        ascending = kwargs["ascending"]
         layout = kwargs["layout"]
-        figsize_width = int(kwargs["figsize_width"])
-        figsize_height = int(kwargs["figsize_height"])
+        width = int(kwargs["width"])
+        height = int(kwargs["height"])
         #
         if view == "Matrix" or view == "Heatmap":
-            controls[7]["widget"].disabled = False
-            controls[8]["widget"].disabled = False
-            controls[9]["widget"].disabled = True
-            controls[10]["widget"].disabled = True
-            controls[11]["widget"].disabled = True
+            controls[-7]["widget"].disabled = False
+            controls[-6]["widget"].disabled = False
+            controls[-5]["widget"].disabled = False
+            controls[-3]["widget"].disabled = True
+            controls[-2]["widget"].disabled = True
+            controls[-1]["widget"].disabled = True
+        if view == "Heatmap":
+            controls[-7]["widget"].disabled = False
+            controls[-6]["widget"].disabled = False
+            controls[-5]["widget"].disabled = False
+            controls[-3]["widget"].disabled = True
+            controls[-2]["widget"].disabled = False
+            controls[-1]["widget"].disabled = False
         if view == "Correlation map":
-            controls[7]["widget"].disabled = False
-            controls[8]["widget"].disabled = True
-            controls[9]["widget"].disabled = False
-            controls[10]["widget"].disabled = False
-            controls[11]["widget"].disabled = False
+            controls[-7]["widget"].disabled = True
+            controls[-6]["widget"].disabled = True
+            controls[-5]["widget"].disabled = True
+            controls[-3]["widget"].disabled = False
+            controls[-2]["widget"].disabled = False
+            controls[-1]["widget"].disabled = False
         if view == "Chord diagram":
-            controls[7]["widget"].disabled = False
-            controls[8]["widget"].disabled = True
-            controls[9]["widget"].disabled = True
-            controls[10]["widget"].disabled = False
-            controls[11]["widget"].disabled = False
+            controls[-7]["widget"].disabled = True
+            controls[-6]["widget"].disabled = True
+            controls[-5]["widget"].disabled = True
+            controls[-3]["widget"].disabled = True
+            controls[-2]["widget"].disabled = False
+            controls[-1]["widget"].disabled = False
         #
-        matrix = corr(
-            x,
-            column=column,
-            by=by,
-            method=method,
-            cmap=cmap,
-            top_by=top_by,
-            top_n=top_n,
-            limit_to=limit_to,
-            exclude=exclude,
-        )
+
+        #
+        output.clear_output()
+        with output:
+            display(
+                corr(
+                    x,
+                    column=column,
+                    by=by,
+                    method=method,
+                    output=view,
+                    cmap=cmap,
+                    top_by=top_by,
+                    top_n=top_n,
+                    sort_by=sort_by,
+                    ascending=ascending,
+                    layout=layout,
+                    limit_to=limit_to,
+                    exclude=exclude,
+                    figsize=(width, height),
+                )
+            )
+
+        return
         #
         #
         #
