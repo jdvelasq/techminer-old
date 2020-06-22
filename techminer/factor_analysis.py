@@ -14,7 +14,7 @@ from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
 from sklearn.decomposition import PCA
 
-from techminer.by_term import summary_by_term
+import techminer.by_term as by_term
 from techminer.co_occurrence import document_term_matrix, filter_index
 from techminer.explode import __explode
 from techminer.keywords import Keywords
@@ -22,7 +22,19 @@ from techminer.plots import COLORMAPS
 
 
 def factor_analysis(
-    x, column, n_components=None, top_by=None, top_n=None, limit_to=None, exclude=None
+    data,
+    column,
+    n_components=None,
+    output=0,
+    top_by=None,
+    top_n=None,
+    sort_by=None,
+    ascending=True,
+    figsize=(10, 10),
+    layout="Kamada Kawai",
+    cmap=None,
+    limit_to=None,
+    exclude=None,
 ):
     """Computes the matrix of factors for terms in a given column.
 
@@ -95,6 +107,7 @@ def factor_analysis(
     #
     # Computo
     #
+    x = data.copy()
     dtm = document_term_matrix(x, column)
     terms = dtm.columns.tolist()
     if n_components is None:
@@ -105,18 +118,54 @@ def factor_analysis(
         result, columns=["F" + str(i) for i in range(n_components)], index=terms
     )
 
-    result = filter_index(
-        x=x,
+    #
+    # top by
+    #
+    summ = by_term.summary(
+        data=x,
         column=column,
-        matrix=result,
-        axis=0,
+        output=0,
         top_by=top_by,
         top_n=top_n,
+        sort_by=top_by,
+        ascending=ascending,
         limit_to=limit_to,
         exclude=exclude,
     )
+    result = result.loc[summ[column], :]
 
-    return result
+    if isinstance(output, str):
+        output = output.replace(" ", "_")
+        output = {"Matrix": 0, "Network": 1,}[output]
+
+    if output == 0:
+        #
+        # top_by
+        #
+        if sort_by == "Alphabetic":
+            result = result.sort_index(axis=0, ascending=ascending)
+
+        if sort_by == "Num Documents/Times Cited":
+            pass
+
+        if sort_by in ["F{}".format(i) for i in range(n_components)]:
+            result = result.sort_values(sort_by, ascending=ascending)
+
+        top_by = top_by.replace(" ", "_")
+        new_names = {key: value for key, value in zip(summ[column], summ[top_by])}
+        result.index = [
+            "{} [{}]".format(idx, new_names[idx]) for idx in result.index.tolist()
+        ]
+
+        if cmap is None:
+            return result
+        else:
+            return result.style.background_gradient(cmap=cmap)
+
+    if output == 1:
+        return factor_map(
+            matrix=result, summary=summ, layout=layout, cmap=cmap, figsize=figsize,
+        )
 
 
 def factor_map(matrix, summary, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)):
@@ -329,7 +378,7 @@ COLUMNS = [
 ]
 
 
-def __TAB0__(x, limit_to, exclude):
+def __TAB0__(data, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -341,7 +390,7 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "view",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Table", "Network"],
+                options=["Matrix", "Network"],
                 disable=True,
                 layout=Layout(width=WIDGET_WIDTH),
             ),
@@ -351,7 +400,7 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "term",
             "desc": "Term to analyze:",
             "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
+                options=[z for z in COLUMNS if z in data.columns],
                 ensure_option=True,
                 disabled=False,
                 layout=Layout(width=WIDGET_WIDTH),
@@ -399,26 +448,19 @@ def __TAB0__(x, limit_to, exclude):
         # 6
         {
             "arg": "sort_by",
-            "desc": "Sort order:",
+            "desc": "Sort by:",
             "widget": widgets.Dropdown(
-                options=[
-                    "Alphabetic asc.",
-                    "Alphabetic desc.",
-                    "Frequency/Cited by asc.",
-                    "Frequency/Cited by desc.",
-                    "Factor asc.",
-                    "Factor desc.",
-                ],
+                options=["Alphabetic", "Num Documents/Times Cited", "Factor",],
                 disable=False,
                 layout=Layout(width=WIDGET_WIDTH),
             ),
         },
         # 7
         {
-            "arg": "factor",
-            "desc": "Sort by factor:",
+            "arg": "ascending",
+            "desc": "Ascending :",
             "widget": widgets.Dropdown(
-                options=[], disable=True, layout=Layout(width=WIDGET_WIDTH),
+                options=[True, False], layout=Layout(width=WIDGET_WIDTH),
             ),
         },
         #  8
@@ -440,7 +482,7 @@ def __TAB0__(x, limit_to, exclude):
         },
         # 9
         {
-            "arg": "figsize_width",
+            "arg": "width",
             "desc": "Figsize",
             "widget": widgets.Dropdown(
                 options=range(5, 15, 1),
@@ -450,7 +492,7 @@ def __TAB0__(x, limit_to, exclude):
         },
         # 10
         {
-            "arg": "figsize_height",
+            "arg": "height",
             "desc": "Figsize",
             "widget": widgets.Dropdown(
                 options=range(5, 15, 1),
@@ -473,80 +515,38 @@ def __TAB0__(x, limit_to, exclude):
         top_by = kwargs["top_by"]
         top_n = int(kwargs["top_n"])
         sort_by = kwargs["sort_by"]
-        factor = kwargs["factor"]
+        ascending = kwargs["ascending"]
         layout = kwargs["layout"]
-        figsize_width = int(kwargs["figsize_width"])
-        figsize_height = int(kwargs["figsize_height"])
-        #
-        matrix = factor_analysis(
-            x=x,
-            column=term,
-            n_components=n_components,
-            top_by=top_by,
-            top_n=top_n,
-            limit_to=limit_to,
-            exclude=exclude,
-        )
-        #
-        controls[7]["widget"].options = matrix.columns
-        controls[7]["widget"].disabled = (
-            True if sort_by not in ["Factor asc.", "Factor desc."] else False
-        )
-        controls[8]["widget"].disabled = False if view == "Network" else True
-        controls[9]["widget"].disabled = False if view == "Network" else True
-        controls[10]["widget"].disabled = False if view == "Network" else True
-        #
-        s = summary_by_term(x, term)
-        if top_by == "Num Documents":
-            new_names = {
-                a: "{} [{:d}]".format(a, b)
-                for a, b in zip(s[term].tolist(), s["Num_Documents"].tolist())
-            }
-        else:
-            new_names = {
-                a: "{} [{:d}]".format(a, b)
-                for a, b in zip(s[term].tolist(), s["Times_Cited"].tolist())
-            }
-        matrix = matrix.rename(index=new_names)
-        #
-        g = (
-            lambda m: m[m.find("[") + 1 : m.find("]")].zfill(5)
-            + " "
-            + m[: m.find("[") - 1]
-        )
-        if sort_by == "Frequency/Cited by asc.":
-            names = sorted(matrix.index, key=g, reverse=False)
-            matrix = matrix.loc[names, :]
-        if sort_by == "Frequency/Cited by desc.":
-            names = sorted(matrix.index, key=g, reverse=True)
-            matrix = matrix.loc[names, :]
-        if sort_by == "Alphabetic asc.":
-            matrix = matrix.sort_index(axis=0, ascending=True)
-        if sort_by == "Alphabetic desc.":
-            matrix = matrix.sort_index(axis=0, ascending=False)
-        if sort_by == "Factor asc.":
-            matrix = matrix.sort_values(factor, ascending=True)
-        if sort_by == "Factor desc.":
-            matrix = matrix.sort_values(factor, ascending=False)
-        #
+        width = int(kwargs["width"])
+        height = int(kwargs["height"])
+
+        controls[6]["widget"].options = ["Alphabetic", "Num Documents/Times Cited"] + [
+            "F{}".format(i) for i in range(n_components)
+        ]
+
+        controls[-3]["widget"].disabled = False if view == "Network" else True
+        controls[-2]["widget"].disabled = False if view == "Network" else True
+        controls[-1]["widget"].disabled = False if view == "Network" else True
+
         output.clear_output()
         with output:
-            if view == "Table":
-                display(
-                    matrix.style.format(
-                        lambda q: "{:+4.3f}".format(q)
-                    ).background_gradient(cmap=cmap, axis=None)
+            return display(
+                factor_analysis(
+                    data=data,
+                    column=term,
+                    output=view,
+                    n_components=n_components,
+                    top_by=top_by,
+                    top_n=top_n,
+                    layout=layout,
+                    sort_by=sort_by,
+                    ascending=ascending,
+                    cmap=cmap,
+                    figsize=(width, height),
+                    limit_to=limit_to,
+                    exclude=exclude,
                 )
-            else:
-                display(
-                    factor_map(
-                        matrix,
-                        summary_by_term(x, column=term, top_by=None, top_n=None),
-                        layout=layout,
-                        cmap=cmap,
-                        figsize=(figsize_width, figsize_height),
-                    )
-                )
+            )
 
     # -------------------------------------------------------------------------
     #
@@ -580,12 +580,12 @@ def __TAB0__(x, limit_to, exclude):
     )
 
 
-def app(df, limit_to=None, exclude=None):
+def app(data, limit_to=None, exclude=None):
     """Jupyter Lab dashboard.
     """
     #
     body = widgets.Tab()
-    body.children = [__TAB0__(x=df, limit_to=limit_to, exclude=exclude)]
+    body.children = [__TAB0__(data=data, limit_to=limit_to, exclude=exclude)]
     body.set_title(0, "Matrix")
     #
     return AppLayout(

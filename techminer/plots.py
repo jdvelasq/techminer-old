@@ -390,7 +390,7 @@ def gant_barh(
     )
 
     xlim = ax.get_xlim()
-    ax.set_xlim(left=xlim[0] - 0.5, right=xlim[1] - 0.5)
+    ax.set_xlim(left=xlim[0] - 0.5, right=xlim[0] + len(data) + 0.5)
     ax.set_xticks(np.arange(len(data)))
     ax.set_xticklabels(data.index)
     ax.tick_params(axis="x", labelrotation=90)

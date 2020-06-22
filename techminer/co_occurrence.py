@@ -14,7 +14,7 @@ import pandas as pd
 import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
-from techminer.by_term import summary_by_term
+import techminer.by_term as by_term
 from techminer.explode import MULTIVALUED_COLS, __explode
 from techminer.keywords import Keywords
 from techminer.params import EXCLUDE_COLS
@@ -37,7 +37,7 @@ def filter_index(
         top_by: 0=frequency, 1=cited_by
 
     """
-    top_terms = summary_by_term(x, column)
+    top_terms = by_term.summary(x, column)
 
     if top_by == 0 or top_by == "Num Documents":
         top_terms = top_terms.sort_values(

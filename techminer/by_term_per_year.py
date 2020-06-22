@@ -293,12 +293,6 @@ def summary(
     years = [year for year in range(result.index.min(), result.index.max() + 1)]
     result = result.reindex(years, fill_value=0)
 
-    # 0- summary
-    # 1- heatmap plot
-    # 2- bubble plot
-    # 3- gant
-    # 4- lines plot
-
     if output == 0:
         if cmap is None:
             return result
@@ -342,7 +336,7 @@ def summary(
     if output == 4:
         return plt.gant_barh(
             data=result,
-            height=0.4,
+            height=0.6,
             left=None,
             align="center",
             cmap=cmap,
@@ -351,217 +345,82 @@ def summary(
         )
 
 
-#####################################
-
-
-def gant(x, column, limit_to=None, exclude=None):
-    """Computes the number of documents by term per year.
-
-    Args:
-        column (str): the column to explode.
-        sep (str): Character used as internal separator for the elements in the column.
-        as_matrix (bool): Results are returned as a matrix.
-        keywords (Keywords): filter the result using the specified Keywords object.
-
-    Returns:
-        DataFrame.
-
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> import pandas as pd
-    >>> df = pd.DataFrame(
-    ...     {
-    ...          "Year": [2010, 2011, 2011, 2012, 2015, 2012, 2016],
-    ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 3,author 4,author 4".split(","),
-    ...          "Times_Cited": list(range(10,17)),
-    ...          "ID": list(range(7)),
-    ...     }
-    ... )
-    >>> num_documents_by_term_per_year(df, 'Authors', as_matrix=True)
-          author 0  author 1  author 2  author 3  author 4
-    2010         1         1         1         0         0
-    2011         1         1         0         0         0
-    2012         0         0         0         1         1
-    2015         0         0         0         1         0
-    2016         0         0         0         0         1
-
-    >>> gant(df, 'Authors')
-          author 0  author 1  author 2  author 3  author 4
-    2010         1         1         1         0         0
-    2011         1         1         0         0         0
-    2012         0         0         0         1         1
-    2013         0         0         0         1         1
-    2014         0         0         0         1         1
-    2015         0         0         0         1         1
-    2016         0         0         0         0         1
-
-
-    >>> terms = Keywords(['author 1', 'author 2'])
-    >>> gant(df, 'Authors', limit_to=terms)
-          author 1  author 2
-    2010         1         1
-    2011         1         0
-
-
-    >>> gant(df, 'Authors', exclude=terms)
-          author 0  author 3  author 4
-    2010         1         0         0
-    2011         1         0         0
-    2012         0         1         1
-    2013         0         1         1
-    2014         0         1         1
-    2015         0         1         1
-    2016         0         0         1
-
-    """
-
-    years = [year for year in range(result.index.min(), result.index.max() + 1)]
-    result = result.reindex(years, fill_value=0)
-    matrix1 = result.copy()
-    matrix1 = matrix1.cumsum()
-    matrix1 = matrix1.applymap(lambda x: True if x > 0 else False)
-    matrix2 = result.copy()
-    matrix2 = matrix2.sort_index(ascending=False)
-    matrix2 = matrix2.cumsum()
-    matrix2 = matrix2.applymap(lambda x: True if x > 0 else False)
-    matrix2 = matrix2.sort_index(ascending=True)
-    result = matrix1.eq(matrix2)
-    result = result.applymap(lambda x: 1 if x is True else 0)
-    return result
-
-
-# def growth_indicators(x, column, timewindow=2, top_n=None, limit_to=None, exclude=None):
-#     """Computes the average growth rate of a group of terms.
-
+#
+# def gant(x, column, limit_to=None, exclude=None):
+#     """Computes the number of documents by term per year.
+#
 #     Args:
 #         column (str): the column to explode.
-#         timewindow (int): time window for analysis
+#         sep (str): Character used as internal separator for the elements in the column.
+#         as_matrix (bool): Results are returned as a matrix.
 #         keywords (Keywords): filter the result using the specified Keywords object.
-
+#
 #     Returns:
 #         DataFrame.
-
-
+#
+#
 #     Examples
 #     ----------------------------------------------------------------------------------------------
-
+#
 #     >>> import pandas as pd
-#     >>> x = pd.DataFrame(
-#     ...   {
-#     ...     "Year": [2010, 2010, 2011, 2011, 2012, 2013, 2014, 2014],
-#     ...     "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4,author 0;author 3,author 3;author 4".split(","),
-#     ...     "Times_Cited": list(range(10,18)),
-#     ...     "ID": list(range(8)),
-#     ...   }
+#     >>> df = pd.DataFrame(
+#     ...     {
+#     ...          "Year": [2010, 2011, 2011, 2012, 2015, 2012, 2016],
+#     ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 3,author 4,author 4".split(","),
+#     ...          "Times_Cited": list(range(10,17)),
+#     ...          "ID": list(range(7)),
+#     ...     }
 #     ... )
-#     >>> x
-#        Year                     Authors  Times_Cited  ID
-#     0  2010  author 0;author 1;author 2           10   0
-#     1  2010                    author 0           11   1
-#     2  2011                    author 1           12   2
-#     3  2011                    author 3           13   3
-#     4  2012                    author 4           14   4
-#     5  2013                    author 4           15   5
-#     6  2014           author 0;author 3           16   6
-#     7  2014           author 3;author 4           17   7
-
-#     >>> num_documents_by_term_per_year(x, 'Authors', as_matrix=True)
+#     >>> num_documents_by_term_per_year(df, 'Authors', as_matrix=True)
 #           author 0  author 1  author 2  author 3  author 4
-#     2010         2         1         1         0         0
-#     2011         0         1         0         1         0
-#     2012         0         0         0         0         1
-#     2013         0         0         0         0         1
-#     2014         1         0         0         2         1
-
-#     >>> growth_indicators(x, 'Authors')
-#         Authors       AGR  ADY   PDLY  Before 2013  Between 2013-2014
-#     0  author 3  0.666667  1.0  12.50            1                  2
-#     1  author 0  0.333333  0.5   6.25            2                  1
-#     2  author 4  0.000000  1.0  12.50            1                  2
-
-#     >>> terms = ['author 3', 'author 4']
-#     >>> growth_indicators(x, 'Authors', limit_to=terms)
-#         Authors       AGR  ADY  PDLY  Before 2013  Between 2013-2014
-#     0  author 3  0.666667  1.0  12.5            1                  2
-#     1  author 4  0.000000  1.0  12.5            1                  2
-
-#     >>> growth_indicators(x, 'Authors', exclude=terms)
-#         Authors       AGR  ADY  PDLY  Before 2011  Between 2011-2014
-#     0  author 1 -0.333333  0.5  6.25            1                  1
-#     1  author 0 -0.333333  0.5  6.25            2                  1
-
+#     2010         1         1         1         0         0
+#     2011         1         1         0         0         0
+#     2012         0         0         0         1         1
+#     2015         0         0         0         1         0
+#     2016         0         0         0         0         1
+#
+#     >>> gant(df, 'Authors')
+#           author 0  author 1  author 2  author 3  author 4
+#     2010         1         1         1         0         0
+#     2011         1         1         0         0         0
+#     2012         0         0         0         1         1
+#     2013         0         0         0         1         1
+#     2014         0         0         0         1         1
+#     2015         0         0         0         1         1
+#     2016         0         0         0         0         1
+#
+#     >>> terms = Keywords(['author 1', 'author 2'])
+#     >>> gant(df, 'Authors', limit_to=terms)
+#           author 1  author 2
+#     2010         1         1
+#     2011         1         0
+#
+#     >>> gant(df, 'Authors', exclude=terms)
+#           author 0  author 3  author 4
+#     2010         1         0         0
+#     2011         1         0         0
+#     2012         0         1         1
+#     2013         0         1         1
+#     2014         0         1         1
+#     2015         0         1         1
+#     2016         0         0         1
+#
 #     """
-
-#     def compute_agr():
-#         result = num_documents_by_term_per_year(
-#             x, column=column, limit_to=limit_to, exclude=exclude
-#         )
-#         years_agr = sorted(set(result.Year))[-(timewindow + 1) :]
-#         years_agr = [years_agr[0], years_agr[-1]]
-#         result = result[result.Year.map(lambda w: w in years_agr)]
-#         result.pop("ID")
-#         result = pd.pivot_table(
-#             result, columns="Year", index=column, values="Num_Documents", fill_value=0,
-#         )
-#         result["AGR"] = 0.0
-#         result = result.assign(
-#             AGR=(result[years_agr[1]] - result[years_agr[0]]) / (timewindow + 1)
-#         )
-#         result.pop(years_agr[0])
-#         result.pop(years_agr[1])
-#         result.columns = list(result.columns)
-#         result = result.sort_values(by=["AGR", column], ascending=False)
-#         result.reset_index(drop=True)
-#         return result
-
-#     def compute_ady():
-#         result = num_documents_by_term_per_year(
-#             x, column=column, limit_to=limit_to, exclude=exclude
-#         )
-#         years_ady = sorted(set(result.Year))[-timewindow:]
-#         result = result[result.Year.map(lambda w: w in years_ady)]
-#         result = result.groupby([column], as_index=False).agg({"Num_Documents": np.sum})
-#         result = result.rename(columns={"Num_Documents": "ADY"})
-#         result["ADY"] = result.ADY.map(lambda w: w / timewindow)
-#         result = result.reset_index(drop=True)
-#         return result
-
-#     def compute_num_documents():
-#         result = num_documents_by_term_per_year(
-#             x, column=column, limit_to=limit_to, exclude=exclude
-#         )
-#         years_between = sorted(set(result.Year))[-timewindow:]
-#         years_before = sorted(set(result.Year))[0:-timewindow]
-#         between = result[result.Year.map(lambda w: w in years_between)]
-#         before = result[result.Year.map(lambda w: w in years_before)]
-#         between = between.groupby([column], as_index=False).agg(
-#             {"Num_Documents": np.sum}
-#         )
-#         between = between.rename(
-#             columns={
-#                 "Num_Documents": "Between {}-{}".format(
-#                     years_between[0], years_between[-1]
-#                 )
-#             }
-#         )
-#         before = before.groupby([column], as_index=False).agg({"Num_Documents": np.sum})
-#         before = before.rename(
-#             columns={"Num_Documents": "Before {}".format(years_between[0])}
-#         )
-#         result = pd.merge(before, between, on=column)
-#         return result
-
-#     result = compute_agr()
-#     ady = compute_ady()
-#     result = pd.merge(result, ady, on=column)
-#     result = result.assign(PDLY=round(result.ADY / len(x) * 100, 2))
-#     num_docs = compute_num_documents()
-#     result = pd.merge(result, num_docs, on=column)
-#     result = result.reset_index(drop=True)
+#
+#     years = [year for year in range(result.index.min(), result.index.max() + 1)]
+#     result = result.reindex(years, fill_value=0)
+#     matrix1 = result.copy()
+#     matrix1 = matrix1.cumsum()
+#     matrix1 = matrix1.applymap(lambda x: True if x > 0 else False)
+#     matrix2 = result.copy()
+#     matrix2 = matrix2.sort_index(ascending=False)
+#     matrix2 = matrix2.cumsum()
+#     matrix2 = matrix2.applymap(lambda x: True if x > 0 else False)
+#     matrix2 = matrix2.sort_index(ascending=True)
+#     result = matrix1.eq(matrix2)
+#     result = result.applymap(lambda x: 1 if x is True else 0)
 #     return result
-
+#
 
 ##
 ##
@@ -729,316 +588,6 @@ def __APP0__(data, limit_to, exclude):
             )
             return
 
-        # if top_by == "Num Documents":
-        #     matrix = num_documents_by_term_per_year(
-        #         x,
-        #         column,
-        #         as_matrix=True,
-        #         top_n=top_n,
-        #         limit_to=limit_to,
-        #         exclude=exclude,
-        #     )
-        # if top_by == "Times Cited":
-        #     matrix = times_cited_by_term_per_year(
-        #         x,
-        #         column,
-        #         as_matrix=True,
-        #         top_n=top_n,
-        #         limit_to=limit_to,
-        #         exclude=exclude,
-        #     )
-        # if top_by == "% Num Documents":
-        #     matrix = perc_num_documents_by_term_per_year(
-        #         x,
-        #         column,
-        #         as_matrix=True,
-        #         top_n=top_n,
-        #         limit_to=limit_to,
-        #         exclude=exclude,
-        #     )
-        # if top_by == "% Times Cited":
-        #     matrix = perc_times_cited_by_term_per_year(
-        #         x,
-        #         column,
-        #         as_matrix=True,
-        #         top_n=top_n,
-        #         limit_to=limit_to,
-        #         exclude=exclude,
-        #     )
-
-        #
-        # Adds [...] to columns and index
-        #
-        # if top_by in ["Num Documents", "% Num Documents"]:
-        #     s = by_term.summary(
-        #         data=x,
-        #         column=column,
-        #         top_by="Num Documents",
-        #         top_n=None,
-        #         limit_to=limit_to,
-        #         exclude=exclude,
-        #     )
-        #     new_names = {
-        #         a: "{} [{:d}]".format(textwrap.shorten(text=a, width=TEXTLEN), b)
-        #         for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
-        #     }
-        #     # matrix = matrix.rename(columns=new_names)
-
-        #     s = by_year.summary(data=x)
-        #     new_names = {
-        #         a: "{} [{:d}]".format(a, b)
-        #         for a, b in zip(s["Year"].tolist(), s["Num_Documents"].tolist())
-        #     }
-        #     #  matrix = matrix.rename(index=new_names)
-
-        # if top_by in ["Times Cited", "% Times Cited"]:
-
-        #     s = by_term.summary(
-        #         x=x,
-        #         column=column,
-        #         top_by="Times Cited",
-        #         top_n=None,
-        #         limit_to=limit_to,
-        #         exclude=exclude,
-        #     )
-        #     new_names = {
-        #         a: "{} [{:d}]".format(textwrap.shorten(text=a, width=TEXTLEN), b)
-        #         for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
-        #     }
-        #     matrix = matrix.rename(columns=new_names)
-
-        #     s = summary_by_year(df=x)
-        #     new_names = {
-        #         a: "{} [{:d}]".format(a, b)
-        #         for a, b in zip(s["Year"].tolist(), s["Times_Cited"].tolist())
-        #     }
-        #     #  matrix = matrix.rename(index=new_names)
-
-        #
-        # Sort by
-        #
-        # g = (
-        #     lambda m: m[m.find("[") + 1 : m.find("]")].zfill(5)
-        #     + " "
-        #     + m[: m.find("[") - 1]
-        # )
-        # if sort_by == "Frequency/Cited by asc.":
-        #     col_names = sorted(matrix.columns, key=g, reverse=False)
-        #     matrix = matrix.loc[:, col_names]
-        # if sort_by == "Frequency/Cited by desc.":
-        #     col_names = sorted(matrix.columns, key=g, reverse=True)
-        #     matrix = matrix.loc[:, col_names]
-        # if sort_by == "Alphabetic asc.":
-        #     matrix = matrix.sort_index(axis=1, ascending=True)
-        # if sort_by == "Alphabetic desc.":
-        #     matrix = matrix.sort_index(axis=1, ascending=False)
-
-        #
-        # Output
-        #
-        #  output.clear_output()
-        with output:
-            if view == "Summary":
-                #  display(matrix.style.background_gradient(cmap=cmap, axis=None))
-                return
-
-            if view == "Heatmap":
-                # display(
-                #      plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height))
-                #  )
-                return
-
-            if view == "Lines plot":
-                # display(
-                #     plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height))
-                # )
-                return
-
-            if view == "Gant diagram" and top_by == "Num Documents":
-                # matrix.index = [int(w[: w.find("[")].strip()) for w in matrix.index]
-                # display(plot(matrix, figsize=(figsize_width, figsize_height)))
-                return
-
-            if view == "Bubble plot" and (
-                top_by == "Num Documents" or top_by == "Times Cited"
-            ):
-                # matrix.columns = [w[: w.find("[")].strip() for w in matrix.columns]
-                # matrix.index = [int(w[: w.find("[")].strip()) for w in matrix.index]
-                # z = times_cited_by_term_per_year(
-                #     x,
-                #     column,
-                #     as_matrix=True,
-                #     top_n=None,
-                #     limit_to=limit_to,
-                #     exclude=exclude,
-                # )
-                # display(
-                #     plot(
-                #         matrix.transpose(),
-                #         z.transpose(),
-                #         axis=0,
-                #         cmap=cmap,
-                #         figsize=(figsize_width, figsize_height),
-                #     )
-                # )
-                return
-
-            display(widgets.HTML("The view not is available for this analysis"))
-
-        ###
-
-        # output.clear_output()
-        # with output:
-
-        #     if analysis_by == "Num Documents":
-        #         matrix = num_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
-
-        #         if view in ['Summary', 'Heatmap']:
-
-        #             s = summary_by_term(
-        #                 x=x,
-        #                 column=column,
-        #                 top_by="Num Documents",
-        #                 top_n=None,
-        #                 limit_to=limit_to,
-        #                 exclude=exclude,
-        #             )
-        #             new_names = {
-        #                 a: "{} [{:d}]".format(textwrap.shorten(text=a, width=TEXTLEN), b)
-        #                 for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
-        #             }
-        #             matrix = matrix.rename(columns=new_names)
-
-        #             s = summary_by_year(df=x)
-        #             new_names = {
-        #                 a: "{} [{:d}]".format(a, b)
-        #                 for a, b in zip(s['Year'].tolist(), s["Num_Documents"].tolist())
-        #             }
-        #             matrix = matrix.rename(index=new_names)
-
-        #         if view == "Gant diagram":
-        #             display(plot(matrix, figsize=(figsize_width, figsize_height)))
-        #             return
-        #         if view == "Bubble plot":
-        #             z = times_cited_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
-        #             display(plot(matrix.transpose(), z.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
-        #             return
-
-        #     if analysis_by == "Times Cited":
-        #         matrix = times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
-
-        #         if view in ['Summary', 'Heatmap']:
-
-        #             s = summary_by_term(
-        #                 x=x,
-        #                 column=column,
-        #                 top_by="Times Cited",
-        #                 top_n=None,
-        #                 limit_to=limit_to,
-        #                 exclude=exclude,
-        #             )
-        #             new_names = {
-        #                 a: "{} [{:d}]".format(textwrap.shorten(text=a, width=TEXTLEN), b)
-        #                 for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
-        #             }
-        #             matrix = matrix.rename(columns=new_names)
-
-        #             s = summary_by_year(df=x)
-        #             new_names = {
-        #                 a: "{} [{:d}]".format(a, b)
-        #                 for a, b in zip(s['Year'].tolist(), s["Times_Cited"].tolist())
-        #             }
-        #             matrix = matrix.rename(index=new_names)
-
-        #         if view == "Bubble plot":
-        #             z = num_documents_by_term_per_year(x, column, as_matrix=True, top_n=None, limit_to=limit_to, exclude=exclude)
-        #             display(plot(matrix.transpose(), z.transpose(), axis=0, cmap=cmap, figsize=(figsize_width, figsize_height)))
-        #             return
-
-        #     if analysis_by == "% Num Documents":
-        #         matrix = perc_num_documents_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
-
-        #         if view == 'Summary':
-        #             s = summary_by_term(
-        #                 x=x,
-        #                 column=column,
-        #                 top_by="Num Documents",
-        #                 top_n=None,
-        #                 limit_to=limit_to,
-        #                 exclude=exclude,
-        #             )
-        #             new_names = {
-        #                 a: "{} [{:d}]".format(textwrap.shorten(text=a, width=TEXTLEN), b)
-        #                 for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
-        #             }
-        #             matrix = matrix.rename(columns=new_names)
-
-        #             s = summary_by_year(df=x)
-        #             new_names = {
-        #                 a: "{} [{:d}]".format(a, b)
-        #                 for a, b in zip(s['Year'].tolist(), s["Num_Documents"].tolist())
-        #             }
-        #             matrix = matrix.rename(index=new_names)
-
-        #     if analysis_by == "% Times Cited":
-        #         matrix = perc_times_cited_by_term_per_year(x, column, as_matrix=True, top_n=top_n, limit_to=limit_to, exclude=exclude)
-
-        #         if view == 'Summary':
-        #             s = summary_by_term(
-        #                 x=x,
-        #                 column=column,
-        #                 top_by="Times Cited",
-        #                 top_n=None,
-        #                 limit_to=limit_to,
-        #                 exclude=exclude,
-        #             )
-        #             new_names = {
-        #                 a: "{} [{:d}]".format(textwrap.shorten(text=a, width=TEXTLEN), b)
-        #                 for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
-        #             }
-        #             matrix = matrix.rename(columns=new_names)
-
-        #             s = summary_by_year(df=x)
-        #             new_names = {
-        #                 a: "{} [{:d}]".format(a, b)
-        #                 for a, b in zip(s['Year'].tolist(), s["Times_Cited"].tolist())
-        #             }
-        #             matrix = matrix.rename(index=new_names)
-
-        #     #
-        #     # Sort order
-        #     #
-        #     if view in ['Summary', "Heatmap"]:
-        #         g = (
-        #             lambda m: m[m.find("[") + 1 : m.find("]")].zfill(5)
-        #             + " "
-        #             + m[: m.find("[") - 1]
-        #         )
-        #         if sort_by == "Frequency/Cited by asc.":
-        #             col_names = sorted(matrix.columns, key=g, reverse=False)
-        #             matrix = matrix.loc[:, col_names]
-        #         if sort_by == "Frequency/Cited by desc.":
-        #             col_names = sorted(matrix.columns, key=g, reverse=True)
-        #             matrix = matrix.loc[:, col_names]
-        #         if sort_by == "Alphabetic asc.":
-        #             matrix = matrix.sort_index(axis=1, ascending=True)
-        #         if sort_by == "Alphabetic desc.":
-        #             matrix = matrix.sort_index(axis=1, ascending=False)
-
-        #         if view == "Summary":
-        #             display(matrix.style.background_gradient(cmap=cmap, axis=None))
-        #             return
-
-        #         if view == "Heatmap":
-        #             display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
-        #             return
-
-        #     if view == "Lines plot":
-        #         display(plot(matrix, cmap=cmap, figsize=(figsize_width, figsize_height)))
-        #         return
-
-        #     display(widgets.HTML('The view not is available for this analysis'))
-
     # -------------------------------------------------------------------------
     #
     # Generic
@@ -1076,6 +625,139 @@ def __APP0__(data, limit_to, exclude):
 ##  Growth Indicators
 ##
 ##
+
+
+def growth_indicators(x, column, timewindow=2, top_n=None, limit_to=None, exclude=None):
+    """Computes the average growth rate of a group of terms.
+
+    Args:
+        column (str): the column to explode.
+        timewindow (int): time window for analysis
+        keywords (Keywords): filter the result using the specified Keywords object.
+
+    Returns:
+        DataFrame.
+
+
+    Examples
+    ----------------------------------------------------------------------------------------------
+
+    >>> import pandas as pd
+    >>> x = pd.DataFrame(
+    ...   {
+    ...     "Year": [2010, 2010, 2011, 2011, 2012, 2013, 2014, 2014],
+    ...     "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 4,author 4,author 0;author 3,author 3;author 4".split(","),
+    ...     "Times_Cited": list(range(10,18)),
+    ...     "ID": list(range(8)),
+    ...   }
+    ... )
+    >>> x
+       Year                     Authors  Times_Cited  ID
+    0  2010  author 0;author 1;author 2           10   0
+    1  2010                    author 0           11   1
+    2  2011                    author 1           12   2
+    3  2011                    author 3           13   3
+    4  2012                    author 4           14   4
+    5  2013                    author 4           15   5
+    6  2014           author 0;author 3           16   6
+    7  2014           author 3;author 4           17   7
+
+    >>> num_documents_by_term_per_year(x, 'Authors', as_matrix=True)
+          author 0  author 1  author 2  author 3  author 4
+    2010         2         1         1         0         0
+    2011         0         1         0         1         0
+    2012         0         0         0         0         1
+    2013         0         0         0         0         1
+    2014         1         0         0         2         1
+
+    >>> growth_indicators(x, 'Authors')
+        Authors       AGR  ADY   PDLY  Before 2013  Between 2013-2014
+    0  author 3  0.666667  1.0  12.50            1                  2
+    1  author 0  0.333333  0.5   6.25            2                  1
+    2  author 4  0.000000  1.0  12.50            1                  2
+
+    >>> terms = ['author 3', 'author 4']
+    >>> growth_indicators(x, 'Authors', limit_to=terms)
+        Authors       AGR  ADY  PDLY  Before 2013  Between 2013-2014
+    0  author 3  0.666667  1.0  12.5            1                  2
+    1  author 4  0.000000  1.0  12.5            1                  2
+
+    >>> growth_indicators(x, 'Authors', exclude=terms)
+        Authors       AGR  ADY  PDLY  Before 2011  Between 2011-2014
+    0  author 1 -0.333333  0.5  6.25            1                  1
+    1  author 0 -0.333333  0.5  6.25            2                  1
+
+    """
+
+    def compute_agr():
+        result = num_documents_by_term_per_year(
+            x, column=column, limit_to=limit_to, exclude=exclude
+        )
+        years_agr = sorted(set(result.Year))[-(timewindow + 1) :]
+        years_agr = [years_agr[0], years_agr[-1]]
+        result = result[result.Year.map(lambda w: w in years_agr)]
+        result.pop("ID")
+        result = pd.pivot_table(
+            result, columns="Year", index=column, values="Num_Documents", fill_value=0,
+        )
+        result["AGR"] = 0.0
+        result = result.assign(
+            AGR=(result[years_agr[1]] - result[years_agr[0]]) / (timewindow + 1)
+        )
+        result.pop(years_agr[0])
+        result.pop(years_agr[1])
+        result.columns = list(result.columns)
+        result = result.sort_values(by=["AGR", column], ascending=False)
+        result.reset_index(drop=True)
+        return result
+
+    def compute_ady():
+        result = num_documents_by_term_per_year(
+            x, column=column, limit_to=limit_to, exclude=exclude
+        )
+        years_ady = sorted(set(result.Year))[-timewindow:]
+        result = result[result.Year.map(lambda w: w in years_ady)]
+        result = result.groupby([column], as_index=False).agg({"Num_Documents": np.sum})
+        result = result.rename(columns={"Num_Documents": "ADY"})
+        result["ADY"] = result.ADY.map(lambda w: w / timewindow)
+        result = result.reset_index(drop=True)
+        return result
+
+    def compute_num_documents():
+        result = num_documents_by_term_per_year(
+            x, column=column, limit_to=limit_to, exclude=exclude
+        )
+        years_between = sorted(set(result.Year))[-timewindow:]
+        years_before = sorted(set(result.Year))[0:-timewindow]
+        between = result[result.Year.map(lambda w: w in years_between)]
+        before = result[result.Year.map(lambda w: w in years_before)]
+        between = between.groupby([column], as_index=False).agg(
+            {"Num_Documents": np.sum}
+        )
+        between = between.rename(
+            columns={
+                "Num_Documents": "Between {}-{}".format(
+                    years_between[0], years_between[-1]
+                )
+            }
+        )
+        before = before.groupby([column], as_index=False).agg({"Num_Documents": np.sum})
+        before = before.rename(
+            columns={"Num_Documents": "Before {}".format(years_between[0])}
+        )
+        result = pd.merge(before, between, on=column)
+        return result
+
+    result = compute_agr()
+    ady = compute_ady()
+    result = pd.merge(result, ady, on=column)
+    result = result.assign(PDLY=round(result.ADY / len(x) * 100, 2))
+    num_docs = compute_num_documents()
+    result = pd.merge(result, num_docs, on=column)
+    result = result.reset_index(drop=True)
+    return result
+
+
 def __APP1__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
@@ -1277,11 +959,9 @@ def app(df, limit_to=None, exclude=None):
     """
     #
     body = widgets.Tab()
-    body.children = [
-        __APP0__(df, limit_to, exclude),
-    ]  # __APP1__(df, limit_to, exclude)
+    body.children = [__APP0__(df, limit_to, exclude), __APP1__(df, limit_to, exclude)]
     body.set_title(0, "Time Analysis")
-    #  body.set_title(1, "Growth Indicators")
+    body.set_title(1, "Growth Indicators")
     #
     return AppLayout(
         header=widgets.HTML(
