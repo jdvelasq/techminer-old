@@ -174,6 +174,7 @@ def summary(
     # Output
     #
     if output == 0:
+        result.pop("ID")
         return result
 
     if output == 1:

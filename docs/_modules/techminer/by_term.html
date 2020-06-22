@@ -153,7 +153,7 @@
 <span class="sd">Analysis by Term</span>
 <span class="sd">==================================================================================================</span>
 
-<span class="sd"> </span>
+
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">widgets</span>
@@ -167,32 +167,336 @@
 <span class="kn">from</span> <span class="nn">techminer.plots</span> <span class="kn">import</span> <span class="n">COLORMAPS</span>
 
 
-<span class="c1"># def get_top_terms(x, column, top_by=0, top_n=None, limit_to=None, exclude=None):</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#  Top documents</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<div class="viewcode-block" id="top_documents"><a class="viewcode-back" href="../../by_term.html#techminer.by_term.top_documents">[docs]</a><span class="k">def</span> <span class="nf">top_documents</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the top 50 documents by Times Cited.</span>
 
-<span class="c1">#     result = summary_by_term(x, column)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        data (pandas.DataFrame): A bibliographic dataframe.</span>
 
-<span class="c1">#     if top_by == 0 or top_by == &quot;Frequency&quot;:</span>
-
-<span class="c1">#     if top_by == 1 or top_by == &quot;Times_Cited&quot;:</span>
-
-
-<span class="c1"># def most_frequent(x, column, top_n, limit_to, exclude):</span>
-<span class="c1">#     result = summary_by_term(x, column, limit_to=limit_to, exclude=exclude)</span>
-<span class="c1">#     result = result.sort_values([&quot;Num_Documents&quot;, &quot;Times_Cited&quot;, column], ascending=False)</span>
-<span class="c1">#     result = result[column].head(top_n)</span>
-<span class="c1">#     result = result.tolist()</span>
-<span class="c1">#     return result</span>
-
-
-<span class="c1"># def most_cited_by(x, column, top_n, limit_to, exclude):</span>
-<span class="c1">#     result = summary_by_term(x, column, limit_to=limit_to, exclude=exclude)</span>
-<span class="c1">#     result = result.sort_values([&quot;Times_Cited&quot;, &quot;Num_Documents&quot;, column], ascending=False)</span>
-<span class="c1">#     result = result[column].head(top_n)</span>
-<span class="c1">#     result = result.tolist()</span>
-<span class="c1">#     return result</span>
+<span class="sd">    Returns:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Year&quot;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">])</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Times_Cited&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">Times_Cited</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="summary_by_term"><a class="viewcode-back" href="../../by_term.html#techminer.by_term.summary_by_term">[docs]</a><span class="k">def</span> <span class="nf">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">top_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit_to</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">__APP4__</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    # &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    # &gt;&gt;&gt; data = pd.DataFrame(</span>
+<span class="sd">    # ...     {</span>
+<span class="sd">    # ...          &quot;Year&quot;: [2010, 2010, 2011, 2011, 2012, 2016],</span>
+<span class="sd">    # ...          &quot;Times_Cited&quot;: list(range(10,16)),</span>
+<span class="sd">    # ...          &quot;ID&quot;: list(range(6)),</span>
+<span class="sd">    # ...     }</span>
+<span class="sd">    # ... )</span>
+<span class="sd">    # &gt;&gt;&gt; __APP4__(data)</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Title&quot;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">])</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[[</span><span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Title&quot;</span><span class="p">,</span> <span class="s2">&quot;Source_title&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">]]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">output</span><span class="p">])</span>
+
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#  Core source titles</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+
+
+<div class="viewcode-block" id="core_source_titles"><a class="viewcode-back" href="../../by_term.html#techminer.by_term.core_source_titles">[docs]</a><span class="k">def</span> <span class="nf">core_source_titles</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;[summary]</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data ([type]): [description]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">summary</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span> <span class="s2">&quot;Source_title&quot;</span><span class="p">,</span> <span class="n">top_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit_to</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="p">[[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]]</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">a</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; %&quot;</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">m</span><span class="p">]</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;Num Sources&quot;</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s2">&quot;%&quot;</span><span class="p">:</span> <span class="n">w</span><span class="p">,</span> <span class="s2">&quot;Documents published&quot;</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">index</span><span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;Documents published&quot;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Acum Num Sources&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Num Sources&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;% Acum&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">a</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;Num Sources&quot;</span><span class="p">]),</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; %&quot;</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Acum Num Sources&quot;</span><span class="p">]</span>
+    <span class="p">]</span>
+
+    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Tot Documents published&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Num Sources&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Documents published&quot;</span><span class="p">]</span>
+    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Tot Documents published&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Tot Documents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">w</span> <span class="o">/</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; %&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">bradford1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">bradford2</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">bradford1</span>
+
+    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Bradford&#39;s Group&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="mi">3</span> <span class="k">if</span> <span class="n">w</span> <span class="o">&gt;</span> <span class="n">bradford2</span> <span class="k">else</span> <span class="p">(</span><span class="mi">2</span> <span class="k">if</span> <span class="n">w</span> <span class="o">&gt;</span> <span class="n">bradford1</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span>
+        <span class="p">[</span>
+            <span class="s2">&quot;Num Sources&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;%&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Acum Num Sources&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;% Acum&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Documents published&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Tot Documents published&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Tot Documents&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Bradford&#39;s Group&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">]</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">m</span></div>
+
+
+<span class="k">def</span> <span class="nf">__APP3__</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">core_source_titles</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">output</span><span class="p">])</span>
+
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#  Core Authors</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<div class="viewcode-block" id="core_authors"><a class="viewcode-back" href="../../by_term.html#techminer.by_term.core_authors">[docs]</a><span class="k">def</span> <span class="nf">core_authors</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#</span>
+    <span class="c1"># Numero de documentos escritos por author</span>
+    <span class="c1">#</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">summary</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="n">top_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit_to</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">authors_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">author</span><span class="p">:</span> <span class="n">num_docs</span>
+        <span class="k">for</span> <span class="n">author</span><span class="p">,</span> <span class="n">num_docs</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">Authors</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">Num_Documents</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">author</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="p">[[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]]</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">a</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; %&quot;</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">z</span><span class="p">]</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;Num Authors&quot;</span><span class="p">:</span> <span class="n">z</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s2">&quot;%&quot;</span><span class="p">:</span> <span class="n">w</span><span class="p">,</span> <span class="s2">&quot;Documents written per Author&quot;</span><span class="p">:</span> <span class="n">z</span><span class="o">.</span><span class="n">index</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;Documents written per Author&quot;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">z</span><span class="p">[</span><span class="s2">&quot;Acum Num Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="s2">&quot;Num Authors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+    <span class="n">z</span><span class="p">[</span><span class="s2">&quot;% Acum&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">a</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="s2">&quot;Num Authors&quot;</span><span class="p">]),</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; %&quot;</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">z</span><span class="p">[</span><span class="s2">&quot;Acum Num Authors&quot;</span><span class="p">]</span>
+    <span class="p">]</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="n">__explode</span><span class="p">(</span><span class="n">data</span><span class="p">[[</span><span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">]],</span> <span class="s2">&quot;Authors&quot;</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Documents_written&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">Authors</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">authors_dict</span><span class="p">[</span><span class="n">w</span><span class="p">])</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">z</span><span class="p">[</span><span class="s2">&quot;Documents written per Author&quot;</span><span class="p">]:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Documents_written &gt;= &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[[</span><span class="s2">&quot;ID&quot;</span><span class="p">]]</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+        <span class="n">n</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+
+    <span class="n">k</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">k</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">n</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">k</span>
+    <span class="n">z</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+    <span class="n">z</span><span class="p">[</span><span class="s2">&quot;Acum Num Documents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span>
+
+    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span>
+        <span class="p">[</span>
+            <span class="s2">&quot;Num Authors&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;%&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Acum Num Authors&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;% Acum&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Documents written per Author&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Acum Num Documents&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">]</span>
+
+    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">z</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#  Panel 2</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="k">def</span> <span class="nf">__APP2__</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">core_authors</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">output</span><span class="p">])</span>
+
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#  worldmap</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<div class="viewcode-block" id="worldmap"><a class="viewcode-back" href="../../by_term.html#techminer.by_term.worldmap">[docs]</a><span class="k">def</span> <span class="nf">worldmap</span><span class="p">(</span>
+    <span class="n">result</span><span class="p">,</span> <span class="n">top_by</span><span class="o">=</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">plt</span><span class="o">.</span><span class="n">worldmap</span><span class="p">(</span>
+        <span class="n">result</span><span class="p">[[</span><span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">top_by</span><span class="p">]],</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">__APP1__</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">limit_to</span><span class="p">,</span> <span class="n">exclude</span><span class="p">):</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1">#</span>
+    <span class="c1"># UI</span>
+    <span class="c1">#</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="n">controls</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="c1"># 0</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;column&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Column to analyze:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Countries&quot;</span><span class="p">,</span> <span class="s2">&quot;Country_1st_Author&quot;</span><span class="p">],</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 1</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;top_by&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Top by:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">],</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 2</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;cmap&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Colormap:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">COLORMAPS</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 3</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;width&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Figsize&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;88px&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 4</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;height&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Figsize&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;88px&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">]</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1">#</span>
+    <span class="c1"># Logic</span>
+    <span class="c1">#</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">server</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1">#</span>
+        <span class="c1"># Logic</span>
+        <span class="c1">#</span>
+        <span class="n">column</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;column&quot;</span><span class="p">]</span>
+        <span class="n">top_by</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;top_by&quot;</span><span class="p">]</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cmap&quot;</span><span class="p">]</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;width&quot;</span><span class="p">])</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">])</span>
+        <span class="c1">#</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">summary</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">top_by</span><span class="o">=</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">display</span><span class="p">(</span>
+                <span class="n">worldmap</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">top_by</span><span class="o">=</span><span class="n">top_by</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,)</span>
+            <span class="p">)</span>
+
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1">#</span>
+    <span class="c1"># Generic</span>
+    <span class="c1">#</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="n">control</span><span class="p">[</span><span class="s2">&quot;arg&quot;</span><span class="p">]:</span> <span class="n">control</span><span class="p">[</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="n">controls</span><span class="p">}</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">widgets</span><span class="o">.</span><span class="n">interactive_output</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">args</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">control</span><span class="p">[</span><span class="s2">&quot;desc&quot;</span><span class="p">]),</span> <span class="n">control</span><span class="p">[</span><span class="s2">&quot;widget&quot;</span><span class="p">]]</span>
+                    <span class="p">)</span>
+                    <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="n">controls</span>
+                    <span class="k">if</span> <span class="n">control</span><span class="p">[</span><span class="s2">&quot;desc&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Figsize&quot;</span><span class="p">]</span>
+                <span class="p">]</span>
+                <span class="o">+</span> <span class="p">[</span>
+                    <span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Figure Size&quot;</span><span class="p">),</span>
+                    <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">controls</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">],</span> <span class="n">controls</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">],]),</span>
+                <span class="p">],</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="n">LEFT_PANEL_HEIGHT</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="s2">&quot;1px solid gray&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">output</span><span class="p">],</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">RIGHT_PANEL_WIDTH</span><span class="p">,</span> <span class="n">align_items</span><span class="o">=</span><span class="s2">&quot;baseline&quot;</span><span class="p">)</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="summary"><a class="viewcode-back" href="../../by_term.html#techminer.by_term.summary">[docs]</a><span class="k">def</span> <span class="nf">summary</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span>
+    <span class="n">column</span><span class="p">,</span>
+    <span class="n">output</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">top_by</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span>
+    <span class="n">top_n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">sort_by</span><span class="o">=</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span>
+    <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">,</span>
+    <span class="n">limit_to</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">exclude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Summarize the number of documents and citations by term in a dataframe.</span>
 
 <span class="sd">    Args:</span>
@@ -223,7 +527,7 @@
 <span class="sd">    2                    author 1           12  1991   2</span>
 <span class="sd">    3                    author 3           13  1991   3</span>
 
-<span class="sd">    &gt;&gt;&gt; summary_by_term(x, &#39;Authors&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; summary(x, &#39;Authors&#39;)</span>
 <span class="sd">        Authors  Num_Documents  Times_Cited      ID</span>
 <span class="sd">    0  author 0              2           21  [0, 1]</span>
 <span class="sd">    1  author 1              2           22  [0, 2]</span>
@@ -231,12 +535,12 @@
 <span class="sd">    3  author 3              1           13     [3]</span>
 
 <span class="sd">    &gt;&gt;&gt; items = [&#39;author 1&#39;, &#39;author 2&#39;]</span>
-<span class="sd">    &gt;&gt;&gt; summary_by_term(x, &#39;Authors&#39;, limit_to=items)</span>
+<span class="sd">    &gt;&gt;&gt; summary(x, &#39;Authors&#39;, limit_to=items)</span>
 <span class="sd">        Authors  Num_Documents  Times_Cited      ID</span>
 <span class="sd">    0  author 1              2           22  [0, 2]</span>
 <span class="sd">    1  author 2              1           10     [0]</span>
 
-<span class="sd">    &gt;&gt;&gt; summary_by_term(x, &#39;Authors&#39;, exclude=items)</span>
+<span class="sd">    &gt;&gt;&gt; summary(x, &#39;Authors&#39;, exclude=items)</span>
 <span class="sd">        Authors  Num_Documents  Times_Cited      ID</span>
 <span class="sd">    0  author 0              2           21  [0, 1]</span>
 <span class="sd">    1  author 3              1           13     [3]</span>
@@ -246,7 +550,7 @@
     <span class="c1">#</span>
     <span class="c1"># Computation</span>
     <span class="c1">#</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">last_year</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Year</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
     <span class="n">x</span><span class="p">[</span><span class="s2">&quot;SD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
@@ -382,71 +686,56 @@
     <span class="k">if</span> <span class="n">exclude</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude</span><span class="p">)]</span>
 
-    <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">:</span>
+    <span class="c1">#</span>
+    <span class="c1"># Top by</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">top_by</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">top_by</span> <span class="o">=</span> <span class="n">top_by</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="n">top_by</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Num_Documents&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;Times_Cited&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;Frac_Num_Documents&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;Times_Cited_per_Year&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;Avg_Times_Cited&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="s2">&quot;H_index&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="s2">&quot;M_index&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+            <span class="s2">&quot;G_index&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="p">}[</span><span class="n">top_by</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">top_by</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="n">by</span><span class="p">,</span> <span class="n">ascending_top_by</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">0</span><span class="p">:</span> <span class="p">([</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]),</span>
+            <span class="mi">1</span><span class="p">:</span> <span class="p">([</span><span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Frac_Num_Documents&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]),</span>
+            <span class="mi">2</span><span class="p">:</span> <span class="p">([</span><span class="s2">&quot;Frac_Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]),</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="p">(</span>
+                <span class="p">[</span><span class="s2">&quot;Times_Cited_per_Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Frac_Num_Documents&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span>
+                <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+            <span class="p">),</span>
+            <span class="mi">4</span><span class="p">:</span> <span class="p">(</span>
+                <span class="p">[</span><span class="s2">&quot;Avg_Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Frac_Num_Documents&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span>
+                <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+            <span class="p">),</span>
+            <span class="mi">5</span><span class="p">:</span> <span class="p">(</span>
+                <span class="p">[</span><span class="s2">&quot;H_index&quot;</span><span class="p">,</span> <span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span>
+                <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+            <span class="p">),</span>
+            <span class="mi">6</span><span class="p">:</span> <span class="p">(</span>
+                <span class="p">[</span><span class="s2">&quot;M_index&quot;</span><span class="p">,</span> <span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span>
+                <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+            <span class="p">),</span>
+            <span class="mi">7</span><span class="p">:</span> <span class="p">(</span>
+                <span class="p">[</span><span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;H_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span>
+                <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
+            <span class="p">),</span>
+        <span class="p">}[</span><span class="n">top_by</span><span class="p">]</span>
+
         <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-            <span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span>
-            <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
-            <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">by</span><span class="o">=</span><span class="n">by</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="n">ascending_top_by</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;Times Cited&quot;</span><span class="p">:</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-            <span class="p">[</span><span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Frac_Num_Documents&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span>
-            <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
-            <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
 
-    <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;Frac Num Documents&quot;</span><span class="p">:</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-            <span class="p">[</span><span class="s2">&quot;Frac_Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span>
-            <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
-            <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;Times Cited per Year&quot;</span><span class="p">:</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-            <span class="p">[</span><span class="s2">&quot;Times_Cited_per_Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Frac_Num_Documents&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span>
-            <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
-            <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">or</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;Avg Times Cited&quot;</span><span class="p">:</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-            <span class="p">[</span><span class="s2">&quot;Avg_Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Frac_Num_Documents&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span>
-            <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
-            <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="mi">5</span> <span class="ow">or</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;H index&quot;</span><span class="p">:</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-            <span class="p">[</span><span class="s2">&quot;H_index&quot;</span><span class="p">,</span> <span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span>
-            <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
-            <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="mi">6</span> <span class="ow">or</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;M index&quot;</span><span class="p">:</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-            <span class="p">[</span><span class="s2">&quot;M_index&quot;</span><span class="p">,</span> <span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span>
-            <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
-            <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="mi">7</span> <span class="ow">or</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;G index&quot;</span><span class="p">:</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-            <span class="p">[</span><span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;H_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="n">column</span><span class="p">],</span>
-            <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
-            <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">top_by</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
             <span class="p">[</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">],</span>
             <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
@@ -457,40 +746,104 @@
     <span class="k">if</span> <span class="n">top_n</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">result</span></div>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="c1">#  Sort by</span>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sort_by</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">sort_by</span> <span class="o">=</span> <span class="n">sort_by</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="n">sort_by</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Column&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;Num_Documents&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;Frac_Num_Documents&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;Times_Cited&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;Times_Cited_per_Year&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="s2">&quot;Avg_Times_Cited&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="s2">&quot;H_index&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+            <span class="s2">&quot;M_index&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+            <span class="s2">&quot;G_index&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="p">}[</span><span class="n">sort_by</span><span class="p">]</span>
 
+    <span class="n">column0</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">sort_by</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">column0</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">],</span>
+        <span class="mi">1</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="n">column0</span><span class="p">],</span>
+        <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Frac_Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="n">column0</span><span class="p">],</span>
+        <span class="mi">3</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">column0</span><span class="p">],</span>
+        <span class="mi">4</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Times_Cited_per_Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">column0</span><span class="p">],</span>
+        <span class="mi">5</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Avg_Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">column0</span><span class="p">],</span>
+        <span class="mi">6</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;H_index&quot;</span><span class="p">,</span> <span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">],</span>
+        <span class="mi">7</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;M_index&quot;</span><span class="p">,</span> <span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">],</span>
+        <span class="mi">8</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;H_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">],</span>
+    <span class="p">}[</span><span class="n">sort_by</span><span class="p">]</span>
 
-<div class="viewcode-block" id="get_top_by"><a class="viewcode-back" href="../../by_term.html#techminer.by_term.get_top_by">[docs]</a><span class="k">def</span> <span class="nf">get_top_by</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">top_by</span><span class="p">,</span> <span class="n">top_n</span><span class="p">,</span> <span class="n">limit_to</span><span class="p">,</span> <span class="n">exclude</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a list with the top_n terms of column</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">summary_by_term</span><span class="p">(</span>
-        <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
-        <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
-        <span class="n">top_by</span><span class="o">=</span><span class="n">top_by</span><span class="p">,</span>
-        <span class="n">top_n</span><span class="o">=</span><span class="n">top_n</span><span class="p">,</span>
-        <span class="n">limit_to</span><span class="o">=</span><span class="n">limit_to</span><span class="p">,</span>
-        <span class="n">exclude</span><span class="o">=</span><span class="n">exclude</span><span class="p">,</span>
-    <span class="p">)[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">sort_by</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="n">ascending</span><span class="p">)</span>
 
+    <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># def most_cited_documents(x):</span>
-<span class="c1">#     &quot;&quot;&quot; Returns the most cited documents.</span>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="c1"># Output</span>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Summary&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;Bar_plot&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;Horizontal_bar_plot&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;Pie_plot&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;Wordcloud&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="s2">&quot;Treemap&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="s2">&quot;S/D_Ratio_(bar)&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+            <span class="s2">&quot;S/D_Ratio_(barh)&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="p">}[</span><span class="n">output</span><span class="p">]</span>
 
-<span class="c1">#     Args:</span>
-<span class="c1">#         x (pandas.DataFrame): bibliographic dataframe.</span>
+    <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
 
-<span class="c1">#     Results:</span>
-<span class="c1">#         A pandas.DataFrame.</span>
+    <span class="n">values</span><span class="p">,</span> <span class="n">prop_to</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="mi">0</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">),</span>
+        <span class="mi">1</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">),</span>
+        <span class="mi">2</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Frac_Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">),</span>
+        <span class="mi">3</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Times_Cited_per_Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">),</span>
+        <span class="mi">4</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Avg_Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">),</span>
+        <span class="mi">5</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;H_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Avg_Times_Cited&quot;</span><span class="p">),</span>
+        <span class="mi">6</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;M_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Avg_Times_Cited&quot;</span><span class="p">),</span>
+        <span class="mi">7</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Avg_Times_Cited&quot;</span><span class="p">),</span>
+    <span class="p">}[</span><span class="n">top_by</span><span class="p">]</span>
 
+    <span class="k">if</span> <span class="n">output</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
 
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     result = x.sort_values(by=&quot;Times_Cited&quot;, ascending=False)[</span>
-<span class="c1">#         [&quot;Title&quot;, &quot;Authors&quot;, &quot;Year&quot;, &quot;Times_Cited&quot;, &quot;ID&quot;]</span>
-<span class="c1">#     ]</span>
-<span class="c1">#     result[&quot;Times_Cited&quot;] = result[&quot;Times_Cited&quot;].map(</span>
-<span class="c1">#         lambda w: int(w) if pd.isna(w) is False else 0</span>
-<span class="c1">#     )</span>
-<span class="c1">#     return result</span>
+        <span class="n">plot</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">pie</span><span class="p">,}[</span><span class="n">output</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">plot</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">result</span><span class="p">,</span>
+            <span class="n">column</span><span class="o">=</span><span class="n">values</span><span class="p">,</span>
+            <span class="n">prop_to</span><span class="o">=</span><span class="n">prop_to</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+            <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
+            <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">output</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]:</span>
+        <span class="n">plot</span> <span class="o">=</span> <span class="p">{</span><span class="mi">4</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">wordcloud</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">treemap</span><span class="p">,}[</span><span class="n">output</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">plot</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">result</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">values</span><span class="p">,</span> <span class="n">prop_to</span><span class="o">=</span><span class="n">prop_to</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">output</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]:</span>
+        <span class="n">plot</span> <span class="o">=</span> <span class="p">{</span><span class="mi">6</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">stacked_bar</span><span class="p">,</span> <span class="mi">7</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">stacked_barh</span><span class="p">,}[</span><span class="n">output</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">plot</span><span class="p">(</span>
+            <span class="n">result</span><span class="p">[[</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;SD&quot;</span><span class="p">,</span> <span class="s2">&quot;MD&quot;</span><span class="p">]],</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SD&quot;</span><span class="p">,</span> <span class="s2">&quot;MD&quot;</span><span class="p">],</span>
+            <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="s2">&quot;ERROR: Output code unknown&quot;</span></div>
 
 
 <span class="c1">###############################################################################</span>
@@ -510,13 +863,13 @@
 <span class="c1">##  Panel 0</span>
 <span class="c1">##</span>
 <span class="c1">##</span>
-<span class="k">def</span> <span class="nf">__APP0__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">limit_to</span><span class="p">,</span> <span class="n">exclude</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">__APP0__</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">limit_to</span><span class="p">,</span> <span class="n">exclude</span><span class="p">):</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
     <span class="c1">#</span>
     <span class="c1"># UI</span>
     <span class="c1">#</span>
     <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="n">COLUMNS</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">column</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">EXCLUDE_COLS</span><span class="p">])</span>
+    <span class="n">COLUMNS</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">column</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">EXCLUDE_COLS</span><span class="p">])</span>
     <span class="c1">#</span>
     <span class="n">controls</span> <span class="o">=</span> <span class="p">[</span>
         <span class="c1"># 0</span>
@@ -542,7 +895,7 @@
             <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;column&quot;</span><span class="p">,</span>
             <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Column to analyze:&quot;</span><span class="p">,</span>
             <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
-                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="n">z</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">COLUMNS</span> <span class="k">if</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="n">z</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">COLUMNS</span> <span class="k">if</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span>
                 <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
             <span class="p">),</span>
         <span class="p">},</span>
@@ -580,30 +933,28 @@
             <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Sort by:&quot;</span><span class="p">,</span>
             <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
                 <span class="n">options</span><span class="o">=</span><span class="p">[</span>
-                    <span class="s2">&quot;Num Documents asc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Num Documents desc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Frac Num Documents asc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Frac Num Documents desc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Times Cited asc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Times Cited desc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Times Cited per Year asc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Times Cited per Year desc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Avg Times Cited asc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Avg Times Cited desc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;H index asc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;H index desc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;M index asc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;M index desc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;G index asc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;G index desc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Column asc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Column desc&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Frac Num Documents&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Times Cited&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Times Cited per Year&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Avg Times Cited&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;H index&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;M index&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;G index&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Column&quot;</span><span class="p">,</span>
                 <span class="p">],</span>
-                <span class="n">value</span><span class="o">=</span><span class="s2">&quot;Num Documents desc&quot;</span><span class="p">,</span>
                 <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
             <span class="p">),</span>
         <span class="p">},</span>
         <span class="c1"># 5</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;ascending&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Ascending:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="s2">&quot;False&quot;</span><span class="p">],</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 6</span>
         <span class="p">{</span>
             <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;cmap&quot;</span><span class="p">,</span>
             <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Colormap:&quot;</span><span class="p">,</span>
@@ -611,9 +962,9 @@
                 <span class="n">options</span><span class="o">=</span><span class="n">COLORMAPS</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
             <span class="p">),</span>
         <span class="p">},</span>
-        <span class="c1"># 6</span>
+        <span class="c1"># 7</span>
         <span class="p">{</span>
-            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;figsize_width&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;width&quot;</span><span class="p">,</span>
             <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Figsize&quot;</span><span class="p">,</span>
             <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
                 <span class="n">options</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
@@ -621,9 +972,9 @@
                 <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;88px&quot;</span><span class="p">),</span>
             <span class="p">),</span>
         <span class="p">},</span>
-        <span class="c1"># 7</span>
+        <span class="c1"># 8</span>
         <span class="p">{</span>
-            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;figsize_height&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;height&quot;</span><span class="p">,</span>
             <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Figsize&quot;</span><span class="p">,</span>
             <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
                 <span class="n">options</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
@@ -649,169 +1000,36 @@
         <span class="n">top_n</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;top_n&quot;</span><span class="p">]</span>
         <span class="n">cmap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cmap&quot;</span><span class="p">]</span>
         <span class="n">sort_by</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;sort_by&quot;</span><span class="p">]</span>
-        <span class="n">figsize_width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;figsize_width&quot;</span><span class="p">])</span>
-        <span class="n">figsize_height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;figsize_height&quot;</span><span class="p">])</span>
-        <span class="c1">#</span>
-        <span class="n">plots</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;Summary&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">&quot;Bar plot&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">bar_prop</span><span class="p">,</span>
-            <span class="s2">&quot;Horizontal bar plot&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">barh_prop</span><span class="p">,</span>
-            <span class="s2">&quot;Pie plot&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">pie_prop</span><span class="p">,</span>
-            <span class="s2">&quot;Wordcloud&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">wordcloud</span><span class="p">,</span>
-            <span class="s2">&quot;Treemap&quot;</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">tree</span><span class="p">,</span>
-            <span class="s2">&quot;S/D Ratio (bar)&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">&quot;S/D Ratio (barh)&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="p">}</span>
-        <span class="c1">#</span>
+        <span class="n">ascending</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;True&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;False&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}[</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;ascending&quot;</span><span class="p">]]</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;width&quot;</span><span class="p">])</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">])</span>
+
         <span class="k">if</span> <span class="n">view</span> <span class="o">==</span> <span class="s2">&quot;Summary&quot;</span><span class="p">:</span>
-            <span class="n">controls</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">controls</span><span class="p">[</span><span class="mi">6</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">controls</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">controls</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">controls</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">controls</span><span class="p">[</span><span class="mi">6</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="n">controls</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="n">controls</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="c1">#</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">summary_by_term</span><span class="p">(</span>
-            <span class="n">x</span><span class="p">,</span>
-            <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
-            <span class="n">top_by</span><span class="o">=</span><span class="n">top_by</span><span class="p">,</span>
-            <span class="n">top_n</span><span class="o">=</span><span class="n">top_n</span><span class="p">,</span>
-            <span class="n">limit_to</span><span class="o">=</span><span class="n">limit_to</span><span class="p">,</span>
-            <span class="n">exclude</span><span class="o">=</span><span class="n">exclude</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="c1">#</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Num Documents asc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Num Documents desc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Frac Num Documents asc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Frac_Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Frac Num Documents desc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Frac_Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Times Cited asc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Times Cited desc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Times Cited per Year asc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Times_Cited_per_Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
-                <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Times Cited per Year desc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Times_Cited_per_Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
-                <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Avg Times Cited asc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Avg_Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Avg Times Cited desc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Avg_Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Column asc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Column desc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;H index asc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;H_index&quot;</span><span class="p">,</span> <span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">],</span>
-                <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;H index desc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;H_index&quot;</span><span class="p">,</span> <span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">],</span>
-                <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;M index asc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;M_index&quot;</span><span class="p">,</span> <span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">],</span>
-                <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;M index desc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;M_index&quot;</span><span class="p">,</span> <span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">],</span>
-                <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;G index asc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;H_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">],</span>
-                <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;G index desc&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;H_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">],</span>
-                <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="p">)</span>
-
-        <span class="c1">#</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="c1">#</span>
-        <span class="n">plot</span> <span class="o">=</span> <span class="n">plots</span><span class="p">[</span><span class="n">view</span><span class="p">]</span>
         <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
         <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">view</span> <span class="o">==</span> <span class="s2">&quot;Summary&quot;</span><span class="p">:</span>
-                <span class="n">df</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">)</span>
-                <span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-
-                <span class="k">if</span> <span class="n">view</span> <span class="o">==</span> <span class="s2">&quot;S/D Ratio (bar)&quot;</span><span class="p">:</span>
-                    <span class="n">display</span><span class="p">(</span>
-                        <span class="n">plt</span><span class="o">.</span><span class="n">stacked_bar</span><span class="p">(</span>
-                            <span class="n">df</span><span class="p">[[</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;SD&quot;</span><span class="p">,</span> <span class="s2">&quot;MD&quot;</span><span class="p">]],</span>
-                            <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">figsize_width</span><span class="p">,</span> <span class="n">figsize_height</span><span class="p">),</span>
-                            <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
-                        <span class="p">)</span>
-                    <span class="p">)</span>
-                    <span class="k">return</span>
-
-                <span class="k">if</span> <span class="n">view</span> <span class="o">==</span> <span class="s2">&quot;S/D Ratio (barh)&quot;</span><span class="p">:</span>
-                    <span class="n">display</span><span class="p">(</span>
-                        <span class="n">plt</span><span class="o">.</span><span class="n">stacked_barh</span><span class="p">(</span>
-                            <span class="n">df</span><span class="p">[[</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;SD&quot;</span><span class="p">,</span> <span class="s2">&quot;MD&quot;</span><span class="p">]],</span>
-                            <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">figsize_width</span><span class="p">,</span> <span class="n">figsize_height</span><span class="p">),</span>
-                            <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
-                        <span class="p">)</span>
-                    <span class="p">)</span>
-                    <span class="k">return</span>
-
-                <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">:</span>
-                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">]]</span>
-                <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;Times Cited&quot;</span><span class="p">:</span>
-                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">]]</span>
-                <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;Frac Num Documents&quot;</span><span class="p">:</span>
-                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;Frac_Num_Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">]]</span>
-                <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;Times Cited per Year&quot;</span><span class="p">:</span>
-                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;Times_Cited_per_Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">]]</span>
-                <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;Avg Times Cited&quot;</span><span class="p">:</span>
-                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;Avg_Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">]]</span>
-                <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;H index&quot;</span><span class="p">:</span>
-                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;H_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Avg_Times_Cited&quot;</span><span class="p">]]</span>
-                <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;M index&quot;</span><span class="p">:</span>
-                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;M_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Avg_Times_Cited&quot;</span><span class="p">]]</span>
-                <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;G index&quot;</span><span class="p">:</span>
-                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;G_index&quot;</span><span class="p">,</span> <span class="s2">&quot;Avg_Times_Cited&quot;</span><span class="p">]]</span>
-
-                <span class="n">display</span><span class="p">(</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">figsize_width</span><span class="p">,</span> <span class="n">figsize_height</span><span class="p">)))</span>
+            <span class="n">display</span><span class="p">(</span>
+                <span class="n">summary</span><span class="p">(</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                    <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+                    <span class="n">output</span><span class="o">=</span><span class="n">view</span><span class="p">,</span>
+                    <span class="n">top_by</span><span class="o">=</span><span class="n">top_by</span><span class="p">,</span>
+                    <span class="n">top_n</span><span class="o">=</span><span class="n">top_n</span><span class="p">,</span>
+                    <span class="n">sort_by</span><span class="o">=</span><span class="n">sort_by</span><span class="p">,</span>
+                    <span class="n">ascending</span><span class="o">=</span><span class="n">ascending</span><span class="p">,</span>
+                    <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+                    <span class="n">limit_to</span><span class="o">=</span><span class="n">limit_to</span><span class="p">,</span>
+                    <span class="n">exclude</span><span class="o">=</span><span class="n">exclude</span><span class="p">,</span>
+                    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
 
     <span class="c1"># -------------------------------------------------------------------------</span>
     <span class="c1">#</span>
@@ -850,265 +1068,6 @@
 <span class="c1">#  Panel 1</span>
 <span class="c1">#</span>
 <span class="c1">#</span>
-<span class="k">def</span> <span class="nf">__APP1__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">limit_to</span><span class="p">,</span> <span class="n">exclude</span><span class="p">):</span>
-    <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="c1">#</span>
-    <span class="c1"># UI</span>
-    <span class="c1">#</span>
-    <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="n">controls</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="c1"># 0</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;term&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Column to analyze:&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
-                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Countries&quot;</span><span class="p">,</span> <span class="s2">&quot;Country_1st_Author&quot;</span><span class="p">],</span>
-                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
-            <span class="p">),</span>
-        <span class="p">},</span>
-        <span class="c1"># 1</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;analysis_type&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Analysis type:&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
-                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times Cited&quot;</span><span class="p">],</span>
-                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
-            <span class="p">),</span>
-        <span class="p">},</span>
-        <span class="c1"># 2</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;cmap&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Colormap:&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
-                <span class="n">options</span><span class="o">=</span><span class="n">COLORMAPS</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">WIDGET_WIDTH</span><span class="p">),</span>
-            <span class="p">),</span>
-        <span class="p">},</span>
-        <span class="c1"># 3</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;figsize_width&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Figsize&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
-                <span class="n">options</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-                <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;88px&quot;</span><span class="p">),</span>
-            <span class="p">),</span>
-        <span class="p">},</span>
-        <span class="c1"># 4</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;figsize_height&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Figsize&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
-                <span class="n">options</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;88px&quot;</span><span class="p">),</span>
-            <span class="p">),</span>
-        <span class="p">},</span>
-    <span class="p">]</span>
-    <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="c1">#</span>
-    <span class="c1"># Logic</span>
-    <span class="c1">#</span>
-    <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">server</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1">#</span>
-        <span class="c1"># Logic</span>
-        <span class="c1">#</span>
-        <span class="n">term</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;term&quot;</span><span class="p">]</span>
-        <span class="n">analysis_type</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;analysis_type&quot;</span><span class="p">]</span>
-        <span class="n">cmap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cmap&quot;</span><span class="p">]</span>
-        <span class="n">figsize_width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;figsize_width&quot;</span><span class="p">])</span>
-        <span class="n">figsize_height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;figsize_height&quot;</span><span class="p">])</span>
-        <span class="c1">#</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">summary_by_term</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">term</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">analysis_type</span> <span class="o">==</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">term</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">]]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">term</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">]]</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
-        <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
-            <span class="n">display</span><span class="p">(</span>
-                <span class="n">plt</span><span class="o">.</span><span class="n">worldmap</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">figsize_width</span><span class="p">,</span> <span class="n">figsize_height</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
-            <span class="p">)</span>
-
-    <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="c1">#</span>
-    <span class="c1"># Generic</span>
-    <span class="c1">#</span>
-    <span class="c1"># -------------------------------------------------------------------------</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="n">control</span><span class="p">[</span><span class="s2">&quot;arg&quot;</span><span class="p">]:</span> <span class="n">control</span><span class="p">[</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="n">controls</span><span class="p">}</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
-    <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
-        <span class="n">display</span><span class="p">(</span><span class="n">widgets</span><span class="o">.</span><span class="n">interactive_output</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">args</span><span class="p">,))</span>
-    <span class="k">return</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">(</span>
-        <span class="p">[</span>
-            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
-                <span class="p">[</span>
-                    <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
-                        <span class="p">[</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">control</span><span class="p">[</span><span class="s2">&quot;desc&quot;</span><span class="p">]),</span> <span class="n">control</span><span class="p">[</span><span class="s2">&quot;widget&quot;</span><span class="p">]]</span>
-                    <span class="p">)</span>
-                    <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="n">controls</span>
-                    <span class="k">if</span> <span class="n">control</span><span class="p">[</span><span class="s2">&quot;desc&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Figsize&quot;</span><span class="p">]</span>
-                <span class="p">]</span>
-                <span class="o">+</span> <span class="p">[</span>
-                    <span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;Figure Size&quot;</span><span class="p">),</span>
-                    <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">controls</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">],</span> <span class="n">controls</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">],]),</span>
-                <span class="p">],</span>
-                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="n">LEFT_PANEL_HEIGHT</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="s2">&quot;1px solid gray&quot;</span><span class="p">),</span>
-            <span class="p">),</span>
-            <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
-                <span class="p">[</span><span class="n">output</span><span class="p">],</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">RIGHT_PANEL_WIDTH</span><span class="p">,</span> <span class="n">align_items</span><span class="o">=</span><span class="s2">&quot;baseline&quot;</span><span class="p">)</span>
-            <span class="p">),</span>
-        <span class="p">]</span>
-    <span class="p">)</span>
-
-
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="c1">#  Panel 2</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="k">def</span> <span class="nf">__APP2__</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-
-    <span class="c1">#</span>
-    <span class="c1"># Numero de documentos escritos por author</span>
-    <span class="c1">#</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">summary_by_term</span><span class="p">(</span>
-        <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="n">top_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit_to</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">None</span>
-    <span class="p">)</span>
-
-    <span class="n">authors_dict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">author</span><span class="p">:</span> <span class="n">num_docs</span>
-        <span class="k">for</span> <span class="n">author</span><span class="p">,</span> <span class="n">num_docs</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">Authors</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">Num_Documents</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">author</span><span class="p">)</span>
-    <span class="p">}</span>
-
-    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="p">[[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]]</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
-    <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">a</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; %&quot;</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">z</span><span class="p">]</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="p">{</span><span class="s2">&quot;Num Authors&quot;</span><span class="p">:</span> <span class="n">z</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s2">&quot;%&quot;</span><span class="p">:</span> <span class="n">w</span><span class="p">,</span> <span class="s2">&quot;Documents written per Author&quot;</span><span class="p">:</span> <span class="n">z</span><span class="o">.</span><span class="n">index</span><span class="p">}</span>
-    <span class="p">)</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;Documents written per Author&quot;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">z</span><span class="p">[</span><span class="s2">&quot;Acum Num Authors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="s2">&quot;Num Authors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
-    <span class="n">z</span><span class="p">[</span><span class="s2">&quot;% Acum&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">a</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="s2">&quot;Num Authors&quot;</span><span class="p">]),</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; %&quot;</span>
-        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">z</span><span class="p">[</span><span class="s2">&quot;Acum Num Authors&quot;</span><span class="p">]</span>
-    <span class="p">]</span>
-
-    <span class="n">m</span> <span class="o">=</span> <span class="n">__explode</span><span class="p">(</span><span class="n">x</span><span class="p">[[</span><span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">]],</span> <span class="s2">&quot;Authors&quot;</span><span class="p">)</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Documents_written&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">Authors</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">authors_dict</span><span class="p">[</span><span class="n">w</span><span class="p">])</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">z</span><span class="p">[</span><span class="s2">&quot;Documents written per Author&quot;</span><span class="p">]:</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;Documents_written &gt;= &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[[</span><span class="s2">&quot;ID&quot;</span><span class="p">]]</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
-        <span class="n">n</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
-
-    <span class="n">k</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">k</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">n</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
-    <span class="n">k</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">k</span>
-    <span class="n">z</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
-    <span class="n">z</span><span class="p">[</span><span class="s2">&quot;Acum Num Documents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span>
-
-    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span>
-        <span class="p">[</span>
-            <span class="s2">&quot;Num Authors&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;%&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Acum Num Authors&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;% Acum&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Documents written per Author&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Acum Num Documents&quot;</span><span class="p">,</span>
-        <span class="p">]</span>
-    <span class="p">]</span>
-
-    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
-    <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
-        <span class="n">display</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
-
-    <span class="k">return</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">output</span><span class="p">])</span>
-
-
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="c1">#  Panel 3</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="k">def</span> <span class="nf">__APP3__</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-
-    <span class="n">m</span> <span class="o">=</span> <span class="n">summary_by_term</span><span class="p">(</span>
-        <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;Source_title&quot;</span><span class="p">,</span> <span class="n">top_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit_to</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">None</span>
-    <span class="p">)</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="p">[[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]]</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
-    <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">a</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; %&quot;</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">m</span><span class="p">]</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="p">{</span><span class="s2">&quot;Num Sources&quot;</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s2">&quot;%&quot;</span><span class="p">:</span> <span class="n">w</span><span class="p">,</span> <span class="s2">&quot;Documents published&quot;</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">index</span><span class="p">}</span>
-    <span class="p">)</span>
-
-    <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;Documents published&quot;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Acum Num Sources&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Num Sources&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;% Acum&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">a</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;Num Sources&quot;</span><span class="p">]),</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; %&quot;</span>
-        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Acum Num Sources&quot;</span><span class="p">]</span>
-    <span class="p">]</span>
-
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Tot Documents published&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Num Sources&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Documents published&quot;</span><span class="p">]</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Tot Documents published&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Tot Documents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
-        <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">w</span> <span class="o">/</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; %&quot;</span>
-    <span class="p">)</span>
-
-    <span class="n">bradford1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="n">bradford2</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">bradford1</span>
-
-    <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Bradford&#39;s Group&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;Num Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
-        <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="mi">3</span> <span class="k">if</span> <span class="n">w</span> <span class="o">&gt;</span> <span class="n">bradford2</span> <span class="k">else</span> <span class="p">(</span><span class="mi">2</span> <span class="k">if</span> <span class="n">w</span> <span class="o">&gt;</span> <span class="n">bradford1</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="p">)</span>
-
-    <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span>
-        <span class="p">[</span>
-            <span class="s2">&quot;Num Sources&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;%&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Acum Num Sources&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;% Acum&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Documents published&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Tot Documents published&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Tot Documents&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Bradford&#39;s Group&quot;</span><span class="p">,</span>
-        <span class="p">]</span>
-    <span class="p">]</span>
-
-    <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
-    <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
-        <span class="n">display</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">output</span><span class="p">])</span>
-
-
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="c1">#  Panel 4</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="k">def</span> <span class="nf">__APP4__</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-
-    <span class="n">z</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;Times_Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Year&quot;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">])</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
-    <span class="n">z</span><span class="p">[</span><span class="s2">&quot;Times_Cited&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">Times_Cited</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
-    <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
-        <span class="n">display</span><span class="p">(</span><span class="n">z</span><span class="p">[[</span><span class="s2">&quot;Authors&quot;</span><span class="p">,</span> <span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="s2">&quot;Title&quot;</span><span class="p">,</span> <span class="s2">&quot;Source_title&quot;</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">]])</span>
-
-    <span class="k">return</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">output</span><span class="p">])</span>
 
 
 <div class="viewcode-block" id="app"><a class="viewcode-back" href="../../by_term.html#techminer.by_term.app">[docs]</a><span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">limit_to</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

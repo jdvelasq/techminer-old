@@ -13,6 +13,7 @@ from os.path import dirname, join
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import squarify
 from techminer.chord_diagram import ChordDiagram
 from wordcloud import ImageColorGenerator, WordCloud
@@ -330,6 +331,88 @@ def barh(
     return fig
 
 
+def gant_barh(
+    data,
+    height=0.5,
+    left=None,
+    align="center",
+    cmap="Greys",
+    figsize=(10, 6),
+    fontsize=13,
+    **kwargs,
+):
+    """
+    """
+    matplotlib.rc("font", size=fontsize)
+
+    data = data.copy()
+    years = [year for year in range(data.index.min(), data.index.max() + 1)]
+    data = data.applymap(lambda w: 1 if w > 0 else 0)
+    data = data.applymap(lambda w: int(w))
+    matrix1 = data.copy()
+    matrix1 = matrix1.cumsum()
+    matrix1 = matrix1.applymap(lambda x: True if x > 0 else False)
+    matrix2 = data.copy()
+    matrix2 = matrix2.sort_index(ascending=False)
+    matrix2 = matrix2.cumsum()
+    matrix2 = matrix2.applymap(lambda x: True if x > 0 else False)
+    matrix2 = matrix2.sort_index(ascending=True)
+    result = matrix1.eq(matrix2)
+    result = result.applymap(lambda x: 1 if x is True else 0)
+    gant_width = result.sum()
+    #  gant_width = gant_width.map(lambda w: w - 0.5)
+    gant_left = matrix1.applymap(lambda w: 1 - w)
+    gant_left = gant_left.sum()
+    gant_left = gant_left.map(lambda w: w - 0.5)
+
+    w = pd.DataFrame({"terms": result.columns, "values": gant_width,})
+
+    cmap = plt.cm.get_cmap(cmap)
+
+    fig = plt.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    kwargs["color"] = [
+        cmap(0.1 + 0.90 * (v - min(gant_width)) / (max(gant_width) - min(gant_width)))
+        for v in gant_width
+    ]
+
+    ax.barh(
+        y=range(len(data.columns)),
+        width=gant_width,
+        height=height,
+        left=gant_left,
+        align=align,
+        edgecolor="k",
+        linewidth=0.5,
+        zorder=10,
+        **kwargs,
+    )
+
+    xlim = ax.get_xlim()
+    ax.set_xlim(left=xlim[0] - 0.5, right=xlim[1] - 0.5)
+    ax.set_xticks(np.arange(len(data)))
+    ax.set_xticklabels(data.index)
+    ax.tick_params(axis="x", labelrotation=90)
+    #  ax.xaxis.tick_top()
+
+    #  ax.invert_yaxis()
+    yticklabels = [textwrap.shorten(text=text, width=TEXTLEN) for text in data.columns]
+    ax.set_yticks(np.arange(len(data.columns)))
+    ax.set_yticklabels(yticklabels)
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
+
+    ax.grid(axis="both", color="gray", linestyle=":")
+
+    ax.set_aspect("equal")
+
+    return fig
+
+
 def worldmap(
     data, cmap="Pastel2", figsize=(10, 5), legend=True, fontsize=12, *args, **kwargs,
 ):
@@ -533,12 +616,13 @@ def pie(
 
 def bubble(
     x,
-    y,
+    prop_to,
     figsize=(9, 9),
     cmap="Blues",
     grid_lw=1.0,
     grid_c="gray",
     grid_ls=":",
+    fontsize=12,
     **kwargs,
 ):
 
@@ -584,7 +668,7 @@ def bubble(
 
 
     """
-    matplotlib.rc("font", size=FONT_SIZE)
+    matplotlib.rc("font", size=fontsize)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
     cmap = plt.cm.get_cmap(cmap)
@@ -594,21 +678,21 @@ def bubble(
     size_max = x.max().max()
     size_min = x.min().min()
 
-    y = y.loc[:, x.columns]
+    prop_to = prop_to.loc[:, x.columns]
 
-    color_max = y.max().max()
-    color_min = y.min().min()
+    color_max = prop_to.max().max()
+    color_min = prop_to.min().min()
 
     for idx, row in enumerate(x.index.tolist()):
 
         sizes = [
-            100 + 400 * (w - size_min) / (size_max - size_min) if w != 0 else 0
+            150 + 1000 * (w - size_min) / (size_max - size_min) if w != 0 else 0
             for w in x.loc[row, :]
         ]
 
         colors = [
             cmap(0.2 + 0.8 * (w - color_min) / (color_max - color_min))
-            for w in y.loc[row, :]
+            for w in prop_to.loc[row, :]
         ]
 
         #  return range(len(x.columns)), [idx] * len(x.columns)
@@ -635,12 +719,24 @@ def bubble(
             idx, -1, len(x.index), linewidth=grid_lw, color=grid_c, linestyle=grid_ls,
         )
 
+    mean_color = 0.5 * (color_min + color_max)
     for idx_col, col in enumerate(x.columns):
         for idx_row, row in enumerate(x.index):
 
             if x[col][row] != 0:
+                if prop_to[col][row] >= 0.8 * mean_color:
+                    text_color = "w"
+                else:
+                    text_color = "k"
+
                 ax.text(
-                    idx_col, idx_row, x[col][row], va="center", ha="center", zorder=12
+                    idx_col,
+                    idx_row,
+                    x[col][row],
+                    va="center",
+                    ha="center",
+                    zorder=12,
+                    color=text_color,
                 )
 
     ax.set_aspect("equal")
@@ -665,7 +761,16 @@ def bubble(
     return fig
 
 
-def plot(x, *args, figsize=(9, 9), cmap="Blues", scalex=True, scaley=True, **kwargs):
+def plot(
+    data,
+    *args,
+    figsize=(9, 9),
+    cmap="Blues",
+    scalex=True,
+    scaley=True,
+    fontsize=12,
+    **kwargs,
+):
     """Creates a plot from a dataframe.
 
     Examples
@@ -705,7 +810,7 @@ def plot(x, *args, figsize=(9, 9), cmap="Blues", scalex=True, scaley=True, **kwa
     ax = fig.subplots()
     cmap = plt.cm.get_cmap(cmap)
 
-    x = x.copy()
+    x = data.copy()
     if "ID" in x.columns:
         x.pop("ID")
         ax.plot(
@@ -722,7 +827,10 @@ def plot(x, *args, figsize=(9, 9), cmap="Blues", scalex=True, scaley=True, **kwa
         ax.set_xlabel(x.columns[0])
         ax.set_ylabel(x.columns[1])
     else:
-        for col in x.columns:
+        colors = [cmap(0.2 + i / (len(x.columns) - 1)) for i in range(len(x.columns))]
+
+        for i, col in enumerate(x.columns):
+            kwargs["color"] = colors[i]
             ax.plot(x.index, x[col], label=col, **kwargs)
         ax.legend()
 
@@ -828,14 +936,6 @@ def wordcloud(
             np.uint8(d * 255),
         )
 
-    # a, b, c, d = cmap(0.1)
-    # background_color = (
-    #     np.uint8(a * 255),
-    #     np.uint8(b * 255),
-    #     np.uint8(c * 255),
-    #     np.uint8(d * 255),
-    # )
-
     wordcloud = WordCloud(
         font_path=font_path,
         width=width,
@@ -914,7 +1014,7 @@ def gant(x, figsize=(8, 8), grid_lw=1.0, grid_c="gray", grid_ls=":", *args, **kw
 
 
     """
-    matplotlib.rc("font", size=FONT_SIZE)
+    matplotlib.rc("font", size=fontsize)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
 
@@ -953,7 +1053,7 @@ def gant(x, figsize=(8, 8), grid_lw=1.0, grid_c="gray", grid_ls=":", *args, **kw
     return fig
 
 
-def heatmap(x, figsize=(8, 8), **kwargs):
+def heatmap(x, figsize=(8, 8), fontsize=12, **kwargs):
     """Plots a heatmap from a matrix.
 
 
@@ -1045,7 +1145,7 @@ def heatmap(x, figsize=(8, 8), **kwargs):
         :align: center
 
     """
-    matplotlib.rc("font", size=FONT_SIZE)
+    matplotlib.rc("font", size=fontsize)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
 
@@ -1059,6 +1159,7 @@ def heatmap(x, figsize=(8, 8), **kwargs):
         textwrap.shorten(text=w, width=TEXTLEN) if isinstance(w, str) else w
         for w in x.index
     ]
+
     ax.set_xticks(np.arange(len(x.index)) + 0.5)
     ax.set_xticklabels(x.index)
     ax.tick_params(axis="x", labelrotation=90)
