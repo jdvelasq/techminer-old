@@ -10,7 +10,7 @@ from IPython.display import display
 from ipywidgets import AppLayout, GridspecLayout, Layout
 import textwrap
 
-from techminer.by_term import summary_by_term
+import techminer.by_term as by_term
 from techminer.explode import __explode
 
 from techminer.explode import MULTIVALUED_COLS
@@ -142,7 +142,7 @@ def column(df, top_n=50):
         #
         x = __explode(df, column)
         if top_n is not None:
-            summary = summary_by_term(df, column)
+            summary = by_term.summary(df, column)
             top_terms_freq = set(
                 summary.sort_values("Num_Documents", ascending=False).head(top_n)[
                     column
@@ -296,7 +296,7 @@ def matrix(df, top_n=50):
         #
 
         if top_n is not None:
-            summary = summary_by_term(xdf, "_key1_")
+            summary = by_term.summary(xdf, "_key1_")
             top_terms_freq = set(
                 summary.sort_values("Num_Documents", ascending=False).head(top_n)[
                     "_key1_"

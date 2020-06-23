@@ -53,6 +53,8 @@ def __APP4__(data):
     result = data.sort_values(["Times_Cited", "Title"], ascending=[False, True])
     result = result[["Authors", "Year", "Title", "Source_title", "Times_Cited"]]
     result = result.head(50)
+    result["Times_Cited"] = result.Times_Cited.map(lambda w: int(w))
+    result = result.reset_index(drop=True)
     output = widgets.Output()
     with output:
         display(result)

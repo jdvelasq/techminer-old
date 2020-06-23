@@ -246,26 +246,33 @@ def summary(
         [selected_col, "Year", column], ascending=[False, True, True], inplace=True,
     )
 
-    if top_by in [0, 1, 2, 3]:
-        selected_terms = result.head(top_n)[column].tolist()
-    else:
-        if top_by in [4, 6]:
-            selected_terms = summary_by_term.sort_values(
-                ["Num_Documents", "Times_Cited"], ascending=False
-            )
-            selected_terms = selected_terms[column].head(top_n).tolist()
-        else:
-            selected_terms = summary_by_term.sort_values(
-                ["Times_Cited", "Num_Documents"], ascending=False
-            )
-            selected_terms = selected_terms[column].head(top_n).tolist()
+    if top_n is not None:
+        selected_terms = []
+        n = top_n
+        while len(selected_terms) < top_n:
+            if top_by in [0, 1, 2, 3]:
+                selected_terms = result.head(n)[column].tolist()
+            else:
+                if top_by in [4, 6]:
+                    selected_terms = summary_by_term.sort_values(
+                        ["Num_Documents", "Times_Cited"], ascending=False
+                    )
+                    selected_terms = selected_terms[column].head(n).tolist()
+                else:
+                    selected_terms = summary_by_term.sort_values(
+                        ["Times_Cited", "Num_Documents"], ascending=False
+                    )
+                    selected_terms = selected_terms[column].head(n).tolist()
+            selected_terms = list(set(selected_terms))
+            n += 1
 
-    result = result[result[column].map(lambda w: w in selected_terms)]
+        result = result[result[column].map(lambda w: w in selected_terms)]
 
     result.reset_index(drop=True)
     result = pd.pivot_table(
         result, values=selected_col, index="Year", columns=column, fill_value=0,
     )
+
     result.columns = result.columns.tolist()
     result.index = result.index.tolist()
 
