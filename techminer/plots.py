@@ -616,7 +616,7 @@ def pie(
 
 def bubble(
     x,
-    prop_to,
+    prop_to=None,
     figsize=(9, 9),
     cmap="Blues",
     grid_lw=1.0,
@@ -678,6 +678,8 @@ def bubble(
     size_max = x.max().max()
     size_min = x.min().min()
 
+    if prop_to is None:
+        prop_to = x
     prop_to = prop_to.loc[:, x.columns]
 
     color_max = prop_to.max().max()

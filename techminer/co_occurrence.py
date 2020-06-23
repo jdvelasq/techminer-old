@@ -94,6 +94,9 @@ def filter_index(
         sort_by = sort_by.replace(" ", "_")
         sort_by = {"Alphabetic": 0, "Num_Documents": 1, "Times_Cited": 2,}[sort_by]
 
+    if isinstance(ascending, str):
+        ascending = {"True": True, "False": False}[ascending]
+
     if sort_by == 0:
         top_terms = top_terms.sort_values(column, ascending=ascending)
 
@@ -110,10 +113,10 @@ def filter_index(
     top_terms = top_terms[column].tolist()
 
     if axis == 0 or axis == 2:
-        matrix = matrix.loc[top_terms, :]
+        matrix = matrix.loc[[t for t in top_terms if t in matrix.index], :]
 
     if axis == 1 or axis == 2:
-        matrix = matrix.loc[:, top_terms]
+        matrix = matrix.loc[:, [t for t in top_terms if t in matrix.columns]]
 
     return matrix
 
@@ -180,7 +183,20 @@ def document_term_matrix(x, column):
 
 
 def co_occurrence(
-    x, column, by=None, top_by=None, top_n=None, limit_to=None, exclude=None
+    x,
+    column,
+    by=None,
+    output=0,
+    top_by=None,
+    top_n=None,
+    sort_by=0,
+    ascending=True,
+    cmap_column="Greys",
+    cmap_by="Greys",
+    layout="Circular",
+    figsize=(10, 10),
+    limit_to=None,
+    exclude=None,
 ):
     """Summary occurrence and citations by terms in two different columns.
 
@@ -250,37 +266,531 @@ def co_occurrence(
         if isinstance(exclude, dict) and column in exclude.keys():
             exclude[by] = exclude[column]
 
+    #
+    # Computo
+    #
+
+    #
+    # top_by
+    #
+    if isinstance(top_by, str):
+        top_by = top_by.replace(" ", "_")
+        top_by = {"Values": -1, "Num_Documents": 0, "Times_Cited": 1,}[top_by]
+
     w = x[[column, by, "ID"]].dropna()
     A = document_term_matrix(w, column)
-    A = filter_index(
-        x=x,
-        column=column,
-        matrix=A,
-        axis=1,
-        top_by=top_by,
-        top_n=top_n,
-        limit_to=limit_to,
-        exclude=exclude,
-    )
     B = document_term_matrix(w, by)
-    B = filter_index(
-        x=x,
-        column=by,
-        matrix=B,
-        axis=1,
-        top_by=top_by,
-        top_n=top_n,
-        limit_to=limit_to,
-        exclude=exclude,
-    )
 
-    result = np.matmul(B.transpose().values, A.values)
-    result = pd.DataFrame(result, columns=A.columns, index=B.columns)
-    result = result.sort_index(axis=0, ascending=True).sort_index(
-        axis=1, ascending=True
-    )
+    if top_by == -1:
+
+        A = filter_index(
+            x=x,
+            column=column,
+            matrix=A,
+            axis=1,
+            top_by=0,
+            top_n=None,
+            sort_by=sort_by,
+            ascending=ascending,
+            limit_to=limit_to,
+            exclude=exclude,
+        )
+
+        B = filter_index(
+            x=x,
+            column=by,
+            matrix=B,
+            axis=1,
+            top_by=0,
+            top_n=None,
+            sort_by=sort_by,
+            ascending=ascending,
+            limit_to=limit_to,
+            exclude=exclude,
+        )
+
+        result = np.matmul(B.transpose().values, A.values)
+        result = pd.DataFrame(result, columns=A.columns, index=B.columns)
+
+        # sort max values per column
+        max_columns = result.sum(axis=0)
+        max_columns = max_columns.sort_values(ascending=False)
+        max_columns = max_columns.head(top_n).index
+
+        max_index = result.sum(axis=1)
+        max_index = max_index.sort_values(ascending=False)
+        max_index = max_index.head(top_n).index
+
+        result = result.loc[
+            [t for t in result.index if t in max_index],
+            [t for t in result.columns if t in max_columns],
+        ]
+
+    if top_by == 0 or top_by == 1:
+
+        A = filter_index(
+            x=x,
+            column=column,
+            matrix=A,
+            axis=1,
+            top_by=top_by,
+            top_n=top_n,
+            sort_by=sort_by,
+            ascending=ascending,
+            limit_to=limit_to,
+            exclude=exclude,
+        )
+
+        B = filter_index(
+            x=x,
+            column=by,
+            matrix=B,
+            axis=1,
+            top_by=top_by,
+            top_n=top_n,
+            sort_by=sort_by,
+            ascending=ascending,
+            limit_to=limit_to,
+            exclude=exclude,
+        )
+
+        result = np.matmul(B.transpose().values, A.values)
+        result = pd.DataFrame(result, columns=A.columns, index=B.columns)
+
+    ## check for compatibility with rest of library
+    if top_by == -1:
+        top_by = 0
+
+    summ = by_term.summary(x, column)
+    if top_by == 0:
+        d = {key: value for key, value in zip(summ[column], summ["Num_Documents"])}
+    else:
+        d = {key: value for key, value in zip(summ[column], summ["Times_Cited"])}
+    result.columns = ["{} [{}]".format(t, d[t]) for t in result.columns]
+
+    summ = by_term.summary(x, by)
+    if top_by == 0:
+        d = {key: value for key, value in zip(summ[by], summ["Num_Documents"])}
+    else:
+        d = {key: value for key, value in zip(summ[by], summ["Times_Cited"])}
+    result.index = ["{} [{}]".format(t, d[t]) for t in result.index]
+
+    if isinstance(output, str):
+        output = output.replace(" ", "_")
+        output = {
+            "Matrix": 0,
+            "Heatmap": 1,
+            "Bubble_plot": 2,
+            "Network": 3,
+            "Slope_chart": 4,
+        }[output]
+
+    if output == 0:
+        if cmap_column is None:
+            return result
+        else:
+            return result.style.background_gradient(cmap=cmap_column, axis=None)
+
+    if output == 1:
+        return plt.heatmap(result.transpose(), cmap=cmap_column, figsize=figsize)
+
+    if output == 2:
+        return plt.bubble(result, axis=0, cmap=cmap_column, figsize=figsize,)
+
+    if output == 3:
+        if column == by:
+            return occurrence_map(
+                result, layout=layout, cmap=cmap_column, figsize=figsize,
+            )
+
+        if column != by:
+            return co_occurrence_map(
+                result,
+                data=x,
+                column=column,
+                by=by,
+                layout=layout,
+                cmap_column=cmap_column,
+                cmap_by=cmap_by,
+                figsize=figsize,
+            )
+
+    if output == 4:
+        return slope_chart(
+            matrix=result,
+            x=x,
+            column=column,
+            by=by,
+            top_by=top_by,
+            cmap_column=cmap_column,
+            cmap_by=cmap_by,
+            figsize=figsize,
+        )
 
     return result
+
+
+def __TAB0__(x, limit_to, exclude):
+    # -------------------------------------------------------------------------
+    #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
+    #
+    controls = [
+        # 0
+        {
+            "arg": "view",
+            "desc": "View:",
+            "widget": widgets.Dropdown(
+                options=["Matrix", "Heatmap", "Bubble plot", "Network", "Slope chart"],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 1
+        {
+            "arg": "column",
+            "desc": "Column to analyze:",
+            "widget": widgets.Dropdown(
+                options=[z for z in COLUMNS if z in x.columns],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 2
+        {
+            "arg": "by",
+            "desc": "By Column:",
+            "widget": widgets.Dropdown(
+                options=[z for z in COLUMNS[1:] if z in x.columns],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 3
+        {
+            "arg": "top_by",
+            "desc": "Top by:",
+            "widget": widgets.Dropdown(
+                options=["Values", "Num Documents", "Times Cited",],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 4
+        {
+            "arg": "top_n",
+            "desc": "Top N:",
+            "widget": widgets.Dropdown(
+                options=list(range(5, 51, 5)), layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 5
+        {
+            "arg": "sort_by",
+            "desc": "Sort order:",
+            "widget": widgets.Dropdown(
+                options=["Alphabetic", "Num Documents", "Times Cited",],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 6
+        {
+            "arg": "ascending",
+            "desc": "Ascending:",
+            "widget": widgets.Dropdown(
+                options=[True, False], layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 7
+        {
+            "arg": "cmap_column",
+            "desc": "Colormap column/matrix:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 8
+        {
+            "arg": "cmap_by",
+            "desc": "Colormap by:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 9
+        {
+            "arg": "layout",
+            "desc": "Map layout:",
+            "widget": widgets.Dropdown(
+                options=[
+                    "Circular",
+                    "Kamada Kawai",
+                    "Planar",
+                    "Random",
+                    "Spectral",
+                    "Spring",
+                    "Shell",
+                ],
+                layout=Layout(width=WIDGET_WIDTH),
+            ),
+        },
+        # 10
+        {
+            "arg": "width",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1),
+                ensure_option=True,
+                layout=Layout(width="88px"),
+            ),
+        },
+        # 11
+        {
+            "arg": "height",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1),
+                ensure_option=True,
+                layout=Layout(width="88px"),
+            ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
+    def server(**kwargs):
+        #
+        # Logic
+        #
+        view = kwargs["view"]
+        column = kwargs["column"]
+        by = kwargs["by"]
+        cmap_column = kwargs["cmap_column"]
+        cmap_by = kwargs["cmap_by"]
+        top_by = kwargs["top_by"]
+        top_n = int(kwargs["top_n"])
+        sort_by = kwargs["sort_by"]
+        ascending = kwargs["ascending"]
+        layout = kwargs["layout"]
+        width = int(kwargs["width"])
+        height = int(kwargs["height"])
+
+        controls[2]["widget"].options = [
+            z for z in COLUMNS if z in x.columns and z != column
+        ]
+        by = controls[2]["widget"].value
+
+        if view == "Matrix" or view == "Heatmap":
+            controls[-4]["widget"].disabled = True
+            controls[-3]["widget"].disabled = True
+            controls[-2]["widget"].disabled = True
+            controls[-1]["widget"].disabled = True
+
+        if view == "Bubble plot":
+            controls[-4]["widget"].disabled = True
+            controls[-3]["widget"].disabled = True
+            controls[-2]["widget"].disabled = False
+            controls[-1]["widget"].disabled = False
+
+        if view == "Network":
+            controls[-4]["widget"].disabled = False
+            controls[-3]["widget"].disabled = False
+            controls[-2]["widget"].disabled = False
+            controls[-1]["widget"].disabled = False
+
+        if view == "Slope chart":
+            controls[-4]["widget"].disabled = False
+            controls[-3]["widget"].disabled = True
+            controls[-2]["widget"].disabled = False
+            controls[-1]["widget"].disabled = False
+
+        output.clear_output()
+        with output:
+            display(
+                co_occurrence(
+                    x,
+                    column=column,
+                    by=by,
+                    output=view,
+                    top_by=top_by,
+                    top_n=top_n,
+                    sort_by=sort_by,
+                    ascending=ascending,
+                    cmap_column=cmap_column,
+                    cmap_by=cmap_by,
+                    layout=layout,
+                    figsize=(width, height),
+                    limit_to=limit_to,
+                    exclude=exclude,
+                )
+            )
+        #
+
+        return
+
+        #
+        if top_by == "Num Documents":
+            s = by_term.summary(
+                data=x,
+                column=column,
+                top_by=top_by,
+                top_n=top_n,
+                limit_to=limit_to,
+                exclude=exclude,
+            )
+            new_names = {
+                a: "{} [{:d}]".format(a, b)
+                for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
+            }
+            matrix = matrix.rename(columns=new_names)
+            #
+            if column == by:
+                matrix = matrix.rename(index=new_names)
+            else:
+                s = by_term.summary(x, by)
+                new_names = {
+                    a: "{} [{:d}]".format(a, b)
+                    for a, b in zip(s[by].tolist(), s["Num_Documents"].tolist())
+                }
+                matrix = matrix.rename(index=new_names)
+        else:
+            s = summary_by_term(
+                x=x,
+                column=column,
+                top_by=top_by,
+                top_n=top_n,
+                limit_to=limit_to,
+                exclude=exclude,
+            )
+            new_names = {
+                a: "{} [{:d}]".format(a, b)
+                for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
+            }
+            matrix = matrix.rename(columns=new_names)
+            #
+            if column == by:
+                matrix = matrix.rename(index=new_names)
+            else:
+                s = summary_by_term(x, by)
+                new_names = {
+                    a: "{} [{:d}]".format(a, b)
+                    for a, b in zip(s[by].tolist(), s["Times_Cited"].tolist())
+                }
+                matrix = matrix.rename(index=new_names)
+
+        #
+        # Sort order
+        #
+        g = (
+            lambda m: m[m.find("[") + 1 : m.find("]")].zfill(5)
+            + " "
+            + m[: m.find("[") - 1]
+        )
+        if sort_by == "Frequency/Cited by asc.":
+            col_names = sorted(matrix.columns, key=g, reverse=False)
+            row_names = sorted(matrix.index, key=g, reverse=False)
+            matrix = matrix.loc[row_names, col_names]
+        if sort_by == "Frequency/Cited by desc.":
+            col_names = sorted(matrix.columns, key=g, reverse=True)
+            row_names = sorted(matrix.index, key=g, reverse=True)
+            matrix = matrix.loc[row_names, col_names]
+        if sort_by == "Alphabetic asc.":
+            matrix = matrix.sort_index(axis=0, ascending=True).sort_index(
+                axis=1, ascending=True
+            )
+        if sort_by == "Alphabetic desc.":
+            matrix = matrix.sort_index(axis=0, ascending=False).sort_index(
+                axis=1, ascending=False
+            )
+        #
+        output.clear_output()
+        with output:
+            #
+            # View
+            #
+            if view == "Matrix":
+                with pd.option_context(
+                    "display.max_columns", 50, "display.max_rows", 50
+                ):
+                    display(matrix.style.background_gradient(cmap=cmap, axis=None))
+            if view == "Heatmap":
+                display(
+                    plt.heatmap(
+                        matrix, cmap=cmap, figsize=(figsize_width, figsize_height)
+                    )
+                )
+            if view == "Bubble plot":
+                display(
+                    plt.bubble(
+                        matrix.transpose(),
+                        axis=0,
+                        cmap=cmap,
+                        figsize=(figsize_width, figsize_height),
+                    )
+                )
+            if view == "Network" and column == by:
+                display(
+                    occurrence_map(
+                        matrix,
+                        layout=layout,
+                        cmap=cmap,
+                        figsize=(figsize_width, figsize_height),
+                    )
+                )
+            if view == "Network" and column != by:
+                display(
+                    co_occurrence_map(
+                        matrix,
+                        layout=layout,
+                        cmap=cmap,
+                        figsize=(figsize_width, figsize_height),
+                    )
+                )
+
+            if view == "Slope chart":
+                display(
+                    slope_chart(
+                        matrix=matrix,
+                        x=x,
+                        column=column,
+                        by=by,
+                        top_by=top_by,
+                        figsize=(figsize_width, figsize_height),
+                        cmap=cmap,
+                    )
+                )
+
+    # -------------------------------------------------------------------------
+    #
+    # Generic
+    #
+    # -------------------------------------------------------------------------
+    args = {control["arg"]: control["widget"] for control in controls}
+    output = widgets.Output()
+    with output:
+        display(widgets.interactive_output(server, args,))
+    return widgets.HBox(
+        [
+            widgets.VBox(
+                [
+                    widgets.VBox(
+                        [widgets.Label(value=control["desc"]), control["widget"]]
+                    )
+                    for control in controls
+                    if control["desc"] not in ["Figsize"]
+                ]
+                + [
+                    widgets.Label(value="Figure Size"),
+                    widgets.HBox([controls[-2]["widget"], controls[-1]["widget"],]),
+                ],
+                layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
+            ),
+            widgets.VBox(
+                [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")
+            ),
+        ]
+    )
 
 
 from sklearn.cluster import AgglomerativeClustering
@@ -802,13 +1312,25 @@ def occurrence_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)
     return fig
 
 
-def co_occurrence_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)):
+def co_occurrence_map(
+    matrix,
+    data,
+    column,
+    by,
+    layout="Kamada Kawai",
+    cmap_column="Greys",
+    cmap_by="Greys",
+    figsize=(17, 12),
+):
     """Computes the occurrence map directly using networkx.
     """
     #
-    def compute_node_sizes(terms):
+    def compute_node_sizes(terms, cmap, column):
         #
-        node_sizes = [int(w[w.find("[") + 1 : w.find("]")]) for w in terms if "[" in w]
+        summ = by_term.summary(data, column)
+        d = {key: value for key, value in zip(summ[column], summ.Num_Documents)}
+        node_sizes = [d[t] for t in terms]
+
         if len(terms) == 0:
             node_sizes = [500] * len(terms)
         else:
@@ -821,6 +1343,10 @@ def co_occurrence_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 
                     600 + int(2500 * (w - min_size) / (max_size - min_size))
                     for w in node_sizes
                 ]
+
+        d = {key: value for key, value in zip(summ[column], summ.Times_Cited)}
+        node_colors = [d[t] for t in terms]
+
         node_colors = [
             cmap(0.2 + 0.75 * node_sizes[i] / max(node_sizes))
             for i in range(len(node_sizes))
@@ -830,23 +1356,28 @@ def co_occurrence_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 
     #
     #
     #
-    cmap = pyplot.cm.get_cmap(cmap)
-
-    #
-    # Data preparation
-    #
-    column_node_sizes, column_node_colors = compute_node_sizes(matrix.columns)
-    index_node_sizes, index_node_colors = compute_node_sizes(matrix.index)
+    cmap_column = pyplot.cm.get_cmap(cmap_column)
+    cmap_by = pyplot.cm.get_cmap(cmap_by)
 
     #
     # Remove [...] from text
     #
-    terms = matrix.columns.tolist() + matrix.index.tolist()
-    terms = [w[: w.find("[")].strip() if "[" in w else w for w in terms]
     matrix.columns = [
         w[: w.find("[")].strip() if "[" in w else w for w in matrix.columns
     ]
     matrix.index = [w[: w.find("[")].strip() if "[" in w else w for w in matrix.index]
+
+    #
+    # Data preparation
+    #
+    column_node_sizes, column_node_colors = compute_node_sizes(
+        matrix.columns, cmap=cmap_column, column=column
+    )
+    index_node_sizes, index_node_colors = compute_node_sizes(
+        matrix.index, cmap=cmap_by, column=by
+    )
+
+    terms = matrix.columns.tolist() + matrix.index.tolist()
 
     #
     # Draw the network
@@ -941,7 +1472,7 @@ def co_occurrence_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 
         nodelist=matrix.index,
         node_size=index_node_sizes,
         node_color=index_node_colors,
-        node_shape="s",
+        node_shape="o",
         edgecolors="k",
         linewidths=1,
     )
@@ -983,17 +1514,25 @@ def co_occurrence_map(matrix, layout="Kamada Kawai", cmap="Greys", figsize=(17, 
     return fig
 
 
-def slope_chart(matrix, x, column, by, top_by, figsize, cmap="Blues"):
+def slope_chart(
+    matrix, x, column, by, top_by, figsize, cmap_column="Greys", cmap_by="Greys"
+):
     """
     """
     matplotlib.rc("font", size=12)
 
     fig = pyplot.Figure(figsize=figsize)
     ax = fig.subplots()
-    cmap = pyplot.cm.get_cmap(cmap)
+    cmap_column = pyplot.cm.get_cmap(cmap_column)
+    cmap_by = pyplot.cm.get_cmap(cmap_by)
 
-    matrix.columns = [a[: a.find("[")].strip() for a in matrix.columns]
-    matrix.index = [a[: a.find("[")].strip() for a in matrix.index]
+    #
+    # Remove [...] from text
+    #
+    matrix.columns = [
+        w[: w.find("[")].strip() if "[" in w else w for w in matrix.columns
+    ]
+    matrix.index = [w[: w.find("[")].strip() if "[" in w else w for w in matrix.index]
 
     m = len(matrix.index)
     n = len(matrix.columns)
@@ -1050,16 +1589,16 @@ def slope_chart(matrix, x, column, by, top_by, figsize, cmap="Blues"):
     #
 
     # sizes
-    z = summary_by_term(x, column=by, top_by=top_by, top_n=None)
+    z = by_term.summary(x, column=by, top_by=top_by, top_n=None)
     dic = {key: value for key, value in zip(z[z.columns[0]], z["Num_Documents"])}
     sizes = [dic[index] for index in matrix.index]
-    sizes = [80 + 300 * (w - min(sizes)) / (max(sizes) - min(sizes)) for w in sizes]
+    sizes = [300 + 2000 * (w - min(sizes)) / (max(sizes) - min(sizes)) for w in sizes]
 
     #  color
     dic = {key: value for key, value in zip(z[z.columns[0]], z["Times_Cited"])}
     colors = [dic[index] for index in matrix.index]
     colors = [
-        cmap((0.25 + 0.75 * (value - min(colors)) / (max(colors) - min(colors))))
+        cmap_by((0.25 + 0.75 * (value - min(colors)) / (max(colors) - min(colors))))
         for value in colors
     ]
 
@@ -1068,23 +1607,37 @@ def slope_chart(matrix, x, column, by, top_by, figsize, cmap="Blues"):
     )
 
     for idx, text in enumerate(matrix.index):
-        ax.text(0.9, yleft[idx], text, ha="right", va="center")
+        ax.plot([0.7, 1.0], [yleft[idx], yleft[idx]], "-", c="grey")
+
+    for idx, text in enumerate(matrix.index):
+        ax.text(
+            0.7,
+            yleft[idx],
+            text,
+            fontsize=10,
+            ha="right",
+            va="center",
+            zorder=10,
+            bbox=dict(
+                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
+            ),
+        )
 
     #
     # right y-axis
     #
 
     #  sizes
-    z = summary_by_term(x, column=column, top_by=top_by, top_n=None)
+    z = by_term.summary(x, column=column, top_by=top_by, top_n=None)
     dic = {key: value for key, value in zip(z[z.columns[0]], z["Num_Documents"])}
     sizes = [dic[column] for column in matrix.columns]
-    sizes = [80 + 300 * (w - min(sizes)) / (max(sizes) - min(sizes)) for w in sizes]
+    sizes = [300 + 2000 * (w - min(sizes)) / (max(sizes) - min(sizes)) for w in sizes]
 
     #  color
     dic = {key: value for key, value in zip(z[z.columns[0]], z["Times_Cited"])}
     colors = [dic[col] for col in matrix.columns]
     colors = [
-        cmap((0.25 + 0.75 * (value - min(colors)) / (max(colors) - min(colors))))
+        cmap_column((0.25 + 0.75 * (value - min(colors)) / (max(colors) - min(colors))))
         for value in colors
     ]
 
@@ -1093,7 +1646,33 @@ def slope_chart(matrix, x, column, by, top_by, figsize, cmap="Blues"):
     )
 
     for idx, text in enumerate(matrix.columns):
-        ax.text(3.1, yright[idx], text, ha="left", va="center")
+        ax.plot([3.0, 3.3], [yright[idx], yright[idx]], "-", c="grey")
+
+    for idx, text in enumerate(matrix.columns):
+        ax.text(
+            3.3,
+            yright[idx],
+            text,
+            fontsize=10,
+            ha="left",
+            va="center",
+            bbox=dict(
+                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
+            ),
+            zorder=11,
+        )
+
+    #
+    # Figure size
+    #
+    xlim = ax.get_xlim()
+    ylim = ax.get_ylim()
+    ax.set_xlim(
+        xlim[0] - 0.10 * (xlim[1] - xlim[0]), xlim[1] + 0.10 * (xlim[1] - xlim[0])
+    )
+    ax.set_ylim(
+        ylim[0] - 0.10 * (ylim[1] - ylim[0]), ylim[1] + 0.10 * (ylim[1] - ylim[0])
+    )
 
     ax.invert_yaxis()
     ax.axis("off")
@@ -1201,325 +1780,6 @@ PANE_HEIGHTS = ["80px", "770px", 0]
 #  Co-occurrence Matrix
 #
 #
-
-
-def __TAB0__(x, limit_to, exclude):
-    # -------------------------------------------------------------------------
-    #
-    # UI
-    #
-    # -------------------------------------------------------------------------
-    COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
-    #
-    controls = [
-        # 0
-        {
-            "arg": "view",
-            "desc": "View:",
-            "widget": widgets.Dropdown(
-                options=["Matrix", "Heatmap", "Bubble plot", "Network", "Slope chart"],
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 1
-        {
-            "arg": "column",
-            "desc": "Column to analyze:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
-                ensure_option=True,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 2
-        {
-            "arg": "by",
-            "desc": "By Column:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
-                ensure_option=True,
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 3
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(
-                options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 4
-        {
-            "arg": "top_by",
-            "desc": "Top by:",
-            "widget": widgets.Dropdown(
-                options=["Num Documents", "Times Cited"],
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 5
-        {
-            "arg": "top_n",
-            "desc": "Top N:",
-            "widget": widgets.Dropdown(
-                options=list(range(5, 51, 5)), layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 6
-        {
-            "arg": "sort_by",
-            "desc": "Sort order:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Alphabetic asc.",
-                    "Alphabetic desc.",
-                    "Frequency/Cited by asc.",
-                    "Frequency/Cited by desc.",
-                ],
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 7
-        {
-            "arg": "layout",
-            "desc": "Map layout:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Circular",
-                    "Kamada Kawai",
-                    "Planar",
-                    "Random",
-                    "Spectral",
-                    "Spring",
-                    "Shell",
-                ],
-                layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 8
-        {
-            "arg": "figsize_width",
-            "desc": "Figsize",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1),
-                ensure_option=True,
-                layout=Layout(width="88px"),
-            ),
-        },
-        # 9
-        {
-            "arg": "figsize_height",
-            "desc": "Figsize",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1),
-                ensure_option=True,
-                layout=Layout(width="88px"),
-            ),
-        },
-    ]
-    # -------------------------------------------------------------------------
-    #
-    # Logic
-    #
-    # -------------------------------------------------------------------------
-    def server(**kwargs):
-        #
-        # Logic
-        #
-        column = kwargs["column"]
-        by = kwargs["by"]
-        view = kwargs["view"]
-        cmap = kwargs["cmap"]
-        top_by = kwargs["top_by"]
-        top_n = int(kwargs["top_n"])
-        sort_by = kwargs["sort_by"]
-        layout = kwargs["layout"]
-        figsize_width = int(kwargs["figsize_width"])
-        figsize_height = int(kwargs["figsize_height"])
-        #
-        matrix = co_occurrence(
-            x,
-            column=column,
-            by=by,
-            top_by=top_by,
-            top_n=top_n,
-            limit_to=limit_to,
-            exclude=exclude,
-        )
-        #
-        if view == "Matrix":
-            controls[-2]["widget"].disabled = True
-            controls[-1]["widget"].disabled = True
-        else:
-            controls[-2]["widget"].disabled = False
-            controls[-1]["widget"].disabled = False
-        if view == "Network":
-            controls[7]["widget"].disabled = False
-        else:
-            controls[7]["widget"].disabled = True
-        #
-        if top_by == "Num Documents":
-            s = summary_by_term(
-                x=x,
-                column=column,
-                top_by=top_by,
-                top_n=top_n,
-                limit_to=limit_to,
-                exclude=exclude,
-            )
-            new_names = {
-                a: "{} [{:d}]".format(a, b)
-                for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
-            }
-            matrix = matrix.rename(columns=new_names)
-            #
-            if column == by:
-                matrix = matrix.rename(index=new_names)
-            else:
-                s = summary_by_term(x, by)
-                new_names = {
-                    a: "{} [{:d}]".format(a, b)
-                    for a, b in zip(s[by].tolist(), s["Num_Documents"].tolist())
-                }
-                matrix = matrix.rename(index=new_names)
-        else:
-            s = summary_by_term(
-                x=x,
-                column=column,
-                top_by=top_by,
-                top_n=top_n,
-                limit_to=limit_to,
-                exclude=exclude,
-            )
-            new_names = {
-                a: "{} [{:d}]".format(a, b)
-                for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
-            }
-            matrix = matrix.rename(columns=new_names)
-            #
-            if column == by:
-                matrix = matrix.rename(index=new_names)
-            else:
-                s = summary_by_term(x, by)
-                new_names = {
-                    a: "{} [{:d}]".format(a, b)
-                    for a, b in zip(s[by].tolist(), s["Times_Cited"].tolist())
-                }
-                matrix = matrix.rename(index=new_names)
-
-        #
-        # Sort order
-        #
-        g = (
-            lambda m: m[m.find("[") + 1 : m.find("]")].zfill(5)
-            + " "
-            + m[: m.find("[") - 1]
-        )
-        if sort_by == "Frequency/Cited by asc.":
-            col_names = sorted(matrix.columns, key=g, reverse=False)
-            row_names = sorted(matrix.index, key=g, reverse=False)
-            matrix = matrix.loc[row_names, col_names]
-        if sort_by == "Frequency/Cited by desc.":
-            col_names = sorted(matrix.columns, key=g, reverse=True)
-            row_names = sorted(matrix.index, key=g, reverse=True)
-            matrix = matrix.loc[row_names, col_names]
-        if sort_by == "Alphabetic asc.":
-            matrix = matrix.sort_index(axis=0, ascending=True).sort_index(
-                axis=1, ascending=True
-            )
-        if sort_by == "Alphabetic desc.":
-            matrix = matrix.sort_index(axis=0, ascending=False).sort_index(
-                axis=1, ascending=False
-            )
-        #
-        output.clear_output()
-        with output:
-            #
-            # View
-            #
-            if view == "Matrix":
-                with pd.option_context(
-                    "display.max_columns", 50, "display.max_rows", 50
-                ):
-                    display(matrix.style.background_gradient(cmap=cmap, axis=None))
-            if view == "Heatmap":
-                display(
-                    plt.heatmap(
-                        matrix, cmap=cmap, figsize=(figsize_width, figsize_height)
-                    )
-                )
-            if view == "Bubble plot":
-                display(
-                    plt.bubble(
-                        matrix.transpose(),
-                        axis=0,
-                        cmap=cmap,
-                        figsize=(figsize_width, figsize_height),
-                    )
-                )
-            if view == "Network" and column == by:
-                display(
-                    occurrence_map(
-                        matrix,
-                        layout=layout,
-                        cmap=cmap,
-                        figsize=(figsize_width, figsize_height),
-                    )
-                )
-            if view == "Network" and column != by:
-                display(
-                    co_occurrence_map(
-                        matrix,
-                        layout=layout,
-                        cmap=cmap,
-                        figsize=(figsize_width, figsize_height),
-                    )
-                )
-
-            if view == "Slope chart":
-                display(
-                    slope_chart(
-                        matrix=matrix,
-                        x=x,
-                        column=column,
-                        by=by,
-                        top_by=top_by,
-                        figsize=(figsize_width, figsize_height),
-                        cmap=cmap,
-                    )
-                )
-
-    # -------------------------------------------------------------------------
-    #
-    # Generic
-    #
-    # -------------------------------------------------------------------------
-    args = {control["arg"]: control["widget"] for control in controls}
-    output = widgets.Output()
-    with output:
-        display(widgets.interactive_output(server, args,))
-    return widgets.HBox(
-        [
-            widgets.VBox(
-                [
-                    widgets.VBox(
-                        [widgets.Label(value=control["desc"]), control["widget"]]
-                    )
-                    for control in controls
-                    if control["desc"] not in ["Figsize"]
-                ]
-                + [
-                    widgets.Label(value="Figure Size"),
-                    widgets.HBox([controls[-2]["widget"], controls[-1]["widget"],]),
-                ],
-                layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
-            ),
-            widgets.VBox(
-                [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")
-            ),
-        ]
-    )
 
 
 def __TAB1__(x, limit_to, exclude):

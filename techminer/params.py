@@ -30,6 +30,8 @@ MULTIVALUED_COLS = [
 
 EXCLUDE_COLS = [
     "Abstract",
+    "Abstract_words",
+    "Title_words",
     "Access_Type",
     "Affiliations",
     "Art_No",
