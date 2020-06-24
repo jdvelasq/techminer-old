@@ -2,9 +2,6 @@
 Plots
 ==================================================================================================
 
-
-
-
 """
 import json
 import textwrap
@@ -109,35 +106,32 @@ COLORMAPS = [
 
 
 def bar(
-    data,
-    column,
-    width=0.8,
-    bottom=None,
-    align="center",
-    prop_to=None,
+    height,
+    darkness=None,
     cmap="Greys",
-    figsize=(10, 6),
-    fontsize=13,
+    figsize=(6, 6),
+    fontsize=11,
+    edgecolor="k",
+    linewidth=0.5,
+    zorder=10,
     **kwargs,
 ):
-    """[summary]
+    """Make a bar plot.
+
+    See https://matplotlib.org/3.2.2/api/_as_gen/matplotlib.axes.Axes.bar.html.
 
     Args:
-        data (pandas.DataFrame): A biblographic dataframe.
-        column (int or string): Column with the height(s) of the bars.
-        width (float, optional): scalar or array-like. The width(s) of the bars. Defaults to 0.8.
-        bottom (scalar or array-like, optional): The y coordinate(s) of the bars bases. Defaults to None.
-        align ({'center', 'edge'}, optional): Alignment of the bars to the x coordinates. Defaults to 'center'.
+        height (pandas.Series): The height(s) of the bars.
+        darkness (pandas.Series, optional): The color darkness of the bars. Defaults to None.
+        cmap (str, optional): Colormap name. Defaults to "Greys".
+        figsize (tuple, optional): Figure size passed to matplotlib. Defaults to (6, 6).
+        fontsize (int, optional): Font size. Defaults to 11.
+        edgecolor (str, optional): The colors of the bar edges. Defaults to "k".
+        linewidth (float, optional): Width of the bar edges. If 0, don't draw edges. Defaults to 0.5.
+        zorder (int, optional): order of drawing. Defaults to 10.
 
-            * 'center': Center the base on the `x` positions.
-
-            * 'edge': Align the left edges of the bars with the `x` positions. To align the bars on the right edge pass a negative width and align='edge'.
-
-        prop_to (array-like, optional): Bar colors proportional to values in this array. Defaults to None.
-        cmap (str, optional): Colormap used to build the plot. Defaults to 'Greys'.
-        figsize (tuple, optional): Figure size. Defaults to (10, 6)
-        fontsize (int): fonsize for plots.
-        **kwargs: Optional arguments pased to matplotlib's bar function.
+    Returns:
+        container: Container with all the bars and optionally errorbars.
 
     Examples
     ----------------------------------------------------------------------------------------------
@@ -145,75 +139,55 @@ def bar(
     >>> import pandas as pd
     >>> df = pd.DataFrame(
     ...     {
-    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
     ...         "Num_Documents": [3, 2, 2, 1],
-    ...         "Colors": [1, 2, 3, 4],
-    ...         "ID": list(range(4)),
-    ...     }
+    ...         "Times_Cited": [1, 2, 3, 4],
+    ...     },
+    ...     index="author 3,author 1,author 0,author 2".split(","),
     ... )
     >>> df
-        Authors  Num_Documents  ID
-    0  author 3              3   0
-    1  author 1              2   1
-    2  author 0              2   2
-    3  author 2              1   3
-    >>> fig = bar(df['Num_Documents], cmap='Blues')
-    >>> fig.savefig('sphinx/images/barplot1.png')
+              Num_Documents  Times_Cited
+    author 3              3            1
+    author 1              2            2
+    author 0              2            3
+    author 2              1            4
+    >>> fig = bar(height=df['Num_Documents'], darkness=df['Times_Cited'])
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/barplot1.png')
 
     .. image:: images/barplot1.png
         :width: 400px
         :align: center
 
-    >>> fig = bar(df['Num_Documents], prop_to=df['Colors', cmap='Blues')
-    >>> fig.savefig('sphinx/images/barplot2.png')
-
-    .. image:: images/barplot2.png
-        :width: 400px
-        :align: center
-
     """
-    matplotlib.rc("font", size=fontsize)
-
-    if isinstance(column, int):
-        column = data.columns[column]
-
-    if isinstance(prop_to, int):
-        prop_to = data.columns[prop_to]
+    darkness = height if darkness is None else darkness
 
     cmap = plt.cm.get_cmap(cmap)
-    color = data[prop_to] if prop_to is not None else data[column]
     kwargs["color"] = [
-        cmap(0.1 + 0.90 * (v - min(color)) / (max(color) - min(color))) for v in color
+        cmap(0.1 + 0.90 * (d - min(darkness)) / (max(darkness) - min(darkness)))
+        for d in darkness
     ]
 
+    matplotlib.rc("font", size=fontsize)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
 
     ax.bar(
-        x=range(len(data)),
-        height=data[column],
-        width=width,
-        bottom=bottom,
-        align=align,
-        edgecolor="k",
-        linewidth=0.5,
-        zorder=1,
-        **({}),
+        x=range(len(height)),
+        height=height,
+        edgecolor=edgecolor,
+        linewidth=linewidth,
+        zorder=zorder,
         **kwargs,
     )
 
-    x = data[data.columns[0]]
-    if x.dtype != "int64":
-        xticklabels = [textwrap.shorten(text=text, width=TEXTLEN) for text in x]
-    else:
-        xticklabels = x
+    xticklabels = height.index
+    if xticklabels.dtype != "int64":
+        xticklabels = [
+            textwrap.shorten(text=text, width=TEXTLEN) for text in xticklabels
+        ]
 
-    ax.set_xticks(np.arange(len(data)))
+    ax.set_xticks(np.arange(len(height)))
     ax.set_xticklabels(xticklabels)
     ax.tick_params(axis="x", labelrotation=90)
-
-    ax.set_xlabel(data.columns[0])
-    ax.set_ylabel(column)
 
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
@@ -221,105 +195,93 @@ def bar(
     ax.spines["bottom"].set_visible(True)
     ax.grid(axis="y", color="gray", linestyle=":")
 
+    fig.set_tight_layout(True)
+
     return fig
 
 
 def barh(
-    data,
-    column,
-    height=0.8,
-    left=None,
-    align="center",
-    prop_to=None,
+    width,
+    darkness=None,
     cmap="Greys",
-    figsize=(10, 6),
-    fontsize=13,
+    figsize=(6, 6),
+    fontsize=11,
+    edgecolor="k",
+    linewidth=0.5,
+    zorder=10,
     **kwargs,
 ):
-    """[summary]
+    """Make a horizontal bar plot.
+
+    See https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.axes.Axes.barh.html
 
     Args:
-        data ([type]): [description]
-        column ([type]): [description]
-        height (float, optional): [description]. Defaults to 0.8.
-        left ([type], optional): [description]. Defaults to None.
-        align (str, optional): [description]. Defaults to "center".
-        prop_to ([type], optional): [description]. Defaults to None.
-        cmap (str, optional): [description]. Defaults to "Greys".
-        figsize (tuple, optional): [description]. Defaults to (10, 6).
-        fontsize (int, optional): [description]. Defaults to 10.
+        width (pandas.Series): The widths of the bars.
+        darkness (pandas.Series, optional): The color darkness of the bars. Defaults to None.
+        cmap (str, optional): Colormap name. Defaults to "Greys".
+        figsize (tuple, optional): Figure size passed to matplotlib. Defaults to (6, 6).
+        fontsize (int, optional): Font size. Defaults to 11.
+        edgecolor (str, optional): The colors of the bar edges. Defaults to "k".
+        linewidth (float, optional): Width of the bar edges. If 0, don't draw edges. Defaults to 0.5.
+        zorder (int, optional): order of drawing. Defaults to 10.
 
     Returns:
-        [type]: [description]
-
+        container: Container with all the bars and optionally errorbars.
 
     Examples
     ----------------------------------------------------------------------------------------------
 
     >>> import pandas as pd
-    >>> x = pd.DataFrame(
+    >>> df = pd.DataFrame(
     ...     {
-    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
     ...         "Num_Documents": [3, 2, 2, 1],
-    ...         "ID": list(range(4)),
-    ...     }
+    ...         "Times_Cited": [1, 2, 3, 4],
+    ...     },
+    ...     index="author 3,author 1,author 0,author 2".split(","),
     ... )
-    >>> x
-        Authors  Num_Documents  ID
-    0  author 3              3   0
-    1  author 1              2   1
-    2  author 0              2   2
-    3  author 2              1   3
-    >>> fig = barh(x, cmap='Blues')
-    >>> fig.savefig('sphinx/images/barhplot.png')
+    >>> df
+              Num_Documents  Times_Cited
+    author 3              3            1
+    author 1              2            2
+    author 0              2            3
+    author 2              1            4
+    >>> fig = barh(width=df['Num_Documents'], darkness=df['Times_Cited'])
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/barhplot.png')
 
     .. image:: images/barhplot.png
         :width: 400px
         :align: center
 
     """
-    matplotlib.rc("font", size=fontsize)
-
-    if isinstance(column, int):
-        column = data.columns[column]
-
-    if isinstance(prop_to, int):
-        prop_to = data.columns[prop_to]
-
+    darkness = width if darkness is None else darkness
     cmap = plt.cm.get_cmap(cmap)
-    color = data[prop_to] if prop_to is not None else data[column]
     kwargs["color"] = [
-        cmap(0.1 + 0.90 * (v - min(color)) / (max(color) - min(color))) for v in color
+        cmap(0.1 + 0.90 * (d - min(darkness)) / (max(darkness) - min(darkness)))
+        for d in darkness
     ]
 
+    matplotlib.rc("font", size=fontsize)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
 
     ax.barh(
-        y=range(len(data)),
-        width=data[column],
-        height=height,
-        left=left,
-        align=align,
-        edgecolor="k",
-        linewidth=0.5,
-        zorder=10,
-        **({}),
+        y=range(len(width)),
+        width=width,
+        edgecolor=edgecolor,
+        linewidth=linewidth,
+        zorder=zorder,
         **kwargs,
     )
 
-    y = data[data.columns[0]]
-
-    if y.dtype != "int64":
-        yticklabels = [textwrap.shorten(text=text, width=TEXTLEN) for text in y]
-    else:
-        yticklabels = y
+    yticklabels = width.index
+    if yticklabels.dtype != "int64":
+        yticklabels = [
+            textwrap.shorten(text=text, width=TEXTLEN) for text in yticklabels
+        ]
 
     ax.invert_yaxis()
-    ax.set_yticks(np.arange(len(data)))
+    ax.set_yticks(np.arange(len(width)))
     ax.set_yticklabels(yticklabels)
-    ax.set_xlabel(column)
-    ax.set_ylabel(data.columns[0])
 
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
@@ -328,24 +290,48 @@ def barh(
 
     ax.grid(axis="x", color="gray", linestyle=":")
 
+    fig.set_tight_layout(True)
+
     return fig
 
 
-def gant_barh(
-    data,
-    height=0.5,
-    left=None,
-    align="center",
-    cmap="Greys",
-    figsize=(10, 6),
-    fontsize=13,
-    **kwargs,
+def gant(
+    x, cmap="Greys", figsize=(6, 6), fontsize=11, linewsidth=0.5, zorder=10, **kwargs,
 ):
     """
+
+    >>> import pandas as pd
+    >>> df = pd.DataFrame(
+    ...     {
+    ...         "author 0": [1, 1, 0, 0, 0, 0, 0],
+    ...         "author 1": [0, 1, 1, 0, 0, 0, 0],
+    ...         "author 2": [1, 0, 0, 0, 0, 0, 0],
+    ...         "author 3": [0, 0, 1, 1, 1, 0, 0],
+    ...         "author 4": [0, 0, 0, 0, 0, 0, 1],
+    ...     },
+    ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
+    ... )
+    >>> df
+          author 0  author 1  author 2  author 3  author 4
+    2010         1         0         1         0         0
+    2011         1         1         0         0         0
+    2012         0         1         0         1         0
+    2013         0         0         0         1         0
+    2014         0         0         0         1         0
+    2015         0         0         0         0         0
+    2016         0         0         0         0         1
+    >>> fig = gant(df)
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/gantplot.png')
+
+    .. image:: images/gantplot.png
+        :width: 400px
+        :align: center
+
+
     """
     matplotlib.rc("font", size=fontsize)
 
-    data = data.copy()
+    data = x.copy()
     years = [year for year in range(data.index.min(), data.index.max() + 1)]
     data = data.applymap(lambda w: 1 if w > 0 else 0)
     data = data.applymap(lambda w: int(w))
@@ -380,9 +366,7 @@ def gant_barh(
     ax.barh(
         y=range(len(data.columns)),
         width=gant_width,
-        height=height,
         left=gant_left,
-        align=align,
         edgecolor="k",
         linewidth=0.5,
         zorder=10,
@@ -394,9 +378,7 @@ def gant_barh(
     ax.set_xticks(np.arange(len(data)))
     ax.set_xticklabels(data.index)
     ax.tick_params(axis="x", labelrotation=90)
-    #  ax.xaxis.tick_top()
 
-    #  ax.invert_yaxis()
     yticklabels = [textwrap.shorten(text=text, width=TEXTLEN) for text in data.columns]
     ax.set_yticks(np.arange(len(data.columns)))
     ax.set_yticklabels(yticklabels)
@@ -410,34 +392,36 @@ def gant_barh(
 
     ax.set_aspect("equal")
 
+    fig.set_tight_layout(True)
+
     return fig
 
 
 def worldmap(
-    data, cmap="Pastel2", figsize=(10, 5), legend=True, fontsize=12, *args, **kwargs,
+    x, cmap="Pastel2", figsize=(6, 6), legend=True, fontsize=11, *args, **kwargs,
 ):
+
     """Worldmap plot with the number of documents per country.
 
     Examples
     ----------------------------------------------------------------------------------------------
 
     >>> import pandas as pd
-    >>> x = pd.DataFrame(
-    ...     {
-    ...         "AU_CO": ["China", "Taiwan", "United States", "United Kingdom", "India", "Colombia"],
-    ...         "Num_Documents": [1000, 900, 800, 700, 600, 1000],
-    ...     },
+    >>> x = pd.Series(
+    ...    data = [1000, 900, 800, 700, 600, 1000],
+    ...    index = ["China", "Taiwan", "United States", "United Kingdom", "India", "Colombia"],
     ... )
     >>> x
-                AU_CO  Num_Documents
-    0           China           1000
-    1          Taiwan            900
-    2   United States            800
-    3  United Kingdom            700
-    4           India            600
-    5        Colombia           1000
+    China             1000
+    Taiwan             900
+    United States      800
+    United Kingdom     700
+    India              600
+    Colombia          1000
+    dtype: int64
+
     >>> fig = worldmap(x, figsize=(15, 6))
-    >>> fig.savefig('sphinx/images/worldmap.png')
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/worldmap.png')
 
     .. image:: images/worldmap.png
         :width: 2000px
@@ -450,13 +434,9 @@ def worldmap(
     ax = fig.subplots()
     cmap = plt.cm.get_cmap(cmap)
 
-    x = data.copy()
-    column0 = x[x.columns[0]]
-    column1 = x[x.columns[1]]
-    x["color"] = x[x.columns[1]].map(
-        lambda w: 0.1 + 0.9 * (w - column1.min()) / (column1.max() - column1.min())
-    )
-    x = x.set_index(column0)
+    df = x.to_frame()
+
+    df["color"] = x.map(lambda w: 0.1 + 0.9 * (w - x.min()) / (x.max() - x.min()))
 
     module_path = dirname(__file__)
     with open(join(module_path, "data/worldmap.data"), "r") as f:
@@ -466,7 +446,7 @@ def worldmap(
         for item in data:
             ax.plot(item[0], item[1], "-k", linewidth=0.5)
             if country in x.index.tolist():
-                ax.fill(item[0], item[1], color=cmap(x.color[country]))
+                ax.fill(item[0], item[1], color=cmap(df.color[country]))
     #
     xmin, xmax = ax.get_xlim()
     ymin, ymax = ax.get_ylim()
@@ -479,10 +459,7 @@ def worldmap(
     ax.pcolormesh(xv, yv, z, cmap=cmap)
     #
     pos = np.linspace(ymin, ymin + (ymax - ymin), 11)
-    value = [
-        round(column1.min() + (column1.max() - column1.min()) * i / 10, 0)
-        for i in range(11)
-    ]
+    value = [round(x.min() + (x.max() - x.min()) * i / 10, 0) for i in range(11)]
     for i in range(11):
         ax.text(
             xright + 0.4 * (xright - xleft),
@@ -516,24 +493,17 @@ def worldmap(
     ax.spines["right"].set_color("gray")
     ax.spines["left"].set_color("gray")
 
+    fig.set_tight_layout(True)
+
     return fig
 
 
 def pie(
-    data,
-    column,
-    prop_to=None,
-    fontsize=12,
-    figsize=(8, 8),
+    x,
+    darkness=None,
     cmap="Greys",
-    explode=None,
-    autopct=None,
-    pctdistance=0.6,
-    shadow=False,
-    labeldistance=1.1,
-    startangle=None,
-    radius=None,
-    counterclock=True,
+    figsize=(6, 6),
+    fontsize=11,
     wedgeprops={
         "width": 0.6,
         "edgecolor": "k",
@@ -541,12 +511,9 @@ def pie(
         "linestyle": "-",
         "antialiased": True,
     },
-    textprops=None,
-    center=(0, 0),
-    frame=False,
-    rotatelabels=False,
+    **kwargs,
 ):
-    """Creates a pie plot from a dataframe.
+    """Plot a pie chart.
 
     Examples
     ----------------------------------------------------------------------------------------------
@@ -554,19 +521,19 @@ def pie(
     >>> import pandas as pd
     >>> df = pd.DataFrame(
     ...     {
-    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
     ...         "Num_Documents": [3, 2, 2, 1],
-    ...         "ID": list(range(4)),
-    ...     }
+    ...         "Times_Cited": [1, 2, 3, 4],
+    ...     },
+    ...     index="author 3,author 1,author 0,author 2".split(","),
     ... )
     >>> df
-        Authors  Num_Documents  ID
-    0  author 3              3   0
-    1  author 1              2   1
-    2  author 0              2   2
-    3  author 2              1   3
-    >>> fig = pie(df, cmap="Blues")
-    >>> fig.savefig('sphinx/images/pieplot.png')
+              Num_Documents  Times_Cited
+    author 3              3            1
+    author 1              2            2
+    author 0              2            3
+    author 2              1            4
+    >>> fig = pie(x=df['Num_Documents'], darkness=df['Times_Cited'], cmap="Blues")
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/pieplot.png')
 
     .. image:: images/pieplot.png
         :width: 400px
@@ -574,55 +541,36 @@ def pie(
 
 
     """
+    darkness = x if darkness is None else darkness
+
+    cmap = plt.cm.get_cmap(cmap)
+    colors = [
+        cmap(0.1 + 0.90 * (d - min(darkness)) / (max(darkness) - min(darkness)))
+        for d in darkness
+    ]
+
     matplotlib.rc("font", size=fontsize)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
-    cmap = plt.cm.get_cmap(cmap)
 
-    x = data.copy()
-    if "ID" in x.columns:
-        x.pop("ID")
-    if prop_to is None:
-        prop_to = column
-    colors = None
-    if cmap is not None:
-        colors = [
-            cmap(
-                0.1
-                + 0.9 * (v - x[prop_to].min()) / (x[prop_to].max() - x[prop_to].min())
-            )
-            for v in x[prop_to]
-        ]
     ax.pie(
-        x=x[x.columns[1]],
-        explode=explode,
-        labels=x[x.columns[0]],
-        colors=colors,
-        autopct=autopct,
-        pctdistance=pctdistance,
-        shadow=shadow,
-        labeldistance=labeldistance,
-        startangle=startangle,
-        radius=radius,
-        counterclock=counterclock,
-        wedgeprops=wedgeprops,
-        textprops=textprops,
-        center=center,
-        frame=frame,
-        rotatelabels=rotatelabels,
+        x=x, labels=x.index, colors=colors, wedgeprops=wedgeprops, **kwargs,
     )
+
+    fig.set_tight_layout(True)
+
     return fig
 
 
 def bubble(
     x,
-    prop_to=None,
-    figsize=(9, 9),
-    cmap="Blues",
+    darkness=None,
+    figsize=(6, 6),
+    cmap="Greys",
     grid_lw=1.0,
     grid_c="gray",
     grid_ls=":",
-    fontsize=12,
+    fontsize=11,
     **kwargs,
 ):
 
@@ -653,14 +601,14 @@ def bubble(
     2016         7         8         0         0         1
 
     >>> fig = bubble(df, axis=0, alpha=0.5, rmax=150)
-    >>> fig.savefig('sphinx/images/bubbleplot0.png')
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/bubbleplot0.png')
 
     .. image:: images/bubbleplot0.png
         :width: 400px
         :align: center
 
     >>> fig = bubble(df, axis=1, alpha=0.5, rmax=150)
-    >>> fig.savefig('sphinx/images/bubbleplot1.png')
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/bubbleplot1.png')
 
     .. image:: images/bubbleplot1.png
         :width: 400px
@@ -678,12 +626,12 @@ def bubble(
     size_max = x.max().max()
     size_min = x.min().min()
 
-    if prop_to is None:
-        prop_to = x
-    prop_to = prop_to.loc[:, x.columns]
+    if darkness is None:
+        darkness = x
+    darkness = darkness.loc[:, x.columns]
 
-    color_max = prop_to.max().max()
-    color_min = prop_to.min().min()
+    color_max = darkness.max().max()
+    color_min = darkness.min().min()
 
     for idx, row in enumerate(x.index.tolist()):
 
@@ -694,7 +642,7 @@ def bubble(
 
         colors = [
             cmap(0.2 + 0.8 * (w - color_min) / (color_max - color_min))
-            for w in prop_to.loc[row, :]
+            for w in darkness.loc[row, :]
         ]
 
         #  return range(len(x.columns)), [idx] * len(x.columns)
@@ -726,7 +674,7 @@ def bubble(
         for idx_row, row in enumerate(x.index):
 
             if x[col][row] != 0:
-                if prop_to[col][row] >= 0.8 * mean_color:
+                if darkness[col][row] >= 0.8 * mean_color:
                     text_color = "w"
                 else:
                     text_color = "k"
@@ -760,18 +708,13 @@ def bubble(
     ax.spines["left"].set_visible(False)
     ax.spines["bottom"].set_visible(False)
 
+    fig.set_tight_layout(True)
+
     return fig
 
 
 def plot(
-    data,
-    *args,
-    figsize=(9, 9),
-    cmap="Blues",
-    scalex=True,
-    scaley=True,
-    fontsize=12,
-    **kwargs,
+    data, cmap="Greys", figsize=(6, 6), fontsize=11, **kwargs,
 ):
     """Creates a plot from a dataframe.
 
@@ -799,7 +742,7 @@ def plot(
     2015         6         9         0         0         0
     2016         7         8         0         0         1
     >>> fig = plot(df)
-    >>> fig.savefig('sphinx/images/plotplot.png')
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/plotplot.png')
 
     .. image:: images/plotplot.png
         :width: 400px
@@ -807,7 +750,7 @@ def plot(
 
 
     """
-    matplotlib.rc("font", size=FONT_SIZE)
+    matplotlib.rc("font", size=fontsize)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
     cmap = plt.cm.get_cmap(cmap)
@@ -846,14 +789,15 @@ def plot(
     ax.spines["left"].set_visible(False)
     ax.spines["bottom"].set_visible(True)
 
+    fig.set_tight_layout(True)
+
     return fig
 
 
 def wordcloud(
-    data,
-    column,
-    prop_to=None,
-    figsize=(8, 8),
+    x,
+    darkness=None,
+    figsize=(6, 6),
     font_path=None,
     width=400,
     height=200,
@@ -889,19 +833,19 @@ def wordcloud(
     >>> import pandas as pd
     >>> df = pd.DataFrame(
     ...     {
-    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
     ...         "Num_Documents": [10, 5, 2, 1],
-    ...         "ID": list(range(4)),
-    ...     }
+    ...         "Times_Cited": [4, 3, 2, 0],
+    ...     },
+    ...     index = "author 3,author 1,author 0,author 2".split(","),
     ... )
     >>> df
-        Authors  Num_Documents  ID
-    0  author 3             10   0
-    1  author 1              5   1
-    2  author 0              2   2
-    3  author 2              1   3
-    >>> fig = wordcloud(df)
-    >>> fig.savefig('sphinx/images/wordcloud.png')
+              Num_Documents  Times_Cited
+    author 3             10            4
+    author 1              5            3
+    author 0              2            2
+    author 2              1            0
+    >>> fig = wordcloud(x=df['Num_Documents'], darkness=df['Times_Cited'])
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/wordcloud.png')
 
     .. image:: images/wordcloud.png
         :width: 400px
@@ -912,21 +856,19 @@ def wordcloud(
     def color_func(word, font_size, position, orientation, font_path, random_state):
         return color_dic[word]
 
+    darkness = x if darkness is None else darkness
+
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
     cmap = plt.cm.get_cmap(cmap)
 
-    x = data.copy()
-    words = {key: value for key, value in zip(x[x.columns[0]], x[column])}
+    words = {key: value for key, value in zip(x.index, x)}
 
-    if prop_to is None:
-        prop_to = column
     color_dic = {
         key: cmap(
-            0.5
-            + 0.5 * (value - x[prop_to].min()) / (x[prop_to].max() - x[prop_to].min())
+            0.5 + 0.5 * (value - darkness.min()) / (darkness.max() - darkness.min())
         )
-        for key, value in zip(x[x.columns[0]], x[prop_to])
+        for key, value in zip(darkness.index, darkness)
     }
 
     for key in color_dic.keys():
@@ -976,86 +918,98 @@ def wordcloud(
     ax.spines["left"].set_color("lightgray")
     ax.set_xticks([])
     ax.set_yticks([])
-    #
-    return fig
 
-
-def gant(x, figsize=(8, 8), grid_lw=1.0, grid_c="gray", grid_ls=":", *args, **kwargs):
-    """Creates a gant activity plot from a dataframe.
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> import pandas as pd
-    >>> df = pd.DataFrame(
-    ...     {
-    ...         "author 0": [1, 1, 0, 0, 0, 0, 0],
-    ...         "author 1": [0, 1, 1, 0, 0, 0, 0],
-    ...         "author 2": [1, 0, 0, 0, 0, 0, 0],
-    ...         "author 3": [0, 0, 1, 1, 1, 0, 0],
-    ...         "author 4": [0, 0, 0, 0, 0, 0, 1],
-    ...     },
-    ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
-    ... )
-    >>> df
-          author 0  author 1  author 2  author 3  author 4
-    2010         1         0         1         0         0
-    2011         1         1         0         0         0
-    2012         0         1         0         1         0
-    2013         0         0         0         1         0
-    2014         0         0         0         1         0
-    2015         0         0         0         0         0
-    2016         0         0         0         0         1
-
-    >>> fig = gant(df)
-    >>> fig.savefig('sphinx/images/gantplot.png')
-
-    .. image:: images/gantplot.png
-        :width: 400px
-        :align: center
-
-
-    """
-    matplotlib.rc("font", size=fontsize)
-    fig = plt.Figure(figsize=figsize)
-    ax = fig.subplots()
-
-    x = x.copy()
-    if "linewidth" not in kwargs.keys() and "lw" not in kwargs.keys():
-        kwargs["linewidth"] = 4
-    if "marker" not in kwargs.keys():
-        kwargs["marker"] = "o"
-    if "markersize" not in kwargs.keys() and "ms" not in kwargs.keys():
-        kwargs["markersize"] = 8
-    if "color" not in kwargs.keys() and "c" not in kwargs.keys():
-        kwargs["color"] = "k"
-    for idx, col in enumerate(x.columns):
-        w = x[col]
-        w = w[w > 0]
-        ax.plot(w.index, [idx] * len(w.index), **kwargs)
-
-    ax.grid(axis="both", color=grid_c, linestyle=grid_ls, linewidth=grid_lw)
-
-    ax.set_yticks(np.arange(len(x.columns)))
-    ax.set_yticklabels(x.columns)
-    ax.invert_yaxis()
-
-    years = list(range(min(x.index), max(x.index) + 1))
-
-    ax.set_xticks(years)
-    ax.set_xticklabels(years)
-    ax.tick_params(axis="x", labelrotation=90)
-
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(True)
-    ax.set_aspect("equal")
+    fig.set_tight_layout(True)
 
     return fig
 
 
-def heatmap(x, figsize=(8, 8), fontsize=12, **kwargs):
+#
+# def __gant(
+#     x,
+#     figsize=(8, 8),
+#     fontsize=12,
+#     grid_lw=1.0,
+#     grid_c="gray",
+#     grid_ls=":",
+#     *args,
+#     **kwargs,
+# ):
+#     """Creates a gant activity plot from a dataframe.
+#
+#     Examples
+#     ----------------------------------------------------------------------------------------------
+#
+#     >>> import pandas as pd
+#     >>> df = pd.DataFrame(
+#     ...     {
+#     ...         "author 0": [1, 1, 0, 0, 0, 0, 0],
+#     ...         "author 1": [0, 1, 1, 0, 0, 0, 0],
+#     ...         "author 2": [1, 0, 0, 0, 0, 0, 0],
+#     ...         "author 3": [0, 0, 1, 1, 1, 0, 0],
+#     ...         "author 4": [0, 0, 0, 0, 0, 0, 1],
+#     ...     },
+#     ...     index =[2010, 2011, 2012, 2013, 2014, 2015, 2016]
+#     ... )
+#     >>> df
+#           author 0  author 1  author 2  author 3  author 4
+#     2010         1         0         1         0         0
+#     2011         1         1         0         0         0
+#     2012         0         1         0         1         0
+#     2013         0         0         0         1         0
+#     2014         0         0         0         1         0
+#     2015         0         0         0         0         0
+#     2016         0         0         0         0         1
+#
+#     >>> fig = gant(df)
+#     >>> fig.savefig('/workspaces/techminer/sphinx/images/gantplot.png')
+#
+#     .. image:: images/gantplot.png
+#         :width: 400px
+#         :align: center
+#
+#     """
+#     matplotlib.rc("font", size=fontsize)
+#     fig = plt.Figure(figsize=figsize)
+#     ax = fig.subplots()
+#
+#     x = x.copy()
+#     if "linewidth" not in kwargs.keys() and "lw" not in kwargs.keys():
+#         kwargs["linewidth"] = 4
+#     if "marker" not in kwargs.keys():
+#         kwargs["marker"] = "o"
+#     if "markersize" not in kwargs.keys() and "ms" not in kwargs.keys():
+#         kwargs["markersize"] = 8
+#     if "color" not in kwargs.keys() and "c" not in kwargs.keys():
+#         kwargs["color"] = "k"
+#     for idx, col in enumerate(x.columns):
+#         w = x[col]
+#         w = w[w > 0]
+#         ax.plot(w.index, [idx] * len(w.index), **kwargs)
+#
+#     ax.grid(axis="both", color=grid_c, linestyle=grid_ls, linewidth=grid_lw)
+#
+#     ax.set_yticks(np.arange(len(x.columns)))
+#     ax.set_yticklabels(x.columns)
+#     ax.invert_yaxis()
+#
+#     years = list(range(min(x.index), max(x.index) + 1))
+#
+#     ax.set_xticks(years)
+#     ax.set_xticklabels(years)
+#     ax.tick_params(axis="x", labelrotation=90)
+#
+#     ax.spines["top"].set_visible(False)
+#     ax.spines["right"].set_visible(False)
+#     ax.spines["left"].set_visible(False)
+#     ax.spines["bottom"].set_visible(True)
+#     ax.set_aspect("equal")
+#
+#     return fig
+#
+
+
+def heatmap(X, cmap="Greys", figsize=(6, 6), fontsize=11, **kwargs):
     """Plots a heatmap from a matrix.
 
 
@@ -1081,14 +1035,14 @@ def heatmap(x, figsize=(8, 8), fontsize=12, **kwargs):
     word 3     0.0     0.5     0.0     1.0     0.3
     word 4    -0.3     0.0     0.0     0.3     1.0
     >>> fig = heatmap(df)
-    >>> fig.savefig('sphinx/images/plotheatmap1.png')
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/plotheatmap1.png')
 
     .. image:: images/plotheatmap1.png
         :width: 400px
         :align: center
 
     >>> fig = heatmap(df, cmap='Blues')
-    >>> fig.savefig('sphinx/images/plotheatmap2.png')
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/plotheatmap2.png')
 
     .. image:: images/plotheatmap2.png
         :width: 400px
@@ -1113,7 +1067,7 @@ def heatmap(x, figsize=(8, 8), fontsize=12, **kwargs):
     word 3       0      50       0     100      30
     word 4      30       0       0       3     100
     >>> fig = heatmap(df, cmap='Greys')
-    >>> fig.savefig('sphinx/images/plotheatmap3.png')
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/plotheatmap3.png')
 
     .. image:: images/plotheatmap3.png
         :width: 400px
@@ -1140,7 +1094,7 @@ def heatmap(x, figsize=(8, 8), fontsize=12, **kwargs):
     word 5       1       2       3       4       5
 
     >>> fig = heatmap(df, cmap='Greys')
-    >>> fig.savefig('sphinx/images/plotheatmap3.png')
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/plotheatmap3.png')
 
     .. image:: images/plotheatmap3.png
         :width: 400px
@@ -1151,59 +1105,58 @@ def heatmap(x, figsize=(8, 8), fontsize=12, **kwargs):
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
 
-    x = x.copy()
-    result = ax.pcolor(np.transpose(x.values), **kwargs,)
-    x.columns = [
+    result = ax.pcolor(np.transpose(X.values), cmap=cmap, **kwargs,)
+    X.columns = [
         textwrap.shorten(text=w, width=TEXTLEN) if isinstance(w, str) else w
-        for w in x.columns
+        for w in X.columns
     ]
-    x.index = [
+    X.index = [
         textwrap.shorten(text=w, width=TEXTLEN) if isinstance(w, str) else w
-        for w in x.index
+        for w in X.index
     ]
 
-    ax.set_xticks(np.arange(len(x.index)) + 0.5)
-    ax.set_xticklabels(x.index)
+    ax.set_xticks(np.arange(len(X.index)) + 0.5)
+    ax.set_xticklabels(X.index)
     ax.tick_params(axis="x", labelrotation=90)
-    ax.set_yticks(np.arange(len(x.columns)) + 0.5)
-    ax.set_yticklabels(x.columns)
-    ax.invert_yaxis()
-    if "cmap" in kwargs:
-        cmap = plt.cm.get_cmap(kwargs["cmap"])
-    else:
-        cmap = plt.cm.get_cmap()
 
-    if all(x.dtypes == "int64"):
+    ax.set_yticks(np.arange(len(X.columns)) + 0.5)
+    ax.set_yticklabels(X.columns)
+    ax.invert_yaxis()
+
+    cmap = plt.cm.get_cmap(cmap)
+
+    if all(X.dtypes == "int64"):
         fmt = "{:3.0f}"
     else:
         fmt = "{:3.2f}"
-    for idx_row, row in enumerate(x.index):
-        for idx_col, col in enumerate(x.columns):
-            if abs(x.at[row, col]) > x.values.max().max() / 2.0:
+    for idx_row, row in enumerate(X.index):
+        for idx_col, col in enumerate(X.columns):
+            if abs(X.loc[row, col]) > X.values.max().max() / 2.0:
                 color = cmap(0.0)
             else:
                 color = cmap(1.0)
             ax.text(
                 idx_row + 0.5,
                 idx_col + 0.5,
-                fmt.format(x.at[row, col]),
+                fmt.format(X.loc[row, col]),
                 ha="center",
                 va="center",
                 color=color,
             )
     ax.xaxis.tick_top()
+
+    fig.set_tight_layout(True)
+
     return fig
 
 
 def stacked_bar(
-    data,
-    columns,
-    figsize=(10, 10),
-    fontsize=12,
-    width=0.8,
-    bottom=None,
-    align="center",
+    X,
     cmap="Greys",
+    figsize=(6, 6),
+    fontsize=11,
+    edgecolor="k",
+    linewidth=0.5,
     **kwargs,
 ):
     """Stacked vertical bar plot.
@@ -1214,50 +1167,25 @@ def stacked_bar(
     >>> import pandas as pd
     >>> df = pd.DataFrame(
     ...     {
-    ...         "Authors": "author 0,author 1,author 2,author 3,author 3,author 5".split(","),
-    ...         "col 0": [6, 5, 4, 3, 2, 1],
-    ...         "col 1": [0, 2, 5, 1, 5, 7],
-    ...         "ID": list(range(6)),
-    ...     }
-    ... )
-    >>> df
-        Authors  col 0  col 1  ID
-    0  author 0      6      0   0
-    1  author 1      5      2   1
-    2  author 2      4      5   2
-    3  author 3      3      1   3
-    4  author 3      2      5   4
-    5  author 5      1      7   5
-
-    >>> fig = stacked_bar(df, cmap='Blues')
-    >>> fig.savefig('sphinx/images/stkbar0.png')
-
-    .. image:: images/stkbar0.png
-        :width: 400px
-        :align: center
-
-    >>> df = pd.DataFrame(
-    ...     {
-    ...         "Authors": "author 0,author 1,author 2,author 3,author 3,author 5".split(","),
     ...         "col 0": [6, 5, 2, 3, 4, 1],
     ...         "col 1": [0, 1, 2, 3, 4, 5],
     ...         "col 2": [3, 2, 3, 1, 0, 1],
-    ...         "ID": list(range(6)),
-    ...     }
+    ...     },
+    ...     index = "author 0,author 1,author 2,author 3,author 4,author 5".split(","),
     ... )
     >>> df
-        Authors  col 0  col 1  col 2  ID
-    0  author 0      6      0      3   0
-    1  author 1      5      1      2   1
-    2  author 2      2      2      3   2
-    3  author 3      3      3      1   3
-    4  author 3      4      4      0   4
-    5  author 5      1      5      1   5
+              col 0  col 1  col 2
+    author 0      6      0      3
+    author 1      5      1      2
+    author 2      2      2      3
+    author 3      3      3      1
+    author 4      4      4      0
+    author 5      1      5      1
 
     >>> fig = stacked_bar(df, cmap='Blues')
-    >>> fig.savefig('sphinx/images/stkbar1.png')
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/stkbar0.png')
 
-    .. image:: images/stkbar1.png
+    .. image:: images/stkbar0.png
         :width: 400px
         :align: center
 
@@ -1267,52 +1195,36 @@ def stacked_bar(
     ax = fig.subplots()
     cmap = plt.cm.get_cmap(cmap)
 
-    x = data.copy()
+    bottom = X[X.columns[0]].map(lambda w: 0.0)
 
-    if bottom is None:
-        bottom = data[columns[0]].map(lambda w: 0.0)
+    for icol, col in enumerate(X.columns):
 
-    for icol, col in enumerate(columns):
-        if cmap is not None:
-            kwargs["color"] = cmap((0.3 + 0.50 * icol / (len(columns) - 1)))
+        kwargs["color"] = cmap((0.3 + 0.50 * icol / (len(X.columns) - 1)))
         ax.bar(
-            x=range(len(x)),
-            height=x[col],
-            width=width,
-            bottom=bottom,
-            align=align,
-            label=col,
-            **({}),
-            **kwargs,
+            x=range(len(X)), height=X[col], bottom=bottom, label=col, **kwargs,
         )
-        bottom = bottom + x[col]
+        bottom = bottom + X[col]
 
     ax.legend()
 
     ax.grid(axis="y", color="gray", linestyle=":")
 
-    ax.set_xticks(np.arange(len(x[x.columns[0]])))
-    ax.set_xticklabels(x[x.columns[0]])
+    ax.set_xticks(np.arange(len(X)))
+    ax.set_xticklabels(X.index)
     ax.tick_params(axis="x", labelrotation=90)
-    ax.set_xlabel(x.columns[0])
 
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)
     ax.spines["bottom"].set_visible(True)
 
+    fig.set_tight_layout(True)
+
     return fig
 
 
 def stacked_barh(
-    data,
-    columns,
-    figsize=(10, 10),
-    height=0.8,
-    left=None,
-    align="center",
-    cmap=None,
-    **kwargs,
+    X, figsize=(6, 6), height=0.8, fontsize=11, cmap="Greys", **kwargs,
 ):
     """Stacked horzontal bar plot.
 
@@ -1322,84 +1234,48 @@ def stacked_barh(
     >>> import pandas as pd
     >>> df = pd.DataFrame(
     ...     {
-    ...         "Authors": "author 0,author 1,author 2,author 3,author 3,author 5".split(","),
-    ...         "col 0": [6, 5, 4, 3, 2, 1],
-    ...         "col 1": [0, 2, 5, 1, 5, 7],
-    ...         "ID": list(range(6)),
-    ...     }
-    ... )
-    >>> df
-        Authors  col 0  col 1  ID
-    0  author 0      6      0   0
-    1  author 1      5      2   1
-    2  author 2      4      5   2
-    3  author 3      3      1   3
-    4  author 3      2      5   4
-    5  author 5      1      7   5
-
-    >>> fig = stacked_barh(df, cmap='Blues')
-    >>> fig.savefig('sphinx/images/stkbarh0.png')
-
-    .. image:: images/stkbarh0.png
-        :width: 400px
-        :align: center
-
-    >>> df = pd.DataFrame(
-    ...     {
-    ...         "Authors": "author 0,author 1,author 2,author 3,author 3,author 5".split(","),
     ...         "col 0": [6, 5, 2, 3, 4, 1],
     ...         "col 1": [0, 1, 2, 3, 4, 5],
     ...         "col 2": [3, 2, 3, 1, 0, 1],
-    ...         "ID": list(range(6)),
-    ...     }
+    ...     },
+    ...     index = "author 0,author 1,author 2,author 3,author 4,author 5".split(","),
     ... )
     >>> df
-        Authors  col 0  col 1  col 2  ID
-    0  author 0      6      0      3   0
-    1  author 1      5      1      2   1
-    2  author 2      2      2      3   2
-    3  author 3      3      3      1   3
-    4  author 3      4      4      0   4
-    5  author 5      1      5      1   5
-
+              col 0  col 1  col 2
+    author 0      6      0      3
+    author 1      5      1      2
+    author 2      2      2      3
+    author 3      3      3      1
+    author 4      4      4      0
+    author 5      1      5      1
     >>> fig = stacked_barh(df, cmap='Blues')
-    >>> fig.savefig('sphinx/images/stkbarh1.png')
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/stkbarh1.png')
 
     .. image:: images/stkbarh1.png
         :width: 400px
         :align: center
 
     """
-    matplotlib.rc("font", size=FONT_SIZE)
+    matplotlib.rc("font", size=fontsize)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
     cmap = plt.cm.get_cmap(cmap)
 
-    x = data.copy()
+    left = X[X.columns[0]].map(lambda w: 0.0)
 
-    if left is None:
-        left = x[x.columns[1]].map(lambda w: 0.0)
-    for icol, col in enumerate(columns):
-        if cmap is not None:
-            kwargs["color"] = cmap((0.3 + 0.50 * icol / (len(columns) - 1)))
+    for icol, col in enumerate(X.columns):
+
+        kwargs["color"] = cmap((0.3 + 0.50 * icol / (len(X.columns) - 1)))
         ax.barh(
-            y=range(len(x)),
-            width=x[col],
-            height=height,
-            left=left,
-            align=align,
-            label=col,
-            **({}),
-            **kwargs,
+            y=range(len(X)), width=X[col], height=height, label=col, **kwargs,
         )
-        left = left + x[col]
+        left = left + X[col]
 
     ax.legend()
 
     ax.invert_yaxis()
-    ax.set_yticks(np.arange(len(x[x.columns[0]])))
-    ax.set_yticklabels(x[x.columns[0]])
-    ax.set_ylabel(x.columns[0])
+    ax.set_yticks(np.arange(len(X[X.columns[0]])))
+    ax.set_yticklabels(X.index)
 
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
@@ -1411,193 +1287,188 @@ def stacked_barh(
     return fig
 
 
-def chord_diagram(
-    x,
-    figsize=(10, 10),
-    cmap="Greys",
-    alpha=1.0,
-    minval=0.0,
-    top_n_links=None,
-    solid_lines=False,
-):
-    """Creates a chord diagram from a correlation or an auto-correlation matrix.
+# def chord_diagram(
+#     X,
+#     node_sizes=None,
+#     node_darkness=None,
+#     figsize=(8, 8),
+#     cmap="Greys",
+#     alpha=1.0,
+#     minval=0.0,
+#     top_n_links=None,
+#     solid_lines=False,
+# ):
+#     """Creates a chord diagram from a correlation or an auto-correlation matrix.
 
+
+#     Examples
+#     ----------------------------------------------------------------------------------------------
+
+#     >>> import pandas as pd
+#     >>> df = pd.DataFrame(
+#     ...     {
+#     ...         'word 0': [1.00, 0.80, 0.70, 0.00,-0.30],
+#     ...         'word 1': [0.80, 1.00, 0.70, 0.50, 0.00],
+#     ...         'word 2': [0.70, 0.70, 1.00, 0.00, 0.00],
+#     ...         'word 3': [0.00, 0.50, 0.00, 1.00, 0.30],
+#     ...         'word 4': [-0.30, 0.00, 0.00, 0.30, 1.00],
+#     ...     },
+#     ...     index=['word {:d}'.format(i) for i in range(5)]
+#     ... )
+#     >>> df
+#             word 0  word 1  word 2  word 3  word 4
+#     word 0     1.0     0.8     0.7     0.0    -0.3
+#     word 1     0.8     1.0     0.7     0.5     0.0
+#     word 2     0.7     0.7     1.0     0.0     0.0
+#     word 3     0.0     0.5     0.0     1.0     0.3
+#     word 4    -0.3     0.0     0.0     0.3     1.0
+#     >>> fig = chord_diagram(df)
+#     >>> fig.savefig('/workspaces/techminer/sphinx/images/plotcd1.png')
+
+#     .. image:: images/plotcd1.png
+#         :width: 400px
+#         :align: center
+
+#     >>> fig = chord_diagram(df, top_n_links=5)
+#     >>> fig.savefig('/workspaces/techminer/sphinx/images/plotcd2.png')
+
+#     .. image:: images/plotcd2.png
+#         :width: 400px
+#         :align: center
+
+#     >>> fig = chord_diagram(df, solid_lines=True)
+#     >>> fig.savefig('/workspaces/techminer/sphinx/images/plotcd3.png')
+
+#     .. image:: images/plotcd3.png
+#         :width: 400px
+#         :align: center
+
+#     """
+#     # ---------------------------------------------------
+#     #
+#     # Node sizes
+#     #
+#     terms = X.columns
+
+#     if node_sizes is None:
+#         nod_sizes = [10] * len(X.columns)
+
+#     if node_darkness is None:
+#         node_darkness = [1] * len(X.columns)
+
+#     max_size = max(node_sizes)
+#     min_size = min(node_sizes)
+#     if min_size == max_size:
+#         node_sizes = [30] * len(terms)
+#     else:
+#         node_sizes = [
+#             100 + int(1000 * (w - min_size) / (max_size - min_size)) for w in node_sizes
+#         ]
+
+#     #
+#     # Node colors
+#     #
+#     cmap = plt.cm.get_cmap(cmap)
+#     node_colors = [
+#         cmap(0.2 + 0.75 * node_sizes[i] / max(node_sizes))
+#         for i in range(len(node_sizes))
+#     ]
+#     #
+#     # ---------------------------------------------------
+
+#     cd = ChordDiagram()
+#     for idx, term in enumerate(x.columns):
+#         cd.add_node(term, color=node_colors[idx], s=node_sizes[idx])
+
+#     if top_n_links is not None and top_n_links <= len(x.columns):
+#         values = []
+#         for idx_col in range(len(x.columns) - 1):
+#             for idx_row in range(idx_col + 1, len(x.columns)):
+#                 node_a = X.index[idx_row]
+#                 node_b = X.columns[idx_col]
+#                 value = X[node_b][node_a]
+#                 values.append(value)
+#         values = sorted(values, reverse=True)
+#         minval = values[top_n_links - 1]
+
+#     style = ["-", "-", "--", ":"]
+#     if solid_lines is True:
+#         style = list("----")
+
+#     width = [4, 2, 1, 1]
+#     if solid_lines is True:
+#         width = [4, 2, 1, 1]
+
+#     links = 0
+#     for idx_col in range(len(X.columns) - 1):
+#         for idx_row in range(idx_col + 1, len(X.columns)):
+
+#             node_a = X.index[idx_row]
+#             node_b = X.columns[idx_col]
+#             value = X[node_b][node_a]
+
+#             if value > 0.75 and value >= minval:
+#                 cd.add_edge(
+#                     node_a,
+#                     node_b,
+#                     linestyle=style[0],
+#                     linewidth=width[0],
+#                     color="black",
+#                 )
+#                 links += 1
+#             elif value > 0.50 and value >= minval:
+#                 cd.add_edge(
+#                     node_a,
+#                     node_b,
+#                     linestyle=style[1],
+#                     linewidth=width[1],
+#                     color="black",
+#                 )
+#                 links += 1
+#             elif value > 0.25 and value >= minval:
+#                 cd.add_edge(
+#                     node_a,
+#                     node_b,
+#                     linestyle=style[2],
+#                     linewidth=width[2],
+#                     color="black",
+#                 )
+#                 links += 1
+#             elif value <= 0.25 and value >= minval and value > 0.0:
+#                 cd.add_edge(
+#                     node_a,
+#                     node_b,
+#                     linestyle=style[3],
+#                     linewidth=width[3],
+#                     color="black",
+#                 )
+#                 links += 1
+
+#             if top_n_links is not None and links >= top_n_links:
+#                 continue
+
+#     return cd.plot(figsize=figsize)
+
+
+def treemap(x, darkness=None, cmap="Greys", figsize=(6, 6), fontsize=11, alpha=0.9):
+    """Creates a classification plot..
 
     Examples
     ----------------------------------------------------------------------------------------------
 
     >>> import pandas as pd
-    >>> df = pd.DataFrame(
-    ...     {
-    ...         'word 0': [1.00, 0.80, 0.70, 0.00,-0.30],
-    ...         'word 1': [0.80, 1.00, 0.70, 0.50, 0.00],
-    ...         'word 2': [0.70, 0.70, 1.00, 0.00, 0.00],
-    ...         'word 3': [0.00, 0.50, 0.00, 1.00, 0.30],
-    ...         'word 4': [-0.30, 0.00, 0.00, 0.30, 1.00],
-    ...     },
-    ...     index=['word {:d}'.format(i) for i in range(5)]
+    >>> x = pd.Series(
+    ...     [10, 5, 2, 1],
+    ...     index = "author 3,author 1,author 0,author 2".split(","),
     ... )
-    >>> df
-            word 0  word 1  word 2  word 3  word 4
-    word 0     1.0     0.8     0.7     0.0    -0.3
-    word 1     0.8     1.0     0.7     0.5     0.0
-    word 2     0.7     0.7     1.0     0.0     0.0
-    word 3     0.0     0.5     0.0     1.0     0.3
-    word 4    -0.3     0.0     0.0     0.3     1.0
-    >>> fig = chord_diagram(df)
-    >>> fig.savefig('sphinx/images/plotcd1.png')
-
-    .. image:: images/plotcd1.png
-        :width: 400px
-        :align: center
-
-    >>> fig = chord_diagram(df, top_n_links=5)
-    >>> fig.savefig('sphinx/images/plotcd2.png')
-
-    .. image:: images/plotcd2.png
-        :width: 400px
-        :align: center
-
-    >>> fig = chord_diagram(df, solid_lines=True)
-    >>> fig.savefig('sphinx/images/plotcd3.png')
-
-    .. image:: images/plotcd3.png
-        :width: 400px
-        :align: center
-
-    """
-
-    x = x.copy()
-
-    # ---------------------------------------------------
-    #
-    # Node sizes
-    #
-    terms = x.columns
-    node_sizes = [int(w[w.find("[") + 1 : w.find("]")]) for w in terms if "[" in w]
-    if len(node_sizes) == 0:
-        node_sizes = [10] * len(terms)
-    else:
-        max_size = max(node_sizes)
-        min_size = min(node_sizes)
-        if min_size == max_size:
-            node_sizes = [30] * len(terms)
-        else:
-            node_sizes = [
-                100 + int(1000 * (w - min_size) / (max_size - min_size))
-                for w in node_sizes
-            ]
-
-    #
-    # Node colors
-    #
-    cmap = plt.cm.get_cmap(cmap)
-    node_colors = [
-        cmap(0.2 + 0.75 * node_sizes[i] / max(node_sizes))
-        for i in range(len(node_sizes))
-    ]
-    #
-    # ---------------------------------------------------
-
-    cd = ChordDiagram()
-    for idx, term in enumerate(x.columns):
-        cd.add_node(term, color=node_colors[idx], s=node_sizes[idx])
-
-    if top_n_links is not None and top_n_links <= len(x.columns):
-        values = []
-        for idx_col in range(len(x.columns) - 1):
-            for idx_row in range(idx_col + 1, len(x.columns)):
-                node_a = x.index[idx_row]
-                node_b = x.columns[idx_col]
-                value = x[node_b][node_a]
-                values.append(value)
-        values = sorted(values, reverse=True)
-        minval = values[top_n_links - 1]
-
-    style = ["-", "-", "--", ":"]
-    if solid_lines is True:
-        style = list("----")
-
-    width = [4, 2, 1, 1]
-    if solid_lines is True:
-        width = [4, 2, 1, 1]
-
-    links = 0
-    for idx_col in range(len(x.columns) - 1):
-        for idx_row in range(idx_col + 1, len(x.columns)):
-
-            node_a = x.index[idx_row]
-            node_b = x.columns[idx_col]
-            value = x[node_b][node_a]
-
-            if value > 0.75 and value >= minval:
-                cd.add_edge(
-                    node_a,
-                    node_b,
-                    linestyle=style[0],
-                    linewidth=width[0],
-                    color="black",
-                )
-                links += 1
-            elif value > 0.50 and value >= minval:
-                cd.add_edge(
-                    node_a,
-                    node_b,
-                    linestyle=style[1],
-                    linewidth=width[1],
-                    color="black",
-                )
-                links += 1
-            elif value > 0.25 and value >= minval:
-                cd.add_edge(
-                    node_a,
-                    node_b,
-                    linestyle=style[2],
-                    linewidth=width[2],
-                    color="black",
-                )
-                links += 1
-            elif value <= 0.25 and value >= minval and value > 0.0:
-                cd.add_edge(
-                    node_a,
-                    node_b,
-                    linestyle=style[3],
-                    linewidth=width[3],
-                    color="black",
-                )
-                links += 1
-
-            if top_n_links is not None and links >= top_n_links:
-                continue
-
-    return cd.plot(figsize=figsize)
-
-
-def treemap(
-    data, column, prop_to=None, fontsize=12, cmap="Blues", figsize=(8, 8), alpha=0.9
-):
-    """Creates a classification plot from a dataframe.
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> import pandas as pd
-    >>> df = pd.DataFrame(
-    ...     {
-    ...         "Authors": "author 3,author 1,author 0,author 2".split(","),
-    ...         "Num_Documents": [10, 5, 2, 1],
-    ...         "ID": list(range(4)),
-    ...     }
-    ... )
-    >>> df
-        Authors  Num_Documents  ID
-    0  author 3             10   0
-    1  author 1              5   1
-    2  author 0              2   2
-    3  author 2              1   3
-
-    >>> fig = treemap(df)
-    >>> fig.savefig('sphinx/images/treeplot.png')
+    >>> x
+    author 3    10
+    author 1     5
+    author 0     2
+    author 2     1
+    dtype: int64
+    >>> fig = treemap(x)
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/treeplot.png')
 
     .. image:: images/treeplot.png
         :width: 400px
@@ -1605,42 +1476,37 @@ def treemap(
 
 
     """
+    darkness = x if darkness is None else darkness
+
     matplotlib.rc("font", size=fontsize)
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
     cmap = plt.cm.get_cmap(cmap)
 
-    x = data.copy()
-    column0 = x[x.columns[0]]
-    column0 = [textwrap.shorten(text=text, width=TEXTLEN) for text in column0]
-    column0 = [textwrap.wrap(text=text, width=15) for text in column0]
-    column0 = ["\n".join(text) for text in column0]
-    column1 = x[column]
-
-    if prop_to is None:
-        prop_to = column
+    labels = x.index
+    labels = [textwrap.shorten(text=text, width=TEXTLEN) for text in labels]
+    labels = [textwrap.wrap(text=text, width=15) for text in labels]
+    labels = ["\n".join(text) for text in labels]
 
     colors = [
-        cmap(
-            0.4
-            + 0.6
-            * (value - data[prop_to].min())
-            / (data[prop_to].max() - data[prop_to].min())
-        )
-        for value in data[prop_to]
+        cmap(0.4 + 0.6 * (d - darkness.min()) / (darkness.max() - darkness.min()))
+        for d in darkness
     ]
 
     squarify.plot(
-        sizes=column1,
-        label=column0,
+        sizes=x,
+        label=labels,
         color=colors,
         alpha=alpha,
         ax=ax,
         pad=True,
         bar_kwargs={"edgecolor": "k", "linewidth": 0.5},
-        text_kwargs={"color": "w", "fontsize": 10},
+        text_kwargs={"color": "w", "fontsize": fontsize},
     )
     ax.axis("off")
+
+    fig.set_tight_layout(True)
+
     return fig
 
 

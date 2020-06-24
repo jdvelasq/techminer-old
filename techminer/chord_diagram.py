@@ -325,4 +325,6 @@ class ChordDiagram:
         ax.set_axis_off()
         ax.set_aspect("equal")
 
+        fig.set_tight_layout(True)
+
         return fig
