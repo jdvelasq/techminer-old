@@ -11,16 +11,17 @@ import matplotlib
 import matplotlib.pyplot as pyplot
 import numpy as np
 import pandas as pd
-import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
-from ipywidgets import AppLayout, Layout
-from techminer.plots import COLORMAPS
+from ipywidgets import AppLayout, GridspecLayout, Layout
+
+import plots as plt
+from plots import COLORMAPS
 
 TEXTLEN = 40
 
 
-def summary(
-    data, output=0, plot=0, cmap="Greys", figsize=(10, 4), fontsize=12, **kwargs
+def analytics(
+    data, output=0, plot=0, cmap="Greys", figsize=(6, 6), fontsize=11, **kwargs
 ):
     """Computes analysis by year.
 
@@ -46,12 +47,12 @@ def summary(
 
             * 1-- Horizontal bar plot.
 
-        cmap ([type], optional): Colormap name. Defaults to 'Grays'.
+        cmap ([type], optional): Colormap name. Defaults to 'Greys'.
         figsize (tuple, optional): figsize parameter for plots. Defaults to (10, 4).
         fontsize (int): Plot font size.
 
     Returns:
-        [pandas.DataFrame or matplotlib.figure.Figure]: Summary table or plot.
+        [pandas.DataFrame or matplotlib.figure.Figure]: analytics table or plot.
 
     Examples
     ----------------------------------------------------------------------------------------------
@@ -73,71 +74,73 @@ def summary(
     4  2012           14   4
     5  2016           15   5
 
-    >>> summary(data)[['Year', "Times_Cited", 'Num_Documents', 'ID']]
-       Year  Times_Cited  Num_Documents      ID
-    0  2010           21              2  [0, 1]
-    1  2011           25              2  [2, 3]
-    2  2012           14              1     [4]
-    3  2013            0              0      []
-    4  2014            0              0      []
-    5  2015            0              0      []
-    6  2016           15              1     [5]
+    >>> analytics(data)[["Times_Cited", 'Num_Documents']]
+          Times_Cited  Num_Documents
+    Year                            
+    2010           21              2
+    2011           25              2
+    2012           14              1
+    2013            0              0
+    2014            0              0
+    2015            0              0
+    2016           15              1
 
-    >>> summary(data)[['Cum_Num_Documents', 'Cum_Times_Cited', 'Avg_Times_Cited']]
-       Cum_Num_Documents  Cum_Times_Cited  Avg_Times_Cited
-    0                  2               21             10.5
-    1                  4               46             12.5
-    2                  5               60             14.0
-    3                  5               60              0.0
-    4                  5               60              0.0
-    5                  5               60              0.0
-    6                  6               75             15.0
+    >>> analytics(data)[['Cum_Num_Documents', 'Cum_Times_Cited', 'Avg_Times_Cited']]
+          Cum_Num_Documents  Cum_Times_Cited  Avg_Times_Cited
+    Year                                                     
+    2010                  2               21             10.5
+    2011                  4               46             12.5
+    2012                  5               60             14.0
+    2013                  5               60              0.0
+    2014                  5               60              0.0
+    2015                  5               60              0.0
+    2016                  6               75             15.0
 
     * 1-- Num Documents by year plot.
 
-    >>> fig = summary(data, output=1)
-    >>> fig.savefig('sphinx/images/by-year-summary-1-barplot.png')
+    >>> fig = analytics(data, output=1)
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/by-year-analytics-1-barplot.png')
 
-    .. image:: images/by-year-summary-1-barplot.png
+    .. image:: images/by-year-analytics-1-barplot.png
         :width: 700px
         :align: center
 
     * 2-- Times Cited by year plot.
 
-    >>> fig = summary(data, output=2)
-    >>> fig.savefig('sphinx/images/by-year-summary-2-barplot.png')
+    >>> fig = analytics(data, output=2)
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/by-year-analytics-2-barplot.png')
 
-    .. image:: images/by-year-summary-2-barplot.png
+    .. image:: images/by-year-analytics-2-barplot.png
         :width: 700px
         :align: center
 
 
     * 3-- Cum Num Documents by year plot.
 
-    >>> fig = summary(data, output=3)
-    >>> fig.savefig('sphinx/images/by-year-summary-3-barplot.png')
+    >>> fig = analytics(data, output=3)
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/by-year-analytics-3-barplot.png')
 
-    .. image:: images/by-year-summary-3-barplot.png
+    .. image:: images/by-year-analytics-3-barplot.png
         :width: 700px
         :align: center
 
 
     * 4-- Cum Times Cited by year plot.
 
-    >>> fig = summary(data, output=4)
-    >>> fig.savefig('sphinx/images/by-year-summary-4-barplot.png')
+    >>> fig = analytics(data, output=4)
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/by-year-analytics-4-barplot.png')
 
-    .. image:: images/by-year-summary-4-barplot.png
+    .. image:: images/by-year-analytics-4-barplot.png
         :width: 700px
         :align: center
 
 
     * 5-- Avg Times Cited by year plot.
 
-    >>> fig = summary(data, output=5)
-    >>> fig.savefig('sphinx/images/by-year-summary-5-barplot.png')
+    >>> fig = analytics(data, output=5)
+    >>> fig.savefig('/workspaces/techminer/sphinx/images/by-year-analytics-5-barplot.png')
 
-    .. image:: images/by-year-summary-5-barplot.png
+    .. image:: images/by-year-analytics-5-barplot.png
         :width: 700px
         :align: center
 
@@ -168,7 +171,7 @@ def summary(
     result["Avg_Times_Cited"] = result["Avg_Times_Cited"].map(
         lambda x: 0 if pd.isna(x) else round(x, 2)
     )
-    result = result.reset_index()
+    #  result = result.reset_index()
 
     #
     # Output
@@ -178,26 +181,25 @@ def summary(
         return result
 
     if output == 1:
-        column = "Num_Documents"
-        prop_to = "Times_Cited"
+        values = result["Num_Documents"]
+        darkness = result["Times_Cited"]
     if output == 2:
-        column = "Times_Cited"
-        prop_to = "Num_Documents"
+        values = result["Times_Cited"]
+        darkness = result["Num_Documents"]
     if output == 3:
-        column = "Cum_Num_Documents"
-        prop_to = "Cum_Times_Cited"
+        values = result["Cum_Num_Documents"]
+        darkness = result["Cum_Times_Cited"]
     if output == 4:
-        column = "Cum_Times_Cited"
-        prop_to = "Cum_Num_Documents"
+        values = result["Cum_Times_Cited"]
+        darkness = result["Cum_Num_Documents"]
     if output == 5:
-        column = "Avg_Times_Cited"
-        prop_to = None
+        values = result["Avg_Times_Cited"]
+        darkness = None
 
     if plot == 0:
         return plt.bar(
-            data=result,
-            column=column,
-            prop_to=prop_to,
+            height=values,
+            darkness=darkness,
             cmap=cmap,
             figsize=figsize,
             fontsize=fontsize,
@@ -205,9 +207,8 @@ def summary(
         )
     if plot == 1:
         return plt.barh(
-            data=result,
-            column=column,
-            prop_to=prop_to,
+            width=values,
+            darkness=darkness,
             cmap=cmap,
             figsize=figsize,
             fontsize=fontsize,
@@ -227,40 +228,30 @@ RIGHT_PANEL_WIDTH = "1200px"
 PANE_HEIGHTS = ["80px", "720px", 0]
 
 
-def __APP0__(data):
-    """
-    >>> import pandas as pd
-    >>> data = pd.DataFrame(
-    ...     {
-    ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
-    ...          "Times_Cited": list(range(10,16)),
-    ...          "ID": list(range(6)),
-    ...     }
-    ... )
-    >>> __APP0__(data)
+from ipywidgets import Box
 
 
-    """
-    # -------------------------------------------------------------------------
+def __TAB0__(data):
     #
-    # UI
     #
-    # -------------------------------------------------------------------------
-    controls = [
+    #  UI --- Left panel
+    #
+    #
+    left_panel = [
         # 0
         {
             "arg": "view",
             "desc": "View:",
             "widget": widgets.Dropdown(
                 options=[
-                    "Summary",
+                    "Analytics",
                     "Num Documents by Year",
                     "Times Cited by Year",
                     "Cum Num Documents by Year",
                     "Cum Times Cited by Year",
                     "Avg Times Cited by Year",
                 ],
-                layout=Layout(width=WIDGET_WIDTH),
+                layout=Layout(width="90%"),
             ),
         },
         # 1
@@ -268,61 +259,80 @@ def __APP0__(data):
             "arg": "plot",
             "desc": "Plot:",
             "widget": widgets.Dropdown(
-                options=["Bar plot", "Horizontal bar plot"],
-                layout=Layout(width=WIDGET_WIDTH),
+                options=["Bar plot", "Horizontal bar plot"], layout=Layout(width="90%"),
             ),
         },
         # 2
         {
             "arg": "cmap",
-            "desc": "Colors:",
-            "widget": widgets.Dropdown(
-                options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
-            ),
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="90%"),),
         },
         # 3
         {
-            "arg": "width",
-            "desc": "Figsize",
+            "arg": "sort_by",
+            "desc": "Sort by:",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1),
-                ensure_option=True,
-                layout=Layout(width="88px"),
+                options=[
+                    "Year",
+                    "Times_Cited",
+                    "Num_Documents",
+                    "Cum_Num_Documents",
+                    "Cum_Times_Cited",
+                    "Avg_Times_Cited",
+                ],
+                layout=Layout(width="90%"),
             ),
         },
         # 4
         {
-            "arg": "height",
-            "desc": "Figsize",
+            "arg": "ascending",
+            "desc": "Ascending:",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1),
-                ensure_option=True,
-                layout=Layout(width="88px"),
+                options=[True, False], layout=Layout(width="90%"),
+            ),
+        },
+        # # 5
+        {
+            "arg": "width",
+            "desc": "Width:",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1), layout=Layout(width="90%"),
+            ),
+        },
+        # 6
+        {
+            "arg": "height",
+            "desc": "Height:",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1), layout=Layout(width="90%"),
             ),
         },
     ]
-    # -------------------------------------------------------------------------
+    #
     #
     # Logic
     #
-    # -------------------------------------------------------------------------
+    #
     def server(**kwargs):
-        #
-        # Logic
-        #
+
         view = kwargs["view"]
         plot = kwargs["plot"]
         cmap = kwargs["cmap"]
+        sort_by = kwargs["sort_by"]
+        ascending = kwargs["ascending"]
         width = int(kwargs["width"])
         height = int(kwargs["height"])
-        #
-        controls[1]["widget"].disabled = True if view == "Summary" else False
-        controls[2]["widget"].disabled = True if view == "Summary" else False
-        controls[-1]["widget"].disabled = True if view == "Summary" else False
-        controls[-2]["widget"].disabled = True if view == "Summary" else False
-        #
+
+        left_panel[1]["widget"].disabled = False if view == "Analytics" else True
+        left_panel[2]["widget"].disabled = True if view == "Analytics" else False
+        left_panel[-4]["widget"].disabled = False if view == "Analytics" else True
+        left_panel[-3]["widget"].disabled = False if view == "Analytics" else True
+        left_panel[-2]["widget"].disabled = True if view == "Analytics" else False
+        left_panel[-1]["widget"].disabled = True if view == "Analytics" else False
+
         view = {
-            "Summary": 0,
+            "Analytics": 0,
             "Num Documents by Year": 1,
             "Times Cited by Year": 2,
             "Cum Num Documents by Year": 3,
@@ -332,51 +342,210 @@ def __APP0__(data):
 
         plot = {"Bar plot": 0, "Horizontal bar plot": 1,}[plot]
 
+        out = analytics(
+            data,
+            output=view,
+            plot=plot,
+            cmap=cmap,
+            figsize=(width, height),
+            fontsize=10,
+        )
+
+        if view == 0:
+            if sort_by == "Year":
+                out = out.sort_index(axis=0, ascending=ascending)
+            else:
+                out = out.sort_values(by=sort_by, ascending=ascending)
+
         output.clear_output()
         with output:
-            return display(
-                summary(
-                    data,
-                    output=view,
-                    plot=plot,
-                    cmap=cmap,
-                    figsize=(width, height),
-                    fontsize=10,
-                )
-            )
-            #
+            return display(out)
 
     # -------------------------------------------------------------------------
     #
     # Generic
     #
     # -------------------------------------------------------------------------
-    args = {control["arg"]: control["widget"] for control in controls}
+    args = {control["arg"]: control["widget"] for control in left_panel}
+
     output = widgets.Output()
     widgets.interactive_output(
         server, args,
     )
-    return widgets.HBox(
-        [
-            widgets.VBox(
-                [
-                    widgets.VBox(
-                        [widgets.Label(value=control["desc"]), control["widget"]]
-                    )
-                    for control in controls
-                    if control["desc"] not in ["Figsize"]
-                ]
-                + [
-                    widgets.Label(value="Figure Size"),
-                    widgets.HBox([controls[-2]["widget"], controls[-1]["widget"],]),
-                ],
-                layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
-            ),
-            widgets.VBox(
-                [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")
-            ),
-        ]
+    #
+    grid = GridspecLayout(10, 8)
+    #
+    # Left panel
+    #
+    for index in range(len(left_panel)):
+        grid[index, 0] = widgets.VBox(
+            [
+                widgets.Label(value=left_panel[index]["desc"]),
+                left_panel[index]["widget"],
+            ]
+        )
+    #
+    # Output
+    #
+    grid[0:, 1:] = widgets.VBox(
+        [output], layout=Layout(height="657px", border="2px solid gray")
     )
+
+    return grid
+
+
+# def __xTAB0__(data):
+#     """
+#     >>> import pandas as pd
+#     >>> data = pd.DataFrame(
+#     ...     {
+#     ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
+#     ...          "Times_Cited": list(range(10,16)),
+#     ...          "ID": list(range(6)),
+#     ...     }
+#     ... )
+
+
+#     # >>> __TAB0__(data)
+
+
+#     """
+#     # -------------------------------------------------------------------------
+#     #
+#     # UI
+#     #
+#     # -------------------------------------------------------------------------
+#     controls = [
+#         # 0
+#         {
+#             "arg": "view",
+#             "desc": "View:",
+#             "widget": widgets.Dropdown(
+#                 options=[
+#                     "analytics",
+#                     "Num Documents by Year",
+#                     "Times Cited by Year",
+#                     "Cum Num Documents by Year",
+#                     "Cum Times Cited by Year",
+#                     "Avg Times Cited by Year",
+#                 ],
+#                 layout=Layout(width=WIDGET_WIDTH),
+#             ),
+#         },
+#         # 1
+#         {
+#             "arg": "plot",
+#             "desc": "Plot:",
+#             "widget": widgets.Dropdown(
+#                 options=["Bar plot", "Horizontal bar plot"],
+#                 layout=Layout(width=WIDGET_WIDTH),
+#             ),
+#         },
+#         # 2
+#         {
+#             "arg": "cmap",
+#             "desc": "Colormap:",
+#             "widget": widgets.Dropdown(
+#                 options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
+#             ),
+#         },
+#         # 3
+#         {
+#             "arg": "width",
+#             "desc": "Figsize",
+#             "widget": widgets.Dropdown(
+#                 options=range(5, 15, 1),
+#                 ensure_option=True,
+#                 layout=Layout(width="88px"),
+#             ),
+#         },
+#         # 4
+#         {
+#             "arg": "height",
+#             "desc": "Figsize",
+#             "widget": widgets.Dropdown(
+#                 options=range(5, 15, 1),
+#                 ensure_option=True,
+#                 layout=Layout(width="88px"),
+#             ),
+#         },
+#     ]
+#     # -------------------------------------------------------------------------
+#     #
+#     # Logic
+#     #
+#     # -------------------------------------------------------------------------
+#     def server(**kwargs):
+#         #
+#         # Logic
+#         #
+#         view = kwargs["view"]
+#         plot = kwargs["plot"]
+#         cmap = kwargs["cmap"]
+#         width = int(kwargs["width"])
+#         height = int(kwargs["height"])
+#         #
+#         controls[1]["widget"].disabled = True if view == "analytics" else False
+#         controls[2]["widget"].disabled = True if view == "analytics" else False
+#         controls[-1]["widget"].disabled = True if view == "analytics" else False
+#         controls[-2]["widget"].disabled = True if view == "analytics" else False
+#         #
+#         view = {
+#             "analytics": 0,
+#             "Num Documents by Year": 1,
+#             "Times Cited by Year": 2,
+#             "Cum Num Documents by Year": 3,
+#             "Cum Times Cited by Year": 4,
+#             "Avg Times Cited by Year": 5,
+#         }[view]
+
+#         plot = {"Bar plot": 0, "Horizontal bar plot": 1,}[plot]
+
+#         output.clear_output()
+#         with output:
+#             return display(
+#                 analytics(
+#                     data,
+#                     output=view,
+#                     plot=plot,
+#                     cmap=cmap,
+#                     figsize=(width, height),
+#                     fontsize=10,
+#                 )
+#             )
+#             #
+
+#     # -------------------------------------------------------------------------
+#     #
+#     # Generic
+#     #
+#     # -------------------------------------------------------------------------
+#     args = {control["arg"]: control["widget"] for control in controls}
+#     output = widgets.Output()
+#     widgets.interactive_output(
+#         server, args,
+#     )
+#     return widgets.HBox(
+#         [
+#             widgets.VBox(
+#                 [
+#                     widgets.VBox(
+#                         [widgets.Label(value=control["desc"]), control["widget"]]
+#                     )
+#                     for control in controls
+#                     if control["desc"] not in ["Figsize"]
+#                 ]
+#                 + [
+#                     widgets.Label(value="Figure Size"),
+#                     widgets.HBox([controls[-2]["widget"], controls[-1]["widget"],]),
+#                 ],
+#                 layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
+#             ),
+#             widgets.VBox(
+#                 [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")
+#             ),
+#         ]
+#     )
 
 
 def app(df):
@@ -384,13 +553,13 @@ def app(df):
     """
     #
     body = widgets.Tab()
-    body.children = [__APP0__(df)]
+    body.children = [__TAB0__(df)]
     body.set_title(0, "Time Analysis")
     #
     return AppLayout(
         header=widgets.HTML(
             value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                "Summary by Year"
+                "Analytics by Year"
             )
         ),
         center=body,
