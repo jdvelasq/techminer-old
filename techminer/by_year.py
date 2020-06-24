@@ -367,11 +367,9 @@ def __TAB0__(data):
     #
     # -------------------------------------------------------------------------
     args = {control["arg"]: control["widget"] for control in left_panel}
-
     output = widgets.Output()
-    widgets.interactive_output(
-        server, args,
-    )
+    with output:
+        display(widgets.interactive_output(server, args,))
     #
     grid = GridspecLayout(10, 8)
     #

@@ -15,7 +15,6 @@ import squarify
 from chord_diagram import ChordDiagram
 from wordcloud import ImageColorGenerator, WordCloud
 
-FONT_SIZE = 13
 
 TEXTLEN = 40
 

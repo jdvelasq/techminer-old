@@ -1,4 +1,5 @@
-from techminer.params import MULTIVALUED_COLS
+from params import MULTIVALUED_COLS
+
 
 def __explode(x, column):
     """Transform each element of a field to a row, reseting index values.

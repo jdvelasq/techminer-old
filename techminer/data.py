@@ -30,6 +30,9 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
+import nltk
+
+nltk.download("stopwords")
 
 ##
 ##
