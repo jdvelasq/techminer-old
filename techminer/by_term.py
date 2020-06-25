@@ -183,6 +183,7 @@ def analytics(
     #
     result = result.reset_index(drop=True)
     result = result.set_index(column)
+
     result = result[
         [
             "Num_Documents",
@@ -265,10 +266,7 @@ def analytics(
     else:
 
         result.sort_values(
-            [column, "Num_Documents", "Times_Cited"],
-            ascending=[True, False, False],
-            inplace=True,
-            ignore_index=True,
+            ["Num_Documents", "Times_Cited"], ascending=False, inplace=True,
         )
 
     if top_n is not None:
@@ -568,7 +566,7 @@ def by_term_app(data, limit_to, exclude):
     #
     grid[0, :] = widgets.HTML(
         value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-            "Term Analysis"
+            "By Term Analysis"
         )
     )
     #
@@ -660,7 +658,7 @@ def worldmap_app(data, limit_to=None, exclude=None):
         width = int(kwargs["width"])
         height = int(kwargs["height"])
         #
-        result = by_term.analytics(
+        result = analytics(
             data, column=column, output=0, top_by="Num_Documents", top_n=None,
         )
         #
@@ -716,9 +714,7 @@ def core_authors(data):
     #
     # Numero de documentos escritos por author
     #
-    z = by_term.analytics(
-        data, "Authors", top_by=None, top_n=None, limit_to=None, exclude=None
-    )
+    z = analytics(data, "Authors", top_by=None, top_n=None, limit_to=None, exclude=None)
 
     authors_dict = {
         author: num_docs
@@ -798,7 +794,7 @@ def core_source_titles(data):
     Args:
         data ([type]): [description]
     """
-    m = by_term.analytics(
+    m = analytics(
         data, "Source_title", top_by=None, top_n=None, limit_to=None, exclude=None
     )
     m = m[["Num_Documents"]]
