@@ -485,6 +485,10 @@ def load_scopus(x):
         #  thesaurus = thesaurus.compile()
         #  x["Title_CL"] = __MAP(x, "Title_CL", thesaurus.apply)
 
+    if "Times_Cited" in x.columns:
+        logging.info("Removing <NA> from Times_Cited field ...")
+        x["Times_Cited"] = x["Times_Cited"].map(lambda w: 0 if pd.isna(w) else w)
+
     x["ID"] = range(len(x))
 
     x = x.applymap(lambda w: pd.NA if isinstance(w, str) and w == "" else w)
