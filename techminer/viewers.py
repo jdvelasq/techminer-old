@@ -280,7 +280,7 @@ def matrix(df, top_n=50):
         main_column = kwargs["main_column"]
         term_in_main_column = kwargs["main_term"]
         by_column = kwargs["by_column"]
-        by_term = kwargs["by_term"]
+        term_in_by_column = kwargs["by_term"]
         title = kwargs["title"]
         #
         # Populate main_column with top_n terms
