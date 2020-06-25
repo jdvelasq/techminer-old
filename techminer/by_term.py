@@ -185,7 +185,6 @@ def analytics(
     result = result.set_index(column)
     result = result[
         [
-            column,
             "Num_Documents",
             "Frac_Num_Documents",
             "Times_Cited",
@@ -215,7 +214,7 @@ def analytics(
 
     if limit_to is not None:
         index = [w for w in result.index if w in limit_to]
-        result = result.loc[w, :]
+        result = result.loc[index, :]
 
     #
     # Exclude
@@ -228,7 +227,7 @@ def analytics(
 
     if exclude is not None:
         index = [w for w in result.index if w not in exclude]
-        result = result.loc[w, :]
+        result = result.loc[index, :]
 
     #
     # Top by
@@ -394,12 +393,7 @@ RIGHT_PANEL_WIDTH = "1200px"
 PANE_HEIGHTS = ["80px", "720px", 0]
 
 
-##
-##
-##  Panel 0
-##
-##
-def __APP0__(data, limit_to, exclude):
+def app(data, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -572,10 +566,16 @@ def __APP0__(data, limit_to, exclude):
 
     grid = GridspecLayout(10, 8)
     #
+    grid[0, :] = widgets.HTML(
+        value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+            "Term Analysis"
+        )
+    )
+    #
     # Left panel
     #
     for index in range(len(left_panel)):
-        grid[index, 0] = widgets.VBox(
+        grid[index + 1, 0] = widgets.VBox(
             [
                 widgets.Label(value=left_panel[index]["desc"]),
                 left_panel[index]["widget"],
@@ -584,7 +584,7 @@ def __APP0__(data, limit_to, exclude):
     #
     # Output
     #
-    grid[0:, 1:] = widgets.VBox(
+    grid[1:, 1:] = widgets.VBox(
         [output], layout=Layout(height="657px", border="2px solid gray")
     )
 
@@ -598,28 +598,28 @@ def __APP0__(data, limit_to, exclude):
 #
 
 
-def app(df, limit_to=None, exclude=None):
-    """Jupyter Lab dashboard.
-    """
-    #
-    body = widgets.Tab()
-    body.children = [
-        __APP0__(df, limit_to, exclude),
-        __APP1__(df, limit_to, exclude),
-        __APP4__(df),
-    ]
-    body.set_title(0, "Term Analysis")
-    body.set_title(1, "Worldmap")
-    body.set_title(2, "Core Authors")
-    body.set_title(3, "Top Documents")
+# def app(df, limit_to=None, exclude=None):
+#     """Jupyter Lab dashboard.
+#     """
+#     #
+#     body = widgets.Tab()
+#     body.children = [
+#         __APP0__(df, limit_to, exclude),
+#         __APP1__(df, limit_to, exclude),
+#         __APP4__(df),
+#     ]
+#     body.set_title(0, "Term Analysis")
+#     body.set_title(1, "Worldmap")
+#     body.set_title(2, "Core Authors")
+#     body.set_title(3, "Top Documents")
 
-    #
-    return AppLayout(
-        header=widgets.HTML(
-            value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                "Summary by Term"
-            )
-        ),
-        center=body,
-        pane_heights=PANE_HEIGHTS,
-    )
+#     #
+#     return AppLayout(
+#         header=widgets.HTML(
+#             value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+#                 "Summary by Term"
+#             )
+#         ),
+#         center=body,
+#         pane_heights=PANE_HEIGHTS,
+#     )
