@@ -799,7 +799,7 @@ def slope_chart(
     return fig
 
 
-def __TAB0__(x, limit_to, exclude):
+def co_occurrence_app(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -1591,7 +1591,7 @@ def occurrence_chord_diagram(
     return cd.plot(figsize=figsize)
 
 
-def __TAB1__(x, limit_to, exclude):
+def occurrence_app(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
