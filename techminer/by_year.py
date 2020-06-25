@@ -324,7 +324,7 @@ def __TAB0__(data):
         width = int(kwargs["width"])
         height = int(kwargs["height"])
 
-        left_panel[1]["widget"].disabled = False if view == "Analytics" else True
+        left_panel[1]["widget"].disabled = True if view == "Analytics" else False
         left_panel[2]["widget"].disabled = True if view == "Analytics" else False
         left_panel[-4]["widget"].disabled = False if view == "Analytics" else True
         left_panel[-3]["widget"].disabled = False if view == "Analytics" else True
