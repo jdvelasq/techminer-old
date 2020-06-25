@@ -231,7 +231,7 @@ PANE_HEIGHTS = ["80px", "720px", 0]
 from ipywidgets import Box
 
 
-def time_analytics(data):
+def by_year_app(data):
     #
     #
     #  UI --- Left panel
@@ -375,7 +375,7 @@ def time_analytics(data):
     #
     grid[0, :] = widgets.HTML(
         value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-            "Time Analytics"
+            "By Year Analytics"
         )
     )
     #
