@@ -231,7 +231,7 @@ PANE_HEIGHTS = ["80px", "720px", 0]
 from ipywidgets import Box
 
 
-def __TAB0__(data):
+def time_analytics(data):
     #
     #
     #  UI --- Left panel
@@ -371,12 +371,18 @@ def __TAB0__(data):
     with output:
         display(widgets.interactive_output(server, args,))
     #
-    grid = GridspecLayout(10, 8)
+    grid = GridspecLayout(11, 8)
+    #
+    grid[0, :] = widgets.HTML(
+        value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+            "Time Analytics"
+        )
+    )
     #
     # Left panel
     #
     for index in range(len(left_panel)):
-        grid[index, 0] = widgets.VBox(
+        grid[index + 1, 0] = widgets.VBox(
             [
                 widgets.Label(value=left_panel[index]["desc"]),
                 left_panel[index]["widget"],
@@ -385,7 +391,7 @@ def __TAB0__(data):
     #
     # Output
     #
-    grid[0:, 1:] = widgets.VBox(
+    grid[1:, 1:] = widgets.VBox(
         [output], layout=Layout(height="657px", border="2px solid gray")
     )
 
@@ -546,23 +552,23 @@ def __TAB0__(data):
 #     )
 
 
-def app(df):
-    """Jupyter Lab dashboard.
-    """
-    #
-    body = widgets.Tab()
-    body.children = [__TAB0__(df)]
-    body.set_title(0, "Time Analysis")
-    #
-    return AppLayout(
-        header=widgets.HTML(
-            value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                "Analytics by Year"
-            )
-        ),
-        center=body,
-        pane_heights=PANE_HEIGHTS,
-    )
+# def app(df):
+#     """Jupyter Lab dashboard.
+#     """
+#     #
+#     body = widgets.Tab()
+#     body.children = [__TAB0__(df)]
+#     body.set_title(0, "Time Analysis")
+#     #
+#     return AppLayout(
+#         header=widgets.HTML(
+#             value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+#                 "Analytics by Year"
+#             )
+#         ),
+#         center=body,
+#         pane_heights=PANE_HEIGHTS,
+#     )
 
 
 #
