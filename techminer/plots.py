@@ -295,7 +295,7 @@ def barh(
 
 
 def gant(
-    x, cmap="Greys", figsize=(6, 6), fontsize=11, linewsidth=0.5, zorder=10, **kwargs,
+    X, cmap="Greys", figsize=(6, 6), fontsize=11, linewsidth=0.5, zorder=10, **kwargs,
 ):
     """
 
@@ -330,20 +330,20 @@ def gant(
     """
     matplotlib.rc("font", size=fontsize)
 
-    data = x.copy()
+    data = X.copy()
     years = [year for year in range(data.index.min(), data.index.max() + 1)]
     data = data.applymap(lambda w: 1 if w > 0 else 0)
     data = data.applymap(lambda w: int(w))
     matrix1 = data.copy()
     matrix1 = matrix1.cumsum()
-    matrix1 = matrix1.applymap(lambda x: True if x > 0 else False)
+    matrix1 = matrix1.applymap(lambda X: True if X > 0 else False)
     matrix2 = data.copy()
     matrix2 = matrix2.sort_index(ascending=False)
     matrix2 = matrix2.cumsum()
-    matrix2 = matrix2.applymap(lambda x: True if x > 0 else False)
+    matrix2 = matrix2.applymap(lambda X: True if X > 0 else False)
     matrix2 = matrix2.sort_index(ascending=True)
     result = matrix1.eq(matrix2)
-    result = result.applymap(lambda x: 1 if x is True else 0)
+    result = result.applymap(lambda X: 1 if X is True else 0)
     gant_width = result.sum()
     #  gant_width = gant_width.map(lambda w: w - 0.5)
     gant_left = matrix1.applymap(lambda w: 1 - w)
@@ -378,6 +378,7 @@ def gant(
     ax.set_xticklabels(data.index)
     ax.tick_params(axis="x", labelrotation=90)
 
+    ax.invert_yaxis()
     yticklabels = [textwrap.shorten(text=text, width=TEXTLEN) for text in data.columns]
     ax.set_yticks(np.arange(len(data.columns)))
     ax.set_yticklabels(yticklabels)
@@ -562,7 +563,7 @@ def pie(
 
 
 def bubble(
-    x,
+    X,
     darkness=None,
     figsize=(6, 6),
     cmap="Greys",
@@ -620,7 +621,7 @@ def bubble(
     ax = fig.subplots()
     cmap = plt.cm.get_cmap(cmap)
 
-    x = x.copy()
+    x = X.copy()
 
     size_max = x.max().max()
     size_min = x.min().min()
@@ -1104,7 +1105,7 @@ def heatmap(X, cmap="Greys", figsize=(6, 6), fontsize=11, **kwargs):
     fig = plt.Figure(figsize=figsize)
     ax = fig.subplots()
 
-    result = ax.pcolor(np.transpose(X.values), cmap=cmap, **kwargs,)
+    result = ax.pcolor(X.values, cmap=cmap, **kwargs,)
     X.columns = [
         textwrap.shorten(text=w, width=TEXTLEN) if isinstance(w, str) else w
         for w in X.columns
@@ -1114,12 +1115,12 @@ def heatmap(X, cmap="Greys", figsize=(6, 6), fontsize=11, **kwargs):
         for w in X.index
     ]
 
-    ax.set_xticks(np.arange(len(X.index)) + 0.5)
-    ax.set_xticklabels(X.index)
+    ax.set_xticks(np.arange(len(X.columns)) + 0.5)
+    ax.set_xticklabels(X.columns)
     ax.tick_params(axis="x", labelrotation=90)
 
-    ax.set_yticks(np.arange(len(X.columns)) + 0.5)
-    ax.set_yticklabels(X.columns)
+    ax.set_yticks(np.arange(len(X.index)) + 0.5)
+    ax.set_yticklabels(X.index)
     ax.invert_yaxis()
 
     cmap = plt.cm.get_cmap(cmap)
@@ -1128,16 +1129,16 @@ def heatmap(X, cmap="Greys", figsize=(6, 6), fontsize=11, **kwargs):
         fmt = "{:3.0f}"
     else:
         fmt = "{:3.2f}"
-    for idx_row, row in enumerate(X.index):
-        for idx_col, col in enumerate(X.columns):
-            if abs(X.loc[row, col]) > X.values.max().max() / 2.0:
+    for idx_row, row in enumerate(X.columns):
+        for idx_col, col in enumerate(X.index):
+            if abs(X.loc[col, row]) > X.values.max().max() / 2.0:
                 color = cmap(0.0)
             else:
                 color = cmap(1.0)
             ax.text(
                 idx_row + 0.5,
                 idx_col + 0.5,
-                fmt.format(X.loc[row, col]),
+                fmt.format(X.loc[col, row]),
                 ha="center",
                 va="center",
                 color=color,

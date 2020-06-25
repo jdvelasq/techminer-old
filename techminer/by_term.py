@@ -9,7 +9,7 @@ import ipywidgets as widgets
 import numpy as np
 import pandas as pd
 from IPython.display import HTML, clear_output, display
-from ipywidgets import AppLayout, Layout, GridspecLayout
+from ipywidgets import AppLayout, GridspecLayout, Layout
 
 import plots as plt
 from explode import __explode

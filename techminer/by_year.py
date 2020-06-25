@@ -292,7 +292,7 @@ def __TAB0__(data):
                 options=[True, False], layout=Layout(width="90%"),
             ),
         },
-        # # 5
+        # 5
         {
             "arg": "width",
             "desc": "Width:",

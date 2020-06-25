@@ -9,21 +9,21 @@ import textwrap
 import ipywidgets as widgets
 import numpy as np
 import pandas as pd
-import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
-from ipywidgets import AppLayout, Layout
-import techminer.by_year as by_year
-import techminer.by_term as by_term
+from ipywidgets import AppLayout, GridspecLayout, Layout
 
-from techminer.explode import __explode
-from techminer.keywords import Keywords
-from techminer.params import EXCLUDE_COLS
-from techminer.plots import COLORMAPS
+import by_term as by_term
+import by_year as by_year
+import plots as plt
+from explode import __explode
+from keywords import Keywords
+from params import EXCLUDE_COLS
+from plots import COLORMAPS
 
 TEXTLEN = 40
 
 
-def summary(
+def analytics(
     data,
     column,
     output=0,
@@ -32,8 +32,8 @@ def summary(
     sort_by=0,
     ascending=True,
     cmap="Greys",
-    figsize=(10, 5),
-    fontsize=12,
+    figsize=(6, 6),
+    fontsize=11,
     limit_to=None,
     exclude=None,
 ):
@@ -68,7 +68,7 @@ def summary(
     4  2012                    author 4           14   4
     5  2014                    author 4           15   5
 
-    >>> summary_by_term_per_year(df, 'Authors')[['Year', 'Authors', "Times_Cited", 'Num_Documents']]
+    >>> analytics(df, 'Authors')[['Year', 'Authors', "Times_Cited", 'Num_Documents']]
        Year   Authors  Times_Cited  Num_Documents
     0  2010  author 0           21              2
     1  2010  author 1           10              1
@@ -79,7 +79,7 @@ def summary(
     6  2014  author 4           15              1
 
 
-    >>> summary_by_term_per_year(df, 'Authors')[['Year', 'Authors', 'Perc_Num_Documents', 'Perc_Times_Cited']]
+    >>> analytics(df, 'Authors')[['Year', 'Authors', 'Perc_Num_Documents', 'Perc_Times_Cited']]
        Year   Authors  Perc_Num_Documents  Perc_Times_Cited
     0  2010  author 0               100.0            100.00
     1  2010  author 1                50.0             47.62
@@ -90,7 +90,7 @@ def summary(
     6  2014  author 4               100.0            100.00
 
     >>> terms = ['author 1', 'author 2', 'author 3']
-    >>> summary_by_term_per_year(df, 'Authors', limit_to=terms)[['Year', 'Authors', "Times_Cited", 'Num_Documents', 'ID']]
+    >>> analytics(df, 'Authors', limit_to=terms)[['Year', 'Authors', "Times_Cited", 'Num_Documents', 'ID']]
        Year   Authors  Times_Cited  Num_Documents   ID
     0  2010  author 1           10              1  [0]
     1  2010  author 2           10              1  [0]
@@ -98,7 +98,7 @@ def summary(
     3  2011  author 3           13              1  [3]
 
     >>> terms = ['author 1']
-    >>> summary_by_term_per_year(df, 'Authors', limit_to=terms)[['Year', 'Authors', "Times_Cited", 'Num_Documents', 'ID']]
+    >>> analytics(df, 'Authors', limit_to=terms)[['Year', 'Authors', "Times_Cited", 'Num_Documents', 'ID']]
        Year   Authors  Times_Cited  Num_Documents   ID
     0  2010  author 1           10              1  [0]
     1  2011  author 1           12              1  [2]
@@ -131,12 +131,12 @@ def summary(
     #
     # Indicators from scientoPy
     #
-    summ = by_year.summary(data)
+    summ = by_year.analytics(data)
     num_documents_by_year = {
-        key: value for key, value in zip(summ.Year, summ.Num_Documents)
+        key: value for key, value in zip(summ.index, summ.Num_Documents)
     }
     times_cited_by_year = {
-        key: value for key, value in zip(summ.Year, summ.Times_Cited)
+        key: value for key, value in zip(summ.index, summ.Times_Cited)
     }
 
     result["summary_documents_by_year"] = result.Year.apply(
@@ -169,17 +169,204 @@ def summary(
     result.pop("summary_documents_by_year")
     result.pop("summary_times_cited_by_year")
 
-    #
-    #
-    #
-    summary_by_term = by_term.summary(
-        data=data,
-        column=column,
-        top_by=None,
-        top_n=None,
-        limit_to=limit_to,
-        exclude=exclude,
+    result = result.rename(
+        columns={
+            "Num_Documents": "Num_Documents_per_Year",
+            "Times_Cited": "Times_Cited_per_Year",
+            "Perc_Num_Documents": "%_Num_Documents_per_Year",
+            "Perc_Times_Cited": "%_Times_Cited_per_Year",
+        }
     )
+
+    # ----------------------------------------------------------------------------------------
+
+    #
+    # top_by
+    #
+    if isinstance(top_by, str):
+        top_by = top_by.replace(" ", "_")
+        top_by = {
+            "Num_Documents_per_Year": 0,
+            "Times_Cited_per_Year": 1,
+            "%_Num_Documents_per_Year": 2,
+            "%_Times_Cited_per_Year": 3,
+        }[top_by]
+
+    # --------------------------------------------------------------------------------------
+    if output == 0:
+
+        columns = {
+            0: ["Num_Documents_per_Year", "Times_Cited_per_Year"],
+            1: ["Times_Cited_per_Year", "Num_Documents_per_Year"],
+            2: ["%_Num_Documents_per_Year", "%_Times_Cited_per_Year"],
+            3: ["%_Times_Cited_per_Year", "%_Num_Documents_per_Year"],
+        }[top_by]
+
+        result.sort_values(
+            columns, ascending=False, inplace=True,
+        )
+
+        if top_n is not None:
+            result = result.head(top_n)
+            result = result.reset_index(drop=True)
+        #
+        # sort_by
+        #
+        if isinstance(sort_by, str):
+            sort_by = sort_by.replace(" ", "_")
+            sort_by = {
+                "Alphabetic": 0,
+                "Year": 1,
+                "Num_Documents_per_Year": 2,
+                "Times_Cited_per_Year": 3,
+                "%_Num_Documents_per_Year": 4,
+                "%_Times_Cited_per_Year": 5,
+            }[sort_by]
+
+        if isinstance(ascending, str):
+            ascending = {"True": True, "False": False,}[ascending]
+
+        if sort_by == 0:
+            result = result.sort_values([column], ascending=ascending)
+        else:
+            result = result.sort_values(
+                {
+                    1: ["Year", "Num_Documents_per_Year", "Times_Cited_per_Year"],
+                    2: ["Num_Documents_per_Year", "Times_Cited_per_Year", "Year"],
+                    3: ["Times_Cited_per_Year", "Num_Documents_per_Year", "Year"],
+                    4: ["%_Num_Documents_per_Year", "%_Times_Cited_per_Year", "Year"],
+                    5: ["%_Times_Cited_per_Year", "%_Num_Documents_per_Year", "Year"],
+                }[sort_by],
+                ascending=ascending,
+            )
+
+        result.pop("ID")
+        result = result[
+            [
+                column,
+                "Year",
+                "Num_Documents_per_Year",
+                "Times_Cited_per_Year",
+                "%_Num_Documents_per_Year",
+                "%_Times_Cited_per_Year",
+            ]
+        ]
+        return result
+
+    # --------------------------------------------------------------------------------------
+    if output in [1, 2, 3, 4]:
+
+        selected_col = {
+            0: "Num_Documents_per_Year",
+            1: "Times_Cited_per_Year",
+            2: "%_Num_Documents_per_Year",
+            3: "%_Times_Cited_per_Year",
+        }[top_by]
+
+        for col in [
+            "Num_Documents_per_Year",
+            "Times_Cited_per_Year",
+            "%_Num_Documents_per_Year",
+            "%_Times_Cited_per_Year",
+        ]:
+
+            if col != selected_col:
+                result.pop(col)
+
+        result = pd.pivot_table(
+            result, values=selected_col, index="Year", columns=column, fill_value=0,
+        )
+
+        max = result.max(axis=0)
+        max = max.sort_values(ascending=False)
+        if top_n is not None:
+            max = max.head(top_n)
+        result = result[max.index]
+
+        sum_years = result.sum(axis=1)
+        for year, index in zip(sum_years, sum_years.index):
+            if year == 0:
+                result = result.drop(axis=0, labels=index)
+            else:
+                break
+
+        #
+        # sort_by
+        #
+        if isinstance(sort_by, str):
+            sort_by = sort_by.replace(" ", "_")
+            sort_by = {"Alphabetic": 0, "Values": 1,}[sort_by]
+
+        if sort_by == 0:
+            columns = sorted(result.columns, reverse=not ascending)
+        if sort_by == 1:
+            columns = result.max(axis=0)
+            columns = columns.sort_values(ascending=ascending)
+            columns = columns.index.tolist()
+
+        result = result[columns]
+
+        #
+        # Output
+        #
+        if output == 1:
+            if cmap is None:
+                return result
+            else:
+                return result.style.background_gradient(cmap=cmap, axis=None)
+
+        if output == 2:
+            return plt.heatmap(
+                X=result.transpose(), cmap=cmap, figsize=figsize, fontsize=fontsize
+            )
+
+        if output == 3:
+            return plt.bubble(
+                X=result.transpose(),
+                darkness=None,
+                cmap=cmap,
+                figsize=figsize,
+                fontsize=fontsize,
+            )
+
+        if output == 4:
+            return plt.gant(X=result, cmap=cmap, figsize=figsize, fontsize=fontsize,)
+
+    # if sort_by == 0:
+    #     result = result.sort_index(axis=1, ascending=ascending)
+
+    # if sort_by == 1:
+    #     selected_terms = summary_by_term.sort_values(
+    #         ["Num_Documents", "Times_Cited"], ascending=ascending
+    #     ).tolist()
+    #     new_rows = [c for c in selected_terms if c in result.index.tolist()]
+    #     result = result.loc[new_rows, :]
+
+    # #  Convert to matrix
+    # selected_col = {
+    #     0: "Num_Documents",
+    #     1: "Times_Cited",
+    #     2: "Perc_Num_Documents",
+    #     3: "Perc_Times_Cited",
+    #     4: "Num_Documents",
+    #     5: "Times_Cited",
+    #     6: "Perc_Num_Documents",
+    #     7: "Perc_Times_Cited",
+    # }[top_by]
+
+    ####################################
+
+    #
+    #
+    #
+    # summary_by_term = by_term.analytics(
+    #     data=data,
+    #     column=column,
+    #     top_by=None,
+    #     top_n=None,
+    #     limit_to=limit_to,
+    #     exclude=exclude,
+    # )
 
     #
     # Limit to / Exclude
@@ -197,159 +384,154 @@ def summary(
     #
     # top_by and matrix conversion
     #
-    if isinstance(top_by, str):
-        top_by = top_by.replace(" ", "_")
-        top_by = {
-            "Num_Documents": 0,
-            "Times_Cited": 1,
-            "%_Num_Documents": 2,
-            "%_Times_Cited": 3,
-            "Num_Documents_(Total)": 4,
-            "Times_Cited_(Total)": 5,
-            "%_Num_Documents_(Total)": 6,
-            "%_Times_Cited_(Total)": 7,
-        }[top_by]
 
-    columns = {
-        0: ["Num_Documents", "Times_Cited"],
-        1: ["Times_Cited", "Num_Documents"],
-        2: ["Perc_Num_Documents", "Perc_Times_Cited"],
-        3: ["Perc_Times_Cited", "Perc_Num_Documents"],
-        4: ["Num_Documents", "Times_Cited"],
-        5: ["Times_Cited", "Num_Documents"],
-        6: ["Perc_Num_Documents", "Perc_Times_Cited"],
-        7: ["Perc_Times_Cited", "Perc_Num_Documents"],
-    }[top_by]
+    # if isinstance(top_by, str):
+    #     top_by = top_by.replace(" ", "_")
+    #     top_by = {
+    #         "Num_Documents": 0,
+    #         "Times_Cited": 1,
+    #         "%_Num_Documents": 2,
+    #         "%_Times_Cited": 3,
+    #         "Num_Documents_(Total)": 4,
+    #         "Times_Cited_(Total)": 5,
+    #         "%_Num_Documents_(Total)": 6,
+    #         "%_Times_Cited_(Total)": 7,
+    #     }[top_by]
 
-    #  Convert to matrix
-    selected_col = {
-        0: "Num_Documents",
-        1: "Times_Cited",
-        2: "Perc_Num_Documents",
-        3: "Perc_Times_Cited",
-        4: "Num_Documents",
-        5: "Times_Cited",
-        6: "Perc_Num_Documents",
-        7: "Perc_Times_Cited",
-    }[top_by]
+    # columns = {
+    #     0: ["Num_Documents", "Times_Cited"],
+    #     1: ["Times_Cited", "Num_Documents"],
+    #     2: ["Perc_Num_Documents", "Perc_Times_Cited"],
+    #     3: ["Perc_Times_Cited", "Perc_Num_Documents"],
+    #     4: ["Num_Documents", "Times_Cited"],
+    #     5: ["Times_Cited", "Num_Documents"],
+    #     6: ["Perc_Num_Documents", "Perc_Times_Cited"],
+    #     7: ["Perc_Times_Cited", "Perc_Num_Documents"],
+    # }[top_by]
 
-    for col in [
-        "Num_Documents",
-        "Times_Cited",
-        "Perc_Num_Documents",
-        "Perc_Times_Cited",
-    ]:
-        if col != selected_col:
-            result.pop(col)
+    # #  Convert to matrix
+    # selected_col = {
+    #     0: "Num_Documents",
+    #     1: "Times_Cited",
+    #     2: "Perc_Num_Documents",
+    #     3: "Perc_Times_Cited",
+    #     4: "Num_Documents",
+    #     5: "Times_Cited",
+    #     6: "Perc_Num_Documents",
+    #     7: "Perc_Times_Cited",
+    # }[top_by]
 
-    result.sort_values(
-        [selected_col, "Year", column], ascending=[False, True, True], inplace=True,
-    )
+    # for col in [
+    #     "Num_Documents",
+    #     "Times_Cited",
+    #     "Perc_Num_Documents",
+    #     "Perc_Times_Cited",
+    # ]:
+    #     if col != selected_col:
+    #         result.pop(col)
 
-    if top_n is not None:
-        selected_terms = []
-        n = top_n
-        while len(selected_terms) < top_n:
-            if top_by in [0, 1, 2, 3]:
-                selected_terms = result.head(n)[column].tolist()
-            else:
-                if top_by in [4, 6]:
-                    selected_terms = summary_by_term.sort_values(
-                        ["Num_Documents", "Times_Cited"], ascending=False
-                    )
-                    selected_terms = selected_terms[column].head(n).tolist()
-                else:
-                    selected_terms = summary_by_term.sort_values(
-                        ["Times_Cited", "Num_Documents"], ascending=False
-                    )
-                    selected_terms = selected_terms[column].head(n).tolist()
-            selected_terms = list(set(selected_terms))
-            n += 1
+    # result.sort_values(
+    #     [selected_col, "Year", column], ascending=[False, True, True], inplace=True,
+    # )
 
-        result = result[result[column].map(lambda w: w in selected_terms)]
+    # if top_n is not None:
+    #     selected_terms = []
+    #     n = top_n
+    #     while len(selected_terms) < top_n:
+    #         if top_by in [0, 1, 2, 3]:
+    #             selected_terms = result.head(n)[column].tolist()
+    #         else:
+    #             if top_by in [4, 6]:
+    #                 selected_terms = summary_by_term.sort_values(
+    #                     ["Num_Documents", "Times_Cited"], ascending=False
+    #                 )
+    #                 selected_terms = selected_terms[column].head(n).tolist()
+    #             else:
+    #                 selected_terms = summary_by_term.sort_values(
+    #                     ["Times_Cited", "Num_Documents"], ascending=False
+    #                 )
+    #                 selected_terms = selected_terms[column].head(n).tolist()
+    #         selected_terms = list(set(selected_terms))
+    #         n += 1
 
-    result.reset_index(drop=True)
-    result = pd.pivot_table(
-        result, values=selected_col, index="Year", columns=column, fill_value=0,
-    )
+    #     result = result[result[column].map(lambda w: w in selected_terms)]
 
-    result.columns = result.columns.tolist()
-    result.index = result.index.tolist()
+    # result.reset_index(drop=True)
+    # result = pd.pivot_table(
+    #     result, values=selected_col, index="Year", columns=column, fill_value=0,
+    # )
+
+    # result.columns = result.columns.tolist()
+    # result.index = result.index.tolist()
 
     #
     # Sort by
     #
-    if isinstance(sort_by, str):
-        sort_by = sort_by.replace(" ", "_")
-        sort_by = {"Alphabetic": 0, "Num_Documents/Times_Cited": 1,}[sort_by]
+    # if isinstance(sort_by, str):
+    #     sort_by = sort_by.replace(" ", "_")
+    #     sort_by = {"Alphabetic": 0, "Num_Documents/Times_Cited": 1,}[sort_by]
 
-    if isinstance(ascending, str):
-        ascending = {"True": True, "False": False,}[ascending]
+    # if isinstance(ascending, str):
+    #     ascending = {"True": True, "False": False,}[ascending]
 
-    if sort_by == 0:
-        result = result.sort_index(axis=1, ascending=ascending)
+    # if sort_by == 0:
+    #     result = result.sort_index(axis=1, ascending=ascending)
 
-    if sort_by == 1:
-        selected_terms = summary_by_term.sort_values(
-            ["Num_Documents", "Times_Cited"], ascending=ascending
-        )[column].tolist()
-        new_cols = [c for c in selected_terms if c in result.columns.tolist()]
-        result = result[new_cols]
+    # if sort_by == 1:
+    #     selected_terms = summary_by_term.sort_values(
+    #         ["Num_Documents", "Times_Cited"], ascending=ascending
+    #     ).tolist()
+    #     new_rows = [c for c in selected_terms if c in result.index.tolist()]
+    #     result = result.loc[new_rows, :]
 
-    #  Complete years
-    years = [year for year in range(result.index.min(), result.index.max() + 1)]
-    result = result.reindex(years, fill_value=0)
+    # #  Complete years
+    # years = [year for year in range(result.index.min(), result.index.max() + 1)]
+    # result = result.reindex(years, fill_value=0)
 
-    if output == 0:
-        if cmap is None:
-            return result
-        else:
-            return result.style.background_gradient(cmap=cmap, axis=None)
+    # if output == 1:
+    #     return plt.heatmap(result, cmap=cmap, figsize=figsize, fontsize=fontsize)
 
-    if output == 1:
-        return plt.heatmap(result, cmap=cmap, figsize=figsize, fontsize=fontsize)
+    # if output == 2:
 
-    if output == 2:
+    #     top_by_complement = {0: 1, 1: 0, 2: 3, 3: 2, 4: 5, 5: 4, 6: 7, 7: 6}[top_by]
 
-        top_by_complement = {0: 1, 1: 0, 2: 3, 3: 2, 4: 5, 5: 4, 6: 7, 7: 6}[top_by]
+    #     prop_to = analytics(
+    #         data=data,
+    #         column=column,
+    #         output=0,
+    #         top_by=top_by_complement,
+    #         top_n=None,
+    #         sort_by=sort_by,
+    #         ascending=ascending,
+    #         cmap=None,
+    #         limit_to=result.columns.tolist(),
+    #         exclude=None,
+    #     )
+    #     prop_to = prop_to.loc[
+    #         result.index, [c for c in prop_to.columns if c in result.columns]
+    #     ]
 
-        prop_to = summary(
-            data=data,
-            column=column,
-            output=0,
-            top_by=top_by_complement,
-            top_n=None,
-            sort_by=sort_by,
-            ascending=ascending,
-            cmap=None,
-            limit_to=result.columns.tolist(),
-            exclude=None,
-        )
-        prop_to = prop_to.loc[
-            result.index, [c for c in prop_to.columns if c in result.columns]
-        ]
+    #     return plt.bubble(
+    #         result.transpose(),
+    #         prop_to=prop_to.transpose(),
+    #         cmap=cmap,
+    #         figsize=figsize,
+    #         fontsize=fontsize,
+    #     )
 
-        return plt.bubble(
-            result.transpose(),
-            prop_to=prop_to.transpose(),
-            cmap=cmap,
-            figsize=figsize,
-            fontsize=fontsize,
-        )
+    # if output == 3:
+    #     return plt.plot(data=result, figsize=figsize, cmap=cmap, fontsize=12,)
 
-    if output == 3:
-        return plt.plot(data=result, figsize=figsize, cmap=cmap, fontsize=12,)
-
-    if output == 4:
-        return plt.gant_barh(
-            data=result,
-            height=0.6,
-            left=None,
-            align="center",
-            cmap=cmap,
-            figsize=figsize,
-            fontsize=fontsize,
-        )
+    # if output == 4:
+    #     return plt.gant_barh(
+    #         data=result,
+    #         height=0.6,
+    #         left=None,
+    #         align="center",
+    #         cmap=cmap,
+    #         figsize=figsize,
+    #         fontsize=fontsize,
+    #     )
 
 
 #
@@ -442,7 +624,7 @@ PANE_HEIGHTS = ["80px", "720px", 0]
 
 ##
 ##
-##  Time Analysis
+##  Analytics by Value
 ##
 ##
 def __APP0__(data, limit_to, exclude):
@@ -453,20 +635,13 @@ def __APP0__(data, limit_to, exclude):
     # -------------------------------------------------------------------------
     COLUMNS = sorted([column for column in data.columns if column not in EXCLUDE_COLS])
     #
-    controls = [
+    left_panel = [
         #  0
         {
             "arg": "view",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=[
-                    "Summary",
-                    "Heatmap",
-                    "Bubble plot",
-                    "Lines plot",
-                    "Gant diagram",
-                ],
-                layout=Layout(width=WIDGET_WIDTH),
+                options=["Analytics",], layout=Layout(width="90%"),
             ),
         },
         # 1
@@ -475,7 +650,7 @@ def __APP0__(data, limit_to, exclude):
             "desc": "Column to analyze:",
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in data.columns],
-                layout=Layout(width=WIDGET_WIDTH),
+                layout=Layout(width="90%"),
             ),
         },
         # 2
@@ -484,16 +659,12 @@ def __APP0__(data, limit_to, exclude):
             "desc": "Top by:",
             "widget": widgets.Dropdown(
                 options=[
-                    "Num Documents",
-                    "Times Cited",
-                    "% Num Documents",
-                    "% Times Cited",
-                    "Num Documents (Total)",
-                    "Times Cited (Total)",
-                    "% Num Documents (Total)",
-                    "% Times Cited (Total)",
+                    "Num Documents per Year",
+                    "Times Cited per Year",
+                    "% Num Documents per Year",
+                    "% Times Cited per Year",
                 ],
-                layout=Layout(width=WIDGET_WIDTH),
+                layout=Layout(width="90%"),
             ),
         },
         # 3
@@ -501,9 +672,9 @@ def __APP0__(data, limit_to, exclude):
             "arg": "top_n",
             "desc": "Top N:",
             "widget": widgets.Dropdown(
-                options=list(range(5, 51, 5)),
+                options=list(range(5, 101, 5)),
                 ensure_option=True,
-                layout=Layout(width=WIDGET_WIDTH),
+                layout=Layout(width="90%"),
             ),
         },
         # 4
@@ -511,8 +682,15 @@ def __APP0__(data, limit_to, exclude):
             "arg": "sort_by",
             "desc": "Sort order:",
             "widget": widgets.Dropdown(
-                options=["Alphabetic", "Num Documents/Times Cited",],
-                layout=Layout(width=WIDGET_WIDTH),
+                options=[
+                    "Alphabetic",
+                    "Year",
+                    "Num Documents per Year",
+                    "Times Cited per Year",
+                    "% Num Documents per Year",
+                    "% Times Cited per Year",
+                ],
+                layout=Layout(width="90%"),
             ),
         },
         # 5
@@ -520,35 +698,7 @@ def __APP0__(data, limit_to, exclude):
             "arg": "ascending",
             "desc": "Ascending:",
             "widget": widgets.Dropdown(
-                options=["True", "False",], layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        #  6
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(
-                options=COLORMAPS, layout=Layout(width=WIDGET_WIDTH),
-            ),
-        },
-        # 7
-        {
-            "arg": "width",
-            "desc": "Figsize",
-            "widget": widgets.Dropdown(
-                options=range(3, 20, 1),
-                ensure_option=True,
-                layout=Layout(width="88px"),
-            ),
-        },
-        # 8
-        {
-            "arg": "height",
-            "desc": "Figsize",
-            "widget": widgets.Dropdown(
-                options=range(3, 20, 1),
-                ensure_option=True,
-                layout=Layout(width="88px"),
+                options=["True", "False",], layout=Layout(width="90%"),
             ),
         },
     ]
@@ -559,13 +709,166 @@ def __APP0__(data, limit_to, exclude):
     # -------------------------------------------------------------------------
     def server(**kwargs):
         #
-        view = {
-            "Summary": 0,
-            "Heatmap": 1,
-            "Bubble plot": 2,
-            "Lines plot": 3,
-            "Gant diagram": 4,
-        }[kwargs["view"]]
+        view = {"Analytics": 0,}[kwargs["view"]]
+        column = kwargs["column"]
+        top_by = kwargs["top_by"]
+        top_n = int(kwargs["top_n"])
+        sort_by = kwargs["sort_by"]
+        ascending = {"True": True, "False": False}[kwargs["ascending"]]
+
+        output.clear_output()
+        with output:
+            display(
+                analytics(
+                    data,
+                    column=column,
+                    output=view,
+                    top_by=top_by,
+                    top_n=top_n,
+                    sort_by=sort_by,
+                    ascending=ascending,
+                    cmap=None,
+                    figsize=None,
+                )
+            )
+            return
+
+    # -------------------------------------------------------------------------
+    #
+    # Generic
+    #
+    # -------------------------------------------------------------------------
+    args = {control["arg"]: control["widget"] for control in left_panel}
+    output = widgets.Output()
+    with output:
+        display(widgets.interactive_output(server, args,))
+    #
+    grid = GridspecLayout(10, 8)
+    #
+    # Left panel
+    #
+    for index in range(len(left_panel)):
+        grid[index, 0] = widgets.VBox(
+            [
+                widgets.Label(value=left_panel[index]["desc"]),
+                left_panel[index]["widget"],
+            ]
+        )
+    #
+    # Output
+    #
+    grid[0:, 1:] = widgets.VBox(
+        [output], layout=Layout(height="657px", border="2px solid gray")
+    )
+
+    return grid
+
+
+##
+##
+##  Analytics by time matrix
+##
+##
+def __APP1__(data, limit_to, exclude):
+    # -------------------------------------------------------------------------
+    #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    COLUMNS = sorted([column for column in data.columns if column not in EXCLUDE_COLS])
+    #
+    left_panel = [
+        #  0
+        {
+            "arg": "view",
+            "desc": "View:",
+            "widget": widgets.Dropdown(
+                options=["Analytics", "Heatmap", "Bubble plot", "Gant"],
+                layout=Layout(width="90%"),
+            ),
+        },
+        # 1
+        {
+            "arg": "column",
+            "desc": "Column to analyze:",
+            "widget": widgets.Dropdown(
+                options=[z for z in COLUMNS if z in data.columns],
+                layout=Layout(width="90%"),
+            ),
+        },
+        # 2
+        {
+            "arg": "top_by",
+            "desc": "Top by:",
+            "widget": widgets.Dropdown(
+                options=[
+                    "Num Documents per Year",
+                    "Times Cited per Year",
+                    "% Num Documents per Year",
+                    "% Times Cited per Year",
+                ],
+                layout=Layout(width="90%"),
+            ),
+        },
+        # 3
+        {
+            "arg": "top_n",
+            "desc": "Top N:",
+            "widget": widgets.Dropdown(
+                options=list(range(5, 51, 5)),
+                ensure_option=True,
+                layout=Layout(width="90%"),
+            ),
+        },
+        # 4
+        {
+            "arg": "sort_by",
+            "desc": "Sort order:",
+            "widget": widgets.Dropdown(
+                options=["Alphabetic", "Values",], layout=Layout(width="90%"),
+            ),
+        },
+        # 5
+        {
+            "arg": "ascending",
+            "desc": "Ascending:",
+            "widget": widgets.Dropdown(
+                options=["True", "False",], layout=Layout(width="90%"),
+            ),
+        },
+        # 6
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="90%"),),
+        },
+        # 7
+        {
+            "arg": "width",
+            "desc": "Width:",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1), layout=Layout(width="90%"),
+            ),
+        },
+        # 8
+        {
+            "arg": "height",
+            "desc": "Height:",
+            "widget": widgets.Dropdown(
+                options=range(3, 15, 1), layout=Layout(width="90%"),
+            ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
+    def server(**kwargs):
+        #
+        view = {"Analytics": 1, "Heatmap": 2, "Bubble plot": 3, "Gant": 4}[
+            kwargs["view"]
+        ]
         column = kwargs["column"]
         top_by = kwargs["top_by"]
         top_n = int(kwargs["top_n"])
@@ -575,13 +878,10 @@ def __APP0__(data, limit_to, exclude):
         width = int(kwargs["width"])
         height = int(kwargs["height"])
 
-        controls[-2]["widget"].disabled = True if view == 0 else False
-        controls[-1]["widget"].disabled = True if view == 0 else False
-
         output.clear_output()
         with output:
             display(
-                summary(
+                analytics(
                     data,
                     column=column,
                     output=view,
@@ -600,31 +900,30 @@ def __APP0__(data, limit_to, exclude):
     # Generic
     #
     # -------------------------------------------------------------------------
-    args = {control["arg"]: control["widget"] for control in controls}
+    args = {control["arg"]: control["widget"] for control in left_panel}
     output = widgets.Output()
     with output:
         display(widgets.interactive_output(server, args,))
-    return widgets.HBox(
-        [
-            widgets.VBox(
-                [
-                    widgets.VBox(
-                        [widgets.Label(value=control["desc"]), control["widget"]]
-                    )
-                    for control in controls
-                    if control["desc"] not in ["Figsize"]
-                ]
-                + [
-                    widgets.Label(value="Figure Size"),
-                    widgets.HBox([controls[-2]["widget"], controls[-1]["widget"],]),
-                ],
-                layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
-            ),
-            widgets.VBox(
-                [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")
-            ),
-        ]
+    #
+    grid = GridspecLayout(10, 8)
+    #
+    # Left panel
+    #
+    for index in range(len(left_panel)):
+        grid[index, 0] = widgets.VBox(
+            [
+                widgets.Label(value=left_panel[index]["desc"]),
+                left_panel[index]["widget"],
+            ]
+        )
+    #
+    # Output
+    #
+    grid[0:, 1:] = widgets.VBox(
+        [output], layout=Layout(height="657px", border="2px solid gray")
     )
+
+    return grid
 
 
 ##
@@ -765,7 +1064,7 @@ def growth_indicators(x, column, timewindow=2, top_n=None, limit_to=None, exclud
     return result
 
 
-def __APP1__(x, limit_to, exclude):
+def __APP2__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -966,9 +1265,14 @@ def app(df, limit_to=None, exclude=None):
     """
     #
     body = widgets.Tab()
-    body.children = [__APP0__(df, limit_to, exclude), __APP1__(df, limit_to, exclude)]
-    body.set_title(0, "Time Analysis")
-    body.set_title(1, "Growth Indicators")
+    body.children = [
+        __APP0__(df, limit_to, exclude),
+        __APP1__(df, limit_to, exclude),
+        __APP2__(df, limit_to, exclude),
+    ]
+    body.set_title(0, "Analysis by Value")
+    body.set_title(1, "Analysis by Time")
+    body.set_title(2, "Growth Indicators")
     #
     return AppLayout(
         header=widgets.HTML(
