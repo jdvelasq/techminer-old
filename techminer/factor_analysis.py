@@ -11,14 +11,14 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 from IPython.display import HTML, clear_output, display
-from ipywidgets import AppLayout, Layout
+from ipywidgets import AppLayout, GridspecLayout, Layout
 from sklearn.decomposition import PCA
 
-import techminer.by_term as by_term
-from techminer.co_occurrence import document_term_matrix, filter_index
-from techminer.explode import __explode
-from techminer.keywords import Keywords
-from techminer.plots import COLORMAPS
+import by_term as by_term
+from co_occurrence import document_term_matrix, filter_index
+from explode import __explode
+from keywords import Keywords
+from plots import COLORMAPS
 
 
 def factor_analysis(
@@ -121,7 +121,7 @@ def factor_analysis(
     #
     # top by
     #
-    summ = by_term.summary(
+    summ = by_term.analytics(
         data=x,
         column=column,
         output=0,
@@ -132,7 +132,7 @@ def factor_analysis(
         limit_to=limit_to,
         exclude=exclude,
     )
-    result = result.loc[summ[column], :]
+    result = result.loc[summ.index, :]
 
     if isinstance(output, str):
         output = output.replace(" ", "_")
@@ -152,7 +152,7 @@ def factor_analysis(
             result = result.sort_values(sort_by, ascending=ascending)
 
         top_by = top_by.replace(" ", "_")
-        new_names = {key: value for key, value in zip(summ[column], summ[top_by])}
+        new_names = {key: value for key, value in zip(summ.index, summ[top_by])}
         result.index = [
             "{} [{}]".format(idx, new_names[idx]) for idx in result.index.tolist()
         ]
@@ -160,7 +160,7 @@ def factor_analysis(
         if cmap is None:
             return result
         else:
-            return result.style.background_gradient(cmap=cmap)
+            return result.style.background_gradient(cmap=cmap, axis=None)
 
     if output == 1:
         return factor_map(
@@ -179,12 +179,8 @@ def factor_map(matrix, summary, layout="Kamada Kawai", cmap="Greys", figsize=(17
     terms = [w[: w.find("[")].strip() if "[" in w else w for w in terms]
     terms = [w.strip() for w in terms]
 
-    num_documents = {
-        k: v for k, v in zip(summary[summary.columns[0]], summary["Num_Documents"])
-    }
-    times_cited = {
-        k: v for k, v in zip(summary[summary.columns[0]], summary["Times_Cited"])
-    }
+    num_documents = {k: v for k, v in zip(summary.index, summary["Num_Documents"])}
+    times_cited = {k: v for k, v in zip(summary.index, summary["Times_Cited"])}
 
     #
     # Node sizes
@@ -357,7 +353,6 @@ def factor_map(matrix, summary, layout="Kamada Kawai", cmap="Greys", figsize=(17
 #
 #
 
-WIDGET_WIDTH = "180px"
 LEFT_PANEL_HEIGHT = "655px"
 RIGHT_PANEL_WIDTH = "1200px"
 PANE_HEIGHTS = ["80px", "720px", 0]
@@ -384,15 +379,13 @@ def __TAB0__(data, limit_to, exclude):
     # UI
     #
     # -------------------------------------------------------------------------
-    controls = [
+    left_panel = [
         # 0
         {
             "arg": "view",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Matrix", "Network"],
-                disable=True,
-                layout=Layout(width=WIDGET_WIDTH),
+                options=["Matrix", "Network"], disable=True, layout=Layout(width="90%"),
             ),
         },
         # 1
@@ -403,7 +396,7 @@ def __TAB0__(data, limit_to, exclude):
                 options=[z for z in COLUMNS if z in data.columns],
                 ensure_option=True,
                 disabled=False,
-                layout=Layout(width=WIDGET_WIDTH),
+                layout=Layout(width="90%"),
             ),
         },
         # 2
@@ -415,7 +408,7 @@ def __TAB0__(data, limit_to, exclude):
                 value=2,
                 ensure_option=True,
                 disabled=False,
-                layout=Layout(width=WIDGET_WIDTH),
+                layout=Layout(width="90%"),
             ),
         },
         # 3
@@ -423,7 +416,7 @@ def __TAB0__(data, limit_to, exclude):
             "arg": "cmap",
             "desc": "Colormap:",
             "widget": widgets.Dropdown(
-                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
+                options=COLORMAPS, disable=False, layout=Layout(width="90%"),
             ),
         },
         # 4
@@ -431,8 +424,7 @@ def __TAB0__(data, limit_to, exclude):
             "arg": "top_by",
             "desc": "Top by:",
             "widget": widgets.Dropdown(
-                options=["Num Documents", "Times Cited"],
-                layout=Layout(width=WIDGET_WIDTH),
+                options=["Num Documents", "Times Cited"], layout=Layout(width="90%"),
             ),
         },
         # 5
@@ -442,7 +434,7 @@ def __TAB0__(data, limit_to, exclude):
             "widget": widgets.Dropdown(
                 options=list(range(5, 51, 5)),
                 ensure_option=True,
-                layout=Layout(width=WIDGET_WIDTH),
+                layout=Layout(width="90%"),
             ),
         },
         # 6
@@ -452,7 +444,7 @@ def __TAB0__(data, limit_to, exclude):
             "widget": widgets.Dropdown(
                 options=["Alphabetic", "Num Documents/Times Cited", "Factor",],
                 disable=False,
-                layout=Layout(width=WIDGET_WIDTH),
+                layout=Layout(width="90%"),
             ),
         },
         # 7
@@ -460,7 +452,7 @@ def __TAB0__(data, limit_to, exclude):
             "arg": "ascending",
             "desc": "Ascending :",
             "widget": widgets.Dropdown(
-                options=[True, False], layout=Layout(width=WIDGET_WIDTH),
+                options=[True, False], layout=Layout(width="90%"),
             ),
         },
         #  8
@@ -477,27 +469,23 @@ def __TAB0__(data, limit_to, exclude):
                     "Spring",
                     "Shell",
                 ],
-                layout=Layout(width=WIDGET_WIDTH),
+                layout=Layout(width="90%"),
             ),
         },
         # 9
         {
             "arg": "width",
-            "desc": "Figsize",
+            "desc": "Width",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1),
-                ensure_option=True,
-                layout=Layout(width="88px"),
+                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="90%"),
             ),
         },
         # 10
         {
             "arg": "height",
-            "desc": "Figsize",
+            "desc": "Height",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1),
-                ensure_option=True,
-                layout=Layout(width="88px"),
+                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="90%"),
             ),
         },
     ]
@@ -520,13 +508,14 @@ def __TAB0__(data, limit_to, exclude):
         width = int(kwargs["width"])
         height = int(kwargs["height"])
 
-        controls[6]["widget"].options = ["Alphabetic", "Num Documents/Times Cited"] + [
-            "F{}".format(i) for i in range(n_components)
-        ]
+        left_panel[6]["widget"].options = [
+            "Alphabetic",
+            "Num Documents/Times Cited",
+        ] + ["F{}".format(i) for i in range(n_components)]
 
-        controls[-3]["widget"].disabled = False if view == "Network" else True
-        controls[-2]["widget"].disabled = False if view == "Network" else True
-        controls[-1]["widget"].disabled = False if view == "Network" else True
+        left_panel[-3]["widget"].disabled = False if view == "Network" else True
+        left_panel[-2]["widget"].disabled = False if view == "Network" else True
+        left_panel[-1]["widget"].disabled = False if view == "Network" else True
 
         output.clear_output()
         with output:
@@ -553,31 +542,30 @@ def __TAB0__(data, limit_to, exclude):
     # Generic
     #
     # -------------------------------------------------------------------------
-    args = {control["arg"]: control["widget"] for control in controls}
+    args = {control["arg"]: control["widget"] for control in left_panel}
     output = widgets.Output()
     with output:
         display(widgets.interactive_output(server, args,))
-    return widgets.HBox(
-        [
-            widgets.VBox(
-                [
-                    widgets.VBox(
-                        [widgets.Label(value=control["desc"]), control["widget"]]
-                    )
-                    for control in controls
-                    if control["desc"] not in ["Figsize"]
-                ]
-                + [
-                    widgets.Label(value="Figure Size"),
-                    widgets.HBox([controls[-2]["widget"], controls[-1]["widget"],]),
-                ],
-                layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
-            ),
-            widgets.VBox(
-                [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")
-            ),
-        ]
+    #
+    grid = GridspecLayout(11, 8)
+    #
+    # Left panel
+    #
+    for index in range(len(left_panel)):
+        grid[index, 0] = widgets.VBox(
+            [
+                widgets.Label(value=left_panel[index]["desc"]),
+                left_panel[index]["widget"],
+            ]
+        )
+    #
+    # Output
+    #
+    grid[0:, 1:] = widgets.VBox(
+        [output], layout=Layout(height="657px", border="2px solid gray")
     )
+
+    return grid
 
 
 def app(data, limit_to=None, exclude=None):

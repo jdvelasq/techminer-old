@@ -5,23 +5,26 @@ Co-occurrence Analysis
 
 
 """
+import warnings
+
 import ipywidgets as widgets
 import matplotlib
 import matplotlib.pyplot as pyplot
 import networkx as nx
 import numpy as np
 import pandas as pd
-import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, Layout
-import techminer.by_term as by_term
-from techminer.explode import MULTIVALUED_COLS, __explode
-from techminer.keywords import Keywords
-from techminer.params import EXCLUDE_COLS
-from techminer.plots import COLORMAPS
-from techminer.chord_diagram import ChordDiagram
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.manifold import MDS
 
-import warnings
+import by_term as by_term
+import plots as plt
+from chord_diagram import ChordDiagram
+from explode import MULTIVALUED_COLS, __explode
+from keywords import Keywords
+from params import EXCLUDE_COLS
+from plots import COLORMAPS
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -1167,10 +1170,6 @@ def __TAB0__(x, limit_to, exclude):
 #
 #
 #
-
-
-from sklearn.cluster import AgglomerativeClustering
-from sklearn.manifold import MDS
 
 
 def occurrence(
