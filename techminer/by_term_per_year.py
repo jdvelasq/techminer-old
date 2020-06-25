@@ -22,6 +22,10 @@ from techminer.plots import COLORMAPS
 
 TEXTLEN = 40
 
+LEFT_PANEL_HEIGHT = "655px"
+RIGHT_PANEL_WIDTH = "1200px"
+PANE_HEIGHTS = ["80px", "720px", 0]
+
 
 def analytics(
     data,
@@ -534,100 +538,12 @@ def analytics(
     #     )
 
 
-#
-# def gant(x, column, limit_to=None, exclude=None):
-#     """Computes the number of documents by term per year.
-#
-#     Args:
-#         column (str): the column to explode.
-#         sep (str): Character used as internal separator for the elements in the column.
-#         as_matrix (bool): Results are returned as a matrix.
-#         keywords (Keywords): filter the result using the specified Keywords object.
-#
-#     Returns:
-#         DataFrame.
-#
-#
-#     Examples
-#     ----------------------------------------------------------------------------------------------
-#
-#     >>> import pandas as pd
-#     >>> df = pd.DataFrame(
-#     ...     {
-#     ...          "Year": [2010, 2011, 2011, 2012, 2015, 2012, 2016],
-#     ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 3,author 4,author 4".split(","),
-#     ...          "Times_Cited": list(range(10,17)),
-#     ...          "ID": list(range(7)),
-#     ...     }
-#     ... )
-#     >>> num_documents_by_term_per_year(df, 'Authors', as_matrix=True)
-#           author 0  author 1  author 2  author 3  author 4
-#     2010         1         1         1         0         0
-#     2011         1         1         0         0         0
-#     2012         0         0         0         1         1
-#     2015         0         0         0         1         0
-#     2016         0         0         0         0         1
-#
-#     >>> gant(df, 'Authors')
-#           author 0  author 1  author 2  author 3  author 4
-#     2010         1         1         1         0         0
-#     2011         1         1         0         0         0
-#     2012         0         0         0         1         1
-#     2013         0         0         0         1         1
-#     2014         0         0         0         1         1
-#     2015         0         0         0         1         1
-#     2016         0         0         0         0         1
-#
-#     >>> terms = Keywords(['author 1', 'author 2'])
-#     >>> gant(df, 'Authors', limit_to=terms)
-#           author 1  author 2
-#     2010         1         1
-#     2011         1         0
-#
-#     >>> gant(df, 'Authors', exclude=terms)
-#           author 0  author 3  author 4
-#     2010         1         0         0
-#     2011         1         0         0
-#     2012         0         1         1
-#     2013         0         1         1
-#     2014         0         1         1
-#     2015         0         1         1
-#     2016         0         0         1
-#
-#     """
-#
-#     years = [year for year in range(result.index.min(), result.index.max() + 1)]
-#     result = result.reindex(years, fill_value=0)
-#     matrix1 = result.copy()
-#     matrix1 = matrix1.cumsum()
-#     matrix1 = matrix1.applymap(lambda x: True if x > 0 else False)
-#     matrix2 = result.copy()
-#     matrix2 = matrix2.sort_index(ascending=False)
-#     matrix2 = matrix2.cumsum()
-#     matrix2 = matrix2.applymap(lambda x: True if x > 0 else False)
-#     matrix2 = matrix2.sort_index(ascending=True)
-#     result = matrix1.eq(matrix2)
-#     result = result.applymap(lambda x: 1 if x is True else 0)
-#     return result
-#
-
-##
-##
-## APP
-##
-##
-
-WIDGET_WIDTH = "180px"
-LEFT_PANEL_HEIGHT = "655px"
-RIGHT_PANEL_WIDTH = "1200px"
-PANE_HEIGHTS = ["80px", "720px", 0]
-
 ##
 ##
 ##  Analytics by Value
 ##
 ##
-def __APP0__(data, limit_to, exclude):
+def by_value_app(data, limit_to=None, exclude=None):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -742,13 +658,19 @@ def __APP0__(data, limit_to, exclude):
     output = widgets.Output()
     with output:
         display(widgets.interactive_output(server, args,))
-    #
+
     grid = GridspecLayout(10, 8)
+
+    grid[0, :] = widgets.HTML(
+        value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+            "By Term per Year (Values)"
+        )
+    )
     #
     # Left panel
     #
     for index in range(len(left_panel)):
-        grid[index, 0] = widgets.VBox(
+        grid[index + 1, 0] = widgets.VBox(
             [
                 widgets.Label(value=left_panel[index]["desc"]),
                 left_panel[index]["widget"],
@@ -757,7 +679,7 @@ def __APP0__(data, limit_to, exclude):
     #
     # Output
     #
-    grid[0:, 1:] = widgets.VBox(
+    grid[1:, 1:] = widgets.VBox(
         [output], layout=Layout(height="657px", border="2px solid gray")
     )
 
@@ -769,7 +691,7 @@ def __APP0__(data, limit_to, exclude):
 ##  Analytics by time matrix
 ##
 ##
-def __APP1__(data, limit_to, exclude):
+def by_time_app(data, limit_to=None, exclude=None):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -907,10 +829,16 @@ def __APP1__(data, limit_to, exclude):
     #
     grid = GridspecLayout(10, 8)
     #
+    grid[0, :] = widgets.HTML(
+        value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+            "By Term per Year (Time)"
+        )
+    )
+    #
     # Left panel
     #
     for index in range(len(left_panel)):
-        grid[index, 0] = widgets.VBox(
+        grid[index + 1, 0] = widgets.VBox(
             [
                 widgets.Label(value=left_panel[index]["desc"]),
                 left_panel[index]["widget"],
@@ -919,11 +847,95 @@ def __APP1__(data, limit_to, exclude):
     #
     # Output
     #
-    grid[0:, 1:] = widgets.VBox(
+    grid[1:, 1:] = widgets.VBox(
         [output], layout=Layout(height="657px", border="2px solid gray")
     )
 
     return grid
+
+
+#
+# def gant(x, column, limit_to=None, exclude=None):
+#     """Computes the number of documents by term per year.
+#
+#     Args:
+#         column (str): the column to explode.
+#         sep (str): Character used as internal separator for the elements in the column.
+#         as_matrix (bool): Results are returned as a matrix.
+#         keywords (Keywords): filter the result using the specified Keywords object.
+#
+#     Returns:
+#         DataFrame.
+#
+#
+#     Examples
+#     ----------------------------------------------------------------------------------------------
+#
+#     >>> import pandas as pd
+#     >>> df = pd.DataFrame(
+#     ...     {
+#     ...          "Year": [2010, 2011, 2011, 2012, 2015, 2012, 2016],
+#     ...          "Authors": "author 0;author 1;author 2,author 0,author 1,author 3,author 3,author 4,author 4".split(","),
+#     ...          "Times_Cited": list(range(10,17)),
+#     ...          "ID": list(range(7)),
+#     ...     }
+#     ... )
+#     >>> num_documents_by_term_per_year(df, 'Authors', as_matrix=True)
+#           author 0  author 1  author 2  author 3  author 4
+#     2010         1         1         1         0         0
+#     2011         1         1         0         0         0
+#     2012         0         0         0         1         1
+#     2015         0         0         0         1         0
+#     2016         0         0         0         0         1
+#
+#     >>> gant(df, 'Authors')
+#           author 0  author 1  author 2  author 3  author 4
+#     2010         1         1         1         0         0
+#     2011         1         1         0         0         0
+#     2012         0         0         0         1         1
+#     2013         0         0         0         1         1
+#     2014         0         0         0         1         1
+#     2015         0         0         0         1         1
+#     2016         0         0         0         0         1
+#
+#     >>> terms = Keywords(['author 1', 'author 2'])
+#     >>> gant(df, 'Authors', limit_to=terms)
+#           author 1  author 2
+#     2010         1         1
+#     2011         1         0
+#
+#     >>> gant(df, 'Authors', exclude=terms)
+#           author 0  author 3  author 4
+#     2010         1         0         0
+#     2011         1         0         0
+#     2012         0         1         1
+#     2013         0         1         1
+#     2014         0         1         1
+#     2015         0         1         1
+#     2016         0         0         1
+#
+#     """
+#
+#     years = [year for year in range(result.index.min(), result.index.max() + 1)]
+#     result = result.reindex(years, fill_value=0)
+#     matrix1 = result.copy()
+#     matrix1 = matrix1.cumsum()
+#     matrix1 = matrix1.applymap(lambda x: True if x > 0 else False)
+#     matrix2 = result.copy()
+#     matrix2 = matrix2.sort_index(ascending=False)
+#     matrix2 = matrix2.cumsum()
+#     matrix2 = matrix2.applymap(lambda x: True if x > 0 else False)
+#     matrix2 = matrix2.sort_index(ascending=True)
+#     result = matrix1.eq(matrix2)
+#     result = result.applymap(lambda x: 1 if x is True else 0)
+#     return result
+#
+
+##
+##
+## APP
+##
+##
 
 
 ##
@@ -1064,7 +1076,7 @@ def growth_indicators(x, column, timewindow=2, top_n=None, limit_to=None, exclud
     return result
 
 
-def __APP2__(x, limit_to, exclude):
+def growth_app(x, limit_to=None, exclude=None):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -1072,7 +1084,7 @@ def __APP2__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
     #
-    controls = [
+    left_panel = [
         # 0
         {
             "arg": "term",
@@ -1080,7 +1092,7 @@ def __APP2__(x, limit_to, exclude):
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in x.columns],
                 ensure_option=True,
-                layout=Layout(width=WIDGET_WIDTH),
+                layout=Layout(width="90%"),
             ),
         },
         # 1
@@ -1095,7 +1107,7 @@ def __APP2__(x, limit_to, exclude):
                     "Number of Document Published",
                 ],
                 value="Average Growth Rate",
-                layout=Layout(width=WIDGET_WIDTH),
+                layout=Layout(width="90%"),
             ),
         },
         # 2
@@ -1103,9 +1115,7 @@ def __APP2__(x, limit_to, exclude):
             "arg": "time_window",
             "desc": "Time window:",
             "widget": widgets.Dropdown(
-                options=["2", "3", "4", "5"],
-                value="2",
-                layout=Layout(width=WIDGET_WIDTH),
+                options=["2", "3", "4", "5"], value="2", layout=Layout(width="90%"),
             ),
         },
         # 3
@@ -1113,7 +1123,7 @@ def __APP2__(x, limit_to, exclude):
             "arg": "plot_type",
             "desc": "Plot type:",
             "widget": widgets.Dropdown(
-                options=["bar", "barh"], layout=Layout(width=WIDGET_WIDTH),
+                options=["bar", "barh"], layout=Layout(width="90%"),
             ),
         },
         # 4
@@ -1121,7 +1131,7 @@ def __APP2__(x, limit_to, exclude):
             "arg": "cmap",
             "desc": "Colormap:",
             "widget": widgets.Dropdown(
-                options=COLORMAPS, disable=False, layout=Layout(width=WIDGET_WIDTH),
+                options=COLORMAPS, disable=False, layout=Layout(width="90%"),
             ),
         },
         # 5
@@ -1131,7 +1141,7 @@ def __APP2__(x, limit_to, exclude):
             "widget": widgets.Dropdown(
                 options=list(range(5, 51, 5)),
                 ensure_option=True,
-                layout=Layout(width=WIDGET_WIDTH),
+                layout=Layout(width="90%"),
             ),
         },
         # 6
@@ -1139,7 +1149,7 @@ def __APP2__(x, limit_to, exclude):
             "arg": "figsize_width",
             "desc": "Figsize",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1), layout=Layout(width="88px"),
+                options=range(5, 15, 1), layout=Layout(width="90%"),
             ),
         },
         # 7
@@ -1147,7 +1157,7 @@ def __APP2__(x, limit_to, exclude):
             "arg": "figsize_height",
             "desc": "Figsize",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1), layout=Layout(width="88px"),
+                options=range(5, 15, 1), layout=Layout(width="90%"),
             ),
         },
     ]
@@ -1233,31 +1243,35 @@ def __APP2__(x, limit_to, exclude):
     # Generic
     #
     # -------------------------------------------------------------------------
-    args = {control["arg"]: control["widget"] for control in controls}
+    args = {control["arg"]: control["widget"] for control in left_panel}
     output = widgets.Output()
     with output:
         display(widgets.interactive_output(server, args,))
-    return widgets.HBox(
-        [
-            widgets.VBox(
-                [
-                    widgets.VBox(
-                        [widgets.Label(value=control["desc"]), control["widget"]]
-                    )
-                    for control in controls
-                    if control["desc"] not in ["Figsize"]
-                ]
-                + [
-                    widgets.Label(value="Figure Size"),
-                    widgets.HBox([controls[-2]["widget"], controls[-1]["widget"],]),
-                ],
-                layout=Layout(height=LEFT_PANEL_HEIGHT, border="1px solid gray"),
-            ),
-            widgets.VBox(
-                [output], layout=Layout(width=RIGHT_PANEL_WIDTH, align_items="baseline")
-            ),
-        ]
+
+    grid = GridspecLayout(10, 8)
+
+    grid[0, :] = widgets.HTML(
+        value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+            "Growth Indicators"
+        )
     )
+
+    #
+    # Left panel
+    #
+    for index in range(len(left_panel)):
+        grid[index + 1, 0] = widgets.VBox(
+            [
+                widgets.Label(value=left_panel[index]["desc"]),
+                left_panel[index]["widget"],
+            ]
+        )
+    #
+    # Output
+    #
+    grid[1:, 1:] = widgets.VBox([output], layout=Layout(border="2px solid gray"))
+
+    return grid
 
 
 def app(df, limit_to=None, exclude=None):
