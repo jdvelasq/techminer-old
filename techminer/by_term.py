@@ -393,7 +393,7 @@ RIGHT_PANEL_WIDTH = "1200px"
 PANE_HEIGHTS = ["80px", "720px", 0]
 
 
-def app(data, limit_to, exclude):
+def by_term_app(data, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -593,33 +593,321 @@ def app(data, limit_to, exclude):
 
 #
 #
-#  Panel 1
 #
 #
+def worldmap_app(data, limit_to=None, exclude=None):
+    # -------------------------------------------------------------------------
+    #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    left_panel = [
+        # 0
+        {
+            "arg": "column",
+            "desc": "Column to analyze:",
+            "widget": widgets.Dropdown(
+                options=["Countries", "Country_1st_Author"], layout=Layout(width="90%"),
+            ),
+        },
+        # 1
+        {
+            "arg": "top_by",
+            "desc": "Top by:",
+            "widget": widgets.Dropdown(
+                options=["Num_Documents", "Times_Cited"], layout=Layout(width="90%"),
+            ),
+        },
+        # 2
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, disable=False, layout=Layout(width="90%"),
+            ),
+        },
+        # 3
+        {
+            "arg": "width",
+            "desc": "Width",
+            "widget": widgets.Dropdown(
+                options=range(15, 21, 1),
+                ensure_option=True,
+                layout=Layout(width="90%"),
+            ),
+        },
+        # 4
+        {
+            "arg": "height",
+            "desc": "Height",
+            "widget": widgets.Dropdown(
+                options=range(4, 9, 1), ensure_option=True, layout=Layout(width="90%"),
+            ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
+    def server(**kwargs):
+        #
+        # Logic
+        #
+        column = kwargs["column"]
+        top_by = kwargs["top_by"]
+        cmap = kwargs["cmap"]
+        width = int(kwargs["width"])
+        height = int(kwargs["height"])
+        #
+        result = by_term.analytics(
+            data, column=column, output=0, top_by="Num_Documents", top_n=None,
+        )
+        #
+        output.clear_output()
+        with output:
+            display(plt.worldmap(x=result[top_by], figsize=(width, height), cmap=cmap,))
+
+    # -------------------------------------------------------------------------
+    #
+    # Generic
+    #
+    # -------------------------------------------------------------------------
+    args = {control["arg"]: control["widget"] for control in left_panel}
+    output = widgets.Output()
+    with output:
+        display(widgets.interactive_output(server, args,))
+    #
+    grid = GridspecLayout(10, 8)
+    #
+    grid[0, :] = widgets.HTML(
+        value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+            "Woldmap"
+        )
+    )
+    #
+    # Left panel
+    #
+    for index in range(len(left_panel)):
+        grid[index + 1, 0] = widgets.VBox(
+            [
+                widgets.Label(value=left_panel[index]["desc"]),
+                left_panel[index]["widget"],
+            ]
+        )
+    #
+    # Output
+    #
+    grid[1:, 1:] = widgets.VBox(
+        [output], layout=Layout(height="657px", border="2px solid gray")
+    )
+
+    return grid
 
 
-# def app(df, limit_to=None, exclude=None):
-#     """Jupyter Lab dashboard.
-#     """
-#     #
-#     body = widgets.Tab()
-#     body.children = [
-#         __APP0__(df, limit_to, exclude),
-#         __APP1__(df, limit_to, exclude),
-#         __APP4__(df),
-#     ]
-#     body.set_title(0, "Term Analysis")
-#     body.set_title(1, "Worldmap")
-#     body.set_title(2, "Core Authors")
-#     body.set_title(3, "Top Documents")
+#
+#
+#  Core Authors
+#
+#
+def core_authors(data):
+    """
+    """
+    #
+    # Numero de documentos escritos por author
+    #
+    z = by_term.analytics(
+        data, "Authors", top_by=None, top_n=None, limit_to=None, exclude=None
+    )
 
-#     #
-#     return AppLayout(
-#         header=widgets.HTML(
+    authors_dict = {
+        author: num_docs
+        for author, num_docs in zip(z.index, z.Num_Documents)
+        if not pd.isna(author)
+    }
+
+    z = z[["Num_Documents"]]
+    z = z.groupby(["Num_Documents"]).size()
+    w = [str(round(100 * a / sum(z), 2)) + " %" for a in z]
+    z = pd.DataFrame(
+        {"Num Authors": z.tolist(), "%": w, "Documents written per Author": z.index}
+    )
+    z = z.sort_values(["Documents written per Author"], ascending=False)
+    z["Acum Num Authors"] = z["Num Authors"].cumsum()
+    z["% Acum"] = [
+        str(round(100 * a / sum(z["Num Authors"]), 2)) + " %"
+        for a in z["Acum Num Authors"]
+    ]
+
+    m = __explode(data[["Authors", "ID"]], "Authors")
+    m = m.dropna()
+    m["Documents_written"] = m.Authors.map(lambda w: authors_dict[w])
+    n = []
+    for k in z["Documents written per Author"]:
+        s = m.query("Documents_written >= " + str(k))
+        s = s[["ID"]]
+        s = s.drop_duplicates()
+        n.append(len(s))
+
+    k = []
+    for index in range(len(n) - 1):
+        k.append(n[index + 1] - n[index])
+    k = [n[0]] + k
+    z["Num Documents"] = k
+    z["Acum Num Documents"] = n
+
+    z = z[
+        [
+            "Num Authors",
+            "%",
+            "Acum Num Authors",
+            "% Acum",
+            "Documents written per Author",
+            "Num Documents",
+            "Acum Num Documents",
+        ]
+    ]
+
+    z = z.reset_index(drop=True)
+    return z
+
+
+#
+#
+#  Panel 2
+#
+#
+# def core_authors_app(data):
+#     output = widgets.Output()
+#     with output:
+#         display(core_authors(data).head(50))
+#     grid = GridspecLayout(10, 8)
+#     grid[1:, 0:] = widgets.VBox(
+#         [output], layout=Layout(height="657px", border="2px solid gray")
+#     )
+#     return grid
+
+#
+#
+#  Core source titles
+#
+#
+def core_source_titles(data):
+    """[summary]
+
+    Args:
+        data ([type]): [description]
+    """
+    m = by_term.analytics(
+        data, "Source_title", top_by=None, top_n=None, limit_to=None, exclude=None
+    )
+    m = m[["Num_Documents"]]
+    m = m.groupby(["Num_Documents"]).size()
+    w = [str(round(100 * a / sum(m), 2)) + " %" for a in m]
+    m = pd.DataFrame(
+        {"Num Sources": m.tolist(), "%": w, "Documents published": m.index}
+    )
+
+    m = m.sort_values(["Documents published"], ascending=False)
+    m["Acum Num Sources"] = m["Num Sources"].cumsum()
+    m["% Acum"] = [
+        str(round(100 * a / sum(m["Num Sources"]), 2)) + " %"
+        for a in m["Acum Num Sources"]
+    ]
+
+    m["Tot Documents published"] = m["Num Sources"] * m["Documents published"]
+    m["Num Documents"] = m["Tot Documents published"].cumsum()
+    m["Tot Documents"] = m["Num Documents"].map(
+        lambda w: str(round(w / m["Num Documents"].max() * 100, 2)) + " %"
+    )
+
+    bradford1 = int(len(data) / 3)
+    bradford2 = 2 * bradford1
+
+    m["Bradford's Group"] = m["Num Documents"].map(
+        lambda w: 3 if w > bradford2 else (2 if w > bradford1 else 1)
+    )
+
+    m = m[
+        [
+            "Num Sources",
+            "%",
+            "Acum Num Sources",
+            "% Acum",
+            "Documents published",
+            "Tot Documents published",
+            "Num Documents",
+            "Tot Documents",
+            "Bradford's Group",
+        ]
+    ]
+
+    m = m.reset_index(drop=True)
+    return m
+
+
+# def app(data):
+#     output = widgets.Output()
+#     with output:
+#         display(core_source_titles(data))
+#     grid = GridspecLayout(10, 8)
+#     grid[0, :] = (
+#         widgets.HTML(
 #             value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-#                 "Summary by Term"
+#                 "Core source titles"
 #             )
 #         ),
-#         center=body,
-#         pane_heights=PANE_HEIGHTS,
 #     )
+#     grid[1:, 0:] = widgets.VBox(
+#         [output], layout=Layout(height="657px", border="2px solid gray")
+#     )
+#     return grid
+
+#
+#
+#  Top documents
+#
+#
+def top_documents(data):
+    """Returns the top 50 documents by Times Cited.
+
+    Args:
+        data (pandas.DataFrame): A bibliographic dataframe.
+
+    Returns:
+    """
+    data = data.sort_values(["Times_Cited", "Year"], ascending=[False, True])
+    data = data.head(50)
+    data["Times_Cited"] = data.Times_Cited.map(lambda w: int(w))
+    data = data.reset_index(drop=True)
+    data = data.sort_values(["Times_Cited", "Title"], ascending=[False, True])
+    data = data[["Authors", "Year", "Title", "Source_title", "Times_Cited"]]
+    data["Times_Cited"] = data.Times_Cited.map(lambda w: int(w))
+    data = data.reset_index(drop=True)
+
+    return data
+
+
+# def __APP4__(data):
+#     """
+#     # >>> import pandas as pd
+#     # >>> data = pd.DataFrame(
+#     # ...     {
+#     # ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
+#     # ...          "Times_Cited": list(range(10,16)),
+#     # ...          "ID": list(range(6)),
+#     # ...     }
+#     # ... )
+#     # >>> __APP4__(data)
+
+
+#     """
+#     output = widgets.Output()
+#     with output:
+#         display(result)
+#     grid = GridspecLayout(10, 8)
+#     grid[0:, 0:] = widgets.VBox(
+#         [output], layout=Layout(height="657px", border="2px solid gray")
+#     )
+#     return grid
+
