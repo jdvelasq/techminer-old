@@ -102,27 +102,29 @@ def column(df, top_n=50):
     # UI
     #
     # -------------------------------------------------------------------------
-    controls = [
+    left_panel = [
         # 0
         {
             "arg": "column",
             "desc": "Column:",
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in df.columns],
-                layout=Layout(width="90%"),
+                layout=Layout(width="95%"),
             ),
         },
         # 1
         {
             "arg": "value",
             "desc": "Term:",
-            "widget": widgets.Dropdown(options=[], layout=Layout(width="90%"),),
+            "widget": widgets.Dropdown(options=[], layout=Layout(width="95%"),),
         },
         # 2
         {
             "arg": "title",
             "desc": "Title:",
-            "widget": widgets.Select(options=[], layout=Layout(width="700px"),),
+            "widget": widgets.Select(
+                options=[], layout=Layout(height="380pt", width="95%"),
+            ),
         },
     ]
     # -------------------------------------------------------------------------
@@ -148,21 +150,21 @@ def column(df, top_n=50):
                 summary.sort_values("Times_Cited", ascending=False).head(top_n).index
             )
             top_terms = sorted(top_terms_freq | top_terms_cited_by)
-            controls[1]["widget"].options = top_terms
+            left_panel[1]["widget"].options = top_terms
         else:
             all_terms = pd.Series(x[column].unique())
             all_terms = all_terms[all_terms.map(lambda w: not pd.isna(w))]
             all_terms = all_terms.sort_values()
-            controls[1]["widget"].options = all_terms
+            left_panel[1]["widget"].options = all_terms
         #
         # Populate titles
         #
-        s = x[x[column] == controls[1]["widget"].value]
-        controls[2]["widget"].options = sorted(s["Title"].tolist())
+        s = x[x[column] == left_panel[1]["widget"].value]
+        left_panel[2]["widget"].options = sorted(s["Title"].tolist())
         #
         # Print info from selected title
         #
-        out = df[df["Title"] == controls[2]["widget"].value]
+        out = df[df["Title"] == left_panel[2]["widget"].value]
         out = out.reset_index(drop=True)
         out = out.iloc[0]
         output.clear_output()
@@ -174,32 +176,32 @@ def column(df, top_n=50):
     # Generic
     #
     # -------------------------------------------------------------------------
-    args = {control["arg"]: control["widget"] for control in controls}
+    args = {control["arg"]: control["widget"] for control in left_panel}
     output = widgets.Output()
-    widgets.interactive_output(
-        server, args,
+    with output:
+        display(widgets.interactive_output(server, args,))
+
+    grid = GridspecLayout(10, 4, height="800px")
+    grid[0, :] = widgets.HTML(
+        value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+            "Matrix Explorer (Top {} terms)".format(top_n)
+        )
     )
-    return AppLayout(
-        header=widgets.HTML(
-            value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                "Column Explorer (Top {} terms)".format(top_n)
-            )
-        ),
-        left_sidebar=widgets.VBox(
-            [
-                widgets.Label(value=controls[0]["desc"]),
-                controls[0]["widget"],
-                widgets.Label(value=controls[1]["desc"]),
-                controls[1]["widget"],
-            ],
-            layout=Layout(width="200px"),
-        ),
-        center=widgets.VBox(
-            [widgets.Label(value=controls[2]["desc"]), controls[2]["widget"]]
-        ),
-        footer=widgets.VBox([output]),
-        pane_heights=["80px", "130px", "550px"],
+    for i in range(0, len(left_panel) - 1):
+        grid[i + 1, 0] = widgets.VBox(
+            [widgets.Label(value=left_panel[i]["desc"]), left_panel[i]["widget"],]
+        )
+
+    grid[len(left_panel) : len(left_panel) + 8, 0] = widgets.VBox(
+        [widgets.Label(value=left_panel[-1]["desc"]), left_panel[-1]["widget"],]
     )
+
+    grid[1:, 1:] = widgets.VBox(
+        [output],  #  layout=Layout(height="657px", border="2px solid gray")
+        layout=Layout(border="2px solid gray"),
+    )
+
+    return grid
 
 
 def matrix(df, top_n=50):
@@ -252,7 +254,7 @@ def matrix(df, top_n=50):
             "desc": "By column:",
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in df.columns],
-                layout=Layout(width="90%"),
+                layout=Layout(width="95%"),
             ),
         },
         # 3
