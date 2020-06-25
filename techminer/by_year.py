@@ -392,7 +392,7 @@ def by_year_app(data):
     # Output
     #
     grid[1:, 1:] = widgets.VBox(
-        [output], layout=Layout(height="657px", border="2px solid gray")
+        [output], layout=Layout(height="740px", border="2px solid gray")
     )
 
     return grid

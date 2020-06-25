@@ -582,9 +582,7 @@ def by_term_app(data, limit_to, exclude):
     #
     # Output
     #
-    grid[1:, 1:] = widgets.VBox(
-        [output], layout=Layout(height="657px", border="2px solid gray")
-    )
+    grid[1:, 1:] = widgets.VBox([output], layout=Layout(border="2px solid gray"))
 
     return grid
 
