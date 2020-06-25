@@ -15,7 +15,7 @@ from ipywidgets import AppLayout, GridspecLayout, Layout
 from sklearn.decomposition import PCA
 
 import by_term as by_term
-from co_occurrence import document_term_matrix, filter_index
+from co_occurrence import document_term_matrix
 from explode import __explode
 from keywords import Keywords
 from plots import COLORMAPS
