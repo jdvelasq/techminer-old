@@ -14,11 +14,11 @@ from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
 from sklearn.decomposition import PCA
 
-import by_term as by_term
-from co_occurrence import document_term_matrix
-from explode import __explode
-from keywords import Keywords
-from plots import COLORMAPS
+import techminer.by_term as by_term
+from techminer.co_occurrence import document_term_matrix
+from techminer.explode import __explode
+from techminer.keywords import Keywords
+from techminer.plots import COLORMAPS
 
 
 def factor_analysis(

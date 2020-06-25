@@ -1,4 +1,4 @@
-from params import MULTIVALUED_COLS
+from techminer.params import MULTIVALUED_COLS
 
 
 def __explode(x, column):

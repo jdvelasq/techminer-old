@@ -18,13 +18,13 @@ from ipywidgets import AppLayout, GridspecLayout, Layout
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.manifold import MDS
 
-import by_term as by_term
-import plots as plt
-from chord_diagram import ChordDiagram
-from explode import MULTIVALUED_COLS, __explode
-from keywords import Keywords
-from params import EXCLUDE_COLS
-from plots import COLORMAPS
+import techminer.by_term as by_term
+import techminer.plots as plt
+from techminer.chord_diagram import ChordDiagram
+from techminer.explode import MULTIVALUED_COLS, __explode
+from techminer.keywords import Keywords
+from techminer.params import EXCLUDE_COLS
+from techminer.plots import COLORMAPS
 
 warnings.filterwarnings("ignore", category=UserWarning)
 

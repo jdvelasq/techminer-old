@@ -10,10 +10,10 @@ from IPython.display import display
 from ipywidgets import AppLayout, GridspecLayout, Layout
 import textwrap
 
-import by_term as by_term
-from explode import __explode
+import techminer.by_term as by_term
+from techminer.explode import __explode
 
-from explode import MULTIVALUED_COLS
+from techminer.explode import MULTIVALUED_COLS
 
 WIDGET_WIDTH = "200px"
 

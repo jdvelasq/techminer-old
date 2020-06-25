@@ -13,15 +13,15 @@ import pandas as pd
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
 
-import by_term as by_term
-import plots as plt
-from chord_diagram import ChordDiagram
-from co_occurrence import co_occurrence, document_term_matrix, filter_index
-from explode import MULTIVALUED_COLS, __explode
-from keywords import Keywords
-from maps import Map
-from params import EXCLUDE_COLS
-from plots import COLORMAPS
+import techminer.by_term as by_term
+import techminer.plots as plt
+from techminer.chord_diagram import ChordDiagram
+from techminer.co_occurrence import co_occurrence, document_term_matrix, filter_index
+from techminer.explode import MULTIVALUED_COLS, __explode
+from techminer.keywords import Keywords
+from techminer.maps import Map
+from techminer.params import EXCLUDE_COLS
+from techminer.plots import COLORMAPS
 
 
 def corr(

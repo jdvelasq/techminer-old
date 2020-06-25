@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import squarify
-from chord_diagram import ChordDiagram
+from techminer.chord_diagram import ChordDiagram
 from wordcloud import ImageColorGenerator, WordCloud
 
 
