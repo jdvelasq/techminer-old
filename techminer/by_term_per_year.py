@@ -210,6 +210,30 @@ def analytics(
             columns, ascending=False, inplace=True,
         )
 
+        #
+        # Limit to
+        #
+        if isinstance(limit_to, dict):
+            if column in limit_to.keys():
+                limit_to = limit_to[column]
+            else:
+                limit_to = None
+
+        if limit_to is not None:
+            result = result[result[column].map(lambda w: w in limit_to)]
+
+        #
+        # Exclude
+        #
+        if isinstance(exclude, dict):
+            if column in exclude.keys():
+                exclude = exclude[column]
+            else:
+                exclude = None
+
+        if exclude is not None:
+            result = result[result[column].map(lambda w: w not in exclude)]
+
         if top_n is not None:
             result = result.head(top_n)
             result = result.reset_index(drop=True)
@@ -643,6 +667,8 @@ def by_value_app(data, limit_to=None, exclude=None):
                     top_n=top_n,
                     sort_by=sort_by,
                     ascending=ascending,
+                    limit_to=limit_to,
+                    exclude=exclude,
                     cmap=None,
                     figsize=None,
                 )
