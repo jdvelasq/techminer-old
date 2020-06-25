@@ -12,13 +12,13 @@ import pandas as pd
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
 
-import by_term as by_term
-import by_year as by_year
-import plots as plt
-from explode import __explode
-from keywords import Keywords
-from params import EXCLUDE_COLS
-from plots import COLORMAPS
+import techminer.by_term as by_term
+import techminer.by_year as by_year
+import techminer.plots as plt
+from techminer.explode import __explode
+from techminer.keywords import Keywords
+from techminer.params import EXCLUDE_COLS
+from techminer.plots import COLORMAPS
 
 TEXTLEN = 40
 

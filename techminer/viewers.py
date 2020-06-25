@@ -10,10 +10,10 @@ from IPython.display import display
 from ipywidgets import AppLayout, GridspecLayout, Layout
 import textwrap
 
-import techminer.by_term as by_term
-from techminer.explode import __explode
+import by_term as by_term
+from explode import __explode
 
-from techminer.explode import MULTIVALUED_COLS
+from explode import MULTIVALUED_COLS
 
 WIDGET_WIDTH = "200px"
 
@@ -142,14 +142,12 @@ def column(df, top_n=50):
         #
         x = __explode(df, column)
         if top_n is not None:
-            summary = by_term.summary(df, column)
+            summary = by_term.analytics(df, column)
             top_terms_freq = set(
-                summary.sort_values("Num_Documents", ascending=False).head(top_n)[
-                    column
-                ]
+                summary.sort_values("Num_Documents", ascending=False).head(top_n).index
             )
             top_terms_cited_by = set(
-                summary.sort_values("Times_Cited", ascending=False).head(top_n)[column]
+                summary.sort_values("Times_Cited", ascending=False).head(top_n).index
             )
             top_terms = sorted(top_terms_freq | top_terms_cited_by)
             controls[1]["widget"].options = top_terms
@@ -280,7 +278,7 @@ def matrix(df, top_n=50):
     def server(**kwargs):
         #
         main_column = kwargs["main_column"]
-        main_term = kwargs["main_term"]
+        term_in_main_column = kwargs["main_term"]
         by_column = kwargs["by_column"]
         by_term = kwargs["by_term"]
         title = kwargs["title"]
@@ -288,7 +286,6 @@ def matrix(df, top_n=50):
         # Populate main_column with top_n terms
         #
         xdf = df.copy()
-        # xdf = xdf[FIELDS]
         xdf["_key1_"] = xdf[main_column]
         xdf["_key2_"] = xdf[by_column]
         if main_column in MULTIVALUED_COLS:
@@ -296,16 +293,12 @@ def matrix(df, top_n=50):
         #
 
         if top_n is not None:
-            summary = by_term.summary(xdf, "_key1_")
+            summary = by_term.analytics(xdf, "_key1_")
             top_terms_freq = set(
-                summary.sort_values("Num_Documents", ascending=False).head(top_n)[
-                    "_key1_"
-                ]
+                summary.sort_values("Num_Documents", ascending=False).head(top_n).index
             )
             top_terms_cited_by = set(
-                summary.sort_values("Times_Cited", ascending=False).head(top_n)[
-                    "_key1_"
-                ]
+                summary.sort_values("Times_Cited", ascending=False).head(top_n).index
             )
             top_terms = sorted(top_terms_freq | top_terms_cited_by)
             controls[1]["widget"].options = top_terms
@@ -348,10 +341,8 @@ def matrix(df, top_n=50):
     # -------------------------------------------------------------------------
     args = {control["arg"]: control["widget"] for control in controls}
     output = widgets.Output()
-    widgets.interactive_output(
-        server, args,
-    )
-
+    with output:
+        display(widgets.interactive_output(server, args,))
     #
     #
     grid = GridspecLayout(10, 5, height="800px")

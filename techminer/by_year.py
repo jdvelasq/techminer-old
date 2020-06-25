@@ -14,8 +14,8 @@ import pandas as pd
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
 
-import plots as plt
-from plots import COLORMAPS
+import techminer.plots as plt
+from techminer.plots import COLORMAPS
 
 TEXTLEN = 40
 
