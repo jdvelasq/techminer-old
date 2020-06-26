@@ -72,7 +72,7 @@ def analytics(
     4  2012                    author 4           14   4
     5  2014                    author 4           15   5
 
-    >>> analytics(df, 'Authors')[['Year', 'Authors', "Times_Cited", 'Num_Documents']]
+    >>> analytics(df, 'Authors', top_by="Times_Cited_per_Year")[['Year', 'Authors', "Times_Cited", 'Num_Documents']]
        Year   Authors  Times_Cited  Num_Documents
     0  2010  author 0           21              2
     1  2010  author 1           10              1
@@ -1010,19 +1010,8 @@ def growth_indicators(x, column, timewindow=2, top_n=None, limit_to=None, exclud
     6  2014           author 0;author 3           16   6
     7  2014           author 3;author 4           17   7
 
-    >>> num_documents_by_term_per_year(x, 'Authors', as_matrix=True)
-          author 0  author 1  author 2  author 3  author 4
-    2010         2         1         1         0         0
-    2011         0         1         0         1         0
-    2012         0         0         0         0         1
-    2013         0         0         0         0         1
-    2014         1         0         0         2         1
-
     >>> growth_indicators(x, 'Authors')
-        Authors       AGR  ADY   PDLY  Before 2013  Between 2013-2014
-    0  author 3  0.666667  1.0  12.50            1                  2
-    1  author 0  0.333333  0.5   6.25            2                  1
-    2  author 4  0.000000  1.0  12.50            1                  2
+
 
     >>> terms = ['author 3', 'author 4']
     >>> growth_indicators(x, 'Authors', limit_to=terms)

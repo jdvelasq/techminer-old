@@ -64,23 +64,25 @@ def analytics(
     >>> analytics(x, 'Authors')[['Num_Documents', 'Times_Cited']]
               Num_Documents  Times_Cited
     Authors                             
-    author 0              2           21
-    author 1              2           22
     author 2              1           10
     author 3              1           13
+    author 0              2           21
+    author 1              2           22
 
     >>> items = ['author 1', 'author 2']
     >>> analytics(x, 'Authors', limit_to=items)[['Num_Documents', 'Times_Cited']]
               Num_Documents  Times_Cited
     Authors                             
-    author 1              2           22
     author 2              1           10
+    author 1              2           22
+    
 
     >>> analytics(x, 'Authors', exclude=items)[['Num_Documents', 'Times_Cited']]
               Num_Documents  Times_Cited
     Authors                             
-    author 0              2           21
     author 3              1           13
+    author 0              2           21
+    
 
     """
 

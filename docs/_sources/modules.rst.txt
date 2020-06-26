@@ -10,6 +10,7 @@ Modules for Analysis
     by_term_per_year
     co_occurrence
     correlation
+    factor_analysis
     text 
     keywords
     thesaurus

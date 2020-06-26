@@ -1,0 +1,920 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>techminer.factor_analysis &mdash; TechMiner - A Package for Bibliographical Analysis using Python 0.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TechMiner - A Package for Bibliographical Analysis using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules for Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#basic-functions">Basic functions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TechMiner - A Package for Bibliographical Analysis using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>techminer.factor_analysis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for techminer.factor_analysis</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Factor analysis</span>
+<span class="sd">==================================================================================================</span>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">widgets</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">pyplot</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">clear_output</span><span class="p">,</span> <span class="n">display</span>
+<span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">AppLayout</span><span class="p">,</span> <span class="n">GridspecLayout</span><span class="p">,</span> <span class="n">Layout</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+
+<span class="kn">import</span> <span class="nn">techminer.by_term</span> <span class="k">as</span> <span class="nn">by_term</span>
+<span class="kn">from</span> <span class="nn">techminer.co_occurrence</span> <span class="kn">import</span> <span class="n">document_term_matrix</span>
+<span class="kn">from</span> <span class="nn">techminer.explode</span> <span class="kn">import</span> <span class="n">__explode</span>
+<span class="kn">from</span> <span class="nn">techminer.keywords</span> <span class="kn">import</span> <span class="n">Keywords</span>
+<span class="kn">from</span> <span class="nn">techminer.plots</span> <span class="kn">import</span> <span class="n">COLORMAPS</span>
+
+
+<div class="viewcode-block" id="factor_analysis"><a class="viewcode-back" href="../../factor_analysis.html#techminer.factor_analysis.factor_analysis">[docs]</a><span class="k">def</span> <span class="nf">factor_analysis</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span>
+    <span class="n">column</span><span class="p">,</span>
+    <span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">output</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">top_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">top_n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">sort_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;Kamada Kawai&quot;</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">limit_to</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">exclude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the matrix of factors for terms in a given column.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (pandas.DataFrame): A bibliographic dataframe.</span>
+<span class="sd">        column (str): column to process.</span>
+<span class="sd">        n_components (int): Number of components to compute.</span>
+<span class="sd">        output (int/str): Output generated by the function:</span>
+
+<span class="sd">            * 0 or &#39;Matrix&#39;.</span>
+
+<span class="sd">            * 1 or &#39;Network&#39;.</span>
+
+<span class="sd">        top_by (int/str): Criteria for selecting the elements of the matrix.</span>
+
+<span class="sd">            * -1 or &#39;Values&#39;: values &gt;= 0.25 or values &lt;= -0.25.</span>
+
+<span class="sd">            * 0 or &#39;Num_Documents&#39;: top terms  based on frequency.</span>
+
+<span class="sd">            * 1 or &#39;Times_Cited&#39;: top terms based on total citations.</span>
+
+<span class="sd">        sort_by (str): </span>
+
+<span class="sd">            * &#39;Alphabetic&#39;.</span>
+
+<span class="sd">            * &#39;Num Documents&#39;.</span>
+
+<span class="sd">            * &#39;Times Cited&#39;.</span>
+
+<span class="sd">            * &#39;F#&#39;.</span>
+
+<span class="sd">        ascending (bool): Sort ascending vs. descending. </span>
+
+<span class="sd">        figsize (tuple): Figure dimensions.</span>
+
+<span class="sd">        layout (str):</span>
+
+<span class="sd">            * &quot;Circular&quot;.</span>
+<span class="sd">            </span>
+<span class="sd">            * &quot;Kamada Kawai&quot;</span>
+
+<span class="sd">            * &quot;Planar&quot;.</span>
+
+<span class="sd">            * &quot;Spectral&quot;.</span>
+
+<span class="sd">            * &quot;Spring&quot;.</span>
+
+<span class="sd">            * &quot;Shell&quot;.</span>
+
+<span class="sd">        cmap (str): Matplotlib&#39;s colormap.</span>
+
+<span class="sd">        limit_to (dict): Dictionary to &#39;limit to&#39; terms in the output.</span>
+
+<span class="sd">        exclude (dict): Dictionary to specify terms to ignore.</span>
+
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------------------------------------------------------------------------------------------</span>
+
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; x = [ &#39;A&#39;, &#39;A;B&#39;, &#39;B&#39;, &#39;A;B;C&#39;, &#39;B;D&#39;, &#39;A;B&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; y = [ &#39;a&#39;, &#39;a;b&#39;, &#39;b&#39;, &#39;c&#39;, &#39;c;d&#39;, &#39;d&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(</span>
+<span class="sd">    ...    {</span>
+<span class="sd">    ...       &#39;Authors&#39;: x,</span>
+<span class="sd">    ...       &#39;Author_Keywords&#39;: y,</span>
+<span class="sd">    ...       &quot;Times_Cited&quot;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;ID&#39;: list(range(len(x))),</span>
+<span class="sd">    ...       &#39;Year&#39;: [1990, 1990, 1991, 1991, 1992, 1992],</span>
+<span class="sd">    ...    }</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; df</span>
+<span class="sd">      Authors Author_Keywords  Times_Cited  ID  Year</span>
+<span class="sd">    0       A               a            0   0  1990</span>
+<span class="sd">    1     A;B             a;b            1   1  1990</span>
+<span class="sd">    2       B               b            2   2  1991</span>
+<span class="sd">    3   A;B;C               c            3   3  1991</span>
+<span class="sd">    4     B;D             c;d            4   4  1992</span>
+<span class="sd">    5     A;B               d            5   5  1992</span>
+
+
+<span class="sd">    &gt;&gt;&gt; document_term_matrix(df, &#39;Authors&#39;)</span>
+<span class="sd">       A  B  C  D</span>
+<span class="sd">    0  1  0  0  0</span>
+<span class="sd">    1  1  1  0  0</span>
+<span class="sd">    2  0  1  0  0</span>
+<span class="sd">    3  1  1  1  0</span>
+<span class="sd">    4  0  1  0  1</span>
+<span class="sd">    5  1  1  0  0</span>
+
+
+<span class="sd">    &gt;&gt;&gt; factor_analysis(df, &#39;Authors&#39;, n_components=3, sort_by=&#39;Num Documents&#39;)</span>
+<span class="sd">             F0            F1       F2</span>
+<span class="sd">    A -0.774597 -0.000000e+00  0.00000</span>
+<span class="sd">    B  0.258199  7.071068e-01 -0.57735</span>
+<span class="sd">    C -0.258199  7.071068e-01  0.57735</span>
+<span class="sd">    D  0.516398  1.110223e-16  0.57735</span>
+
+<span class="sd">    &gt;&gt;&gt; factor_analysis(df, &#39;Authors&#39;, n_components=3, limit_to=[&#39;A&#39;, &#39;B&#39;, &#39;C&#39;])</span>
+<span class="sd">             F0        F1       F2</span>
+<span class="sd">    A -0.774597 -0.000000  0.00000</span>
+<span class="sd">    B  0.258199  0.707107 -0.57735</span>
+<span class="sd">    C -0.258199  0.707107  0.57735</span>
+
+<span class="sd">    &gt;&gt;&gt; factor_analysis(df, &#39;Authors&#39;, n_components=3, exclude=[&#39;C&#39;])</span>
+<span class="sd">             F0            F1       F2</span>
+<span class="sd">    A -0.774597 -0.000000e+00  0.00000</span>
+<span class="sd">    B  0.258199  7.071068e-01 -0.57735</span>
+<span class="sd">    D  0.516398  1.110223e-16  0.57735</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Computo</span>
+    <span class="c1">#</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">dtm</span> <span class="o">=</span> <span class="n">document_term_matrix</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
+    <span class="n">terms</span> <span class="o">=</span> <span class="n">dtm</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">n_components</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n_components</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">terms</span><span class="p">))))</span>
+    <span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">pca</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">dtm</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">components_</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">result</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;F&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_components</span><span class="p">)],</span> <span class="n">index</span><span class="o">=</span><span class="n">terms</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">top_by</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">top_by</span> <span class="o">=</span> <span class="n">top_by</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="n">top_by</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Values&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Num_Documents&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Times_Cited&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,}[</span><span class="n">top_by</span><span class="p">]</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># top by</span>
+    <span class="c1">#</span>
+    <span class="n">limit</span> <span class="o">=</span> <span class="mf">0.25</span>
+    <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+
+        <span class="n">max_by_rows</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">max_by_rows</span> <span class="o">=</span> <span class="n">max_by_rows</span><span class="p">[(</span><span class="n">max_by_rows</span> <span class="o">&gt;=</span> <span class="n">limit</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">max_by_rows</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="n">limit</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">max_by_rows</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">limit</span> <span class="o">=</span> <span class="mf">0.10</span>
+            <span class="n">max_by_rows</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">max_by_rows</span> <span class="o">=</span> <span class="n">max_by_rows</span><span class="p">[(</span><span class="n">max_by_rows</span> <span class="o">&gt;=</span> <span class="n">limit</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">max_by_rows</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="n">limit</span><span class="p">)]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">max_by_rows</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="n">summ</span> <span class="o">=</span> <span class="n">by_term</span><span class="o">.</span><span class="n">analytics</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+            <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">top_by</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">top_n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">sort_by</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">ascending</span><span class="o">=</span><span class="n">ascending</span><span class="p">,</span>
+            <span class="n">limit_to</span><span class="o">=</span><span class="n">limit_to</span><span class="p">,</span>
+            <span class="n">exclude</span><span class="o">=</span><span class="n">exclude</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="n">summ</span> <span class="o">=</span> <span class="n">by_term</span><span class="o">.</span><span class="n">analytics</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+            <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">top_by</span><span class="o">=</span><span class="n">top_by</span><span class="p">,</span>
+            <span class="n">top_n</span><span class="o">=</span><span class="n">top_n</span><span class="p">,</span>
+            <span class="n">sort_by</span><span class="o">=</span><span class="n">top_by</span><span class="p">,</span>
+            <span class="n">ascending</span><span class="o">=</span><span class="n">ascending</span><span class="p">,</span>
+            <span class="n">limit_to</span><span class="o">=</span><span class="n">limit_to</span><span class="p">,</span>
+            <span class="n">exclude</span><span class="o">=</span><span class="n">exclude</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">summ</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Matrix&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Network&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,}[</span><span class="n">output</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># Rename row axis</span>
+        <span class="c1">#</span>
+
+        <span class="n">fmt</span> <span class="o">=</span> <span class="n">_get_fmt</span><span class="p">(</span><span class="n">summ</span><span class="p">)</span>
+        <span class="n">new_names</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">key</span><span class="p">:</span> <span class="n">fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">nd</span><span class="p">,</span> <span class="n">tc</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">nd</span><span class="p">,</span> <span class="n">tc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">summ</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">summ</span><span class="o">.</span><span class="n">Num_Documents</span><span class="p">,</span> <span class="n">summ</span><span class="o">.</span><span class="n">Times_Cited</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="c1">#</span>
+
+        <span class="c1">#  new_names = {key: value for key, value in zip(summ.index, summ[top_by])}</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_names</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># top_by</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Alphabetic&quot;</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="n">ascending</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">:</span>
+            <span class="n">terms</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">terms</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="ow">not</span> <span class="n">ascending</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">_get_num_documents</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">terms</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="k">if</span> <span class="n">sort_by</span> <span class="o">==</span> <span class="s2">&quot;Times Cited&quot;</span><span class="p">:</span>
+            <span class="n">terms</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">terms</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="ow">not</span> <span class="n">ascending</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">_get_times_cited</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">terms</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="k">if</span> <span class="n">sort_by</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;F</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_components</span><span class="p">)]:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">sort_by</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="n">ascending</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">background_gradient</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">factor_map</span><span class="p">(</span>
+            <span class="n">matrix</span><span class="o">=</span><span class="n">result</span><span class="p">,</span> <span class="n">summary</span><span class="o">=</span><span class="n">summ</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_num_documents</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">z</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span>
+
+
+<span class="k">def</span> <span class="nf">_get_times_cited</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">z</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span>
+
+
+<span class="k">def</span> <span class="nf">_get_fmt</span><span class="p">(</span><span class="n">summ</span><span class="p">):</span>
+    <span class="n">n_Num_Documents</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">summ</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">n_Times_Cited</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">summ</span><span class="p">[</span><span class="s2">&quot;Times_Cited&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> {:0&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n_Num_Documents</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;d}:{:0&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n_Times_Cited</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;d}&quot;</span>
+
+
+<div class="viewcode-block" id="factor_map"><a class="viewcode-back" href="../../factor_analysis.html#techminer.factor_analysis.factor_map">[docs]</a><span class="k">def</span> <span class="nf">factor_map</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">summary</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;Kamada Kawai&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="mi">12</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Data preparation</span>
+    <span class="c1">#</span>
+    <span class="n">terms</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">terms</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="p">[:</span> <span class="n">w</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">if</span> <span class="s2">&quot;[&quot;</span> <span class="ow">in</span> <span class="n">w</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">terms</span><span class="p">]</span>
+    <span class="n">terms</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">terms</span><span class="p">]</span>
+
+    <span class="n">num_documents</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">summary</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">summary</span><span class="p">[</span><span class="s2">&quot;Num_Documents&quot;</span><span class="p">])}</span>
+    <span class="n">times_cited</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">summary</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">summary</span><span class="p">[</span><span class="s2">&quot;Times_Cited&quot;</span><span class="p">])}</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Node sizes</span>
+    <span class="c1">#</span>
+    <span class="n">node_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">num_documents</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">terms</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">node_sizes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">node_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">500</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">max_size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">node_sizes</span><span class="p">)</span>
+        <span class="n">min_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">node_sizes</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">min_size</span> <span class="o">==</span> <span class="n">max_size</span><span class="p">:</span>
+            <span class="n">node_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">500</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">node_sizes</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="mi">600</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2500</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">-</span> <span class="n">min_size</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_size</span> <span class="o">-</span> <span class="n">min_size</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">node_sizes</span>
+            <span class="p">]</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Node colors</span>
+    <span class="c1">#</span>
+
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">node_colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">times_cited</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">terms</span><span class="p">]</span>
+    <span class="n">node_colors</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">cmap</span><span class="p">(</span><span class="mf">0.2</span> <span class="o">+</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">node_colors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">node_colors</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">node_colors</span><span class="p">))</span>
+    <span class="p">]</span>
+
+    <span class="n">matrix</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">terms</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Draw the network</span>
+    <span class="c1">#</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+    <span class="n">draw_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Circular&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_circular</span><span class="p">,</span>
+        <span class="s2">&quot;Kamada Kawai&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_kamada_kawai</span><span class="p">,</span>
+        <span class="s2">&quot;Planar&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_planar</span><span class="p">,</span>
+        <span class="s2">&quot;Random&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_random</span><span class="p">,</span>
+        <span class="s2">&quot;Spectral&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_spectral</span><span class="p">,</span>
+        <span class="s2">&quot;Spring&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_spring</span><span class="p">,</span>
+        <span class="s2">&quot;Shell&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_shell</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">draw</span> <span class="o">=</span> <span class="n">draw_dict</span><span class="p">[</span><span class="n">layout</span><span class="p">]</span>
+
+    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># network nodes</span>
+    <span class="c1">#</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># network edges</span>
+    <span class="c1">#</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="n">matrix</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.25</span><span class="p">]</span>
+        <span class="c1"># if len(x) &gt; 1:</span>
+        <span class="c1">#     for t in x.index:</span>
+        <span class="c1">#         node_colors[t] = cmap(0.05 + 0.9 * float(idx) / len(matrix.columns))</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">t0</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">t1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">)):</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">t0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">t1</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="mf">0.75</span><span class="p">:</span>
+                        <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">t0</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">t1</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="mf">0.50</span><span class="p">:</span>
+                        <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">t0</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">t1</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="mf">0.25</span><span class="p">:</span>
+                        <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">t0</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">t1</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="n">matrix</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">]</span>
+        <span class="c1"># if len(x) &gt; 1:</span>
+        <span class="c1">#     for t in x.index:</span>
+        <span class="c1">#         node_colors[t] = cmap(0.1 + 0.9 * float(idx) / len(matrix.columns))</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">t0</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">t1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">)):</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">t0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">t1</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mf">0.75</span><span class="p">:</span>
+                        <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">t0</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">t1</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mf">0.50</span><span class="p">:</span>
+                        <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">t0</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">t1</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">:</span>
+                        <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">t0</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">t1</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># network edges</span>
+    <span class="c1">#</span>
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">data</span><span class="p">():</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">dic</span> <span class="o">=</span> <span class="n">e</span>
+        <span class="n">edge</span> <span class="o">=</span> <span class="p">[(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)]</span>
+        <span class="n">draw</span><span class="p">(</span>
+            <span class="n">G</span><span class="p">,</span>
+            <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+            <span class="n">edgelist</span><span class="o">=</span><span class="n">edge</span><span class="p">,</span>
+            <span class="n">width</span><span class="o">=</span><span class="n">dic</span><span class="p">[</span><span class="s2">&quot;width&quot;</span><span class="p">],</span>
+            <span class="n">edge_color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span>
+            <span class="n">with_labels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">node_color</span><span class="o">=</span><span class="n">node_colors</span><span class="p">,</span>
+            <span class="n">node_size</span><span class="o">=</span><span class="n">node_sizes</span><span class="p">,</span>
+            <span class="n">edgecolors</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span>
+            <span class="n">linewidths</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Labels</span>
+    <span class="c1">#</span>
+    <span class="n">layout_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Circular&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">circular_layout</span><span class="p">,</span>
+        <span class="s2">&quot;Kamada Kawai&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">kamada_kawai_layout</span><span class="p">,</span>
+        <span class="s2">&quot;Planar&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">planar_layout</span><span class="p">,</span>
+        <span class="s2">&quot;Random&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">random_layout</span><span class="p">,</span>
+        <span class="s2">&quot;Spectral&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">spectral_layout</span><span class="p">,</span>
+        <span class="s2">&quot;Spring&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">,</span>
+        <span class="s2">&quot;Shell&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">shell_layout</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">label_pos</span> <span class="o">=</span> <span class="n">layout_dict</span><span class="p">[</span><span class="n">layout</span><span class="p">](</span><span class="n">G</span><span class="p">)</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Figure size</span>
+    <span class="c1">#</span>
+    <span class="n">xlim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+    <span class="n">ylim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">term</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">terms</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">label_pos</span><span class="p">[</span><span class="n">term</span><span class="p">]</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+            <span class="n">x</span>
+            <span class="o">+</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="p">(</span><span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="o">+</span> <span class="mf">0.001</span> <span class="o">*</span> <span class="n">node_sizes</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="mi">300</span> <span class="o">*</span> <span class="p">(</span><span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+            <span class="n">y</span>
+            <span class="o">-</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="p">(</span><span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="o">-</span> <span class="mf">0.001</span> <span class="o">*</span> <span class="n">node_sizes</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/</span> <span class="mi">300</span> <span class="o">*</span> <span class="p">(</span><span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+            <span class="n">s</span><span class="o">=</span><span class="n">term</span><span class="p">,</span>
+            <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round,pad=0.5&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+            <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Figure size</span>
+    <span class="c1">#</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span>
+        <span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="p">(</span><span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="p">(</span><span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span>
+        <span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="p">(</span><span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="p">(</span><span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># APP</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+
+<span class="n">LEFT_PANEL_HEIGHT</span> <span class="o">=</span> <span class="s2">&quot;655px&quot;</span>
+<span class="n">RIGHT_PANEL_WIDTH</span> <span class="o">=</span> <span class="s2">&quot;1200px&quot;</span>
+<span class="n">PANE_HEIGHTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;80px&quot;</span><span class="p">,</span> <span class="s2">&quot;720px&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="n">COLUMNS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Authors&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Countries&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Institutions&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Author_Keywords&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Index_Keywords&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Abstract_words_CL&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Abstract_words&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Title_words_CL&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Title_words&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Affiliations&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Author_Keywords_CL&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Index_Keywords_CL&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">__TAB0__</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">limit_to</span><span class="p">,</span> <span class="n">exclude</span><span class="p">):</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1">#</span>
+    <span class="c1"># UI</span>
+    <span class="c1">#</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="n">left_panel</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="c1"># 0</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;view&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;View:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Matrix&quot;</span><span class="p">,</span> <span class="s2">&quot;Network&quot;</span><span class="p">],</span> <span class="n">disable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;90%&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 1</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;term&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Term to analyze:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="n">z</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">COLUMNS</span> <span class="k">if</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span>
+                <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">disabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;90%&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 2</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;n_components&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Number of factors:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">21</span><span class="p">)),</span>
+                <span class="n">value</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">disabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;90%&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 3</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;cmap&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Colormap:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="n">COLORMAPS</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;90%&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 4</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;top_by&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Top by:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Values&quot;</span><span class="p">,</span> <span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;Times Cited&quot;</span><span class="p">],</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;90%&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 5</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;top_n&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Top N:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">5</span><span class="p">)),</span>
+                <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;90%&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 6</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;sort_by&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Sort by:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Alphabetic&quot;</span><span class="p">,</span> <span class="s2">&quot;Num Documents/Times Cited&quot;</span><span class="p">,</span> <span class="s2">&quot;Factor&quot;</span><span class="p">,],</span>
+                <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;90%&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 7</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;ascending&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Ascending :&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;90%&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1">#  8</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;layout&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Map layout:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="p">[</span>
+                    <span class="s2">&quot;Circular&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Kamada Kawai&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Planar&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Random&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Spectral&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Spring&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Shell&quot;</span><span class="p">,</span>
+                <span class="p">],</span>
+                <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;90%&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 9</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;width&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Width&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;90%&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># 10</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;arg&quot;</span><span class="p">:</span> <span class="s2">&quot;height&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;Height&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widget&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ensure_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;90%&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">]</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1">#</span>
+    <span class="c1"># Logic</span>
+    <span class="c1">#</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">server</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1">#</span>
+        <span class="n">view</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;view&quot;</span><span class="p">]</span>
+        <span class="n">term</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;term&quot;</span><span class="p">]</span>
+        <span class="n">n_components</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;n_components&quot;</span><span class="p">])</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cmap&quot;</span><span class="p">]</span>
+        <span class="n">top_by</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;top_by&quot;</span><span class="p">]</span>
+        <span class="n">top_n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;top_n&quot;</span><span class="p">])</span>
+        <span class="n">sort_by</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;sort_by&quot;</span><span class="p">]</span>
+        <span class="n">ascending</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;ascending&quot;</span><span class="p">]</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">]</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;width&quot;</span><span class="p">])</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">])</span>
+
+        <span class="n">left_panel</span><span class="p">[</span><span class="mi">6</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;Alphabetic&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Num Documents&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Times Cited&quot;</span><span class="p">,</span>
+        <span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;F</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_components</span><span class="p">)]</span>
+
+        <span class="n">left_panel</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">top_by</span> <span class="o">==</span> <span class="s2">&quot;Values&quot;</span> <span class="k">else</span> <span class="kc">False</span>
+        <span class="n">left_panel</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">view</span> <span class="o">==</span> <span class="s2">&quot;Network&quot;</span> <span class="k">else</span> <span class="kc">True</span>
+        <span class="n">left_panel</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">view</span> <span class="o">==</span> <span class="s2">&quot;Network&quot;</span> <span class="k">else</span> <span class="kc">True</span>
+        <span class="n">left_panel</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">disabled</span> <span class="o">=</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">view</span> <span class="o">==</span> <span class="s2">&quot;Network&quot;</span> <span class="k">else</span> <span class="kc">True</span>
+
+        <span class="n">output</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">display</span><span class="p">(</span>
+                <span class="n">factor_analysis</span><span class="p">(</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                    <span class="n">column</span><span class="o">=</span><span class="n">term</span><span class="p">,</span>
+                    <span class="n">output</span><span class="o">=</span><span class="n">view</span><span class="p">,</span>
+                    <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span>
+                    <span class="n">top_by</span><span class="o">=</span><span class="n">top_by</span><span class="p">,</span>
+                    <span class="n">top_n</span><span class="o">=</span><span class="n">top_n</span><span class="p">,</span>
+                    <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span>
+                    <span class="n">sort_by</span><span class="o">=</span><span class="n">sort_by</span><span class="p">,</span>
+                    <span class="n">ascending</span><span class="o">=</span><span class="n">ascending</span><span class="p">,</span>
+                    <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+                    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span>
+                    <span class="n">limit_to</span><span class="o">=</span><span class="n">limit_to</span><span class="p">,</span>
+                    <span class="n">exclude</span><span class="o">=</span><span class="n">exclude</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="c1">#</span>
+    <span class="c1"># Generic</span>
+    <span class="c1">#</span>
+    <span class="c1"># -------------------------------------------------------------------------</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="n">control</span><span class="p">[</span><span class="s2">&quot;arg&quot;</span><span class="p">]:</span> <span class="n">control</span><span class="p">[</span><span class="s2">&quot;widget&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">control</span> <span class="ow">in</span> <span class="n">left_panel</span><span class="p">}</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">output</span><span class="p">:</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">widgets</span><span class="o">.</span><span class="n">interactive_output</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">args</span><span class="p">,))</span>
+    <span class="c1">#</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">GridspecLayout</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="c1"># Left panel</span>
+    <span class="c1">#</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">left_panel</span><span class="p">)):</span>
+        <span class="n">grid</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">left_panel</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="s2">&quot;desc&quot;</span><span class="p">]),</span>
+                <span class="n">left_panel</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="s2">&quot;widget&quot;</span><span class="p">],</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="c1"># Output</span>
+    <span class="c1">#</span>
+    <span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">output</span><span class="p">],</span> <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="s2">&quot;650px&quot;</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="s2">&quot;2px solid gray&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">grid</span>
+
+
+<div class="viewcode-block" id="app"><a class="viewcode-back" href="../../factor_analysis.html#techminer.factor_analysis.app">[docs]</a><span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">limit_to</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tab</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Jupyter Lab dashboard.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">app_title</span> <span class="o">=</span> <span class="s2">&quot;Factor Analysis&quot;</span>
+    <span class="n">tab_titles</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;Factor Analysis&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">tab_list</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">__TAB0__</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">limit_to</span><span class="o">=</span><span class="n">limit_to</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="n">exclude</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">tab</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">AppLayout</span><span class="p">(</span>
+            <span class="n">header</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span>
+                <span class="n">value</span><span class="o">=</span><span class="s2">&quot;&lt;h1&gt;</span><span class="si">{}</span><span class="s2">&lt;/h1&gt;&lt;hr style=&#39;height:2px;border-width:0;color:gray;background-color:gray&#39;&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">app_title</span> <span class="o">+</span> <span class="s2">&quot; / &quot;</span> <span class="o">+</span> <span class="n">tab_titles</span><span class="p">[</span><span class="n">tab</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="p">),</span>
+            <span class="n">center</span><span class="o">=</span><span class="n">tab_list</span><span class="p">[</span><span class="n">tab</span><span class="p">],</span>
+            <span class="n">pane_heights</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;80px&quot;</span><span class="p">,</span> <span class="s2">&quot;660px&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># tamaño total de la ventana: Ok!</span>
+        <span class="p">)</span>
+
+    <span class="n">body</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Tab</span><span class="p">()</span>
+    <span class="n">body</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">tab_list</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tab_list</span><span class="p">)):</span>
+        <span class="n">body</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">tab_titles</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">AppLayout</span><span class="p">(</span>
+        <span class="n">header</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span>
+            <span class="n">value</span><span class="o">=</span><span class="s2">&quot;&lt;h1&gt;</span><span class="si">{}</span><span class="s2">&lt;/h1&gt;&lt;hr style=&#39;height:2px;border-width:0;color:gray;background-color:gray&#39;&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">app_title</span>
+            <span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">center</span><span class="o">=</span><span class="n">body</span><span class="p">,</span>
+        <span class="n">pane_heights</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;80px&quot;</span><span class="p">,</span> <span class="s2">&quot;720px&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">)</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="kn">import</span> <span class="nn">doctest</span>
+
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
