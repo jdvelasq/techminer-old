@@ -799,7 +799,7 @@ def slope_chart(
     return fig
 
 
-def co_occurrence_app(x, limit_to, exclude):
+def __TAB0__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -1147,7 +1147,7 @@ def co_occurrence_app(x, limit_to, exclude):
     # Output
     #
     grid[0:, 1:] = widgets.VBox(
-        [output], layout=Layout(height="657px", border="2px solid gray")
+        [output], layout=Layout(height="650px", border="2px solid gray")
     )
 
     return grid
@@ -1591,7 +1591,7 @@ def occurrence_chord_diagram(
     return cd.plot(figsize=figsize)
 
 
-def occurrence_app(x, limit_to, exclude):
+def __TAB1__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -2147,35 +2147,41 @@ LEFT_PANEL_HEIGHT = "710px"
 RIGHT_PANEL_WIDTH = "1200px"
 PANE_HEIGHTS = ["80px", "770px", 0]
 
-#
-#
-#  Co-occurrence Matrix
-#
-#
 
-
-#
-#
-#  Occurrence Network
-#
-#
-
-
-def app(df, limit_to=None, exclude=None):
+def app(data, limit_to=None, exclude=None, tab=None):
     """Jupyter Lab dashboard.
     """
-    #
+    app_title = "Co-occurrence Analysis"
+    tab_titles = [
+        "Co-occurrence Matrix",
+        "Occurrence Matrix",
+    ]
+    tab_list = [
+        __TAB0__(data, limit_to=limit_to, exclude=exclude),
+        __TAB1__(data, limit_to=limit_to, exclude=exclude),
+    ]
+
+    if tab is not None:
+        return AppLayout(
+            header=widgets.HTML(
+                value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+                    app_title + " / " + tab_titles[tab]
+                )
+            ),
+            center=tab_list[tab],
+            pane_heights=["80px", "660px", 0],  # tamaño total de la ventana: Ok!
+        )
+
     body = widgets.Tab()
-    body.children = [__TAB0__(df, limit_to, exclude), __TAB1__(df, limit_to, exclude)]
-    body.set_title(0, "Co-occurrence")
-    body.set_title(1, "Occurrence")
-    #
+    body.children = tab_list
+    for i in range(len(tab_list)):
+        body.set_title(i, tab_titles[i])
     return AppLayout(
         header=widgets.HTML(
             value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                "Co-occurrence Analysis"
+                app_title
             )
         ),
         center=body,
-        pane_heights=PANE_HEIGHTS,
+        pane_heights=["80px", "720px", 0],
     )
