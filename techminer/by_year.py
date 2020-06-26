@@ -226,7 +226,7 @@ def analytics(
 #
 
 
-def __TAB0__(data, tab=False):
+def __TAB0__(data):
     #
     #
     #  UI --- Left panel
@@ -399,7 +399,7 @@ def app(data, tab=None):
     app_title = "Analysis per Year"
     tab_titles = ["Time Analysis"]
     tab_list = [
-        __TAB0__(data, tab=None),
+        __TAB0__(data),
     ]
 
     if tab is not None:
@@ -416,7 +416,7 @@ def app(data, tab=None):
     body = widgets.Tab()
     body.children = tab_list
     for i in range(len(tab_list)):
-        body.set_title(0, tab_titles[i])
+        body.set_title(i, tab_titles[i])
     return AppLayout(
         header=widgets.HTML(
             value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(

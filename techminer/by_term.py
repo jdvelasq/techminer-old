@@ -391,7 +391,7 @@ RIGHT_PANEL_WIDTH = "1200px"
 PANE_HEIGHTS = ["80px", "720px", 0]
 
 
-def by_term_app(data, limit_to, exclude):
+def __TAB0__(data, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -562,18 +562,18 @@ def by_term_app(data, limit_to, exclude):
     with output:
         display(widgets.interactive_output(server, args))
 
-    grid = GridspecLayout(10, 8)
+    grid = GridspecLayout(10, 8, height="650px")
     #
-    grid[0, :] = widgets.HTML(
-        value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-            "By Term Analysis"
-        )
-    )
+    #  grid[0, :] = widgets.HTML(
+    #    value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+    #          "By Term Analysis"
+    #     )
+    #  )
     #
     # Left panel
     #
     for index in range(len(left_panel)):
-        grid[index + 1, 0] = widgets.VBox(
+        grid[index, 0] = widgets.VBox(
             [
                 widgets.Label(value=left_panel[index]["desc"]),
                 left_panel[index]["widget"],
@@ -582,7 +582,9 @@ def by_term_app(data, limit_to, exclude):
     #
     # Output
     #
-    grid[1:, 1:] = widgets.VBox([output], layout=Layout(border="2px solid gray"))
+    grid[0:, 1:] = widgets.VBox(
+        [output], layout=Layout(height="650px", border="2px solid gray")
+    )
 
     return grid
 
@@ -591,7 +593,7 @@ def by_term_app(data, limit_to, exclude):
 #
 #
 #
-def worldmap_app(data, limit_to=None, exclude=None):
+def __TAB1__(data):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -674,18 +676,18 @@ def worldmap_app(data, limit_to=None, exclude=None):
     with output:
         display(widgets.interactive_output(server, args,))
     #
-    grid = GridspecLayout(10, 8)
+    grid = GridspecLayout(8, 8)
     #
-    grid[0, :] = widgets.HTML(
-        value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-            "Woldmap"
-        )
-    )
+    # grid[0, :] = widgets.HTML(
+    #     value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+    #         "Woldmap"
+    #     )
+    # )
     #
     # Left panel
     #
     for index in range(len(left_panel)):
-        grid[index + 1, 0] = widgets.VBox(
+        grid[index, 0] = widgets.VBox(
             [
                 widgets.Label(value=left_panel[index]["desc"]),
                 left_panel[index]["widget"],
@@ -694,8 +696,8 @@ def worldmap_app(data, limit_to=None, exclude=None):
     #
     # Output
     #
-    grid[1:, 1:] = widgets.VBox(
-        [output], layout=Layout(height="657px", border="2px solid gray")
+    grid[0:, 1:] = widgets.VBox(
+        [output], layout=Layout(height="650px", border="2px solid gray")
     )
 
     return grid
@@ -771,15 +773,16 @@ def core_authors(data):
 #  Panel 2
 #
 #
-# def core_authors_app(data):
-#     output = widgets.Output()
-#     with output:
-#         display(core_authors(data).head(50))
-#     grid = GridspecLayout(10, 8)
-#     grid[1:, 0:] = widgets.VBox(
-#         [output], layout=Layout(height="657px", border="2px solid gray")
-#     )
-#     return grid
+def __TAB2__(data):
+    output = widgets.Output()
+    with output:
+        display(core_authors(data).head(50))
+    grid = GridspecLayout(8, 8)
+    grid[0:, 0:] = widgets.VBox(
+        [output], layout=Layout(height="650px", border="2px solid gray")
+    )
+    return grid
+
 
 #
 #
@@ -840,22 +843,23 @@ def core_source_titles(data):
     return m
 
 
-# def app(data):
-#     output = widgets.Output()
-#     with output:
-#         display(core_source_titles(data))
-#     grid = GridspecLayout(10, 8)
-#     grid[0, :] = (
-#         widgets.HTML(
-#             value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-#                 "Core source titles"
-#             )
-#         ),
-#     )
-#     grid[1:, 0:] = widgets.VBox(
-#         [output], layout=Layout(height="657px", border="2px solid gray")
-#     )
-#     return grid
+def __TAB3__(data):
+    output = widgets.Output()
+    with output:
+        display(core_source_titles(data))
+    grid = GridspecLayout(8, 8)
+    # grid[0, :] = (
+    #     widgets.HTML(
+    #         value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+    #             "Core source titles"
+    #         )
+    #     ),
+    # )
+    grid[:, :] = widgets.VBox(
+        [output], layout=Layout(height="650px", border="2px solid gray")
+    )
+    return grid
+
 
 #
 #
@@ -882,26 +886,70 @@ def top_documents(data):
     return data
 
 
-# def __APP4__(data):
-#     """
-#     # >>> import pandas as pd
-#     # >>> data = pd.DataFrame(
-#     # ...     {
-#     # ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
-#     # ...          "Times_Cited": list(range(10,16)),
-#     # ...          "ID": list(range(6)),
-#     # ...     }
-#     # ... )
-#     # >>> __APP4__(data)
+def __TAB4__(data):
+    """
+    # >>> import pandas as pd
+    # >>> data = pd.DataFrame(
+    # ...     {
+    # ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
+    # ...          "Times_Cited": list(range(10,16)),
+    # ...          "ID": list(range(6)),
+    # ...     }
+    # ... )
+    # >>> __APP4__(data)
 
 
-#     """
-#     output = widgets.Output()
-#     with output:
-#         display(result)
-#     grid = GridspecLayout(10, 8)
-#     grid[0:, 0:] = widgets.VBox(
-#         [output], layout=Layout(height="657px", border="2px solid gray")
-#     )
-#     return grid
+    """
+    output = widgets.Output()
+    with output:
+        display(top_documents(data))
+    grid = GridspecLayout(10, 8)
+    grid[0:, 0:] = widgets.VBox(
+        [output], layout=Layout(height="650px", border="2px solid gray")
+    )
+    return grid
 
+
+def app(data, limit_to=None, exclude=None, tab=None):
+    """Jupyter Lab dashboard.
+    """
+    app_title = "Analysis by Term"
+    tab_titles = [
+        "Term Analysis",
+        "Worldmap",
+        "Core Authors",
+        "Core Source titles",
+        "Top Documentes",
+    ]
+    tab_list = [
+        __TAB0__(data, limit_to=limit_to, exclude=exclude),
+        __TAB1__(data),
+        __TAB2__(data),
+        __TAB3__(data),
+        __TAB4__(data),
+    ]
+
+    if tab is not None:
+        return AppLayout(
+            header=widgets.HTML(
+                value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+                    app_title + " / " + tab_titles[tab]
+                )
+            ),
+            center=tab_list[tab],
+            pane_heights=["80px", "660px", 0],  # tamaño total de la ventana: Ok!
+        )
+
+    body = widgets.Tab()
+    body.children = tab_list
+    for i in range(len(tab_list)):
+        body.set_title(i, tab_titles[i])
+    return AppLayout(
+        header=widgets.HTML(
+            value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+                app_title
+            )
+        ),
+        center=body,
+        pane_heights=["80px", "720px", 0],
+    )
