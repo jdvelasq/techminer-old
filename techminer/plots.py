@@ -1267,7 +1267,12 @@ def stacked_barh(
 
         kwargs["color"] = cmap((0.3 + 0.50 * icol / (len(X.columns) - 1)))
         ax.barh(
-            y=range(len(X)), width=X[col], height=height, label=col, **kwargs,
+            y=range(len(X)),
+            width=X[col],
+            height=height,
+            left=left,
+            label=col,
+            **kwargs,
         )
         left = left + X[col]
 
