@@ -569,7 +569,7 @@ def analytics(
 ##  Analytics by Value
 ##
 ##
-def by_value_app(data, limit_to=None, exclude=None):
+def __TAB0__(data, limit_to=None, exclude=None):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -687,18 +687,18 @@ def by_value_app(data, limit_to=None, exclude=None):
     with output:
         display(widgets.interactive_output(server, args,))
 
-    grid = GridspecLayout(10, 8)
+    grid = GridspecLayout(8, 8)
 
-    grid[0, :] = widgets.HTML(
-        value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-            "By Term per Year (Values)"
-        )
-    )
+    # grid[0, :] = widgets.HTML(
+    #     value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+    #         "By Term per Year (Values)"
+    #     )
+    # )
     #
     # Left panel
     #
     for index in range(len(left_panel)):
-        grid[index + 1, 0] = widgets.VBox(
+        grid[index, 0] = widgets.VBox(
             [
                 widgets.Label(value=left_panel[index]["desc"]),
                 left_panel[index]["widget"],
@@ -707,8 +707,8 @@ def by_value_app(data, limit_to=None, exclude=None):
     #
     # Output
     #
-    grid[1:, 1:] = widgets.VBox(
-        [output], layout=Layout(height="657px", border="2px solid gray")
+    grid[0:, 1:] = widgets.VBox(
+        [output], layout=Layout(height="650px", border="2px solid gray")
     )
 
     return grid
@@ -719,7 +719,7 @@ def by_value_app(data, limit_to=None, exclude=None):
 ##  Analytics by time matrix
 ##
 ##
-def by_time_app(data, limit_to=None, exclude=None):
+def __TAB1__(data, limit_to=None, exclude=None):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -857,18 +857,18 @@ def by_time_app(data, limit_to=None, exclude=None):
     with output:
         display(widgets.interactive_output(server, args,))
     #
-    grid = GridspecLayout(10, 8)
+    grid = GridspecLayout(9, 8)
     #
-    grid[0, :] = widgets.HTML(
-        value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-            "By Term per Year (Time)"
-        )
-    )
+    # grid[0, :] = widgets.HTML(
+    #     value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+    #         "By Term per Year (Time)"
+    #     )
+    # )
     #
     # Left panel
     #
     for index in range(len(left_panel)):
-        grid[index + 1, 0] = widgets.VBox(
+        grid[index, 0] = widgets.VBox(
             [
                 widgets.Label(value=left_panel[index]["desc"]),
                 left_panel[index]["widget"],
@@ -877,7 +877,7 @@ def by_time_app(data, limit_to=None, exclude=None):
     #
     # Output
     #
-    grid[1:, 1:] = widgets.VBox(
+    grid[:, 1:] = widgets.VBox(
         [output], layout=Layout(height="657px", border="2px solid gray")
     )
 
@@ -1106,7 +1106,7 @@ def growth_indicators(x, column, timewindow=2, top_n=None, limit_to=None, exclud
     return result
 
 
-def growth_app(x, limit_to=None, exclude=None):
+def __TAB2__(x, limit_to=None, exclude=None):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -1278,19 +1278,19 @@ def growth_app(x, limit_to=None, exclude=None):
     with output:
         display(widgets.interactive_output(server, args,))
 
-    grid = GridspecLayout(10, 8)
+    grid = GridspecLayout(8, 8)
 
-    grid[0, :] = widgets.HTML(
-        value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-            "Growth Indicators"
-        )
-    )
+    # grid[0, :] = widgets.HTML(
+    #     value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+    #         "Growth Indicators"
+    #     )
+    # )
 
     #
     # Left panel
     #
     for index in range(len(left_panel)):
-        grid[index + 1, 0] = widgets.VBox(
+        grid[index, 0] = widgets.VBox(
             [
                 widgets.Label(value=left_panel[index]["desc"]),
                 left_panel[index]["widget"],
@@ -1299,33 +1299,51 @@ def growth_app(x, limit_to=None, exclude=None):
     #
     # Output
     #
-    grid[1:, 1:] = widgets.VBox([output], layout=Layout(border="2px solid gray"))
+    grid[0:, 1:] = widgets.VBox(
+        [output], layout=Layout(height="650px", border="2px solid gray")
+    )
 
     return grid
 
 
-def app(df, limit_to=None, exclude=None):
+def app(data, limit_to=None, exclude=None, tab=None):
     """Jupyter Lab dashboard.
     """
-    #
-    body = widgets.Tab()
-    body.children = [
-        __APP0__(df, limit_to, exclude),
-        __APP1__(df, limit_to, exclude),
-        __APP2__(df, limit_to, exclude),
+    app_title = "Analysis by Term per Year"
+    tab_titles = [
+        "Matrix Values",
+        "Top terms",
+        "Growth Indicators",
     ]
-    body.set_title(0, "Analysis by Value")
-    body.set_title(1, "Analysis by Time")
-    body.set_title(2, "Growth Indicators")
-    #
+    tab_list = [
+        __TAB0__(data, limit_to=limit_to, exclude=exclude),
+        __TAB1__(data),
+        __TAB2__(data),
+    ]
+
+    if tab is not None:
+        return AppLayout(
+            header=widgets.HTML(
+                value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+                    app_title + " / " + tab_titles[tab]
+                )
+            ),
+            center=tab_list[tab],
+            pane_heights=["80px", "660px", 0],  # tamaño total de la ventana: Ok!
+        )
+
+    body = widgets.Tab()
+    body.children = tab_list
+    for i in range(len(tab_list)):
+        body.set_title(i, tab_titles[i])
     return AppLayout(
         header=widgets.HTML(
             value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                "Summary by Term per Year"
+                app_title
             )
         ),
         center=body,
-        pane_heights=PANE_HEIGHTS,
+        pane_heights=["80px", "720px", 0],
     )
 
 
