@@ -118,44 +118,90 @@ def factor_analysis(
         result, columns=["F" + str(i) for i in range(n_components)], index=terms
     )
 
+    if isinstance(top_by, str):
+        top_by = top_by.replace(" ", "_")
+        top_by = {"Values": -1, "Num_Documents": 0, "Times_Cited": 1,}[top_by]
+
     #
     # top by
     #
-    summ = by_term.analytics(
-        data=x,
-        column=column,
-        output=0,
-        top_by=top_by,
-        top_n=top_n,
-        sort_by=top_by,
-        ascending=ascending,
-        limit_to=limit_to,
-        exclude=exclude,
-    )
-    result = result.loc[summ.index, :]
+    limit = 0.25
+    if top_by == -1:
+
+        max_by_rows = result.max(axis=1)
+        max_by_rows = max_by_rows[(max_by_rows >= limit) | (max_by_rows <= -limit)]
+        if len(max_by_rows) < 5:
+            limit = 0.10
+            max_by_rows = result.max(axis=1)
+            max_by_rows = max_by_rows[(max_by_rows >= limit) | (max_by_rows <= -limit)]
+        result = result.loc[max_by_rows.index, :]
+
+        summ = by_term.analytics(
+            data=x,
+            column=column,
+            output=0,
+            top_by=0,
+            top_n=None,
+            sort_by=0,
+            ascending=ascending,
+            limit_to=limit_to,
+            exclude=exclude,
+        )
+
+    else:
+
+        summ = by_term.analytics(
+            data=x,
+            column=column,
+            output=0,
+            top_by=top_by,
+            top_n=top_n,
+            sort_by=top_by,
+            ascending=ascending,
+            limit_to=limit_to,
+            exclude=exclude,
+        )
+
+        result = result.loc[summ.index, :]
 
     if isinstance(output, str):
         output = output.replace(" ", "_")
         output = {"Matrix": 0, "Network": 1,}[output]
 
     if output == 0:
+
+        #
+        # Rename row axis
+        #
+
+        fmt = _get_fmt(summ)
+        new_names = {
+            key: fmt.format(key, nd, tc)
+            for key, nd, tc in zip(summ.index, summ.Num_Documents, summ.Times_Cited)
+        }
+        #
+
+        #  new_names = {key: value for key, value in zip(summ.index, summ[top_by])}
+        result.index = [new_names[idx] for idx in result.index.tolist()]
+
         #
         # top_by
         #
         if sort_by == "Alphabetic":
             result = result.sort_index(axis=0, ascending=ascending)
 
-        if sort_by == "Num Documents/Times Cited":
-            pass
+        if sort_by == "Num Documents":
+            terms = result.index.tolist()
+            terms = sorted(terms, reverse=not ascending, key=_get_num_documents)
+            result = result.loc[terms, :]
+
+        if sort_by == "Times Cited":
+            terms = result.index.tolist()
+            terms = sorted(terms, reverse=not ascending, key=_get_times_cited)
+            result = result.loc[terms, :]
 
         if sort_by in ["F{}".format(i) for i in range(n_components)]:
             result = result.sort_values(sort_by, ascending=ascending)
-
-        top_by = top_by.replace(" ", "_")
-        new_names = {key: value for key, value in zip(summ.index, summ[top_by])}
-        result.index = [
-            "{} [{}]".format(idx, new_names[idx]) for idx in result.index.tolist()
-        ]
 
         if cmap is None:
             return result
@@ -166,6 +212,24 @@ def factor_analysis(
         return factor_map(
             matrix=result, summary=summ, layout=layout, cmap=cmap, figsize=figsize,
         )
+
+
+def _get_num_documents(x):
+    z = x.split(" ")[-1]
+    z = z.split(":")
+    return z[0] + z[1] + x
+
+
+def _get_times_cited(x):
+    z = x.split(" ")[-1]
+    z = z.split(":")
+    return z[1] + z[0] + x
+
+
+def _get_fmt(summ):
+    n_Num_Documents = int(np.log10(summ["Num_Documents"].max())) + 1
+    n_Times_Cited = int(np.log10(summ["Times_Cited"].max())) + 1
+    return "{} {:0" + str(n_Num_Documents) + "d}:{:0" + str(n_Times_Cited) + "d}"
 
 
 def factor_map(matrix, summary, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)):
@@ -424,7 +488,8 @@ def __TAB0__(data, limit_to, exclude):
             "arg": "top_by",
             "desc": "Top by:",
             "widget": widgets.Dropdown(
-                options=["Num Documents", "Times Cited"], layout=Layout(width="90%"),
+                options=["Values", "Num Documents", "Times Cited"],
+                layout=Layout(width="90%"),
             ),
         },
         # 5
@@ -510,9 +575,11 @@ def __TAB0__(data, limit_to, exclude):
 
         left_panel[6]["widget"].options = [
             "Alphabetic",
-            "Num Documents/Times Cited",
+            "Num Documents",
+            "Times Cited",
         ] + ["F{}".format(i) for i in range(n_components)]
 
+        left_panel[5]["widget"].disabled = True if top_by == "Values" else False
         left_panel[-3]["widget"].disabled = False if view == "Network" else True
         left_panel[-2]["widget"].disabled = False if view == "Network" else True
         left_panel[-1]["widget"].disabled = False if view == "Network" else True
