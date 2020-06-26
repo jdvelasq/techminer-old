@@ -1037,72 +1037,93 @@ def growth_indicators(x, column, timewindow=2, top_n=None, limit_to=None, exclud
 
     """
 
-    def compute_agr():
-        result = num_documents_by_term_per_year(
-            x, column=column, limit_to=limit_to, exclude=exclude
+    def average_growth_rate():
+        #
+        #         sum_{i=Y_start}^Y_end  Num_Documents[i] - Num_Documents[i-1]
+        #  AGR = --------------------------------------------------------------
+        #                          Y_end - Y_start + 1
+        #
+        #
+        result = analytics(
+            data=x, column=column, limit_to=limit_to, exclude=exclude, top_by=0,
         )
-        years_agr = sorted(set(result.Year))[-(timewindow + 1) :]
-        years_agr = [years_agr[0], years_agr[-1]]
-        result = result[result.Year.map(lambda w: w in years_agr)]
-        result.pop("ID")
+        #  result.pop("ID")
+
+        years_AGR = sorted(set(result.Year))[-(timewindow + 1) :]
+        years_AGR = [years_AGR[0], years_AGR[-1]]
+        result = result[result.Year.map(lambda w: w in years_AGR)]
         result = pd.pivot_table(
-            result, columns="Year", index=column, values="Num_Documents", fill_value=0,
+            result,
+            columns="Year",
+            index=column,
+            values="Num_Documents_per_Year",
+            fill_value=0,
         )
         result["AGR"] = 0.0
         result = result.assign(
-            AGR=(result[years_agr[1]] - result[years_agr[0]]) / (timewindow + 1)
+            AGR=(result[years_AGR[1]] - result[years_AGR[0]]) / timewindow
         )
-        result.pop(years_agr[0])
-        result.pop(years_agr[1])
+        result.pop(years_AGR[0])
+        result.pop(years_AGR[1])
         result.columns = list(result.columns)
         result = result.sort_values(by=["AGR", column], ascending=False)
         result.reset_index(drop=True)
         return result
 
-    def compute_ady():
-        result = num_documents_by_term_per_year(
-            x, column=column, limit_to=limit_to, exclude=exclude
+    def average_documents_per_year():
+        #
+        #         sum_{i=Y_start}^Y_end  Num_Documents[i]
+        #  AGR = -----------------------------------------
+        #                  Y_end - Y_start + 1
+        #
+        result = analytics(
+            data=x, column=column, limit_to=limit_to, exclude=exclude, top_by=0
         )
-        years_ady = sorted(set(result.Year))[-timewindow:]
-        result = result[result.Year.map(lambda w: w in years_ady)]
-        result = result.groupby([column], as_index=False).agg({"Num_Documents": np.sum})
-        result = result.rename(columns={"Num_Documents": "ADY"})
+        years_ADY = sorted(set(result.Year))[-timewindow:]
+        result = result[result.Year.map(lambda w: w in years_ADY)]
+        result = result.groupby([column], as_index=False).agg(
+            {"Num_Documents_per_Year": np.sum}
+        )
+        result = result.rename(columns={"Num_Documents_per_Year": "ADY"})
         result["ADY"] = result.ADY.map(lambda w: w / timewindow)
         result = result.reset_index(drop=True)
         return result
 
     def compute_num_documents():
-        result = num_documents_by_term_per_year(
-            x, column=column, limit_to=limit_to, exclude=exclude
+        result = analytics(
+            data=x, column=column, limit_to=limit_to, exclude=exclude, top_by=0
         )
         years_between = sorted(set(result.Year))[-timewindow:]
         years_before = sorted(set(result.Year))[0:-timewindow]
         between = result[result.Year.map(lambda w: w in years_between)]
         before = result[result.Year.map(lambda w: w in years_before)]
         between = between.groupby([column], as_index=False).agg(
-            {"Num_Documents": np.sum}
+            {"Num_Documents_per_Year": np.sum}
         )
         between = between.rename(
             columns={
-                "Num_Documents": "Between {}-{}".format(
+                "Num_Documents_per_Year": "Between {}-{}".format(
                     years_between[0], years_between[-1]
                 )
             }
         )
-        before = before.groupby([column], as_index=False).agg({"Num_Documents": np.sum})
+        before = before.groupby([column], as_index=False).agg(
+            {"Num_Documents_per_Year": np.sum}
+        )
         before = before.rename(
-            columns={"Num_Documents": "Before {}".format(years_between[0])}
+            columns={"Num_Documents_per_Year": "Before {}".format(years_between[0])}
         )
         result = pd.merge(before, between, on=column)
         return result
 
-    result = compute_agr()
-    ady = compute_ady()
+    result = average_growth_rate()
+    ady = average_documents_per_year()
     result = pd.merge(result, ady, on=column)
     result = result.assign(PDLY=round(result.ADY / len(x) * 100, 2))
     num_docs = compute_num_documents()
     result = pd.merge(result, num_docs, on=column)
     result = result.reset_index(drop=True)
+    result = result.set_index(column)
     return result
 
 
@@ -1218,43 +1239,38 @@ def __TAB2__(x, limit_to=None, exclude=None):
         with output:
             if analysis_type == "Average Growth Rate":
                 df = df.sort_values("AGR", ascending=False).head(top_n)
-                df = df.reset_index(drop=True)
+                #  df = df.reset_index(drop=True)
                 display(
                     plot(
-                        df[[term, "AGR"]],
+                        df["AGR"],
+                        darkness=None,
                         cmap=cmap,
                         figsize=(figsize_width, figsize_height),
                     )
                 )
             if analysis_type == "Average Documents per Year":
                 df = df.sort_values("ADY", ascending=False).head(top_n)
-                df = df.reset_index(drop=True)
+                #  df = df.reset_index(drop=True)
                 display(
-                    plot(
-                        df[[term, "ADY"]],
-                        cmap=cmap,
-                        figsize=(figsize_width, figsize_height),
-                    )
+                    plot(df["ADY"], cmap=cmap, figsize=(figsize_width, figsize_height),)
                 )
             if analysis_type == "Percentage of Documents in Last Years":
                 df = df.sort_values("PDLY", ascending=False).head(top_n)
-                df = df.reset_index(drop=True)
+                #  df = df.reset_index(drop=True)
                 display(
                     plot(
-                        df[[term, "PDLY"]],
-                        cmap=cmap,
-                        figsize=(figsize_width, figsize_height),
+                        df["PDLY"], cmap=cmap, figsize=(figsize_width, figsize_height),
                     )
                 )
             if analysis_type == "Number of Document Published":
                 df["Num_Documents"] = df[df.columns[-2]] + df[df.columns[-1]]
                 df = df.sort_values("Num_Documents", ascending=False).head(top_n)
-                df = df.reset_index(drop=True)
+                # df = df.reset_index(drop=True)
                 df.pop("Num_Documents")
                 if plot_type == "bar":
                     display(
                         plt.stacked_bar(
-                            df[[term, df.columns[-2], df.columns[-1]]],
+                            df[[df.columns[-2], df.columns[-1]]],
                             figsize=(figsize_width, figsize_height),
                             cmap=cmap,
                         )
@@ -1262,7 +1278,7 @@ def __TAB2__(x, limit_to=None, exclude=None):
                 if plot_type == "barh":
                     display(
                         plt.stacked_barh(
-                            df[[term, df.columns[-2], df.columns[-1]]],
+                            df[[df.columns[-2], df.columns[-1]]],
                             figsize=(figsize_width, figsize_height),
                             cmap=cmap,
                         )
