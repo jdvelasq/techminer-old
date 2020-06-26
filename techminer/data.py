@@ -489,6 +489,12 @@ def load_scopus(x):
         logging.info("Removing <NA> from Times_Cited field ...")
         x["Times_Cited"] = x["Times_Cited"].map(lambda w: 0 if pd.isna(w) else w)
 
+    if "Abb_Source_Title" in x.columns:
+        logging.info("Removing '.' from Abb_Source_Title field ...")
+        x["Abb_Source_Title"] = x["Abb_Source_Title"].map(
+            lambda w: w.replace(".", "") if isinstance(w, str) else w
+        )
+
     x["ID"] = range(len(x))
 
     x = x.applymap(lambda w: pd.NA if isinstance(w, str) and w == "" else w)
