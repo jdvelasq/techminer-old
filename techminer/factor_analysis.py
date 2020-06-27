@@ -730,23 +730,15 @@ def __TAB0__(data, limit_to, exclude):
     #
 
     for index in range(len(left_panel)):
-        if left_panel[index]["desc"] is None:
-            grid[index, 0] = widgets.HBox(
-                [left_panel[index]["widget"],],
-                layout=Layout(
-                    display="flex", align_content="center", justify_content="flex-end"
-                ),
-            )
-        else:
-            grid[index, 0] = widgets.HBox(
-                [
-                    widgets.Label(value=left_panel[index]["desc"]),
-                    left_panel[index]["widget"],
-                ],
-                layout=Layout(
-                    display="flex", justify_content="flex-end", align_content="center",
-                ),
-            )
+        grid[index, 0] = widgets.HBox(
+            [
+                widgets.Label(value=left_panel[index]["desc"]),
+                left_panel[index]["widget"],
+            ],
+            layout=Layout(
+                display="flex", justify_content="flex-end", align_content="center",
+            ),
+        )
     #
     # Output
     #
