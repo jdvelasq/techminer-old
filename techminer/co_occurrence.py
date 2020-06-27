@@ -362,18 +362,20 @@ def co_occurrence(
         top_by = 0
 
     summ = by_term.analytics(x, column)
-    if top_by == 0:
-        d = {key: value for key, value in zip(summ.index, summ["Num_Documents"])}
-    else:
-        d = {key: value for key, value in zip(summ.index, summ["Times_Cited"])}
-    result.columns = ["{} [{}]".format(t, d[t]) for t in result.columns]
+    fmt = _get_fmt(summ)
+    new_names = {
+        key: fmt.format(key, nd, tc)
+        for key, nd, tc in zip(summ.index, summ.Num_Documents, summ.Times_Cited)
+    }
+    result.columns = [new_names[w] for w in result.columns]
 
     summ = by_term.analytics(x, by)
-    if top_by == 0:
-        d = {key: value for key, value in zip(summ.index, summ["Num_Documents"])}
-    else:
-        d = {key: value for key, value in zip(summ.index, summ["Times_Cited"])}
-    result.index = ["{} [{}]".format(t, d[t]) for t in result.index]
+    fmt = _get_fmt(summ)
+    new_names = {
+        key: fmt.format(key, nd, tc)
+        for key, nd, tc in zip(summ.index, summ.Num_Documents, summ.Times_Cited)
+    }
+    result.index = [new_names[w] for w in result.index]
 
     if isinstance(output, str):
         output = output.replace(" ", "_")
@@ -429,6 +431,12 @@ def co_occurrence(
         )
 
     return result
+
+
+def _get_fmt(summ):
+    n_Num_Documents = int(np.log10(summ["Num_Documents"].max())) + 1
+    n_Times_Cited = int(np.log10(summ["Times_Cited"].max())) + 1
+    return "{} {:0" + str(n_Num_Documents) + "d}:{:0" + str(n_Times_Cited) + "d}"
 
 
 def co_occurrence_map(
