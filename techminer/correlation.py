@@ -221,6 +221,26 @@ def corr(
         ]
 
     if output == 0:
+
+        summ = by_term.analytics(
+            data=x,
+            column=column,
+            output=0,
+            top_by=0,
+            top_n=None,
+            sort_by=0,
+            ascending=ascending,
+            limit_to=limit_to,
+            exclude=exclude,
+        )
+        fmt = _get_fmt(summ)
+        new_names = {
+            key: fmt.format(key, nd, tc)
+            for key, nd, tc in zip(summ.index, summ.Num_Documents, summ.Times_Cited)
+        }
+        result.columns = [new_names[w] for w in result.columns]
+        result.index = [new_names[w] for w in result.index]
+
         if cmap is None:
             return result
         else:
@@ -251,6 +271,12 @@ def corr(
         )
 
     return result
+
+
+def _get_fmt(summ):
+    n_Num_Documents = int(np.log10(summ["Num_Documents"].max())) + 1
+    n_Times_Cited = int(np.log10(summ["Times_Cited"].max())) + 1
+    return "{} {:0" + str(n_Num_Documents) + "d}:{:0" + str(n_Times_Cited) + "d}"
 
 
 def correlation_chord_diagram(
