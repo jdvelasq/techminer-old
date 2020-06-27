@@ -728,7 +728,6 @@ def __TAB0__(data, limit_to, exclude):
     #
     # Left panel
     #
-
     for index in range(len(left_panel)):
         grid[index, 0] = widgets.HBox(
             [

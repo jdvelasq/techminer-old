@@ -583,7 +583,7 @@ def __TAB0__(data, limit_to=None, exclude=None):
             "arg": "view",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Analytics",], layout=Layout(width="90%"),
+                options=["Analytics",], layout=Layout(width="55%"),
             ),
         },
         # 1
@@ -592,7 +592,7 @@ def __TAB0__(data, limit_to=None, exclude=None):
             "desc": "Column to analyze:",
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in data.columns],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 2
@@ -606,7 +606,7 @@ def __TAB0__(data, limit_to=None, exclude=None):
                     "% Num Documents per Year",
                     "% Times Cited per Year",
                 ],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 3
@@ -616,7 +616,7 @@ def __TAB0__(data, limit_to=None, exclude=None):
             "widget": widgets.Dropdown(
                 options=list(range(5, 101, 5)),
                 ensure_option=True,
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 4
@@ -632,7 +632,7 @@ def __TAB0__(data, limit_to=None, exclude=None):
                     "% Num Documents per Year",
                     "% Times Cited per Year",
                 ],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 5
@@ -640,7 +640,7 @@ def __TAB0__(data, limit_to=None, exclude=None):
             "arg": "ascending",
             "desc": "Ascending:",
             "widget": widgets.Dropdown(
-                options=["True", "False",], layout=Layout(width="90%"),
+                options=["True", "False",], layout=Layout(width="55%"),
             ),
         },
     ]
@@ -687,22 +687,20 @@ def __TAB0__(data, limit_to=None, exclude=None):
     with output:
         display(widgets.interactive_output(server, args,))
 
-    grid = GridspecLayout(8, 8)
+    grid = GridspecLayout(13, 6)
 
-    # grid[0, :] = widgets.HTML(
-    #     value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-    #         "By Term per Year (Values)"
-    #     )
-    # )
     #
     # Left panel
     #
     for index in range(len(left_panel)):
-        grid[index, 0] = widgets.VBox(
+        grid[index, 0] = widgets.HBox(
             [
                 widgets.Label(value=left_panel[index]["desc"]),
                 left_panel[index]["widget"],
-            ]
+            ],
+            layout=Layout(
+                display="flex", justify_content="flex-end", align_content="center",
+            ),
         )
     #
     # Output
@@ -734,7 +732,7 @@ def __TAB1__(data, limit_to=None, exclude=None):
             "desc": "View:",
             "widget": widgets.Dropdown(
                 options=["Analytics", "Heatmap", "Bubble plot", "Gant"],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 1
@@ -743,7 +741,7 @@ def __TAB1__(data, limit_to=None, exclude=None):
             "desc": "Column to analyze:",
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in data.columns],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 2
@@ -757,7 +755,7 @@ def __TAB1__(data, limit_to=None, exclude=None):
                     "% Num Documents per Year",
                     "% Times Cited per Year",
                 ],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 3
@@ -767,7 +765,7 @@ def __TAB1__(data, limit_to=None, exclude=None):
             "widget": widgets.Dropdown(
                 options=list(range(5, 51, 5)),
                 ensure_option=True,
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 4
@@ -775,7 +773,7 @@ def __TAB1__(data, limit_to=None, exclude=None):
             "arg": "sort_by",
             "desc": "Sort order:",
             "widget": widgets.Dropdown(
-                options=["Alphabetic", "Values",], layout=Layout(width="90%"),
+                options=["Alphabetic", "Values",], layout=Layout(width="55%"),
             ),
         },
         # 5
@@ -783,21 +781,21 @@ def __TAB1__(data, limit_to=None, exclude=None):
             "arg": "ascending",
             "desc": "Ascending:",
             "widget": widgets.Dropdown(
-                options=["True", "False",], layout=Layout(width="90%"),
+                options=["True", "False",], layout=Layout(width="55%"),
             ),
         },
         # 6
         {
             "arg": "cmap",
             "desc": "Colormap:",
-            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="90%"),),
+            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
         },
         # 7
         {
             "arg": "width",
             "desc": "Width:",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1), layout=Layout(width="90%"),
+                options=range(5, 15, 1), layout=Layout(width="55%"),
             ),
         },
         # 8
@@ -805,7 +803,7 @@ def __TAB1__(data, limit_to=None, exclude=None):
             "arg": "height",
             "desc": "Height:",
             "widget": widgets.Dropdown(
-                options=range(3, 15, 1), layout=Layout(width="90%"),
+                options=range(3, 15, 1), layout=Layout(width="55%"),
             ),
         },
     ]
@@ -857,22 +855,19 @@ def __TAB1__(data, limit_to=None, exclude=None):
     with output:
         display(widgets.interactive_output(server, args,))
     #
-    grid = GridspecLayout(9, 8)
-    #
-    # grid[0, :] = widgets.HTML(
-    #     value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-    #         "By Term per Year (Time)"
-    #     )
-    # )
+    grid = GridspecLayout(13, 6)
     #
     # Left panel
     #
     for index in range(len(left_panel)):
-        grid[index, 0] = widgets.VBox(
+        grid[index, 0] = widgets.HBox(
             [
                 widgets.Label(value=left_panel[index]["desc"]),
                 left_panel[index]["widget"],
-            ]
+            ],
+            layout=Layout(
+                display="flex", justify_content="flex-end", align_content="center",
+            ),
         )
     #
     # Output
@@ -1132,7 +1127,7 @@ def __TAB2__(x, limit_to=None, exclude=None):
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in x.columns],
                 ensure_option=True,
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 1
@@ -1147,7 +1142,7 @@ def __TAB2__(x, limit_to=None, exclude=None):
                     "Number of Document Published",
                 ],
                 value="Average Growth Rate",
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 2
@@ -1155,7 +1150,7 @@ def __TAB2__(x, limit_to=None, exclude=None):
             "arg": "time_window",
             "desc": "Time window:",
             "widget": widgets.Dropdown(
-                options=["2", "3", "4", "5"], value="2", layout=Layout(width="90%"),
+                options=["2", "3", "4", "5"], value="2", layout=Layout(width="55%"),
             ),
         },
         # 3
@@ -1163,7 +1158,7 @@ def __TAB2__(x, limit_to=None, exclude=None):
             "arg": "plot_type",
             "desc": "Plot type:",
             "widget": widgets.Dropdown(
-                options=["bar", "barh"], layout=Layout(width="90%"),
+                options=["bar", "barh"], layout=Layout(width="55%"),
             ),
         },
         # 4
@@ -1171,7 +1166,7 @@ def __TAB2__(x, limit_to=None, exclude=None):
             "arg": "cmap",
             "desc": "Colormap:",
             "widget": widgets.Dropdown(
-                options=COLORMAPS, disable=False, layout=Layout(width="90%"),
+                options=COLORMAPS, disable=False, layout=Layout(width="55%"),
             ),
         },
         # 5
@@ -1181,7 +1176,7 @@ def __TAB2__(x, limit_to=None, exclude=None):
             "widget": widgets.Dropdown(
                 options=list(range(5, 51, 5)),
                 ensure_option=True,
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 6
@@ -1189,7 +1184,7 @@ def __TAB2__(x, limit_to=None, exclude=None):
             "arg": "figsize_width",
             "desc": "Figsize",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1), layout=Layout(width="90%"),
+                options=range(5, 15, 1), layout=Layout(width="55%"),
             ),
         },
         # 7
@@ -1197,7 +1192,7 @@ def __TAB2__(x, limit_to=None, exclude=None):
             "arg": "figsize_height",
             "desc": "Figsize",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1), layout=Layout(width="90%"),
+                options=range(5, 15, 1), layout=Layout(width="55%"),
             ),
         },
     ]
@@ -1283,23 +1278,20 @@ def __TAB2__(x, limit_to=None, exclude=None):
     with output:
         display(widgets.interactive_output(server, args,))
 
-    grid = GridspecLayout(8, 8)
-
-    # grid[0, :] = widgets.HTML(
-    #     value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-    #         "Growth Indicators"
-    #     )
-    # )
+    grid = GridspecLayout(13, 6)
 
     #
     # Left panel
     #
     for index in range(len(left_panel)):
-        grid[index, 0] = widgets.VBox(
+        grid[index, 0] = widgets.HBox(
             [
                 widgets.Label(value=left_panel[index]["desc"]),
                 left_panel[index]["widget"],
-            ]
+            ],
+            layout=Layout(
+                display="flex", justify_content="flex-end", align_content="center",
+            ),
         )
     #
     # Output
