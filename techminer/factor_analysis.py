@@ -6,15 +6,15 @@ Factor analysis
 
 """
 import ipywidgets as widgets
-import matplotlib.pyplot as pyplot
+import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import pandas as pd
+import techminer.by_term as by_term
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
+from matplotlib import colors
 from sklearn.decomposition import PCA
-
-import techminer.by_term as by_term
 from techminer.co_occurrence import document_term_matrix
 from techminer.explode import __explode
 from techminer.keywords import Keywords
@@ -255,9 +255,12 @@ def factor_analysis(
             return "Empty Matrix"
 
         if cmap is None:
-            return result
+            return result.format("{:.3f}")
         else:
-            return result.style.background_gradient(cmap=cmap, axis=None)
+            cmap = plt.cm.get_cmap(cmap)
+            return result.style.format("{:.3f}").applymap(
+                lambda w: "background-color: {}".format(colors.rgb2hex(cmap(abs(w))))
+            )
 
     if output == 1:
         return factor_map(
