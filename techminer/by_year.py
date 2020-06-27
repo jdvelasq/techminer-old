@@ -246,7 +246,7 @@ def __TAB0__(data):
                     "Cum Times Cited by Year",
                     "Avg Times Cited by Year",
                 ],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 1
@@ -254,14 +254,14 @@ def __TAB0__(data):
             "arg": "plot",
             "desc": "Plot:",
             "widget": widgets.Dropdown(
-                options=["Bar plot", "Horizontal bar plot"], layout=Layout(width="90%"),
+                options=["Bar plot", "Horizontal bar plot"], layout=Layout(width="55%"),
             ),
         },
         # 2
         {
             "arg": "cmap",
             "desc": "Colormap:",
-            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="90%"),),
+            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
         },
         # 3
         {
@@ -276,7 +276,7 @@ def __TAB0__(data):
                     "Cum_Times_Cited",
                     "Avg_Times_Cited",
                 ],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 4
@@ -284,7 +284,7 @@ def __TAB0__(data):
             "arg": "ascending",
             "desc": "Ascending:",
             "widget": widgets.Dropdown(
-                options=[True, False], layout=Layout(width="90%"),
+                options=[True, False], layout=Layout(width="55%"),
             ),
         },
         # 5
@@ -292,7 +292,7 @@ def __TAB0__(data):
             "arg": "width",
             "desc": "Width:",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1), layout=Layout(width="90%"),
+                options=range(5, 15, 1), layout=Layout(width="55%"),
             ),
         },
         # 6
@@ -300,7 +300,7 @@ def __TAB0__(data):
             "arg": "height",
             "desc": "Height:",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1), layout=Layout(width="90%"),
+                options=range(5, 15, 1), layout=Layout(width="55%"),
             ),
         },
     ]
@@ -366,22 +366,19 @@ def __TAB0__(data):
     with output:
         display(widgets.interactive_output(server, args,))
     #
-    grid = GridspecLayout(8, 8, height="650px")  ## Marco externo al negro
-    #
-    # grid[0, :] = widgets.HTML(
-    #     value="<h3>{}</h3><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-    #         "By Year Analytics"
-    #     )
-    # )
+    grid = GridspecLayout(13, 6, height="650px")  ## Marco externo al negro
     #
     # Left panel
     #
     for index in range(len(left_panel)):
-        grid[index, 0] = widgets.VBox(
+        grid[index, 0] = widgets.HBox(
             [
                 widgets.Label(value=left_panel[index]["desc"]),
                 left_panel[index]["widget"],
             ],
+            layout=Layout(
+                display="flex", justify_content="flex-end", align_content="center",
+            ),
         )
     #
     # Output
