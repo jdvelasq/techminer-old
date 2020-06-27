@@ -6,7 +6,7 @@ Factor analysis
 
 """
 import ipywidgets as widgets
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as pyplot
 import networkx as nx
 import numpy as np
 import pandas as pd
@@ -214,7 +214,7 @@ def factor_analysis(
 
     if isinstance(output, str):
         output = output.replace(" ", "_")
-        output = {"Matrix": 0, "Network": 1,}[output]
+        output = {"Matrix": 0, "Network": 1, "Network0": 2, "Table": 3}[output]
 
     if output == 0:
 
@@ -257,7 +257,7 @@ def factor_analysis(
         if cmap is None:
             return result.format("{:.3f}")
         else:
-            cmap = plt.cm.get_cmap(cmap)
+            cmap = pyplot.cm.get_cmap(cmap)
             return result.style.format("{:.3f}").applymap(
                 lambda w: "background-color: {}".format(colors.rgb2hex(cmap(abs(w))))
             )
@@ -266,6 +266,41 @@ def factor_analysis(
         return factor_map(
             matrix=result, summary=summ, layout=layout, cmap=cmap, figsize=figsize,
         )
+
+    if output == 2:
+        return factor_map_0(
+            matrix=result, summary=summ, layout=layout, cmap=cmap, figsize=figsize,
+        )
+
+    if output == 3:
+        result = result.stack().to_frame().reset_index()
+        result.columns = [column, "Factor", "Values"]
+        result = result[(result["Values"] >= 0.25) | (result["Values"] <= -0.25)]
+        result = result.sort_values(["Values"])
+        result = result.reset_index(drop=True)
+
+        fmt = _get_fmt(summ)
+        new_names = {
+            key: fmt.format(key, nd, tc)
+            for key, nd, tc in zip(summ.index, summ.Num_Documents, summ.Times_Cited)
+        }
+        #
+
+        #  new_names = {key: value for key, value in zip(summ.index, summ[top_by])}
+        result[column] = result[column].map(lambda w: new_names[w])
+
+        if sort_by == column:
+            result = result.sort_values([column], ascending=ascending)
+
+        if sort_by == "Factor":
+            result = result.sort_values(["Factor", "Values"], ascending=ascending)
+
+        if sort_by == "Values":
+            result = result.sort_values(
+                ["Values", "Factor", column], ascending=ascending
+            )
+
+        return result
 
 
 def _get_num_documents(x):
@@ -504,7 +539,9 @@ def __TAB0__(data, limit_to, exclude):
             "arg": "view",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Matrix", "Network"], disable=True, layout=Layout(width="55%"),
+                options=["Matrix", "Network", "Network0", "Table"],
+                disable=True,
+                layout=Layout(width="55%"),
             ),
         },
         # 1
@@ -628,16 +665,34 @@ def __TAB0__(data, limit_to, exclude):
         width = int(kwargs["width"])
         height = int(kwargs["height"])
 
-        left_panel[6]["widget"].options = [
-            "Alphabetic",
-            "Num Documents",
-            "Times Cited",
-        ] + ["F{}".format(i) for i in range(n_components)]
+        if view == "Table":
+
+            left_panel[6]["widget"].options = [
+                term,
+                "Factor",
+                "Values",
+            ]
+            sort_by = left_panel[6]["widget"].value
+
+        else:
+
+            left_panel[6]["widget"].options = [
+                "Alphabetic",
+                "Num Documents",
+                "Times Cited",
+            ] + ["F{}".format(i) for i in range(n_components)]
+            sort_by = left_panel[6]["widget"].value
 
         left_panel[5]["widget"].disabled = True if top_by == "Values" else False
-        left_panel[-3]["widget"].disabled = False if view == "Network" else True
-        left_panel[-2]["widget"].disabled = False if view == "Network" else True
-        left_panel[-1]["widget"].disabled = False if view == "Network" else True
+        left_panel[-3]["widget"].disabled = (
+            False if view in ["Network", "Network0"] else True
+        )
+        left_panel[-2]["widget"].disabled = (
+            False if view in ["Network", "Network0"] else True
+        )
+        left_panel[-1]["widget"].disabled = (
+            False if view in ["Network", "Network0"] else True
+        )
 
         output.clear_output()
         with output:
@@ -737,6 +792,201 @@ def app(data, limit_to=None, exclude=None, tab=None):
         center=body,
         pane_heights=["80px", "720px", 0],
     )
+
+
+#
+#
+#
+
+
+def factor_map_0(
+    matrix, summary, layout="Kamada Kawai", cmap="Greys", figsize=(17, 12)
+):
+    """
+    """
+
+    #
+    # Data preparation
+    #
+    terms = matrix.index.tolist()
+    terms = [w[: w.find("[")].strip() if "[" in w else w for w in terms]
+    terms = [w.strip() for w in terms]
+
+    num_documents = {k: v for k, v in zip(summary.index, summary["Num_Documents"])}
+    times_cited = {k: v for k, v in zip(summary.index, summary["Times_Cited"])}
+
+    #
+    # Node sizes
+    #
+    node_sizes = [num_documents[t] for t in terms]
+    if len(node_sizes) == 0:
+        node_sizes = [500] * len(terms)
+    else:
+        max_size = max(node_sizes)
+        min_size = min(node_sizes)
+        if min_size == max_size:
+            node_sizes = [500] * len(terms)
+        else:
+            node_sizes = [
+                600 + int(2500 * (w - min_size) / (max_size - min_size))
+                for w in node_sizes
+            ]
+
+    #
+    # Node colors
+    #
+
+    cmap = pyplot.cm.get_cmap(cmap)
+
+    cmaps = [pyplot.cm.get_cmap(t) for t in COLORMAPS[0 : len(matrix.columns)]]
+
+    node_colors = []
+    for t in terms:
+        node_colors.append(matrix.loc[t, :].argmax())
+
+    node_colors = [cmaps[t](0.9) for t in node_colors]
+
+    # node_colors = [times_cited[t] for t in terms]
+    # node_colors = [
+    #     cmap(0.2 + 0.75 * node_colors[i] / max(node_colors))
+    #     for i in range(len(node_colors))
+    # ]
+
+    matrix.index = terms
+
+    #
+    # Draw the network
+    #
+    fig = pyplot.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    draw_dict = {
+        "Circular": nx.draw_circular,
+        "Kamada Kawai": nx.draw_kamada_kawai,
+        "Planar": nx.draw_planar,
+        "Random": nx.draw_random,
+        "Spectral": nx.draw_spectral,
+        "Spring": nx.draw_spring,
+        "Shell": nx.draw_shell,
+    }
+    draw = draw_dict[layout]
+
+    G = nx.Graph(ax=ax)
+    G.clear()
+
+    #
+    # network nodes
+    #
+    G.add_nodes_from(terms)
+
+    #
+    # network edges
+    #
+    for idx, column in enumerate(matrix.columns):
+
+        matrix = matrix.sort_values(column, ascending=False)
+
+        x = matrix[column][matrix[column] >= 0.25]
+        # if len(x) > 1:
+        #     for t in x.index:
+        #         node_colors[t] = cmap(0.05 + 0.9 * float(idx) / len(matrix.columns))
+
+        if len(x) > 1:
+            for t0 in range(len(x.index) - 1):
+                for t1 in range(1, len(x.index)):
+                    value = 0.5 * (x[t0] + x[t1])
+                    if value >= 0.75:
+                        G.add_edge(x.index[t0], x.index[t1], width=3)
+                    elif value >= 0.50:
+                        G.add_edge(x.index[t0], x.index[t1], width=2)
+                    elif value >= 0.25:
+                        G.add_edge(x.index[t0], x.index[t1], width=1)
+        #
+        x = matrix[column][matrix[column] < -0.25]
+        # if len(x) > 1:
+        #     for t in x.index:
+        #         node_colors[t] = cmap(0.1 + 0.9 * float(idx) / len(matrix.columns))
+
+        if len(x) > 1:
+            for t0 in range(len(x.index) - 1):
+                for t1 in range(1, len(x.index)):
+                    value = 0.5 * (x[t0] + x[t1])
+                    if value <= -0.75:
+                        G.add_edge(x.index[t0], x.index[t1], width=3)
+                    elif value <= -0.50:
+                        G.add_edge(x.index[t0], x.index[t1], width=2)
+                    elif value <= -0.25:
+                        G.add_edge(x.index[t0], x.index[t1], width=1)
+
+    #
+    # network edges
+    #
+    for e in G.edges.data():
+        a, b, dic = e
+        edge = [(a, b)]
+        draw(
+            G,
+            ax=ax,
+            edgelist=edge,
+            width=dic["width"],
+            edge_color="k",
+            with_labels=False,
+            node_color=node_colors,
+            node_size=node_sizes,
+            edgecolors="k",
+            linewidths=1,
+        )
+
+    #
+    # Labels
+    #
+    layout_dict = {
+        "Circular": nx.circular_layout,
+        "Kamada Kawai": nx.kamada_kawai_layout,
+        "Planar": nx.planar_layout,
+        "Random": nx.random_layout,
+        "Spectral": nx.spectral_layout,
+        "Spring": nx.spring_layout,
+        "Shell": nx.shell_layout,
+    }
+    label_pos = layout_dict[layout](G)
+
+    #
+    # Figure size
+    #
+    xlim = ax.get_xlim()
+    ylim = ax.get_ylim()
+
+    for idx, term in enumerate(terms):
+        x, y = label_pos[term]
+        ax.text(
+            x
+            + 0.01 * (xlim[1] - xlim[0])
+            + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
+            y
+            - 0.01 * (ylim[1] - ylim[0])
+            - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
+            s=term,
+            fontsize=10,
+            bbox=dict(
+                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
+            ),
+            horizontalalignment="left",
+            verticalalignment="top",
+        )
+
+    #
+    # Figure size
+    #
+
+    ax.set_xlim(
+        xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
+    )
+    ax.set_ylim(
+        ylim[0] - 0.15 * (ylim[1] - ylim[0]), ylim[1] + 0.15 * (ylim[1] - ylim[0])
+    )
+    ax.set_aspect("equal")
+    return fig
 
 
 #
