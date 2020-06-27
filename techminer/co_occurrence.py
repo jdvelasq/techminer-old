@@ -814,7 +814,7 @@ def __TAB0__(x, limit_to, exclude):
             "desc": "View:",
             "widget": widgets.Dropdown(
                 options=["Matrix", "Heatmap", "Bubble plot", "Network", "Slope chart"],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 1
@@ -823,7 +823,7 @@ def __TAB0__(x, limit_to, exclude):
             "desc": "Column to analyze:",
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in x.columns],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 2
@@ -832,7 +832,7 @@ def __TAB0__(x, limit_to, exclude):
             "desc": "By Column:",
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS[1:] if z in x.columns],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 3
@@ -841,7 +841,7 @@ def __TAB0__(x, limit_to, exclude):
             "desc": "Top by:",
             "widget": widgets.Dropdown(
                 options=["Values", "Num Documents", "Times Cited",],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 4
@@ -849,7 +849,7 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "top_n",
             "desc": "Top N:",
             "widget": widgets.Dropdown(
-                options=list(range(5, 51, 5)), layout=Layout(width="90%"),
+                options=list(range(5, 51, 5)), layout=Layout(width="55%"),
             ),
         },
         # 5
@@ -858,7 +858,7 @@ def __TAB0__(x, limit_to, exclude):
             "desc": "Sort order:",
             "widget": widgets.Dropdown(
                 options=["Alphabetic", "Num Documents", "Times Cited",],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 6
@@ -866,20 +866,20 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "ascending",
             "desc": "Ascending:",
             "widget": widgets.Dropdown(
-                options=[True, False], layout=Layout(width="90%"),
+                options=[True, False], layout=Layout(width="55%"),
             ),
         },
         # 7
         {
             "arg": "cmap_column",
             "desc": "Colormap column/matrix:",
-            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="90%"),),
+            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
         },
         # 8
         {
             "arg": "cmap_by",
             "desc": "Colormap by:",
-            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="90%"),),
+            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
         },
         # 9
         {
@@ -895,7 +895,7 @@ def __TAB0__(x, limit_to, exclude):
                     "Spring",
                     "Shell",
                 ],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 10
@@ -903,7 +903,7 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "width",
             "desc": "Figsize",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="90%"),
+                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
             ),
         },
         # 11
@@ -911,7 +911,7 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "height",
             "desc": "Figsize",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="90%"),
+                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
             ),
         },
     ]
@@ -1132,16 +1132,19 @@ def __TAB0__(x, limit_to, exclude):
     with output:
         display(widgets.interactive_output(server, args,))
     #
-    grid = GridspecLayout(12, 8)
+    grid = GridspecLayout(13, 6)
     #
     # Left panel
     #
     for index in range(len(left_panel)):
-        grid[index, 0] = widgets.VBox(
+        grid[index, 0] = widgets.HBox(
             [
                 widgets.Label(value=left_panel[index]["desc"]),
                 left_panel[index]["widget"],
-            ]
+            ],
+            layout=Layout(
+                display="flex", justify_content="flex-end", align_content="center",
+            ),
         )
     #
     # Output
@@ -1612,7 +1615,7 @@ def __TAB1__(x, limit_to, exclude):
                     "Network",
                     "Chord diagram",
                 ],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 1
@@ -1622,21 +1625,21 @@ def __TAB1__(x, limit_to, exclude):
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in x.columns],
                 ensure_option=True,
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 2
         {
             "arg": "cmap",
             "desc": "Colormap:",
-            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="90%"),),
+            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
         },
         # 3
         {
             "arg": "top_by",
             "desc": "Top by:",
             "widget": widgets.Dropdown(
-                options=["Num Documents", "Times Cited"], layout=Layout(width="90%"),
+                options=["Num Documents", "Times Cited"], layout=Layout(width="55%"),
             ),
         },
         # 4
@@ -1644,7 +1647,7 @@ def __TAB1__(x, limit_to, exclude):
             "arg": "top_n",
             "desc": "Top N:",
             "widget": widgets.Dropdown(
-                options=list(range(5, 81, 5)), layout=Layout(width="90%"),
+                options=list(range(5, 81, 5)), layout=Layout(width="55%"),
             ),
         },
         # 5
@@ -1653,7 +1656,7 @@ def __TAB1__(x, limit_to, exclude):
             "desc": "Sort order:",
             "widget": widgets.Dropdown(
                 options=["Alphabetic", "Num Documents", "Times Cited",],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 6
@@ -1661,7 +1664,7 @@ def __TAB1__(x, limit_to, exclude):
             "arg": "ascending",
             "desc": "Ascending:",
             "widget": widgets.Dropdown(
-                options=[True, False], layout=Layout(width="90%"),
+                options=[True, False], layout=Layout(width="55%"),
             ),
         },
         # 7
@@ -1671,7 +1674,7 @@ def __TAB1__(x, limit_to, exclude):
             "widget": widgets.Dropdown(
                 options=["None", "association", "inclusion", "jaccard", "salton"],
                 ensure_option=True,
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 8
@@ -1679,7 +1682,7 @@ def __TAB1__(x, limit_to, exclude):
             "arg": "n_clusters",
             "desc": "Num clusters:",
             "widget": widgets.Dropdown(
-                options=list(range(3, 21)), layout=Layout(width="90%"),
+                options=list(range(3, 21)), layout=Layout(width="55%"),
             ),
         },
         #
@@ -1689,7 +1692,7 @@ def __TAB1__(x, limit_to, exclude):
         #     "arg": "n_components",
         #     "desc": "Num components:",
         #     "widget": widgets.Dropdown(
-        #         options=list(range(2, 10)), layout=Layout(width="90%"),
+        #         options=list(range(2, 10)), layout=Layout(width="55%"),
         #     ),
         # },
         # # 8
@@ -1697,7 +1700,7 @@ def __TAB1__(x, limit_to, exclude):
         #     "arg": "n_dim",
         #     "desc": "Dim for plotting:",
         #     "widget": widgets.Dropdown(
-        #         options=list(range(1, 10)), layout=Layout(width="90%"),
+        #         options=list(range(1, 10)), layout=Layout(width="55%"),
         #     ),
         # },
         #######
@@ -1715,7 +1718,7 @@ def __TAB1__(x, limit_to, exclude):
                     "Spring",
                     "Shell",
                 ],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 10
@@ -1723,7 +1726,7 @@ def __TAB1__(x, limit_to, exclude):
             "arg": "width",
             "desc": "Figsize",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="90%"),
+                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
             ),
         },
         # 9
@@ -1731,7 +1734,7 @@ def __TAB1__(x, limit_to, exclude):
             "arg": "height",
             "desc": "Figsize",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="90%"),
+                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
             ),
         },
     ]
@@ -1830,16 +1833,19 @@ def __TAB1__(x, limit_to, exclude):
     with output:
         display(widgets.interactive_output(server, args,))
     #
-    grid = GridspecLayout(12, 8)
+    grid = GridspecLayout(13, 6)
     #
     # Left panel
     #
     for index in range(len(left_panel)):
-        grid[index, 0] = widgets.VBox(
+        grid[index, 0] = widgets.HBox(
             [
                 widgets.Label(value=left_panel[index]["desc"]),
                 left_panel[index]["widget"],
-            ]
+            ],
+            layout=Layout(
+                display="flex", justify_content="flex-end", align_content="center",
+            ),
         )
     #
     # Output
