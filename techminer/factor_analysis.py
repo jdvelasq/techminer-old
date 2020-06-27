@@ -497,36 +497,37 @@ def __TAB0__(data, limit_to, exclude):
     # UI
     #
     # -------------------------------------------------------------------------
+
     left_panel = [
         # 0
         {
             "arg": "view",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Matrix", "Network"], disable=True, layout=Layout(width="90%"),
+                options=["Matrix", "Network"], disable=True, layout=Layout(width="55%"),
             ),
         },
         # 1
         {
             "arg": "term",
-            "desc": "Term to analyze:",
+            "desc": "Term:",
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in data.columns],
                 ensure_option=True,
                 disabled=False,
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 2
         {
             "arg": "n_components",
-            "desc": "Number of factors:",
+            "desc": "Num Factors:",
             "widget": widgets.Dropdown(
                 options=list(range(2, 21)),
                 value=2,
                 ensure_option=True,
                 disabled=False,
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 3
@@ -534,7 +535,7 @@ def __TAB0__(data, limit_to, exclude):
             "arg": "cmap",
             "desc": "Colormap:",
             "widget": widgets.Dropdown(
-                options=COLORMAPS, disable=False, layout=Layout(width="90%"),
+                options=COLORMAPS, disable=False, layout=Layout(width="55%"),
             ),
         },
         # 4
@@ -543,7 +544,7 @@ def __TAB0__(data, limit_to, exclude):
             "desc": "Top by:",
             "widget": widgets.Dropdown(
                 options=["Values", "Num Documents", "Times Cited"],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 5
@@ -553,7 +554,7 @@ def __TAB0__(data, limit_to, exclude):
             "widget": widgets.Dropdown(
                 options=list(range(5, 51, 5)),
                 ensure_option=True,
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 6
@@ -563,7 +564,7 @@ def __TAB0__(data, limit_to, exclude):
             "widget": widgets.Dropdown(
                 options=["Alphabetic", "Num Documents/Times Cited", "Factor",],
                 disable=False,
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 7
@@ -571,7 +572,7 @@ def __TAB0__(data, limit_to, exclude):
             "arg": "ascending",
             "desc": "Ascending :",
             "widget": widgets.Dropdown(
-                options=[True, False], layout=Layout(width="90%"),
+                options=[True, False], layout=Layout(width="55%"),
             ),
         },
         #  8
@@ -588,23 +589,23 @@ def __TAB0__(data, limit_to, exclude):
                     "Spring",
                     "Shell",
                 ],
-                layout=Layout(width="90%"),
+                layout=Layout(width="55%"),
             ),
         },
         # 9
         {
             "arg": "width",
-            "desc": "Width",
+            "desc": "Fig Width",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="90%"),
+                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
             ),
         },
         # 10
         {
             "arg": "height",
-            "desc": "Height",
+            "desc": "Fig Height",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="90%"),
+                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
             ),
         },
     ]
@@ -668,17 +669,29 @@ def __TAB0__(data, limit_to, exclude):
     with output:
         display(widgets.interactive_output(server, args,))
     #
-    grid = GridspecLayout(11, 8)
+    grid = GridspecLayout(13, 6)
     #
     # Left panel
     #
+
     for index in range(len(left_panel)):
-        grid[index, 0] = widgets.VBox(
-            [
-                widgets.Label(value=left_panel[index]["desc"]),
-                left_panel[index]["widget"],
-            ]
-        )
+        if left_panel[index]["desc"] is None:
+            grid[index, 0] = widgets.HBox(
+                [left_panel[index]["widget"],],
+                layout=Layout(
+                    display="flex", align_content="center", justify_content="flex-end"
+                ),
+            )
+        else:
+            grid[index, 0] = widgets.HBox(
+                [
+                    widgets.Label(value=left_panel[index]["desc"]),
+                    left_panel[index]["widget"],
+                ],
+                layout=Layout(
+                    display="flex", justify_content="flex-end", align_content="center",
+                ),
+            )
     #
     # Output
     #
