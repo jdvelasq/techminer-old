@@ -340,22 +340,6 @@ def analytics(
             else:
                 break
 
-        #
-        # sort_by
-        #
-        if isinstance(sort_by, str):
-            sort_by = sort_by.replace(" ", "_")
-            sort_by = {"Alphabetic": 0, "Values": 1,}[sort_by]
-
-        if sort_by == 0:
-            columns = sorted(result.columns, reverse=not ascending)
-        if sort_by == 1:
-            columns = result.max(axis=0)
-            columns = columns.sort_values(ascending=ascending)
-            columns = columns.index.tolist()
-
-        result = result[columns]
-
         ###
         summ = by_term.analytics(
             data=x,
@@ -376,6 +360,36 @@ def analytics(
         result.columns = [new_names[w] for w in result.columns]
 
         ###
+
+        #
+        # sort_by
+        #
+        if isinstance(sort_by, str):
+            sort_by = sort_by.replace(" ", "_")
+            sort_by = {
+                "Alphabetic": 0,
+                "Values": 1,
+                "Num_Documents": 2,
+                "Times_Cited": 3,
+            }[sort_by]
+
+        if sort_by == 0:
+            columns = sorted(result.columns, reverse=not ascending)
+
+        if sort_by == 1:
+            columns = result.max(axis=0)
+            columns = columns.sort_values(ascending=ascending)
+            columns = columns.index.tolist()
+
+        if sort_by == 2:
+            columns = result.columns.tolist()
+            columns = sorted(columns, reverse=not ascending, key=_get_num_documents)
+
+        if sort_by == 3:
+            columns = result.columns.tolist()
+            columns = sorted(columns, reverse=not ascending, key=_get_times_cited)
+
+        result = result[columns]
 
         #
         # Output
@@ -404,211 +418,22 @@ def analytics(
             return plt.gant(X=result, cmap=cmap, figsize=figsize, fontsize=fontsize,)
 
 
+def _get_num_documents(x):
+    z = x.split(" ")[-1]
+    z = z.split(":")
+    return z[0] + z[1] + x
+
+
+def _get_times_cited(x):
+    z = x.split(" ")[-1]
+    z = z.split(":")
+    return z[1] + z[0] + x
+
+
 def _get_fmt(summ):
     n_Num_Documents = int(np.log10(summ["Num_Documents"].max())) + 1
     n_Times_Cited = int(np.log10(summ["Times_Cited"].max())) + 1
     return "{} {:0" + str(n_Num_Documents) + "d}:{:0" + str(n_Times_Cited) + "d}"
-
-    # if sort_by == 0:
-    #     result = result.sort_index(axis=1, ascending=ascending)
-
-    # if sort_by == 1:
-    #     selected_terms = summary_by_term.sort_values(
-    #         ["Num_Documents", "Times_Cited"], ascending=ascending
-    #     ).tolist()
-    #     new_rows = [c for c in selected_terms if c in result.index.tolist()]
-    #     result = result.loc[new_rows, :]
-
-    # #  Convert to matrix
-    # selected_col = {
-    #     0: "Num_Documents",
-    #     1: "Times_Cited",
-    #     2: "Perc_Num_Documents",
-    #     3: "Perc_Times_Cited",
-    #     4: "Num_Documents",
-    #     5: "Times_Cited",
-    #     6: "Perc_Num_Documents",
-    #     7: "Perc_Times_Cited",
-    # }[top_by]
-
-    ####################################
-
-    #
-    #
-    #
-    # summary_by_term = by_term.analytics(
-    #     data=data,
-    #     column=column,
-    #     top_by=None,
-    #     top_n=None,
-    #     limit_to=limit_to,
-    #     exclude=exclude,
-    # )
-
-    #
-    # Limit to / Exclude
-    #
-    # filtered_terms = by_term.summary(
-    #     data=x,
-    #     column=column,
-    #     top_by=None,
-    #     top_n=None,
-    #     limit_to=limit_to,
-    #     exclude=exclude,
-    # )[column].tolist()
-    # result = result[result[column].map(lambda w: w in filtered_terms)]
-
-    #
-    # top_by and matrix conversion
-    #
-
-    # if isinstance(top_by, str):
-    #     top_by = top_by.replace(" ", "_")
-    #     top_by = {
-    #         "Num_Documents": 0,
-    #         "Times_Cited": 1,
-    #         "%_Num_Documents": 2,
-    #         "%_Times_Cited": 3,
-    #         "Num_Documents_(Total)": 4,
-    #         "Times_Cited_(Total)": 5,
-    #         "%_Num_Documents_(Total)": 6,
-    #         "%_Times_Cited_(Total)": 7,
-    #     }[top_by]
-
-    # columns = {
-    #     0: ["Num_Documents", "Times_Cited"],
-    #     1: ["Times_Cited", "Num_Documents"],
-    #     2: ["Perc_Num_Documents", "Perc_Times_Cited"],
-    #     3: ["Perc_Times_Cited", "Perc_Num_Documents"],
-    #     4: ["Num_Documents", "Times_Cited"],
-    #     5: ["Times_Cited", "Num_Documents"],
-    #     6: ["Perc_Num_Documents", "Perc_Times_Cited"],
-    #     7: ["Perc_Times_Cited", "Perc_Num_Documents"],
-    # }[top_by]
-
-    # #  Convert to matrix
-    # selected_col = {
-    #     0: "Num_Documents",
-    #     1: "Times_Cited",
-    #     2: "Perc_Num_Documents",
-    #     3: "Perc_Times_Cited",
-    #     4: "Num_Documents",
-    #     5: "Times_Cited",
-    #     6: "Perc_Num_Documents",
-    #     7: "Perc_Times_Cited",
-    # }[top_by]
-
-    # for col in [
-    #     "Num_Documents",
-    #     "Times_Cited",
-    #     "Perc_Num_Documents",
-    #     "Perc_Times_Cited",
-    # ]:
-    #     if col != selected_col:
-    #         result.pop(col)
-
-    # result.sort_values(
-    #     [selected_col, "Year", column], ascending=[False, True, True], inplace=True,
-    # )
-
-    # if top_n is not None:
-    #     selected_terms = []
-    #     n = top_n
-    #     while len(selected_terms) < top_n:
-    #         if top_by in [0, 1, 2, 3]:
-    #             selected_terms = result.head(n)[column].tolist()
-    #         else:
-    #             if top_by in [4, 6]:
-    #                 selected_terms = summary_by_term.sort_values(
-    #                     ["Num_Documents", "Times_Cited"], ascending=False
-    #                 )
-    #                 selected_terms = selected_terms[column].head(n).tolist()
-    #             else:
-    #                 selected_terms = summary_by_term.sort_values(
-    #                     ["Times_Cited", "Num_Documents"], ascending=False
-    #                 )
-    #                 selected_terms = selected_terms[column].head(n).tolist()
-    #         selected_terms = list(set(selected_terms))
-    #         n += 1
-
-    #     result = result[result[column].map(lambda w: w in selected_terms)]
-
-    # result.reset_index(drop=True)
-    # result = pd.pivot_table(
-    #     result, values=selected_col, index="Year", columns=column, fill_value=0,
-    # )
-
-    # result.columns = result.columns.tolist()
-    # result.index = result.index.tolist()
-
-    #
-    # Sort by
-    #
-    # if isinstance(sort_by, str):
-    #     sort_by = sort_by.replace(" ", "_")
-    #     sort_by = {"Alphabetic": 0, "Num_Documents/Times_Cited": 1,}[sort_by]
-
-    # if isinstance(ascending, str):
-    #     ascending = {"True": True, "False": False,}[ascending]
-
-    # if sort_by == 0:
-    #     result = result.sort_index(axis=1, ascending=ascending)
-
-    # if sort_by == 1:
-    #     selected_terms = summary_by_term.sort_values(
-    #         ["Num_Documents", "Times_Cited"], ascending=ascending
-    #     ).tolist()
-    #     new_rows = [c for c in selected_terms if c in result.index.tolist()]
-    #     result = result.loc[new_rows, :]
-
-    # #  Complete years
-    # years = [year for year in range(result.index.min(), result.index.max() + 1)]
-    # result = result.reindex(years, fill_value=0)
-
-    # if output == 1:
-    #     return plt.heatmap(result, cmap=cmap, figsize=figsize, fontsize=fontsize)
-
-    # if output == 2:
-
-    #     top_by_complement = {0: 1, 1: 0, 2: 3, 3: 2, 4: 5, 5: 4, 6: 7, 7: 6}[top_by]
-
-    #     prop_to = analytics(
-    #         data=data,
-    #         column=column,
-    #         output=0,
-    #         top_by=top_by_complement,
-    #         top_n=None,
-    #         sort_by=sort_by,
-    #         ascending=ascending,
-    #         cmap=None,
-    #         limit_to=result.columns.tolist(),
-    #         exclude=None,
-    #     )
-    #     prop_to = prop_to.loc[
-    #         result.index, [c for c in prop_to.columns if c in result.columns]
-    #     ]
-
-    #     return plt.bubble(
-    #         result.transpose(),
-    #         prop_to=prop_to.transpose(),
-    #         cmap=cmap,
-    #         figsize=figsize,
-    #         fontsize=fontsize,
-    #     )
-
-    # if output == 3:
-    #     return plt.plot(data=result, figsize=figsize, cmap=cmap, fontsize=12,)
-
-    # if output == 4:
-    #     return plt.gant_barh(
-    #         data=result,
-    #         height=0.6,
-    #         left=None,
-    #         align="center",
-    #         cmap=cmap,
-    #         figsize=figsize,
-    #         fontsize=fontsize,
-    #     )
 
 
 ##
@@ -661,7 +486,7 @@ def __TAB1__(data, limit_to=None, exclude=None):
             "arg": "top_n",
             "desc": "Top N:",
             "widget": widgets.Dropdown(
-                options=list(range(5, 101, 5)),
+                options=list(range(5, 61, 5)),
                 ensure_option=True,
                 layout=Layout(width="55%"),
             ),
@@ -820,7 +645,8 @@ def __TAB0__(data, limit_to=None, exclude=None):
             "arg": "sort_by",
             "desc": "Sort by:",
             "widget": widgets.Dropdown(
-                options=["Alphabetic", "Values",], layout=Layout(width="55%"),
+                options=["Alphabetic", "Values", "Num Documents", "Times Cited"],
+                layout=Layout(width="55%"),
             ),
         },
         # 5
