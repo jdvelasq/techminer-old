@@ -616,7 +616,7 @@ def _get_fmt(summ):
 ##  Analytics by Value
 ##
 ##
-def __TAB0__(data, limit_to=None, exclude=None):
+def __TAB1__(data, limit_to=None, exclude=None):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -669,7 +669,7 @@ def __TAB0__(data, limit_to=None, exclude=None):
         # 4
         {
             "arg": "sort_by",
-            "desc": "Sort order:",
+            "desc": "Sort by:",
             "widget": widgets.Dropdown(
                 options=[
                     "Alphabetic",
@@ -764,7 +764,7 @@ def __TAB0__(data, limit_to=None, exclude=None):
 ##  Analytics by time matrix
 ##
 ##
-def __TAB1__(data, limit_to=None, exclude=None):
+def __TAB0__(data, limit_to=None, exclude=None):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -818,7 +818,7 @@ def __TAB1__(data, limit_to=None, exclude=None):
         # 4
         {
             "arg": "sort_by",
-            "desc": "Sort order:",
+            "desc": "Sort by:",
             "widget": widgets.Dropdown(
                 options=["Alphabetic", "Values",], layout=Layout(width="55%"),
             ),
@@ -1355,8 +1355,8 @@ def app(data, limit_to=None, exclude=None, tab=None):
     """
     app_title = "Analysis by Term per Year"
     tab_titles = [
-        "Matrix Values",
-        "Top terms",
+        "Matrix View",
+        "List Cells in Matrix",
         "Growth Indicators",
     ]
     tab_list = [

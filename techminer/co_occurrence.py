@@ -385,6 +385,7 @@ def co_occurrence(
             "Bubble_plot": 2,
             "Network": 3,
             "Slope_chart": 4,
+            "Table": 5,
         }[output]
 
     if output == 0:
@@ -429,6 +430,30 @@ def co_occurrence(
             cmap_by=cmap_by,
             figsize=figsize,
         )
+
+    if output == 5:
+        result = result.stack().to_frame().reset_index()
+        result.columns = [by, column, "Values"]
+        result = result[result["Values"] != 0]
+        result = result.sort_values(["Values"])
+        result = result.reset_index(drop=True)
+
+        if sort_by == "Alphabetic":
+            return result.sort_values([by, column, "Values"], ascending=ascending)
+
+        if sort_by == "Num Documents":
+            result["ND-column"] = result[column].map(
+                lambda w: w.split(" ")[-1].split(":")[0]
+            )
+            result["ND-by"] = result[by].map(lambda w: w.split(" ")[-1].split(":")[0])
+            result = result.sort_values(
+                ["ND-by", "ND-column", "Values"], ascending=ascending
+            )
+            result.pop("ND-column")
+            result.pop("ND-by")
+            return result
+
+        return result
 
     return result
 
@@ -821,7 +846,14 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "view",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Matrix", "Heatmap", "Bubble plot", "Network", "Slope chart"],
+                options=[
+                    "Matrix",
+                    "Heatmap",
+                    "Bubble plot",
+                    "Network",
+                    "Slope chart",
+                    "Table",
+                ],
                 layout=Layout(width="55%"),
             ),
         },
@@ -950,7 +982,7 @@ def __TAB0__(x, limit_to, exclude):
         ]
         by = left_panel[2]["widget"].value
 
-        if view == "Matrix" or view == "Heatmap":
+        if view in ["Matrix", "Heatmap", "Table"]:
             left_panel[-4]["widget"].disabled = True
             left_panel[-3]["widget"].disabled = True
             left_panel[-2]["widget"].disabled = True
