@@ -843,7 +843,21 @@ def __TAB0__(data, limit_to=None, exclude=None):
 ##
 
 
-def growth_indicators(x, column, timewindow=2, top_n=None, limit_to=None, exclude=None):
+def growth_indicators(
+    x,
+    column,
+    timewindow=2,
+    output=0,
+    top_by=None,
+    top_n=None,
+    sort_by=None,
+    ascending=True,
+    plot=None,
+    cmap="Greys",
+    figsize=(5, 5),
+    limit_to=None,
+    exclude=None,
+):
     """Computes the average growth rate of a group of terms.
 
     Args:
@@ -923,8 +937,6 @@ def growth_indicators(x, column, timewindow=2, top_n=None, limit_to=None, exclud
         result.pop(years_AGR[0])
         result.pop(years_AGR[1])
         result.columns = list(result.columns)
-        result = result.sort_values(by=["AGR", column], ascending=False)
-        result.reset_index(drop=True)
         return result
 
     def average_documents_per_year():
@@ -943,7 +955,6 @@ def growth_indicators(x, column, timewindow=2, top_n=None, limit_to=None, exclud
         )
         result = result.rename(columns={"Num_Documents_per_Year": "ADY"})
         result["ADY"] = result.ADY.map(lambda w: w / timewindow)
-        result = result.reset_index(drop=True)
         return result
 
     def compute_num_documents():
@@ -981,7 +992,89 @@ def growth_indicators(x, column, timewindow=2, top_n=None, limit_to=None, exclud
     result = pd.merge(result, num_docs, on=column)
     result = result.reset_index(drop=True)
     result = result.set_index(column)
-    return result
+
+    result = result.head(top_n)
+    if isinstance(sort_by, str):
+        sort_by = sort_by.replace(" ", "_")
+        sort_by = {
+            "Alphabetic": 0,
+            "Num_Documents": 1,
+            "Times_Cited": 2,
+            "Average_Growth_Rate": 3,
+            "Average_Documents_per_Year": 4,
+            "Percentage_of_Documents_in_Last_Years": 5,
+            "Before": 6,
+            "Between": 7,
+        }[sort_by]
+
+    if sort_by == 0:
+        result = result.sort_index(axis=0, ascending=ascending)
+
+    if sort_by == 1:
+        terms = result.index.tolist()
+        terms = sorted(terms, reverse=not ascending, key=_get_num_documents)
+        result = result.loc[terms, :]
+
+    if sort_by == 2:
+        terms = result.index.tolist()
+        terms = sorted(terms, reverse=not ascending, key=_get_times_cited)
+        result = result.loc[terms, :]
+
+    if sort_by == 3:
+        result = result.sort_values(["AGR", "ADY", "PDLY"], ascending=ascending)
+
+    if sort_by == 4:
+        result = result.sort_values(["ADY", "AGR", "PDLY"], ascending=ascending)
+
+    if sort_by == 5:
+        result = result.sort_values(["PDLY", "ADY", "AGR"], ascending=ascending)
+
+    if sort_by == 6:
+        result = result.sort_values(
+            [result.columns[-2], result.columns[-1]], ascending=ascending
+        )
+
+    if sort_by == 7:
+        result = result.sort_values(
+            [result.columns[-1], result.columns[-2]], ascending=ascending
+        )
+
+    if output == 0:
+        return result
+
+    if output == 1:
+        if plot == "bar":
+            return plt.bar(height=result.AGR, cmap=cmap, figsize=figsize)
+        if plot == "barh":
+            return plt.barh(width=result.AGR, cmap=cmap, figsize=figsize)
+
+    if output == 2:
+        if plot == "bar":
+            return plt.bar(height=result.AGR, cmap=cmap, figsize=figsize)
+        if plot == "barh":
+            return plt.barh(width=result.AGR, cmap=cmap, figsize=figsize)
+
+    if output == 3:
+        if plot == "bar":
+            return plt.bar(height=result.AGR, cmap=cmap, figsize=figsize)
+        if plot == "barh":
+            return plt.barh(width=result.AGR, cmap=cmap, figsize=figsize)
+
+    if output == 4:
+        if plot == "bar":
+            return plt.stacked_bar(
+                result[[result.columns[-2], result.columns[-1]]],
+                cmap=cmap,
+                figsize=figsize,
+            )
+        if plot == "barh":
+            return plt.stacked_barh(
+                result[[result.columns[-2], result.columns[-1]]],
+                cmap=cmap,
+                figsize=(figsize_width, figsize_height),
+            )
+
+    return output
 
 
 def __TAB2__(x, limit_to=None, exclude=None):
@@ -995,18 +1088,40 @@ def __TAB2__(x, limit_to=None, exclude=None):
     left_panel = [
         # 0
         {
-            "arg": "term",
-            "desc": "Term to analyze:",
+            "arg": "view",
+            "desc": "View:",
             "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
-                ensure_option=True,
+                options=[
+                    "Analytics",
+                    "Average Growth Rate",
+                    "Average Documents per Year",
+                    "Percentage of Documents in Last Years",
+                    "Num Documents",
+                ],
                 layout=Layout(width="55%"),
             ),
         },
         # 1
         {
-            "arg": "analysis_type",
-            "desc": "Analysis type:",
+            "arg": "column",
+            "desc": "Column:",
+            "widget": widgets.Dropdown(
+                options=[z for z in COLUMNS if z in x.columns],
+                layout=Layout(width="55%"),
+            ),
+        },
+        # 1
+        {
+            "arg": "time_window",
+            "desc": "Time window:",
+            "widget": widgets.Dropdown(
+                options=["2", "3", "4", "5"], value="2", layout=Layout(width="55%"),
+            ),
+        },
+        # 2
+        {
+            "arg": "top_by",
+            "desc": "Top by:",
             "widget": widgets.Dropdown(
                 options=[
                     "Average Growth Rate",
@@ -1018,31 +1133,7 @@ def __TAB2__(x, limit_to=None, exclude=None):
                 layout=Layout(width="55%"),
             ),
         },
-        # 2
-        {
-            "arg": "time_window",
-            "desc": "Time window:",
-            "widget": widgets.Dropdown(
-                options=["2", "3", "4", "5"], value="2", layout=Layout(width="55%"),
-            ),
-        },
         # 3
-        {
-            "arg": "plot_type",
-            "desc": "Plot type:",
-            "widget": widgets.Dropdown(
-                options=["bar", "barh"], layout=Layout(width="55%"),
-            ),
-        },
-        # 4
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(
-                options=COLORMAPS, disable=False, layout=Layout(width="55%"),
-            ),
-        },
-        # 5
         {
             "arg": "top_n",
             "desc": "Top N:",
@@ -1052,18 +1143,61 @@ def __TAB2__(x, limit_to=None, exclude=None):
                 layout=Layout(width="55%"),
             ),
         },
+        # 4
+        {
+            "arg": "sort_by",
+            "desc": "Sort by:",
+            "widget": widgets.Dropdown(
+                options=[
+                    "Alphabetic",
+                    "Num Documents",
+                    "Times Cited",
+                    "Average Growth Rate",
+                    "Average Documents per Year",
+                    "Percentage of Documents in Last Years",
+                    "Before",
+                    "Between",
+                ],
+                value="Average Growth Rate",
+                layout=Layout(width="55%"),
+            ),
+        },
+        # 5
+        {
+            "arg": "ascending",
+            "desc": "Ascending:",
+            "widget": widgets.Dropdown(
+                options=["True", "False",], layout=Layout(width="55%"),
+            ),
+        },
+        # 4
+        {
+            "arg": "plot",
+            "desc": "Plot type:",
+            "widget": widgets.Dropdown(
+                options=["bar", "barh"], layout=Layout(width="55%"),
+            ),
+        },
+        # 5
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(
+                options=COLORMAPS, disable=False, layout=Layout(width="55%"),
+            ),
+        },
         # 6
         {
-            "arg": "figsize_width",
-            "desc": "Figsize",
+            "arg": "width",
+            "desc": "Fig Width",
             "widget": widgets.Dropdown(
                 options=range(5, 15, 1), layout=Layout(width="55%"),
             ),
         },
         # 7
         {
-            "arg": "figsize_height",
-            "desc": "Figsize",
+            "arg": "height",
+            "desc": "Fig Height:",
             "widget": widgets.Dropdown(
                 options=range(5, 15, 1), layout=Layout(width="55%"),
             ),
@@ -1076,70 +1210,55 @@ def __TAB2__(x, limit_to=None, exclude=None):
     # -------------------------------------------------------------------------
     def server(**kwargs):
         #
-        term = kwargs["term"]
-        cmap = kwargs["cmap"]
-        analysis_type = kwargs["analysis_type"]
-        top_n = kwargs["top_n"]
-        plot_type = kwargs["plot_type"]
+        view = {
+            "Analytics": 0,
+            "Average Growth Rate": 1,
+            "Average Documents per Year": 2,
+            "Percentage of Documents in Last Years": 3,
+            "Num Documents": 4,
+        }[kwargs["view"]]
+        column = kwargs["column"]
         time_window = int(kwargs["time_window"])
-        figsize_width = int(kwargs["figsize_width"])
-        figsize_height = int(kwargs["figsize_height"])
+        top_by = kwargs["top_by"]
+        top_n = int(kwargs["top_n"])
+        sort_by = kwargs["sort_by"]
+        ascending = {"True": True, "False": False}[kwargs["ascending"]]
+        plot = kwargs["plot"]
+        cmap = kwargs["cmap"]
+        width = int(kwargs["width"])
+        height = int(kwargs["height"])
         #
-        plots = {"bar": plt.bar, "barh": plt.barh}
-        plot = plots[plot_type]
+        if view == 0:
+            left_panel[-4]["widget"].disabled = True
+            left_panel[-3]["widget"].disabled = True
+            left_panel[-2]["widget"].disabled = True
+            left_panel[-1]["widget"].disabled = True
+        else:
+            left_panel[-4]["widget"].disabled = False
+            left_panel[-3]["widget"].disabled = False
+            left_panel[-2]["widget"].disabled = False
+            left_panel[-1]["widget"].disabled = False
         #
-        df = growth_indicators(
-            x, term, timewindow=time_window, limit_to=limit_to, exclude=exclude
-        )
-        output.clear_output()
 
+        output.clear_output()
         with output:
-            if analysis_type == "Average Growth Rate":
-                df = df.sort_values("AGR", ascending=False).head(top_n)
-                #  df = df.reset_index(drop=True)
-                display(
-                    plot(
-                        df["AGR"],
-                        darkness=None,
-                        cmap=cmap,
-                        figsize=(figsize_width, figsize_height),
-                    )
+            display(
+                growth_indicators(
+                    x,
+                    column=column,
+                    output=view,
+                    timewindow=time_window,
+                    top_n=top_n,
+                    sort_by=sort_by,
+                    ascending=ascending,
+                    plot=plot,
+                    cmap=cmap,
+                    figsize=(width, height),
+                    limit_to=limit_to,
+                    exclude=exclude,
                 )
-            if analysis_type == "Average Documents per Year":
-                df = df.sort_values("ADY", ascending=False).head(top_n)
-                #  df = df.reset_index(drop=True)
-                display(
-                    plot(df["ADY"], cmap=cmap, figsize=(figsize_width, figsize_height),)
-                )
-            if analysis_type == "Percentage of Documents in Last Years":
-                df = df.sort_values("PDLY", ascending=False).head(top_n)
-                #  df = df.reset_index(drop=True)
-                display(
-                    plot(
-                        df["PDLY"], cmap=cmap, figsize=(figsize_width, figsize_height),
-                    )
-                )
-            if analysis_type == "Number of Document Published":
-                df["Num_Documents"] = df[df.columns[-2]] + df[df.columns[-1]]
-                df = df.sort_values("Num_Documents", ascending=False).head(top_n)
-                # df = df.reset_index(drop=True)
-                df.pop("Num_Documents")
-                if plot_type == "bar":
-                    display(
-                        plt.stacked_bar(
-                            df[[df.columns[-2], df.columns[-1]]],
-                            figsize=(figsize_width, figsize_height),
-                            cmap=cmap,
-                        )
-                    )
-                if plot_type == "barh":
-                    display(
-                        plt.stacked_barh(
-                            df[[df.columns[-2], df.columns[-1]]],
-                            figsize=(figsize_width, figsize_height),
-                            cmap=cmap,
-                        )
-                    )
+            )
+            return
 
     # -------------------------------------------------------------------------
     #
