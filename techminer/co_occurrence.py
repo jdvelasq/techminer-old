@@ -361,22 +361,6 @@ def co_occurrence(
     if top_by == -1:
         top_by = 0
 
-    summ = by_term.analytics(x, column)
-    fmt = _get_fmt(summ)
-    new_names = {
-        key: fmt.format(key, nd, tc)
-        for key, nd, tc in zip(summ.index, summ.Num_Documents, summ.Times_Cited)
-    }
-    result.columns = [new_names[w] for w in result.columns]
-
-    summ = by_term.analytics(x, by)
-    fmt = _get_fmt(summ)
-    new_names = {
-        key: fmt.format(key, nd, tc)
-        for key, nd, tc in zip(summ.index, summ.Num_Documents, summ.Times_Cited)
-    }
-    result.index = [new_names[w] for w in result.index]
-
     if isinstance(output, str):
         output = output.replace(" ", "_")
         output = {
@@ -387,6 +371,23 @@ def co_occurrence(
             "Slope_chart": 4,
             "Table": 5,
         }[output]
+
+    if output in [0, 1, 2, 5]:
+        summ = by_term.analytics(x, column)
+        fmt = _get_fmt(summ)
+        new_names = {
+            key: fmt.format(key, nd, tc)
+            for key, nd, tc in zip(summ.index, summ.Num_Documents, summ.Times_Cited)
+        }
+        result.columns = [new_names[w] for w in result.columns]
+
+        summ = by_term.analytics(x, by)
+        fmt = _get_fmt(summ)
+        new_names = {
+            key: fmt.format(key, nd, tc)
+            for key, nd, tc in zip(summ.index, summ.Num_Documents, summ.Times_Cited)
+        }
+        result.index = [new_names[w] for w in result.index]
 
     if output == 0:
         if cmap_column is None:
@@ -1530,16 +1531,9 @@ def occurrence(
         return plt.bubble(matrix, axis=0, cmap=cmap, figsize=figsize,)
 
     if output == 3:
-
-        matrix.columns = [
-            w[: w.find("[")].strip() if "[" in w else w for w in matrix.columns
-        ]
-        matrix.index = [
-            w[: w.find("[")].strip() if "[" in w else w for w in matrix.index
-        ]
-
+        matrix.columns = [" ".join(t.split(" ")[:-1]) for t in matrix.columns]
+        matrix.index = [" ".join(t.split(" ")[:-1]) for t in matrix.index]
         matrix = normalize(matrix, normalization=normalization)
-
         clustering = AgglomerativeClustering(linkage=linkage, n_clusters=n_clusters)
         clustering.fit(matrix)
         cluster_dict = {
@@ -1549,13 +1543,9 @@ def occurrence(
         return network_map(x=x, cmap=cmap)
 
     if output == 4:
+        matrix.columns = [" ".join(t.split(" ")[:-1]) for t in matrix.columns]
+        matrix.index = [" ".join(t.split(" ")[:-1]) for t in matrix.index]
         matrix = normalize(matrix, normalization=normalization)
-        matrix.columns = [
-            w[: w.find("[")].strip() if "[" in w else w for w in matrix.columns
-        ]
-        matrix.index = [
-            w[: w.find("[")].strip() if "[" in w else w for w in matrix.index
-        ]
         return occurrence_chord_diagram(
             matrix, summary=by_term.analytics(x, column), cmap=cmap, figsize=figsize,
         )
