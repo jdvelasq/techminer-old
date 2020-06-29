@@ -304,7 +304,7 @@ def analytics(
         return result
 
     # --------------------------------------------------------------------------------------
-    if output in [1, 2, 3, 4]:
+    if output in [1, 2, 3, 4, 5]:
 
         selected_col = {
             0: "Num_Documents_per_Year",
@@ -416,6 +416,9 @@ def analytics(
 
         if output == 4:
             return plt.gant(X=result, cmap=cmap, figsize=figsize, fontsize=fontsize,)
+
+        if output == 5:
+            return plt.gant0(x=result, figsize=figsize, fontsize=fontsize,)
 
 
 def _get_num_documents(x):
@@ -603,14 +606,14 @@ def __TAB0__(data, limit_to=None, exclude=None):
             "arg": "view",
             "desc": "View:",
             "widget": widgets.Dropdown(
-                options=["Analytics", "Heatmap", "Bubble plot", "Gant"],
+                options=["Analytics", "Heatmap", "Bubble plot", "Gant", "Gant0"],
                 layout=Layout(width="55%"),
             ),
         },
         # 1
         {
             "arg": "column",
-            "desc": "Column to analyze:",
+            "desc": "Column:",
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in data.columns],
                 layout=Layout(width="55%"),
@@ -687,7 +690,7 @@ def __TAB0__(data, limit_to=None, exclude=None):
     # -------------------------------------------------------------------------
     def server(**kwargs):
         #
-        view = {"Analytics": 1, "Heatmap": 2, "Bubble plot": 3, "Gant": 4}[
+        view = {"Analytics": 1, "Heatmap": 2, "Bubble plot": 3, "Gant": 4, "Gant0": 5}[
             kwargs["view"]
         ]
         column = kwargs["column"]
