@@ -2165,6 +2165,437 @@ def correspondence_matrix(
     return pd.DataFrame(data=rowScores, columns=result.columns, index=result.columns)
 
 
+#
+# Associaction
+#
+
+
+def co_association_map(
+    matrix,
+    data,
+    column,
+    by,
+    layout="Kamada Kawai",
+    cmap_column="Greys",
+    cmap_by="Greys",
+    figsize=(17, 12),
+):
+    """Computes the occurrence map directly using networkx.
+    """
+    #
+    def compute_node_sizes(terms, cmap):
+        #
+        d = {}
+        for t in terms:
+            key = t
+            value = int((t.split(" ")[-1]).split(":")[0])
+            d[key] = value
+
+        node_sizes = [d[t] for t in terms]
+
+        if len(terms) == 0:
+            node_sizes = [500] * len(terms)
+        else:
+            max_size = max(node_sizes)
+            min_size = min(node_sizes)
+            if min_size == max_size:
+                node_sizes = [500] * len(terms)
+            else:
+                node_sizes = [
+                    600 + int(2500 * (w - min_size) / (max_size - min_size))
+                    for w in node_sizes
+                ]
+
+        d = {t: int(t.split(" ")[-1].split(":")[1]) for t in terms}
+        node_colors = [d[t] for t in terms]
+
+        node_colors = [
+            cmap(0.2 + 0.75 * node_sizes[i] / max(node_sizes))
+            for i in range(len(node_sizes))
+        ]
+        return node_sizes, node_colors
+
+    #
+    #
+    #
+    cmap_column = pyplot.cm.get_cmap(cmap_column)
+    cmap_by = pyplot.cm.get_cmap(cmap_by)
+
+    #
+    # Data preparation
+    #
+    column_node_sizes, column_node_colors = compute_node_sizes(
+        matrix.columns, cmap=cmap_column,
+    )
+    index_node_sizes, index_node_colors = compute_node_sizes(
+        matrix.index, cmap=cmap_by,
+    )
+
+    terms = matrix.columns.tolist() + matrix.index.tolist()
+
+    #
+    # Draw the network
+    #
+    fig = pyplot.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    G = nx.Graph(ax=ax)
+    G.clear()
+
+    #
+    # network nodes
+    #
+    # G.add_nodes_from(terms)
+
+    #
+    # network edges
+    #
+    n = len(matrix.columns)
+    max_width = 0
+    for col in matrix.columns:
+        for row in matrix.index:
+            link = matrix.at[row, col]
+            if link > 0:
+                G.add_edge(row, col, width=link)
+                if max_width < link:
+                    max_width = link
+
+    #
+    # Layout
+    #
+    pos = {
+        "Circular": nx.circular_layout,
+        "Kamada Kawai": nx.kamada_kawai_layout,
+        "Planar": nx.planar_layout,
+        "Random": nx.random_layout,
+        "Spectral": nx.spectral_layout,
+        "Spring": nx.spring_layout,
+        "Shell": nx.shell_layout,
+    }[layout](G)
+
+    # draw_dict = {
+    #     "Circular": nx.draw_circular,
+    #     "Kamada Kawai": nx.draw_kamada_kawai,
+    #     "Planar": nx.draw_planar,
+    #     "Random": nx.draw_random,
+    #     "Spectral": nx.draw_spectral,
+    #     "Spring": nx.draw_spring,
+    #     "Shell": nx.draw_shell,
+    # }
+    # draw = draw_dict[layout]
+
+    for e in G.edges.data():
+        a, b, width = e
+        edge = [(a, b)]
+        width = 0.2 + 4.0 * width["width"] / max_width
+        nx.draw_networkx_edges(
+            G,
+            pos=pos,
+            ax=ax,
+            edgelist=edge,
+            width=width,
+            edge_color="k",
+            with_labels=False,
+            node_size=1,
+        )
+
+    #
+    # Draw column nodes
+    #
+    nx.draw_networkx_nodes(
+        G,
+        pos,
+        ax=ax,
+        edge_color="k",
+        nodelist=matrix.columns,
+        node_size=column_node_sizes,
+        node_color=column_node_colors,
+        node_shape="o",
+        edgecolors="k",
+        linewidths=1,
+    )
+
+    #
+    # Draw index nodes
+    #
+    nx.draw_networkx_nodes(
+        G,
+        pos,
+        ax=ax,
+        edge_color="k",
+        nodelist=matrix.index,
+        node_size=index_node_sizes,
+        node_color=index_node_colors,
+        node_shape="o",
+        edgecolors="k",
+        linewidths=1,
+    )
+
+    #
+    # Labels
+    #
+    xlim = ax.get_xlim()
+    ylim = ax.get_ylim()
+    node_sizes = column_node_sizes + index_node_sizes
+    for idx, term in enumerate(terms):
+        x, y = pos[term]
+        ax.text(
+            x
+            + 0.01 * (xlim[1] - xlim[0])
+            + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
+            y
+            - 0.01 * (ylim[1] - ylim[0])
+            - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
+            s=term,
+            fontsize=10,
+            bbox=dict(
+                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
+            ),
+            horizontalalignment="left",
+            verticalalignment="top",
+        )
+
+    fig.tight_layout()
+    #
+    # Figure size
+    #
+    ax.set_xlim(
+        xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
+    )
+    ax.set_ylim(
+        ylim[0] - 0.15 * (ylim[1] - ylim[0]), ylim[1] + 0.15 * (ylim[1] - ylim[0])
+    )
+    ax.set_aspect("equal")
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
+
+    return fig
+
+
+#
+# Association Map
+#
+def __TAB2__(x, limit_to, exclude):
+    # -------------------------------------------------------------------------
+    #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
+    #
+    left_panel = [
+        # 0
+        {
+            "arg": "column",
+            "desc": "Column to analyze:",
+            "widget": widgets.Dropdown(
+                options=[z for z in COLUMNS if z in x.columns],
+                layout=Layout(width="55%"),
+            ),
+        },
+        # 1
+        {
+            "arg": "by",
+            "desc": "By Column:",
+            "widget": widgets.Dropdown(
+                options=[z for z in COLUMNS[1:] if z in x.columns],
+                layout=Layout(width="55%"),
+            ),
+        },
+        # 2
+        {
+            "arg": "top_by",
+            "desc": "Top by:",
+            "widget": widgets.Dropdown(
+                options=["Values", "Num Documents", "Times Cited",],
+                layout=Layout(width="55%"),
+            ),
+        },
+        # 3
+        {
+            "arg": "top_n",
+            "desc": "Top N:",
+            "widget": widgets.Dropdown(
+                options=list(range(5, 51, 5)), layout=Layout(width="55%"),
+            ),
+        },
+        # 4
+        {
+            "arg": "cmap_column",
+            "desc": "Colormap column/matrix:",
+            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
+        },
+        # 5
+        {
+            "arg": "cmap_by",
+            "desc": "Colormap by:",
+            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
+        },
+        # 6
+        {
+            "arg": "layout",
+            "desc": "Map layout:",
+            "widget": widgets.Dropdown(
+                options=[
+                    "Circular",
+                    "Kamada Kawai",
+                    "Planar",
+                    "Random",
+                    "Spectral",
+                    "Spring",
+                    "Shell",
+                ],
+                layout=Layout(width="55%"),
+            ),
+        },
+        # 7
+        {
+            "arg": "width",
+            "desc": "Width:",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
+            ),
+        },
+        # 8
+        {
+            "arg": "height",
+            "desc": "Height:",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
+            ),
+        },
+        # 9
+        {
+            "arg": "selected",
+            "desc": "Seleted Cols:",
+            "widget": widgets.widgets.SelectMultiple(
+                options=[], layout=Layout(width="95%", height="150px"),
+            ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
+    def server(**kwargs):
+        #
+        # Logic
+        #
+        column = kwargs["column"]
+        by = kwargs["by"]
+        cmap_column = kwargs["cmap_column"]
+        cmap_by = kwargs["cmap_by"]
+        top_by = kwargs["top_by"]
+        top_n = int(kwargs["top_n"])
+        layout = kwargs["layout"]
+        width = int(kwargs["width"])
+        height = int(kwargs["height"])
+        selected = kwargs["selected"]
+
+        left_panel[1]["widget"].options = [
+            z for z in COLUMNS if z in x.columns and z != column
+        ]
+        by = left_panel[1]["widget"].value
+
+        matrix = co_occurrence(
+            x,
+            column=column,
+            by=by,
+            output=0,
+            top_by=top_by,
+            top_n=top_n,
+            cmap_column=None,
+            cmap_by=None,
+            layout=layout,
+            figsize=(width, height),
+            limit_to=limit_to,
+            exclude=exclude,
+        )
+
+        left_panel[-1]["widget"].options = sorted(matrix.columns)
+
+        if len(selected) == 0:
+            output.clear_output()
+            with output:
+                display("No columns selected to analyze")
+                return
+
+        Y = matrix[[t for t in matrix.columns if t in selected]]
+        S = Y.sum(axis=1)
+        S = S[S > 0]
+        Y = Y.loc[S.index, :]
+        if len(Y) == 0:
+            output.clear_output()
+            with output:
+                display("There are not associations to show")
+                return
+
+        output.clear_output()
+        with output:
+            display(
+                co_association_map(
+                    Y,
+                    data=x,
+                    column=column,
+                    by=by,
+                    layout=layout,
+                    cmap_column=cmap_column,
+                    cmap_by=cmap_by,
+                    figsize=(width, height),
+                )
+            )
+        #
+        return
+
+    # -------------------------------------------------------------------------
+    #
+    # Generic
+    #
+    # -------------------------------------------------------------------------
+    args = {control["arg"]: control["widget"] for control in left_panel}
+    output = widgets.Output()
+    with output:
+        display(widgets.interactive_output(server, args,))
+    #
+    grid = GridspecLayout(12, 6)
+    #
+    # Left panel
+    #
+    for index in range(len(left_panel)):
+        if index != len(left_panel) - 1:
+            grid[index, 0] = widgets.HBox(
+                [
+                    widgets.Label(value=left_panel[index]["desc"]),
+                    left_panel[index]["widget"],
+                ],
+                layout=Layout(
+                    display="flex", justify_content="flex-end", align_content="center",
+                ),
+            )
+        else:
+            grid[index:, 0] = widgets.VBox(
+                [
+                    #                    widgets.Label(value=left_panel[index]["desc"]),
+                    left_panel[index]["widget"],
+                ],
+                layout=Layout(
+                    display="flex", justify_content="flex-end", align_content="center",
+                ),
+            )
+    #
+    # Output
+    #
+    grid[0:, 1:] = widgets.VBox(
+        [output], layout=Layout(height="650px", border="2px solid gray")
+    )
+
+    return grid
+
+
 # def relationship(x, y):
 #     sxy = sum([a * b * min(a, b) for a, b in zip(x, y)])
 #     a = math.sqrt(sum(x))
@@ -2190,10 +2621,12 @@ def app(data, limit_to=None, exclude=None, tab=None):
     tab_titles = [
         "Co-occurrence Matrix",
         "Occurrence Matrix",
+        "(Co) Association Map",
     ]
     tab_list = [
         __TAB0__(data, limit_to=limit_to, exclude=exclude),
         __TAB1__(data, limit_to=limit_to, exclude=exclude),
+        __TAB2__(data, limit_to=limit_to, exclude=exclude),
     ]
 
     if tab is not None:
