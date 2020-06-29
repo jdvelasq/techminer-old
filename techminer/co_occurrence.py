@@ -389,7 +389,6 @@ def co_occurrence(
         }[output]
 
     if output == 0:
-        return result
         if cmap_column is None:
             return result
         else:
