@@ -1099,11 +1099,8 @@ def occurrence_chord_diagram(
 #
 
 
-def co_association_map(
+def associations_map(
     matrix,
-    data,
-    column,
-    by,
     layout="Kamada Kawai",
     cmap_column="Greys",
     cmap_by="Greys",
@@ -1111,54 +1108,43 @@ def co_association_map(
 ):
     """Computes the occurrence map directly using networkx.
     """
-    #
-    def compute_node_sizes(terms, cmap):
-        #
-        d = {}
-        for t in terms:
-            key = t
-            value = int((t.split(" ")[-1]).split(":")[0])
-            d[key] = value
 
-        node_sizes = [d[t] for t in terms]
-
-        if len(terms) == 0:
-            node_sizes = [500] * len(terms)
-        else:
-            max_size = max(node_sizes)
-            min_size = min(node_sizes)
-            if min_size == max_size:
-                node_sizes = [500] * len(terms)
-            else:
-                node_sizes = [
-                    600 + int(2500 * (w - min_size) / (max_size - min_size))
-                    for w in node_sizes
-                ]
-
-        d = {t: int(t.split(" ")[-1].split(":")[1]) for t in terms}
-        node_colors = [d[t] for t in terms]
-
-        node_colors = [
-            cmap(0.2 + 0.75 * node_sizes[i] / max(node_sizes))
-            for i in range(len(node_sizes))
-        ]
-        return node_sizes, node_colors
-
-    #
-    #
-    #
     cmap_column = pyplot.cm.get_cmap(cmap_column)
     cmap_by = pyplot.cm.get_cmap(cmap_by)
 
     #
-    # Data preparation
+    # Sizes
     #
-    column_node_sizes, column_node_colors = compute_node_sizes(
-        matrix.columns, cmap=cmap_column,
-    )
-    index_node_sizes, index_node_colors = compute_node_sizes(
-        matrix.index, cmap=cmap_by,
-    )
+    index_node_sizes = [int(t.split(" ")[-1].split(":")[0]) for t in matrix.index]
+    column_node_sizes = [int(t.split(" ")[-1].split(":")[0]) for t in matrix.columns]
+
+    min_size = min(index_node_sizes + column_node_sizes)
+    max_size = max(index_node_sizes + column_node_sizes)
+
+    index_node_sizes = [
+        150 + 2000 * (t - min_size) / (max_size - min_size) for t in index_node_sizes
+    ]
+    column_node_sizes = [
+        150 + 2000 * (t - min_size) / (max_size - min_size) for t in column_node_sizes
+    ]
+
+    #
+    # Colors
+    #
+    index_node_colors = [int(t.split(" ")[-1].split(":")[1]) for t in matrix.index]
+    column_node_colors = [int(t.split(" ")[-1].split(":")[1]) for t in matrix.columns]
+
+    min_color = min(index_node_colors + column_node_colors)
+    max_color = max(index_node_colors + column_node_colors)
+
+    index_node_colors = [
+        cmap_by(0.1 + 0.9 * (t - min_color) / (max_color - min_color))
+        for t in index_node_colors
+    ]
+    column_node_colors = [
+        cmap_column(0.1 + 0.9 * (t - min_color) / (max_color - min_color))
+        for t in column_node_colors
+    ]
 
     terms = matrix.columns.tolist() + matrix.index.tolist()
 
@@ -1236,7 +1222,7 @@ def co_association_map(
         pos,
         ax=ax,
         edge_color="k",
-        nodelist=matrix.columns,
+        nodelist=matrix.columns.tolist(),
         node_size=column_node_sizes,
         node_color=column_node_colors,
         node_shape="o",
@@ -1252,7 +1238,7 @@ def co_association_map(
         pos,
         ax=ax,
         edge_color="k",
-        nodelist=matrix.index,
+        nodelist=matrix.index.tolist(),
         node_size=index_node_sizes,
         node_color=index_node_colors,
         node_shape="o",
@@ -1301,13 +1287,15 @@ def co_association_map(
     ax.spines["left"].set_visible(False)
     ax.spines["bottom"].set_visible(False)
 
+    ax.axis("off")
+
     return fig
 
 
 #
 # Association Map
 #
-def __TAB2__(x, limit_to, exclude):
+def __TAB1__(x, limit_to, exclude):
     # -------------------------------------------------------------------------
     #
     # UI
@@ -1319,7 +1307,7 @@ def __TAB2__(x, limit_to, exclude):
         # 0
         {
             "arg": "column",
-            "desc": "Column to analyze:",
+            "desc": "Column:",
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in x.columns],
                 layout=Layout(width="55%"),
@@ -1328,7 +1316,7 @@ def __TAB2__(x, limit_to, exclude):
         # 1
         {
             "arg": "by",
-            "desc": "By Column:",
+            "desc": "By:",
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS[1:] if z in x.columns],
                 layout=Layout(width="55%"),
@@ -1354,19 +1342,19 @@ def __TAB2__(x, limit_to, exclude):
         # 4
         {
             "arg": "cmap_column",
-            "desc": "Colormap column/matrix:",
+            "desc": "Cmap col:",
             "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
         },
         # 5
         {
             "arg": "cmap_by",
-            "desc": "Colormap by:",
+            "desc": "Cmap by:",
             "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
         },
         # 6
         {
             "arg": "layout",
-            "desc": "Map layout:",
+            "desc": "Layout:",
             "widget": widgets.Dropdown(
                 options=[
                     "Circular",
@@ -1430,17 +1418,12 @@ def __TAB2__(x, limit_to, exclude):
         ]
         by = left_panel[1]["widget"].value
 
-        matrix = co_occurrence(
+        matrix = co_occurrence_matrix(
             x,
             column=column,
             by=by,
-            output=0,
             top_by=top_by,
             top_n=top_n,
-            cmap_column=None,
-            cmap_by=None,
-            layout=layout,
-            figsize=(width, height),
             limit_to=limit_to,
             exclude=exclude,
         )
@@ -1466,11 +1449,8 @@ def __TAB2__(x, limit_to, exclude):
         output.clear_output()
         with output:
             display(
-                co_association_map(
+                associations_map(
                     Y,
-                    data=x,
-                    column=column,
-                    by=by,
                     layout=layout,
                     cmap_column=cmap_column,
                     cmap_by=cmap_by,
@@ -1542,9 +1522,11 @@ def app(data, limit_to=None, exclude=None, tab=None):
     app_title = "Bigraph Analysis"
     tab_titles = [
         "Network Map",
+        "Associations Map",
     ]
     tab_list = [
         __TAB0__(data, limit_to=limit_to, exclude=exclude),
+        __TAB1__(data, limit_to=limit_to, exclude=exclude),
     ]
 
     if tab is not None:
