@@ -1002,69 +1002,6 @@ def __TAB0__(x, limit_to, exclude):
 
 
 
-def multiimensional_scaling(X, cmap, figsize, n_clusters, x_axis=0, y_axis=1):
-
-    matplotlib.rc("font", size=11)
-    fig = pyplot.Figure(figsize=figsize)
-    ax = fig.subplots()
-    cmap = pyplot.cm.get_cmap(cmap)
-
-    node_sizes = [int(t.split(" ")[-1].split(":")[0]) for t in X.columns]
-    max_size = max(node_sizes)
-    min_size = min(node_sizes)
-    node_sizes = [
-        600 + int(2500 * (w - min_size) / (max_size - min_size)) for w in node_sizes
-    ]
-
-    node_colors = [int(t.split(" ")[-1].split(":")[1]) for t in X.columns]
-    node_colors = [cmap(0.2 + 0.75 * i / (n_clusters - 1)) for i in node_colors]
-
-    embedding = MDS(n_components=n_components)
-    X_transformed = embedding.fit_transform(X,)
-    x_axis = [row[x_axis] for row in X_transformed]
-    y_axis = [row[y_axis] for row in X_transformed]
-
-    ax.scatter(
-        x_axis, y_axis, s=node_sizes, linewidths=1, edgecolors="k", c=node_colors
-    )
-
-    xlim = ax.get_xlim()
-    ylim = ax.get_ylim()
-
-    dx = 0.1 * (xlim[1] - xlim[0])
-    dy = 0.1 * (ylim[1] - ylim[0])
-
-    ax.set_xlim(xlim[0] - dx, xlim[1] + dx)
-    ax.set_ylim(ylim[0] - dy, ylim[1] + dy)
-
-    for idx, term in enumerate(X.columns):
-        x, y = x0[idx], x1[idx]
-        ax.text(
-            x
-            + 0.01 * (xlim[1] - xlim[0])
-            + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
-            y
-            - 0.01 * (ylim[1] - ylim[0])
-            - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
-            s=term,
-            fontsize=10,
-            bbox=dict(
-                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
-            ),
-            horizontalalignment="left",
-            verticalalignment="top",
-        )
-
-    ax.axhline(y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
-    ax.axvline(x=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
-
-    ax.set_aspect("equal")
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
-
-    return fig
 
 
 def occurrence(

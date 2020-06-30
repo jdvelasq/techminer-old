@@ -298,7 +298,7 @@ def network_map(X, cmap, clustering, layout, only_communities, figsize=(8, 8)):
             verticalalignment="top",
         )
 
-    fig.tight_layout()
+    fig.set_tight_layout(True)
 
     # Figure size
     ax.set_xlim(
@@ -676,8 +676,6 @@ def associations_map(X, selected, cmap, layout, figsize):
             verticalalignment="top",
         )
 
-    fig.tight_layout()
-
     # Figure size
     ax.set_xlim(
         xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
@@ -692,6 +690,8 @@ def associations_map(X, selected, cmap, layout, figsize):
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)
     ax.spines["bottom"].set_visible(False)
+
+    fig.set_tight_layout(True)
 
     return fig
 
@@ -786,7 +786,7 @@ def __TAB1__(data, limit_to, exclude):
             "arg": "selected",
             "desc": "Seleted Cols:",
             "widget": widgets.widgets.SelectMultiple(
-                options=[], layout=Layout(width="95%", height="150px"),
+                options=[], layout=Layout(width="95%", height="212px"),
             ),
         },
     ]
@@ -862,14 +862,283 @@ def __TAB1__(data, limit_to, exclude):
             )
         else:
             grid[index:, 0] = widgets.VBox(
-                [
-                    #                    widgets.Label(value=left_panel[index]["desc"]),
-                    left_panel[index]["widget"],
-                ],
+                [left_panel[index]["widget"],],
                 layout=Layout(
                     display="flex", justify_content="flex-end", align_content="center",
                 ),
             )
+    #
+    # Output
+    #
+    grid[0:, 1:] = widgets.VBox(
+        [output], layout=Layout(height="650px", border="2px solid gray")
+    )
+
+    return grid
+
+
+#
+#
+#
+#
+#
+
+
+def multiimensional_scaling(
+    X, n_components=2, n_clusters=2, linkage="ward", x_axis=0, y_axis=1, figsize=(6, 6)
+):
+
+    matplotlib.rc("font", size=11)
+    fig = pyplot.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    clustering = AgglomerativeClustering(linkage=linkage, n_clusters=n_clusters)
+    clustering.fit(1 - X)
+    cluster_dict = {key: value for key, value in zip(X.columns, clustering.labels_)}
+
+    embedding = MDS(n_components=n_components)
+    X_transformed = embedding.fit_transform(X,)
+
+    colors = []
+    for cmap_name in ["tab20", "tab20b", "tab20c"]:
+        cmap = pyplot.cm.get_cmap(cmap_name)
+        colors += [cmap(0.025 + 0.05 * i) for i in range(20)]
+
+    node_sizes = [int(t.split(" ")[-1].split(":")[0]) for t in X.columns]
+    max_size = max(node_sizes)
+    min_size = min(node_sizes)
+    node_sizes = [
+        600 + int(2500 * (w - min_size) / (max_size - min_size)) for w in node_sizes
+    ]
+
+    node_colors = [
+        cmap(0.2 + 0.80 * cluster_dict[t] / (n_clusters - 1)) for t in X.columns
+    ]
+
+    x_axis = X_transformed[:, x_axis]
+    y_axis = X_transformed[:, y_axis]
+
+    ax.scatter(
+        x_axis, y_axis, s=node_sizes, linewidths=1, edgecolors="k", c=node_colors
+    )
+
+    xlim = ax.get_xlim()
+    ylim = ax.get_ylim()
+
+    dx = 0.1 * (xlim[1] - xlim[0])
+    dy = 0.1 * (ylim[1] - ylim[0])
+
+    ax.set_xlim(xlim[0] - dx, xlim[1] + dx)
+    ax.set_ylim(ylim[0] - dy, ylim[1] + dy)
+
+    for idx, term in enumerate(X.columns):
+        x, y = x_axis[idx], y_axis[idx]
+        ax.text(
+            x
+            + 0.01 * (xlim[1] - xlim[0])
+            + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
+            y
+            - 0.01 * (ylim[1] - ylim[0])
+            - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
+            s=term,
+            fontsize=10,
+            bbox=dict(
+                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
+            ),
+            horizontalalignment="left",
+            verticalalignment="top",
+        )
+
+    ax.axhline(y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
+    ax.axvline(x=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
+
+    ax.set_aspect("equal")
+    ax.axis("off")
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
+
+    fig.set_tight_layout(True)
+
+    return fig
+
+
+#
+# Multidimensional Scaling
+#
+def __TAB2__(data, limit_to, exclude):
+    # -------------------------------------------------------------------------
+    #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    COLUMNS = sorted([column for column in data.columns if column not in EXCLUDE_COLS])
+    #
+    left_panel = [
+        # 0
+        {
+            "arg": "column",
+            "desc": "Column to analyze:",
+            "widget": widgets.Dropdown(
+                options=[z for z in COLUMNS if z in data.columns],
+                layout=Layout(width="55%"),
+            ),
+        },
+        # 1
+        {
+            "arg": "top_by",
+            "desc": "Top by:",
+            "widget": widgets.Dropdown(
+                options=["Num Documents", "Times Cited",], layout=Layout(width="55%"),
+            ),
+        },
+        # 2
+        {
+            "arg": "top_n",
+            "desc": "Top N:",
+            "widget": widgets.Dropdown(
+                options=list(range(5, 51, 5)), layout=Layout(width="55%"),
+            ),
+        },
+        # 3
+        {
+            "arg": "normalization",
+            "desc": "Normalization:",
+            "widget": widgets.Dropdown(
+                options=["None", "association", "inclusion", "jaccard", "salton"],
+                layout=Layout(width="55%"),
+            ),
+        },
+        # 4
+        {
+            "arg": "n_components",
+            "desc": "# components:",
+            "widget": widgets.Dropdown(
+                options=list(range(2, 10)), layout=Layout(width="55%"),
+            ),
+        },
+        # 5
+        {
+            "arg": "n_clusters",
+            "desc": "# clusters:",
+            "widget": widgets.Dropdown(
+                options=list(range(2, 20)), layout=Layout(width="55%"),
+            ),
+        },
+        # 6
+        {
+            "arg": "linkage",
+            "desc": "Linkage:",
+            "widget": widgets.Dropdown(
+                options=["ward", "complete", "average", "single"],
+                layout=Layout(width="55%"),
+            ),
+        },
+        # 7
+        {
+            "arg": "x_axis",
+            "desc": "X-axis:",
+            "widget": widgets.Dropdown(options=[0], layout=Layout(width="55%"),),
+        },
+        # 8
+        {
+            "arg": "y_axis",
+            "desc": "Y-axis:",
+            "widget": widgets.Dropdown(options=[0], layout=Layout(width="55%"),),
+        },
+        # 9
+        {
+            "arg": "width",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
+            ),
+        },
+        # 10
+        {
+            "arg": "height",
+            "desc": "Figsize",
+            "widget": widgets.Dropdown(
+                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
+            ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
+    def server(**kwargs):
+        #
+        # Logic
+        #
+        column = kwargs["column"]
+        top_by = kwargs["top_by"]
+        top_n = int(kwargs["top_n"])
+        normalization = kwargs["normalization"]
+        n_components = int(kwargs["n_components"])
+        n_clusters = int(kwargs["n_clusters"])
+        x_axis = int(kwargs["x_axis"])
+        y_axis = int(kwargs["y_axis"])
+        width = int(kwargs["width"])
+        height = int(kwargs["height"])
+
+        left_panel[7]["widget"].options = list(range(n_components))
+        left_panel[8]["widget"].options = list(range(n_components))
+        x_axis = left_panel[7]["widget"].value
+        y_axis = left_panel[8]["widget"].value
+
+        matrix = co_occurrence_matrix(
+            data=data,
+            column=column,
+            top_by=top_by,
+            top_n=top_n,
+            normalization=normalization,
+            limit_to=limit_to,
+            exclude=exclude,
+        )
+
+        output.clear_output()
+        with output:
+
+            display(
+                multiimensional_scaling(
+                    X=matrix,
+                    n_components=n_components,
+                    n_clusters=n_clusters,
+                    x_axis=x_axis,
+                    y_axis=y_axis,
+                    figsize=(width, height),
+                )
+            )
+
+        return
+
+    # -------------------------------------------------------------------------
+    #
+    # Generic
+    #
+    # -------------------------------------------------------------------------
+    args = {control["arg"]: control["widget"] for control in left_panel}
+    output = widgets.Output()
+    with output:
+        display(widgets.interactive_output(server, args,))
+    #
+    grid = GridspecLayout(13, 6)
+    #
+    # Left panel
+    #
+    for index in range(len(left_panel)):
+        grid[index, 0] = widgets.HBox(
+            [
+                widgets.Label(value=left_panel[index]["desc"]),
+                left_panel[index]["widget"],
+            ],
+            layout=Layout(
+                display="flex", justify_content="flex-end", align_content="center",
+            ),
+        )
     #
     # Output
     #
@@ -887,10 +1156,12 @@ def app(data, limit_to=None, exclude=None, tab=None):
     tab_titles = [
         "Network Map",
         "Associations Map",
+        "Mutidimensinal Scaling",
     ]
     tab_list = [
         __TAB0__(data, limit_to=limit_to, exclude=exclude),
         __TAB1__(data, limit_to=limit_to, exclude=exclude),
+        __TAB2__(data, limit_to=limit_to, exclude=exclude),
     ]
 
     if tab is not None:
