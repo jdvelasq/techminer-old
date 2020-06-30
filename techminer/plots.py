@@ -1113,6 +1113,8 @@ def heatmap(X, cmap="Greys", figsize=(6, 6), fontsize=11, **kwargs):
         for w in X.index
     ]
 
+    ax.set_aspect("equal")
+
     ax.set_xticks(np.arange(len(X.columns)) + 0.5)
     ax.set_xticklabels(X.columns)
     ax.tick_params(axis="x", labelrotation=90)
