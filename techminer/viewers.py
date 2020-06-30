@@ -268,7 +268,7 @@ def matrix(df, top_n=50):
             "arg": "title",
             "desc": "Title:",
             "widget": widgets.Select(
-                options=[], layout=Layout(height="320pt", width="95%"),
+                options=[], layout=Layout(height="270pt", width="95%"),
             ),
         },
     ]
@@ -358,7 +358,7 @@ def matrix(df, top_n=50):
             [widgets.Label(value=left_panel[i]["desc"]), left_panel[i]["widget"],]
         )
 
-    grid[len(left_panel) - 1 : len(left_panel) + 5, 0] = widgets.VBox(
+    grid[len(left_panel) : len(left_panel) + 5, 0] = widgets.VBox(
         [widgets.Label(value=left_panel[-1]["desc"]), left_panel[-1]["widget"],]
     )
 
