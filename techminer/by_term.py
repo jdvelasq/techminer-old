@@ -102,7 +102,9 @@ def analytics(
 
     x["Num_Documents"] = 1
     x["Frac_Num_Documents"] = x[column].map(
-        lambda w: round(1 / len(w.split(";")), 2) if not pd.isna(w) else 0
+        lambda w: round(1 / (len(w.split(";")) if isinstance(w, str) else 1), 2)
+        if not pd.isna(w)
+        else 0
     )
     x["First_Year"] = x.Year
     x = __explode(
@@ -602,7 +604,7 @@ def __TAB1__(data):
         # 0
         {
             "arg": "column",
-            "desc": "Term:",
+            "desc": "Column to analyze:",
             "widget": widgets.Dropdown(
                 options=["Countries", "Country_1st_Author"], layout=Layout(width="55%"),
             ),
