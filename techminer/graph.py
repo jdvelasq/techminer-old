@@ -884,8 +884,15 @@ def __TAB1__(data, limit_to, exclude):
 #
 
 
-def multiimensional_scaling(
-    X, n_components=2, n_clusters=2, linkage="ward", x_axis=0, y_axis=1, figsize=(6, 6)
+def association_analysis(
+    X,
+    method="MDS",
+    n_components=2,
+    n_clusters=2,
+    linkage="ward",
+    x_axis=0,
+    y_axis=1,
+    figsize=(6, 6),
 ):
 
     matplotlib.rc("font", size=11)
@@ -896,8 +903,14 @@ def multiimensional_scaling(
     clustering.fit(1 - X)
     cluster_dict = {key: value for key, value in zip(X.columns, clustering.labels_)}
 
-    embedding = MDS(n_components=n_components)
-    X_transformed = embedding.fit_transform(X,)
+    if method == "MDS":
+        # Multidimensional scaling
+        embedding = MDS(n_components=n_components)
+        X_transformed = embedding.fit_transform(X,)
+
+    if method == "CA":
+        # Correspondence analysis
+        X_transformed = correspondence_matrix(X)
 
     colors = []
     for cmap_name in ["tab20", "tab20b", "tab20c"]:
@@ -964,8 +977,41 @@ def multiimensional_scaling(
     return fig
 
 
+def correspondence_matrix(X):
+    """
+    """
+
+    matrix = X.values
+    grand_total = np.sum(matrix)
+    correspondence_matrix = np.divide(matrix, grand_total)
+    row_totals = np.sum(correspondence_matrix, axis=1)
+    col_totals = np.sum(correspondence_matrix, axis=0)
+    independence_model = np.outer(row_totals, col_totals)
+    norm_correspondence_matrix = np.divide(correspondence_matrix, row_totals[:, None])
+    distances = np.zeros(
+        (correspondence_matrix.shape[0], correspondence_matrix.shape[0])
+    )
+    norm_col_totals = np.sum(norm_correspondence_matrix, axis=0)
+    for row in range(correspondence_matrix.shape[0]):
+        distances[row] = np.sqrt(
+            np.sum(
+                np.square(norm_correspondence_matrix - norm_correspondence_matrix[row])
+                / col_totals,
+                axis=1,
+            )
+        )
+    std_residuals = np.divide(
+        (correspondence_matrix - independence_model), np.sqrt(independence_model)
+    )
+    u, s, vh = np.linalg.svd(std_residuals, full_matrices=False)
+    deltaR = np.diag(np.divide(1.0, np.sqrt(row_totals)))
+    rowScores = np.dot(np.dot(deltaR, u), np.diag(s))
+
+    return rowScores
+
+
 #
-# Multidimensional Scaling
+# Association analysis
 #
 def __TAB2__(data, limit_to, exclude):
     # -------------------------------------------------------------------------
@@ -978,6 +1024,15 @@ def __TAB2__(data, limit_to, exclude):
     left_panel = [
         # 0
         {
+            "arg": "method",
+            "desc": "Method:",
+            "widget": widgets.Dropdown(
+                options=["Multidimensional scaling", "Correspondence analysis"],
+                layout=Layout(width="55%"),
+            ),
+        },
+        # 1
+        {
             "arg": "column",
             "desc": "Column to analyze:",
             "widget": widgets.Dropdown(
@@ -985,7 +1040,7 @@ def __TAB2__(data, limit_to, exclude):
                 layout=Layout(width="55%"),
             ),
         },
-        # 1
+        # 2
         {
             "arg": "top_by",
             "desc": "Top by:",
@@ -993,7 +1048,7 @@ def __TAB2__(data, limit_to, exclude):
                 options=["Num Documents", "Times Cited",], layout=Layout(width="55%"),
             ),
         },
-        # 2
+        # 3
         {
             "arg": "top_n",
             "desc": "Top N:",
@@ -1001,7 +1056,7 @@ def __TAB2__(data, limit_to, exclude):
                 options=list(range(5, 51, 5)), layout=Layout(width="55%"),
             ),
         },
-        # 3
+        # 4
         {
             "arg": "normalization",
             "desc": "Normalization:",
@@ -1010,7 +1065,7 @@ def __TAB2__(data, limit_to, exclude):
                 layout=Layout(width="55%"),
             ),
         },
-        # 4
+        # 5
         {
             "arg": "n_components",
             "desc": "# components:",
@@ -1018,7 +1073,7 @@ def __TAB2__(data, limit_to, exclude):
                 options=list(range(2, 10)), layout=Layout(width="55%"),
             ),
         },
-        # 5
+        # 6
         {
             "arg": "n_clusters",
             "desc": "# clusters:",
@@ -1026,7 +1081,7 @@ def __TAB2__(data, limit_to, exclude):
                 options=list(range(2, 20)), layout=Layout(width="55%"),
             ),
         },
-        # 6
+        # 7
         {
             "arg": "linkage",
             "desc": "Linkage:",
@@ -1035,19 +1090,19 @@ def __TAB2__(data, limit_to, exclude):
                 layout=Layout(width="55%"),
             ),
         },
-        # 7
+        # 8
         {
             "arg": "x_axis",
             "desc": "X-axis:",
             "widget": widgets.Dropdown(options=[0], layout=Layout(width="55%"),),
         },
-        # 8
+        # 9
         {
             "arg": "y_axis",
             "desc": "Y-axis:",
             "widget": widgets.Dropdown(options=[0], layout=Layout(width="55%"),),
         },
-        # 9
+        # 10
         {
             "arg": "width",
             "desc": "Figsize",
@@ -1055,7 +1110,7 @@ def __TAB2__(data, limit_to, exclude):
                 options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
             ),
         },
-        # 10
+        # 11
         {
             "arg": "height",
             "desc": "Figsize",
@@ -1073,6 +1128,9 @@ def __TAB2__(data, limit_to, exclude):
         #
         # Logic
         #
+        method = {"Multidimensional scaling": "MDS", "Correspondence analysis": "CA"}[
+            kwargs["method"]
+        ]
         column = kwargs["column"]
         top_by = kwargs["top_by"]
         top_n = int(kwargs["top_n"])
@@ -1084,10 +1142,10 @@ def __TAB2__(data, limit_to, exclude):
         width = int(kwargs["width"])
         height = int(kwargs["height"])
 
-        left_panel[7]["widget"].options = list(range(n_components))
         left_panel[8]["widget"].options = list(range(n_components))
-        x_axis = left_panel[7]["widget"].value
-        y_axis = left_panel[8]["widget"].value
+        left_panel[9]["widget"].options = list(range(n_components))
+        x_axis = left_panel[8]["widget"].value
+        y_axis = left_panel[9]["widget"].value
 
         matrix = co_occurrence_matrix(
             data=data,
@@ -1103,8 +1161,9 @@ def __TAB2__(data, limit_to, exclude):
         with output:
 
             display(
-                multiimensional_scaling(
+                association_analysis(
                     X=matrix,
+                    method=method,
                     n_components=n_components,
                     n_clusters=n_clusters,
                     x_axis=x_axis,
@@ -1156,7 +1215,7 @@ def app(data, limit_to=None, exclude=None, tab=None):
     tab_titles = [
         "Network Map",
         "Associations Map",
-        "Mutidimensinal Scaling",
+        "Association analysis",
     ]
     tab_list = [
         __TAB0__(data, limit_to=limit_to, exclude=exclude),
