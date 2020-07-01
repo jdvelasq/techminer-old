@@ -184,7 +184,7 @@ def column(df, top_n=50):
     grid = GridspecLayout(10, 4, height="800px")
     grid[0, :] = widgets.HTML(
         value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-            "Matrix Explorer (Top {} terms)".format(top_n)
+            "Column Explorer (Top {} terms)".format(top_n)
         )
     )
     for i in range(0, len(left_panel) - 1):

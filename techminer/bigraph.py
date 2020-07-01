@@ -794,7 +794,7 @@ def __TAB0__(x, limit_to, exclude):
         # 2
         {
             "arg": "by",
-            "desc": "Byn:",
+            "desc": "By:",
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS[1:] if z in x.columns],
                 layout=Layout(width="55%"),
@@ -868,7 +868,7 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "width",
             "desc": "Figsize",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
+                options=range(5, 21, 1), ensure_option=True, layout=Layout(width="55%"),
             ),
         },
         # 11
@@ -876,7 +876,7 @@ def __TAB0__(x, limit_to, exclude):
             "arg": "height",
             "desc": "Figsize",
             "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
+                options=range(5, 21, 1), ensure_option=True, layout=Layout(width="55%"),
             ),
         },
     ]
@@ -907,11 +907,17 @@ def __TAB0__(x, limit_to, exclude):
         ]
         by = left_panel[2]["widget"].value
 
-        if view in ["Matrix", "Heatmap", "Table"]:
+        if view in ["Matrix", "Table"]:
             left_panel[-4]["widget"].disabled = True
             left_panel[-3]["widget"].disabled = True
             left_panel[-2]["widget"].disabled = True
             left_panel[-1]["widget"].disabled = True
+
+        if view == "Heatmap":
+            left_panel[-4]["widget"].disabled = True
+            left_panel[-3]["widget"].disabled = True
+            left_panel[-2]["widget"].disabled = False
+            left_panel[-1]["widget"].disabled = False
 
         if view == "Bubble plot":
             left_panel[-4]["widget"].disabled = True

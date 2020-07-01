@@ -487,6 +487,16 @@ def correlation_map(
                 if link is not None:
                     G.add_edge(terms[icol], terms[irow], link=link)
 
+    pos = {
+        "Circular": nx.circular_layout,
+        "Kamada Kawai": nx.kamada_kawai_layout,
+        "Planar": nx.planar_layout,
+        "Random": nx.random_layout,
+        "Spectral": nx.spectral_layout,
+        "Spring": nx.spring_layout,
+        "Shell": nx.shell_layout,
+    }[layout](G)
+
     #
     # Network drawing
     #
@@ -525,8 +535,9 @@ def correlation_map(
             style = "dotted"
             edge_color = "k"
 
-        draw(
+        nx.draw_networkx_edges(
             G,
+            pos=pos,
             ax=ax,
             edgelist=edge,
             width=width,
@@ -539,23 +550,13 @@ def correlation_map(
     #
     # Draw column nodes
     #
-    layout_dict = {
-        "Circular": nx.circular_layout,
-        "Kamada Kawai": nx.kamada_kawai_layout,
-        "Planar": nx.planar_layout,
-        "Random": nx.random_layout,
-        "Spectral": nx.spectral_layout,
-        "Spring": nx.spring_layout,
-        "Shell": nx.shell_layout,
-    }
-    label_pos = layout_dict[layout](G)
 
     nx.draw_networkx_nodes(
         G,
-        label_pos,
+        pos=pos,
         ax=ax,
         edge_color="k",
-        nodelist=matrix.columns,
+        nodelist=matrix.columns.tolist(),
         node_size=node_sizes,
         node_color=node_colors,
         node_shape="o",
@@ -570,7 +571,7 @@ def correlation_map(
     ylim = ax.get_ylim()
 
     for idx, term in enumerate(terms):
-        x, y = label_pos[term]
+        x, y = pos[term]
         ax.text(
             x
             + 0.01 * (xlim[1] - xlim[0])

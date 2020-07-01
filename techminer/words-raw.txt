@@ -1,2298 +1,410 @@
-abiotic factor
-    abiotic factor
-    abiotic factors
-abortion, veterinary
-    abortion, veterinary
-    veterinary abortion
-acceptability
-    acceptability
-    acceptable
-    acceptance
-access
-    access
-    accessibility
-accra, ghana
-    accra, ghana
-    accra-ghana
-achieve
-    achieve
-    achieving
-action research
-    action research
-    action-research
-activism
-    activism
-    activity
-adaptation
-    adaptation
-    adaptive
-added
-    added
-    adding
-adult
-    adult
-    adultism
-advance
-    advance
-    advancing
-aeroponic
-    aeroponic
-    aeroponics
-affect
-    affect
-    affected
-africa, central
-    africa, central
-    central africa
-africa, southern
-    africa, southern
-    southern africa
-african american
-    african american
-    african americans
-age
-    age
-    aged
-agrarian
-    agrarian
-    agrarianism
-agricultural
-    agricultural
-    agriculture
-agricultural activities
-    agricultural activities
-    agricultural activity
-agricultural crops
-    agricultural crops
-    crops, agricultural
-agricultural development
-    agricultural development
-    agriculture development
-agricultural dynamic
-    agricultural dynamic
-    agricultural dynamics
-agricultural irrigation
-    agricultural irrigation
-    irrigation (agriculture)
-    irrigation agriculture
-agricultural landscape
-    agricultural landscape
-    agricultural landscapes
-agricultural policy
-    agricultural policy
-    agriculture policy
-agricultural practice
-    agricultural practice
-    agricultural practices
-    agriculture practice
-agricultural product
-    agricultural product
-    agricultural production
-    agricultural productions
-    agriculture productions
-agricultural system
-    agricultural system
-    agricultural systems
-    agriculture system
-agricultural urbanism
-    agricultural urbanism
-    agriculture urban
-    urban agricultural
-    urban agriculture
-    urban agriculture urban
-    urban agricultures
-agriculture supporting
-    agriculture supporting
-    supported agriculture
-agripoetic
-    agripoetic
-    agripoetics
-agro ecosystems
-    agro ecosystems
-    agro-ecosystems
-agroecological
-    agroecological
-    agroecology
-air pollutant
-    air pollutant
-    air pollutants
-    air pollution
-alkali
-    alkali
-    alkalies
-alkaline
-    alkaline
-    alkalinity
-allotment
-    allotment
-    allotments
-allotment garden
-    allotment garden
-    allotment gardening
-    allotment gardens
-alternative food movement
-    alternative food movement
-    alternative food movements
-alternative food network
-    alternative food network
-    alternative food networks
-alternative urban
-    alternative urban
-    alternative urbanism
-anaerobic process
-    anaerobic process
-    anaerobic processes
+accelerometer
+    accelerometer
+    accelerometers
+action selection mechanism
+    action selection mechanism
+    action selection mechanisms
+adaptive behavior
+    adaptive behavior
+    behavior adaptation
+    behavior adaptations
+agent based modeling
+    agent based modeling
+    agent-based model
+    agent-based modelling
+algorithm
+    algorithm
+    algorithms
+ambient intelligence
+    ambient intelligence
+    ambient intelligent
 animal
     animal
     animals
-animal housing
-    animal housing
-    housing, animal
-animals, domestic
-    animals, domestic
-    domestic animal
-ant
-    ant
-    ants
-apartment house
-    apartment house
-    apartment houses
-applied
-    applied
-    apply
-    applying
-aquaculture system
-    aquaculture system
-    aquaculture systems
-aquaponic
-    aquaponic
-    aquaponics
-aquaponic system
-    aquaponic system
-    aquaponics system
-aquifer
-    aquifer
-    aquifers
-archival
-    archival
-    archives
-    archiving
-archival practice
-    archival practice
-    archiving practices
-arid region
-    arid region
-    arid regions
-aromatic hydrocarbon
-    aromatic hydrocarbon
-    aromatic hydrocarbons
-arrangement
-    arrangement
-    arrangements
-arthropod
-    arthropod
-    arthropods
-assessing
-    assessing
-    assessment
-associated
-    associated
-    association
-    associations
-atmospheric deposition
-    atmospheric deposition
-    atmospheric depositions
-automated
-    automated
-    automation
-automation and control
-    automation and control
-    automation and controls
-aware
-    aware
-    awareness
-bacterial dna
-    bacterial dna
-    dna, bacterial
-based hydroponic
-    based hydroponic
-    hydroponics based
-berries
-    berries
-    berry
-bioaccessibility
-    bioaccessibility
-    bioaccessible
-bioactive
-    bioactive
-    bioactivity
-biofilter
-    biofilter
-    biofilters
-biological
-    biological
-    biology
-biological marker
-    biological marker
-    biological markers
-biological pest control
-    biological pest control
-    pest control, biological
-biorefineries
-    biorefineries
-    biorefinery
-biosolid
-    biosolid
-    biosolids
-bovine brucellosis
-    bovine brucellosis
-    brucellosis, bovine
-brassica oleracea (cabbage)
-    brassica oleracea (cabbage)
-    cabbage brassica oleracea
-buffalo
-    buffalo
-    buffaloes
-building
-    building
-    buildings
-building envelope
-    building envelope
-    building envelopes
-building integrated agriculture
-    building integrated agriculture
-    building-integrated agriculture
-bulgarian gardener
-    bulgarian gardener
-    bulgarian gardeners
-business model
-    business model
-    business models
-byproduct
-    byproduct
-    byproducts
-c reactive protein
-    c reactive protein
-    c-reactive protein
-camera
-    camera
-    cameras
-capital
-    capital
-    capitalism
-carbon
-    carbon
-    carbonate
-carbon emission
-    carbon emission
-    carbon emissions
-carbon fraction
-    carbon fraction
-    carbon fractionation
-carrier
-    carrier
-    carriers
-case control study
-    case control study
-    case-control studies
-case study methodologies
-    case study methodologies
-    case study methodology
-chain
-    chain
-    chains
-challenge
-    challenge
-    challenges
-change
-    change
-    changing
-changing landscape
-    changing landscape
-    landscape change
-characterization
-    characterization
-    characterizing
-chicken
-    chicken
-    chickens
-chicken egg
-    chicken egg
-    chicken eggs
-child, preschool
-    child, preschool
-    preschool child
-children
-    children
-    childrens
-cities
-    cities
-    city
-citizen
-    citizen
-    citizens
-citizen engagements
-    citizen engagements
-    citizens engagement
-city development
-    city development
-    developed city
-city farming
-    city farming
-    farm city
-city feeding
-    city feeding
-    feeding city
-city garden
-    city garden
-    garden cities
-    garden city
-city planning
-    city planning
-    city-planning
-city urban
-    city urban
-    urban cities
-    urban city
-classification tree
-    classification tree
-    classification trees
-cleaning waste
-    cleaning waste
-    waste cleaning
-    waste cleaning waste
-climate change
-    climate change
-    climatic change
-    climatic changes
-climate mitigation
-    climate mitigation
-    climate mitigations
-closed loop urban metabolism
-    closed loop urban metabolism
-    closed-loop urban metabolism
-cohort studies
-    cohort studies
-    cohort study
-collaboration
-    collaboration
-    collaborative
-collected
-    collected
-    collection
-    collective
-    collectivity
-commercial
-    commercial
-    commercialization
-common
-    common
-    commoning
-    commons
-common place
-    common place
-    common places
-communal
-    communal
-    communication
-    communities
-    community
-communal garden
-    communal garden
-    communal gardens
-    community garden
-    community gardener
-    community gardening
-    community gardens
-communal urban
-    communal urban
-    community urban
-    urban community
-communal urban garden
-    communal urban garden
-    community urban garden
-    urban community garden
-    urban community gardening
-    urban community gardens
-    urban gardening communities
-community building
-    community building
-    community buildings
-community composter
-    community composter
-    community composting
-community economies
-    community economies
-    community economy
-community empowerment
-    community empowerment
-    community empowerment communication
-    empowerment communication
-community farming
-    community farming
-    farming communities
-    farming community
-comparable
-    comparable
-    comparative
-    compared
-competition design
-    competition design
-    design competition
-compost
-    compost
-    composter
-    composting
-compost technologies
-    compost technologies
-    composting technologies
-concentration (parameter)
-    concentration (parameter)
-    concentration (parameters)
-conflict
-    conflict
-    conflicts
-connecting
-    connecting
-    connection
-constructal
-    constructal
-    construction
-consumer
-    consumer
-    consumers
-container
-    container
-    containers
-contaminant
-    contaminant
-    contaminated
-    contamination
-contaminated plant
-    contaminated plant
-    plant contamination
-contaminated soil
-    contaminated soil
-    soil contaminants
-    soil contamination
-contestation
-    contestation
-    contested
-contribute
-    contribute
-    contributing
-    contribution
-control
-    control
-    controlled
-    controller
-    controllers
-control system
-    control system
-    control systems
-    controlling system
-controlled environment agriculture
-    controlled environment agriculture
-    controlled environment agricultures
-cooperation
-    cooperation
-    cooperative
-    cooperatives
-cost
-    cost
-    costs
-cost benefit analysis
-    cost benefit analysis
-    cost-benefit analysis
-cote d'ivoire
-    cote d'ivoire
-    cote divoire
-created
-    created
-    creating
-crispr cas system
-    crispr cas system
-    crispr-cas systems
-crop
-    crop
-    crops
-cross-sectional studies
-    cross-sectional studies
-    cross-sectional study
-cultivated
-    cultivated
-    cultivating
-    cultivation
-    cultivator
-cultivating urban
-    cultivating urban
-    urban cultivation
-cultural
-    cultural
-    culture
-    cultured
-current source
-    current source
-    current sources
-cut flower
-    cut flower
-    cut flowers
-    cut-flowers
-cycle
-    cycle
-    cycling
-dairy
-    dairy
-    dairying
-dairy buffalo
-    dairy buffalo
-    dairy buffaloes
-dairy product
-    dairy product
-    dairy products
-data collection protocol
-    data collection protocol
-    data collection protocols
-decision model
-    decision model
-    decision models
+animal behavior
+    animal behavior
+    behavior, animal
+applications
+    applications
+    applications.
+attention mechanism
+    attention mechanism
+    attention mechanisms
+behavior analysis
+    behavior analysis
+    behavioral analysis
+behavior genetics
+    behavior genetics
+    genetics, behavioral
+behavior model
+    behavior model
+    behavior modeling
+    behavioral modeling
+behavior patterns
+    behavior patterns
+    behavioral patterns
+behavioral simulation
+    behavioral simulation
+    behavioral simulations
+    behaviour simulation
+    behaviour simulations
+biological model
+    biological model
+    biological modeling
+    models, biological
+blog
+    blog
+    blogging
+    blogs
+change points
+    change points
+    change-points
+cognition
+    cognition
+    cognitive
+communication data
+    communication data
+    data-communication
+computation theory
+    computation theory
+    computational theories
+computational cost
+    computational cost
+    computational costs
+computational social science
+    computational social science
+    social sciences computing
+context awareness
+    context awareness
+    context- awareness
+    context-aware
+context free grammars
+    context free grammars
+    context-free grammars
+crowding
+    crowding
+    crowds
+cuckoo search
+    cuckoo search
+    cuckoo searches
+data visualization
+    data visualization
+    visual data
 decision support
     decision support
     decision supports
-dependence
-    dependence
-    dependency
-derived liquid
-    derived liquid
-    derived liquids
-design approach
-    design approach
-    design approaches
-design engineering
-    design engineering
-    engineering design
-design pattern
-    design pattern
-    design patterns
-determinant
-    determinant
-    determination
-    determining
-developed
-    developed
-    developing
-    development
-developed countries
-    developed countries
-    developed country
-    developing countries
-    developing country
-developing region
-    developing region
-    region developing
-developing solution
-    developing solution
-    developing solutions
-development urban
-    development urban
-    urban development
-development urban farming
-    development urban farming
-    urban farming development
-device
-    device
-    devices
-dietary intervention
-    dietary intervention
-    dietary interventions
-difference
-    difference
-    different
-dig
-    dig
-    digging
-digital
-    digital
-    digitalization
-digital surface model
-    digital surface model
-    digital surface models
+decision tree
+    decision tree
+    decision trees
+delay tolerant network
+    delay tolerant network
+    delay tolerant networking
+    delay tolerant networks
 disaster
     disaster
     disasters
-disease
-    disease
-    diseases
-diverse
-    diverse
-    diversity
-diversity urban
-    diversity urban
-    urbanization diversity
-dna directed rna polymerase
-    dna directed rna polymerase
-    dna-directed rna polymerases
-dna, plant
-    dna, plant
-    plant dna
-drug effect
-    drug effect
-    drug effects
-duck
-    duck
-    ducks
-dynamic
-    dynamic
-    dynamically
-    dynamics
-dynamic spatial
-    dynamic spatial
-    spatial dynamic
-earthworm
-    earthworm
-    earthworms
-ecological
-    ecological
-    ecology
-economic
-    economic
-    economics
-economic activism
-    economic activism
-    economic activities
-    economic activity
-economic aspect
-    economic aspect
-    economic aspects
-economic value added
-    economic value added
-    economic value-added
-ecosocial innovation
-    ecosocial innovation
-    ecosocial innovations
-ecosystem
-    ecosystem
-    ecosystems
-ecosystem function
-    ecosystem function
-    ecosystem functioning
-ecosystem service
-    ecosystem service
-    ecosystem services
-ecovillage
-    ecovillage
-    ecovillages
-edible plant
-    edible plant
-    edible plants
-education
-    education
-    educational
-effect
-    effect
-    effectiveness
-efficiency
-    efficiency
-    efficient
-effluent
-    effluent
-    effluents
-egg
-    egg
-    eggs
-electric conductivity
-    electric conductivity
-    electrical conductivity
-electrophoresis, gel, pulsed-field
-    electrophoresis, gel, pulsed-field
-    pulsed field gel electrophoresis
-element
-    element
-    elemental
-element concentration
-    element concentration
-    elemental concentrations
-emergence
-    emergence
-    emergent
-    emerging
-engineered
-    engineered
-    engineering
-enhance
-    enhance
-    enhanced
-    enhancement
-    enhancing
-environment urban
-    environment urban
-    urban environment
-    urban environments
-environmental
-    environmental
-    environmentalism
-    environmentally
+domestic activities
+    domestic activities
+    domestic activity
+earthquake
+    earthquake
+    earthquakes
+electric appliances
+    electric appliances
+    electrical appliances
+embodied agent
+    embodied agent
+    embodied agents
+emotion
+    emotion
+    emotions
+emotion identification
+    emotion identification
+    emotion identifications
+emotion model
+    emotion model
+    emotion modeling
+energy efficiency
+    energy efficiency
+    energy-efficient
+ensemble approach
+    ensemble approach
+    ensemble approaches
 environmental factor
     environmental factor
     environmental factors
-environmental improvement
-    environmental improvement
-    improve environmental
-environmental pollution
-    environmental pollution
-    environmental pollutions
-environmental sustainability
-    environmental sustainability
-    environmentally sustainable
-enzyme linked immunosorbent assay
-    enzyme linked immunosorbent assay
-    enzyme-linked immunosorbent assay
-estimating
-    estimating
-    estimation
-evaluating
-    evaluating
-    evaluation
-evaluation studies
-    evaluation studies
-    evaluation study
-examination
-    examination
-    examining
-example –
-    example –
-    – example
-expanded
-    expanded
-    expanding
-experience
-    experience
-    experiment
-    experiments
-expert
-    expert
-    experts
-exploration
-    exploration
-    explorations
-    explorative
-    exploring
-exposure factor
-    exposure factor
-    exposure factors
-extract
-    extract
-    extraction
-extrinsic motivation
-    extrinsic motivation
-    extrinsic motivations
-fabricating
-    fabricating
-    fabrication
-facilities
-    facilities
-    facility
-farm
-    farm
-    farming
-    farms
-farm management
-    farm management
-    farming management
-farm system
-    farm system
-    farming system
-farmer
-    farmer
-    farmers
-farmer attitude
-    farmer attitude
-    farmers attitude
-farming activities
-    farming activities
-    farming activity
-farming practice
-    farming practice
-    farming practices
-farming toward
-    farming toward
-    farming towards
-feasibility studies
-    feasibility studies
-    feasibility study
-feed
-    feed
-    feeding
-fertile
-    fertile
-    fertility
-    fertilizer
-    fertilizers
-fertilizer application
-    fertilizer application
-    fertilizer applications
-fish
-    fish
-    fishing
-flavonoid
-    flavonoid
-    flavonoids
-flooding
-    flooding
-    floods
-flower
-    flower
-    flowers
-food desert
-    food desert
-    food deserts
-food garden
-    food garden
-    food gardening
-    food gardens
-food growing
-    food growing
-    food-growing
-    grow food
-    growing food
-food health
-    food health
-    health food
-food plant
-    food plant
-    food plants
-food production
-    food production
-    food products
-food supply chain
-    food supply chain
-    food supply chains
-food sustainability
-    food sustainability
-    sustainable food
-food system
-    food system
-    food systems
-food, energy, water nexus
-    food, energy, water nexus
-    water-food-energy nexus
-form
-    form
-    forming
-foster
-    foster
-    fostering
-fraction
-    fraction
-    fractionation
-frame
-    frame
-    framing
-freedom
-    freedom
-    freedoms
-fruit
-    fruit
-    fruits
-fruit and vegetables
-    fruit and vegetables
-    fruits and vegetables
-fruit crop
-    fruit crop
-    fruit crops
-function
-    function
-    functioning
-future
-    future
-    futurity
-future sustainable
-    future sustainable
-    sustainable future
-ga
-    ga
-    gas
-garden
-    garden
-    gardener
-    gardening
-    gardens
-garden grow
-    garden grow
-    growing garden
-garden influence
-    garden influence
-    gardener influence
-garden soil
-    garden soil
-    garden soils
-gardening activism
-    gardening activism
-    gardening activities
-gardening practice
-    gardening practice
-    gardening practices
-gardening public
-    gardening public
-    public gardening
-gas emission
-    gas emission
-    gas emissions
-gender
-    gender
-    gendered
-generating
-    generating
-    generator
-    generic
-genetic
-    genetic
-    genetics
-genotoxic
-    genotoxic
-    genotoxicities
-    genotoxicity
-geochemical map
-    geochemical map
-    geochemical mapping
-geographic information system
-    geographic information system
-    geographic information systems
-gi
-    gi
-    gis
-global
-    global
-    globalization
-glucosinolate
-    glucosinolate
-    glucosinolates
-goat
-    goat
-    goats
-governance
-    governance
-    governing
-    government
-governing urban
-    governing urban
-    urban governance
-green
-    green
-    greening
-green area
-    green area
-    green areas
-green building
-    green building
-    green buildings
-green economies
-    green economies
-    green economy
-green facilities
-    green facilities
-    green facility
-green open space
-    green open space
-    open green space
-green roof
-    green roof
-    green roofs
-green space
-    green space
-    green spaces
-green wall
-    green wall
-    green walls
-greenhouse
-    greenhouse
-    greenhouses
-greenspace
-    greenspace
-    greenspaces
-grow
-    grow
-    growing
-    grows
-grow light
-    grow light
-    grow lights
-grow urban
-    grow urban
-    urban growing
-growth urban
-    growth urban
-    urban growth
-harare [zimbabwe]
-    harare [zimbabwe]
-    zimbabwe, harare
-harvest
-    harvest
-    harvested
-    harvesting
-health hazard
-    health hazard
-    health hazards
-health risk
-    health risk
-    health risks
-healthy cities
-    healthy cities
-    healthy city
-heat
-    heat
-    heating
-heavy metal
-    heavy metal
-    heavy metals
-    metals, heavy
-helminth
-    helminth
-    helminths
-helminth egg
-    helminth egg
-    helminth eggs
-highly urbanized area
-    highly urbanized area
-    highly urbanized areas
-historic
-    historic
-    historical
-    historically
-historic farmhouse system
-    historic farmhouse system
-    historical farmhouse system
-home garden
-    home garden
-    home gardener
-    home gardening
-    home gardens
-hong kong
-    hong kong
-    hong kongs
-hookworm infection
-    hookworm infection
-    hookworm infections
-horticultural
-    horticultural
-    horticulture
-house
-    house
-    houses
-    housing
-household survey
-    household survey
-    household surveys
+eye tracking systems
+    eye tracking systems
+    eye-tracking system
+feature extraction
+    feature extraction
+    feature extractions
+group process
+    group process
+    group processes
+hidden markov model
+    hidden markov model
+    hidden markov models
+histogram of oriented gradient (hog)
+    histogram of oriented gradient (hog)
+    histogram of oriented gradients (hog)
+hmm
+    hmm
+    hmms
 human
     human
     humans
-human health risk
-    human health risk
-    human health risks
-human machine interaction
-    human machine interaction
-    human-machine interaction
-hybrid system
-    hybrid system
-    hybrid systems
-hydrocarbon
-    hydrocarbon
-    hydrocarbons
-hydroponic
-    hydroponic
-    hydroponics
-hydroponic system
-    hydroponic system
-    hydroponic systems
-    hydroponics system
-impact
-    impact
-    impacting
-    impacts
-implementation
-    implementation
-    implemented
-import
-    import
-    importance
-    important
-improve
-    improve
-    improvement
-inclusion
-    inclusion
-    inclusive
-increasing urban population
-    increasing urban population
-    urban population increase
-indicator
-    indicator
-    indicators
-industrial
-    industrial
-    industry
-influence
-    influence
-    influencing
-inform
-    inform
-    informal
-    informality
-    information
-inform urban
-    inform urban
-    informal urban
-    urban informality
-information system
-    information system
-    information systems
-    system information
-initial
-    initial
-    initiative
-innovation
-    innovation
-    innovative
-innovative technologies
-    innovative technologies
-    innovative technology
-    technological innovation
-innovative urban
-    innovative urban
-    urban innovation
-innovative urban agriculture
-    innovative urban agriculture
-    urban innovative agriculture
-insecure
-    insecure
-    insecurity
-institution
-    institution
-    institutional
-    institutions
-intangible cultural heritage
-    intangible cultural heritage
-    intangible cultural heritages
-integrate
-    integrate
-    integrated
-    integrating
-    integration
-    integrative
-intelligent robotic
-    intelligent robotic
-    intelligent robots
-intensity
-    intensity
-    intensive
-interaction
-    interaction
-    interactions
-internet of thing (iots)
-    internet of thing (iots)
-    internet of things (iot)
-    internet-of-things (iots)
-interview
-    interview
-    interviews
-intestinal parasite
-    intestinal parasite
-    intestine parasite
-invertebrate
-    invertebrate
-    invertebrates
-investigating
-    investigating
-    investigation
-investment
-    investment
-    investments
-iot architecture
-    iot architecture
-    iot architectures
-iron oxide
-    iron oxide
-    iron oxides
-irrigated
-    irrigated
-    irrigation
-irrigation control
-    irrigation control
-    irrigation controls
-irrigation water
-    irrigation water
-    irrigation waters
-kampala uganda
-    kampala uganda
-    uganda, kampala
-kenya, nairobi
-    kenya, nairobi
-    nairobi [kenya]
-kong
-    kong
-    kongs
-laboratories
-    laboratories
-    laboratory
-laboratory condition
-    laboratory condition
-    laboratory conditions
-land use
-    land use
-    land-use
-land use conflict
-    land use conflict
-    land-use conflicts
-landscape
-    landscape
-    landscaping
-landscape ecological
-    landscape ecological
-    landscape ecology
-latent fingerprint
-    latent fingerprint
-    latent fingerprints
-lay out
-    lay out
-    lay-out
-lead
-    lead
-    leading
-leafy vegetable
-    leafy vegetable
-    leafy vegetables
-learn
-    learn
-    learned
-    learning
-led
-    led
-    leds
-led driver
-    led driver
-    led drivers
-led light
-    led light
-    led lighting
-life cycle assessment
-    life cycle assessment
-    life-cycle assessment
-life quality
-    life quality
-    quality life
-light
-    light
-    lighting
-light emitting diode
-    light emitting diode
-    light emitting diodes
-    light emitting-diodes
-limitation
-    limitation
-    limited
-    limiting
-link
-    link
-    linking
-literature review
-    literature review
-    literature reviews
-lived
-    lived
-    living
-lived space
-    lived space
-    living spaces
-livelihood
-    livelihood
-    livelihoods
-livelihood opportunities
-    livelihood opportunities
-    livelihood opportunity
-living lab
-    living lab
-    living labs
-living wall
-    living wall
-    living walls
-local
-    local
-    localism
-local food
-    local food
-    local foods
-local food system
-    local food system
-    local food systems
-locating
-    locating
-    location
-logic
-    logic
-    logical
-low carbon cities
-    low carbon cities
-    low-carbon cities
-low energies
-    low energies
-    low energy
-    low-energy
-low quality water treatment
-    low quality water treatment
-    low quality water treatments
-make
-    make
-    making
-management
-    management
-    managing
-map
-    map
-    mapping
-market
-    market
-    marketing
-    markets
-material
-    material
-    materials
-material flow
-    material flow
-    materials flow
-measure
-    measure
+human behavior
+    human behavior
+    human behaviors
+    human behaviour
+    human behaviours    
+human behavior model
+    human behavior model
+    human behavior modeling
+    human behavior modelling
+human being
+    human being
+    human beings
+human movement
+    human movement
+    human movements
+human robot interaction
+    human robot interaction
+    human-robot interaction
+    human-robot interactions
+    robot-human interaction
+    human robot interaction (hri)
+    human-robot-interaction (hri)
+human-system interaction
+    human-system interaction
+    human-system interactions
+indoor environment
+    indoor environment
+    indoor environments
+information visual processing
+    information visual processing
+    visual information processing
+intelligent space
+    intelligent space
+    intelligent spaces
+kalman filter
+    kalman filter
+    kalman filters
+life log
+    life log
+    life-logging
+measurement
     measurement
-    measuring
-meat
-    meat
-    meats
-mechanical
-    mechanical
-    mechanism
-mechanical properties
-    mechanical properties
-    mechanical property
-megacities
-    megacities
-    megacity
-mental mapping
-    mental mapping
-    mental maps
-metabolic
-    metabolic
-    metabolism
-metal
-    metal
-    metals
-metal(loid)s
-    metal(loid)s
-    metalloid
-    metalloids
-metropolis ruhr
-    metropolis ruhr
-    ruhr metropolis
-metropolitan region
-    metropolitan region
-    metropolitan regions
-microbiological
-    microbiological
-    microbiology
-micronucleus test
-    micronucleus test
-    micronucleus tests
-mitchell plain
-    mitchell plain
-    mitchells plain
-mobile visualization
-    mobile visualization
-    mobile visualizations
+    measurements
+micro-blog
+    micro-blog
+    micro-blogging
+mines
+    mines
+    mining
+mobile computer
+    mobile computer
+    mobile computing
+    mobile computing system
+    mobile computing systems
+mobile device
+    mobile device
+    mobile devices
+mobile opportunistic network
+    mobile opportunistic network
+    mobile opportunistic networks
+mobile phone
+    mobile phone
+    mobile phones
+mobile robot
+    mobile robot
+    mobile robots
+mobility model
+    mobility model
+    mobility models
 model
     model
-    modeling
-    modelization
     modelling
     models
-models, statistical
-    models, statistical
-    statistical model
-monitor and control
-    monitor and control
-    monitoring and control
-motivation
-    motivation
-    motivations
-move
-    move
-    moving
-multivariant analysis
-    multivariant analysis
-    multivariate analysis
-municipal
-    municipal
-    municipalities
-    municipality
-n leaching
-    n leaching
-    n-leaching
-nanoparticle
-    nanoparticle
-    nanoparticles
-nanosensor
-    nanosensor
-    nanosensors
-nation
-    nation
-    national
-natural resource
-    natural resource
-    natural resources
-near real time
-    near real time
-    near-real time
-negotiating
-    negotiating
-    negotiation
-neighbourhood
-    neighbourhood
-    neighbourhoods
-neoliberal
-    neoliberal
-    neoliberalism
-    neoliberalization
-neoplasm
-    neoplasm
-    neoplasms
-new urban agricultural
-    new urban agricultural
-    urban agriculture new
-nitrate
-    nitrate
-    nitrates
-nut
-    nut
-    nuts
-nutrient
-    nutrient
-    nutrients
-nutrient content
-    nutrient content
-    nutrient contents
-nutrition
-    nutrition
-    nutritional
-nutrition security
-    nutrition security
-    nutritional security
-nutritional value
-    nutritional value
-    nutritive value
-object
-    object
-    objective
-obstacle
-    obstacle
-    obstacles
-office environment
-    office environment
-    office environments
-open
-    open
-    openness
-open system
-    open system
-    open systems
-opportunities
-    opportunities
-    opportunity
-optimal production
-    optimal production
-    production optimization
-optimization
-    optimization
-    optimize
-    optimizing
-orchard
-    orchard
-    orchards
-organic
-    organic
-    organization
-organic food
-    organic food
-    organic foods
-organic pollutant
-    organic pollutant
-    organic pollutants
-organic urban
-    organic urban
-    urban organic
-organic urban farming
-    organic urban farming
-    urban organic farming
-organic waste
-    organic waste
-    organic wastes
-ornamental plant
-    ornamental plant
-    ornamental plants
-pah
-    pah
-    pahs
-parametric simulation
-    parametric simulation
-    parametric simulations
-parasite
-    parasite
-    parasites
-park
-    park
-    parking
-participant
-    participant
-    participation
-particleboard
-    particleboard
-    particleboards
-passive sustainable technique
-    passive sustainable technique
-    passive sustainable techniques
-pathogen
-    pathogen
-    pathogenic
-    pathogens
-performance based design
-    performance based design
-    performance-based design
-peri-urban
-    peri-urban
-    peri-urbanization
-peri-urban area
-    peri-urban area
-    peri-urban areas
-peri-urban farming
-    peri-urban farming
-    urban peri-urban farming
-periurban
-    periurban
-    periurbanization
-periurban agricultural
-    periurban agricultural
-    periurban agriculture
-periurban smallscale
-    periurban smallscale
-    smallscale periurban
-pesticide
-    pesticide
-    pesticides
-philippine
-    philippine
-    philippines
-photovoltaic system
-    photovoltaic system
-    photovoltaic systems
+psychological model
+    models, psychological
+    psychological model
+models, theoretical
+    models, theoretical
+    theoretical model
+monitor
+    monitor
+    monitoring
+physiologic monitoring
+    monitoring, physiologic
+    physiologic monitoring
+multi agent simulation
+    multi agent simulation
+    multi-agent simulation
+multi-view
+    multi-view
+    multi-views
+neural network
+    neural network
+    neural networks
+observational method
+    observational method
+    observational methods
+ontologies
+    ontologies
+    ontology
+optical flow method
+    optical flow method
+    optical flow methods
+particle filter
+    particle filter
+    particle filters
+periodic task
+    periodic task
+    periodic tasks
+personal information
+    personal information
+    personalized information
+personality
+    personality
+    personalization
+    personalizations
 physiological
     physiological
     physiology
-physiological stress
-    physiological stress
-    stress, physiological
-pilot project
-    pilot project
-    pilot projects
-planning practice
-    planning practice
-    planning practices
-plant
-    plant
-    planting
-    plants
-plant factories
-    plant factories
-    plant factory
-point of use
-    point of use
-    point-of-use
-political
-    political
-    politically
-    politics
-pollinator
-    pollinator
-    pollinators
-pollutant
-    pollutant
-    pollution
-polyaromatic hydrocarbon
-    polyaromatic hydrocarbon
-    polyaromatic hydrocarbons
-polycyclic aromatic hydrocarbon
-    polycyclic aromatic hydrocarbon
-    polycyclic aromatic hydrocarbons
-polysaccharide
-    polysaccharide
-    polysaccharides
-potential
-    potential
-    potentially
-potential health risk
-    potential health risk
-    potential health risks
-practice
-    practice
-    practices
-    practicing
-precision application
-    precision application
-    precision applications
-predation
-    predation
-    predator
-    predators
-preference
-    preference
-    preferences
-problem
-    problem
-    problems
-produce
-    produce
-    produced
-    producer
-    producing
-product
-    product
-    production
-    productive
-    productivity
-production system
-    production system
-    production systems
-productive rooftop
-    productive rooftop
-    rooftop production
-productive urban
-    productive urban
-    urban production
-productive urban landscape
-    productive urban landscape
-    urban productive landscapes
-profit
-    profit
-    profitability
-    profitable
-program
-    program
-    programming
-    programs
-prospective studies
-    prospective studies
-    prospective study
-protected
-    protected
-    protecting
-    protective
-protocol
-    protocol
-    protocols
-provide
-    provide
-    provided
-    provider
-    provides
-public space
-    public space
-    public spaces
-questionnaire
-    questionnaire
-    questionnaires
-questionnaire survey
-    questionnaire survey
-    questionnaire surveys
-ra hybrid system
-    ra hybrid system
-    system ra hybrid
-real time polymerase chain reaction
-    real time polymerase chain reaction
-    real-time polymerase chain reaction
-reduce
-    reduce
-    reducing
-refugee
-    refugee
-    refugees
-region
-    region
-    regional
-relating
-    relating
-    relation
-remote sensing useful
-    remote sensing useful
-    using remote sensing
-reproduction
-    reproduction
-    reproductive
-requirement
-    requirement
-    requires
-research program
-    research program
-    research programs
-resettled
-    resettled
-    resettlement
-residential district
-    residential district
-    residential districts
-resilience
-    resilience
-    resilient
-resonant converter
-    resonant converter
-    resonant converters
-resource efficiencies
-    resource efficiencies
-    resource efficiency
-response
-    response
-    responsibility
-    responsible
-reuse
-    reuse
-    reusing
-right to the city
-    right to the city
-    the right to the city
-risk factor
-    risk factor
-    risk factors
-river
-    river
-    rivers
-robotic
-    robotic
+pocket switched network
+    pocket switched network
+    pocket switched networks
+power law distribution
+    power law distribution
+    power-law distribution
+prisoner's dilemma
+    prisoner's dilemma
+    prisoners' dilemma
+private space
+    private space
+    private spaces
+proactive interface
+    proactive interface
+    proactive interfaces
+psychological process
+    psychological process
+    psychological processes
+reality mining
+    reality mining
+    reality minings
+robot
+    robot
     robotics
-roof
-    roof
-    roofs
-roof garden
-    roof garden
-    roof-garden
-rooftop farming
-    rooftop farming
-    rooftop farms
-rooftop garden
-    rooftop garden
-    rooftop gardening
-    rooftop gardens
-rooftop greenhouse
-    rooftop greenhouse
-    rooftop greenhouses
-rooftop polytunnel
-    rooftop polytunnel
-    rooftop polytunnels
-rooftop urban
-    rooftop urban
-    urban rooftop
-row crop
-    row crop
-    row crops
-rural area
-    rural area
-    rural areas
-rural landscape
-    rural landscape
-    rural landscapes
-rural-urban migration
-    rural-urban migration
-    urban-rural migration
-salinity
-    salinity
-    salinization
-salmonella spp
-    salmonella spp
-    salmonella spp.
-sample
-    sample
-    sampling
-scale
-    scale
-    scaling
-sediment
-    sediment
-    sedimentation
-    sediments
-selected example
-    selected example
-    selected examples
-self organization
-    self organization
-    self-organization
-self sufficiency
-    self sufficiency
-    self-sufficiency
-    self-sufficient
-sensor
-    sensor
-    sensors
-seoul , south korea
-    seoul , south korea
-    seoul [south korea]
-shaped
-    shaped
-    shaping
-shrinking cities
-    shrinking cities
-    shrinking city
-silicone
-    silicone
-    silicones
-smallholder
-    smallholder
-    smallholders
-smallholder farm
-    smallholder farm
-    smallholder farms
-smart agriculture
-    smart agriculture
-    smart agricultures
+    robots
+robot behavior
+    robot behavior
+    robot behaviors
+scarf
+    scarf
+    scarfing
+season
+    season
+    seasons
+self help device
+    self help device
+    self-help devices
+self organizing maps
+    self organizing maps
+    self-organizing map
+sensor network
+    sensor network
+    sensor networks
+sensorimotor system
+    sensorimotor system
+    sensorimotor systems
+shape change
+    shape change
+    shape-changing
+signal
+    signal
+    signaling
+    signals
+simulation
+    simulation
+    simulations
+    simulators
+small screen interface
+    small screen interface
+    small screen interfaces
 smart cities
     smart cities
     smart city
-smart control systems
-    smart control systems
-    smart controlling systems
-smart farming
-    smart farming
-    smart farmings
-smart system
-    smart system
-    smart systems
-smartphone
-    smartphone
-    smartphones
-social
-    social
-    socialism
-    socially
-social acceptance
-    social acceptance
-    socially acceptable
-social characteristic
-    social characteristic
-    social characteristics
-social communications
-    social communications
-    social community
-social innovation
-    social innovation
-    social innovations
-social movement
-    social movement
-    social movements
+smart device
+    smart device
+    smart devices
+smart home
+    smart home
+    smart homes
+social capital
+    social capital
+    social capitals
+social concern
+    social concern
+    social concerns
+social interaction
+    social interaction
+    social interactions
 social network
     social network
     social networks
-social representation
-    social representation
-    social representations
-social sustainability
-    social sustainability
-    social sustainable
-social tie
-    social tie
-    social ties
-social- economic
-    social- economic
-    social-economic
-socioeconomic
-    socioeconomic
-    socioeconomics
-soil
-    soil
-    soils
-soil conditioner
-    soil conditioner
-    soil conditioners
-soil pollutant
-    soil pollutant
-    soil pollutants
-    soil pollution
-soil test
-    soil test
-    soil testing
-soil urban
-    soil urban
-    urban soil
-    urban soils
-soilless system
-    soilless system
-    soilless systems
-solar power
-    solar power
-    solar-powered
-soluble substance
-    soluble substance
-    soluble substances
-spatial variation
-    spatial variation
-    spatial variations
-special
-    special
-    specialization
-spider
-    spider
-    spiders
-stakeholder
-    stakeholder
-    stakeholders
-standard
-    standard
-    standards
-stream sediment
-    stream sediment
-    stream sediments
-structural
-    structural
-    structure
-student
-    student
-    students
-studied
-    studied
-    studies
-    study
-studio
-    studio
-    studios
-study practice
-    study practice
-    study practices
-subirrigated planter
-    subirrigated planter
-    subirrigated planters
-substrate
-    substrate
-    substrates
-suburban
-    suburban
-    suburbanization
-supply chain
-    supply chain
-    supply chains
-support
-    support
-    supported
-    supporting
-support urban
-    support urban
-    supported urban
-supporting actor
-    supporting actor
-    supporting actors
+social robotics
+    social robotics
+    social robots
+support vector machine
+    support vector machine
+    support vector machines
 survey
     survey
     surveying
     surveys
-survey method
-    survey method
-    survey methods
-survival
-    survival
-    survive
-survivor
-    survivor
-    survivors
-sustainability
-    sustainability
-    sustainable
-    sustaining
-sustainability transition
-    sustainability transition
-    sustainability transitions
-sustainable building
-    sustainable building
-    sustainable buildings
-sustainable cities
-    sustainable cities
-    sustainable city
-sustainable communities
-    sustainable communities
-    sustainable community
-sustainable development goal
-    sustainable development goal
-    sustainable development goals
-sustainable development urban
-    sustainable development urban
-    sustainable urban development
-sustainable farming
-    sustainable farming
-    sustainable farming.
-sustainable urban
-    sustainable urban
-    sustaining urban
-    urban sustainability
-sustainable urban design
-    sustainable urban design
-    sustainable urban designs
-sustainable urban farming
-    sustainable urban farming
-    sustaining urban farming
-sustainable use
-    sustainable use
-    using sustainable
-system
-    system
-    systemic
-    systems
-system optimization
-    system optimization
-    system optimizations
-system vertical
-    system vertical
-    vertical system
-system vertical farming
-    system vertical farming
-    vertical farming system
-    vertical farming systems
-systemic analysis
-    systemic analysis
-    systems analysis
-systemic approach
-    systemic approach
-    systems approach
-target hazard quotient
-    target hazard quotient
-    target hazard quotients
-technological
-    technological
-    technology
-technology useful
-    technology useful
-    using technology
-technosol
-    technosol
-    technosols
-tested
-    tested
-    testing
-thermodynamic
-    thermodynamic
-    thermodynamics
-threat
-    threat
-    threats
-tourist destination
-    tourist destination
-    tourist destinations
-toward
-    toward
-    towards
-toward sustainability
-    toward sustainability
-    towards sustainable
-towards urban farming
-    towards urban farming
-    urban farming toward
-    urban farming towards
-toxic
-    toxic
-    toxicity
-trace
-    trace
-    tracing
-trace element
-    trace element
-    trace elements
-trace element concentration
-    trace element concentration
-    trace element concentrations
-trace metal
-    trace metal
-    trace metals
-trader
-    trader
-    traders
-traffic impact
-    traffic impact
-    traffic impacts
-transformation
-    transformation
-    transformative
-    transforming
-transition
-    transition
-    transitions
-transition theories
-    transition theories
-    transition theory
-transport
-    transport
-    transportation
-trend
-    trend
-    trends
-trophic interaction
-    trophic interaction
-    trophic interactions
-tropical
-    tropical
-    tropics
-twin cities
-    twin cities
-    twin city
-united state
-    united state
-    united states
-universal
-    universal
-    university
-urban
-    urban
-    urbanism
-    urbanity
-    urbanization
-    urbanized
-urban agricultural landscape
-    urban agricultural landscape
-    urban agricultural landscapes
-urban agricultural practice
-    urban agricultural practice
-    urban agriculture practice
-urban agricultural product
-    urban agricultural product
-    urban agricultural productivity
-urban allotment
-    urban allotment
-    urban allotments
-urban area
-    urban area
-    urban areas
-    urbanized area
-urban environmental
-    urban environmental
-    urban environmentalism
-urban farm
-    urban farm
-    urban farming
-    urban farmings
-urban farm system
-    urban farm system
-    urban farming system
-urban farmer
-    urban farmer
-    urban farmers
-    urbanized farmer
-urban food system
-    urban food system
-    urban food systems
-urban garden
-    urban garden
-    urban gardener
-    urban gardening
-    urban gardens
-urban green
-    urban green
-    urban greening
-urban green space
-    urban green space
-    urban green spaces
-urban metabolism
-    urban metabolism
-    urban metabolisms
-urban region
-    urban region
-    urban regions
-urban setting
-    urban setting
-    urban settings
-urban space
-    urban space
-    urban spaces
-urban vegetable farming
-    urban vegetable farming
-    urban vegetable farmings
-urban vertical
-    urban vertical
-    vertical urban
-urban waste
-    urban waste
-    urban wastes
-urbanfarm
-    urbanfarm
-    urbanfarming
-use
-    use
-    used
-    useful
-    using
-use value
-    use value
-    using value
-utilisation
-    utilisation
-    utilising
-utility
-    utility
-    utilization
-value
-    value
-    valuing
-value added
-    value added
-    value-added
-vegetable
-    vegetable
-    vegetables
-    vegetation
-vegetable crop
-    vegetable crop
-    vegetable crops
-vegetable farm
-    vegetable farm
-    vegetable farming
-vegetable production
-    vegetable production
-    vegetable productions
-vertical farm
-    vertical farm
-    vertical farming
-vertical gardening
-    vertical gardening
-    vertical gardens
-volunteer
-    volunteer
-    volunteering
-vulnerability
-    vulnerability
-    vulnerable
-wash
-    wash
-    washing
-waste disposal facilities
-    waste disposal facilities
-    waste disposal facility
-wastewaterirrigated
-    wastewaterirrigated
-    wastewaterirrigation
-water quality index
-    water quality index
-    water quality indexes
-water resource
-    water resource
-    water resources
-wildfire
-    wildfire
-    wildfires
-x ray absorption spectroscopy
-    x ray absorption spectroscopy
-    x-ray absorption spectroscopy
-zero waste concept
-    zero waste concept
-    zero waste concepts
-zero water discharge
-    zero water discharge
-    zero-water discharge
-zone
-    zone
-    zoning
+target tracking
+    target tracking
+    tracking targets
+test facilities
+    test facilities
+    testing facility
+through the wall
+    through the wall
+    through-the-wall
+transfer function
+    transfer function
+    transfer functions
+user fatigue
+    user fatigue
+    user fatigues
+video game
+    video game
+    video games
+virtual environment
+    virtual environment
+    virtual environments
+virtual human
+    virtual human
+    virtual humans
+visual sensor
+    visual sensor
+    visual sensors
+wearable device
+    wearable device
+    wearable devices
+    wearable sensor
+    wearable sensors    
+wearable interface
+    wearable interface
+    wearable interfaces
+wireless networking
+    wireless networking
+    wireless networks
+wireless sensor network
+    wireless sensor network
+    wireless sensor networks
+work environments
+    work environments
+    working environment
