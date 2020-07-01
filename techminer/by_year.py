@@ -390,6 +390,8 @@ def __TAB0__(data):
     return grid
 
 
+
+
 def app(data, tab=None):
     """Jupyter Lab dashboard.
     """

@@ -1,349 +1,443 @@
 """
-Correlation Maps generation and manipulation
+Strategic and thematic maps
 ==================================================================================================
 
 
 
 """
-import textwrap
 
-import matplotlib.pyplot as plt
-import networkx as nx
+## path_length = nx.shortest_path_length(self._graph)
+## distances = pd.DataFrame(index=self._graph.nodes(), columns=self._graph.nodes())
+## for row, data in path_length:
+##     for col, dist in data.items():
+##         distances.loc[row, col] = dist
+## distances = distances.fillna(distances.max().max())
+## return nx.kamada_kawai_layout(self._graph, dist=distances.to_dict())
+
+import json
+
 import pandas as pd
 
-TEXTLEN = 15
+import ipywidgets as widgets
+import matplotlib
+import matplotlib.pyplot as pyplot
+from ipywidgets import AppLayout, GridspecLayout, Layout
+import techminer.graph as graph
+from sklearn.cluster import AgglomerativeClustering
+from techminer.plots import COLORMAPS
+
+pd.options.display.max_rows = 50
+pd.options.display.max_columns = 50
 
 
-class Map:
-    def __init__(self):
-        self._graph = nx.Graph()
+def strategic_map(
+    X, n_clusters=2, linkage="ward", output=0, cmap="Greys", figsize=(6, 6),
+):
 
-    def _compute_graph_layout(self):
-        path_length = nx.shortest_path_length(self._graph)
-        distances = pd.DataFrame(index=self._graph.nodes(), columns=self._graph.nodes())
-        for row, data in path_length:
-            for col, dist in data.items():
-                distances.loc[row, col] = dist
-        distances = distances.fillna(distances.max().max())
-        return nx.kamada_kawai_layout(self._graph, dist=distances.to_dict())
+    clustering = AgglomerativeClustering(linkage=linkage, n_clusters=n_clusters)
+    clustering.fit(1 - X)
+    cluster_dict = {key: value for key, value in zip(X.columns, clustering.labels_)}
 
-    def add_node(self, node_for_adding, **attr):
-        """Adds a node to a current map.
+    map = pd.DataFrame(
+        {"cluster": list(range(n_clusters))}, index=list(range(n_clusters))
+    )
+    map["density"] = 0.0
+    map["centrality"] = 0.0
+    map["name"] = ""
+    map["n_members"] = 0
+    map["members"] = [[]] * len(map)
 
-        Examples
-        ----------------------------------------------------------------------------------------------
+    #
+    # Members of cluster
+    #
+    for t in X.columns:
+        map.at[cluster_dict[t], "members"] = map.loc[cluster_dict[t], "members"] + [t]
 
-        """
-        self._graph.add_node(node_for_adding, **attr)
+    #
+    # Name of cluster
+    #
+    for i_cluster, words in enumerate(map["members"]):
+        cluster_name = None
+        cluster_freq = None
+        map.at[i_cluster, "n_members"] = len(words)
+        for word in words:
+            freq = int(word.split(" ")[-1].split(":")[0])
+            if cluster_freq is None or freq > cluster_freq:
+                cluster_name = word
+                cluster_freq = freq
+        map.at[i_cluster, "name"] = cluster_name
 
-    def add_nodes_from(self, nodes_for_adding, **attr):
-        """Adds a bunch of nodes to a current map.
+    for i_cluster in range(len(map)):
+        map.at[i_cluster, "members"] = ";".join(map.loc[i_cluster, "members"])
 
-        Examples
-        ----------------------------------------------------------------------------------------------
+    #
+    # density
+    #
+    for i_cluster in range(n_clusters):
+        Z = X[[t for t in X.columns if cluster_dict[t] == i_cluster]]
+        I = Z.copy()
+        I = I.loc[[t for t in I.index if cluster_dict[t] == i_cluster], :]
+        if len(I) == 1:
+            map.at[i_cluster, "density"] = 0
+        else:
+            density = []
+            for i_column in range(len(I.columns) - 1):
+                for i_index in range(i_column + 1, len(I.index)):
+                    density.append(I.loc[I.index[i_index], I.columns[i_column]])
 
-        """
-        self._graph.add_nodes_from(self, nodes_for_adding, **attr)
+            map.at[i_cluster, "density"] = sum(density) / len(density)
 
-    def add_edge(self, u_of_edge, v_of_edge, **attr):
-        """Add an edge to a current map.
+    #
+    # centratity
+    #
+    for i_cluster in range(n_clusters):
+        Z = X[[t for t in X.columns if cluster_dict[t] == i_cluster]]
+        I = Z.copy()
+        I = I.loc[[t for t in I.index if cluster_dict[t] != i_cluster], :]
+        map.at[i_cluster, "centrality"] = I.sum().sum()
 
-        Examples
-        ----------------------------------------------------------------------------------------------
+    #
+    # Output
+    #
+    if output == 0:
+        return map
 
-        """
-        self._graph.add_edge(self, u_of_edge, v_of_edge, **attr)
+    if output == 1:
+        text = {}
+        for i_cluster in range(n_clusters):
+            text[map.name[i_cluster]] = map.members[i_cluster].split(";")
+        return json.dumps(text, indent=4, sort_keys=True)
 
-    def add_edges_from(self, ebunch_to_add, **attr):
-        """Adds a bunch of edges to a current map.
+    if output == 2:
 
-        Examples
-        ----------------------------------------------------------------------------------------------
+        matplotlib.rc("font", size=11)
+        cmap = pyplot.cm.get_cmap(cmap)
+        fig = pyplot.Figure(figsize=figsize)
+        ax = fig.subplots()
 
-        """
-        self._graph().add_edges_from(self, ebunch_to_add, **attr)
+        node_sizes = [int(t.split(" ")[-1].split(":")[0]) for t in map.name]
+        max_size = max(node_sizes)
+        min_size = min(node_sizes)
+        node_sizes = [
+            600 + int(2500 * (w - min_size) / (max_size - min_size)) for w in node_sizes
+        ]
 
-    # def occurrence_map(
-    #     self,
-    #     figsize,
-    #     terms,
-    #     docs,
-    #     edges,
-    #     label_terms,
-    #     label_docs,
-    #     term_props={},
-    #     doc_props={},
-    #     edge_props={},
-    #     label_term_props={},
-    #     label_docs_props={},
-    # ):
-    #     """Cluster map for ocurrence and co-ocurrence matrices.
+        node_colors = [int(t.split(" ")[-1].split(":")[1]) for t in map.name]
+        max_citations = max(node_colors)
+        min_citations = min(node_colors)
+        node_colors = [
+            cmap(0.2 + 0.80 * (i - min_citations) / (max_citations - min_citations))
+            for i in node_colors
+        ]
 
-    #     Examples
-    #     ----------------------------------------------------------------------------------------------
-
-    #     >>> terms = ["A", "B", "C", "D"]
-    #     >>> docs = ["doc#0", "doc#1", "doc#2", "doc#3", "doc#4", "doc#5"]
-    #     >>> edges = [
-    #     ...     ("A", "doc#0"),
-    #     ...     ("A", "doc#1"),
-    #     ...     ("B", "doc#1"),
-    #     ...     ("A", "doc#2"),
-    #     ...     ("B", "doc#2"),
-    #     ...     ("C", "doc#2"),
-    #     ...     ("B", "doc#3"),
-    #     ...     ("B", "doc#4"),
-    #     ...     ("D", "doc#4"),
-    #     ...     ("D", "doc#5"),
-    #     ... ]
-    #     >>> label_docs = {
-    #     ...     "doc#0": 2,
-    #     ...     "doc#1": 1,
-    #     ...     "doc#2": 1,
-    #     ...     "doc#3": 1,
-    #     ...     "doc#4": 1,
-    #     ...     "doc#5": 1,
-    #     ... }
-    #     >>> label_terms = {
-    #     ...     "A": "Author A",
-    #     ...     "B": "Author B",
-    #     ...     "C": "Author C",
-    #     ...     "D": "Author D",
-    #     ... }
-    #     >>> nxmap = Map()
-    #     >>> nxmap.occurrence_map(
-    #     ...     figsize=(10,10),
-    #     ...     terms=terms,
-    #     ...     docs=docs,
-    #     ...     edges=edges,
-    #     ...     label_terms=label_terms,
-    #     ...     label_docs=label_docs,
-    #     ...     term_props={"node_color": "red"},
-    #     ...     label_docs_props={"color": "lightblue"},
-    #     ...     label_term_props=dict(ma="left", rotation=0, fontsize=10, disp=3, bbox=None),
-    #     ... )
-    #     >>> plt.savefig('sphinx/images/network_occurrence_map.png')
-
-    #     .. image:: images/network_occurrence_map.png
-    #         :width: 600px
-    #         :align: center
-
-    #     >>> import pandas as pd
-    #     >>> x = [ 'A', 'A', 'A;B', 'B', 'A;B;C', 'D', 'B;D']
-    #     >>> df = pd.DataFrame(
-    #     ...    {
-    #     ...       'Authors': x,
-    #     ...       'ID': list(range(len(x))),
-    #     ...    }
-    #     ... )
-    #     >>> df
-    #       Authors  ID
-    #     0       A   0
-    #     1       A   1
-    #     2     A;B   2
-    #     3       B   3
-    #     4   A;B;C   4
-    #     5       D   5
-    #     6     B;D   6
-    #     >>> nxmap = Map()
-    #     >>> dic1 = nxmap.occurrence_map(df, 'Authors')
-    #     >>> dic2 = dict(
-    #     ...     term_props={"node_color": "red"},
-    #     ...     label_docs_props={"color": "lightblue"},
-    #     ...     label_term_props=dict(ma="left", rotation=0, fontsize=10, disp=3, bbox=None)
-    #     ... )
-    #     >>> kwargs = {**dic1, **dic2}
-    #     >>> kwargs
-    #     {'terms': ['A', 'B', 'C', 'D'], 'docs': ['doc#0', 'doc#1', 'doc#2', 'doc#3', 'doc#4', 'doc#5'], 'edges': [('A', 'doc#0'), ('A', 'doc#1'), ('B', 'doc#1'), ('A', 'doc#2'), ('B', 'doc#2'), ('C', 'doc#2'), ('B', 'doc#3'), ('B', 'doc#4'), ('D', 'doc#4'), ('D', 'doc#5')], 'label_terms': {'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D'}, 'label_docs': {'doc#0': 2, 'doc#1': 1, 'doc#2': 1, 'doc#3': 1, 'doc#4': 1, 'doc#5': 1}, 'term_props': {'node_color': 'red'}, 'label_docs_props': {'color': 'lightblue'}, 'label_term_props': {'ma': 'left', 'rotation': 0, 'fontsize': 10, 'disp': 3, 'bbox': None}}
-    #     >>> nxmap.occurrence_map(**kwargs)
-    #     >>> plt.savefig('sphinx/images/network_occurrence_map_1.png')
-
-    #     .. image:: images/network_occurrence_map_1.png
-    #         :width: 600px
-    #         :align: center
-
-    #     """
-    #     fig = plt.Figure(figsize=figsize)
-    #     ax = fig.subplots()
-
-    #     self._graph.clear()
-    #     self._graph.add_nodes_from(terms)
-    #     self._graph.add_nodes_from(docs)
-    #     self._graph.add_edges_from(edges)
-
-    #     layout = self._compute_graph_layout()
-
-    #     nx.draw_networkx_nodes(
-    #         self._graph, pos=layout, nodelist=terms, ax=ax, **term_props
-    #     )
-    #     nx.draw_networkx_nodes(
-    #         self._graph, pos=layout, nodelist=docs, ax=ax, **doc_props
-    #     )
-    #     nx.draw_networkx_edges(self._graph, pos=layout, ax=ax, **edge_props)
-    #     # nx.draw_networkx_labels(
-    #     #    self._graph, pos=layout, labels=label_docs, **label_docs_props
-    #     # )
-    #     self.draw_network_labels(
-    #         pos=layout, labels=label_terms, ax=ax, **label_term_props
-    #     )
-    #     self.draw_network_labels(
-    #         pos=layout, labels=label_docs, ax=ax, **label_docs_props
-    #     )
-
-    #     plt.axis("off")
-
-    # def correlation_map(
-    #     self, figsize, terms, edges_75, edges_50, edges_25, other_edges, term_props={},
-    # ):
-    #     """
-
-    #     Examples
-    #     ----------------------------------------------------------------------------------------------
-
-    #     >>> kwargs = dict(
-    #     ...     terms = list('ABCDE'),
-    #     ...     edges_75 = [('A', 'B')],
-    #     ...     edges_50 = [('B', 'C'), ('A', 'C')],
-    #     ...     edges_25 = [('D', 'E')],
-    #     ...     other_edges = [('B', 'E')],
-    #     ... )
-    #     >>> nxmap = Map()
-    #     >>> fig = nxmap.correlation_map(figsize=(10,10),**kwargs)
-    #     >>> fig.savefig('sphinx/images/correlation_map.png')
-
-    #     .. image:: images/correlation_map.png
-    #         :width: 600px
-    #         :align: center
-
-    #     >>> import pandas as pd
-    #     >>> x = [ 'A', 'A;C', 'B', 'A;B;C', 'B;D', 'A;B', 'A;C']
-    #     >>> y = [ 'a', 'a;b', 'b', 'c', 'c;d', 'd', 'c;d']
-    #     >>> df = pd.DataFrame(
-    #     ...    {
-    #     ...       'Authors': x,
-    #     ...       'Author Keywords': y,
-    #     ...       "Times_Cited": list(range(len(x))),
-    #     ...       'ID': list(range(len(x))),
-    #     ...    }
-    #     ... )
-    #     >>> df
-    #       Authors Author Keywords  Times_Cited   ID
-    #     0       A               a         0   0
-    #     1     A;C             a;b         1   1
-    #     2       B               b         2   2
-    #     3   A;B;C               c         3   3
-    #     4     B;D             c;d         4   4
-    #     5     A;B               d         5   5
-    #     6     A;C             c;d         6   6
-    #     >>> nxmap = Map()
-    #     >>> kwargs = nxmap.correlation_map(df, 'Authors')
-    #     >>> nxmap.correlation_map(**kwargs)
-    #     >>> plt.savefig('sphinx/images/correlation_map_1.png')
-
-    #     .. image:: images/correlation_map_1.png
-    #         :width: 600px
-    #         :align: center
-
-    #     >>> nxmap = Map()
-    #     >>> kwargs = DataFrame(df).autocorr_map('Authors',  top_n_links=4)
-    #     >>> nxmap.correlation_map(**kwargs)
-    #     >>> plt.savefig('sphinx/images/correlation_map_2.png')
-
-    #     .. image:: images/correlation_map_2.png
-    #         :width: 600px
-    #         :align: center
-
-    #     >>> nxmap = Map()
-    #     >>> kwargs = DataFrame(df).corr_map('Authors', by='Author Keywords',  top_n_links=4)
-    #     >>> nxmap.correlation_map(**kwargs)
-    #     >>> plt.savefig('sphinx/images/correlation_map_3.png')
-
-    #     .. image:: images/correlation_map_3.png
-    #         :width: 600px
-    #         :align: center
-
-    #     """
-
-    #     fig = plt.Figure(figsize=figsize)
-    #     ax = fig.subplots()
-
-    #     self._graph.clear()
-    #     self._graph.add_nodes_from(terms)
-    #     if edges_75 is not None:
-    #         self._graph.add_edges_from(edges_75)
-    #     if edges_50 is not None:
-    #         self._graph.add_edges_from(edges_50)
-    #     if edges_25 is not None:
-    #         self._graph.add_edges_from(edges_25)
-    #     if other_edges is not None:
-    #         self._graph.add_edges_from(other_edges)
-
-    #     layout = self._compute_graph_layout()
-
-    #     nx.draw_networkx_nodes(
-    #         self._graph, pos=layout, nodelist=terms, ax=ax, **term_props
-    #     )
-
-    #     if edges_75 is not None:
-    #         edge_props = dict(
-    #             width=3, color="k", style="solid", alpha=0.9, arrows=False
-    #         )
-    #         nx.draw_networkx_edges(
-    #             self._graph, edgelist=edges_75, pos=layout, ax=ax, **edge_props
-    #         )
-    #     if edges_50 is not None:
-    #         edge_props = dict(
-    #             width=1, color="k", style="solid", alpha=0.9, arrows=False
-    #         )
-    #         nx.draw_networkx_edges(
-    #             self._graph, edgelist=edges_50, pos=layout, ax=ax, **edge_props
-    #         )
-    #     if edges_25 is not None:
-    #         edge_props = dict(
-    #             width=2, color="lightgray", style="dashed", alpha=0.7, arrows=False
-    #         )
-    #         nx.draw_networkx_edges(
-    #             self._graph, edgelist=edges_25, pos=layout, ax=ax, **edge_props
-    #         )
-    #     if other_edges is not None:
-    #         edge_props = dict(
-    #             width=2, color="lightgray", style="dotted", alpha=0.7, arrows=False,
-    #         )
-    #         nx.draw_networkx_edges(
-    #             self._graph, edgelist=other_edges, pos=layout, ax=ax, **edge_props
-    #         )
-
-    #     label_terms = {t: t for t in terms}
-    #     self.draw_network_labels(pos=layout, labels=label_terms, ax=ax, **term_props)
-
-    #     ax.set_axis_off()
-    #     return fig
-
-    def draw_network_labels(
-        self, pos, labels, disp=1, ax=None, fontdict=None, **kwargs
-    ):
-
-        x_left, x_right = plt.xlim()
-        y_left, y_right = plt.ylim()
-        delta_x = (x_right - x_left) * disp / 100
-        delta_y = (y_right - y_left) * disp / 100
-
-        default = dict(
-            fontsize=12,
-            ha="left",
-            va="bottom",
-            bbox=dict(boxstyle="square", ec="lightgray", fc="white",),
+        ax.scatter(
+            map.centrality,
+            map.density,
+            s=node_sizes,
+            linewidths=1,
+            edgecolors="k",
+            c=node_colors,
         )
-        props = {**default, **kwargs}
 
-        labels = {
-            key: textwrap.shorten(text=str(labels[key]), width=TEXTLEN)
-            for key in labels.keys()
-        }
+        xlim = ax.get_xlim()
+        ylim = ax.get_ylim()
 
-        for node in self._graph.nodes:
-            if node in labels:
-                x_pos, y_pos = pos[node]
-                ax.text(
-                    x_pos + delta_x, y_pos + delta_y, labels[node], **props,
+        dx = 0.15 * (xlim[1] - xlim[0])
+        dy = 0.15 * (ylim[1] - ylim[0])
+
+        ax.set_xlim(xlim[0] - dx, xlim[1] + dx)
+        ax.set_ylim(ylim[0] - dy, ylim[1] + dy)
+
+        for idx, term in enumerate(map.name):
+            x, y = map.centrality[idx], map.density[idx]
+            ax.text(
+                x
+                + 0.01 * (xlim[1] - xlim[0])
+                + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
+                y
+                - 0.01 * (ylim[1] - ylim[0])
+                - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
+                s=term,
+                fontsize=10,
+                bbox=dict(
+                    facecolor="w",
+                    alpha=1.0,
+                    edgecolor="gray",
+                    boxstyle="round,pad=0.5",
+                ),
+                horizontalalignment="left",
+                verticalalignment="top",
+            )
+
+        ax.axhline(
+            y=map.density.median(),
+            color="gray",
+            linestyle="--",
+            linewidth=0.5,
+            zorder=-1,
+        )
+        ax.axvline(
+            x=map.centrality.median(),
+            color="gray",
+            linestyle="--",
+            linewidth=1,
+            zorder=-1,
+        )
+
+        #  ax.set_aspect("equal")
+        ax.axis("off")
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.spines["left"].set_visible(False)
+        ax.spines["bottom"].set_visible(False)
+
+        fig.set_tight_layout(True)
+
+        return fig
+
+    return None
+
+
+MAP_COLUMNS = [
+    "Author_Keywords",
+    "Author_Keywords_CL",
+    "Index_Keywords",
+    "Index_Keywords_CL",
+    "Abstract_words",
+    "Title_words",
+]
+
+
+def __TAB0__(data, limit_to, exclude):
+    # -------------------------------------------------------------------------
+    #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    COLUMNS = [column for column in data.columns if column in MAP_COLUMNS]
+    #
+    left_panel = [
+        # 0
+        {
+            "arg": "view",
+            "desc": "View:",
+            "widget": widgets.Dropdown(
+                options=["Table", "Membership", "Plot"], layout=Layout(width="55%"),
+            ),
+        },
+        # 1
+        {
+            "arg": "column",
+            "desc": "Column to analyze:",
+            "widget": widgets.Dropdown(
+                options=[z for z in COLUMNS if z in data.columns],
+                layout=Layout(width="55%"),
+            ),
+        },
+        # 2
+        {
+            "arg": "top_by",
+            "desc": "Top by:",
+            "widget": widgets.Dropdown(
+                options=["Num Documents", "Times Cited",], layout=Layout(width="55%"),
+            ),
+        },
+        # 3
+        {
+            "arg": "top_n",
+            "desc": "Top N:",
+            "widget": widgets.Dropdown(
+                options=list(range(20, 501, 5)), layout=Layout(width="55%"),
+            ),
+        },
+        # 4
+        {
+            "arg": "normalization",
+            "desc": "Normalization:",
+            "widget": widgets.Dropdown(
+                options=["None", "association", "inclusion", "jaccard", "salton"],
+                layout=Layout(width="55%"),
+            ),
+        },
+        # 5
+        {
+            "arg": "n_clusters",
+            "desc": "# clusters:",
+            "widget": widgets.Dropdown(
+                options=list(range(2, 20)), layout=Layout(width="55%"),
+            ),
+        },
+        # 6
+        {
+            "arg": "linkage",
+            "desc": "Linkage:",
+            "widget": widgets.Dropdown(
+                options=["ward", "complete", "average", "single"],
+                layout=Layout(width="55%"),
+            ),
+        },
+        # 7
+        {
+            "arg": "cmap",
+            "desc": "Colormap:",
+            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
+        },
+        # 8
+        {
+            "arg": "width",
+            "desc": "Fig Width",
+            "widget": widgets.Dropdown(
+                options=range(5, 20, 1), ensure_option=True, layout=Layout(width="55%"),
+            ),
+        },
+        # 11
+        {
+            "arg": "height",
+            "desc": "Fig Height",
+            "widget": widgets.Dropdown(
+                options=range(5, 20, 1), ensure_option=True, layout=Layout(width="55%"),
+            ),
+        },
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
+    def server(**kwargs):
+        #
+        # Logic
+        #
+        view = kwargs["view"]
+        column = kwargs["column"]
+        top_by = kwargs["top_by"]
+        top_n = int(kwargs["top_n"])
+        normalization = kwargs["normalization"]
+        n_clusters = int(kwargs["n_clusters"])
+        linkage = kwargs["linkage"]
+        cmap = kwargs["cmap"]
+        width = int(kwargs["width"])
+        height = int(kwargs["height"])
+
+        matrix = graph.co_occurrence_matrix(
+            data=data,
+            column=column,
+            top_by=top_by,
+            top_n=top_n,
+            normalization=normalization,
+            limit_to=limit_to,
+            exclude=exclude,
+        )
+
+        strategic_map_table = strategic_map(
+            X=matrix, n_clusters=n_clusters, linkage=linkage, figsize=(width, height),
+        )
+
+        output.clear_output()
+        with output:
+            if view == "Table":
+                display(
+                    strategic_map(
+                        X=matrix,
+                        n_clusters=n_clusters,
+                        linkage=linkage,
+                        output=0,
+                        figsize=(width, height),
+                    )
                 )
+
+            if view == "Membership":
+                display(
+                    print(
+                        strategic_map(
+                            X=matrix,
+                            n_clusters=n_clusters,
+                            linkage=linkage,
+                            output=1,
+                            figsize=(width, height),
+                        )
+                    )
+                )
+
+            if view == "Plot":
+                display(
+                    strategic_map(
+                        X=matrix,
+                        n_clusters=n_clusters,
+                        linkage=linkage,
+                        output=2,
+                        figsize=(width, height),
+                    )
+                )
+
+        return
+
+    # -------------------------------------------------------------------------
+    #
+    # Generic
+    #
+    # -------------------------------------------------------------------------
+    args = {control["arg"]: control["widget"] for control in left_panel}
+    output = widgets.Output()
+    with output:
+        display(widgets.interactive_output(server, args,))
+    #
+    grid = GridspecLayout(13, 6)
+    #
+    # Left panel
+    #
+    for index in range(len(left_panel)):
+        grid[index, 0] = widgets.HBox(
+            [
+                widgets.Label(value=left_panel[index]["desc"]),
+                left_panel[index]["widget"],
+            ],
+            layout=Layout(
+                display="flex", justify_content="flex-end", align_content="center",
+            ),
+        )
+    #
+    # Output
+    #
+    grid[0:, 1:] = widgets.VBox(
+        [output], layout=Layout(height="650px", border="2px solid gray")
+    )
+
+    return grid
+
+
+def app(data, limit_to=None, exclude=None, tab=None):
+    """Jupyter Lab dashboard.
+    """
+    app_title = "Maps"
+    tab_titles = [
+        "Strategic Map",
+    ]
+    tab_list = [
+        __TAB0__(data, limit_to=limit_to, exclude=exclude),
+    ]
+
+    if tab is not None:
+        return AppLayout(
+            header=widgets.HTML(
+                value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+                    app_title + " / " + tab_titles[tab]
+                )
+            ),
+            center=tab_list[tab],
+            pane_heights=["80px", "660px", 0],  # tamaño total de la ventana: Ok!
+        )
+
+    body = widgets.Tab()
+    body.children = tab_list
+    for i in range(len(tab_list)):
+        body.set_title(i, tab_titles[i])
+    return AppLayout(
+        header=widgets.HTML(
+            value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+                app_title
+            )
+        ),
+        center=body,
+        pane_heights=["80px", "720px", 0],
+    )

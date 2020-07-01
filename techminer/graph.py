@@ -16,9 +16,9 @@ from techminer.plots import COLORMAPS
 
 from cdlib import algorithms
 
-from networkx.algorithms.community.label_propagation import (
-    label_propagation_communities,
-)
+# from networkx.algorithms.community.label_propagation import (
+#     label_propagation_communities,
+# )
 
 pd.options.display.max_rows = 50
 pd.options.display.max_columns = 50
