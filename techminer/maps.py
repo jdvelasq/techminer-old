@@ -342,6 +342,7 @@ def __TAB0__(data, limit_to, exclude):
                         n_clusters=n_clusters,
                         linkage=linkage,
                         output=0,
+                        cmap=cmap,
                         figsize=(width, height),
                     )
                 )
@@ -353,6 +354,7 @@ def __TAB0__(data, limit_to, exclude):
                             X=matrix,
                             n_clusters=n_clusters,
                             linkage=linkage,
+                            cmap=cmap,
                             output=1,
                             figsize=(width, height),
                         )
@@ -366,6 +368,7 @@ def __TAB0__(data, limit_to, exclude):
                         n_clusters=n_clusters,
                         linkage=linkage,
                         output=2,
+                        cmap=cmap,
                         figsize=(width, height),
                     )
                 )
