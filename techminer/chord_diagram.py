@@ -7,8 +7,9 @@ Chord Diagram Plot
 """
 import textwrap
 
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as pyplot
 import numpy as np
+
 
 TEXTLEN = 20
 
@@ -24,9 +25,9 @@ class ChordDiagram:
     >>> chord.add_nodes_from('abcdef', color='black', s=10)
     >>> chord.add_edge('a', 'b')
     >>> chord.add_edges_from([('a', 'b'), ('c', 'd'), ('e', 'f')])
-    >>> _= plt.figure(figsize=(6, 6))
+    >>> _= pyplot.figure(figsize=(6, 6))
     >>> _ = chord.plot(R=1, dist=0.05, fontsize=20, color='red')
-    >>> plt.savefig('sphinx/images/chord_demo_1.png')
+    >>> pyplot.savefig('sphinx/images/chord_demo_1.png')
 
     .. image:: images/chord_demo_1.png
         :width: 400px
@@ -37,9 +38,9 @@ class ChordDiagram:
     >>> chord.add_node('e', s=100, color='black')
     >>> chord.add_node('g', s=200, color='black')
     >>> chord.add_edge('a', 'b', linestyle=':', color='red')
-    >>> _ = plt.figure(figsize=(6, 6))
+    >>> _ = pyplot.figure(figsize=(6, 6))
     >>> _ = chord.plot(R=1, dist=0.05, fontsize=20, color='red')
-    >>> plt.savefig('sphinx/images/chord_demo_2.png')
+    >>> pyplot.savefig('sphinx/images/chord_demo_2.png')
 
     .. image:: images/chord_demo_2.png
         :width: 400px
@@ -141,7 +142,6 @@ class ChordDiagram:
                 u, v = e
                 d = {}
             u, v = sorted([e[0], e[1]])
-            edge = (u, v)
             d = {**attr, **d}
             self.add_edge(u, v, **d)
 
@@ -283,10 +283,10 @@ class ChordDiagram:
 
                 angle = a0 + (a2 - a0) / 2
 
-                if angle > np.pi:
-                    angle_corr = angle - np.pi
-                else:
-                    angle_corr = angle
+                # if angle > np.pi:
+                #     angle_corr = angle - np.pi
+                # else:
+                #     angle_corr = angle
 
                 distance = np.abs(a2 - a0)
                 if distance > np.pi:
@@ -302,7 +302,7 @@ class ChordDiagram:
                     [x0, y0], [x1, y1], [x2, y2], **self._edges[edge],
                 )
 
-        fig = plt.Figure(figsize=figsize)
+        fig = pyplot.Figure(figsize=figsize)
         ax = fig.subplots()
 
         node_properties = compute_node_properties()
@@ -312,19 +312,14 @@ class ChordDiagram:
         #
         # Figure size
         #
-
         xlim = ax.get_xlim()
         ylim = ax.get_ylim()
-        ax.set_xlim(
-            xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
-        )
-        ax.set_ylim(
-            ylim[0] - 0.15 * (ylim[1] - ylim[0]), ylim[1] + 0.15 * (ylim[1] - ylim[0])
-        )
-
+        dx = 0.15 * (xlim[1] - xlim[0])
+        dy = 0.15 * (ylim[1] - ylim[0])
+        ax.set_xlim(xlim[0] - dx, xlim[1] + dx)
+        ax.set_ylim(ylim[0] - dy, ylim[1] + dy)
         ax.set_axis_off()
         ax.set_aspect("equal")
-
         fig.set_tight_layout(True)
 
         return fig

@@ -236,7 +236,7 @@ def analytics(
 #
 def __TAB0__(data):
     #
-    # GUI
+    # UI
     #
     left_panel = [
         gui.dropdown(

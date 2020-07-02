@@ -15,6 +15,7 @@ import squarify
 from techminer.chord_diagram import ChordDiagram
 from wordcloud import ImageColorGenerator, WordCloud
 
+import techminer.common as common
 
 TEXTLEN = 40
 
@@ -103,7 +104,16 @@ COLORMAPS = [
     "gist_ncar",
 ]
 
+#
+# Generic functions to manipulate plots
+#
 
+
+#
+#
+# Plot functions
+#
+#
 def bar(
     height,
     darkness=None,
@@ -188,10 +198,8 @@ def bar(
     ax.set_xticklabels(xticklabels)
     ax.tick_params(axis="x", labelrotation=90)
 
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(True)
+    common.set_ax_splines_invisible(ax, exclude="bottom")
+
     ax.grid(axis="y", color="gray", linestyle=":")
 
     fig.set_tight_layout(True)
@@ -282,10 +290,7 @@ def barh(
     ax.set_yticks(np.arange(len(width)))
     ax.set_yticklabels(yticklabels)
 
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(True)
-    ax.spines["bottom"].set_visible(False)
+    common.set_ax_splines_invisible(ax, exclude="left")
 
     ax.grid(axis="x", color="gray", linestyle=":")
 
@@ -383,10 +388,7 @@ def gant(
     ax.set_yticks(np.arange(len(data.columns)))
     ax.set_yticklabels(yticklabels)
 
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
+    common.set_ax_splines_invisible(ax)
 
     ax.grid(axis="both", color="gray", linestyle=":")
 
@@ -703,10 +705,7 @@ def bubble(
     ax.set_yticks(np.arange(len(x.index)))
     ax.set_yticklabels(x.index)
 
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
+    common.set_ax_splines_invisible(ax)
 
     fig.set_tight_layout(True)
 
@@ -784,10 +783,7 @@ def plot(
     ax.tick_params(axis="x", labelrotation=90)
     # ax.xaxis.tick_top()
 
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(True)
+    common.set_ax_splines_invisible(ax, exclude="bottom")
 
     fig.set_tight_layout(True)
 
@@ -998,10 +994,7 @@ def gant0(
     ax.set_xticklabels(years)
     ax.tick_params(axis="x", labelrotation=90)
 
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(True)
+    common.set_ax_splines_invisible(ax, exclude="bottom")
     ax.set_aspect("equal")
 
     return fig
@@ -1213,10 +1206,7 @@ def stacked_bar(
     ax.set_xticklabels(X.index)
     ax.tick_params(axis="x", labelrotation=90)
 
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(True)
+    common.set_ax_splines_invisible(ax, exclude="bottom")
 
     fig.set_tight_layout(True)
 
@@ -1282,10 +1272,7 @@ def stacked_barh(
     ax.set_yticks(np.arange(len(X[X.columns[0]])))
     ax.set_yticklabels(X.index)
 
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(True)
-    ax.spines["bottom"].set_visible(False)
+    common.set_ax_splines_invisible(ax, exclude="left")
 
     ax.grid(axis="x", color="gray", linestyle=":")
 

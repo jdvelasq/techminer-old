@@ -5,7 +5,10 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import techminer.by_term as by_term
+import techminer.common as common
+import techminer.gui as gui
 import techminer.plots as plt
+from cdlib import algorithms
 from ipywidgets import AppLayout, GridspecLayout, Layout
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.manifold import MDS
@@ -13,9 +16,6 @@ from techminer.document_term import document_term_matrix
 from techminer.explode import __explode
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
-
-from cdlib import algorithms
-import techminer.gui as gui
 
 # from networkx.algorithms.community.label_propagation import (
 #     label_propagation_communities,
@@ -309,10 +309,7 @@ def network_map(X, cmap, clustering, layout, only_communities, figsize=(8, 8)):
     ax.set_aspect("equal")
 
     ax.axis("off")
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
+    common.set_ax_splines_invisible(ax)
 
     return fig
 
@@ -631,10 +628,7 @@ def associations_map(X, selected, cmap, layout, figsize):
     ax.set_aspect("equal")
 
     ax.axis("off")
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
+    common.set_ax_splines_invisible(ax)
 
     fig.set_tight_layout(True)
 
@@ -847,14 +841,9 @@ def association_analysis(
         x_axis, y_axis, s=node_sizes, linewidths=1, edgecolors="k", c=node_colors
     )
 
+    common.ax_expand_limits(ax)
     xlim = ax.get_xlim()
     ylim = ax.get_ylim()
-
-    dx = 0.1 * (xlim[1] - xlim[0])
-    dy = 0.1 * (ylim[1] - ylim[0])
-
-    ax.set_xlim(xlim[0] - dx, xlim[1] + dx)
-    ax.set_ylim(ylim[0] - dy, ylim[1] + dy)
 
     for idx, term in enumerate(X.columns):
         x, y = x_axis[idx], y_axis[idx]
@@ -879,10 +868,7 @@ def association_analysis(
 
     ax.set_aspect("equal")
     ax.axis("off")
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
+    common.set_ax_splines_invisible(ax)
 
     fig.set_tight_layout(True)
 
@@ -1078,4 +1064,3 @@ def app(data, limit_to=None, exclude=None, tab=None):
         ],
         tab=tab,
     )
-

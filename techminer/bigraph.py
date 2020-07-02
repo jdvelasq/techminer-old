@@ -24,7 +24,7 @@ from techminer.explode import MULTIVALUED_COLS, __explode
 from techminer.keywords import Keywords
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
-
+import techminer.common as common
 import techminer.gui as gui
 
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -582,10 +582,7 @@ def co_occurrence_map(
     )
     ax.set_aspect("equal")
     ax.axis("off")
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
+    common.set_ax_splines_invisible(ax)
     return fig
 
 
@@ -744,15 +741,7 @@ def slope_chart(matrix, figsize, cmap_column="Greys", cmap_by="Greys"):
     #
     # Figure size
     #
-    xlim = ax.get_xlim()
-    ylim = ax.get_ylim()
-    ax.set_xlim(
-        xlim[0] - 0.10 * (xlim[1] - xlim[0]), xlim[1] + 0.10 * (xlim[1] - xlim[0])
-    )
-    ax.set_ylim(
-        ylim[0] - 0.10 * (ylim[1] - ylim[0]), ylim[1] + 0.10 * (ylim[1] - ylim[0])
-    )
-
+    common.ax_expand_limits(ax)
     ax.invert_yaxis()
     ax.axis("off")
 
@@ -934,6 +923,34 @@ def __TAB0__(x, limit_to, exclude):
                         figsize=(width, height),
                     )
                 )
+
+            if view == "Table":
+                result = matrix.stack().to_frame().reset_index()
+                result.columns = [by, column, "Values"]
+
+                result = result[result["Values"] != 0]
+                result = result.sort_values(["Values"])
+                result = result.reset_index(drop=True)
+
+                if sort_by == "Alphabetic":
+                    result = result.sort_values(
+                        [by, column, "Values"], ascending=ascending
+                    )
+
+                if sort_by == "Num Documents":
+                    result["ND-column"] = result[column].map(
+                        lambda w: w.split(" ")[-1].split(":")[0]
+                    )
+                    result["ND-by"] = result[by].map(
+                        lambda w: w.split(" ")[-1].split(":")[0]
+                    )
+                    result = result.sort_values(
+                        ["ND-by", "ND-column", "Values"], ascending=ascending
+                    )
+                    result.pop("ND-column")
+                    result.pop("ND-by")
+
+                display(result)
 
         return
 
@@ -1230,18 +1247,10 @@ def associations_map(
     #
     # Figure size
     #
-    ax.set_xlim(
-        xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
-    )
-    ax.set_ylim(
-        ylim[0] - 0.15 * (ylim[1] - ylim[0]), ylim[1] + 0.15 * (ylim[1] - ylim[0])
-    )
+    common.ax_expand_limits(ax)
     ax.set_aspect("equal")
 
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
+    common.set_ax_splines_invisible(ax)
 
     ax.axis("off")
 
@@ -1431,6 +1440,7 @@ def __TAB1__(x, limit_to, exclude):
 ##  APP
 ##
 ###############################################################################
+
 
 def app(data, limit_to=None, exclude=None, tab=None):
     return gui.APP(

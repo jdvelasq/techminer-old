@@ -10,20 +10,18 @@ import matplotlib.pyplot as pyplot
 import networkx as nx
 import numpy as np
 import pandas as pd
+import techminer.by_term as by_term
+import techminer.common as common
+import techminer.gui as gui
+import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
-
-import techminer.by_term as by_term
-import techminer.plots as plt
 from techminer.chord_diagram import ChordDiagram
 from techminer.co_occurrence import co_occurrence, document_term_matrix, filter_index
 from techminer.explode import MULTIVALUED_COLS, __explode
 from techminer.keywords import Keywords
-
-#  from techminer.maps import Map
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
-import techminer.gui as gui
 
 
 def corr(
@@ -593,14 +591,7 @@ def correlation_map(
     #
     # Figure size
     #
-    xlim = ax.get_xlim()
-    ylim = ax.get_ylim()
-    ax.set_xlim(
-        xlim[0] - 0.10 * (xlim[1] - xlim[0]), xlim[1] + 0.10 * (xlim[1] - xlim[0])
-    )
-    ax.set_ylim(
-        ylim[0] - 0.10 * (ylim[1] - ylim[0]), ylim[1] + 0.10 * (ylim[1] - ylim[0])
-    )
+    common.ax_expand_limits(ax)
 
     #
     # Legend
@@ -658,6 +649,7 @@ def correlation_map(
 ##  APP
 ##
 ###############################################################################
+
 
 def __TAB0__(x, limit_to, exclude):
     # -------------------------------------------------------------------------

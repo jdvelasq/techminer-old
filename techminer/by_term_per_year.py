@@ -9,19 +9,16 @@ import textwrap
 import ipywidgets as widgets
 import numpy as np
 import pandas as pd
-from IPython.display import HTML, clear_output, display
-from ipywidgets import AppLayout, GridspecLayout, Layout
-
 import techminer.by_term as by_term
 import techminer.by_year as by_year
+import techminer.gui as gui
 import techminer.plots as plt
+from IPython.display import HTML, clear_output, display
+from ipywidgets import AppLayout, GridspecLayout, Layout
 from techminer.explode import __explode
 from techminer.keywords import Keywords
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
-
-
-import techminer.gui as gui
 
 TEXTLEN = 40
 
@@ -1020,7 +1017,7 @@ def growth_indicators(
             return plt.stacked_barh(
                 result[[result.columns[-2], result.columns[-1]]],
                 cmap=cmap,
-                figsize=(figsize_width, figsize_height),
+                figsize=figsize,
             )
 
     return output

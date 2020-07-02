@@ -66,7 +66,7 @@ def linkage():
 def n_clusters():
     return {
         "arg": "n_clusters",
-        "desc": "Num Clusters:",
+        "desc": "# Clusters:",
         "widget": widgets.Dropdown(
             options=list(range(2, 21)), layout=Layout(width="55%"),
         ),
