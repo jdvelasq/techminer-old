@@ -532,49 +532,18 @@ def __TAB0__(data, limit_to, exclude):
     # -------------------------------------------------------------------------
 
     left_panel = [
-        # 0
-        {
-            "arg": "view",
-            "desc": "View:",
-            "widget": widgets.Dropdown(
-                options=["Matrix", "Network", "Network0", "Table"],
-                disable=True,
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 1
-        {
-            "arg": "term",
-            "desc": "Term:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in data.columns],
-                ensure_option=True,
-                disabled=False,
-                layout=Layout(width="55%"),
-            ),
-        },
+        gui.dropdown(desc="View:", options=["Matrix", "Network", "Network0", "Table"],),
+        gui.dropdown(desc="Term:", options=[z for z in COLUMNS if z in data.columns],),
         gui.n_components(),
         gui.cmap(),
-        # 4
-        {
-            "arg": "top_by",
-            "desc": "Top by:",
-            "widget": widgets.Dropdown(
-                options=["Values", "Num Documents", "Times Cited"],
-                layout=Layout(width="55%"),
-            ),
-        },
+        gui.dropdown(
+            desc="Top by:", options=["Values", "Num Documents", "Times Cited"],
+        ),
         gui.top_n(),
-        # 6
-        {
-            "arg": "sort_by",
-            "desc": "Sort by:",
-            "widget": widgets.Dropdown(
-                options=["Alphabetic", "Num Documents/Times Cited", "Factor",],
-                disable=False,
-                layout=Layout(width="55%"),
-            ),
-        },
+        gui.dropdown(
+            desc="Sort by:",
+            options=["Alphabetic", "Num Documents/Times Cited", "Factor",],
+        ),
         gui.ascending(),
         gui.nx_layout(),
         gui.fig_width(),
@@ -717,7 +686,7 @@ def factor_map_0(
     terms = [w.strip() for w in terms]
 
     num_documents = {k: v for k, v in zip(summary.index, summary["Num_Documents"])}
-    times_cited = {k: v for k, v in zip(summary.index, summary["Times_Cited"])}
+    #  times_cited = {k: v for k, v in zip(summary.index, summary["Times_Cited"])}
 
     #
     # Node sizes

@@ -660,81 +660,20 @@ def __TAB0__(x, limit_to, exclude):
     COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
     #
     left_panel = [
-        # 0
-        {
-            "arg": "view",
-            "desc": "View:",
-            "widget": widgets.Dropdown(
-                options=["Matrix", "Heatmap", "Correlation map", "Chord diagram"],
-                ensure_option=True,
-                continuous_update=True,
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 1
-        {
-            "arg": "term",
-            "desc": "Column to analyze:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
-                ensure_option=True,
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 2
-        {
-            "arg": "by",
-            "desc": "By Column:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
-                ensure_option=True,
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 3
-        {
-            "arg": "method",
-            "desc": "Method:",
-            "widget": widgets.Dropdown(
-                options=["pearson", "kendall", "spearman"],
-                ensure_option=True,
-                continuous_update=True,
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 4
-        {
-            "arg": "top_by",
-            "desc": "Top by:",
-            "widget": widgets.Dropdown(
-                options=["Num Documents", "Times Cited"], layout=Layout(width="55%"),
-            ),
-        },
-        # 5
+        gui.dropdown(
+            desc="View:",
+            options=["Matrix", "Heatmap", "Correlation map", "Chord diagram"],
+        ),
+        gui.dropdown(desc="Term:", options=[z for z in COLUMNS if z in x.columns],),
+        gui.dropdown(desc="By:", options=[z for z in COLUMNS if z in x.columns],),
+        gui.dropdown(desc="Method:", options=["pearson", "kendall", "spearman"],),
+        gui.dropdown(desc="Top by:", options=["Num Documents", "Times Cited"],),
         gui.top_n(),
-        # 6
-        {
-            "arg": "sort_by",
-            "desc": "Sort order:",
-            "widget": widgets.Dropdown(
-                options=["Alphabetic", "Num Documents", "Times Cited",],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 7
+        gui.dropdown(
+            desc="Sort by:", options=["Alphabetic", "Num Documents", "Times Cited",],
+        ),
         gui.ascending(),
-        # 8
-        {
-            "arg": "min_link_value",
-            "desc": "Min link value:",
-            "widget": widgets.Dropdown(
-                options="0.00 0.25 0.50 0.75".split(" "),
-                ensure_option=True,
-                continuous_update=True,
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 9
+        gui.dropdown(desc="Min link value:", options="0.00 0.25 0.50 0.75".split(" "),),
         gui.cmap(),
         gui.nx_layout(),
         gui.fig_width(),
@@ -817,91 +756,91 @@ def __TAB0__(x, limit_to, exclude):
         #
         #
         #
-        if top_by == "Num Documents":
-            s = summary_by_term(x, column)
-            new_names = {
-                a: "{} [{:d}]".format(a, b)
-                for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
-            }
-        else:
-            s = summary_by_term(x, column)
-            new_names = {
-                a: "{} [{:d}]".format(a, b)
-                for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
-            }
-        matrix = matrix.rename(columns=new_names, index=new_names)
+        # if top_by == "Num Documents":
+        #     s = summary_by_term(x, column)
+        #     new_names = {
+        #         a: "{} [{:d}]".format(a, b)
+        #         for a, b in zip(s[column].tolist(), s["Num_Documents"].tolist())
+        #     }
+        # else:
+        #     s = summary_by_term(x, column)
+        #     new_names = {
+        #         a: "{} [{:d}]".format(a, b)
+        #         for a, b in zip(s[column].tolist(), s["Times_Cited"].tolist())
+        #     }
+        # matrix = matrix.rename(columns=new_names, index=new_names)
 
-        output.clear_output()
-        with output:
-            if view == "Matrix" or view == "Heatmap":
-                #
-                # Sort order
-                #
-                g = (
-                    lambda m: m[m.find("[") + 1 : m.find("]")].zfill(5)
-                    + " "
-                    + m[: m.find("[") - 1]
-                )
-                if sort_by == "Frequency/Cited by asc.":
-                    names = sorted(matrix.columns, key=g, reverse=False)
-                    matrix = matrix.loc[names, names]
-                if sort_by == "Frequency/Cited by desc.":
-                    names = sorted(matrix.columns, key=g, reverse=True)
-                    matrix = matrix.loc[names, names]
-                if sort_by == "Alphabetic asc.":
-                    matrix = matrix.sort_index(axis=0, ascending=True).sort_index(
-                        axis=1, ascending=True
-                    )
-                if sort_by == "Alphabetic desc.":
-                    matrix = matrix.sort_index(axis=0, ascending=False).sort_index(
-                        axis=1, ascending=False
-                    )
-                #
-                # View
-                #
-                with pd.option_context(
-                    "display.max_columns", 60, "display.max_rows", 60
-                ):
-                    if view == "Matrix":
-                        display(
-                            matrix.style.format(
-                                lambda q: "{:+4.3f}".format(q)
-                                if q >= min_link_value
-                                else ""
-                            ).background_gradient(cmap=cmap)
-                        )
-                if view == "Heatmap":
-                    display(
-                        plt.heatmap(
-                            matrix, cmap=cmap, figsize=(figsize_width, figsize_height)
-                        )
-                    )
-                #
-            if view == "Correlation map":
-                #
-                display(
-                    correlation_map(
-                        matrix=matrix,
-                        summary=summary_by_term(
-                            x, column=column, top_by=None, top_n=None
-                        ),
-                        layout=layout,
-                        cmap=cmap,
-                        figsize=(figsize_width, figsize_height),
-                        min_link_value=min_link_value,
-                    )
-                )
-                #
-            if view == "Chord diagram":
-                #
-                display(
-                    chord_diagram(
-                        matrix,
-                        figsize=(figsize_width, figsize_height),
-                        cmap=cmap,
-                        minval=min_link_value,
-                    )
-                )
+        # output.clear_output()
+        # with output:
+        #     if view == "Matrix" or view == "Heatmap":
+        #         #
+        #         # Sort order
+        #         #
+        #         g = (
+        #             lambda m: m[m.find("[") + 1 : m.find("]")].zfill(5)
+        #             + " "
+        #             + m[: m.find("[") - 1]
+        #         )
+        #         if sort_by == "Frequency/Cited by asc.":
+        #             names = sorted(matrix.columns, key=g, reverse=False)
+        #             matrix = matrix.loc[names, names]
+        #         if sort_by == "Frequency/Cited by desc.":
+        #             names = sorted(matrix.columns, key=g, reverse=True)
+        #             matrix = matrix.loc[names, names]
+        #         if sort_by == "Alphabetic asc.":
+        #             matrix = matrix.sort_index(axis=0, ascending=True).sort_index(
+        #                 axis=1, ascending=True
+        #             )
+        #         if sort_by == "Alphabetic desc.":
+        #             matrix = matrix.sort_index(axis=0, ascending=False).sort_index(
+        #                 axis=1, ascending=False
+        #             )
+        #         #
+        #         # View
+        #         #
+        #         with pd.option_context(
+        #             "display.max_columns", 60, "display.max_rows", 60
+        #         ):
+        #             if view == "Matrix":
+        #                 display(
+        #                     matrix.style.format(
+        #                         lambda q: "{:+4.3f}".format(q)
+        #                         if q >= min_link_value
+        #                         else ""
+        #                     ).background_gradient(cmap=cmap)
+        #                 )
+        #         if view == "Heatmap":
+        #             display(
+        #                 plt.heatmap(
+        #                     matrix, cmap=cmap, figsize=(figsize_width, figsize_height)
+        #                 )
+        #             )
+        #         #
+        #     if view == "Correlation map":
+        #         #
+        #         display(
+        #             correlation_map(
+        #                 matrix=matrix,
+        #                 summary=summary_by_term(
+        #                     x, column=column, top_by=None, top_n=None
+        #                 ),
+        #                 layout=layout,
+        #                 cmap=cmap,
+        #                 figsize=(figsize_width, figsize_height),
+        #                 min_link_value=min_link_value,
+        #             )
+        #         )
+        #         #
+        #     if view == "Chord diagram":
+        #         #
+        #         display(
+        #             chord_diagram(
+        #                 matrix,
+        #                 figsize=(figsize_width, figsize_height),
+        #                 cmap=cmap,
+        #                 minval=min_link_value,
+        #             )
+        #         )
 
     # -------------------------------------------------------------------------
     #
