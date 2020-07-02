@@ -558,50 +558,27 @@ def __TAB0__(data, limit_to=None, exclude=None):
     COLUMNS = sorted([column for column in data.columns if column not in EXCLUDE_COLS])
     #
     left_panel = [
-        #  0
-        {
-            "arg": "view",
-            "desc": "View:",
-            "widget": widgets.Dropdown(
-                options=["Analytics", "Heatmap", "Bubble plot", "Gant", "Gant0"],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 1
-        {
-            "arg": "column",
-            "desc": "Column:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in data.columns],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 2
-        {
-            "arg": "top_by",
-            "desc": "Top by:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Num Documents per Year",
-                    "Times Cited per Year",
-                    "% Num Documents per Year",
-                    "% Times Cited per Year",
-                ],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 3
+        gui.dropdown(
+            desc="View:",
+            options=["Analytics", "Heatmap", "Bubble plot", "Gant", "Gant0"],
+        ),
+        gui.dropdown(
+            desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+        ),
+        gui.dropdown(
+            desc="Top by:",
+            options=[
+                "Num Documents per Year",
+                "Times Cited per Year",
+                "% Num Documents per Year",
+                "% Times Cited per Year",
+            ],
+        ),
         gui.top_n(),
-        # 4
-        {
-            "arg": "sort_by",
-            "desc": "Sort by:",
-            "widget": widgets.Dropdown(
-                options=["Alphabetic", "Values", "Num Documents", "Times Cited"],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 5
+        gui.dropdown(
+            desc="Sort by:",
+            options=["Alphabetic", "Values", "Num Documents", "Times Cited"],
+        ),
         gui.ascending(),
         gui.cmap(),
         gui.fig_width(),
@@ -1007,85 +984,43 @@ def __TAB2__(x, limit_to=None, exclude=None):
     COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
     #
     left_panel = [
-        # 0
-        {
-            "arg": "view",
-            "desc": "View:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Analytics",
-                    "Average Growth Rate",
-                    "Average Documents per Year",
-                    "Percentage of Documents in Last Years",
-                    "Num Documents",
-                ],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 1
-        {
-            "arg": "column",
-            "desc": "Column:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 1
-        {
-            "arg": "time_window",
-            "desc": "Time window:",
-            "widget": widgets.Dropdown(
-                options=["2", "3", "4", "5"], value="2", layout=Layout(width="55%"),
-            ),
-        },
-        # 2
-        {
-            "arg": "top_by",
-            "desc": "Top by:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Average Growth Rate",
-                    "Average Documents per Year",
-                    "Percentage of Documents in Last Years",
-                    "Number of Document Published",
-                ],
-                value="Average Growth Rate",
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 3
+        gui.dropdown(
+            desc="View:",
+            options=[
+                "Analytics",
+                "Average Growth Rate",
+                "Average Documents per Year",
+                "Percentage of Documents in Last Years",
+                "Num Documents",
+            ],
+        ),
+        gui.dropdown(desc="Column:", options=[z for z in COLUMNS if z in x.columns],),
+        gui.dropdown(desc="Time window:", options=[2, 3, 4, 5],),
+        gui.dropdown(
+            desc="Top by:",
+            options=[
+                "Average Growth Rate",
+                "Average Documents per Year",
+                "Percentage of Documents in Last Years",
+                "Number of Document Published",
+            ],
+        ),
         gui.top_n(),
-        # 4
-        {
-            "arg": "sort_by",
-            "desc": "Sort by:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Alphabetic",
-                    "Num Documents",
-                    "Times Cited",
-                    "Average Growth Rate",
-                    "Average Documents per Year",
-                    "Percentage of Documents in Last Years",
-                    "Before",
-                    "Between",
-                ],
-                value="Average Growth Rate",
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 5
+        gui.dropdown(
+            desc="Sort by:",
+            options=[
+                "Alphabetic",
+                "Num Documents",
+                "Times Cited",
+                "Average Growth Rate",
+                "Average Documents per Year",
+                "Percentage of Documents in Last Years",
+                "Before",
+                "Between",
+            ],
+        ),
         gui.ascending(),
-        # 4
-        {
-            "arg": "plot",
-            "desc": "Plot type:",
-            "widget": widgets.Dropdown(
-                options=["bar", "barh"], layout=Layout(width="55%"),
-            ),
-        },
-        # 5
+        gui.dropdown(desc="Plot:", options=["bar", "barh"],),
         gui.cmap(),
         gui.fig_width(),
         gui.fig_height(),
