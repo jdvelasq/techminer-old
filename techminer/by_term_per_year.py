@@ -449,56 +449,31 @@ def __TAB1__(data, limit_to=None, exclude=None):
     COLUMNS = sorted([column for column in data.columns if column not in EXCLUDE_COLS])
     #
     left_panel = [
-        #  0
-        {
-            "arg": "view",
-            "desc": "View:",
-            "widget": widgets.Dropdown(
-                options=["Analytics",], layout=Layout(width="55%"),
-            ),
-        },
-        # 1
-        {
-            "arg": "column",
-            "desc": "Column to analyze:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in data.columns],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 2
-        {
-            "arg": "top_by",
-            "desc": "Top by:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Num Documents per Year",
-                    "Times Cited per Year",
-                    "% Num Documents per Year",
-                    "% Times Cited per Year",
-                ],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 3
+        gui.dropdown(desc="View:", options=["Analytics",],),
+        gui.dropdown(
+            desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+        ),
+        gui.dropdown(
+            desc="Top by:",
+            options=[
+                "Num Documents per Year",
+                "Times Cited per Year",
+                "% Num Documents per Year",
+                "% Times Cited per Year",
+            ],
+        ),
         gui.top_n(),
-        # 4
-        {
-            "arg": "sort_by",
-            "desc": "Sort by:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Alphabetic",
-                    "Year",
-                    "Num Documents per Year",
-                    "Times Cited per Year",
-                    "% Num Documents per Year",
-                    "% Times Cited per Year",
-                ],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 5
+        gui.dropdown(
+            desc="Sort by:",
+            options=[
+                "Alphabetic",
+                "Year",
+                "Num Documents per Year",
+                "Times Cited per Year",
+                "% Num Documents per Year",
+                "% Times Cited per Year",
+            ],
+        ),
         gui.ascending(),
     ]
     # -------------------------------------------------------------------------
@@ -1160,6 +1135,7 @@ def __TAB2__(x, limit_to=None, exclude=None):
                     column=column,
                     output=view,
                     timewindow=time_window,
+                    top_by=top_by,
                     top_n=top_n,
                     sort_by=sort_by,
                     ascending=ascending,
