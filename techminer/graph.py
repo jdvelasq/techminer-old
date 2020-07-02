@@ -185,8 +185,6 @@ def network_map(X, cmap, clustering, layout, only_communities, figsize=(8, 8)):
     n = len(terms)
     G.add_nodes_from(terms)
 
-    # return terms
-
     max_width = 0
     for icol in range(n - 1):
         for irow in range(icol + 1, n):
@@ -1060,6 +1058,13 @@ def __TAB2__(data, limit_to, exclude):
     )
 
     return grid
+
+
+###############################################################################
+##
+##  APP
+##
+###############################################################################
 
 
 def app(data, limit_to=None, exclude=None, tab=None):

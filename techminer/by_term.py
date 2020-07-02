@@ -804,17 +804,6 @@ def top_documents(data):
 
 def __TAB4__(data):
     """
-    # >>> import pandas as pd
-    # >>> data = pd.DataFrame(
-    # ...     {
-    # ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
-    # ...          "Times_Cited": list(range(10,16)),
-    # ...          "ID": list(range(6)),
-    # ...     }
-    # ... )
-    # >>> __APP4__(data)
-
-
     """
     output = widgets.Output()
     with output:
@@ -824,6 +813,13 @@ def __TAB4__(data):
         [output], layout=Layout(height="650px", border="2px solid gray")
     )
     return grid
+
+
+###############################################################################
+##
+##  APP
+##
+###############################################################################
 
 
 def app(data, limit_to=None, exclude=None, tab=None):

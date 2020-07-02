@@ -309,6 +309,13 @@ def __TAB0__(data):
     return gui.TABapp(left_panel=left_panel, server=server, output=output)
 
 
+###############################################################################
+##
+##  APP
+##
+###############################################################################
+
+
 def app(data, tab=None):
     return gui.APP(
         app_title="Analysis per Year",

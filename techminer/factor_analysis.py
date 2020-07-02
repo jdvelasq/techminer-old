@@ -682,6 +682,13 @@ def __TAB0__(data, limit_to, exclude):
     return grid
 
 
+###############################################################################
+##
+##  APP
+##
+###############################################################################
+
+
 def app(data, limit_to=None, exclude=None, tab=None):
     return gui.APP(
         app_title="Factor Analysis",

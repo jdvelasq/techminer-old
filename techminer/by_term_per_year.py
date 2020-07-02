@@ -25,10 +25,6 @@ import techminer.gui as gui
 
 TEXTLEN = 40
 
-LEFT_PANEL_HEIGHT = "655px"
-RIGHT_PANEL_WIDTH = "1200px"
-PANE_HEIGHTS = ["80px", "720px", 0]
-
 
 def analytics(
     data,
@@ -788,12 +784,6 @@ def __TAB0__(data, limit_to=None, exclude=None):
 #     return result
 #
 
-##
-##
-## APP
-##
-##
-
 
 ##
 ##
@@ -1218,6 +1208,13 @@ def __TAB2__(x, limit_to=None, exclude=None):
     )
 
     return grid
+
+
+###############################################################################
+##
+##  APP
+##
+###############################################################################
 
 
 def app(data, limit_to=None, exclude=None, tab=None):
