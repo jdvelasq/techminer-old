@@ -544,22 +544,8 @@ def __TAB1__(data):
     #
     # -------------------------------------------------------------------------
     left_panel = [
-        # 0
-        {
-            "arg": "column",
-            "desc": "Column to analyze:",
-            "widget": widgets.Dropdown(
-                options=["Countries", "Country_1st_Author"], layout=Layout(width="55%"),
-            ),
-        },
-        # 1
-        {
-            "arg": "top_by",
-            "desc": "Top by:",
-            "widget": widgets.Dropdown(
-                options=["Num_Documents", "Times_Cited"], layout=Layout(width="55%"),
-            ),
-        },
+        gui.dropdown(desc="Column:", options=["Countries", "Country_1st_Author"],),
+        gui.dropdown(desc="Top by:", options=["Num_Documents", "Times_Cited"],),
         gui.cmap(),
         gui.fig_width(),
         gui.fig_height(),
