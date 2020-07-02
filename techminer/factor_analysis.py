@@ -508,10 +508,6 @@ def factor_map(matrix, summary, layout="Kamada Kawai", cmap="Greys", figsize=(17
 #
 #
 
-LEFT_PANEL_HEIGHT = "655px"
-RIGHT_PANEL_WIDTH = "1200px"
-PANE_HEIGHTS = ["80px", "720px", 0]
-
 COLUMNS = [
     "Authors",
     "Countries",
@@ -693,8 +689,6 @@ def app(data, limit_to=None, exclude=None, tab=None):
         tab_widgets=[__TAB0__(data, limit_to=limit_to, exclude=exclude),],
         tab=tab,
     )
-
-
 
 
 #

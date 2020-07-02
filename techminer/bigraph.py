@@ -1432,11 +1432,6 @@ def __TAB1__(x, limit_to, exclude):
 ##
 ###############################################################################
 
-LEFT_PANEL_HEIGHT = "710px"
-RIGHT_PANEL_WIDTH = "1200px"
-PANE_HEIGHTS = ["80px", "770px", 0]
-
-
 def app(data, limit_to=None, exclude=None, tab=None):
     return gui.APP(
         app_title="Bigraph Analysis",

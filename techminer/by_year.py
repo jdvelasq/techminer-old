@@ -226,7 +226,7 @@ def analytics(
 #  APP
 #
 #
-def TAB_0(data):
+def __TAB0__(data):
     #
     # GUI
     #
@@ -318,7 +318,7 @@ def app(data, tab=None):
     return gui.APP(
         app_title="Analysis per Year",
         tab_titles=["Time Analysis"],
-        tab_widgets=[TAB_0(data),],
+        tab_widgets=[__TAB0__(data),],
         tab=tab,
     )
 
