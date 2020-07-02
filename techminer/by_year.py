@@ -11,22 +11,25 @@ import matplotlib
 import matplotlib.pyplot as pyplot
 import numpy as np
 import pandas as pd
+import techminer.gui as gui
+import techminer.plots as plt
 from IPython.display import clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
-
-
-import techminer.plots as plt
 from techminer.plots import COLORMAPS
-
-import techminer.gui as gui
-
-#  from ipywidgets import Box
 
 TEXTLEN = 40
 
 
 def analytics(
-    data, output=0, plot=0, cmap="Greys", figsize=(6, 6), fontsize=11, **kwargs
+    data,
+    view=0,
+    plot=0,
+    cmap="Greys",
+    sort_by="Year",
+    ascending=True,
+    figsize=(6, 6),
+    fontsize=11,
+    **kwargs
 ):
     """Computes analysis by year.
 
@@ -181,23 +184,28 @@ def analytics(
     #
     # Output
     #
-    if output == 0:
+    if view == 0:
         result.pop("ID")
+
+        if sort_by == "Year":
+            result = result.sort_index(axis=0, ascending=ascending)
+        else:
+            result = result.sort_values(by=sort_by, ascending=ascending)
         return result
 
-    if output == 1:
+    if view == 1:
         values = result["Num_Documents"]
         darkness = result["Times_Cited"]
-    if output == 2:
+    if view == 2:
         values = result["Times_Cited"]
         darkness = result["Num_Documents"]
-    if output == 3:
+    if view == 3:
         values = result["Cum_Num_Documents"]
         darkness = result["Cum_Times_Cited"]
-    if output == 4:
+    if view == 4:
         values = result["Cum_Times_Cited"]
         darkness = result["Cum_Num_Documents"]
-    if output == 5:
+    if view == 5:
         values = result["Avg_Times_Cited"]
         darkness = None
 
@@ -264,50 +272,37 @@ def __TAB0__(data):
     #
     def server(**kwargs):
 
-        view = kwargs["view"]
-        plot = kwargs["plot"]
-        cmap = kwargs["cmap"]
-        sort_by = kwargs["sort_by"]
-        ascending = kwargs["ascending"]
-        width = int(kwargs["width"])
-        height = int(kwargs["height"])
+        kwargs["figsize"] = (int(kwargs["width"]), int(kwargs["height"]))
+        del kwargs["height"], kwargs["width"]
 
-        left_panel[1]["widget"].disabled = True if view == "Analytics" else False
-        left_panel[2]["widget"].disabled = True if view == "Analytics" else False
-        left_panel[-4]["widget"].disabled = False if view == "Analytics" else True
-        left_panel[-3]["widget"].disabled = False if view == "Analytics" else True
-        left_panel[-2]["widget"].disabled = True if view == "Analytics" else False
-        left_panel[-1]["widget"].disabled = True if view == "Analytics" else False
+        for i in [1, 2, -2, -1]:
+            left_panel[i]["widget"].disabled = (
+                True if kwargs["view"] == "Analytics" else False
+            )
 
-        view = {
+        for i in [
+            -4,
+            -3,
+        ]:
+            left_panel[i]["widget"].disabled = (
+                False if kwargs["view"] == "Analytics" else True
+            )
+
+        kwargs["view"] = {
             "Analytics": 0,
             "Num Documents by Year": 1,
             "Times Cited by Year": 2,
             "Cum Num Documents by Year": 3,
             "Cum Times Cited by Year": 4,
             "Avg Times Cited by Year": 5,
-        }[view]
+        }[kwargs["view"]]
 
-        plot = {"Bar plot": 0, "Horizontal bar plot": 1,}[plot]
-
-        out = analytics(
-            data,
-            output=view,
-            plot=plot,
-            cmap=cmap,
-            figsize=(width, height),
-            fontsize=10,
-        )
-
-        if view == 0:
-            if sort_by == "Year":
-                out = out.sort_index(axis=0, ascending=ascending)
-            else:
-                out = out.sort_values(by=sort_by, ascending=ascending)
+        kwargs["plot"] = {"Bar plot": 0, "Horizontal bar plot": 1,}[kwargs["plot"]]
+        kwargs["data"] = data
 
         output.clear_output()
         with output:
-            return display(out)
+            return display(analytics(**kwargs))
 
     output = widgets.Output()
 
@@ -321,173 +316,6 @@ def app(data, tab=None):
         tab_widgets=[__TAB0__(data),],
         tab=tab,
     )
-
-
-#
-# Generic
-#
-
-
-##
-##
-##
-##
-
-
-# def __TAB0__(data):
-#     #
-#     #
-#     #  UI --- Left panel
-#     #
-#     #
-#     left_panel = [
-#         gui.dropdown(
-#             desc="View:",
-#             options=[
-#                 "Analytics",
-#                 "Num Documents by Year",
-#                 "Times Cited by Year",
-#                 "Cum Num Documents by Year",
-#                 "Cum Times Cited by Year",
-#                 "Avg Times Cited by Year",
-#             ],
-#         ),
-#         gui.dropdown(desc="Plot:", options=["Bar plot", "Horizontal bar plot"],),
-#         gui.cmap(),
-#         gui.dropdown(
-#             desc="Sort by:",
-#             options=[
-#                 "Year",
-#                 "Times_Cited",
-#                 "Num_Documents",
-#                 "Cum_Num_Documents",
-#                 "Cum_Times_Cited",
-#                 "Avg_Times_Cited",
-#             ],
-#         ),
-#         gui.ascending(),
-#         gui.fig_width(),
-#         gui.fig_height(),
-#     ]
-#     #
-#     #
-#     # Logic
-#     #
-#     #
-#     def server(**kwargs):
-
-#         view = kwargs["view"]
-#         plot = kwargs["plot"]
-#         cmap = kwargs["cmap"]
-#         sort_by = kwargs["sort_by"]
-#         ascending = kwargs["ascending"]
-#         width = int(kwargs["width"])
-#         height = int(kwargs["height"])
-
-#         left_panel[1]["widget"].disabled = True if view == "Analytics" else False
-#         left_panel[2]["widget"].disabled = True if view == "Analytics" else False
-#         left_panel[-4]["widget"].disabled = False if view == "Analytics" else True
-#         left_panel[-3]["widget"].disabled = False if view == "Analytics" else True
-#         left_panel[-2]["widget"].disabled = True if view == "Analytics" else False
-#         left_panel[-1]["widget"].disabled = True if view == "Analytics" else False
-
-#         view = {
-#             "Analytics": 0,
-#             "Num Documents by Year": 1,
-#             "Times Cited by Year": 2,
-#             "Cum Num Documents by Year": 3,
-#             "Cum Times Cited by Year": 4,
-#             "Avg Times Cited by Year": 5,
-#         }[view]
-
-#         plot = {"Bar plot": 0, "Horizontal bar plot": 1,}[plot]
-
-#         out = analytics(
-#             data,
-#             output=view,
-#             plot=plot,
-#             cmap=cmap,
-#             figsize=(width, height),
-#             fontsize=10,
-#         )
-
-#         if view == 0:
-#             if sort_by == "Year":
-#                 out = out.sort_index(axis=0, ascending=ascending)
-#             else:
-#                 out = out.sort_values(by=sort_by, ascending=ascending)
-
-#         output.clear_output()
-#         with output:
-#             return display(out)
-
-#     # -------------------------------------------------------------------------
-#     #
-#     # Generic
-#     #
-#     # -------------------------------------------------------------------------
-#     args = {control["arg"]: control["widget"] for control in left_panel}
-#     output = widgets.Output()
-#     with output:
-#         display(widgets.interactive_output(server, args,))
-#     #
-#     grid = GridspecLayout(13, 6, height="650px")  ## Marco externo al negro
-#     #
-#     # Left panel
-#     #
-#     for index in range(len(left_panel)):
-#         grid[index, 0] = widgets.HBox(
-#             [
-#                 widgets.Label(value=left_panel[index]["desc"]),
-#                 left_panel[index]["widget"],
-#             ],
-#             layout=Layout(
-#                 display="flex", justify_content="flex-end", align_content="center",
-#             ),
-#         )
-#     #
-#     # Output
-#     #
-#     grid[:, 1:] = widgets.VBox(
-#         [output], layout=Layout(height="650px", border="2px solid gray")
-#     )
-
-#     return grid
-
-
-# def __app(data, tab=None):
-#     """Jupyter Lab dashboard.
-#     """
-#     app_title = "Analysis per Year"
-#     tab_titles = ["Time Analysis"]
-#     tab_list = [
-#         __TAB0__(data),
-#     ]
-
-#     if tab is not None:
-#         return AppLayout(
-#             header=widgets.HTML(
-#                 value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-#                     app_title + " / " + tab_titles[tab]
-#                 )
-#             ),
-#             center=tab_list[tab],
-#             pane_heights=["80px", "660px", 0],  # tamaño total de la ventana: Ok!
-#         )
-
-#     body = widgets.Tab()
-#     body.children = tab_list
-#     for i in range(len(tab_list)):
-#         body.set_title(i, tab_titles[i])
-#     return AppLayout(
-#         header=widgets.HTML(
-#             value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-#                 app_title
-#             )
-#         ),
-#         center=body,
-#         pane_heights=["80px", "720px", 0],
-#     )
 
 
 #
