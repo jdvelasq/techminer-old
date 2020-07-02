@@ -18,6 +18,8 @@ from ipywidgets import AppLayout, GridspecLayout, Layout
 import techminer.plots as plt
 from techminer.plots import COLORMAPS
 
+import techminer.gui as gui
+
 #  from ipywidgets import Box
 
 TEXTLEN = 40
@@ -224,90 +226,41 @@ def analytics(
 #  APP
 #
 #
-
-
-def __TAB0__(data):
+def TAB_0(data):
     #
-    #
-    #  UI --- Left panel
-    #
+    # GUI
     #
     left_panel = [
-        # 0
-        {
-            "arg": "view",
-            "desc": "View:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Analytics",
-                    "Num Documents by Year",
-                    "Times Cited by Year",
-                    "Cum Num Documents by Year",
-                    "Cum Times Cited by Year",
-                    "Avg Times Cited by Year",
-                ],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 1
-        {
-            "arg": "plot",
-            "desc": "Plot:",
-            "widget": widgets.Dropdown(
-                options=["Bar plot", "Horizontal bar plot"], layout=Layout(width="55%"),
-            ),
-        },
-        # 2
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
-        },
-        # 3
-        {
-            "arg": "sort_by",
-            "desc": "Sort by:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Year",
-                    "Times_Cited",
-                    "Num_Documents",
-                    "Cum_Num_Documents",
-                    "Cum_Times_Cited",
-                    "Avg_Times_Cited",
-                ],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 4
-        {
-            "arg": "ascending",
-            "desc": "Ascending:",
-            "widget": widgets.Dropdown(
-                options=[True, False], layout=Layout(width="55%"),
-            ),
-        },
-        # 5
-        {
-            "arg": "width",
-            "desc": "Width:",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), layout=Layout(width="55%"),
-            ),
-        },
-        # 6
-        {
-            "arg": "height",
-            "desc": "Height:",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), layout=Layout(width="55%"),
-            ),
-        },
+        gui.dropdown(
+            desc="View:",
+            options=[
+                "Analytics",
+                "Num Documents by Year",
+                "Times Cited by Year",
+                "Cum Num Documents by Year",
+                "Cum Times Cited by Year",
+                "Avg Times Cited by Year",
+            ],
+        ),
+        gui.dropdown(desc="Plot:", options=["Bar plot", "Horizontal bar plot"],),
+        gui.cmap(),
+        gui.dropdown(
+            desc="Sort by:",
+            options=[
+                "Year",
+                "Times_Cited",
+                "Num_Documents",
+                "Cum_Num_Documents",
+                "Cum_Times_Cited",
+                "Avg_Times_Cited",
+            ],
+        ),
+        gui.ascending(),
+        gui.fig_width(),
+        gui.fig_height(),
     ]
     #
-    #
-    # Logic
-    #
+    # Server
     #
     def server(**kwargs):
 
@@ -356,75 +309,185 @@ def __TAB0__(data):
         with output:
             return display(out)
 
-    # -------------------------------------------------------------------------
-    #
-    # Generic
-    #
-    # -------------------------------------------------------------------------
-    args = {control["arg"]: control["widget"] for control in left_panel}
     output = widgets.Output()
-    with output:
-        display(widgets.interactive_output(server, args,))
-    #
-    grid = GridspecLayout(13, 6, height="650px")  ## Marco externo al negro
-    #
-    # Left panel
-    #
-    for index in range(len(left_panel)):
-        grid[index, 0] = widgets.HBox(
-            [
-                widgets.Label(value=left_panel[index]["desc"]),
-                left_panel[index]["widget"],
-            ],
-            layout=Layout(
-                display="flex", justify_content="flex-end", align_content="center",
-            ),
-        )
-    #
-    # Output
-    #
-    grid[:, 1:] = widgets.VBox(
-        [output], layout=Layout(height="650px", border="2px solid gray")
-    )
 
-    return grid
-
-
+    return gui.TABapp(left_panel=left_panel, server=server, output=output)
 
 
 def app(data, tab=None):
-    """Jupyter Lab dashboard.
-    """
-    app_title = "Analysis per Year"
-    tab_titles = ["Time Analysis"]
-    tab_list = [
-        __TAB0__(data),
-    ]
-
-    if tab is not None:
-        return AppLayout(
-            header=widgets.HTML(
-                value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                    app_title + " / " + tab_titles[tab]
-                )
-            ),
-            center=tab_list[tab],
-            pane_heights=["80px", "660px", 0],  # tamaño total de la ventana: Ok!
-        )
-
-    body = widgets.Tab()
-    body.children = tab_list
-    for i in range(len(tab_list)):
-        body.set_title(i, tab_titles[i])
-    return AppLayout(
-        header=widgets.HTML(
-            value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                app_title
-            )
-        ),
-        center=body,
-        pane_heights=["80px", "720px", 0],
+    return gui.APP(
+        app_title="Analysis per Year",
+        tab_titles=["Time Analysis"],
+        tab_widgets=[TAB_0(data),],
+        tab=tab,
     )
+
+
+#
+# Generic
+#
+
+
+##
+##
+##
+##
+
+
+# def __TAB0__(data):
+#     #
+#     #
+#     #  UI --- Left panel
+#     #
+#     #
+#     left_panel = [
+#         gui.dropdown(
+#             desc="View:",
+#             options=[
+#                 "Analytics",
+#                 "Num Documents by Year",
+#                 "Times Cited by Year",
+#                 "Cum Num Documents by Year",
+#                 "Cum Times Cited by Year",
+#                 "Avg Times Cited by Year",
+#             ],
+#         ),
+#         gui.dropdown(desc="Plot:", options=["Bar plot", "Horizontal bar plot"],),
+#         gui.cmap(),
+#         gui.dropdown(
+#             desc="Sort by:",
+#             options=[
+#                 "Year",
+#                 "Times_Cited",
+#                 "Num_Documents",
+#                 "Cum_Num_Documents",
+#                 "Cum_Times_Cited",
+#                 "Avg_Times_Cited",
+#             ],
+#         ),
+#         gui.ascending(),
+#         gui.fig_width(),
+#         gui.fig_height(),
+#     ]
+#     #
+#     #
+#     # Logic
+#     #
+#     #
+#     def server(**kwargs):
+
+#         view = kwargs["view"]
+#         plot = kwargs["plot"]
+#         cmap = kwargs["cmap"]
+#         sort_by = kwargs["sort_by"]
+#         ascending = kwargs["ascending"]
+#         width = int(kwargs["width"])
+#         height = int(kwargs["height"])
+
+#         left_panel[1]["widget"].disabled = True if view == "Analytics" else False
+#         left_panel[2]["widget"].disabled = True if view == "Analytics" else False
+#         left_panel[-4]["widget"].disabled = False if view == "Analytics" else True
+#         left_panel[-3]["widget"].disabled = False if view == "Analytics" else True
+#         left_panel[-2]["widget"].disabled = True if view == "Analytics" else False
+#         left_panel[-1]["widget"].disabled = True if view == "Analytics" else False
+
+#         view = {
+#             "Analytics": 0,
+#             "Num Documents by Year": 1,
+#             "Times Cited by Year": 2,
+#             "Cum Num Documents by Year": 3,
+#             "Cum Times Cited by Year": 4,
+#             "Avg Times Cited by Year": 5,
+#         }[view]
+
+#         plot = {"Bar plot": 0, "Horizontal bar plot": 1,}[plot]
+
+#         out = analytics(
+#             data,
+#             output=view,
+#             plot=plot,
+#             cmap=cmap,
+#             figsize=(width, height),
+#             fontsize=10,
+#         )
+
+#         if view == 0:
+#             if sort_by == "Year":
+#                 out = out.sort_index(axis=0, ascending=ascending)
+#             else:
+#                 out = out.sort_values(by=sort_by, ascending=ascending)
+
+#         output.clear_output()
+#         with output:
+#             return display(out)
+
+#     # -------------------------------------------------------------------------
+#     #
+#     # Generic
+#     #
+#     # -------------------------------------------------------------------------
+#     args = {control["arg"]: control["widget"] for control in left_panel}
+#     output = widgets.Output()
+#     with output:
+#         display(widgets.interactive_output(server, args,))
+#     #
+#     grid = GridspecLayout(13, 6, height="650px")  ## Marco externo al negro
+#     #
+#     # Left panel
+#     #
+#     for index in range(len(left_panel)):
+#         grid[index, 0] = widgets.HBox(
+#             [
+#                 widgets.Label(value=left_panel[index]["desc"]),
+#                 left_panel[index]["widget"],
+#             ],
+#             layout=Layout(
+#                 display="flex", justify_content="flex-end", align_content="center",
+#             ),
+#         )
+#     #
+#     # Output
+#     #
+#     grid[:, 1:] = widgets.VBox(
+#         [output], layout=Layout(height="650px", border="2px solid gray")
+#     )
+
+#     return grid
+
+
+# def __app(data, tab=None):
+#     """Jupyter Lab dashboard.
+#     """
+#     app_title = "Analysis per Year"
+#     tab_titles = ["Time Analysis"]
+#     tab_list = [
+#         __TAB0__(data),
+#     ]
+
+#     if tab is not None:
+#         return AppLayout(
+#             header=widgets.HTML(
+#                 value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+#                     app_title + " / " + tab_titles[tab]
+#                 )
+#             ),
+#             center=tab_list[tab],
+#             pane_heights=["80px", "660px", 0],  # tamaño total de la ventana: Ok!
+#         )
+
+#     body = widgets.Tab()
+#     body.children = tab_list
+#     for i in range(len(tab_list)):
+#         body.set_title(i, tab_titles[i])
+#     return AppLayout(
+#         header=widgets.HTML(
+#             value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+#                 app_title
+#             )
+#         ),
+#         center=body,
+#         pane_heights=["80px", "720px", 0],
+#     )
 
 
 #

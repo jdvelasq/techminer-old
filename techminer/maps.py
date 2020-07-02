@@ -26,6 +26,7 @@ import techminer.graph as graph
 from sklearn.cluster import AgglomerativeClustering
 from techminer.plots import COLORMAPS
 from sklearn.manifold import MDS
+import techminer.gui as gui
 
 pd.options.display.max_rows = 50
 pd.options.display.max_columns = 50
@@ -244,61 +245,13 @@ def __TAB0__(data, limit_to, exclude):
             ),
         },
         # 3
-        {
-            "arg": "top_n",
-            "desc": "Top N:",
-            "widget": widgets.Dropdown(
-                options=list(range(20, 501, 5)), layout=Layout(width="55%"),
-            ),
-        },
-        # 4
-        {
-            "arg": "normalization",
-            "desc": "Normalization:",
-            "widget": widgets.Dropdown(
-                options=["None", "association", "inclusion", "jaccard", "salton"],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 5
-        {
-            "arg": "n_clusters",
-            "desc": "# clusters:",
-            "widget": widgets.Dropdown(
-                options=list(range(2, 20)), layout=Layout(width="55%"),
-            ),
-        },
-        # 6
-        {
-            "arg": "linkage",
-            "desc": "Linkage:",
-            "widget": widgets.Dropdown(
-                options=["ward", "complete", "average", "single"],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 7
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
-        },
-        # 8
-        {
-            "arg": "width",
-            "desc": "Fig Width",
-            "widget": widgets.Dropdown(
-                options=range(5, 20, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
-        # 11
-        {
-            "arg": "height",
-            "desc": "Fig Height",
-            "widget": widgets.Dropdown(
-                options=range(5, 20, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
+        gui.top_n(),
+        gui.normalization(),
+        gui.n_clusters(),
+        gui.linkage(),
+        gui.cmap(),
+        gui.fig_width(),
+        gui.fig_height(),
     ]
     # -------------------------------------------------------------------------
     #
@@ -692,72 +645,15 @@ def __TAB1__(data, limit_to, exclude):
             ),
         },
         # 3
-        {
-            "arg": "top_n",
-            "desc": "Top N:",
-            "widget": widgets.Dropdown(
-                options=list(range(20, 501, 5)), layout=Layout(width="55%"),
-            ),
-        },
-        # 4
-        {
-            "arg": "n_clusters",
-            "desc": "# clusters:",
-            "widget": widgets.Dropdown(
-                options=list(range(2, 20)), layout=Layout(width="55%"),
-            ),
-        },
-        # 5
-        {
-            "arg": "linkage",
-            "desc": "Linkage:",
-            "widget": widgets.Dropdown(
-                options=["ward", "complete", "average", "single"],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 6
-        {
-            "arg": "n_components",
-            "desc": "# components:",
-            "widget": widgets.Dropdown(
-                options=list(range(2, 10)), layout=Layout(width="55%"),
-            ),
-        },
-        # 7
-        {
-            "arg": "x_axis",
-            "desc": "X-axis:",
-            "widget": widgets.Dropdown(options=[0], layout=Layout(width="55%"),),
-        },
-        # 8
-        {
-            "arg": "y_axis",
-            "desc": "Y-axis:",
-            "widget": widgets.Dropdown(options=[0], layout=Layout(width="55%"),),
-        },
-        # 9
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
-        },
-        # 10
-        {
-            "arg": "width",
-            "desc": "Fig Width",
-            "widget": widgets.Dropdown(
-                options=range(5, 20, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
-        # 11
-        {
-            "arg": "height",
-            "desc": "Fig Height",
-            "widget": widgets.Dropdown(
-                options=range(5, 20, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
+        gui.top_n(m=20, n=501),
+        gui.n_clusters(),
+        gui.linkage(),
+        gui.n_components(),
+        gui.x_axis(),
+        gui.y_axis(),
+        gui.cmap(),
+        gui.fig_width(),
+        gui.fig_height(),
     ]
     # -------------------------------------------------------------------------
     #
@@ -872,42 +768,15 @@ def __TAB1__(data, limit_to, exclude):
 ##
 ##
 ##
-
-
 def app(data, limit_to=None, exclude=None, tab=None):
-    """Jupyter Lab dashboard.
-    """
-    app_title = "Maps"
-    tab_titles = [
-        "Strategic Map",
-        "Thematic Analysis",
-    ]
-    tab_list = [
-        __TAB0__(data, limit_to=limit_to, exclude=exclude),
-        __TAB1__(data, limit_to=limit_to, exclude=exclude),
-    ]
-
-    if tab is not None:
-        return AppLayout(
-            header=widgets.HTML(
-                value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                    app_title + " / " + tab_titles[tab]
-                )
-            ),
-            center=tab_list[tab],
-            pane_heights=["80px", "660px", 0],  # tamaño total de la ventana: Ok!
-        )
-
-    body = widgets.Tab()
-    body.children = tab_list
-    for i in range(len(tab_list)):
-        body.set_title(i, tab_titles[i])
-    return AppLayout(
-        header=widgets.HTML(
-            value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                app_title
-            )
-        ),
-        center=body,
-        pane_heights=["80px", "720px", 0],
+    return gui.APP(
+        app_title="Maps",
+        tab_titles=["Strategic Map", "Thematic Analysis",],
+        tab_widgets=[
+            __TAB0__(data, limit_to=limit_to, exclude=exclude),
+            __TAB1__(data, limit_to=limit_to, exclude=exclude),
+        ],
+        tab=tab,
     )
+
+

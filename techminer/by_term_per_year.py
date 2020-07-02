@@ -20,6 +20,9 @@ from techminer.keywords import Keywords
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
 
+
+import techminer.gui as gui
+
 TEXTLEN = 40
 
 LEFT_PANEL_HEIGHT = "655px"
@@ -485,15 +488,7 @@ def __TAB1__(data, limit_to=None, exclude=None):
             ),
         },
         # 3
-        {
-            "arg": "top_n",
-            "desc": "Top N:",
-            "widget": widgets.Dropdown(
-                options=list(range(5, 61, 5)),
-                ensure_option=True,
-                layout=Layout(width="55%"),
-            ),
-        },
+        gui.top_n(),
         # 4
         {
             "arg": "sort_by",
@@ -511,13 +506,7 @@ def __TAB1__(data, limit_to=None, exclude=None):
             ),
         },
         # 5
-        {
-            "arg": "ascending",
-            "desc": "Ascending:",
-            "widget": widgets.Dropdown(
-                options=["True", "False",], layout=Layout(width="55%"),
-            ),
-        },
+        gui.ascending(),
     ]
     # -------------------------------------------------------------------------
     #
@@ -531,7 +520,7 @@ def __TAB1__(data, limit_to=None, exclude=None):
         top_by = kwargs["top_by"]
         top_n = int(kwargs["top_n"])
         sort_by = kwargs["sort_by"]
-        ascending = {"True": True, "False": False}[kwargs["ascending"]]
+        ascending = kwargs["ascending"]
 
         output.clear_output()
         with output:
@@ -634,15 +623,7 @@ def __TAB0__(data, limit_to=None, exclude=None):
             ),
         },
         # 3
-        {
-            "arg": "top_n",
-            "desc": "Top N:",
-            "widget": widgets.Dropdown(
-                options=list(range(5, 51, 5)),
-                ensure_option=True,
-                layout=Layout(width="55%"),
-            ),
-        },
+        gui.top_n(),
         # 4
         {
             "arg": "sort_by",
@@ -653,35 +634,10 @@ def __TAB0__(data, limit_to=None, exclude=None):
             ),
         },
         # 5
-        {
-            "arg": "ascending",
-            "desc": "Ascending:",
-            "widget": widgets.Dropdown(
-                options=["True", "False",], layout=Layout(width="55%"),
-            ),
-        },
-        # 6
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
-        },
-        # 7
-        {
-            "arg": "width",
-            "desc": "Width:",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), layout=Layout(width="55%"),
-            ),
-        },
-        # 8
-        {
-            "arg": "height",
-            "desc": "Height:",
-            "widget": widgets.Dropdown(
-                options=range(3, 15, 1), layout=Layout(width="55%"),
-            ),
-        },
+        gui.ascending(),
+        gui.cmap(),
+        gui.fig_width(),
+        gui.fig_height(),
     ]
     # -------------------------------------------------------------------------
     #
@@ -697,7 +653,7 @@ def __TAB0__(data, limit_to=None, exclude=None):
         top_by = kwargs["top_by"]
         top_n = int(kwargs["top_n"])
         sort_by = kwargs["sort_by"]
-        ascending = {"True": True, "False": False}[kwargs["ascending"]]
+        ascending = kwargs["ascending"]
         cmap = kwargs["cmap"]
         width = int(kwargs["width"])
         height = int(kwargs["height"])
@@ -1137,15 +1093,7 @@ def __TAB2__(x, limit_to=None, exclude=None):
             ),
         },
         # 3
-        {
-            "arg": "top_n",
-            "desc": "Top N:",
-            "widget": widgets.Dropdown(
-                options=list(range(5, 51, 5)),
-                ensure_option=True,
-                layout=Layout(width="55%"),
-            ),
-        },
+        gui.top_n(),
         # 4
         {
             "arg": "sort_by",
@@ -1166,13 +1114,7 @@ def __TAB2__(x, limit_to=None, exclude=None):
             ),
         },
         # 5
-        {
-            "arg": "ascending",
-            "desc": "Ascending:",
-            "widget": widgets.Dropdown(
-                options=["True", "False",], layout=Layout(width="55%"),
-            ),
-        },
+        gui.ascending(),
         # 4
         {
             "arg": "plot",
@@ -1182,29 +1124,9 @@ def __TAB2__(x, limit_to=None, exclude=None):
             ),
         },
         # 5
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(
-                options=COLORMAPS, disable=False, layout=Layout(width="55%"),
-            ),
-        },
-        # 6
-        {
-            "arg": "width",
-            "desc": "Fig Width",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), layout=Layout(width="55%"),
-            ),
-        },
-        # 7
-        {
-            "arg": "height",
-            "desc": "Fig Height:",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), layout=Layout(width="55%"),
-            ),
-        },
+        gui.cmap(),
+        gui.fig_width(),
+        gui.fig_height(),
     ]
     # -------------------------------------------------------------------------
     #
@@ -1225,7 +1147,7 @@ def __TAB2__(x, limit_to=None, exclude=None):
         top_by = kwargs["top_by"]
         top_n = int(kwargs["top_n"])
         sort_by = kwargs["sort_by"]
-        ascending = {"True": True, "False": False}[kwargs["ascending"]]
+        ascending = kwargs["ascending"]
         plot = kwargs["plot"]
         cmap = kwargs["cmap"]
         width = int(kwargs["width"])
@@ -1299,43 +1221,15 @@ def __TAB2__(x, limit_to=None, exclude=None):
 
 
 def app(data, limit_to=None, exclude=None, tab=None):
-    """Jupyter Lab dashboard.
-    """
-    app_title = "Analysis by Term per Year"
-    tab_titles = [
-        "Matrix View",
-        "List Cells in Matrix",
-        "Growth Indicators",
-    ]
-    tab_list = [
-        __TAB0__(data, limit_to=limit_to, exclude=exclude),
-        __TAB1__(data),
-        __TAB2__(data),
-    ]
-
-    if tab is not None:
-        return AppLayout(
-            header=widgets.HTML(
-                value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                    app_title + " / " + tab_titles[tab]
-                )
-            ),
-            center=tab_list[tab],
-            pane_heights=["80px", "660px", 0],  # tamaño total de la ventana: Ok!
-        )
-
-    body = widgets.Tab()
-    body.children = tab_list
-    for i in range(len(tab_list)):
-        body.set_title(i, tab_titles[i])
-    return AppLayout(
-        header=widgets.HTML(
-            value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                app_title
-            )
-        ),
-        center=body,
-        pane_heights=["80px", "720px", 0],
+    return gui.APP(
+        app_title="Analysis by Term per Year",
+        tab_titles=["Matrix View", "List Cells in Matrix", "Growth Indicators",],
+        tab_widgets=[
+            __TAB0__(data, limit_to=limit_to, exclude=exclude),
+            __TAB1__(data),
+            __TAB2__(data),
+        ],
+        tab=tab,
     )
 
 

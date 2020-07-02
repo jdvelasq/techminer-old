@@ -15,6 +15,7 @@ from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
 
 from cdlib import algorithms
+import techminer.gui as gui
 
 # from networkx.algorithms.community.label_propagation import (
 #     label_propagation_communities,
@@ -354,13 +355,7 @@ def __TAB0__(data, limit_to, exclude):
             ),
         },
         # 3
-        {
-            "arg": "top_n",
-            "desc": "Top N:",
-            "widget": widgets.Dropdown(
-                options=list(range(5, 51, 5)), layout=Layout(width="55%"),
-            ),
-        },
+        gui.top_n(),
         # 4
         {
             "arg": "sort_by",
@@ -371,22 +366,8 @@ def __TAB0__(data, limit_to, exclude):
             ),
         },
         # 5
-        {
-            "arg": "ascending",
-            "desc": "Ascending:",
-            "widget": widgets.Dropdown(
-                options=[True, False], layout=Layout(width="55%"),
-            ),
-        },
-        # 6
-        {
-            "arg": "normalization",
-            "desc": "Normalization:",
-            "widget": widgets.Dropdown(
-                options=["None", "association", "inclusion", "jaccard", "salton"],
-                layout=Layout(width="55%"),
-            ),
-        },
+        gui.ascending(),
+        gui.normalization(),
         # 7
         {
             "arg": "clustering",
@@ -397,44 +378,10 @@ def __TAB0__(data, limit_to, exclude):
             ),
         },
         # 8
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
-        },
-        # 9
-        {
-            "arg": "layout",
-            "desc": "Map layout:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Circular",
-                    "Kamada Kawai",
-                    "Planar",
-                    "Random",
-                    "Spectral",
-                    "Spring",
-                    "Shell",
-                ],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 10
-        {
-            "arg": "width",
-            "desc": "Figsize",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
-        # 11
-        {
-            "arg": "height",
-            "desc": "Figsize",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
+        gui.cmap(),
+        gui.nx_layout(),
+        gui.fig_width(),
+        gui.fig_height(),
     ]
     # -------------------------------------------------------------------------
     #
@@ -726,45 +673,12 @@ def __TAB1__(data, limit_to, exclude):
             ),
         },
         # 2
-        {
-            "arg": "top_n",
-            "desc": "Top N:",
-            "widget": widgets.Dropdown(
-                options=list(range(5, 51, 5)), layout=Layout(width="55%"),
-            ),
-        },
+        gui.top_n(),
         # 3
-        {
-            "arg": "normalization",
-            "desc": "Normalization:",
-            "widget": widgets.Dropdown(
-                options=["None", "association", "inclusion", "jaccard", "salton"],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 4
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
-        },
+        gui.normalization(),
+        gui.cmap(),
         # 5
-        {
-            "arg": "layout",
-            "desc": "Map layout:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Circular",
-                    "Kamada Kawai",
-                    "Planar",
-                    "Random",
-                    "Spectral",
-                    "Spring",
-                    "Shell",
-                ],
-                layout=Layout(width="55%"),
-            ),
-        },
+        gui.nx_layout(),
         # 6
         {
             "arg": "width",
@@ -1049,75 +963,15 @@ def __TAB2__(data, limit_to, exclude):
             ),
         },
         # 3
-        {
-            "arg": "top_n",
-            "desc": "Top N:",
-            "widget": widgets.Dropdown(
-                options=list(range(5, 51, 5)), layout=Layout(width="55%"),
-            ),
-        },
-        # 4
-        {
-            "arg": "normalization",
-            "desc": "Normalization:",
-            "widget": widgets.Dropdown(
-                options=["None", "association", "inclusion", "jaccard", "salton"],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 5
-        {
-            "arg": "n_components",
-            "desc": "# components:",
-            "widget": widgets.Dropdown(
-                options=list(range(2, 10)), layout=Layout(width="55%"),
-            ),
-        },
-        # 6
-        {
-            "arg": "n_clusters",
-            "desc": "# clusters:",
-            "widget": widgets.Dropdown(
-                options=list(range(2, 20)), layout=Layout(width="55%"),
-            ),
-        },
-        # 7
-        {
-            "arg": "linkage",
-            "desc": "Linkage:",
-            "widget": widgets.Dropdown(
-                options=["ward", "complete", "average", "single"],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 8
-        {
-            "arg": "x_axis",
-            "desc": "X-axis:",
-            "widget": widgets.Dropdown(options=[0], layout=Layout(width="55%"),),
-        },
-        # 9
-        {
-            "arg": "y_axis",
-            "desc": "Y-axis:",
-            "widget": widgets.Dropdown(options=[0], layout=Layout(width="55%"),),
-        },
-        # 10
-        {
-            "arg": "width",
-            "desc": "Figsize",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
-        # 11
-        {
-            "arg": "height",
-            "desc": "Figsize",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
+        gui.top_n(),
+        gui.normalization(),
+        gui.n_components(),
+        gui.n_clusters(),
+        gui.linkage(),
+        gui.x_axis(),
+        gui.y_axis(),
+        gui.fig_width(),
+        gui.fig_height(),
     ]
     # -------------------------------------------------------------------------
     #
@@ -1209,41 +1063,14 @@ def __TAB2__(data, limit_to, exclude):
 
 
 def app(data, limit_to=None, exclude=None, tab=None):
-    """Jupyter Lab dashboard.
-    """
-    app_title = "Graph Analysis"
-    tab_titles = [
-        "Network Map",
-        "Associations Map",
-        "Association analysis",
-    ]
-    tab_list = [
-        __TAB0__(data, limit_to=limit_to, exclude=exclude),
-        __TAB1__(data, limit_to=limit_to, exclude=exclude),
-        __TAB2__(data, limit_to=limit_to, exclude=exclude),
-    ]
-
-    if tab is not None:
-        return AppLayout(
-            header=widgets.HTML(
-                value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                    app_title + " / " + tab_titles[tab]
-                )
-            ),
-            center=tab_list[tab],
-            pane_heights=["80px", "660px", 0],  # tamaño total de la ventana: Ok!
-        )
-
-    body = widgets.Tab()
-    body.children = tab_list
-    for i in range(len(tab_list)):
-        body.set_title(i, tab_titles[i])
-    return AppLayout(
-        header=widgets.HTML(
-            value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                app_title
-            )
-        ),
-        center=body,
-        pane_heights=["80px", "720px", 0],
+    return gui.APP(
+        app_title="Graph Analysis",
+        tab_titles=["Network Map", "Associations Map", "Association analysis",],
+        tab_widgets=[
+            __TAB0__(data, limit_to=limit_to, exclude=exclude),
+            __TAB1__(data, limit_to=limit_to, exclude=exclude),
+            __TAB2__(data, limit_to=limit_to, exclude=exclude),
+        ],
+        tab=tab,
     )
+

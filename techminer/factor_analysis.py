@@ -20,6 +20,8 @@ from techminer.explode import __explode
 from techminer.keywords import Keywords
 from techminer.plots import COLORMAPS
 
+import techminer.gui as gui
+
 
 def factor_analysis(
     data,
@@ -555,26 +557,8 @@ def __TAB0__(data, limit_to, exclude):
                 layout=Layout(width="55%"),
             ),
         },
-        # 2
-        {
-            "arg": "n_components",
-            "desc": "Num Factors:",
-            "widget": widgets.Dropdown(
-                options=list(range(2, 21)),
-                value=2,
-                ensure_option=True,
-                disabled=False,
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 3
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(
-                options=COLORMAPS, disable=False, layout=Layout(width="55%"),
-            ),
-        },
+        gui.n_components(),
+        gui.cmap(),
         # 4
         {
             "arg": "top_by",
@@ -584,16 +568,7 @@ def __TAB0__(data, limit_to, exclude):
                 layout=Layout(width="55%"),
             ),
         },
-        # 5
-        {
-            "arg": "top_n",
-            "desc": "Top N:",
-            "widget": widgets.Dropdown(
-                options=list(range(5, 51, 5)),
-                ensure_option=True,
-                layout=Layout(width="55%"),
-            ),
-        },
+        gui.top_n(),
         # 6
         {
             "arg": "sort_by",
@@ -604,47 +579,10 @@ def __TAB0__(data, limit_to, exclude):
                 layout=Layout(width="55%"),
             ),
         },
-        # 7
-        {
-            "arg": "ascending",
-            "desc": "Ascending :",
-            "widget": widgets.Dropdown(
-                options=[True, False], layout=Layout(width="55%"),
-            ),
-        },
-        #  8
-        {
-            "arg": "layout",
-            "desc": "Map layout:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Circular",
-                    "Kamada Kawai",
-                    "Planar",
-                    "Random",
-                    "Spectral",
-                    "Spring",
-                    "Shell",
-                ],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 9
-        {
-            "arg": "width",
-            "desc": "Fig Width",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
-        # 10
-        {
-            "arg": "height",
-            "desc": "Fig Height",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
+        gui.ascending(),
+        gui.nx_layout(),
+        gui.fig_width(),
+        gui.fig_height(),
     ]
     # -------------------------------------------------------------------------
     #
@@ -749,40 +687,14 @@ def __TAB0__(data, limit_to, exclude):
 
 
 def app(data, limit_to=None, exclude=None, tab=None):
-    """Jupyter Lab dashboard.
-    """
-    app_title = "Factor Analysis"
-    tab_titles = [
-        "Factor Analysis",
-    ]
-    tab_list = [
-        __TAB0__(data, limit_to=limit_to, exclude=exclude),
-    ]
-
-    if tab is not None:
-        return AppLayout(
-            header=widgets.HTML(
-                value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                    app_title + " / " + tab_titles[tab]
-                )
-            ),
-            center=tab_list[tab],
-            pane_heights=["80px", "660px", 0],  # tamaño total de la ventana: Ok!
-        )
-
-    body = widgets.Tab()
-    body.children = tab_list
-    for i in range(len(tab_list)):
-        body.set_title(i, tab_titles[i])
-    return AppLayout(
-        header=widgets.HTML(
-            value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                app_title
-            )
-        ),
-        center=body,
-        pane_heights=["80px", "720px", 0],
+    return gui.APP(
+        app_title="Factor Analysis",
+        tab_titles=["Factor Analisis"],
+        tab_widgets=[__TAB0__(data, limit_to=limit_to, exclude=exclude),],
+        tab=tab,
     )
+
+
 
 
 #

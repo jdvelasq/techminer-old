@@ -25,6 +25,8 @@ from techminer.keywords import Keywords
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
 
+import techminer.gui as gui
+
 warnings.filterwarnings("ignore", category=UserWarning)
 
 
@@ -810,13 +812,7 @@ def __TAB0__(x, limit_to, exclude):
             ),
         },
         # 4
-        {
-            "arg": "top_n",
-            "desc": "Top N:",
-            "widget": widgets.Dropdown(
-                options=list(range(5, 51, 5)), layout=Layout(width="55%"),
-            ),
-        },
+        gui.top_n(),
         # 5
         {
             "arg": "sort_by",
@@ -827,58 +823,12 @@ def __TAB0__(x, limit_to, exclude):
             ),
         },
         # 6
-        {
-            "arg": "ascending",
-            "desc": "Ascending:",
-            "widget": widgets.Dropdown(
-                options=[True, False], layout=Layout(width="55%"),
-            ),
-        },
-        # 7
-        {
-            "arg": "cmap_column",
-            "desc": "Colormap column/matrix:",
-            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
-        },
-        # 8
-        {
-            "arg": "cmap_by",
-            "desc": "Colormap by:",
-            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
-        },
-        # 9
-        {
-            "arg": "layout",
-            "desc": "Map layout:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Circular",
-                    "Kamada Kawai",
-                    "Planar",
-                    "Random",
-                    "Spectral",
-                    "Spring",
-                    "Shell",
-                ],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 10
-        {
-            "arg": "width",
-            "desc": "Figsize",
-            "widget": widgets.Dropdown(
-                options=range(5, 21, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
-        # 11
-        {
-            "arg": "height",
-            "desc": "Figsize",
-            "widget": widgets.Dropdown(
-                options=range(5, 21, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
+        gui.ascending(),
+        gui.cmap(arg="cmap_column", desc="Colormap Col:"),
+        gui.cmap(arg="cmap_by", desc="Colormap By:"),
+        gui.nx_layout(),
+        gui.fig_width(),
+        gui.fig_height(),
     ]
     # -------------------------------------------------------------------------
     #
@@ -1338,13 +1288,7 @@ def __TAB1__(x, limit_to, exclude):
             ),
         },
         # 3
-        {
-            "arg": "top_n",
-            "desc": "Top N:",
-            "widget": widgets.Dropdown(
-                options=list(range(5, 51, 5)), layout=Layout(width="55%"),
-            ),
-        },
+        gui.top_n(),
         # 4
         {
             "arg": "cmap_column",
@@ -1358,38 +1302,9 @@ def __TAB1__(x, limit_to, exclude):
             "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
         },
         # 6
-        {
-            "arg": "layout",
-            "desc": "Layout:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Circular",
-                    "Kamada Kawai",
-                    "Planar",
-                    "Random",
-                    "Spectral",
-                    "Spring",
-                    "Shell",
-                ],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 7
-        {
-            "arg": "width",
-            "desc": "Width:",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
-        # 8
-        {
-            "arg": "height",
-            "desc": "Height:",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
+        gui.nx_layout(),
+        gui.fig_width(),
+        gui.fig_height(),
         # 9
         {
             "arg": "selected",
@@ -1523,39 +1438,13 @@ PANE_HEIGHTS = ["80px", "770px", 0]
 
 
 def app(data, limit_to=None, exclude=None, tab=None):
-    """Jupyter Lab dashboard.
-    """
-    app_title = "Bigraph Analysis"
-    tab_titles = [
-        "Network Map",
-        "Associations Map",
-    ]
-    tab_list = [
-        __TAB0__(data, limit_to=limit_to, exclude=exclude),
-        __TAB1__(data, limit_to=limit_to, exclude=exclude),
-    ]
-
-    if tab is not None:
-        return AppLayout(
-            header=widgets.HTML(
-                value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                    app_title + " / " + tab_titles[tab]
-                )
-            ),
-            center=tab_list[tab],
-            pane_heights=["80px", "660px", 0],  # tamaño total de la ventana: Ok!
-        )
-
-    body = widgets.Tab()
-    body.children = tab_list
-    for i in range(len(tab_list)):
-        body.set_title(i, tab_titles[i])
-    return AppLayout(
-        header=widgets.HTML(
-            value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                app_title
-            )
-        ),
-        center=body,
-        pane_heights=["80px", "720px", 0],
+    return gui.APP(
+        app_title="Bigraph Analysis",
+        tab_titles=["Network Map", "Associations Map",],
+        tab_widgets=[
+            __TAB0__(data, limit_to=limit_to, exclude=exclude),
+            __TAB1__(data, limit_to=limit_to, exclude=exclude),
+        ],
+        tab=tab,
     )
+

@@ -16,6 +16,8 @@ from techminer.explode import __explode
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
 
+import techminer.gui as gui
+
 
 def analytics(
     data,
@@ -404,108 +406,54 @@ def __TAB0__(data, limit_to, exclude):
     COLUMNS = sorted([column for column in data.columns if column not in EXCLUDE_COLS])
     #
     left_panel = [
-        # 0
-        {
-            "arg": "view",
-            "desc": "View:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Analytics",
-                    "Bar plot",
-                    "Horizontal bar plot",
-                    "Pie plot",
-                    "Wordcloud",
-                    "Treemap",
-                    "S/D Ratio (bar)",
-                    "S/D Ratio (barh)",
-                ],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 1
-        {
-            "arg": "column",
-            "desc": "Column to analyze:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in data.columns],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 2
-        {
-            "arg": "top_by",
-            "desc": "Top by:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Num Documents",
-                    "Times Cited",
-                    "Frac Num Documents",
-                    "Times Cited per Year",
-                    "Avg Times Cited",
-                    "H index",
-                    "M index",
-                    "G index",
-                ],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 3
-        {
-            "arg": "top_n",
-            "desc": "Top N:",
-            "widget": widgets.Dropdown(
-                options=list(range(5, 51, 5)), layout=Layout(width="55%"),
-            ),
-        },
-        # 4
-        {
-            "arg": "sort_by",
-            "desc": "Sort by:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Num Documents",
-                    "Frac Num Documents",
-                    "Times Cited",
-                    "Times Cited per Year",
-                    "Avg Times Cited",
-                    "H index",
-                    "M index",
-                    "G index",
-                    "*Index*",
-                ],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 5
-        {
-            "arg": "ascending",
-            "desc": "Ascending:",
-            "widget": widgets.Dropdown(
-                options=["True", "False"], layout=Layout(width="55%"),
-            ),
-        },
-        # 6
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
-        },
-        # 7
-        {
-            "arg": "width",
-            "desc": "Figsize",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
-        # 8
-        {
-            "arg": "height",
-            "desc": "Figsize",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
+        gui.dropdown(
+            desc="View:",
+            options=[
+                "Analytics",
+                "Bar plot",
+                "Horizontal bar plot",
+                "Pie plot",
+                "Wordcloud",
+                "Treemap",
+                "S/D Ratio (bar)",
+                "S/D Ratio (barh)",
+            ],
+        ),
+        gui.dropdown(
+            desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+        ),
+        gui.dropdown(
+            desc="Top by:",
+            options=[
+                "Num Documents",
+                "Times Cited",
+                "Frac Num Documents",
+                "Times Cited per Year",
+                "Avg Times Cited",
+                "H index",
+                "M index",
+                "G index",
+            ],
+        ),
+        gui.top_n(),
+        gui.dropdown(
+            desc="Sort by:",
+            options=[
+                "Num Documents",
+                "Frac Num Documents",
+                "Times Cited",
+                "Times Cited per Year",
+                "Avg Times Cited",
+                "H index",
+                "M index",
+                "G index",
+                "*Index*",
+            ],
+        ),
+        gui.ascending(),
+        gui.cmap(),
+        gui.fig_width(),
+        gui.fig_height(),
     ]
     # -------------------------------------------------------------------------
     #
@@ -524,7 +472,7 @@ def __TAB0__(data, limit_to, exclude):
         top_n = kwargs["top_n"]
         cmap = kwargs["cmap"]
         sort_by = kwargs["sort_by"]
-        ascending = {"True": True, "False": False}[kwargs["ascending"]]
+        ascending = kwargs["ascending"]
         width = int(kwargs["width"])
         height = int(kwargs["height"])
 
@@ -617,32 +565,9 @@ def __TAB1__(data):
                 options=["Num_Documents", "Times_Cited"], layout=Layout(width="55%"),
             ),
         },
-        # 2
-        {
-            "arg": "cmap",
-            "desc": "Colormap:",
-            "widget": widgets.Dropdown(
-                options=COLORMAPS, disable=False, layout=Layout(width="55%"),
-            ),
-        },
-        # 3
-        {
-            "arg": "width",
-            "desc": "Width",
-            "widget": widgets.Dropdown(
-                options=range(15, 21, 1),
-                ensure_option=True,
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 4
-        {
-            "arg": "height",
-            "desc": "Height",
-            "widget": widgets.Dropdown(
-                options=range(4, 9, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
+        gui.cmap(),
+        gui.fig_width(),
+        gui.fig_height(),
     ]
     # -------------------------------------------------------------------------
     #
@@ -902,6 +827,27 @@ def __TAB4__(data):
 
 
 def app(data, limit_to=None, exclude=None, tab=None):
+    return gui.APP(
+        app_title="Analysis by Term",
+        tab_titles=[
+            "Term Analysis",
+            "Worldmap",
+            "Core Authors",
+            "Core Source titles",
+            "Top Documentes",
+        ],
+        tab_widgets=[
+            __TAB0__(data, limit_to=limit_to, exclude=exclude),
+            __TAB1__(data),
+            __TAB2__(data),
+            __TAB3__(data),
+            __TAB4__(data),
+        ],
+        tab=tab,
+    )
+
+
+def __app(data, limit_to=None, exclude=None, tab=None):
     """Jupyter Lab dashboard.
     """
     app_title = "Analysis by Term"

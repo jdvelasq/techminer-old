@@ -19,9 +19,11 @@ from techminer.chord_diagram import ChordDiagram
 from techminer.co_occurrence import co_occurrence, document_term_matrix, filter_index
 from techminer.explode import MULTIVALUED_COLS, __explode
 from techminer.keywords import Keywords
-from techminer.maps import Map
+
+#  from techminer.maps import Map
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
+import techminer.gui as gui
 
 
 def corr(
@@ -722,13 +724,7 @@ def __TAB0__(x, limit_to, exclude):
             ),
         },
         # 5
-        {
-            "arg": "top_n",
-            "desc": "Top N:",
-            "widget": widgets.Dropdown(
-                options=list(range(5, 51, 5)), layout=Layout(width="55%"),
-            ),
-        },
+        gui.top_n(),
         # 6
         {
             "arg": "sort_by",
@@ -739,13 +735,7 @@ def __TAB0__(x, limit_to, exclude):
             ),
         },
         # 7
-        {
-            "arg": "ascending",
-            "desc": "Ascending:",
-            "widget": widgets.Dropdown(
-                options=[True, False], layout=Layout(width="55%"),
-            ),
-        },
+        gui.ascending(),
         # 8
         {
             "arg": "min_link_value",
@@ -758,46 +748,10 @@ def __TAB0__(x, limit_to, exclude):
             ),
         },
         # 9
-        {
-            "arg": "cmap",
-            "desc": "Matrix colormap:",
-            "widget": widgets.Dropdown(
-                options=COLORMAPS, layout=Layout(width="55%"), disabled=False,
-            ),
-        },
-        # 10
-        {
-            "arg": "layout",
-            "desc": "Map layout:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Circular",
-                    "Kamada Kawai",
-                    "Planar",
-                    "Random",
-                    "Spectral",
-                    "Spring",
-                    "Shell",
-                ],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 11
-        {
-            "arg": "width",
-            "desc": "Figsize",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
-        # 12
-        {
-            "arg": "height",
-            "desc": "Figsize",
-            "widget": widgets.Dropdown(
-                options=range(5, 15, 1), ensure_option=True, layout=Layout(width="55%"),
-            ),
-        },
+        gui.cmap(),
+        gui.nx_layout(),
+        gui.fig_width(),
+        gui.fig_height(),
     ]
     # -------------------------------------------------------------------------
     #
@@ -1002,39 +956,11 @@ def __TAB0__(x, limit_to, exclude):
 #
 #
 def app(data, limit_to=None, exclude=None, tab=None):
-    """Jupyter Lab dashboard.
-    """
-    app_title = "Correlation"
-    tab_titles = [
-        "Correlation Analysis",
-    ]
-    tab_list = [
-        __TAB0__(data, limit_to=limit_to, exclude=exclude),
-    ]
-
-    if tab is not None:
-        return AppLayout(
-            header=widgets.HTML(
-                value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                    app_title + " / " + tab_titles[tab]
-                )
-            ),
-            center=tab_list[tab],
-            pane_heights=["80px", "660px", 0],  # tamaño total de la ventana: Ok!
-        )
-
-    body = widgets.Tab()
-    body.children = tab_list
-    for i in range(len(tab_list)):
-        body.set_title(i, tab_titles[i])
-    return AppLayout(
-        header=widgets.HTML(
-            value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-                app_title
-            )
-        ),
-        center=body,
-        pane_heights=["80px", "720px", 0],
+    return gui.APP(
+        app_title="Correlation",
+        tab_titles=["Correlation Analysis",],
+        tab_widgets=[__TAB0__(data, limit_to=limit_to, exclude=exclude),],
+        tab=tab,
     )
 
 
