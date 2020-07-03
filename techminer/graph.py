@@ -17,6 +17,8 @@ from techminer.explode import __explode
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
 
+import techminer.common as common
+
 # from networkx.algorithms.community.label_propagation import (
 #     label_propagation_communities,
 # )
@@ -273,43 +275,13 @@ def network_map(X, cmap, clustering, layout, only_communities, figsize=(8, 8)):
         linewidths=1,
     )
 
-    #
-    # Labels
-    #
-    xlim = ax.get_xlim()
-    ylim = ax.get_ylim()
-    node_sizes = node_sizes
-    for idx, term in enumerate(terms):
-        x, y = pos[term]
-        ax.text(
-            x
-            + 0.01 * (xlim[1] - xlim[0])
-            + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
-            y
-            - 0.01 * (ylim[1] - ylim[0])
-            - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
-            s=term,
-            fontsize=10,
-            bbox=dict(
-                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
-            ),
-            horizontalalignment="left",
-            verticalalignment="top",
-        )
+    common.ax_text_node_labels(ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes)
 
     fig.set_tight_layout(True)
-
-    # Figure size
-    ax.set_xlim(
-        xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
-    )
-    ax.set_ylim(
-        ylim[0] - 0.15 * (ylim[1] - ylim[0]), ylim[1] + 0.15 * (ylim[1] - ylim[0])
-    )
-    ax.set_aspect("equal")
-
-    ax.axis("off")
+    common.ax_expand_limits(ax)
     common.set_ax_splines_invisible(ax)
+    ax.set_aspect("equal")
+    ax.axis("off")
 
     return fig
 
@@ -594,41 +566,11 @@ def associations_map(X, selected, cmap, layout, figsize):
         linewidths=1,
     )
 
-    #
-    # Labels
-    #
-    xlim = ax.get_xlim()
-    ylim = ax.get_ylim()
-    node_sizes = node_sizes
-    for idx, term in enumerate(terms):
-        x, y = pos[term]
-        ax.text(
-            x
-            + 0.01 * (xlim[1] - xlim[0])
-            + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
-            y
-            - 0.01 * (ylim[1] - ylim[0])
-            - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
-            s=term,
-            fontsize=10,
-            bbox=dict(
-                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
-            ),
-            horizontalalignment="left",
-            verticalalignment="top",
-        )
-
-    # Figure size
-    ax.set_xlim(
-        xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
-    )
-    ax.set_ylim(
-        ylim[0] - 0.15 * (ylim[1] - ylim[0]), ylim[1] + 0.15 * (ylim[1] - ylim[0])
-    )
-    ax.set_aspect("equal")
-
-    ax.axis("off")
+    common.ax_text_node_labels(ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes)
+    common.ax_expand_limits(ax)
     common.set_ax_splines_invisible(ax)
+    ax.set_aspect("equal")
+    ax.axis("off")
 
     fig.set_tight_layout(True)
 
@@ -842,27 +784,11 @@ def association_analysis(
     )
 
     common.ax_expand_limits(ax)
-    xlim = ax.get_xlim()
-    ylim = ax.get_ylim()
 
-    for idx, term in enumerate(X.columns):
-        x, y = x_axis[idx], y_axis[idx]
-        ax.text(
-            x
-            + 0.01 * (xlim[1] - xlim[0])
-            + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
-            y
-            - 0.01 * (ylim[1] - ylim[0])
-            - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
-            s=term,
-            fontsize=10,
-            bbox=dict(
-                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
-            ),
-            horizontalalignment="left",
-            verticalalignment="top",
-        )
-
+    pos = {term: (x_axis[idx], y_axis[idx]) for idx, term in enumerate(X.columns)}
+    common.ax_text_node_labels(
+        ax=ax, labels=X.columns, dict_pos=pos, node_sizes=node_sizes
+    )
     ax.axhline(y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
     ax.axvline(x=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
 

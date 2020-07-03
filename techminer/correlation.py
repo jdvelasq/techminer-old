@@ -569,24 +569,7 @@ def correlation_map(
     #
     xlim = ax.get_xlim()
     ylim = ax.get_ylim()
-
-    for idx, term in enumerate(terms):
-        x, y = pos[term]
-        ax.text(
-            x
-            + 0.01 * (xlim[1] - xlim[0])
-            + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
-            y
-            - 0.01 * (ylim[1] - ylim[0])
-            - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
-            s=term,
-            fontsize=10,
-            bbox=dict(
-                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
-            ),
-            horizontalalignment="left",
-            verticalalignment="top",
-        )
+    common.ax_text_node_labels(ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes)
 
     #
     # Figure size

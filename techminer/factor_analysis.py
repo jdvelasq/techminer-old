@@ -19,6 +19,7 @@ from techminer.co_occurrence import document_term_matrix
 from techminer.explode import __explode
 from techminer.keywords import Keywords
 from techminer.plots import COLORMAPS
+import techminer.common as common
 
 import techminer.gui as gui
 
@@ -395,7 +396,7 @@ def factor_map(matrix, summary, layout="Kamada Kawai", cmap="Greys", figsize=(17
     #
     # network edges
     #
-    for idx, column in enumerate(matrix.columns):
+    for column in matrix.columns:
 
         matrix = matrix.sort_values(column, ascending=False)
 
@@ -467,38 +468,12 @@ def factor_map(matrix, summary, layout="Kamada Kawai", cmap="Greys", figsize=(17
     #
     # Figure size
     #
-    xlim = ax.get_xlim()
-    ylim = ax.get_ylim()
-
-    for idx, term in enumerate(terms):
-        x, y = label_pos[term]
-        ax.text(
-            x
-            + 0.01 * (xlim[1] - xlim[0])
-            + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
-            y
-            - 0.01 * (ylim[1] - ylim[0])
-            - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
-            s=term,
-            fontsize=10,
-            bbox=dict(
-                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
-            ),
-            horizontalalignment="left",
-            verticalalignment="top",
-        )
-
-    #
-    # Figure size
-    #
-
-    ax.set_xlim(
-        xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
+    common.ax_text_node_labels(
+        ax=ax, labels=terms, dict_pos=label_pos, node_sizes=node_sizes
     )
-    ax.set_ylim(
-        ylim[0] - 0.15 * (ylim[1] - ylim[0]), ylim[1] + 0.15 * (ylim[1] - ylim[0])
-    )
+    common.ax_expand_limits(ax)
     ax.set_aspect("equal")
+
     return fig
 
 
@@ -827,37 +802,11 @@ def factor_map_0(
     #
     # Figure size
     #
-    xlim = ax.get_xlim()
-    ylim = ax.get_ylim()
-
-    for idx, term in enumerate(terms):
-        x, y = label_pos[term]
-        ax.text(
-            x
-            + 0.01 * (xlim[1] - xlim[0])
-            + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
-            y
-            - 0.01 * (ylim[1] - ylim[0])
-            - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
-            s=term,
-            fontsize=10,
-            bbox=dict(
-                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
-            ),
-            horizontalalignment="left",
-            verticalalignment="top",
-        )
-
-    #
-    # Figure size
-    #
-
-    ax.set_xlim(
-        xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
+    common.ax_text_node_labels(
+        ax=ax, labels=terms, dict_pos=label_pos, node_sizes=node_sizes
     )
-    ax.set_ylim(
-        ylim[0] - 0.15 * (ylim[1] - ylim[0]), ylim[1] + 0.15 * (ylim[1] - ylim[0])
-    )
+    common.ax_expand_limits(ax)
+
     ax.set_aspect("equal")
     return fig
 

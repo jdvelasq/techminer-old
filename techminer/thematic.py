@@ -195,28 +195,12 @@ def thematc_analysis(
 
         common.ax_expand_limits(ax)
 
-        xlim = ax.get_xlim()
-        ylim = ax.get_ylim()
-        for idx, term in enumerate(map.name):
-            x, y = x_clusters[idx], y_clusters[idx]
-            ax.text(
-                x
-                + 0.01 * (xlim[1] - xlim[0])
-                + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
-                y
-                - 0.01 * (ylim[1] - ylim[0])
-                - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
-                s=term,
-                fontsize=10,
-                bbox=dict(
-                    facecolor="w",
-                    alpha=1.0,
-                    edgecolor="gray",
-                    boxstyle="round,pad=0.5",
-                ),
-                horizontalalignment="left",
-                verticalalignment="top",
-            )
+        pos = {
+            key: (x_clusters[idx], y_clusters[idx]) for idx, key in enumerate(map.name)
+        }
+        common.ax_text_node_labels(
+            ax=ax, labels=map.name, dict_pos=pos, node_sizes=node_sizes
+        )
 
         ax.axhline(
             y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1,
@@ -225,9 +209,9 @@ def thematc_analysis(
             x=0, color="gray", linestyle="--", linewidth=1, zorder=-1,
         )
 
-        #  ax.set_aspect("equal")
         common.set_ax_splines_invisible(ax)
         ax.axis("off")
+
         fig.set_tight_layout(True)
 
         return fig

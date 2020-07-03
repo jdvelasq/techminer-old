@@ -547,39 +547,9 @@ def co_occurrence_map(
         linewidths=1,
     )
 
-    #
-    # Labels
-    #
-    xlim = ax.get_xlim()
-    ylim = ax.get_ylim()
     node_sizes = column_node_sizes + index_node_sizes
-    for idx, term in enumerate(terms):
-        x, y = pos[term]
-        ax.text(
-            x
-            + 0.01 * (xlim[1] - xlim[0])
-            + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
-            y
-            - 0.01 * (ylim[1] - ylim[0])
-            - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
-            s=term,
-            fontsize=10,
-            bbox=dict(
-                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
-            ),
-            horizontalalignment="left",
-            verticalalignment="top",
-        )
-
-    #
-    # Figure size
-    #
-    ax.set_xlim(
-        xlim[0] - 0.15 * (xlim[1] - xlim[0]), xlim[1] + 0.15 * (xlim[1] - xlim[0])
-    )
-    ax.set_ylim(
-        ylim[0] - 0.15 * (ylim[1] - ylim[0]), ylim[1] + 0.15 * (ylim[1] - ylim[0])
-    )
+    common.ax_text_node_labels(ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes)
+    common.ax_expand_limits(ax)
     ax.set_aspect("equal")
     ax.axis("off")
     common.set_ax_splines_invisible(ax)
@@ -1219,37 +1189,13 @@ def associations_map(
         linewidths=1,
     )
 
-    #
-    # Labels
-    #
-    xlim = ax.get_xlim()
-    ylim = ax.get_ylim()
     node_sizes = column_node_sizes + index_node_sizes
-    for idx, term in enumerate(terms):
-        x, y = pos[term]
-        ax.text(
-            x
-            + 0.01 * (xlim[1] - xlim[0])
-            + 0.001 * node_sizes[idx] / 300 * (xlim[1] - xlim[0]),
-            y
-            - 0.01 * (ylim[1] - ylim[0])
-            - 0.001 * node_sizes[idx] / 300 * (ylim[1] - ylim[0]),
-            s=term,
-            fontsize=10,
-            bbox=dict(
-                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
-            ),
-            horizontalalignment="left",
-            verticalalignment="top",
-        )
+
+    common.ax_text_node_labels(ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes)
 
     fig.tight_layout()
-    #
-    # Figure size
-    #
     common.ax_expand_limits(ax)
     ax.set_aspect("equal")
-
     common.set_ax_splines_invisible(ax)
 
     ax.axis("off")
