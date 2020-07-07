@@ -1152,33 +1152,11 @@ def __TAB1__(x, limit_to, exclude):
     #
     left_panel = [
         # 0
-        {
-            "arg": "column",
-            "desc": "Column:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 1
-        {
-            "arg": "by",
-            "desc": "By:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS[1:] if z in x.columns],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 2
-        {
-            "arg": "top_by",
-            "desc": "Top by:",
-            "widget": widgets.Dropdown(
-                options=["Values", "Num Documents", "Times Cited",],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 3
+        gui.dropdown(desc="Column:", options=[z for z in COLUMNS if z in x.columns],),
+        gui.dropdown(desc="By:", options=[z for z in COLUMNS if z in x.columns],),
+        gui.dropdown(
+            desc="Top by:", options=["Values", "Num Documents", "Times Cited",],
+        ),
         gui.top_n(),
         # 4
         {
@@ -1271,48 +1249,6 @@ def __TAB1__(x, limit_to, exclude):
             )
         #
         return
-
-    # -------------------------------------------------------------------------
-    #
-    # Generic
-    #
-    # -------------------------------------------------------------------------
-    # args = {control["arg"]: control["widget"] for control in left_panel}
-    # output = widgets.Output()
-    # with output:
-    #     display(widgets.interactive_output(server, args,))
-    # #
-    # grid = GridspecLayout(12, 6)
-    # #
-    # # Left panel
-    # #
-    # for index in range(len(left_panel)):
-    #     if index != len(left_panel) - 1:
-    #         grid[index, 0] = widgets.HBox(
-    #             [
-    #                 widgets.Label(value=left_panel[index]["desc"]),
-    #                 left_panel[index]["widget"],
-    #             ],
-    #             layout=Layout(
-    #                 display="flex", justify_content="flex-end", align_content="center",
-    #             ),
-    #         )
-    #     else:
-    #         grid[index:, 0] = widgets.VBox(
-    #             [
-    #                 #                    widgets.Label(value=left_panel[index]["desc"]),
-    #                 left_panel[index]["widget"],
-    #             ],
-    #             layout=Layout(
-    #                 display="flex", justify_content="flex-end", align_content="center",
-    #             ),
-    #         )
-    # #
-    # # Output
-    # #
-    # grid[0:, 1:] = widgets.VBox(
-    #     [output], layout=Layout(height="650px", border="2px solid gray")
-    # )
 
     ###
     output = widgets.Output()
