@@ -304,8 +304,8 @@ def __TAB0__(data):
         with output:
             return display(analytics(**kwargs))
 
+    ###
     output = widgets.Output()
-
     return gui.TABapp(left_panel=left_panel, server=server, output=output)
 
 
