@@ -192,8 +192,6 @@ def __TAB0__(data, limit_to, exclude):
     #
     # UI
     #
-    output = widgets.Output()
-    #
     COLUMNS = [column for column in data.columns if column in MAP_COLUMNS]
     #
     left_panel = [
@@ -283,6 +281,7 @@ def __TAB0__(data, limit_to, exclude):
     #
     # Body
     #
+    output = widgets.Output()
     return gui.TABapp(left_panel=left_panel, server=server, output=output)
 
 
