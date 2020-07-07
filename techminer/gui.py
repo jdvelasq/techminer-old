@@ -196,3 +196,108 @@ def TABapp(left_panel, server, output):
     )
 
     return grid
+
+
+class TABapp_:
+    def __init__(self):
+        self._output = widgets.Output()
+        self._panel = []
+        self._grid = []
+        self._result = None
+        self._cmap = None
+        self._view = None
+
+    def run(self):
+        return self._grid
+
+    def gui(self):
+        pass
+
+    def update(self, button):
+        pass
+
+    # def update(self, button):
+    #     self.compute()
+    #     self.display()
+
+    # def app_output(self):
+
+    #     self._output.clear_output()
+
+    #     with self._output:
+
+    #         if self._plot == "*Matrix*":
+    #             display(matrix.style.background_gradient(cmap=self._cmap, axis=bg_axis))
+    #             return
+
+    #         if self._plot == "Heatmap":
+    #             display(
+    #                 plt.heatmap(self._result, cmap=self._cmap, figsize=self._figsize)
+    #             )
+    #             return
+
+    #         if self._plot == "Bubble plot":
+    #             display(
+    #                 plt.bubble(self._result, cmap=self._cmap, figsize=self._figsize)
+    #             )
+    #             return
+
+    #         if self._plot == "Slope chart":
+    #             display(
+    #                 slope_chart(
+    #                     self._result,
+    #                     figsize=self._figsize,
+    #                     cmap_column=self._cmap,
+    #                     cmap_by=self._cmap_by,
+    #                 )
+    #             )
+    #             return
+
+    #         if self._plot == "Bar plot":
+    #             return
+
+    #         if self._plot == "Horizontal bar plot":
+    #             return
+
+    #         if self._plot == "Pie":
+    #             return
+
+    #         if self._plot == "Gant":
+    #             return
+
+    def create_grid(self):
+
+        #  Grid size
+        self._grid = GridspecLayout(14, 6, height="650px")
+
+        # Button control
+        self._grid[0, 0] = widgets.Button(
+            description="Update", layout=Layout(width="91%", border="2px solid gray"),
+        )
+        self._grid[0, 0].on_click(self.update)
+
+        self._grid[1:, 0] = widgets.VBox(
+            [
+                widgets.HBox(
+                    [
+                        widgets.Label(value=self._panel[index]["desc"]),
+                        self._panel[index]["widget"],
+                    ],
+                    layout=Layout(
+                        display="flex",
+                        justify_content="flex-end",
+                        align_content="center",
+                    ),
+                )
+                for index in range(len(self._panel))
+            ]
+        )
+
+        #  Output area
+        self._grid[:, 1:] = widgets.VBox(
+            [self._output], layout=Layout(height="650px", border="2px solid gray")
+        )
+
+        args = {control["arg"]: control["widget"] for control in self._panel}
+        with self._output:
+            display(widgets.interactive_output(self.gui, args,))

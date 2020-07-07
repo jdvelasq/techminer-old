@@ -17,7 +17,8 @@ import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
 from techminer.chord_diagram import ChordDiagram
-from techminer.co_occurrence import co_occurrence, document_term_matrix, filter_index
+from techminer.graph import co_occurrence_matrix
+from techminer.bigraph import filter_index
 from techminer.explode import MULTIVALUED_COLS, __explode
 from techminer.keywords import Keywords
 from techminer.params import EXCLUDE_COLS

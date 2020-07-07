@@ -123,6 +123,7 @@ def bar(
     edgecolor="k",
     linewidth=0.5,
     zorder=10,
+    ylabel=None,
     **kwargs,
 ):
     """Make a bar plot.
@@ -188,6 +189,9 @@ def bar(
         **kwargs,
     )
 
+    if ylabel is not None:
+        ax.set_ylabel(ylabel)
+
     xticklabels = height.index
     if xticklabels.dtype != "int64":
         xticklabels = [
@@ -215,6 +219,7 @@ def barh(
     fontsize=11,
     edgecolor="k",
     linewidth=0.5,
+    xlabel=None,
     zorder=10,
     **kwargs,
 ):
@@ -279,6 +284,9 @@ def barh(
         zorder=zorder,
         **kwargs,
     )
+
+    if xlabel is not None:
+        ax.set_xlabel(xlabel)
 
     yticklabels = width.index
     if yticklabels.dtype != "int64":
@@ -1150,6 +1158,7 @@ def stacked_bar(
     fontsize=11,
     edgecolor="k",
     linewidth=0.5,
+    ylabel=None,
     **kwargs,
 ):
     """Stacked vertical bar plot.
@@ -1198,6 +1207,9 @@ def stacked_bar(
         )
         bottom = bottom + X[col]
 
+    if ylabel is not None:
+        ax.set_ylabel(ylabel)
+
     ax.legend()
 
     ax.grid(axis="y", color="gray", linestyle=":")
@@ -1214,7 +1226,7 @@ def stacked_bar(
 
 
 def stacked_barh(
-    X, figsize=(6, 6), height=0.8, fontsize=11, cmap="Greys", **kwargs,
+    X, figsize=(6, 6), height=0.8, fontsize=11, cmap="Greys", xlabel=None, **kwargs,
 ):
     """Stacked horzontal bar plot.
 
@@ -1265,6 +1277,9 @@ def stacked_barh(
             **kwargs,
         )
         left = left + X[col]
+
+    if xlabel is not None:
+        ax.set_xlabel(xlabel)
 
     ax.legend()
 

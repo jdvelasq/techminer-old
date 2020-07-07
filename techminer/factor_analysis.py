@@ -15,7 +15,7 @@ from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
 from matplotlib import colors
 from sklearn.decomposition import PCA
-from techminer.co_occurrence import document_term_matrix
+from techminer.document_term import document_term_matrix
 from techminer.explode import __explode
 from techminer.keywords import Keywords
 from techminer.plots import COLORMAPS
