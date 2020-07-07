@@ -727,61 +727,26 @@ def __TAB0__(x, limit_to, exclude):
     COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
     #
     left_panel = [
-        # 0
-        {
-            "arg": "view",
-            "desc": "View:",
-            "widget": widgets.Dropdown(
-                options=[
-                    "Matrix",
-                    "Heatmap",
-                    "Bubble plot",
-                    "Network",
-                    "Slope chart",
-                    "Table",
-                ],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 1
-        {
-            "arg": "column",
-            "desc": "Column:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in x.columns],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 2
-        {
-            "arg": "by",
-            "desc": "By:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS[1:] if z in x.columns],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 3
-        {
-            "arg": "top_by",
-            "desc": "Top by:",
-            "widget": widgets.Dropdown(
-                options=["Values", "Num Documents", "Times Cited",],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 4
+        gui.dropdown(
+            desc="View:",
+            options=[
+                "Matrix",
+                "Heatmap",
+                "Bubble plot",
+                "Network",
+                "Slope chart",
+                "Table",
+            ],
+        ),
+        gui.dropdown(desc="Column:", options=[z for z in COLUMNS if z in x.columns],),
+        gui.dropdown(desc="By:", options=[z for z in COLUMNS if z in x.columns],),
+        gui.dropdown(
+            desc="Top by:", options=["Values", "Num Documents", "Times Cited"],
+        ),
         gui.top_n(),
-        # 5
-        {
-            "arg": "sort_by",
-            "desc": "Sort order:",
-            "widget": widgets.Dropdown(
-                options=["Alphabetic", "Num Documents", "Times Cited",],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 6
+        gui.dropdown(
+            desc="Sort by:", options=["Alphabetic", "Num Documents", "Times Cited",],
+        ),
         gui.ascending(),
         gui.cmap(arg="cmap_column", desc="Colormap Col:"),
         gui.cmap(arg="cmap_by", desc="Colormap By:"),
