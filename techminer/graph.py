@@ -780,33 +780,14 @@ def __TAB2__(data, limit_to, exclude):
     COLUMNS = sorted([column for column in data.columns if column not in EXCLUDE_COLS])
     #
     left_panel = [
-        # 0
-        {
-            "arg": "method",
-            "desc": "Method:",
-            "widget": widgets.Dropdown(
-                options=["Multidimensional scaling", "Correspondence analysis"],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 1
-        {
-            "arg": "column",
-            "desc": "Column to analyze:",
-            "widget": widgets.Dropdown(
-                options=[z for z in COLUMNS if z in data.columns],
-                layout=Layout(width="55%"),
-            ),
-        },
-        # 2
-        {
-            "arg": "top_by",
-            "desc": "Top by:",
-            "widget": widgets.Dropdown(
-                options=["Num Documents", "Times Cited",], layout=Layout(width="55%"),
-            ),
-        },
-        # 3
+        gui.dropdown(
+            desc="Method:",
+            options=["Multidimensional scaling", "Correspondence analysis"],
+        ),
+        gui.dropdown(
+            desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+        ),
+        gui.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
         gui.top_n(),
         gui.normalization(),
         gui.n_components(),
