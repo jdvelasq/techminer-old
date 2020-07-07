@@ -30,7 +30,7 @@ from IPython.display import clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.manifold import MDS
-from techminer.document_term import document_term_matrix
+from techminer.document_term import TF_matrix
 from techminer.plots import COLORMAPS
 
 pd.options.display.max_rows = 50

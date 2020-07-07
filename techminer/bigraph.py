@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
-from techminer.document_term import document_term_matrix
+from techminer.document_term import TF_matrix
 
 import techminer.by_term as by_term
 import techminer.plots as plt
@@ -209,8 +209,8 @@ def co_occurrence_matrix(
         top_by = {"Values": -1, "Num_Documents": 0, "Times_Cited": 1,}[top_by]
 
     w = x[[column, by, "ID"]].dropna()
-    A = document_term_matrix(w, column)
-    B = document_term_matrix(w, by)
+    A = TF_matrix(w, column)
+    B = TF_matrix(w, by)
 
     if top_by == -1:
 

@@ -88,7 +88,7 @@ def corr(
     5     A;B               d            5   5
 
 
-    >>> document_term_matrix(df, 'Authors')
+    >>> TF_matrix(df, 'Authors')
        A  B  C  D
     0  1  0  0  0
     1  1  1  0  0
@@ -97,7 +97,7 @@ def corr(
     4  0  1  0  1
     5  1  1  0  0
 
-    >>> document_term_matrix(df, 'Author_Keywords')
+    >>> TF_matrix(df, 'Author_Keywords')
        a  b  c  d
     0  1  0  0  0
     1  1  1  0  0
@@ -146,7 +146,7 @@ def corr(
     4     B;D             c;d            4   4
     5     A;B               d            5   5
 
-    >>> document_term_matrix(df, column='Authors')
+    >>> TF_matrix(df, column='Authors')
        A  B  C  D
     0  1  0  0  0
     1  1  1  0  0
@@ -180,7 +180,7 @@ def corr(
 
     if column == by:
 
-        dtm = document_term_matrix(x, column=column)
+        dtm = TF_matrix(x, column=column)
         dtm = filter_index(
             x=x,
             column=column,
@@ -198,7 +198,7 @@ def corr(
     else:
 
         w = x[[column, by, "ID"]].dropna()
-        A = document_term_matrix(w, column=column)
+        A = TF_matrix(w, column=column)
         A = filter_index(
             x=x,
             column=column,
@@ -211,7 +211,7 @@ def corr(
             limit_to=limit_to,
             exclude=exclude,
         )
-        B = document_term_matrix(w, column=by)
+        B = TF_matrix(w, column=by)
         matrix = np.matmul(B.transpose().values, A.values)
         matrix = pd.DataFrame(matrix, columns=A.columns, index=B.columns)
         result = matrix.corr(method=method)

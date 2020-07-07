@@ -12,7 +12,7 @@ from IPython.display import clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.manifold import MDS
-from techminer.document_term import document_term_matrix
+from techminer.document_term import TF_matrix
 
 import techminer.plots as plt
 
@@ -40,7 +40,7 @@ def thematc_analysis(
     exclude=None,
 ):
 
-    dtm = document_term_matrix(data, column)
+    dtm = TF_matrix(data, column)
 
     summ = by_term.analytics(data, column)
     fmt = _get_fmt(summ)

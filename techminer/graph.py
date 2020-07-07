@@ -12,7 +12,7 @@ from cdlib import algorithms
 from ipywidgets import AppLayout, GridspecLayout, Layout
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.manifold import MDS
-from techminer.document_term import document_term_matrix
+from techminer.document_term import TF_matrix
 from techminer.explode import __explode
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
@@ -147,7 +147,7 @@ def co_occurrence_matrix(
     )
 
     W = data[[column, "ID"]].dropna()
-    A = document_term_matrix(W, column)
+    A = TF_matrix(W, column)
     A = A[[t for t in A.columns if t in top_terms]]
     matrix = np.matmul(A.transpose().values, A.values)
     matrix = pd.DataFrame(matrix, columns=A.columns, index=A.columns)

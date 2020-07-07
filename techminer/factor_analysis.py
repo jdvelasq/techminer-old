@@ -15,7 +15,7 @@ from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
 from matplotlib import colors
 from sklearn.decomposition import PCA
-from techminer.document_term import document_term_matrix
+from techminer.document_term import TF_matrix
 from techminer.explode import __explode
 from techminer.keywords import Keywords
 from techminer.plots import COLORMAPS
@@ -122,7 +122,7 @@ def factor_analysis(
     5     A;B               d            5   5  1992
 
 
-    >>> document_term_matrix(df, 'Authors')
+    >>> TF_matrix(df, 'Authors')
        A  B  C  D
     0  1  0  0  0
     1  1  1  0  0
@@ -157,7 +157,7 @@ def factor_analysis(
     # Computo
     #
     x = data.copy()
-    dtm = document_term_matrix(x, column)
+    dtm = TF_matrix(x, column)
     terms = dtm.columns.tolist()
     if n_components is None:
         n_components = int(np.sqrt(len(set(terms))))
