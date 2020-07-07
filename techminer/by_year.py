@@ -13,8 +13,8 @@ import numpy as np
 import pandas as pd
 import techminer.gui as gui
 import techminer.plots as plt
-from IPython.display import clear_output, display
-from ipywidgets import AppLayout, GridspecLayout, Layout
+from IPython.display import display
+from ipywidgets import GridspecLayout, Layout
 from techminer.plots import COLORMAPS
 
 TEXTLEN = 40
