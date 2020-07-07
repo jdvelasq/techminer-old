@@ -23,6 +23,7 @@ from techminer.explode import MULTIVALUED_COLS, __explode
 from techminer.keywords import Keywords
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
+from techminer.document_term import TF_matrix
 
 
 def corr(

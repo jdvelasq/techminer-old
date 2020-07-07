@@ -179,16 +179,31 @@ def TABapp(left_panel, server, output):
     grid = GridspecLayout(13, 6, height="650px")
 
     # left panel layout
-    for index in range(len(left_panel)):
-        grid[index, 0] = widgets.HBox(
-            [
-                widgets.Label(value=left_panel[index]["desc"]),
-                left_panel[index]["widget"],
-            ],
-            layout=Layout(
-                display="flex", justify_content="flex-end", align_content="center",
-            ),
-        )
+    grid[0:, 0] = widgets.VBox(
+        [
+            widgets.HBox(
+                [
+                    widgets.Label(value=left_panel[index]["desc"]),
+                    left_panel[index]["widget"],
+                ],
+                layout=Layout(
+                    display="flex", justify_content="flex-end", align_content="center",
+                ),
+            )
+            for index in range(len(left_panel))
+        ]
+    )
+
+    # for index in range(len(left_panel)):
+    #     grid[index, 0] = widgets.HBox(
+    #         [
+    #             widgets.Label(value=left_panel[index]["desc"]),
+    #             left_panel[index]["widget"],
+    #         ],
+    #         layout=Layout(
+    #             display="flex", justify_content="flex-end", align_content="center",
+    #         ),
+    #     )
 
     # output
     grid[:, 1:] = widgets.VBox(
