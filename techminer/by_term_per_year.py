@@ -514,34 +514,35 @@ def __TAB1__(data, limit_to=None, exclude=None):
     # Generic
     #
     # -------------------------------------------------------------------------
-    args = {control["arg"]: control["widget"] for control in left_panel}
+    # args = {control["arg"]: control["widget"] for control in left_panel}
+    # output = widgets.Output()
+    # with output:
+    #     display(widgets.interactive_output(server, args,))
+
+    # grid = GridspecLayout(13, 6)
+
+    # #
+    # # Left panel
+    # #
+    # for index in range(len(left_panel)):
+    #     grid[index, 0] = widgets.HBox(
+    #         [
+    #             widgets.Label(value=left_panel[index]["desc"]),
+    #             left_panel[index]["widget"],
+    #         ],
+    #         layout=Layout(
+    #             display="flex", justify_content="flex-end", align_content="center",
+    #         ),
+    #     )
+    # #
+    # # Output
+    # #
+    # grid[0:, 1:] = widgets.VBox(
+    #     [output], layout=Layout(height="650px", border="2px solid gray")
+    # )
+
     output = widgets.Output()
-    with output:
-        display(widgets.interactive_output(server, args,))
-
-    grid = GridspecLayout(13, 6)
-
-    #
-    # Left panel
-    #
-    for index in range(len(left_panel)):
-        grid[index, 0] = widgets.HBox(
-            [
-                widgets.Label(value=left_panel[index]["desc"]),
-                left_panel[index]["widget"],
-            ],
-            layout=Layout(
-                display="flex", justify_content="flex-end", align_content="center",
-            ),
-        )
-    #
-    # Output
-    #
-    grid[0:, 1:] = widgets.VBox(
-        [output], layout=Layout(height="650px", border="2px solid gray")
-    )
-
-    return grid
+    return gui.TABapp(left_panel=left_panel, server=server, output=output)
 
 
 ##
@@ -627,33 +628,34 @@ def __TAB0__(data, limit_to=None, exclude=None):
     # Generic
     #
     # -------------------------------------------------------------------------
-    args = {control["arg"]: control["widget"] for control in left_panel}
-    output = widgets.Output()
-    with output:
-        display(widgets.interactive_output(server, args,))
-    #
-    grid = GridspecLayout(13, 6)
-    #
-    # Left panel
-    #
-    for index in range(len(left_panel)):
-        grid[index, 0] = widgets.HBox(
-            [
-                widgets.Label(value=left_panel[index]["desc"]),
-                left_panel[index]["widget"],
-            ],
-            layout=Layout(
-                display="flex", justify_content="flex-end", align_content="center",
-            ),
-        )
-    #
-    # Output
-    #
-    grid[:, 1:] = widgets.VBox(
-        [output], layout=Layout(height="657px", border="2px solid gray")
-    )
+    # args = {control["arg"]: control["widget"] for control in left_panel}
+    # output = widgets.Output()
+    # with output:
+    #     display(widgets.interactive_output(server, args,))
+    # #
+    # grid = GridspecLayout(13, 6)
+    # #
+    # # Left panel
+    # #
+    # for index in range(len(left_panel)):
+    #     grid[index, 0] = widgets.HBox(
+    #         [
+    #             widgets.Label(value=left_panel[index]["desc"]),
+    #             left_panel[index]["widget"],
+    #         ],
+    #         layout=Layout(
+    #             display="flex", justify_content="flex-end", align_content="center",
+    #         ),
+    #     )
+    # #
+    # # Output
+    # #
+    # grid[:, 1:] = widgets.VBox(
+    #     [output], layout=Layout(height="657px", border="2px solid gray")
+    # )
 
-    return grid
+    output = widgets.Output()
+    return gui.TABapp(left_panel=left_panel, server=server, output=output)
 
 
 #
@@ -1088,34 +1090,36 @@ def __TAB2__(x, limit_to=None, exclude=None):
     # Generic
     #
     # -------------------------------------------------------------------------
-    args = {control["arg"]: control["widget"] for control in left_panel}
+    # args = {control["arg"]: control["widget"] for control in left_panel}
+    # output = widgets.Output()
+    # with output:
+    #     display(widgets.interactive_output(server, args,))
+
+    # grid = GridspecLayout(13, 6)
+
+    # #
+    # # Left panel
+    # #
+    # for index in range(len(left_panel)):
+    #     grid[index, 0] = widgets.HBox(
+    #         [
+    #             widgets.Label(value=left_panel[index]["desc"]),
+    #             left_panel[index]["widget"],
+    #         ],
+    #         layout=Layout(
+    #             display="flex", justify_content="flex-end", align_content="center",
+    #         ),
+    #     )
+    # #
+    # # Output
+    # #
+    # grid[0:, 1:] = widgets.VBox(
+    #     [output], layout=Layout(height="650px", border="2px solid gray")
+    # )
+
+    ###
     output = widgets.Output()
-    with output:
-        display(widgets.interactive_output(server, args,))
-
-    grid = GridspecLayout(13, 6)
-
-    #
-    # Left panel
-    #
-    for index in range(len(left_panel)):
-        grid[index, 0] = widgets.HBox(
-            [
-                widgets.Label(value=left_panel[index]["desc"]),
-                left_panel[index]["widget"],
-            ],
-            layout=Layout(
-                display="flex", justify_content="flex-end", align_content="center",
-            ),
-        )
-    #
-    # Output
-    #
-    grid[0:, 1:] = widgets.VBox(
-        [output], layout=Layout(height="650px", border="2px solid gray")
-    )
-
-    return grid
+    return gui.TABapp(left_panel=left_panel, server=server, output=output)
 
 
 ###############################################################################
