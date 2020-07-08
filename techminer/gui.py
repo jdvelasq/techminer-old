@@ -79,6 +79,16 @@ def linkage():
     }
 
 
+def nx_max_iters():
+    return {
+        "arg": "nx_max_iter",
+        "desc": "# max iterations:",
+        "widget": widgets.Dropdown(
+            options=list(range(5, 101, 1)), layout=Layout(width="55%"),
+        ),
+    }
+
+
 def n_clusters():
     return {
         "arg": "n_clusters",
@@ -153,6 +163,38 @@ def y_axis():
         "desc": "Y-axis:",
         "widget": widgets.Dropdown(options=[0], layout=Layout(width="55%"),),
     }
+
+
+def processing():
+    html = """
+        <style>
+        .loader {
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #3498db;
+        width: 120px;
+        height: 120px;
+        -webkit-animation: spin 2s linear infinite; /* Safari */
+        animation: spin 2s linear infinite;
+        }
+
+        /* Safari */
+        @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+        }
+
+        @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+        }
+        </style>
+        </head>
+        <h3>Processing </h3>
+        <div class="loader"></div>
+
+        """
+    return widgets.HTML(html)
 
 
 def APP(app_title, tab_titles, tab_widgets, tab=None):

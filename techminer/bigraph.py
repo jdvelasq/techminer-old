@@ -29,11 +29,11 @@ import techminer.gui as gui
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
-###############################################################################
+###################################################################################################
 ##
 ##  CALCULATIONS
 ##
-###############################################################################
+###################################################################################################
 
 
 def co_occurrence_matrix(
@@ -122,11 +122,331 @@ def co_occurrence_matrix(
     return matrix
 
 
-###############################################################################
+# -------------------------------------------------------------------------------------------------
+
+
+def slope_chart(matrix, figsize, cmap_column="Greys", cmap_by="Greys"):
+    """
+    """
+    matplotlib.rc("font", size=12)
+
+    fig = pyplot.Figure(figsize=figsize)
+    ax = fig.subplots()
+    cmap_column = pyplot.cm.get_cmap(cmap_column)
+    cmap_by = pyplot.cm.get_cmap(cmap_by)
+
+    m = len(matrix.index)
+    n = len(matrix.columns)
+    maxmn = max(m, n)
+    yleft = (maxmn - m) / 2.0 + np.linspace(0, m, m)
+    yright = (maxmn - n) / 2.0 + np.linspace(0, n, n)
+
+    ax.vlines(
+        x=1,
+        ymin=-1,
+        ymax=maxmn + 1,
+        color="gray",
+        alpha=0.7,
+        linewidth=1,
+        linestyles="dotted",
+    )
+
+    ax.vlines(
+        x=3,
+        ymin=-1,
+        ymax=maxmn + 1,
+        color="gray",
+        alpha=0.7,
+        linewidth=1,
+        linestyles="dotted",
+    )
+
+    #
+    # Dibuja los ejes para las conexiones
+    #
+    ax.scatter(x=[1] * m, y=yleft, s=1)
+    ax.scatter(x=[3] * n, y=yright, s=1)
+
+    #
+    # Dibuja las conexiones
+    #
+    maxlink = matrix.max().max()
+    minlink = matrix.values.ravel()
+    minlink = min([v for v in minlink if v > 0])
+    for idx, index in enumerate(matrix.index):
+        for icol, col in enumerate(matrix.columns):
+            link = matrix.loc[index, col]
+            if link > 0:
+                ax.plot(
+                    [1, 3],
+                    [yleft[idx], yright[icol]],
+                    c="k",
+                    linewidth=0.5 + 4 * (link - minlink) / (maxlink - minlink),
+                    alpha=0.5 + 0.5 * (link - minlink) / (maxlink - minlink),
+                )
+
+    #
+    # Sizes
+    #
+    left_sizes = [int(t.split(" ")[-1].split(":")[0]) for t in matrix.index]
+    right_sizes = [int(t.split(" ")[-1].split(":")[0]) for t in matrix.columns]
+
+    min_size = min(left_sizes + right_sizes)
+    max_size = max(left_sizes + right_sizes)
+
+    left_sizes = [
+        150 + 2000 * (t - min_size) / (max_size - min_size) for t in left_sizes
+    ]
+    right_sizes = [
+        150 + 2000 * (t - min_size) / (max_size - min_size) for t in right_sizes
+    ]
+
+    #
+    # Colors
+    #
+    left_colors = [int(t.split(" ")[-1].split(":")[1]) for t in matrix.index]
+    right_colors = [int(t.split(" ")[-1].split(":")[1]) for t in matrix.columns]
+
+    min_color = min(left_colors + right_colors)
+    max_color = max(left_colors + right_colors)
+
+    left_colors = [
+        cmap_by(0.1 + 0.9 * (t - min_color) / (max_color - min_color))
+        for t in left_colors
+    ]
+    right_colors = [
+        cmap_column(0.1 + 0.9 * (t - min_color) / (max_color - min_color))
+        for t in right_colors
+    ]
+
+    ax.scatter(
+        x=[1] * m,
+        y=yleft,
+        s=left_sizes,
+        c=left_colors,
+        zorder=10,
+        linewidths=1,
+        edgecolors="k",
+    )
+
+    for idx, text in enumerate(matrix.index):
+        ax.plot([0.7, 1.0], [yleft[idx], yleft[idx]], "-", c="grey")
+
+    for idx, text in enumerate(matrix.index):
+        ax.text(
+            0.7,
+            yleft[idx],
+            text,
+            fontsize=10,
+            ha="right",
+            va="center",
+            zorder=10,
+            bbox=dict(
+                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
+            ),
+        )
+
+    #
+    # right y-axis
+    #
+
+    ax.scatter(
+        x=[3] * n,
+        y=yright,
+        s=right_sizes,
+        c=right_colors,
+        zorder=10,
+        linewidths=1,
+        edgecolors="k",
+    )
+
+    for idx, text in enumerate(matrix.columns):
+        ax.plot([3.0, 3.3], [yright[idx], yright[idx]], "-", c="grey")
+
+    for idx, text in enumerate(matrix.columns):
+        ax.text(
+            3.3,
+            yright[idx],
+            text,
+            fontsize=10,
+            ha="left",
+            va="center",
+            bbox=dict(
+                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
+            ),
+            zorder=11,
+        )
+
+    #
+    # Figure size
+    #
+    cmn.ax_expand_limits(ax)
+    ax.invert_yaxis()
+    ax.axis("off")
+
+    return fig
+
+
+# -------------------------------------------------------------------------------------------------
+
+
+def co_occurrence_map(
+    matrix,
+    layout="Kamada Kawai",
+    iterations=50,
+    cmap_column="Greys",
+    cmap_by="Greys",
+    figsize=(17, 12),
+):
+    """Computes the occurrence map directly using networkx.
+    """
+    #
+    #
+    #
+    #
+    cmap_column = pyplot.cm.get_cmap(cmap_column)
+    cmap_by = pyplot.cm.get_cmap(cmap_by)
+
+    #
+    # Sizes
+    #
+    index_node_sizes = [int(t.split(" ")[-1].split(":")[0]) for t in matrix.index]
+    column_node_sizes = [int(t.split(" ")[-1].split(":")[0]) for t in matrix.columns]
+
+    min_size = min(index_node_sizes + column_node_sizes)
+    max_size = max(index_node_sizes + column_node_sizes)
+
+    index_node_sizes = [
+        150 + 2000 * (t - min_size) / (max_size - min_size) for t in index_node_sizes
+    ]
+    column_node_sizes = [
+        150 + 2000 * (t - min_size) / (max_size - min_size) for t in column_node_sizes
+    ]
+
+    #
+    # Colors
+    #
+    index_node_colors = [int(t.split(" ")[-1].split(":")[1]) for t in matrix.index]
+    column_node_colors = [int(t.split(" ")[-1].split(":")[1]) for t in matrix.columns]
+
+    min_color = min(index_node_colors + column_node_colors)
+    max_color = max(index_node_colors + column_node_colors)
+
+    index_node_colors = [
+        cmap_by(0.1 + 0.9 * (t - min_color) / (max_color - min_color))
+        for t in index_node_colors
+    ]
+    column_node_colors = [
+        cmap_column(0.1 + 0.9 * (t - min_color) / (max_color - min_color))
+        for t in column_node_colors
+    ]
+
+    terms = matrix.columns.tolist() + matrix.index.tolist()
+
+    #
+    # Draw the network
+    #
+    fig = pyplot.Figure(figsize=figsize)
+    ax = fig.subplots()
+
+    G = nx.Graph(ax=ax)
+    G.clear()
+
+    #
+    # network nodes
+    #
+    G.add_nodes_from(terms)
+
+    #
+    # network edges
+    #
+    n = len(matrix.columns)
+    max_width = 0
+    for col in matrix.columns:
+        for row in matrix.index:
+            link = matrix.at[row, col]
+            if link > 0:
+                G.add_edge(row, col, width=link)
+                if max_width < link:
+                    max_width = link
+
+    #
+    # Layout
+    #
+    if layout == "Spring":
+        pos = nx.spring_layout(G, iterations=iterations)
+    else:
+        pos = {
+            "Circular": nx.circular_layout,
+            "Kamada Kawai": nx.kamada_kawai_layout,
+            "Planar": nx.planar_layout,
+            "Random": nx.random_layout,
+            "Spectral": nx.spectral_layout,
+            "Spring": nx.spring_layout,
+            "Shell": nx.shell_layout,
+        }[layout](G)
+
+    for e in G.edges.data():
+        a, b, width = e
+        edge = [(a, b)]
+        width = 0.2 + 4.0 * width["width"] / max_width
+        nx.draw_networkx_edges(
+            G,
+            pos=pos,
+            ax=ax,
+            edgelist=edge,
+            width=width,
+            edge_color="k",
+            with_labels=False,
+            node_size=1,
+        )
+
+    #
+    # Draw column nodes
+    #
+    nx.draw_networkx_nodes(
+        G,
+        pos,
+        ax=ax,
+        edge_color="k",
+        nodelist=matrix.columns.tolist(),
+        node_size=column_node_sizes,
+        node_color=column_node_colors,
+        node_shape="o",
+        edgecolors="k",
+        linewidths=1,
+    )
+
+    #
+    # Draw index nodes
+    #
+    nx.draw_networkx_nodes(
+        G,
+        pos,
+        ax=ax,
+        edge_color="k",
+        nodelist=matrix.index.tolist(),
+        node_size=index_node_sizes,
+        node_color=index_node_colors,
+        node_shape="o",
+        edgecolors="k",
+        linewidths=1,
+    )
+
+    node_sizes = column_node_sizes + index_node_sizes
+    cmn.ax_text_node_labels(ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes)
+    cmn.ax_expand_limits(ax)
+    ax.set_aspect("equal")
+    ax.axis("off")
+    cmn.set_ax_splines_invisible(ax)
+    return fig
+
+
+###################################################################################################
 ##
 ##  APP
 ##
-###############################################################################
+###################################################################################################
 
 
 def app(data, limit_to=None, exclude=None, tab=None):
@@ -142,11 +462,11 @@ def app(data, limit_to=None, exclude=None, tab=None):
     )
 
 
-###############################################################################
+###################################################################################################
 ##
 ##  TAB app 0 --- Bigraph
 ##
-###############################################################################
+###################################################################################################
 
 
 class TABapp0(gui.TABapp_):
@@ -190,6 +510,7 @@ class TABapp0(gui.TABapp_):
             gui.cmap(arg="cmap", desc="Colormap Col:"),
             gui.cmap(arg="cmap_by", desc="Colormap By:"),
             gui.nx_layout(),
+            gui.nx_max_iters(),
             gui.fig_width(),
             gui.fig_height(),
             # {
@@ -206,39 +527,25 @@ class TABapp0(gui.TABapp_):
 
         super().gui(**kwargs)
 
-        if self.view in ["Matrix", "Table"]:
-            self.panel_[-4]["widget"].disabled = True
-            self.panel_[-3]["widget"].disabled = True
-            self.panel_[-2]["widget"].disabled = True
-            self.panel_[-1]["widget"].disabled = True
+        self.panel_[5]["widget"].disabled = self.view == "Network"
+        self.panel_[6]["widget"].disabled = self.view == "Network"
+        self.panel_[7]["widget"].disabled = self.view == "Network"
+        self.panel_[8]["widget"].disabled = self.view == "Network"
 
-        if self.view == "Heatmap":
-            self.panel_[-4]["widget"].disabled = True
-            self.panel_[-3]["widget"].disabled = True
-            self.panel_[-2]["widget"].disabled = False
-            self.panel_[-1]["widget"].disabled = False
-
-        if self.view == "Bubble plot":
-            self.panel_[-4]["widget"].disabled = True
-            self.panel_[-3]["widget"].disabled = True
-            self.panel_[-2]["widget"].disabled = False
-            self.panel_[-1]["widget"].disabled = False
-
-        if self.view == "Network":
-            self.panel_[-4]["widget"].disabled = False
-            self.panel_[-3]["widget"].disabled = False
-            self.panel_[-2]["widget"].disabled = False
-            self.panel_[-1]["widget"].disabled = False
-
-        if self.view == "Slope chart":
-            self.panel_[-4]["widget"].disabled = False
-            self.panel_[-3]["widget"].disabled = True
-            self.panel_[-2]["widget"].disabled = False
-            self.panel_[-1]["widget"].disabled = False
+        self.panel_[-5]["widget"].disabled = self.view not in ["Network", "Slope chart"]
+        self.panel_[-4]["widget"].disabled = self.view != "Network"
+        self.panel_[-3]["widget"].disabled = self.view != "Network"
+        self.panel_[-2]["widget"].disabled = self.view == "Matrix"
+        self.panel_[-1]["widget"].disabled = self.view == "Matrix"
 
     def update(self, button):
         """ 
         """
+        
+
+        self.output_.clear_output()
+        with self.output_:
+            display(gui.processing())
 
         self.matrix_ = co_occurrence_matrix(
             x=self.data_,
@@ -298,6 +605,7 @@ class TABapp0(gui.TABapp_):
                     co_occurrence_map(
                         matrix=self.matrix_,
                         layout=self.layout,
+                        iterations=self.nx_max_iter,
                         cmap_column=self.cmap,
                         cmap_by=self.cmap_by,
                         figsize=(self.width, self.height),
@@ -380,7 +688,7 @@ class TABapp1(gui.TABapp_):
                 "arg": "terms",
                 "desc": "Terms:",
                 "widget": widgets.widgets.SelectMultiple(
-                    options=[], layout=Layout(width="98%", height="180px"),
+                    options=[], layout=Layout(width="98%", height="100px"),
                 ),
             },
         ]
@@ -1081,316 +1389,6 @@ def _get_fmt(summ):
     n_Num_Documents = int(np.log10(summ["Num_Documents"].max())) + 1
     n_Times_Cited = int(np.log10(summ["Times_Cited"].max())) + 1
     return "{} {:0" + str(n_Num_Documents) + "d}:{:0" + str(n_Times_Cited) + "d}"
-
-
-def co_occurrence_map(
-    matrix,
-    layout="Kamada Kawai",
-    cmap_column="Greys",
-    cmap_by="Greys",
-    figsize=(17, 12),
-):
-    """Computes the occurrence map directly using networkx.
-    """
-    #
-    #
-    #
-    #
-    cmap_column = pyplot.cm.get_cmap(cmap_column)
-    cmap_by = pyplot.cm.get_cmap(cmap_by)
-
-    #
-    # Sizes
-    #
-    index_node_sizes = [int(t.split(" ")[-1].split(":")[0]) for t in matrix.index]
-    column_node_sizes = [int(t.split(" ")[-1].split(":")[0]) for t in matrix.columns]
-
-    min_size = min(index_node_sizes + column_node_sizes)
-    max_size = max(index_node_sizes + column_node_sizes)
-
-    index_node_sizes = [
-        150 + 2000 * (t - min_size) / (max_size - min_size) for t in index_node_sizes
-    ]
-    column_node_sizes = [
-        150 + 2000 * (t - min_size) / (max_size - min_size) for t in column_node_sizes
-    ]
-
-    #
-    # Colors
-    #
-    index_node_colors = [int(t.split(" ")[-1].split(":")[1]) for t in matrix.index]
-    column_node_colors = [int(t.split(" ")[-1].split(":")[1]) for t in matrix.columns]
-
-    min_color = min(index_node_colors + column_node_colors)
-    max_color = max(index_node_colors + column_node_colors)
-
-    index_node_colors = [
-        cmap_by(0.1 + 0.9 * (t - min_color) / (max_color - min_color))
-        for t in index_node_colors
-    ]
-    column_node_colors = [
-        cmap_column(0.1 + 0.9 * (t - min_color) / (max_color - min_color))
-        for t in column_node_colors
-    ]
-
-    terms = matrix.columns.tolist() + matrix.index.tolist()
-
-    #
-    # Draw the network
-    #
-    fig = pyplot.Figure(figsize=figsize)
-    ax = fig.subplots()
-
-    G = nx.Graph(ax=ax)
-    G.clear()
-
-    #
-    # network nodes
-    #
-    G.add_nodes_from(terms)
-
-    #
-    # network edges
-    #
-    n = len(matrix.columns)
-    max_width = 0
-    for col in matrix.columns:
-        for row in matrix.index:
-            link = matrix.at[row, col]
-            if link > 0:
-                G.add_edge(row, col, width=link)
-                if max_width < link:
-                    max_width = link
-
-    #
-    # Layout
-    #
-    pos = {
-        "Circular": nx.circular_layout,
-        "Kamada Kawai": nx.kamada_kawai_layout,
-        "Planar": nx.planar_layout,
-        "Random": nx.random_layout,
-        "Spectral": nx.spectral_layout,
-        "Spring": nx.spring_layout,
-        "Shell": nx.shell_layout,
-    }[layout](G)
-
-    for e in G.edges.data():
-        a, b, width = e
-        edge = [(a, b)]
-        width = 0.2 + 4.0 * width["width"] / max_width
-        nx.draw_networkx_edges(
-            G,
-            pos=pos,
-            ax=ax,
-            edgelist=edge,
-            width=width,
-            edge_color="k",
-            with_labels=False,
-            node_size=1,
-        )
-
-    #
-    # Draw column nodes
-    #
-    nx.draw_networkx_nodes(
-        G,
-        pos,
-        ax=ax,
-        edge_color="k",
-        nodelist=matrix.columns.tolist(),
-        node_size=column_node_sizes,
-        node_color=column_node_colors,
-        node_shape="o",
-        edgecolors="k",
-        linewidths=1,
-    )
-
-    #
-    # Draw index nodes
-    #
-    nx.draw_networkx_nodes(
-        G,
-        pos,
-        ax=ax,
-        edge_color="k",
-        nodelist=matrix.index.tolist(),
-        node_size=index_node_sizes,
-        node_color=index_node_colors,
-        node_shape="o",
-        edgecolors="k",
-        linewidths=1,
-    )
-
-    node_sizes = column_node_sizes + index_node_sizes
-    cmn.ax_text_node_labels(ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes)
-    cmn.ax_expand_limits(ax)
-    ax.set_aspect("equal")
-    ax.axis("off")
-    cmn.set_ax_splines_invisible(ax)
-    return fig
-
-
-def slope_chart(matrix, figsize, cmap_column="Greys", cmap_by="Greys"):
-    """
-    """
-    matplotlib.rc("font", size=12)
-
-    fig = pyplot.Figure(figsize=figsize)
-    ax = fig.subplots()
-    cmap_column = pyplot.cm.get_cmap(cmap_column)
-    cmap_by = pyplot.cm.get_cmap(cmap_by)
-
-    m = len(matrix.index)
-    n = len(matrix.columns)
-    maxmn = max(m, n)
-    yleft = (maxmn - m) / 2.0 + np.linspace(0, m, m)
-    yright = (maxmn - n) / 2.0 + np.linspace(0, n, n)
-
-    ax.vlines(
-        x=1,
-        ymin=-1,
-        ymax=maxmn + 1,
-        color="gray",
-        alpha=0.7,
-        linewidth=1,
-        linestyles="dotted",
-    )
-
-    ax.vlines(
-        x=3,
-        ymin=-1,
-        ymax=maxmn + 1,
-        color="gray",
-        alpha=0.7,
-        linewidth=1,
-        linestyles="dotted",
-    )
-
-    #
-    # Dibuja los ejes para las conexiones
-    #
-    ax.scatter(x=[1] * m, y=yleft, s=1)
-    ax.scatter(x=[3] * n, y=yright, s=1)
-
-    #
-    # Dibuja las conexiones
-    #
-    maxlink = matrix.max().max()
-    minlink = matrix.values.ravel()
-    minlink = min([v for v in minlink if v > 0])
-    for idx, index in enumerate(matrix.index):
-        for icol, col in enumerate(matrix.columns):
-            link = matrix.loc[index, col]
-            if link > 0:
-                ax.plot(
-                    [1, 3],
-                    [yleft[idx], yright[icol]],
-                    c="k",
-                    linewidth=0.5 + 4 * (link - minlink) / (maxlink - minlink),
-                    alpha=0.5 + 0.5 * (link - minlink) / (maxlink - minlink),
-                )
-
-    #
-    # Sizes
-    #
-    left_sizes = [int(t.split(" ")[-1].split(":")[0]) for t in matrix.index]
-    right_sizes = [int(t.split(" ")[-1].split(":")[0]) for t in matrix.columns]
-
-    min_size = min(left_sizes + right_sizes)
-    max_size = max(left_sizes + right_sizes)
-
-    left_sizes = [
-        150 + 2000 * (t - min_size) / (max_size - min_size) for t in left_sizes
-    ]
-    right_sizes = [
-        150 + 2000 * (t - min_size) / (max_size - min_size) for t in right_sizes
-    ]
-
-    #
-    # Colors
-    #
-    left_colors = [int(t.split(" ")[-1].split(":")[1]) for t in matrix.index]
-    right_colors = [int(t.split(" ")[-1].split(":")[1]) for t in matrix.columns]
-
-    min_color = min(left_colors + right_colors)
-    max_color = max(left_colors + right_colors)
-
-    left_colors = [
-        cmap_by(0.1 + 0.9 * (t - min_color) / (max_color - min_color))
-        for t in left_colors
-    ]
-    right_colors = [
-        cmap_column(0.1 + 0.9 * (t - min_color) / (max_color - min_color))
-        for t in right_colors
-    ]
-
-    ax.scatter(
-        x=[1] * m,
-        y=yleft,
-        s=left_sizes,
-        c=left_colors,
-        zorder=10,
-        linewidths=1,
-        edgecolors="k",
-    )
-
-    for idx, text in enumerate(matrix.index):
-        ax.plot([0.7, 1.0], [yleft[idx], yleft[idx]], "-", c="grey")
-
-    for idx, text in enumerate(matrix.index):
-        ax.text(
-            0.7,
-            yleft[idx],
-            text,
-            fontsize=10,
-            ha="right",
-            va="center",
-            zorder=10,
-            bbox=dict(
-                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
-            ),
-        )
-
-    #
-    # right y-axis
-    #
-
-    ax.scatter(
-        x=[3] * n,
-        y=yright,
-        s=right_sizes,
-        c=right_colors,
-        zorder=10,
-        linewidths=1,
-        edgecolors="k",
-    )
-
-    for idx, text in enumerate(matrix.columns):
-        ax.plot([3.0, 3.3], [yright[idx], yright[idx]], "-", c="grey")
-
-    for idx, text in enumerate(matrix.columns):
-        ax.text(
-            3.3,
-            yright[idx],
-            text,
-            fontsize=10,
-            ha="left",
-            va="center",
-            bbox=dict(
-                facecolor="w", alpha=1.0, edgecolor="gray", boxstyle="round,pad=0.5",
-            ),
-            zorder=11,
-        )
-
-    #
-    # Figure size
-    #
-    cmn.ax_expand_limits(ax)
-    ax.invert_yaxis()
-    ax.axis("off")
-
-    return fig
 
 
 #
