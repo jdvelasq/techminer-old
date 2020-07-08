@@ -215,6 +215,12 @@ class TABapp_:
         self.width = None
         self.height = None
         self.plot = None
+        self.column = None
+        self.norm = None
+        self.use_idf = None
+        self.smooth_idf = None
+        self.top_n = None
+        self.sublinear_tf = None
 
     def run(self):
         return self.grid_
