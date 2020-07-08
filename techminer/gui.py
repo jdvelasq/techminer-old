@@ -15,6 +15,22 @@ def ascending():
     }
 
 
+def c_axis_ascending():
+    return {
+        "arg": "c_axis_ascending",
+        "desc": "C-axis ascending:",
+        "widget": widgets.Dropdown(options=[True, False], layout=Layout(width="55%"),),
+    }
+
+
+def r_axis_ascending():
+    return {
+        "arg": "r_axis_ascending",
+        "desc": "R-axis ascending:",
+        "widget": widgets.Dropdown(options=[True, False], layout=Layout(width="55%"),),
+    }
+
+
 def cmap(arg="cmap", desc="Colormap:"):
     return {
         "arg": arg,
@@ -24,7 +40,7 @@ def cmap(arg="cmap", desc="Colormap:"):
 
 
 def dropdown(desc, options):
-    arg = desc.replace(":", "").replace(" ", "_").lower()
+    arg = desc.replace(":", "").replace(" ", "_").replace("-", "_").lower()
     return {
         "arg": arg,
         "desc": desc,
@@ -248,6 +264,18 @@ class TABapp_:
         self.grid_[1:, 0] = widgets.VBox(
             [
                 widgets.HBox(
+                    [
+                        widgets.Label(value=self.panel_[index]["desc"]),
+                        self.panel_[index]["widget"],
+                    ],
+                    layout=Layout(
+                        display="flex",
+                        justify_content="flex-end",
+                        align_content="center",
+                    ),
+                )
+                if self.panel_[index]["arg"] != "terms"
+                else widgets.VBox(
                     [
                         widgets.Label(value=self.panel_[index]["desc"]),
                         self.panel_[index]["widget"],

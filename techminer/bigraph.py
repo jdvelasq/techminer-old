@@ -44,8 +44,10 @@ def co_occurrence_matrix(
     top_n=None,
     limit_to=None,
     exclude=None,
-    sort_by="Num Documents",
-    ascending=False,
+    sort_c_by="Num Documents",
+    c_ascending=False,
+    sort_r_by="Num Documents",
+    r_ascending=False,
 ):
     """
     """
@@ -57,7 +59,7 @@ def co_occurrence_matrix(
     A = TF_matrix(W, column)
     B = TF_matrix(W, by)
 
-    if top_by == "Values":
+    if top_by == "Data":
 
         A = cmn.limit_to_exclude(
             data=A, axis=1, column=column, limit_to=limit_to, exclude=exclude,
@@ -109,8 +111,13 @@ def co_occurrence_matrix(
         matrix = np.matmul(B.transpose().values, A.values)
         matrix = pd.DataFrame(matrix, columns=A.columns, index=B.columns)
 
-    matrix = cmn.sort_by_axis(data=matrix, sort_by=sort_by, ascending=ascending, axis=0)
-    matrix = cmn.sort_by_axis(data=matrix, sort_by=sort_by, ascending=ascending, axis=1)
+    matrix = cmn.sort_by_axis(
+        data=matrix, sort_by=sort_r_by, ascending=r_ascending, axis=0
+    )
+
+    matrix = cmn.sort_by_axis(
+        data=matrix, sort_by=sort_c_by, ascending=c_ascending, axis=1
+    )
 
     return matrix
 
@@ -125,13 +132,21 @@ def co_occurrence_matrix(
 def app(data, limit_to=None, exclude=None, tab=None):
     return gui.APP(
         app_title="Bigraph Analysis",
-        tab_titles=["Network Map", "Associations Map",],
+        tab_titles=["Network Map", "Associations Map", "OLD"],
         tab_widgets=[
             TABapp0(data, limit_to=limit_to, exclude=exclude).run(),
-            __TAB1__(data, limit_to=limit_to, exclude=exclude),
+            #  TABapp1(data, limit_to=limit_to, exclude=exclude).run(),
+            #  __TAB1__(data, limit_to=limit_to, exclude=exclude),
         ],
         tab=tab,
     )
+
+
+###############################################################################
+##
+##  TAB app 0 --- Bigraph
+##
+###############################################################################
 
 
 class TABapp0(gui.TABapp_):
@@ -159,19 +174,31 @@ class TABapp0(gui.TABapp_):
                 desc="By:", options=[z for z in COLUMNS if z in data.columns],
             ),
             gui.dropdown(
-                desc="Top by:", options=["Num Documents", "Times Cited", "Values",],
+                desc="Top by:", options=["Num Documents", "Times Cited", "Data",],
             ),
             gui.top_n(),
             gui.dropdown(
-                desc="Sort by:",
-                options=["Alphabetic", "Num Documents", "Times Cited",],
+                desc="Sort C-axis by:",
+                options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
             ),
-            gui.ascending(),
+            gui.c_axis_ascending(),
+            gui.dropdown(
+                desc="Sort R-axis by:",
+                options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
+            ),
+            gui.r_axis_ascending(),
             gui.cmap(arg="cmap", desc="Colormap Col:"),
             gui.cmap(arg="cmap_by", desc="Colormap By:"),
             gui.nx_layout(),
             gui.fig_width(),
             gui.fig_height(),
+            # {
+            #     "arg": "terms",
+            #     "desc": "Terms:",
+            #     "widget": widgets.widgets.SelectMultiple(
+            #         options=[], layout=Layout(width="98%", height="180px"),
+            #     ),
+            # },
         ]
         super().create_grid()
 
@@ -209,100 +236,189 @@ class TABapp0(gui.TABapp_):
             self.panel_[-2]["widget"].disabled = False
             self.panel_[-1]["widget"].disabled = False
 
-    # def co_occurrence_matrix(self):
-    #     """Computes the co-occurrence matrix.
-    #     """
+    def update(self, button):
+        """ 
+        """
 
-    #     if self.column == self.by:
-    #         self.matrix_ = None
-    #         return
+        self.matrix_ = co_occurrence_matrix(
+            x=self.data_,
+            column=self.column,
+            by=self.by,
+            top_by=self.top_by,
+            top_n=self.top_n,
+            limit_to=self.limit_to_,
+            exclude=self.exclude_,
+            sort_c_by=self.sort_c_axis_by,
+            c_ascending=self.c_axis_ascending,
+            sort_r_by=self.sort_r_axis_by,
+            r_ascending=self.r_axis_ascending,
+        )
 
-    #     W = self.data_[[self.column, self.by, "ID"]].dropna()
-    #     A = TF_matrix(W, self.column)
-    #     B = TF_matrix(W, self.by)
+        self.output_.clear_output()
+        with self.output_:
 
-    #     if self.top_by == "Values":
+            if self.matrix_ is None:
+                display(widgets.HTML("Different columns must be selected!"))
+                return
 
-    #         A = cmn.limit_to_exclude(
-    #             data=A,
-    #             axis=1,
-    #             column=self.column,
-    #             limit_to=self.limit_to_,
-    #             exclude=self.exclude_,
-    #         )
-    #         B = cmn.limit_to_exclude(
-    #             data=B,
-    #             axis=1,
-    #             column=self.by,
-    #             limit_to=self.limit_to_,
-    #             exclude=self.exclude_,
-    #         )
-    #         matrix = np.matmul(B.transpose().values, A.values)
-    #         matrix = pd.DataFrame(matrix, columns=A.columns, index=B.columns)
+            if self.view == "Matrix":
+                display(
+                    self.matrix_.style.background_gradient(cmap=self.cmap, axis=None)
+                )
 
-    #         # sort max values per column
-    #         max_columns = matrix.sum(axis=0)
-    #         max_columns = max_columns.sort_values(ascending=False)
-    #         max_columns = max_columns.head(self.top_n).index
+            if self.view == "Heatmap":
+                display(
+                    plt.heatmap(
+                        self.matrix_, cmap=self.cmap, figsize=(self.width, self.height)
+                    )
+                )
 
-    #         max_index = matrix.sum(axis=1)
-    #         max_index = max_index.sort_values(ascending=False)
-    #         max_index = max_index.head(self.top_n).index
+            if self.view == "Bubble plot":
+                display(
+                    plt.bubble(
+                        self.matrix_,
+                        axis=0,
+                        cmap=self.cmap,
+                        figsize=(self.width, self.height),
+                    )
+                )
 
-    #         matrix = matrix.loc[
-    #             [t for t in matrix.index if t in max_index],
-    #             [t for t in matrix.columns if t in max_columns],
-    #         ]
+            if self.view == "Slope chart":
+                display(
+                    slope_chart(
+                        self.matrix_,
+                        figsize=(self.width, self.height),
+                        cmap_column=self.cmap,
+                        cmap_by=self.cmap_by,
+                    )
+                )
 
-    #         matrix = cmn.add_counters_to_axis(
-    #             X=matrix, axis=1, data=self.data_, column=self.column
-    #         )
-    #         matrix = cmn.add_counters_to_axis(
-    #             X=matrix, axis=0, data=self.data_, column=self.by
-    #         )
+            if self.view == "Network":
+                display(
+                    co_occurrence_map(
+                        matrix=self.matrix_,
+                        layout=self.layout,
+                        cmap_column=self.cmap,
+                        cmap_by=self.cmap_by,
+                        figsize=(self.width, self.height),
+                    )
+                )
 
-    #     if self.top_by in ["Num Documents", "Times Cited"]:
+            # if self.view == "Table":
 
-    #         A = cmn.limit_to_exclude(
-    #             data=A,
-    #             axis=1,
-    #             column=self.column,
-    #             limit_to=self.limit_to_,
-    #             exclude=self.exclude_,
-    #         )
+            #     result = self.matrix_.stack().to_frame().reset_index()
+            #     result.columns = [self.by, self.column, "Values"]
 
-    #         A = cmn.add_counters_to_axis(
-    #             X=A, axis=1, data=self.data_, column=self.column
-    #         )
+            #     result = result[result["Values"] != 0]
+            #     result = result.sort_values(["Values"])
+            #     result = result.reset_index(drop=True)
 
-    #         A = cmn.sort_by_axis(data=A, sort_by=self.top_by, ascending=False, axis=1)
+            #     if self.sort_by == "Alphabetic":
+            #         result = result.sort_values(
+            #             [by, column, "Values"], ascending=self.ascending
+            #         )
 
-    #         A = A[A.columns[: self.top_n]]
+            #     if self.sort_by == "Num Documents":
+            #         result["ND-column"] = result[column].map(
+            #             lambda w: w.split(" ")[-1].split(":")[0]
+            #         )
+            #         result["ND-by"] = result[by].map(
+            #             lambda w: w.split(" ")[-1].split(":")[0]
+            #         )
+            #         result = result.sort_values(
+            #             ["ND-by", "ND-column", "Values"], ascending=self.ascending
+            #         )
+            #         result.pop("ND-column")
+            #         result.pop("ND-by")
 
-    #         B = cmn.limit_to_exclude(
-    #             data=B,
-    #             axis=1,
-    #             column=self.by,
-    #             limit_to=self.limit_to_,
-    #             exclude=self.exclude_,
-    #         )
+            #     display(result)
 
-    #         B = cmn.add_counters_to_axis(X=B, axis=1, data=self.data_, column=self.by)
 
-    #         B = cmn.sort_by_axis(data=B, sort_by=self.top_by, ascending=False, axis=1)
-    #         B = B[B.columns[: self.top_n]]
+###############################################################################
+##
+##  TAB app 1 --- Associations
+##
+###############################################################################
 
-    #         matrix = np.matmul(B.transpose().values, A.values)
-    #         matrix = pd.DataFrame(matrix, columns=A.columns, index=B.columns)
 
-    #     matrix = cmn.sort_by_axis(
-    #         data=matrix, sort_by=self.sort_by, ascending=self.ascending, axis=0
-    #     )
-    #     matrix = cmn.sort_by_axis(
-    #         data=matrix, sort_by=self.sort_by, ascending=self.ascending, axis=1
-    #     )
+class TABapp1(gui.TABapp_):
+    def __init__(self, data, limit_to, exclude):
 
-    #     self.matrix_ = matrix
+        super(TABapp1, self).__init__()
+
+        self.data_ = data
+        self.limit_to_ = limit_to
+        self.exclude_ = exclude
+
+        COLUMNS = sorted(
+            [column for column in data.columns if column not in EXCLUDE_COLS]
+        )
+
+        self.panel_ = [
+            gui.dropdown(desc="View:", options=["Table", "Network",],),
+            gui.dropdown(
+                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            gui.dropdown(
+                desc="By:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            gui.dropdown(
+                desc="Top by:", options=["Num Documents", "Times Cited", "Values",],
+            ),
+            gui.top_n(),
+            gui.dropdown(
+                desc="Sort by:",
+                options=["Alphabetic", "Num Documents", "Times Cited",],
+            ),
+            gui.ascending(),
+            gui.cmap(arg="cmap", desc="Colormap Col:"),
+            gui.cmap(arg="cmap_by", desc="Colormap By:"),
+            gui.nx_layout(),
+            gui.fig_width(),
+            gui.fig_height(),
+            {
+                "arg": "terms",
+                "desc": "Terms:",
+                "widget": widgets.widgets.SelectMultiple(
+                    options=[], layout=Layout(width="98%", height="180px"),
+                ),
+            },
+        ]
+        super().create_grid()
+
+    def gui(self, **kwargs):
+
+        super().gui(**kwargs)
+
+        if self.view in ["Matrix", "Table"]:
+            self.panel_[-4]["widget"].disabled = True
+            self.panel_[-3]["widget"].disabled = True
+            self.panel_[-2]["widget"].disabled = True
+            self.panel_[-1]["widget"].disabled = True
+
+        if self.view == "Heatmap":
+            self.panel_[-4]["widget"].disabled = True
+            self.panel_[-3]["widget"].disabled = True
+            self.panel_[-2]["widget"].disabled = False
+            self.panel_[-1]["widget"].disabled = False
+
+        if self.view == "Bubble plot":
+            self.panel_[-4]["widget"].disabled = True
+            self.panel_[-3]["widget"].disabled = True
+            self.panel_[-2]["widget"].disabled = False
+            self.panel_[-1]["widget"].disabled = False
+
+        if self.view == "Network":
+            self.panel_[-4]["widget"].disabled = False
+            self.panel_[-3]["widget"].disabled = False
+            self.panel_[-2]["widget"].disabled = False
+            self.panel_[-1]["widget"].disabled = False
+
+        if self.view == "Slope chart":
+            self.panel_[-4]["widget"].disabled = False
+            self.panel_[-3]["widget"].disabled = True
+            self.panel_[-2]["widget"].disabled = False
+            self.panel_[-1]["widget"].disabled = False
 
     def update(self, button):
         """ 

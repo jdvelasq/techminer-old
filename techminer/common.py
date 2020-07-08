@@ -52,7 +52,7 @@ def sort_by_axis(data, sort_by, ascending, axis):
     if sort_by == "Alphabetic":
 
         for m in axis_to_sort:
-            X = X.sort_index(axis=0, ascending=ascending).sort_index(
+            X = X.sort_index(axis=m, ascending=ascending).sort_index(
                 axis=m, ascending=ascending
             )
 
@@ -66,7 +66,17 @@ def sort_by_axis(data, sort_by, ascending, axis):
                 ascending=ascending,
             )
 
+    elif sort_by == "Data":
+
+        for m in axis_to_sort:
+            if m == 0:
+                t = X.max(axis=1)
+                X = X.loc[t.sort_values(ascending=ascending).index, :]
+            else:
+                t = X.max(axis=0)
+                X = X.loc[:, t.sort_values(ascending=ascending).index]
     else:
+
         raise NameError("Invalid 'Sort by' value:" + sort_by)
 
     return X
