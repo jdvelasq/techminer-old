@@ -37,7 +37,7 @@ def fig_height():
         "arg": "height",
         "desc": "Height:",
         "widget": widgets.Dropdown(
-            options=range(5, 15, 1), layout=Layout(width="55%"),
+            options=range(5, 26, 1), layout=Layout(width="55%"),
         ),
     }
 
@@ -47,7 +47,7 @@ def fig_width():
         "arg": "width",
         "desc": "Width:",
         "widget": widgets.Dropdown(
-            options=range(5, 15, 1), layout=Layout(width="55%"),
+            options=range(5, 26, 1), layout=Layout(width="55%"),
         ),
     }
 

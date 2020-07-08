@@ -24,10 +24,569 @@ from techminer.explode import MULTIVALUED_COLS, __explode
 from techminer.keywords import Keywords
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
-import techminer.common as common
+import techminer.common as cmn
 import techminer.gui as gui
 
 warnings.filterwarnings("ignore", category=UserWarning)
+
+###############################################################################
+##
+##  CALCULATIONS
+##
+###############################################################################
+
+
+def co_occurrence_matrix(
+    x,
+    column,
+    by=None,
+    top_by=None,
+    top_n=None,
+    limit_to=None,
+    exclude=None,
+    sort_by="Num Documents",
+    ascending=False,
+):
+    """
+    """
+    if column == by:
+        x = None
+        return
+
+    W = x[[column, by, "ID"]].dropna()
+    A = TF_matrix(W, column)
+    B = TF_matrix(W, by)
+
+    if top_by == "Values":
+
+        A = cmn.limit_to_exclude(
+            data=A, axis=1, column=column, limit_to=limit_to, exclude=exclude,
+        )
+        B = cmn.limit_to_exclude(
+            data=B, axis=1, column=by, limit_to=limit_to, exclude=exclude,
+        )
+        matrix = np.matmul(B.transpose().values, A.values)
+        matrix = pd.DataFrame(matrix, columns=A.columns, index=B.columns)
+
+        # sort max values per column
+        max_columns = matrix.sum(axis=0)
+        max_columns = max_columns.sort_values(ascending=False)
+        max_columns = max_columns.head(top_n).index
+
+        max_index = matrix.sum(axis=1)
+        max_index = max_index.sort_values(ascending=False)
+        max_index = max_index.head(top_n).index
+
+        matrix = matrix.loc[
+            [t for t in matrix.index if t in max_index],
+            [t for t in matrix.columns if t in max_columns],
+        ]
+
+        matrix = cmn.add_counters_to_axis(X=matrix, axis=1, data=x, column=column)
+        matrix = cmn.add_counters_to_axis(X=matrix, axis=0, data=x, column=by)
+
+    if top_by in ["Num Documents", "Times Cited"]:
+
+        A = cmn.limit_to_exclude(
+            data=A, axis=1, column=column, limit_to=limit_to, exclude=exclude,
+        )
+
+        A = cmn.add_counters_to_axis(X=A, axis=1, data=x, column=column)
+
+        A = cmn.sort_by_axis(data=A, sort_by=top_by, ascending=False, axis=1)
+
+        A = A[A.columns[:top_n]]
+
+        B = cmn.limit_to_exclude(
+            data=B, axis=1, column=by, limit_to=limit_to, exclude=exclude,
+        )
+
+        B = cmn.add_counters_to_axis(X=B, axis=1, data=x, column=by)
+
+        B = cmn.sort_by_axis(data=B, sort_by=top_by, ascending=False, axis=1)
+        B = B[B.columns[:top_n]]
+
+        matrix = np.matmul(B.transpose().values, A.values)
+        matrix = pd.DataFrame(matrix, columns=A.columns, index=B.columns)
+
+    matrix = cmn.sort_by_axis(data=matrix, sort_by=sort_by, ascending=ascending, axis=0)
+    matrix = cmn.sort_by_axis(data=matrix, sort_by=sort_by, ascending=ascending, axis=1)
+
+    return matrix
+
+
+###############################################################################
+##
+##  APP
+##
+###############################################################################
+
+
+def app(data, limit_to=None, exclude=None, tab=None):
+    return gui.APP(
+        app_title="Bigraph Analysis",
+        tab_titles=["Network Map", "Associations Map",],
+        tab_widgets=[
+            TABapp0(data, limit_to=limit_to, exclude=exclude).run(),
+            __TAB1__(data, limit_to=limit_to, exclude=exclude),
+        ],
+        tab=tab,
+    )
+
+
+class TABapp0(gui.TABapp_):
+    def __init__(self, data, limit_to, exclude):
+
+        super(TABapp0, self).__init__()
+
+        self.data_ = data
+        self.limit_to_ = limit_to
+        self.exclude_ = exclude
+
+        COLUMNS = sorted(
+            [column for column in data.columns if column not in EXCLUDE_COLS]
+        )
+
+        self.panel_ = [
+            gui.dropdown(
+                desc="View:",
+                options=["Matrix", "Heatmap", "Bubble plot", "Network", "Slope chart",],
+            ),
+            gui.dropdown(
+                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            gui.dropdown(
+                desc="By:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            gui.dropdown(
+                desc="Top by:", options=["Num Documents", "Times Cited", "Values",],
+            ),
+            gui.top_n(),
+            gui.dropdown(
+                desc="Sort by:",
+                options=["Alphabetic", "Num Documents", "Times Cited",],
+            ),
+            gui.ascending(),
+            gui.cmap(arg="cmap", desc="Colormap Col:"),
+            gui.cmap(arg="cmap_by", desc="Colormap By:"),
+            gui.nx_layout(),
+            gui.fig_width(),
+            gui.fig_height(),
+        ]
+        super().create_grid()
+
+    def gui(self, **kwargs):
+
+        super().gui(**kwargs)
+
+        if self.view in ["Matrix", "Table"]:
+            self.panel_[-4]["widget"].disabled = True
+            self.panel_[-3]["widget"].disabled = True
+            self.panel_[-2]["widget"].disabled = True
+            self.panel_[-1]["widget"].disabled = True
+
+        if self.view == "Heatmap":
+            self.panel_[-4]["widget"].disabled = True
+            self.panel_[-3]["widget"].disabled = True
+            self.panel_[-2]["widget"].disabled = False
+            self.panel_[-1]["widget"].disabled = False
+
+        if self.view == "Bubble plot":
+            self.panel_[-4]["widget"].disabled = True
+            self.panel_[-3]["widget"].disabled = True
+            self.panel_[-2]["widget"].disabled = False
+            self.panel_[-1]["widget"].disabled = False
+
+        if self.view == "Network":
+            self.panel_[-4]["widget"].disabled = False
+            self.panel_[-3]["widget"].disabled = False
+            self.panel_[-2]["widget"].disabled = False
+            self.panel_[-1]["widget"].disabled = False
+
+        if self.view == "Slope chart":
+            self.panel_[-4]["widget"].disabled = False
+            self.panel_[-3]["widget"].disabled = True
+            self.panel_[-2]["widget"].disabled = False
+            self.panel_[-1]["widget"].disabled = False
+
+    # def co_occurrence_matrix(self):
+    #     """Computes the co-occurrence matrix.
+    #     """
+
+    #     if self.column == self.by:
+    #         self.matrix_ = None
+    #         return
+
+    #     W = self.data_[[self.column, self.by, "ID"]].dropna()
+    #     A = TF_matrix(W, self.column)
+    #     B = TF_matrix(W, self.by)
+
+    #     if self.top_by == "Values":
+
+    #         A = cmn.limit_to_exclude(
+    #             data=A,
+    #             axis=1,
+    #             column=self.column,
+    #             limit_to=self.limit_to_,
+    #             exclude=self.exclude_,
+    #         )
+    #         B = cmn.limit_to_exclude(
+    #             data=B,
+    #             axis=1,
+    #             column=self.by,
+    #             limit_to=self.limit_to_,
+    #             exclude=self.exclude_,
+    #         )
+    #         matrix = np.matmul(B.transpose().values, A.values)
+    #         matrix = pd.DataFrame(matrix, columns=A.columns, index=B.columns)
+
+    #         # sort max values per column
+    #         max_columns = matrix.sum(axis=0)
+    #         max_columns = max_columns.sort_values(ascending=False)
+    #         max_columns = max_columns.head(self.top_n).index
+
+    #         max_index = matrix.sum(axis=1)
+    #         max_index = max_index.sort_values(ascending=False)
+    #         max_index = max_index.head(self.top_n).index
+
+    #         matrix = matrix.loc[
+    #             [t for t in matrix.index if t in max_index],
+    #             [t for t in matrix.columns if t in max_columns],
+    #         ]
+
+    #         matrix = cmn.add_counters_to_axis(
+    #             X=matrix, axis=1, data=self.data_, column=self.column
+    #         )
+    #         matrix = cmn.add_counters_to_axis(
+    #             X=matrix, axis=0, data=self.data_, column=self.by
+    #         )
+
+    #     if self.top_by in ["Num Documents", "Times Cited"]:
+
+    #         A = cmn.limit_to_exclude(
+    #             data=A,
+    #             axis=1,
+    #             column=self.column,
+    #             limit_to=self.limit_to_,
+    #             exclude=self.exclude_,
+    #         )
+
+    #         A = cmn.add_counters_to_axis(
+    #             X=A, axis=1, data=self.data_, column=self.column
+    #         )
+
+    #         A = cmn.sort_by_axis(data=A, sort_by=self.top_by, ascending=False, axis=1)
+
+    #         A = A[A.columns[: self.top_n]]
+
+    #         B = cmn.limit_to_exclude(
+    #             data=B,
+    #             axis=1,
+    #             column=self.by,
+    #             limit_to=self.limit_to_,
+    #             exclude=self.exclude_,
+    #         )
+
+    #         B = cmn.add_counters_to_axis(X=B, axis=1, data=self.data_, column=self.by)
+
+    #         B = cmn.sort_by_axis(data=B, sort_by=self.top_by, ascending=False, axis=1)
+    #         B = B[B.columns[: self.top_n]]
+
+    #         matrix = np.matmul(B.transpose().values, A.values)
+    #         matrix = pd.DataFrame(matrix, columns=A.columns, index=B.columns)
+
+    #     matrix = cmn.sort_by_axis(
+    #         data=matrix, sort_by=self.sort_by, ascending=self.ascending, axis=0
+    #     )
+    #     matrix = cmn.sort_by_axis(
+    #         data=matrix, sort_by=self.sort_by, ascending=self.ascending, axis=1
+    #     )
+
+    #     self.matrix_ = matrix
+
+    def update(self, button):
+        """ 
+        """
+
+        self.matrix_ = co_occurrence_matrix(
+            x=self.data_,
+            column=self.column,
+            by=self.by,
+            top_by=self.top_by,
+            top_n=self.top_n,
+            limit_to=self.limit_to_,
+            exclude=self.exclude_,
+            sort_by=self.sort_by,
+            ascending=self.ascending,
+        )
+
+        self.output_.clear_output()
+        with self.output_:
+
+            if self.matrix_ is None:
+                display(widgets.HTML("Different columns must be selected!"))
+                return
+
+            if self.view == "Matrix":
+                display(
+                    self.matrix_.style.background_gradient(cmap=self.cmap, axis=None)
+                )
+
+            if self.view == "Heatmap":
+                display(
+                    plt.heatmap(
+                        self.matrix_, cmap=self.cmap, figsize=(self.width, self.height)
+                    )
+                )
+
+            if self.view == "Bubble plot":
+                display(
+                    plt.bubble(
+                        self.matrix_,
+                        axis=0,
+                        cmap=self.cmap,
+                        figsize=(self.width, self.height),
+                    )
+                )
+
+            if self.view == "Slope chart":
+                display(
+                    slope_chart(
+                        self.matrix_,
+                        figsize=(self.width, self.height),
+                        cmap_column=self.cmap,
+                        cmap_by=self.cmap_by,
+                    )
+                )
+
+            if self.view == "Network":
+                display(
+                    co_occurrence_map(
+                        matrix=self.matrix_,
+                        layout=self.layout,
+                        cmap_column=self.cmap,
+                        cmap_by=self.cmap_by,
+                        figsize=(self.width, self.height),
+                    )
+                )
+
+            # if self.view == "Table":
+
+            #     result = self.matrix_.stack().to_frame().reset_index()
+            #     result.columns = [self.by, self.column, "Values"]
+
+            #     result = result[result["Values"] != 0]
+            #     result = result.sort_values(["Values"])
+            #     result = result.reset_index(drop=True)
+
+            #     if self.sort_by == "Alphabetic":
+            #         result = result.sort_values(
+            #             [by, column, "Values"], ascending=self.ascending
+            #         )
+
+            #     if self.sort_by == "Num Documents":
+            #         result["ND-column"] = result[column].map(
+            #             lambda w: w.split(" ")[-1].split(":")[0]
+            #         )
+            #         result["ND-by"] = result[by].map(
+            #             lambda w: w.split(" ")[-1].split(":")[0]
+            #         )
+            #         result = result.sort_values(
+            #             ["ND-by", "ND-column", "Values"], ascending=self.ascending
+            #         )
+            #         result.pop("ND-column")
+            #         result.pop("ND-by")
+
+            #     display(result)
+
+
+###
+###
+###
+###
+
+
+def __TAB0__(x, limit_to, exclude):
+    # -------------------------------------------------------------------------
+    #
+    # UI
+    #
+    # -------------------------------------------------------------------------
+    COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
+    #
+    left_panel = [
+        gui.dropdown(
+            desc="View:",
+            options=[
+                "Matrix",
+                "Heatmap",
+                "Bubble plot",
+                "Network",
+                "Slope chart",
+                "Table",
+            ],
+        ),
+        gui.dropdown(desc="Column:", options=[z for z in COLUMNS if z in x.columns],),
+        gui.dropdown(desc="By:", options=[z for z in COLUMNS if z in x.columns],),
+        gui.dropdown(
+            desc="Top by:", options=["Values", "Num Documents", "Times Cited"],
+        ),
+        gui.top_n(),
+        gui.dropdown(
+            desc="Sort by:", options=["Alphabetic", "Num Documents", "Times Cited",],
+        ),
+        gui.ascending(),
+        gui.cmap(arg="cmap_column", desc="Colormap Col:"),
+        gui.cmap(arg="cmap_by", desc="Colormap By:"),
+        gui.nx_layout(),
+        gui.fig_width(),
+        gui.fig_height(),
+    ]
+    # -------------------------------------------------------------------------
+    #
+    # Logic
+    #
+    # -------------------------------------------------------------------------
+    def server(**kwargs):
+        #
+        # Logic
+        #
+        view = kwargs["view"]
+        column = kwargs["column"]
+        by = kwargs["by"]
+        cmap_column = kwargs["cmap_column"]
+        cmap_by = kwargs["cmap_by"]
+        top_by = kwargs["top_by"]
+        top_n = int(kwargs["top_n"])
+        sort_by = kwargs["sort_by"]
+        ascending = kwargs["ascending"]
+        layout = kwargs["layout"]
+        width = int(kwargs["width"])
+        height = int(kwargs["height"])
+
+        left_panel[2]["widget"].options = [
+            z for z in COLUMNS if z in x.columns and z != column
+        ]
+        by = left_panel[2]["widget"].value
+
+        if view in ["Matrix", "Table"]:
+            left_panel[-4]["widget"].disabled = True
+            left_panel[-3]["widget"].disabled = True
+            left_panel[-2]["widget"].disabled = True
+            left_panel[-1]["widget"].disabled = True
+
+        if view == "Heatmap":
+            left_panel[-4]["widget"].disabled = True
+            left_panel[-3]["widget"].disabled = True
+            left_panel[-2]["widget"].disabled = False
+            left_panel[-1]["widget"].disabled = False
+
+        if view == "Bubble plot":
+            left_panel[-4]["widget"].disabled = True
+            left_panel[-3]["widget"].disabled = True
+            left_panel[-2]["widget"].disabled = False
+            left_panel[-1]["widget"].disabled = False
+
+        if view == "Network":
+            left_panel[-4]["widget"].disabled = False
+            left_panel[-3]["widget"].disabled = False
+            left_panel[-2]["widget"].disabled = False
+            left_panel[-1]["widget"].disabled = False
+
+        if view == "Slope chart":
+            left_panel[-4]["widget"].disabled = False
+            left_panel[-3]["widget"].disabled = True
+            left_panel[-2]["widget"].disabled = False
+            left_panel[-1]["widget"].disabled = False
+
+        matrix = co_occurrence_matrix(
+            x,
+            column=column,
+            by=by,
+            top_by=top_by,
+            top_n=top_n,
+            sort_by=sort_by,
+            ascending=ascending,
+            limit_to=limit_to,
+            exclude=exclude,
+        )
+
+        output.clear_output()
+        with output:
+            if view == "Matrix":
+                display(matrix.style.background_gradient(cmap=cmap_column, axis=None))
+
+            if view == "Heatmap":
+                display(plt.heatmap(matrix, cmap=cmap_column, figsize=(width, height)))
+
+            if view == "Bubble plot":
+                display(
+                    plt.bubble(
+                        matrix, axis=0, cmap=cmap_column, figsize=(width, height)
+                    )
+                )
+
+            if view == "Slope chart":
+                display(
+                    slope_chart(
+                        matrix,
+                        figsize=(width, height),
+                        cmap_column=cmap_column,
+                        cmap_by=cmap_by,
+                    )
+                )
+
+            if view == "Network":
+                display(
+                    co_occurrence_map(
+                        matrix=matrix,
+                        layout=layout,
+                        cmap_column=cmap_column,
+                        cmap_by=cmap_by,
+                        figsize=(width, height),
+                    )
+                )
+
+            if view == "Table":
+                result = matrix.stack().to_frame().reset_index()
+                result.columns = [by, column, "Values"]
+
+                result = result[result["Values"] != 0]
+                result = result.sort_values(["Values"])
+                result = result.reset_index(drop=True)
+
+                if sort_by == "Alphabetic":
+                    result = result.sort_values(
+                        [by, column, "Values"], ascending=ascending
+                    )
+
+                if sort_by == "Num Documents":
+                    result["ND-column"] = result[column].map(
+                        lambda w: w.split(" ")[-1].split(":")[0]
+                    )
+                    result["ND-by"] = result[by].map(
+                        lambda w: w.split(" ")[-1].split(":")[0]
+                    )
+                    result = result.sort_values(
+                        ["ND-by", "ND-column", "Values"], ascending=ascending
+                    )
+                    result.pop("ND-column")
+                    result.pop("ND-by")
+
+                display(result)
+
+        return
+
+    ###
+    output = widgets.Output()
+    return gui.TABapp(left_panel=left_panel, server=server, output=output)
+
+
+###############################################################################
+##
+##  CALCULATIONS
+##
+###############################################################################
 
 
 def filter_index(
@@ -122,7 +681,7 @@ def filter_index(
     return matrix
 
 
-def co_occurrence_matrix(
+def __co_occurrence_matrix(
     x,
     column,
     by=None,
@@ -548,11 +1107,11 @@ def co_occurrence_map(
     )
 
     node_sizes = column_node_sizes + index_node_sizes
-    common.ax_text_node_labels(ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes)
-    common.ax_expand_limits(ax)
+    cmn.ax_text_node_labels(ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes)
+    cmn.ax_expand_limits(ax)
     ax.set_aspect("equal")
     ax.axis("off")
-    common.set_ax_splines_invisible(ax)
+    cmn.set_ax_splines_invisible(ax)
     return fig
 
 
@@ -711,187 +1270,11 @@ def slope_chart(matrix, figsize, cmap_column="Greys", cmap_by="Greys"):
     #
     # Figure size
     #
-    common.ax_expand_limits(ax)
+    cmn.ax_expand_limits(ax)
     ax.invert_yaxis()
     ax.axis("off")
 
     return fig
-
-
-def __TAB0__(x, limit_to, exclude):
-    # -------------------------------------------------------------------------
-    #
-    # UI
-    #
-    # -------------------------------------------------------------------------
-    COLUMNS = sorted([column for column in x.columns if column not in EXCLUDE_COLS])
-    #
-    left_panel = [
-        gui.dropdown(
-            desc="View:",
-            options=[
-                "Matrix",
-                "Heatmap",
-                "Bubble plot",
-                "Network",
-                "Slope chart",
-                "Table",
-            ],
-        ),
-        gui.dropdown(desc="Column:", options=[z for z in COLUMNS if z in x.columns],),
-        gui.dropdown(desc="By:", options=[z for z in COLUMNS if z in x.columns],),
-        gui.dropdown(
-            desc="Top by:", options=["Values", "Num Documents", "Times Cited"],
-        ),
-        gui.top_n(),
-        gui.dropdown(
-            desc="Sort by:", options=["Alphabetic", "Num Documents", "Times Cited",],
-        ),
-        gui.ascending(),
-        gui.cmap(arg="cmap_column", desc="Colormap Col:"),
-        gui.cmap(arg="cmap_by", desc="Colormap By:"),
-        gui.nx_layout(),
-        gui.fig_width(),
-        gui.fig_height(),
-    ]
-    # -------------------------------------------------------------------------
-    #
-    # Logic
-    #
-    # -------------------------------------------------------------------------
-    def server(**kwargs):
-        #
-        # Logic
-        #
-        view = kwargs["view"]
-        column = kwargs["column"]
-        by = kwargs["by"]
-        cmap_column = kwargs["cmap_column"]
-        cmap_by = kwargs["cmap_by"]
-        top_by = kwargs["top_by"]
-        top_n = int(kwargs["top_n"])
-        sort_by = kwargs["sort_by"]
-        ascending = kwargs["ascending"]
-        layout = kwargs["layout"]
-        width = int(kwargs["width"])
-        height = int(kwargs["height"])
-
-        left_panel[2]["widget"].options = [
-            z for z in COLUMNS if z in x.columns and z != column
-        ]
-        by = left_panel[2]["widget"].value
-
-        if view in ["Matrix", "Table"]:
-            left_panel[-4]["widget"].disabled = True
-            left_panel[-3]["widget"].disabled = True
-            left_panel[-2]["widget"].disabled = True
-            left_panel[-1]["widget"].disabled = True
-
-        if view == "Heatmap":
-            left_panel[-4]["widget"].disabled = True
-            left_panel[-3]["widget"].disabled = True
-            left_panel[-2]["widget"].disabled = False
-            left_panel[-1]["widget"].disabled = False
-
-        if view == "Bubble plot":
-            left_panel[-4]["widget"].disabled = True
-            left_panel[-3]["widget"].disabled = True
-            left_panel[-2]["widget"].disabled = False
-            left_panel[-1]["widget"].disabled = False
-
-        if view == "Network":
-            left_panel[-4]["widget"].disabled = False
-            left_panel[-3]["widget"].disabled = False
-            left_panel[-2]["widget"].disabled = False
-            left_panel[-1]["widget"].disabled = False
-
-        if view == "Slope chart":
-            left_panel[-4]["widget"].disabled = False
-            left_panel[-3]["widget"].disabled = True
-            left_panel[-2]["widget"].disabled = False
-            left_panel[-1]["widget"].disabled = False
-
-        matrix = co_occurrence_matrix(
-            x,
-            column=column,
-            by=by,
-            top_by=top_by,
-            top_n=top_n,
-            sort_by=sort_by,
-            ascending=ascending,
-            limit_to=limit_to,
-            exclude=exclude,
-        )
-
-        output.clear_output()
-        with output:
-            if view == "Matrix":
-                display(matrix.style.background_gradient(cmap=cmap_column, axis=None))
-
-            if view == "Heatmap":
-                display(plt.heatmap(matrix, cmap=cmap_column, figsize=(width, height)))
-
-            if view == "Bubble plot":
-                display(
-                    plt.bubble(
-                        matrix, axis=0, cmap=cmap_column, figsize=(width, height)
-                    )
-                )
-
-            if view == "Slope chart":
-                display(
-                    slope_chart(
-                        matrix,
-                        figsize=(width, height),
-                        cmap_column=cmap_column,
-                        cmap_by=cmap_by,
-                    )
-                )
-
-            if view == "Network":
-                display(
-                    co_occurrence_map(
-                        matrix=matrix,
-                        layout=layout,
-                        cmap_column=cmap_column,
-                        cmap_by=cmap_by,
-                        figsize=(width, height),
-                    )
-                )
-
-            if view == "Table":
-                result = matrix.stack().to_frame().reset_index()
-                result.columns = [by, column, "Values"]
-
-                result = result[result["Values"] != 0]
-                result = result.sort_values(["Values"])
-                result = result.reset_index(drop=True)
-
-                if sort_by == "Alphabetic":
-                    result = result.sort_values(
-                        [by, column, "Values"], ascending=ascending
-                    )
-
-                if sort_by == "Num Documents":
-                    result["ND-column"] = result[column].map(
-                        lambda w: w.split(" ")[-1].split(":")[0]
-                    )
-                    result["ND-by"] = result[by].map(
-                        lambda w: w.split(" ")[-1].split(":")[0]
-                    )
-                    result = result.sort_values(
-                        ["ND-by", "ND-column", "Values"], ascending=ascending
-                    )
-                    result.pop("ND-column")
-                    result.pop("ND-by")
-
-                display(result)
-
-        return
-
-    ###
-    output = widgets.Output()
-    return gui.TABapp(left_panel=left_panel, server=server, output=output)
 
 
 #
@@ -1253,23 +1636,4 @@ def __TAB1__(x, limit_to, exclude):
     ###
     output = widgets.Output()
     return gui.TABapp(left_panel=left_panel, server=server, output=output)
-
-
-###############################################################################
-##
-##  APP
-##
-###############################################################################
-
-
-def app(data, limit_to=None, exclude=None, tab=None):
-    return gui.APP(
-        app_title="Bigraph Analysis",
-        tab_titles=["Network Map", "Associations Map",],
-        tab_widgets=[
-            __TAB0__(data, limit_to=limit_to, exclude=exclude),
-            __TAB1__(data, limit_to=limit_to, exclude=exclude),
-        ],
-        tab=tab,
-    )
 
