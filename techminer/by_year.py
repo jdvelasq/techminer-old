@@ -18,6 +18,155 @@ from ipywidgets import GridspecLayout, Layout
 from techminer.plots import COLORMAPS
 
 TEXTLEN = 40
+FONTSIZE = 11
+
+###############################################################################
+##
+##  APP
+##
+###############################################################################
+
+
+def app(data, tab=None):
+    return gui.APP(
+        app_title="Analysis per Year",
+        tab_titles=["Time Analysis"],
+        tab_widgets=[TABapp0(data).run(),],
+        tab=tab,
+    )
+
+
+class TABapp0(gui.TABapp_):
+    def __init__(self, data):
+
+        super(TABapp0, self).__init__()
+
+        self.data_ = data
+
+        self.panel_ = [
+            gui.dropdown(
+                desc="View:",
+                options=[
+                    "Analytics",
+                    "Num Documents by Year",
+                    "Times Cited by Year",
+                    "Cum Num Documents by Year",
+                    "Cum Times Cited by Year",
+                    "Avg Times Cited by Year",
+                ],
+            ),
+            gui.dropdown(desc="Plot:", options=["Bar plot", "Horizontal bar plot"],),
+            gui.cmap(),
+            gui.dropdown(
+                desc="Sort by:",
+                options=[
+                    "Year",
+                    "Times_Cited",
+                    "Num_Documents",
+                    "Cum_Num_Documents",
+                    "Cum_Times_Cited",
+                    "Avg_Times_Cited",
+                ],
+            ),
+            gui.ascending(),
+            gui.fig_width(),
+            gui.fig_height(),
+        ]
+        super().create_grid()
+
+    def gui(self, **kwargs):
+
+        super().gui(**kwargs)
+
+        for i in [1, 2, -2, -1]:
+            self.panel_[i]["widget"].disabled = (
+                True if kwargs["view"] == "Analytics" else False
+            )
+
+        for i in [
+            -4,
+            -3,
+        ]:
+            self.panel_[i]["widget"].disabled = (
+                False if kwargs["view"] == "Analytics" else True
+            )
+
+    def update(self, button):
+        """ 
+        """
+        data = self.data_[["Year", "Times_Cited", "ID"]].explode("Year")
+        data["Num_Documents"] = 1
+        result = data.groupby("Year", as_index=False).agg(
+            {"Times_Cited": np.sum, "Num_Documents": np.size}
+        )
+        result = result.assign(
+            ID=data.groupby("Year").agg({"ID": list}).reset_index()["ID"]
+        )
+        result["Times_Cited"] = result["Times_Cited"].map(lambda w: int(w))
+        years = [year for year in range(result.Year.min(), result.Year.max() + 1)]
+        result = result.set_index("Year")
+        result = result.reindex(years, fill_value=0)
+        result["ID"] = result["ID"].map(lambda x: [] if x == 0 else x)
+        result.sort_values(
+            "Year", ascending=True, inplace=True,
+        )
+        result["Cum_Num_Documents"] = result["Num_Documents"].cumsum()
+        result["Cum_Times_Cited"] = result["Times_Cited"].cumsum()
+        result["Avg_Times_Cited"] = result["Times_Cited"] / result["Num_Documents"]
+        result["Avg_Times_Cited"] = result["Avg_Times_Cited"].map(
+            lambda x: 0 if pd.isna(x) else round(x, 2)
+        )
+
+        self.output_.clear_output()
+        with self.output_:
+
+            if self.view == "Analytics":
+                result.pop("ID")
+                if self.sort_by == "Year":
+                    display(result.sort_index(axis=0, ascending=self.ascending))
+                else:
+                    display(
+                        result.sort_values(by=self.sort_by, ascending=self.ascending)
+                    )
+                return
+
+            if self.view == "Num Documents by Year":
+                values = result["Num_Documents"]
+                darkness = result["Times_Cited"]
+            if self.view == "Times Cited by Year":
+                values = result["Times_Cited"]
+                darkness = result["Num_Documents"]
+            if self.view == "Cum Num Documents by Year":
+                values = result["Cum_Num_Documents"]
+                darkness = result["Cum_Times_Cited"]
+            if self.view == "Cum Times Cited by Year":
+                values = result["Cum_Times_Cited"]
+                darkness = result["Cum_Num_Documents"]
+            if self.view == "Avg Times Cited by Year":
+                values = result["Avg_Times_Cited"]
+                darkness = None
+
+            figsize = (self.width, self.height)
+            if self.plot == "Bar plot":
+                display(
+                    plt.bar(
+                        height=values,
+                        darkness=darkness,
+                        cmap=self.cmap,
+                        figsize=figsize,
+                        ylabel=self.view,
+                    )
+                )
+            if self.plot == "Horizontal bar plot":
+                display(
+                    plt.barh(
+                        width=values,
+                        darkness=darkness,
+                        cmap=self.cmap,
+                        figsize=figsize,
+                        xlabel=self.view,
+                    )
+                )
 
 
 def analytics(
@@ -31,129 +180,6 @@ def analytics(
     fontsize=11,
     **kwargs
 ):
-    """Computes analysis by year.
-
-    Args:
-        data (pandas.DataFrame): A bibliographic dataframe.
-        output (int, optional): [description]. Defaults to 0.
-
-            * 0-- Summary dataframe.
-
-            * 1-- Num Documents by year plot.
-
-            * 2-- Times Cited by year plot.
-
-            * 3-- Cum Num Documents by year plot.
-
-            * 4-- Cum Times Cited by year plot.
-
-            * 5-- Avg Times Cited by year plot.
-
-        plot (int, optional): Plot type. Defaults to 0.
-
-            * 0-- Bar plot.
-
-            * 1-- Horizontal bar plot.
-
-        cmap ([type], optional): Colormap name. Defaults to 'Greys'.
-        figsize (tuple, optional): figsize parameter for plots. Defaults to (10, 4).
-        fontsize (int): Plot font size.
-
-    Returns:
-        [pandas.DataFrame or matplotlib.figure.Figure]: analytics table or plot.
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> import pandas as pd
-    >>> data = pd.DataFrame(
-    ...     {
-    ...          "Year": [2010, 2010, 2011, 2011, 2012, 2016],
-    ...          "Times_Cited": list(range(10,16)),
-    ...          "ID": list(range(6)),
-    ...     }
-    ... )
-    >>> data
-       Year  Times_Cited  ID
-    0  2010           10   0
-    1  2010           11   1
-    2  2011           12   2
-    3  2011           13   3
-    4  2012           14   4
-    5  2016           15   5
-
-    >>> analytics(data)[["Times_Cited", 'Num_Documents']]
-          Times_Cited  Num_Documents
-    Year                            
-    2010           21              2
-    2011           25              2
-    2012           14              1
-    2013            0              0
-    2014            0              0
-    2015            0              0
-    2016           15              1
-
-    >>> analytics(data)[['Cum_Num_Documents', 'Cum_Times_Cited', 'Avg_Times_Cited']]
-          Cum_Num_Documents  Cum_Times_Cited  Avg_Times_Cited
-    Year                                                     
-    2010                  2               21             10.5
-    2011                  4               46             12.5
-    2012                  5               60             14.0
-    2013                  5               60              0.0
-    2014                  5               60              0.0
-    2015                  5               60              0.0
-    2016                  6               75             15.0
-
-    * 1-- Num Documents by year plot.
-
-    >>> fig = analytics(data, output=1)
-    >>> fig.savefig('/workspaces/techminer/sphinx/images/by-year-analytics-1-barplot.png')
-
-    .. image:: images/by-year-analytics-1-barplot.png
-        :width: 700px
-        :align: center
-
-    * 2-- Times Cited by year plot.
-
-    >>> fig = analytics(data, output=2)
-    >>> fig.savefig('/workspaces/techminer/sphinx/images/by-year-analytics-2-barplot.png')
-
-    .. image:: images/by-year-analytics-2-barplot.png
-        :width: 700px
-        :align: center
-
-
-    * 3-- Cum Num Documents by year plot.
-
-    >>> fig = analytics(data, output=3)
-    >>> fig.savefig('/workspaces/techminer/sphinx/images/by-year-analytics-3-barplot.png')
-
-    .. image:: images/by-year-analytics-3-barplot.png
-        :width: 700px
-        :align: center
-
-
-    * 4-- Cum Times Cited by year plot.
-
-    >>> fig = analytics(data, output=4)
-    >>> fig.savefig('/workspaces/techminer/sphinx/images/by-year-analytics-4-barplot.png')
-
-    .. image:: images/by-year-analytics-4-barplot.png
-        :width: 700px
-        :align: center
-
-
-    * 5-- Avg Times Cited by year plot.
-
-    >>> fig = analytics(data, output=5)
-    >>> fig.savefig('/workspaces/techminer/sphinx/images/by-year-analytics-5-barplot.png')
-
-    .. image:: images/by-year-analytics-5-barplot.png
-        :width: 700px
-        :align: center
-
-    """
-
     #
     # Computation
     #
@@ -307,22 +333,6 @@ def __TAB0__(data):
     ###
     output = widgets.Output()
     return gui.TABapp(left_panel=left_panel, server=server, output=output)
-
-
-###############################################################################
-##
-##  APP
-##
-###############################################################################
-
-
-def app(data, tab=None):
-    return gui.APP(
-        app_title="Analysis per Year",
-        tab_titles=["Time Analysis"],
-        tab_widgets=[__TAB0__(data),],
-        tab=tab,
-    )
 
 
 #

@@ -194,17 +194,6 @@ def TABapp(left_panel, server, output):
         ]
     )
 
-    # for index in range(len(left_panel)):
-    #     grid[index, 0] = widgets.HBox(
-    #         [
-    #             widgets.Label(value=left_panel[index]["desc"]),
-    #             left_panel[index]["widget"],
-    #         ],
-    #         layout=Layout(
-    #             display="flex", justify_content="flex-end", align_content="center",
-    #         ),
-    #     )
-
     # output
     grid[:, 1:] = widgets.VBox(
         [output], layout=Layout(height="650px", border="2px solid gray")
@@ -215,88 +204,47 @@ def TABapp(left_panel, server, output):
 
 class TABapp_:
     def __init__(self):
-        self._output = widgets.Output()
-        self._panel = []
-        self._grid = []
-        self._result = None
-        self._cmap = None
-        self._view = None
+        self.output_ = widgets.Output()
+        self.panel_ = []
+        self.grid_ = []
+        #
+        self.view = None
+        self.sort_by = None
+        self.ascending = None
+        self.cmap = None
+        self.width = None
+        self.height = None
+        self.plot = None
 
     def run(self):
-        return self._grid
+        return self.grid_
 
-    def gui(self):
-        pass
+    def gui(self, **kwargs):
+
+        for key in kwargs.keys():
+            setattr(self, key, kwargs[key])
 
     def update(self, button):
         pass
 
-    # def update(self, button):
-    #     self.compute()
-    #     self.display()
-
-    # def app_output(self):
-
-    #     self._output.clear_output()
-
-    #     with self._output:
-
-    #         if self._plot == "*Matrix*":
-    #             display(matrix.style.background_gradient(cmap=self._cmap, axis=bg_axis))
-    #             return
-
-    #         if self._plot == "Heatmap":
-    #             display(
-    #                 plt.heatmap(self._result, cmap=self._cmap, figsize=self._figsize)
-    #             )
-    #             return
-
-    #         if self._plot == "Bubble plot":
-    #             display(
-    #                 plt.bubble(self._result, cmap=self._cmap, figsize=self._figsize)
-    #             )
-    #             return
-
-    #         if self._plot == "Slope chart":
-    #             display(
-    #                 slope_chart(
-    #                     self._result,
-    #                     figsize=self._figsize,
-    #                     cmap_column=self._cmap,
-    #                     cmap_by=self._cmap_by,
-    #                 )
-    #             )
-    #             return
-
-    #         if self._plot == "Bar plot":
-    #             return
-
-    #         if self._plot == "Horizontal bar plot":
-    #             return
-
-    #         if self._plot == "Pie":
-    #             return
-
-    #         if self._plot == "Gant":
-    #             return
-
     def create_grid(self):
 
         #  Grid size
-        self._grid = GridspecLayout(14, 6, height="650px")
+        self.grid_ = GridspecLayout(max(14, len(self.panel_)), 6, height="650px")
 
         # Button control
-        self._grid[0, 0] = widgets.Button(
-            description="Update", layout=Layout(width="91%", border="2px solid gray"),
+        self.grid_[0, 0] = widgets.Button(
+            description="Calculate",
+            layout=Layout(width="91%", border="2px solid gray"),
         )
-        self._grid[0, 0].on_click(self.update)
+        self.grid_[0, 0].on_click(self.update)
 
-        self._grid[1:, 0] = widgets.VBox(
+        self.grid_[1:, 0] = widgets.VBox(
             [
                 widgets.HBox(
                     [
-                        widgets.Label(value=self._panel[index]["desc"]),
-                        self._panel[index]["widget"],
+                        widgets.Label(value=self.panel_[index]["desc"]),
+                        self.panel_[index]["widget"],
                     ],
                     layout=Layout(
                         display="flex",
@@ -304,15 +252,15 @@ class TABapp_:
                         align_content="center",
                     ),
                 )
-                for index in range(len(self._panel))
+                for index in range(len(self.panel_))
             ]
         )
 
         #  Output area
-        self._grid[:, 1:] = widgets.VBox(
-            [self._output], layout=Layout(height="650px", border="2px solid gray")
+        self.grid_[:, 1:] = widgets.VBox(
+            [self.output_], layout=Layout(height="650px", border="2px solid gray")
         )
 
-        args = {control["arg"]: control["widget"] for control in self._panel}
-        with self._output:
+        args = {control["arg"]: control["widget"] for control in self.panel_}
+        with self.output_:
             display(widgets.interactive_output(self.gui, args,))
