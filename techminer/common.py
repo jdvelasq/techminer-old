@@ -177,3 +177,23 @@ def add_counters_to_axis(X, axis, data, column):
 
     return X
 
+
+def counters_to_node_sizes(x):
+    node_sizes = [int(t.split(" ")[-1].split(":")[0]) for t in x]
+    max_size = max(node_sizes)
+    min_size = min(node_sizes)
+    node_sizes = [
+        500 + int(2500 * (w - min_size) / (max_size - min_size)) for w in node_sizes
+    ]
+    return node_sizes
+
+
+def counters_to_node_colors(x, cmap):
+    node_colors = [int(t.split(" ")[-1].split(":")[1]) for t in x]
+    max_citations = max(node_colors)
+    min_citations = min(node_colors)
+    node_colors = [
+        cmap(0.2 + 0.80 * (i - min_citations) / (max_citations - min_citations))
+        for i in node_colors
+    ]
+    return node_colors

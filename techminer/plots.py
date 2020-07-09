@@ -692,7 +692,9 @@ def bubble(
                 ax.text(
                     idx_col,
                     idx_row,
-                    x[col][row],
+                    "{}".format(x[col][row])
+                    if x[col][row].dtype == "int64"
+                    else "{:.2f}".format(x[col][row]),
                     va="center",
                     ha="center",
                     zorder=12,

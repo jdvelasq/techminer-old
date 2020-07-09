@@ -190,7 +190,7 @@ def processing():
         }
         </style>
         </head>
-        <h3>Processing </h3>
+        <h3>Processing ...</h3>
         <div class="loader"></div>
 
         """
@@ -279,6 +279,7 @@ class TABapp_:
         self.smooth_idf = None
         self.top_n = None
         self.sublinear_tf = None
+        self.by = None
 
     def run(self):
         return self.grid_

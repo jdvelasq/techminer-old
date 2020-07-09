@@ -11,7 +11,7 @@ import matplotlib.pyplot as pyplot
 import numpy as np
 
 
-TEXTLEN = 20
+TEXTLEN = 50
 
 
 class ChordDiagram:
@@ -318,8 +318,10 @@ class ChordDiagram:
         dy = 0.15 * (ylim[1] - ylim[0])
         ax.set_xlim(xlim[0] - dx, xlim[1] + dx)
         ax.set_ylim(ylim[0] - dy, ylim[1] + dy)
+
         ax.set_axis_off()
         ax.set_aspect("equal")
+
         fig.set_tight_layout(True)
 
         return fig
