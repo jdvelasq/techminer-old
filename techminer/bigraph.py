@@ -489,6 +489,17 @@ class TABapp0(gui.TABapp_):
 
         super().gui(**kwargs)
 
+        if self.panel_[1]["widget"].value == self.panel_[2]["widget"].value:
+            self.grid_[0, 0].disabled = True
+            self.panel_[0]["widget"].disabled = True
+            for i in range(3, len(self.panel_)):
+                self.panel_[i]["widget"].disabled = True
+            return
+
+        self.grid_[0, 0].disabled = False
+        for i in range(len(self.panel_)):
+            self.panel_[i]["widget"].disabled = False
+
         self.panel_[5]["widget"].disabled = self.view == "Network"
         self.panel_[6]["widget"].disabled = self.view == "Network"
         self.panel_[7]["widget"].disabled = self.view == "Network"
