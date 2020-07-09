@@ -248,49 +248,6 @@ def correlation_map(
 
     ax.legend(legend_lines, [text_75, text_50, text_25, text_0])
 
-    #
-    # Legend
-    #
-    # xlim = ax.get_xlim()
-    # ylim = ax.get_ylim()
-    # x_len = (xlim[1] - xlim[0]) / 50
-    # y_len = (ylim[1] - ylim[0]) / 50
-    # text_len = max(x_len, y_len)
-    # #
-
-    # #
-
-    # #
-    # ax.text(xlim[0] + 2.5 * text_len, ylim[0] + text_len * 3, text_75)
-    # ax.text(xlim[0] + 2.5 * text_len, ylim[0] + text_len * 2, text_50)
-    # ax.text(xlim[0] + 2.5 * text_len, ylim[0] + text_len * 1, text_25)
-    # ax.text(xlim[0] + 2.5 * text_len, ylim[0] + text_len * 0, text_0)
-    # #
-    # ax.plot(
-    #     [xlim[0], xlim[0] + 2.0 * text_len],
-    #     [ylim[0] + text_len * 0.25, ylim[0] + text_len * 0.25],
-    #     "k:",
-    #     linewidth=1,
-    # )
-    # ax.plot(
-    #     [xlim[0], xlim[0] + 2.0 * text_len],
-    #     [ylim[0] + text_len * 1.25, ylim[0] + text_len * 1.25],
-    #     "k--",
-    #     linewidth=1,
-    # )
-    # ax.plot(
-    #     [xlim[0], xlim[0] + 2.0 * text_len],
-    #     [ylim[0] + text_len * 2.25, ylim[0] + text_len * 2.25],
-    #     "k-",
-    #     linewidth=2,
-    # )
-    # ax.plot(
-    #     [xlim[0], xlim[0] + 2.0 * text_len],
-    #     [ylim[0] + text_len * 3.25, ylim[0] + text_len * 3.25],
-    #     "k-",
-    #     linewidth=4,
-    # )
-
     ax.axis("off")
 
     return fig
@@ -456,6 +413,7 @@ class TABapp0(gui.TABapp_):
                     correlation_map(
                         X=self.matrix_,
                         layout=self.layout,
+                        iterations=self.nx_max_iter,
                         cmap=self.cmap,
                         figsize=(self.width, self.height),
                     )
