@@ -107,9 +107,7 @@ def co_occurrence_matrix(
             )
 
         if top_by == 1:
-            summ = summ.sort_values(
-                ["Times_Cited", "Num_Documents"], ascending=[False, False, True],
-            )
+            summ = summ.sort_values(["Times_Cited", "Num_Documents"], ascending=False,)
 
         if isinstance(limit_to, dict):
             if column in limit_to.keys():
