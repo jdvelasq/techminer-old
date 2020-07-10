@@ -29,19 +29,26 @@ class DASH:
     def update(self, button):
         pass
 
+    def on_selected_tab_changes(self, widget):
+        pass
+
     def create_grid(self):
 
         ## Grid size
-        self.grid_ = GridspecLayout(
-            max(14, len(self.main_panel_) + len(self.aux_panel_)), 6, height="720px"
-        )
+        panel_len = 0
+        if self.main_panel_ is not None:
+            panel_len += len(self.main_panel_)
+        if self.aux_panel_ is not None:
+            panel_len += len(self.aux_panel_)
+        self.grid_ = GridspecLayout(max(14, panel_len), 5, height="720px")
 
         ## Buttons
-        calculate_button = widgets.Button(
-            description="Calculate",
-            layout=Layout(width="91%", border="2px solid gray"),
-        )
-        calculate_button.on_click(self.calculate)
+        if self.main_panel_ is not None:
+            calculate_button = widgets.Button(
+                description="Calculate",
+                layout=Layout(width="91%", border="2px solid gray"),
+            )
+            calculate_button.on_click(self.calculate)
 
         update_button = widgets.Button(
             description="Update Visualization",
@@ -50,32 +57,40 @@ class DASH:
         update_button.on_click(self.update)
 
         ## Left panel layout
-        panel_layout = [calculate_button]
-        panel_layout += [
-            widgets.HBox(
-                [
-                    widgets.Label(value=self.main_panel_[index]["desc"]),
-                    self.main_panel_[index]["widget"],
-                ],
-                layout=Layout(
-                    display="flex", justify_content="flex-end", align_content="center",
-                ),
-            )
-            for index in range(len(self.main_panel_))
-        ]
-        panel_layout += [update_button]
-        panel_layout += [
-            widgets.HBox(
-                [
-                    widgets.Label(value=self.aux_panel_[index]["desc"]),
-                    self.aux_panel_[index]["widget"],
-                ],
-                layout=Layout(
-                    display="flex", justify_content="flex-end", align_content="center",
-                ),
-            )
-            for index in range(len(self.aux_panel_))
-        ]
+        panel_layout = []
+        if self.main_panel_ is not None:
+            panel_layout = [calculate_button]
+            panel_layout += [
+                widgets.HBox(
+                    [
+                        widgets.Label(value=self.main_panel_[index]["desc"]),
+                        self.main_panel_[index]["widget"],
+                    ],
+                    layout=Layout(
+                        display="flex",
+                        justify_content="flex-end",
+                        align_content="center",
+                    ),
+                )
+                for index in range(len(self.main_panel_))
+            ]
+
+        if self.aux_panel_ is not None:
+            panel_layout += [update_button]
+            panel_layout += [
+                widgets.HBox(
+                    [
+                        widgets.Label(value=self.aux_panel_[index]["desc"]),
+                        self.aux_panel_[index]["widget"],
+                    ],
+                    layout=Layout(
+                        display="flex",
+                        justify_content="flex-end",
+                        align_content="center",
+                    ),
+                )
+                for index in range(len(self.aux_panel_))
+            ]
 
         self.grid_[:, 0] = widgets.VBox(panel_layout)
 
@@ -94,10 +109,21 @@ class DASH:
         self.grid_[:, 1:] = self.tab_
 
         ## interactive
-        args = {
-            **{control["arg"]: control["widget"] for control in self.main_panel_},
-            **{control["arg"]: control["widget"] for control in self.aux_panel_},
-        }
-        #  with self.output_:
-        display(widgets.interactive_output(self.gui, args,))
+        args = {}
+        if self.main_panel_ is not None:
+            args = {
+                **args,
+                **{control["arg"]: control["widget"] for control in self.main_panel_},
+            }
+        if self.aux_panel_ is not None:
+            args = {
+                **args,
+                **{control["arg"]: control["widget"] for control in self.aux_panel_},
+            }
 
+        #  with self.output_:
+        widgets.interactive_output(
+            self.gui, args,
+        )
+
+        self.tab_.observe(self.on_selected_tab_changes, names="selected_index")
