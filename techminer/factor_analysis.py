@@ -292,7 +292,7 @@ class TABapp0(gui.TABapp_):
             ),
             gui.ascending(),
             gui.nx_layout(),
-            gui.nx_max_iters(),
+            gui.nx_max_iter(),
             gui.fig_width(),
             gui.fig_height(),
         ]

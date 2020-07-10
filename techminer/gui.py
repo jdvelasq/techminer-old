@@ -79,7 +79,17 @@ def linkage():
     }
 
 
-def nx_max_iters():
+def max_iter():
+    return {
+        "arg": "max_iter",
+        "desc": "Max # of iterations:",
+        "widget": widgets.Dropdown(
+            options=list(range(50, 501, 50)), layout=Layout(width="55%"),
+        ),
+    }
+
+
+def nx_max_iter():
     return {
         "arg": "nx_max_iter",
         "desc": "# max iterations:",
