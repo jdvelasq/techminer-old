@@ -333,6 +333,15 @@ class TABapp0(gui.TABapp_):
         self.panel_[-4]["widget"].options = list(range(self.n_clusters))
         self.panel_[-3]["widget"].options = list(range(self.n_clusters))
 
+        for i in [-1, -2, -3, -4, -5]:
+            self.panel_[i]["widget"].disabled = kwargs["view"] in [
+                "Contigency table",
+                "Membership",
+                "Cluster ppal coordinates",
+            ]
+
+        #  self.panel_[-1]["widget"].disabled = kwargs["view"] == "Contigency table"
+
     def update(self, button):
 
         self.output_.clear_output()
