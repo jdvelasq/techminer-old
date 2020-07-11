@@ -137,7 +137,8 @@ class DASHapp(DASH):
         super(DASH, self).__init__()
 
         self.data_ = data
-        self.tab_titles_ = [
+        self.app_title_ = "By Year Analysis"
+        self.menu_options_ = [
             "Table",
             "Num Documents by Year",
             "Times Cited by Year",
@@ -178,11 +179,8 @@ class DASHapp(DASH):
     def gui(self, **kwargs):
 
         super().gui(**kwargs)
-        self.on_selected_tab_changes(None)
 
-    def on_selected_tab_changes(self, widget):
-
-        if self.tab_.selected_index == 0:
+        if self.menu_.value == self.menu_options_[0]:
 
             self.aux_panel_[0]["widget"].disabled = False
             self.aux_panel_[1]["widget"].disabled = False
@@ -200,9 +198,6 @@ class DASHapp(DASH):
             self.aux_panel_[4]["widget"].disabled = False
             self.aux_panel_[5]["widget"].disabled = False
 
-        # with self.output_[self.tab_.selected_index]:
-        #     display("calculate in tab " + str(self.tab_.selected_index))
-
     def calculate(self, button):
 
         with self.output_[self.tab_.selected_index]:
@@ -210,15 +205,15 @@ class DASHapp(DASH):
 
     def update(self, button):
 
-        self.output_[self.tab_.selected_index].clear_output()
-        with self.output_[self.tab_.selected_index]:
+        self.output_.clear_output()
+        with self.output_:
 
-            if self.tab_.selected_index == 0:
+            if self.menu_.value == self.menu_options_[0]:
                 display(
                     self.obj_.table_view(sort_by=self.sort_by, ascending=self.ascending)
                 )
 
-            if self.tab_.selected_index == 1:
+            if self.menu_.value == self.menu_options_[1]:
                 display(
                     self.obj_.Num_Documents_by_Year(
                         plot=self.plot,
@@ -227,7 +222,7 @@ class DASHapp(DASH):
                     )
                 )
 
-            if self.tab_.selected_index == 2:
+            if self.menu_.value == self.menu_options_[2]:
                 display(
                     self.obj_.Times_Cited_by_Year(
                         plot=self.plot,
@@ -236,7 +231,7 @@ class DASHapp(DASH):
                     )
                 )
 
-            if self.tab_.selected_index == 3:
+            if self.menu_.value == self.menu_options_[3]:
                 display(
                     self.obj_.Cum_Num_Documents_by_Year(
                         plot=self.plot,
@@ -245,7 +240,7 @@ class DASHapp(DASH):
                     )
                 )
 
-            if self.tab_.selected_index == 4:
+            if self.menu_.value == self.menu_options_[4]:
                 display(
                     self.obj_.Cum_Times_Cited_by_Year(
                         plot=self.plot,
@@ -254,7 +249,7 @@ class DASHapp(DASH):
                     )
                 )
 
-            if self.tab_.selected_index == 5:
+            if self.menu_.value == self.menu_options_[5]:
                 display(
                     self.obj_.Avg_Times_Cited_by_Year(
                         plot=self.plot,
