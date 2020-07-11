@@ -100,7 +100,7 @@ class DASH:
         self.tab_.children = [
             widgets.VBox(
                 [self.output_[i]],
-                layout=Layout(height="650px", border="2px solid gray"),
+                layout=Layout(height="657px", border="2px solid gray"),
             )
             for i, _ in enumerate(self.tab_titles_)
         ]
