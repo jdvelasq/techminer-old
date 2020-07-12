@@ -14,12 +14,12 @@ from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
 from matplotlib import colors
 from sklearn.decomposition import PCA
-from techminer.document_term import TF_matrix
-from techminer.explode import __explode
-from techminer.keywords import Keywords
-from techminer.plots import COLORMAPS
-import techminer.common as cmn
-import techminer.gui as gui
+from document_term import TF_matrix
+from explode import __explode
+from keywords import Keywords
+from plots import COLORMAPS
+import common as cmn
+import gui as gui
 
 
 from matplotlib.lines import Line2D
