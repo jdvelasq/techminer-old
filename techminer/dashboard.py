@@ -49,7 +49,7 @@ class DASH:
                 "<h2>"
                 + self.app_title_
                 + "</h2>"
-                + "<hr style='height:5px;border-width:0;color:gray;background-color:black'>"
+                + "<hr style='height:2px;border-width:0;color:gray;background-color:gray'>"
             )
         ]
 
@@ -92,14 +92,6 @@ class DASH:
             )
             calculate_button.on_click(self.calculate)
             panel_layout += [calculate_button]
-
-        ## line
-        if self.calculate_panel_ is not None and self.update_panel_ is not None:
-            panel_layout += [
-                widgets.HTML(
-                    "<hr style='height:3px;border-width:0;color:gray;background-color:black'>"
-                )
-            ]
 
         ## Update menu
         if self.update_menu_options_ is not None:
