@@ -151,9 +151,7 @@ class DASHapp(DASH):
         #      [column for column in data.columns if column not in EXCLUDE_COLS]
         #  )
 
-        self.main_panel_ = None
-
-        self.aux_panel_ = [
+        self.panel_ = [
             gui.dropdown(
                 desc="Sort by:",
                 options=[
@@ -180,23 +178,27 @@ class DASHapp(DASH):
 
         super().gui(**kwargs)
 
-        if self.menu_.value == self.menu_options_[0]:
+        self.output_.clear_output()
+        with self.output_:
+            print(self.menu)
 
-            self.aux_panel_[0]["widget"].disabled = False
-            self.aux_panel_[1]["widget"].disabled = False
-            self.aux_panel_[2]["widget"].disabled = True
-            self.aux_panel_[3]["widget"].disabled = True
-            self.aux_panel_[4]["widget"].disabled = True
-            self.aux_panel_[5]["widget"].disabled = True
+        if self.menu == self.menu_options_[0]:
+
+            self.panel_[0]["widget"].disabled = False
+            self.panel_[1]["widget"].disabled = False
+            self.panel_[2]["widget"].disabled = True
+            self.panel_[3]["widget"].disabled = True
+            self.panel_[4]["widget"].disabled = True
+            self.panel_[5]["widget"].disabled = True
 
         else:
 
-            self.aux_panel_[0]["widget"].disabled = True
-            self.aux_panel_[1]["widget"].disabled = True
-            self.aux_panel_[2]["widget"].disabled = False
-            self.aux_panel_[3]["widget"].disabled = False
-            self.aux_panel_[4]["widget"].disabled = False
-            self.aux_panel_[5]["widget"].disabled = False
+            self.panel_[0]["widget"].disabled = True
+            self.panel_[1]["widget"].disabled = True
+            self.panel_[2]["widget"].disabled = False
+            self.panel_[3]["widget"].disabled = False
+            self.panel_[4]["widget"].disabled = False
+            self.panel_[5]["widget"].disabled = False
 
     def calculate(self, button):
 
