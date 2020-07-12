@@ -5,25 +5,23 @@ Factor analysis
 
 
 """
+from IPython.display import HTML, clear_output, display
+from ipywidgets import AppLayout, GridspecLayout, Layout
+from matplotlib import colors
+from matplotlib.lines import Line2D
+from sklearn.decomposition import PCA
+from techminer.dashboard import DASH
+from techminer.document_term import TF_matrix
+from techminer.explode import __explode
+from techminer.keywords import Keywords
+from techminer.plots import COLORMAPS
 import ipywidgets as widgets
 import matplotlib.pyplot as pyplot
 import networkx as nx
 import numpy as np
 import pandas as pd
-from IPython.display import HTML, clear_output, display
-from ipywidgets import AppLayout, GridspecLayout, Layout
-from matplotlib import colors
-from sklearn.decomposition import PCA
-from techminer.document_term import TF_matrix
-from techminer.explode import __explode
-from techminer.keywords import Keywords
-from techminer.plots import COLORMAPS
 import techminer.common as cmn
 import techminer.gui as gui
-
-
-from matplotlib.lines import Line2D
-from dashboard import DASH
 
 ###################################################################################################
 ##
@@ -295,9 +293,18 @@ class FactorAnalysis:
     ):
 
         if output == "Factors":
-            return self.sort(
+            out = self.sort(
                 top_by=top_by, top_n=top_n, sort_by=sort_by, ascending=ascending
             )
+            if cmap is None:
+                return out
+            else:
+                cmap = pyplot.cm.get_cmap(cmap)
+                return out.style.format("{:.3f}").applymap(
+                    lambda w: "background-color: {}".format(
+                        colors.rgb2hex(cmap(abs(w)))
+                    )
+                )
 
         if output == "Variances":
             return self.variances_
