@@ -324,15 +324,6 @@ def app(data, limit_to=None, exclude=None):
     return DASHapp(data=data, limit_to=limit_to, exclude=exclude).run()
 
 
-# def app(data, limit_to=None, exclude=None, tab=None):
-#     return gui.APP(
-#         app_title="Factor Analysis",
-#         tab_titles=["Factor Analysis"],
-#         tab_widgets=[TABapp0(data, limit_to=limit_to, exclude=exclude).run(),],
-#         tab=tab,
-#     )
-
-
 ###################################################################################################
 ##
 ##  DASHBOARD --- Factor Analysis
@@ -403,6 +394,13 @@ class DASHapp(DASH):
     def gui(self, **kwargs):
         super().gui(**kwargs)
 
+        self.update_panel_[0]["widget"].disabled = (
+            self.update_menu_.value == "Variances"
+        )
+        self.update_panel_[1]["widget"].disabled = (
+            self.update_menu_.value == "Variances"
+        )
+
         self.update_panel_[2]["widget"].disabled = (
             not self.update_menu_.value == "Factors"
         )
@@ -418,6 +416,11 @@ class DASHapp(DASH):
         self.update_panel_[6]["widget"].disabled = (
             True if self.update_menu_.value != "Map" else False
         )
+
+        self.update_panel_[6]["widget"].disabled = (
+            True if self.update_panel_[5]["widget"].value != "Spring" else False
+        )
+
         self.update_panel_[7]["widget"].disabled = (
             True if self.update_menu_.value != "Map" else False
         )
