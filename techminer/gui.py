@@ -112,7 +112,7 @@ def n_clusters():
 def n_components():
     return {
         "arg": "n_components",
-        "desc": "# components:",
+        "desc": "# Comp. :",
         "widget": widgets.Dropdown(
             options=list(range(2, 21)), layout=Layout(width="55%"),
         ),
