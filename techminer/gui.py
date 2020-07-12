@@ -89,10 +89,10 @@ def max_iter():
     }
 
 
-def nx_max_iter():
+def nx_iterations():
     return {
         "arg": "nx_max_iter",
-        "desc": "# max iterations:",
+        "desc": "nx iterations:",
         "widget": widgets.Dropdown(
             options=list(range(5, 101, 1)), layout=Layout(width="55%"),
         ),
@@ -143,6 +143,49 @@ def nx_layout():
                 "Spectral",
                 "Spring",
                 "Shell",
+            ],
+            layout=Layout(width="55%"),
+        ),
+    }
+
+
+def random_state():
+    return {
+        "arg": "random_state",
+        "desc": "Random State:",
+        "widget": widgets.Dropdown(
+            options=[
+                "0012345",
+                "0123456",
+                "0234567",
+                "0345678",
+                "0456789",
+                "0567890",
+                "0678901",
+                "0789012",
+                "0890123",
+                "0901234",
+                "1012345",
+                "1123456",
+                "1234567",
+                "1345678",
+                "1456789",
+                "1567890",
+                "1678901",
+                "1789012",
+                "1890123",
+                "1901234",
+                "2012345",
+                "2123456",
+                "2234567",
+                "2345678",
+                "2456789",
+                "2567890",
+                "2678901",
+                "2789012",
+                "2890123",
+                "2901234",
+                "3012345",
             ],
             layout=Layout(width="55%"),
         ),

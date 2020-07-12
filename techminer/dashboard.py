@@ -5,15 +5,19 @@ from ipywidgets import AppLayout, GridspecLayout, Layout
 class DASH:
     def __init__(self):
 
+        ##
+        self._obj = None
+
         ## layout
         self.grid_ = []
         self.tab_ = None
 
         ## Panel controls
         self.app_title_ = "None"
-        self.menu_options_ = None
-        self.main_panel_ = []
-        self.aux_panel_ = []
+        self.calculate_menu_options_ = None
+        self.calculate_panel_ = []
+        self.update_menu_options_ = None
+        self.update_panel_ = []
         self.tab_titles_ = []
 
     def run(self):
@@ -33,32 +37,13 @@ class DASH:
 
         ## Grid size
         panel_len = 0
-        if self.main_panel_ is not None:
-            panel_len += len(self.main_panel_)
-        if self.aux_panel_ is not None:
-            panel_len += len(self.aux_panel_)
+        if self.calculate_panel_ is not None:
+            panel_len += len(self.calculate_panel_)
+        if self.update_panel_ is not None:
+            panel_len += len(self.update_panel_)
         self.grid_ = GridspecLayout(max(14, panel_len + 1), 5, height="720px")
 
-        ## Menu
-        self.menu_ = widgets.Dropdown(
-            options=self.menu_options_, layout=Layout(width="98%"),
-        )
-
-        ## Buttons
-        if self.main_panel_ is not None:
-            calculate_button = widgets.Button(
-                description="Calculate",
-                layout=Layout(width="100%", border="2px solid gray"),
-            )
-            calculate_button.on_click(self.calculate)
-
-        update_button = widgets.Button(
-            description="Update Visualization",
-            layout=Layout(width="98%", border="2px solid gray"),
-        )
-        update_button.on_click(self.update)
-
-        ## Left panel layout
+        ## Panel Title
         panel_layout = [
             widgets.HTML(
                 "<h2>"
@@ -67,14 +52,63 @@ class DASH:
                 + "<hr style='height:2px;border-width:0;color:gray;background-color:gray'>"
             )
         ]
-        panel_layout += [self.menu_]
-        if self.main_panel_ is not None:
+
+        ## Calculate menu
+        if self.calculate_menu_options_ is not None:
+            self.calculate_menu_ = widgets.Dropdown(
+                options=self.calculate_menu_options_, layout=Layout(width="98%"),
+            )
+            panel_layout += [self.calculate_menu_]
+        else:
+            self.calculate_menu_ = None
+
+        ## Calculate Panel
+        if self.calculate_panel_ is not None:
+
+            # Caulculate controls
+            panel_layout += [
+                widgets.HBox(
+                    [
+                        widgets.Label(value=self.calculate_panel_[index]["desc"]),
+                        self.calculate_panel_[index]["widget"],
+                    ],
+                    layout=Layout(
+                        display="flex",
+                        justify_content="flex-end",
+                        align_content="center",
+                    ),
+                )
+                for index in range(len(self.calculate_panel_))
+            ]
+
+        # Calculate button
+        if (
+            self.calculate_menu_options_ is not None
+            or self.calculate_panel_ is not None
+        ):
+            calculate_button = widgets.Button(
+                description="Calculate",
+                layout=Layout(width="98%", border="2px solid gray"),
+            )
+            calculate_button.on_click(self.calculate)
             panel_layout += [calculate_button]
+
+        ## Update menu
+        if self.update_menu_options_ is not None:
+            self.update_menu_ = widgets.Dropdown(
+                options=self.update_menu_options_, layout=Layout(width="98%"),
+            )
+            panel_layout += [self.update_menu_]
+        else:
+            self.update_menu_ = None
+
+        ## Update controls
+        if self.update_panel_ is not None:
             panel_layout += [
                 widgets.HBox(
                     [
-                        widgets.Label(value=self.main_panel_[index]["desc"]),
-                        self.main_panel_[index]["widget"],
+                        widgets.Label(value=self.update_panel_[index]["desc"]),
+                        self.update_panel_[index]["widget"],
                     ],
                     layout=Layout(
                         display="flex",
@@ -82,29 +116,22 @@ class DASH:
                         align_content="center",
                     ),
                 )
-                for index in range(len(self.main_panel_))
+                for index in range(len(self.update_panel_))
             ]
 
-        if self.aux_panel_ is not None:
+        # Update button
+        if self.update_menu_options_ is not None or self.update_panel_ is not None:
+            update_button = widgets.Button(
+                description="Update Visualization",
+                layout=Layout(width="98%", border="2px solid gray"),
+            )
+            update_button.on_click(self.update)
             panel_layout += [update_button]
-            panel_layout += [
-                widgets.HBox(
-                    [
-                        widgets.Label(value=self.aux_panel_[index]["desc"]),
-                        self.aux_panel_[index]["widget"],
-                    ],
-                    layout=Layout(
-                        display="flex",
-                        justify_content="flex-end",
-                        align_content="center",
-                    ),
-                )
-                for index in range(len(self.aux_panel_))
-            ]
 
+        ## Build left panel
         self.grid_[:, 0] = widgets.VBox(panel_layout)
 
-        ## Output tabs
+        ## Output area
         self.output_ = widgets.Output()
         self.grid_[:, 1:] = widgets.VBox(
             [self.output_], layout=Layout(height="720px", border="2px solid gray"),
@@ -123,19 +150,31 @@ class DASH:
         # self.grid_[:, 1:] = self.tab_
 
         ## interactive
-        args = {"menu": self.menu_}
-        if self.main_panel_ is not None:
+        args = {}
+        if self.calculate_menu_ is not None:
             args = {
                 **args,
-                **{control["arg"]: control["widget"] for control in self.main_panel_},
+                **{"calculate_menu": self.calculate_menu_},
             }
-        if self.aux_panel_ is not None:
+        if self.calculate_panel_ is not None:
             args = {
                 **args,
-                **{control["arg"]: control["widget"] for control in self.aux_panel_},
+                **{
+                    control["arg"]: control["widget"]
+                    for control in self.calculate_panel_
+                },
+            }
+        if self.update_menu_ is not None:
+            args = {
+                **args,
+                **{"update_menu": self.update_menu_},
+            }
+        if self.update_panel_ is not None:
+            args = {
+                **args,
+                **{control["arg"]: control["widget"] for control in self.update_panel_},
             }
 
-        #  with self.output_:
         widgets.interactive_output(
             self.gui, args,
         )
