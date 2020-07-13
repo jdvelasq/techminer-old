@@ -52,7 +52,6 @@ class Model:
         self.width = None
         self.x_axis = None
         self.y_axis = None
-
         ##
 
     def fit(self):
