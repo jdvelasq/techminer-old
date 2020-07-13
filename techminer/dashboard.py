@@ -1,86 +1,68 @@
 import ipywidgets as widgets
 from ipywidgets import AppLayout, GridspecLayout, Layout
+from IPython.display import display
 
 
 class DASH:
     def __init__(self):
 
-        ##
-        self._obj = None
-
         ## layout
-        self.grid_ = []
-        self.tab_ = None
+        self.app_layout = []
 
         ## Panel controls
-        self.app_title_ = "None"
-        # self.TAB_menu_options_ = None
-        self.menu_options_ = None
-        self.panel_ = []
+        self.app_title = "None"
+        self.menu_options = None
+        self.menu = None
+        self.panel_widgets = []
+        self.output = None
 
     def run(self):
-        return self.grid_
+        return self.app_layout
 
-    def gui(self, **kwargs):
+    def interactive_output(self, **kwargs):
         for key in kwargs.keys():
             setattr(self, key, kwargs[key])
 
     def calculate(self, button):
-        pass
-
-    def update(self, button):
-        pass
+        menu = self.menu.replace(" ", "_").lower()
+        self.output.clear_output()
+        with self.output:
+            display(getattr(self, menu)())
 
     def create_grid(self):
 
         ## Grid size
         panel_len = 0
-        if self.panel_ is not None:
-            panel_len += len(self.panel_)
-        self.grid_ = GridspecLayout(max(14, panel_len + 1), 5, height="720px")
+        if self.panel_widgets is not None:
+            panel_len += len(self.panel_widgets)
+        self.app_layout = GridspecLayout(max(14, panel_len + 1), 5, height="720px")
 
         ## Panel Title
-        panel_layout = [
+        panel_widgets = [
             widgets.HTML(
                 "<h2>"
-                + self.app_title_
+                + self.app_title
                 + "</h2>"
                 + "<hr style='height:3px;border-width:0;color:gray;background-color:black'>"
             )
         ]
 
-        # if self.TAB_menu_options_ is not None:
-        #     self.TAB_menu_ = widgets.Dropdown(
-        #         options=self.TAB_menu_options_, layout=Layout(width="98%"),
-        #     )
-        #     panel_layout += [self.TAB_menu_]
-        # else:
-        #     self.TAB_menu_ = None
-
-        # ## line
-        # if self.calculate_panel_ is not None and self.update_panel_ is not None:
-        #     panel_layout += [
-        #         widgets.HTML(
-        #             "<hr style='height:3px;border-width:0;color:gray;background-color:black'>"
-        #         )
-        #     ]
-
-        ## menu
-        if self.menu_options_ is not None:
-            self.menu_ = widgets.Dropdown(
-                options=self.menu_options_, layout=Layout(width="98%"),
+        # menu
+        if self.menu_options is not None:
+            self.menu_widget = widgets.Dropdown(
+                options=self.menu_options, layout=Layout(width="98%"),
             )
-            panel_layout += [self.menu_]
+            panel_widgets += [self.menu_widget]
         else:
-            self.menu_ = None
+            self.menu_widget = None
 
         ## Update controls
-        if self.panel_ is not None:
-            panel_layout += [
+        if self.panel_widgets is not None:
+            panel_widgets += [
                 widgets.HBox(
                     [
-                        widgets.Label(value=self.panel_[index]["desc"]),
-                        self.panel_[index]["widget"],
+                        widgets.Label(value=self.panel_widgets[index]["desc"]),
+                        self.panel_widgets[index]["widget"],
                     ],
                     layout=Layout(
                         display="flex",
@@ -88,52 +70,40 @@ class DASH:
                         align_content="center",
                     ),
                 )
-                for index in range(len(self.panel_))
+                for index, _ in enumerate(self.panel_widgets)
             ]
 
-        # Calculate button
-        if self.menu_options_ is not None:
+        ## Calculate button
+        if self.menu_options is not None:
             calculate_button = widgets.Button(
                 description="Calculate",
                 layout=Layout(width="98%", border="2px solid gray"),
             )
-            calculate_button.on_click(self.update)
-            panel_layout += [calculate_button]
+            calculate_button.on_click(self.calculate)
+            panel_widgets += [calculate_button]
 
         ## Build left panel
-        self.grid_[:, 0] = widgets.VBox(panel_layout)
+        self.app_layout[:, 0] = widgets.VBox(panel_widgets)
 
         ## Output area
-        self.output_ = widgets.Output()
-        self.grid_[:, 1:] = widgets.VBox(
-            [self.output_], layout=Layout(height="720px", border="2px solid gray"),
+        self.output = widgets.Output()
+        self.app_layout[:, 1:] = widgets.VBox(
+            [self.output], layout=Layout(height="720px", border="2px solid gray"),
         )
 
         ## interactive
         args = {}
-        if self.menu_ is not None:
+        if self.menu_options is not None:
             args = {
                 **args,
-                **{"menu": self.menu_},
+                **{"menu": self.menu_widget},
             }
-        if self.panel_ is not None:
+        if self.panel_widgets is not None:
             args = {
                 **args,
-                **{control["arg"]: control["widget"] for control in self.panel_},
+                **{control["arg"]: control["widget"] for control in self.panel_widgets},
             }
-        # if self.update_menu_ is not None:
-        #     args = {
-        #         **args,
-        #         **{"update_menu": self.update_menu_},
-        #     }
-        # if self.update_panel_ is not None:
-        #     args = {
-        #         **args,
-        #         **{control["arg"]: control["widget"] for control in self.update_panel_},
-        #     }
 
         widgets.interactive_output(
-            self.gui, args,
+            self.interactive_output, args,
         )
-
-        ## self.tab_.observe(self.on_selected_tab_changes, names="selected_index")

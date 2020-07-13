@@ -5,14 +5,30 @@ import techminer.plots as plt
 from IPython.display import display
 
 
-class ByYear:
-    def __init__(self, data):
-        self.data_ = data
+from techminer.params import EXCLUDE_COLS
+import techminer.gui as gui
+from techminer.dashboard import DASH
 
+#  import ipywidgets as widgets
+#  from ipywidgets import AppLayout, GridspecLayout, Layout
+
+
+class Model:
+    def __init__(self, data):
         #
-        # Computos
+        self.data = data
         #
-        data = self.data_[["Year", "Times_Cited", "ID"]].explode("Year")
+        self.ascending = True
+        self.cmap = None
+        self.height = None
+        self.plot = None
+        self.sort_by = None
+        self.width = None
+        #
+        self.fit()
+
+    def fit(self):
+        data = self.data[["Year", "Times_Cited", "ID"]].explode("Year")
         data["Num_Documents"] = 1
         result = data.groupby("Year", as_index=False).agg(
             {"Times_Cited": np.sum, "Num_Documents": np.size}
@@ -35,110 +51,84 @@ class ByYear:
             lambda x: 0 if pd.isna(x) else round(x, 2)
         )
         result.pop("ID")
+        self.X_ = result
 
-        self.table_ = result
+    def table(self):
+        if self.sort_by == "Year":
+            return self.X_.sort_index(axis=0, ascending=self.ascending)
+        return self.X_.sort_values(by=self.sort_by, ascending=self.ascending)
 
-    def table_view(self, sort_by, ascending):
-        if sort_by == "Year":
-            return self.table_.sort_index(axis=0, ascending=ascending)
-        return self.table_.sort_values(by=sort_by, ascending=ascending)
+    def plot_(self, values, darkness, label, figsize):
 
-    def plot(self, values, darkness, plot, cmap, figsize, label):
-
-        if plot == "Bar plot":
+        if self.plot == "Bar plot":
             return plt.bar(
                 height=values,
                 darkness=darkness,
-                cmap=cmap,
-                figsize=figsize,
                 ylabel=label,
+                figsize=figsize,
+                cmap=self.cmap,
             )
 
-        if plot == "Horizontal bar plot":
+        if self.plot == "Horizontal bar plot":
             return plt.barh(
                 width=values,
                 darkness=darkness,
-                cmap=cmap,
-                figsize=figsize,
                 xlabel=label,
+                figsize=figsize,
+                cmap=self.cmap,
             )
 
-    def Num_Documents_by_Year(self, plot, cmap, figsize):
-        values = self.table_["Num_Documents"]
-        darkness = self.table_["Times_Cited"]
-        return self.plot(
-            values=values,
-            darkness=darkness,
-            plot=plot,
-            cmap=cmap,
-            figsize=figsize,
+    def num_documents_by_year(self):
+        return self.plot_(
+            values=self.X_["Num_Documents"],
+            darkness=self.X_["Times_Cited"],
             label="Num Documents by Year",
+            figsize=(self.width, self.height),
         )
 
-    def Times_Cited_by_Year(self, plot, cmap, figsize):
-        values = self.table_["Times_Cited"]
-        darkness = self.table_["Num_Documents"]
-        return self.plot(
-            values=values,
-            darkness=darkness,
-            plot=plot,
-            cmap=cmap,
-            figsize=figsize,
+    def times_cited_by_year(self):
+        return self.plot_(
+            values=self.X_["Times_Cited"],
+            darkness=self.X_["Num_Documents"],
             label="Times Cited by Year",
+            figsize=(self.width, self.height),
         )
 
-    def Cum_Num_Documents_by_Year(self, plot, cmap, figsize):
-        values = self.table_["Cum_Num_Documents"]
-        darkness = self.table_["Cum_Times_Cited"]
-        return self.plot(
-            values=values,
-            darkness=darkness,
-            plot=plot,
-            cmap=cmap,
-            figsize=figsize,
+    def cum_num_documents_by_year(self):
+        return self.plot_(
+            values=self.X_["Cum_Num_Documents"],
+            darkness=self.X_["Cum_Times_Cited"],
             label="Cum Num Documents by Year",
+            figsize=(self.width, self.height),
         )
 
-    def Cum_Times_Cited_by_Year(self, plot, cmap, figsize):
-        values = self.table_["Cum_Times_Cited"]
-        darkness = self.table_["Cum_Num_Documents"]
-        return self.plot(
-            values=values,
-            darkness=darkness,
-            plot=plot,
-            cmap=cmap,
-            figsize=figsize,
+    def cum_times_cited_by_year(self):
+        return self.plot_(
+            values=self.X_["Cum_Times_Cited"],
+            darkness=self.X_["Cum_Num_Documents"],
             label="Cum Times Cited by Year",
+            figsize=(self.width, self.height),
         )
 
-    def Avg_Times_Cited_by_Year(self, plot, cmap, figsize):
-        values = self.table_["Avg_Times_Cited"]
-        darkness = None
-        return self.plot(
-            values=values,
-            darkness=darkness,
-            plot=plot,
-            cmap=cmap,
-            figsize=figsize,
+    def avg_times_cited_by_year(self):
+        return self.plot_(
+            values=self.X_["Avg_Times_Cited"],
+            darkness=None,
             label="Avg Times Cited by Year",
+            figsize=(self.width, self.height),
         )
 
 
-import ipywidgets as widgets
-from ipywidgets import AppLayout, GridspecLayout, Layout
-from techminer.params import EXCLUDE_COLS
-import techminer.gui as gui
-from techminer.dashboard import DASH
-
-
-class DASHapp(DASH):
+class DASHapp(DASH, Model):
     def __init__(self, data):
+        """Dashboard app"""
 
-        super(DASH, self).__init__()
+        Model.__init__(self, data)
+        DASH.__init__(self)
 
-        self.data_ = data
-        self.app_title_ = "By Year Analysis"
-        self.menu_options_ = [
+        self.data = data
+        self.app_title = "By Year Analysis"
+        self.menu_options = [
             "Table",
             "Num Documents by Year",
             "Times Cited by Year",
@@ -147,11 +137,7 @@ class DASHapp(DASH):
             "Avg Times Cited by Year",
         ]
 
-        #  COLUMNS = sorted(
-        #      [column for column in data.columns if column not in EXCLUDE_COLS]
-        #  )
-
-        self.panel_ = [
+        self.panel_widgets = [
             gui.dropdown(
                 desc="Sort by:",
                 options=[
@@ -171,94 +157,27 @@ class DASHapp(DASH):
         ]
         super().create_grid()
 
-        #
-        self.obj_ = ByYear(data)
+    def interactive_output(self, **kwargs):
 
-    def gui(self, **kwargs):
+        super().interactive_output(**kwargs)
 
-        super().gui(**kwargs)
+        if self.menu == self.menu_options[0]:
 
-        self.output_.clear_output()
-        with self.output_:
-            print(self.menu)
-
-        if self.menu == self.menu_options_[0]:
-
-            self.panel_[0]["widget"].disabled = False
-            self.panel_[1]["widget"].disabled = False
-            self.panel_[2]["widget"].disabled = True
-            self.panel_[3]["widget"].disabled = True
-            self.panel_[4]["widget"].disabled = True
-            self.panel_[5]["widget"].disabled = True
+            self.panel_widgets[0]["widget"].disabled = False
+            self.panel_widgets[1]["widget"].disabled = False
+            self.panel_widgets[2]["widget"].disabled = True
+            self.panel_widgets[3]["widget"].disabled = True
+            self.panel_widgets[4]["widget"].disabled = True
+            self.panel_widgets[5]["widget"].disabled = True
 
         else:
 
-            self.panel_[0]["widget"].disabled = True
-            self.panel_[1]["widget"].disabled = True
-            self.panel_[2]["widget"].disabled = False
-            self.panel_[3]["widget"].disabled = False
-            self.panel_[4]["widget"].disabled = False
-            self.panel_[5]["widget"].disabled = False
-
-    def calculate(self, button):
-
-        with self.output_[self.tab_.selected_index]:
-            display("calculate in tab " + str(self.tab_.selected_index))
-
-    def update(self, button):
-
-        self.output_.clear_output()
-        with self.output_:
-
-            if self.menu_.value == self.menu_options_[0]:
-                display(
-                    self.obj_.table_view(sort_by=self.sort_by, ascending=self.ascending)
-                )
-
-            if self.menu_.value == self.menu_options_[1]:
-                display(
-                    self.obj_.Num_Documents_by_Year(
-                        plot=self.plot,
-                        cmap=self.cmap,
-                        figsize=(self.width, self.height),
-                    )
-                )
-
-            if self.menu_.value == self.menu_options_[2]:
-                display(
-                    self.obj_.Times_Cited_by_Year(
-                        plot=self.plot,
-                        cmap=self.cmap,
-                        figsize=(self.width, self.height),
-                    )
-                )
-
-            if self.menu_.value == self.menu_options_[3]:
-                display(
-                    self.obj_.Cum_Num_Documents_by_Year(
-                        plot=self.plot,
-                        cmap=self.cmap,
-                        figsize=(self.width, self.height),
-                    )
-                )
-
-            if self.menu_.value == self.menu_options_[4]:
-                display(
-                    self.obj_.Cum_Times_Cited_by_Year(
-                        plot=self.plot,
-                        cmap=self.cmap,
-                        figsize=(self.width, self.height),
-                    )
-                )
-
-            if self.menu_.value == self.menu_options_[5]:
-                display(
-                    self.obj_.Avg_Times_Cited_by_Year(
-                        plot=self.plot,
-                        cmap=self.cmap,
-                        figsize=(self.width, self.height),
-                    )
-                )
+            self.panel_widgets[0]["widget"].disabled = True
+            self.panel_widgets[1]["widget"].disabled = True
+            self.panel_widgets[2]["widget"].disabled = False
+            self.panel_widgets[3]["widget"].disabled = False
+            self.panel_widgets[4]["widget"].disabled = False
+            self.panel_widgets[5]["widget"].disabled = False
 
 
 ###############################################################################
