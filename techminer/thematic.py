@@ -19,57 +19,63 @@ from techminer.correspondence import CA
 import techminer.plots as plt
 
 from sklearn.cluster import KMeans
+from techminer.dashboard import DASH
 
-################################################################################################
+
+###############################################################################
 ##
-##  CALCULATIONS
+##  Model
 ##
-################################################################################################
+###############################################################################
 
 
-class Thematic_analysis:
-    def __init__(
-        self,
-        norm,
-        use_idf,
-        smooth_idf,
-        sublinear_tf,
-        n_clusters,
-        max_iter,
-        top_by,
-        top_n,
-    ):
+class Model:
+    def __init__(self, data, limit_to, exclude):
+        #
+        self.data = data
+        self.limit_to = limit_to
+        self.exclude = exclude
+        ##
+        self.ascending = None
+        self.sort_by = None
+        self.column = None
+        self.top_by = None
+        self.top_n = None
+        self.cmap = None
+        self.height = None
+        self.width = None
+        self.smooth_idf = None
+        self.use_idf = None
+        self.sublinear_tf = None
+        self.x_axis = None
+        self.y_axis = None
 
-        self.norm = norm
-        self.use_idf = use_idf
-        self.smooth_idf = smooth_idf
-        self.sublinear_tf = sublinear_tf
-        self.n_clusters = n_clusters
-        self.max_iter = max_iter
-        self.top_by = top_by
-        self.top_n = top_n
+        ##
 
-    def fit(self, data, column, limit_to=None, exclude=None):
+    def fit(self):
 
         ##
         ## Fuente:
         ##   https://tlab.it/en/allegati/help_en_online/mrepert.htm
         ##
-
         #
         # 1.-- Construye TF_matrix binaria
         #
-        TF_matrix_ = TF_matrix(data, column, scheme="binary")
+        TF_matrix_ = TF_matrix(self.data, self.column, scheme="binary")
         TF_matrix_ = cmn.limit_to_exclude(
-            data=TF_matrix_, axis=1, column=column, limit_to=limit_to, exclude=exclude,
+            data=TF_matrix_,
+            axis=1,
+            column=self.column,
+            limit_to=self.limit_to,
+            exclude=self.exclude,
         )
         TF_matrix_ = cmn.add_counters_to_axis(
-            X=TF_matrix_, axis=1, data=data, column=column
+            X=TF_matrix_, axis=1, data=self.data, column=self.column
         )
-        TF_matrix_ = cmn.sort_by_axis(
-            data=TF_matrix_, sort_by=self.top_by, ascending=False, axis=1
-        )
-        TF_matrix_ = TF_matrix_[TF_matrix_.columns[: self.top_n]]
+        #  TF_matrix_ = cmn.sort_by_axis(
+        #      data=TF_matrix_, sort_by=self.top_by, ascending=False, axis=1
+        #  )
+        #  TF_matrix_ = TF_matrix_[TF_matrix_.columns[: self.top_n]]
 
         #
         # 2.-- Construye TF-IDF y escala filas to longitud unitaria (norma euclidiana).
@@ -106,7 +112,33 @@ class Thematic_analysis:
         self.contingency_table_ = matrix.transpose()
 
         #
-        # 5.-- Nombres de los clusters.
+        # 5.-- Memberships
+        #
+        memberships = None
+        for cluster in self.contingency_table_.columns:
+            grp = self.contingency_table_[cluster]
+            grp = grp[grp > 0]
+            grp = grp.sort_values(ascending=False)
+            grp = grp.head(self.top_n)
+            index = [(cluster, w) for w in grp.index]
+            index = pd.MultiIndex.from_tuples(index, names=["Cluster", "Term"])
+            grp = pd.DataFrame(grp.values, columns=["Values"], index=index)
+            if memberships is None:
+                memberships = grp
+            else:
+                memberships = pd.concat([memberships, grp])
+        self.memberships_ = memberships
+
+        #
+        # 6.-- Top n for contingency table
+        #
+        self.contingency_table_ = cmn.sort_by_axis(
+            data=self.contingency_table_, sort_by=self.top_by, ascending=False, axis=0
+        )
+        self.contingency_table_ = self.contingency_table_.head(self.top_n)
+
+        #
+        # 7.-- Nombres de los clusters.
         #
         self.cluster_names_ = {}
         for c in self.contingency_table_:
@@ -114,13 +146,13 @@ class Thematic_analysis:
             self.cluster_names_[c] = m.index[0]
 
         #
-        # 6.-- Tamaño de los clusters.
+        # 8.-- Tamaño de los clusters.
         #         Cantidad de documentos
         #         Cantidad de citas
         #
-        W = data[[column, "Times_Cited"]]
+        W = self.data[[self.column, "Times_Cited"]]
         W = W.dropna()
-        W.pop(column)
+        W.pop(self.column)
         W["Num_Documents"] = 1
         W["*cluster*"] = labels
         W = W.groupby("*cluster*").sum()
@@ -128,26 +160,42 @@ class Thematic_analysis:
         self.times_cited_ = W["Times_Cited"].to_dict()
 
         #
-        # 7.-- Correspondence Analysis
+        # 9.-- Correspondence Analysis
         #
         ca = CA()
         ca.fit(X=self.contingency_table_)
         self.cluster_ppal_coordinates_ = ca.principal_coordinates_cols_
-        self.terms_ppal_coordinates_ = ca.principal_coordinates_rows_
+        self.term_ppal_coordinates_ = ca.principal_coordinates_rows_
 
-    def plot_clusters(self, x_axis, y_axis, cmap, figsize):
+    def contingency_table(self):
+        self.fit()
+        return self.contingency_table_
 
+    def memberships_table(self):
+        self.fit()
+        return self.memberships_
+
+    def cluster_ppal_coordinates(self):
+        self.fit()
+        return self.cluster_ppal_coordinates_
+
+    def term_ppal_coordinates(self):
+        self.fit()
+        return self.term_ppal_coordinates_
+
+    def clusters_plot(self):
+        self.fit()
         x = self.cluster_ppal_coordinates_[
-            self.cluster_ppal_coordinates_.columns[x_axis]
+            self.cluster_ppal_coordinates_.columns[self.x_axis]
         ]
         y = self.cluster_ppal_coordinates_[
-            self.cluster_ppal_coordinates_.columns[y_axis]
+            self.cluster_ppal_coordinates_.columns[self.y_axis]
         ]
 
         matplotlib.rc("font", size=11)
-        fig = pyplot.Figure(figsize=figsize)
+        fig = pyplot.Figure(figsize=(self.width, self.height))
         ax = fig.subplots()
-        cmap = pyplot.cm.get_cmap(cmap)
+        cmap = pyplot.cm.get_cmap(self.cmap)
 
         node_sizes = self.num_documents_.values()
         max_size = max(node_sizes)
@@ -197,19 +245,23 @@ class Thematic_analysis:
 
         return fig
 
-    def plot_terms(self, x_axis, y_axis, cmap, figsize):
-
-        x = self.terms_ppal_coordinates_[self.terms_ppal_coordinates_.columns[x_axis]]
-        y = self.terms_ppal_coordinates_[self.terms_ppal_coordinates_.columns[y_axis]]
+    def terms_plot(self):
+        self.fit()
+        x = self.term_ppal_coordinates_[
+            self.term_ppal_coordinates_.columns[self.x_axis]
+        ]
+        y = self.term_ppal_coordinates_[
+            self.term_ppal_coordinates_.columns[self.y_axis]
+        ]
 
         matplotlib.rc("font", size=11)
-        fig = pyplot.Figure(figsize=figsize)
+        fig = pyplot.Figure(figsize=(self.width, self.height))
         ax = fig.subplots()
-        cmap = pyplot.cm.get_cmap(cmap)
+        cmap = pyplot.cm.get_cmap(self.cmap)
 
-        node_sizes = cmn.counters_to_node_sizes(self.terms_ppal_coordinates_.index)
+        node_sizes = cmn.counters_to_node_sizes(self.term_ppal_coordinates_.index)
         node_colors = cmn.counters_to_node_colors(
-            self.terms_ppal_coordinates_.index, cmap
+            self.term_ppal_coordinates_.index, cmap
         )
 
         ax.scatter(
@@ -232,11 +284,11 @@ class Thematic_analysis:
 
         dict_pos = {
             key: (x_, y_)
-            for key, x_, y_ in zip(self.terms_ppal_coordinates_.index, x, y)
+            for key, x_, y_ in zip(self.term_ppal_coordinates_.index, x, y)
         }
         cmn.ax_text_node_labels(
             ax=ax,
-            labels=self.terms_ppal_coordinates_.index,
+            labels=self.term_ppal_coordinates_.index,
             dict_pos=dict_pos,
             node_sizes=node_sizes,
         )
@@ -250,64 +302,48 @@ class Thematic_analysis:
         return fig
 
 
-################################################################################################
+###############################################################################
 ##
-##  APP
+##  DASHBOARD
 ##
-################################################################################################
+###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, tab=None):
-    return gui.APP(
-        app_title="Thematic Analysis",
-        tab_titles=["Thematic Analysis"],
-        tab_widgets=[TABapp0(data, limit_to=limit_to, exclude=exclude).run(),],
-        tab=tab,
-    )
+COLUMNS = [
+    "Authors",
+    "Countries",
+    "Institutions",
+    "Author_Keywords",
+    "Index_Keywords",
+    "Abstract_words_CL",
+    "Abstract_words",
+    "Title_words_CL",
+    "Title_words",
+    "Affiliations",
+    "Author_Keywords_CL",
+    "Index_Keywords_CL",
+]
 
 
-################################################################################################
-##
-##  TAB app 0 --- Thematic Analysis
-##
-################################################################################################
+class DASHapp(DASH, Model):
+    def __init__(self, data, limit_to=None, exclude=None):
+        """Dashboard app"""
 
+        Model.__init__(self, data, limit_to, exclude)
+        DASH.__init__(self)
 
-class TABapp0(gui.TABapp_):
-    def __init__(self, data, limit_to, exclude):
-
-        super(TABapp0, self).__init__()
-
-        self.data_ = data
-        self.limit_to_ = limit_to
-        self.exclude_ = exclude
-
-        COLUMNS = [
-            "Authors",
-            "Countries",
-            "Institutions",
-            "Author_Keywords",
-            "Index_Keywords",
-            "Abstract_words_CL",
-            "Abstract_words",
-            "Title_words_CL",
-            "Title_words",
-            "Affiliations",
-            "Author_Keywords_CL",
-            "Index_Keywords_CL",
+        self.data = data
+        self.app_title = "Thematic Analysis"
+        self.menu_options = [
+            "Contingency table",
+            "Memberships table",
+            "Cluster ppal coordinates",
+            "Term ppal coordinates",
+            "Clusters plot",
+            "Terms plot",
         ]
 
-        self.panel_ = [
-            gui.dropdown(
-                desc="View:",
-                options=[
-                    "Contigency table",
-                    "Membership",
-                    "Cluster ppal coordinates",
-                    "Plot clusters",
-                    "Plot terms",
-                ],
-            ),
+        self.panel_widgets = [
             gui.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
@@ -327,88 +363,295 @@ class TABapp0(gui.TABapp_):
         ]
         super().create_grid()
 
-    def gui(self, **kwargs):
+    def interactive_output(self, **kwargs):
 
-        super().gui(**kwargs)
-        self.panel_[-4]["widget"].options = list(range(self.n_clusters))
-        self.panel_[-3]["widget"].options = list(range(self.n_clusters))
+        DASH.interactive_output(self, **kwargs)
+
+        self.panel_widgets[-4]["widget"].options = list(range(self.n_clusters))
+        self.panel_widgets[-3]["widget"].options = list(range(self.n_clusters))
 
         for i in [-1, -2, -3, -4, -5]:
-            self.panel_[i]["widget"].disabled = kwargs["view"] in [
-                "Contigency table",
-                "Membership",
+            self.panel_widgets[i]["widget"].disabled = self.menu in [
+                "Contingency table",
+                "Memberships table",
                 "Cluster ppal coordinates",
+                "Term ppal coordinates",
             ]
 
-        #  self.panel_[-1]["widget"].disabled = kwargs["view"] == "Contigency table"
 
-    def update(self, button):
+###############################################################################
+##
+##  EXTERNAL INTERFACE
+##
+###############################################################################
 
-        self.output_.clear_output()
-        with self.output_:
-            display(gui.processing())
 
-        thematic = Thematic_analysis(
-            norm=self.norm,
-            use_idf=self.use_idf,
-            smooth_idf=self.smooth_idf,
-            sublinear_tf=self.sublinear_tf,
-            n_clusters=self.n_clusters,
-            max_iter=self.max_iter,
-            top_by=self.top_by,
-            top_n=self.top_n,
-        )
+def app(data, limit_to=None, exclude=None):
+    return DASHapp(data=data, limit_to=limit_to, exclude=exclude).run()
 
-        thematic.fit(
-            data=self.data_,
-            column=self.column,
-            limit_to=self.limit_to_,
-            exclude=self.exclude_,
-        )
 
-        self.output_.clear_output()
-        with self.output_:
+# - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - #
 
-            if self.view == "Contigency table":
-                display(thematic.contingency_table_)
 
-            if self.view == "Membership":
-                print("=" * 55)
-                print("    {:>40s}   {:>6s}".format("Term", "TF*IDF"))
-                for k in thematic.cluster_names_.keys():
-                    print(("-" * 55))
-                    print(k, ": ", thematic.cluster_names_[k], sep="")
-                    print("")
-                    m = thematic.contingency_table_.sort_values(k, ascending=False)
-                    m = m[k]
-                    m = m[m > 0.0]
-                    for i in m.index:
-                        print("    {:>40s}   {:>6.2f}".format(i, m[i]))
-                    print("")
-                    print("")
+# ################################################################################################
+# ##
+# ##  CALCULATIONS
+# ##
+# ################################################################################################
 
-            if self.view == "Cluster ppal coordinates":
-                display(thematic.cluster_ppal_coordinates_)
 
-            if self.view == "Plot clusters":
-                display(
-                    thematic.plot_clusters(
-                        x_axis=int(self.x_axis),
-                        y_axis=int(self.y_axis),
-                        cmap=self.cmap,
-                        figsize=(self.width, self.height),
-                    )
-                )
+# class Thematic_analysis:
+#     def __init__(
+#         self,
+#         norm,
+#         use_idf,
+#         smooth_idf,
+#         sublinear_tf,
+#         n_clusters,
+#         max_iter,
+#         top_by,
+#         top_n,
+#     ):
 
-            if self.view == "Plot terms":
-                display(
-                    thematic.plot_terms(
-                        x_axis=int(self.x_axis),
-                        y_axis=int(self.y_axis),
-                        cmap=self.cmap,
-                        figsize=(self.width, self.height),
-                    )
-                )
+#         self.norm = norm
+#         self.use_idf = use_idf
+#         self.smooth_idf = smooth_idf
+#         self.sublinear_tf = sublinear_tf
+#         self.n_clusters = n_clusters
+#         self.max_iter = max_iter
+#         self.top_by = top_by
+#         self.top_n = top_n
+
+#     def fit(self, data, column, limit_to=None, exclude=None):
+
+#         ##
+#         ## Fuente:
+#         ##   https://tlab.it/en/allegati/help_en_online/mrepert.htm
+#         ##
+
+#         #
+#         # 1.-- Construye TF_matrix binaria
+#         #
+#         TF_matrix_ = TF_matrix(data, column, scheme="binary")
+#         TF_matrix_ = cmn.limit_to_exclude(
+#             data=TF_matrix_, axis=1, column=column, limit_to=limit_to, exclude=exclude,
+#         )
+#         TF_matrix_ = cmn.add_counters_to_axis(
+#             X=TF_matrix_, axis=1, data=data, column=column
+#         )
+#         TF_matrix_ = cmn.sort_by_axis(
+#             data=TF_matrix_, sort_by=self.top_by, ascending=False, axis=1
+#         )
+#         TF_matrix_ = TF_matrix_[TF_matrix_.columns[: self.top_n]]
+
+#         #
+#         # 2.-- Construye TF-IDF y escala filas to longitud unitaria (norma euclidiana).
+#         #      En sklearn: norm='l2'
+#         #
+#         #      En TLAB se usa tf * log( N / df).
+#         #      Para sklearn:
+#         #        * use_idf = False
+#         #        * sublinear_tf = False
+#         #
+#         TF_IDF_matrix_ = TFIDF_matrix(
+#             TF_matrix=TF_matrix_,
+#             norm=self.norm,
+#             use_idf=self.use_idf,
+#             smooth_idf=self.smooth_idf,
+#             sublinear_tf=self.sublinear_tf,
+#         )
+
+#         #
+#         # 3.-- Clustering de las filas de TF_IDF_matrix_.
+#         #      En TLAB se usa bisecting k-means.
+#         #      Se implementa sklearn.cluster.KMeans
+#         #
+#         kmeans = KMeans(n_clusters=self.n_clusters, max_iter=self.max_iter)
+#         labels = kmeans.fit_predict(X=TF_IDF_matrix_)
+
+#         #
+#         # 4.-- Matriz de contingencia.
+#         #
+#         matrix = TF_IDF_matrix_.copy()
+#         matrix["*cluster*"] = labels
+#         matrix = matrix.groupby(by="*cluster*").sum()
+#         matrix.index = ["Cluster {:>2d}".format(i) for i in range(self.n_clusters)]
+#         self.contingency_table_ = matrix.transpose()
+
+#         #
+#         # 5.-- Nombres de los clusters.
+#         #
+#         self.cluster_names_ = {}
+#         for c in self.contingency_table_:
+#             m = self.contingency_table_.sort_values(by=c, ascending=False)
+#             self.cluster_names_[c] = m.index[0]
+
+#         #
+#         # 6.-- Tamaño de los clusters.
+#         #         Cantidad de documentos
+#         #         Cantidad de citas
+#         #
+#         W = data[[column, "Times_Cited"]]
+#         W = W.dropna()
+#         W.pop(column)
+#         W["Num_Documents"] = 1
+#         W["*cluster*"] = labels
+#         W = W.groupby("*cluster*").sum()
+#         self.num_documents_ = W["Num_Documents"].to_dict()
+#         self.times_cited_ = W["Times_Cited"].to_dict()
+
+#         #
+#         # 7.-- Correspondence Analysis
+#         #
+#         ca = CA()
+#         ca.fit(X=self.contingency_table_)
+#         self.cluster_ppal_coordinates_ = ca.principal_coordinates_cols_
+#         self.terms_ppal_coordinates_ = ca.principal_coordinates_rows_
+
+
+################################################################################################
+##
+##  TAB app 0 --- Thematic Analysis
+##
+################################################################################################
+
+
+# class TABapp0(gui.TABapp_):
+#     def __init__(self, data, limit_to, exclude):
+
+#         super(TABapp0, self).__init__()
+
+#         self.data_ = data
+#         self.limit_to_ = limit_to
+#         self.exclude_ = exclude
+
+#         COLUMNS = [
+#             "Authors",
+#             "Countries",
+#             "Institutions",
+#             "Author_Keywords",
+#             "Index_Keywords",
+#             "Abstract_words_CL",
+#             "Abstract_words",
+#             "Title_words_CL",
+#             "Title_words",
+#             "Affiliations",
+#             "Author_Keywords_CL",
+#             "Index_Keywords_CL",
+#         ]
+
+#         self.panel_ = [
+#             gui.dropdown(
+#                 desc="View:",
+#                 options=[
+#                     "Contigency table",
+#                     "Membership",
+#                     "Cluster ppal coordinates",
+#                     "Plot clusters",
+#                     "Plot terms",
+#                 ],
+#             ),
+#             gui.dropdown(
+#                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+#             ),
+#             gui.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+#             gui.top_n(n=101,),
+#             gui.dropdown(desc="Norm:", options=[None, "L1", "L2"],),
+#             gui.dropdown(desc="Use IDF:", options=[True, False,],),
+#             gui.dropdown(desc="Smooth IDF:", options=[True, False,],),
+#             gui.dropdown(desc="Sublinear TF:", options=[True, False,],),
+#             gui.n_clusters(),
+#             gui.max_iter(),
+#             gui.cmap(),
+#             gui.x_axis(),
+#             gui.y_axis(),
+#             gui.fig_width(),
+#             gui.fig_height(),
+#         ]
+#         super().create_grid()
+
+#     def gui(self, **kwargs):
+
+#         super().gui(**kwargs)
+#         self.panel_[-4]["widget"].options = list(range(self.n_clusters))
+#         self.panel_[-3]["widget"].options = list(range(self.n_clusters))
+
+#         for i in [-1, -2, -3, -4, -5]:
+#             self.panel_[i]["widget"].disabled = kwargs["view"] in [
+#                 "Contigency table",
+#                 "Membership",
+#                 "Cluster ppal coordinates",
+#             ]
+
+#         #  self.panel_[-1]["widget"].disabled = kwargs["view"] == "Contigency table"
+
+#     def update(self, button):
+
+#         self.output_.clear_output()
+#         with self.output_:
+#             display(gui.processing())
+
+#         thematic = Thematic_analysis(
+#             norm=self.norm,
+#             use_idf=self.use_idf,
+#             smooth_idf=self.smooth_idf,
+#             sublinear_tf=self.sublinear_tf,
+#             n_clusters=self.n_clusters,
+#             max_iter=self.max_iter,
+#             top_by=self.top_by,
+#             top_n=self.top_n,
+#         )
+
+#         thematic.fit(
+#             data=self.data_,
+#             column=self.column,
+#             limit_to=self.limit_to_,
+#             exclude=self.exclude_,
+#         )
+
+#         self.output_.clear_output()
+#         with self.output_:
+
+#             if self.view == "Contigency table":
+#                 display(thematic.contingency_table_)
+
+#             if self.view == "Membership":
+#                 print("=" * 55)
+#                 print("    {:>40s}   {:>6s}".format("Term", "TF*IDF"))
+#                 for k in thematic.cluster_names_.keys():
+#                     print(("-" * 55))
+#                     print(k, ": ", thematic.cluster_names_[k], sep="")
+#                     print("")
+#                     m = thematic.contingency_table_.sort_values(k, ascending=False)
+#                     m = m[k]
+#                     m = m[m > 0.0]
+#                     for i in m.index:
+#                         print("    {:>40s}   {:>6.2f}".format(i, m[i]))
+#                     print("")
+#                     print("")
+
+#             if self.view == "Cluster ppal coordinates":
+#                 display(thematic.cluster_ppal_coordinates_)
+
+#             if self.view == "Plot clusters":
+#                 display(
+#                     thematic.plot_clusters(
+#                         x_axis=int(self.x_axis),
+#                         y_axis=int(self.y_axis),
+#                         cmap=self.cmap,
+#                         figsize=(self.width, self.height),
+#                     )
+#                 )
+
+#             if self.view == "Plot terms":
+#                 display(
+#                     thematic.plot_terms(
+#                         x_axis=int(self.x_axis),
+#                         y_axis=int(self.y_axis),
+#                         cmap=self.cmap,
+#                         figsize=(self.width, self.height),
+#                     )
+#                 )
 
 
 ################################################################################################
