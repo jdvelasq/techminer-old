@@ -91,7 +91,7 @@ def max_iter():
 
 def nx_iterations():
     return {
-        "arg": "nx_max_iter",
+        "arg": "nx_iterations",
         "desc": "nx iterations:",
         "widget": widgets.Dropdown(
             options=list(range(5, 101, 1)), layout=Layout(width="55%"),
