@@ -14,47 +14,61 @@ from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
 from matplotlib import colors
 from sklearn.decomposition import PCA
-from document_term import TF_matrix
-from explode import __explode
-from keywords import Keywords
-from plots import COLORMAPS
-import common as cmn
-import gui as gui
+from techminer.document_term import TF_matrix
+from techminer.explode import __explode
+from techminer.keywords import Keywords
+from techminer.plots import COLORMAPS
+import techminer.common as cmn
+import techminer.gui as gui
 
 
 from matplotlib.lines import Line2D
-from dashboard import DASH
+from techminer.dashboard import DASH
 
-###################################################################################################
+###############################################################################
 ##
-##  CALCULATIONS
+##  MODEL
 ##
-###################################################################################################
+###############################################################################
 
 
-class FactorAnalysis:
+class Model:
     def __init__(self, data, limit_to, exclude):
-        self._data = data
-        self._limit_to = limit_to
-        self._exclude = exclude
-
-    def calculate(self, column, n_components, random_state):
         #
-        X = self._data.copy()
+        self.data = data
+        self.limit_to = limit_to
+        self.exclude = exclude
+        #
+        self.ascending = None
+        self.cmap = None
+        self.column = None
+        self.height = None
+        self.iterations = None
+        self.layout = None
+        self.n_components = None
+        self.random_state = None
+        self.sort_by = None
+        self.top_by = None
+        self.top_n = None
+        self.width = None
+
+    def fit(self):
+        #
+        X = self.data.copy()
 
         #
         # 1.-- Term-frequency matrix
         #
-        TF_matrix_ = TF_matrix(X, column)
+        TF_matrix_ = TF_matrix(X, self.column)
 
         #
         # 2.-- PCA (VantagePoint pag 170)
         #
-        pca = PCA(n_components=n_components, random_state=random_state)
+        pca = PCA(n_components=self.n_components, random_state=int(self.random_state))
         R = np.transpose(pca.fit(X=TF_matrix_.values).components_)
         R = pd.DataFrame(
             R,
-            columns=["F" + str(i) for i in range(n_components)],
+            columns=["F" + str(i) for i in range(self.n_components)],
             index=TF_matrix_.columns,
         )
 
@@ -64,11 +78,11 @@ class FactorAnalysis:
         R = cmn.limit_to_exclude(
             data=R,
             axis=0,
-            column=column,
-            limit_to=self._limit_to,
-            exclude=self._exclude,
+            column=self.column,
+            limit_to=self.limit_to,
+            exclude=self.exclude,
         )
-        R = cmn.add_counters_to_axis(X=R, axis=0, data=X, column=column)
+        R = cmn.add_counters_to_axis(X=R, axis=0, data=X, column=self.column)
 
         #
         # 4.-- Top 50 values
@@ -95,27 +109,71 @@ class FactorAnalysis:
         self.variances_["Explained ratio"] = pca.explained_variance_ratio_
         self.variances_["Singular values"] = pca.singular_values_
 
-    def map(self, top_by, top_n, cmap, layout, iterations, figsize):
+    def sort(self):
 
+        R = self.factors_.copy()
+
+        if self.top_by == "Values":
+
+            m = R.copy()
+            m = m.applymap(abs)
+            m = m.max(axis=1)
+            m = m.sort_values(ascending=False)
+            m = m.head(self.top_n)
+            m = m.index
+            R = R.loc[m, :]
+
+        else:
+
+            R = cmn.sort_by_axis(data=R, sort_by=self.top_by, ascending=False, axis=0)
+            R = R.head(self.top_n)
+
+        if self.sort_by in ["Alphabetic", "Num Documents", "Times Cited"]:
+            R = cmn.sort_by_axis(
+                data=R, sort_by=self.sort_by, ascending=self.ascending, axis=0
+            )
+
+        if self.sort_by in ["F{}".format(i) for i in range(len(R.columns))]:
+            R = R.sort_values(self.sort_by, ascending=self.ascending)
+
+        if len(R) == 0:
+            return None
+
+        return R
+
+    def factors(self):
+        self.fit()
+        output = self.sort()
+        if self.cmap is None:
+            return output
+        else:
+            return output.style.background_gradient(cmap=self.cmap)
+
+    def variances(self):
+        self.fit()
+        return self.variances_
+
+    def map(self):
+        self.fit()
         X = self.factors_.copy()
 
-        if top_by == "Values":
+        if self.top_by == "Values":
 
             m = X.copy()
             m = m.applymap(abs)
             m = m.max(axis=1)
             m = m.sort_values(ascending=False)
-            m = m.head(top_n)
+            m = m.head(self.top_n)
             m = m.index
             X = X.loc[m, :]
 
         else:
 
-            X = cmn.sort_by_axis(data=X, sort_by=top_by, ascending=False, axis=0)
-            X = X.head(top_n)
+            X = cmn.sort_by_axis(data=X, sort_by=self.top_by, ascending=False, axis=0)
+            X = X.head(self.top_n)
 
         ## Networkx
-        fig = pyplot.Figure(figsize=figsize)
+        fig = pyplot.Figure(figsize=(self.width, self.height))
         ax = fig.subplots()
         G = nx.Graph(ax=ax)
         G.clear()
@@ -124,15 +182,15 @@ class FactorAnalysis:
         terms = X.index.tolist()
         node_sizes = cmn.counters_to_node_sizes(x=terms)
         node_colors = cmn.counters_to_node_colors(
-            x=terms, cmap=pyplot.cm.get_cmap(cmap)
+            x=terms, cmap=pyplot.cm.get_cmap(self.cmap)
         )
 
         ## Add nodes
         G.add_nodes_from(terms)
 
         ## node positions
-        if layout == "Spring":
-            pos = nx.spring_layout(G, iterations=iterations)
+        if self.layout == "Spring":
+            pos = nx.spring_layout(G, iterations=self.iterations)
         else:
             pos = {
                 "Circular": nx.circular_layout,
@@ -142,7 +200,7 @@ class FactorAnalysis:
                 "Spectral": nx.spectral_layout,
                 "Spring": nx.spring_layout,
                 "Shell": nx.shell_layout,
-            }[layout](G)
+            }[self.layout](G)
 
         d = {
             0: {"width": 4, "style": "solid", "edge_color": "k"},
@@ -251,93 +309,12 @@ class FactorAnalysis:
 
         return fig
 
-    def sort(self, top_by, top_n, sort_by, ascending):
-
-        R = self.factors_.copy()
-
-        if top_by == "Values":
-
-            m = R.copy()
-            m = m.applymap(abs)
-            m = m.max(axis=1)
-            m = m.sort_values(ascending=False)
-            m = m.head(top_n)
-            m = m.index
-            R = R.loc[m, :]
-
-        else:
-
-            R = cmn.sort_by_axis(data=R, sort_by=top_by, ascending=False, axis=0)
-            R = R.head(top_n)
-
-        if sort_by in ["Alphabetic", "Num Documents", "Times Cited"]:
-            R = cmn.sort_by_axis(data=R, sort_by=sort_by, ascending=ascending, axis=0)
-
-        if sort_by in ["F{}".format(i) for i in range(len(R.columns))]:
-            R = R.sort_values(sort_by, ascending=ascending)
-
-        if len(R) == 0:
-            return None
-
-        return R
-
-    def update(
-        self,
-        output,
-        top_by,
-        top_n,
-        sort_by,
-        ascending,
-        cmap,
-        figsize,
-        layout,
-        iterations,
-    ):
-
-        if output == "Factors":
-            return self.sort(
-                top_by=top_by, top_n=top_n, sort_by=sort_by, ascending=ascending
-            )
-
-        if output == "Variances":
-            return self.variances_
-
-        if output == "Map":
-            return self.map(
-                top_by=top_by,
-                top_n=top_n,
-                cmap=cmap,
-                layout=layout,
-                iterations=iterations,
-                figsize=figsize,
-            )
-
 
 ###############################################################################
 ##
-##  EXTERNAL INTERFACE
+##  DASHBOARD
 ##
 ###############################################################################
-
-
-def app(data, limit_to=None, exclude=None):
-    return DASHapp(data=data, limit_to=limit_to, exclude=exclude).run()
-
-
-# def app(data, limit_to=None, exclude=None, tab=None):
-#     return gui.APP(
-#         app_title="Factor Analysis",
-#         tab_titles=["Factor Analysis"],
-#         tab_widgets=[TABapp0(data, limit_to=limit_to, exclude=exclude).run(),],
-#         tab=tab,
-#     )
-
-
-###################################################################################################
-##
-##  DASHBOARD --- Factor Analysis
-##
-###################################################################################################
 
 COLUMNS = [
     "Authors",
@@ -355,27 +332,23 @@ COLUMNS = [
 ]
 
 
-class DASHapp(DASH):
-    def __init__(self, data, limit_to, exclude):
-        #
-        super(DASH, self).__init__()
-        #
-        self._obj = FactorAnalysis(data=data, limit_to=limit_to, exclude=exclude)
-        #
-        self.data_ = data
-        self.limit_to_ = limit_to
-        self.exclude_ = exclude
-        self.app_title_ = "Factor Analysis"
-        self.calculate_menu_options_ = None
-        self.calculate_panel_ = [
+class DASHapp(DASH, Model):
+    def __init__(self, data, limit_to=None, exclude=None):
+        """Dashboard app"""
+
+        Model.__init__(self, data, limit_to, exclude)
+        DASH.__init__(self)
+
+        self.data = data
+        self.app_title = "Factor Analysis"
+        self.menu_options = ["Factors", "Variances", "Map"]
+
+        self.panel_widgets = [
             gui.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
             gui.n_components(),
             gui.random_state(),
-        ]
-        self.update_menu_options_ = ["Factors", "Variances", "Map"]
-        self.update_panel_ = [
             gui.dropdown(
                 desc="Top by:", options=["Values", "Num Documents", "Times Cited"],
             ),
@@ -391,88 +364,43 @@ class DASHapp(DASH):
             gui.fig_width(),
             gui.fig_height(),
         ]
-        #
-        self.calculate_has_run = False
-        #
         super().create_grid()
-        #
 
-    def run(self):
-        return self.grid_
+    def interactive_output(self, **kwargs):
 
-    def gui(self, **kwargs):
-        super().gui(**kwargs)
+        DASH.interactive_output(self, **kwargs)
 
-        self.update_panel_[2]["widget"].disabled = (
-            not self.update_menu_.value == "Factors"
+        self.panel_widgets[5]["widget"].disabled = not self.menu == "Factors"
+        self.panel_widgets[6]["widget"].disabled = not self.menu == "Factors"
+        self.panel_widgets[7]["widget"].disabled = (
+            True if self.menu == "Variances" else False
         )
-        self.update_panel_[3]["widget"].disabled = (
-            not self.update_menu_.value == "Factors"
+        self.panel_widgets[8]["widget"].disabled = True if self.menu != "Map" else False
+        self.panel_widgets[9]["widget"].disabled = True if self.menu != "Map" else False
+        self.panel_widgets[10]["widget"].disabled = (
+            True if self.menu != "Map" else False
         )
-        self.update_panel_[4]["widget"].disabled = (
-            True if self.update_menu_.value == "Variances" else False
+        self.panel_widgets[11]["widget"].disabled = (
+            True if self.menu != "Map" else False
         )
-        self.update_panel_[5]["widget"].disabled = (
-            True if self.update_menu_.value != "Map" else False
-        )
-        self.update_panel_[6]["widget"].disabled = (
-            True if self.update_menu_.value != "Map" else False
-        )
-        self.update_panel_[7]["widget"].disabled = (
-            True if self.update_menu_.value != "Map" else False
-        )
-        self.update_panel_[8]["widget"].disabled = (
-            True if self.update_menu_.value != "Map" else False
+        self.panel_widgets[9]["widget"].disabled = (
+            True if self.panel_widgets[8]["widget"].value != "Spring" else False
         )
 
-        self.update_panel_[2]["widget"].options = [
+        self.panel_widgets[5]["widget"].options = [
             "Alphabetic",
             "Num Documents",
             "Times Cited",
         ] + ["F{}".format(i) for i in range(self.n_components)]
 
-    def calculate(self, button):
 
-        self.calculate_has_run = True
+###############################################################################
+##
+##  EXTERNAL INTERFACE
+##
+###############################################################################
 
-        self.output_.clear_output()
-        with self.output_:
-            display(gui.processing())
-        self._obj.calculate(
-            column=self.column,
-            n_components=self.n_components,
-            random_state=int(self.random_state),
-        )
-        self.update(button=None)
 
-    def update(self, button):
+def app(data, limit_to=None, exclude=None):
+    return DASHapp(data=data, limit_to=limit_to, exclude=exclude).run()
 
-        if self.calculate_has_run is False:
-            self.calculate(button=None)
-            return
-
-        self.output_.clear_output()
-        with self.output_:
-            display(gui.processing())
-
-        output = self._obj.update(
-            output=self.update_menu,
-            top_by=self.top_by,
-            top_n=self.top_n,
-            sort_by=self.sort_by,
-            ascending=self.ascending,
-            cmap=self.cmap,
-            figsize=(self.width, self.height),
-            layout=self.layout,
-            iterations=self.nx_max_iter,
-        )
-
-        if self.update_menu == "Factors":
-            cmap = pyplot.cm.get_cmap(self.cmap)
-            output = output.style.format("{:.3f}").applymap(
-                lambda w: "background-color: {}".format(colors.rgb2hex(cmap(abs(w))))
-            )
-
-        self.output_.clear_output()
-        with self.output_:
-            display(output)

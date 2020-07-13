@@ -24,6 +24,7 @@ class DASH:
             setattr(self, key, kwargs[key])
 
     def calculate(self, button):
+
         menu = self.menu.replace(" ", "_").lower()
         self.output.clear_output()
         with self.output:

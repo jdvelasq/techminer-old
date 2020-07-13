@@ -24,7 +24,7 @@ from techminer.dashboard import DASH
 
 ###############################################################################
 ##
-##  Model
+##  MODEL
 ##
 ###############################################################################
 
@@ -37,16 +37,17 @@ class Model:
         self.exclude = exclude
         ##
         self.ascending = None
-        self.sort_by = None
+        self.cmap = None
         self.column = None
+        self.height = None
+        self.n_clusters = None
+        self.smooth_idf = None
+        self.sort_by = None
+        self.sublinear_tf = None
         self.top_by = None
         self.top_n = None
-        self.cmap = None
-        self.height = None
-        self.width = None
-        self.smooth_idf = None
         self.use_idf = None
-        self.sublinear_tf = None
+        self.width = None
         self.x_axis = None
         self.y_axis = None
 
