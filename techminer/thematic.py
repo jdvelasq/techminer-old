@@ -40,7 +40,9 @@ class Model:
         self.cmap = None
         self.column = None
         self.height = None
+        self.max_iter = None
         self.n_clusters = None
+        self.norm = None
         self.smooth_idf = None
         self.sort_by = None
         self.sublinear_tf = None
