@@ -25,7 +25,7 @@ class DASH:
 
     def calculate(self, button):
 
-        menu = self.menu.replace(" ", "_").lower()
+        menu = self.menu.replace(" ", "_").replace("-", "_").lower()
         self.output.clear_output()
         with self.output:
             display(getattr(self, menu)())
@@ -77,7 +77,7 @@ class DASH:
         ## Calculate button
         if self.menu_options is not None:
             calculate_button = widgets.Button(
-                description="Calculate",
+                description="Apply",
                 layout=Layout(width="98%", border="2px solid gray"),
             )
             calculate_button.on_click(self.calculate)

@@ -28,7 +28,7 @@ from techminer.dashboard import DASH
 ###############################################################################
 
 
-def _normalize(X, normalization=None):
+def network_normalization(X, normalization=None):
     """
     """
     X = X.copy()
@@ -67,7 +67,6 @@ def co_occurrence_matrix(
     column,
     top_by,
     top_n,
-    normalization,
     sort_c_axis_by,
     sort_r_axis_by,
     c_axis_ascending,
@@ -92,7 +91,6 @@ def co_occurrence_matrix(
 
     matrix = np.matmul(A.transpose().values, A.values)
     matrix = pd.DataFrame(matrix, columns=A.columns, index=A.columns)
-    matrix = _normalize(matrix, normalization)
 
     matrix = cmn.sort_by_axis(
         data=matrix, sort_by=sort_r_axis_by, ascending=r_axis_ascending, axis=0,
@@ -261,7 +259,6 @@ class Model:
             column=self.column,
             top_by=self.top_by,
             top_n=self.top_n,
-            normalization=self.normalization,
             sort_c_axis_by=self.sort_c_axis_by,
             sort_r_axis_by=self.sort_r_axis_by,
             c_axis_ascending=self.c_axis_ascending,
@@ -269,6 +266,8 @@ class Model:
             limit_to=self.limit_to,
             exclude=self.exclude,
         )
+
+        self.X_ = network_normalization(X=self.X_, normalization=self.normalization)
 
     def matrix(self):
         self.fit()

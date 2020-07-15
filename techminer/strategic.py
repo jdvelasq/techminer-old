@@ -156,62 +156,7 @@ class Strategic_map:
         self.memberships_ = memberships
 
     def plot(self, cmap="Greys", figsize=(6, 6)):
-
-        matplotlib.rc("font", size=11)
-        cmap = pyplot.cm.get_cmap(cmap)
-        fig = pyplot.Figure(figsize=figsize)
-        ax = fig.subplots()
-
-        node_sizes = cmn.counters_to_node_sizes(self.map_.name)
-        node_colors = cmn.counters_to_node_colors(
-            self.map_.name, cmap=pyplot.cm.get_cmap(cmap)
-        )
-
-        ax.scatter(
-            self.map_.centrality,
-            self.map_.density,
-            s=node_sizes,
-            linewidths=1,
-            edgecolors="k",
-            c=node_colors,
-        )
-
-        cmn.ax_expand_limits(ax)
-        cmn.ax_text_node_labels(
-            ax,
-            labels=self.map_.name,
-            dict_pos={
-                key: (c, d)
-                for key, c, d in zip(
-                    self.map_.name, self.map_.centrality, self.map_.density
-                )
-            },
-            node_sizes=node_sizes,
-        )
-
-        ax.axhline(
-            y=self.map_.density.median(),
-            color="gray",
-            linestyle="--",
-            linewidth=1,
-            zorder=-1,
-        )
-        ax.axvline(
-            x=self.map_.centrality.median(),
-            color="gray",
-            linestyle="--",
-            linewidth=1,
-            zorder=-1,
-        )
-
-        #  ax.set_aspect("equal")
-        ax.axis("off")
-
-        cmn.set_ax_splines_invisible(ax)
-
-        fig.set_tight_layout(True)
-
-        return fig
+        pass
 
 
 ###################################################################################################

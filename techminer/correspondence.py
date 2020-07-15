@@ -67,7 +67,7 @@ class CA:
         #
         # 9.-- explained variance
         #
-        explained_variance = self.eigenvalues_ / sum(self.eigenvalues_)
+        self.explained_variance_ = self.eigenvalues_ / sum(self.eigenvalues_)
 
         #
         # 10.-- standard coordinates:

@@ -7,6 +7,17 @@ import ipywidgets as widgets
 #
 # Common controls GUI definition
 #
+def affinity():
+    return {
+        "arg": "affinity",
+        "desc": "Affinity:",
+        "widget": widgets.Dropdown(
+            options=["euclidean", "l1", "l2", "manhattan", "cossine"],
+            layout=Layout(width="55%"),
+        ),
+    }
+
+
 def ascending():
     return {
         "arg": "ascending",
