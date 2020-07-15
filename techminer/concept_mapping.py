@@ -52,7 +52,6 @@ def cluster_plot(X, method, n_components, x_axis, y_axis, figsize):
         ca = CA()
         ca.fit(1 - X)
         X_transformed = ca.principal_coordinates_cols_
-        print(X_transformed)
         x_axis = X_transformed.loc[:, X_transformed.columns[x_axis]]
         y_axis = X_transformed.loc[:, X_transformed.columns[y_axis]]
 
