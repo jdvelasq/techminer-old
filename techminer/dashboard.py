@@ -25,7 +25,7 @@ class DASH:
 
     def calculate(self, button):
 
-        menu = self.menu.replace(" ", "_").replace("-", "_").lower()
+        menu = self.menu.replace(" ", "_").replace("-", "_").replace("/", "_").lower()
         self.output.clear_output()
         with self.output:
             display(getattr(self, menu)())

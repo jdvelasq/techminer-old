@@ -13,7 +13,7 @@ import techminer.plots as plt
 from techminer.explode import __explode as _explode
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
-
+import techminer.common as cmn
 import techminer.gui as gui
 from techminer.dashboard import DASH
 
@@ -31,7 +31,7 @@ class Model:
         self.limit_to = limit_to
         self.exclude = exclude
 
-    def apply(self):
+    def fit(self):
         x = self.data.copy()
         last_year = x.Year.max()
 
@@ -228,7 +228,7 @@ class Model:
                 ["Num_Documents", "Times_Cited"], ascending=False, inplace=True,
             )
 
-        if top_n is not None:
+        if self.top_n is not None:
             result = result.head(self.top_n)
 
         #
@@ -261,9 +261,39 @@ class Model:
                 6: ["M_index", "G_index", "Times_Cited", "Num_Documents"],
                 7: ["G_index", "H_index", "Times_Cited", "Num_Documents"],
             }[sort_by]
-            result = result.sort_values(by=sort_by, ascending=ascending)
+            result = result.sort_values(by=sort_by, ascending=self.ascending)
 
         self.X_ = result
+
+    def terms(self):
+        self.fit()
+        selected_columns = [
+            "Num_Documents",
+            "Times_Cited",
+            "Times_Cited_per_Year",
+            "Avg_Times_Cited",
+        ]
+        if self.column in [
+            "Authors",
+            "Countries",
+            "Country_1st_Author",
+            "Institutions",
+            "Institution_1st_Author",
+            "Abb_Source_Title",
+        ]:
+            selected_columns += ["H_index", "G_index", "M_index"]
+
+        if self.column in ["Authors", "Countries", "Institutions"]:
+            selected_columns += [
+                "Frac_Num_Documents",
+                "SD",
+                "MD",
+                "SMR",
+            ]
+
+        result = self.X_[selected_columns]
+
+        return result
 
     def core_source_titles(self):
         """Compute source title statistics """
@@ -400,6 +430,84 @@ class Model:
         data = data.reset_index(drop=True)
         return data
 
+    def worldmap(self):
+        x = self.data.copy()
+        x["Num_Documents"] = 1
+        x = _explode(
+            x[[self.column, "Num_Documents", "Times_Cited", "ID",]], self.column,
+        )
+        result = x.groupby(self.column, as_index=True).agg(
+            {"Num_Documents": np.sum, "Times_Cited": np.sum,}
+        )
+        top_by = self.top_by.replace(" ", "_")
+        return plt.worldmap(
+            x=result[top_by], figsize=(self.width, self.height), cmap=self.cmap,
+        )
+
+    def single_multiple_publication(self):
+        x = self.data.copy()
+        x["SD"] = x[self.column].map(
+            lambda w: 1 if isinstance(w, str) and len(w.split(";")) == 1 else 0
+        )
+        x["MD"] = x[self.column].map(
+            lambda w: 1 if isinstance(w, str) and len(w.split(";")) > 1 else 0
+        )
+        x = _explode(x[[self.column, "SD", "MD", "ID",]], self.column,)
+        result = x.groupby(self.column, as_index=False).agg(
+            {"SD": np.sum, "MD": np.sum,}
+        )
+        result["SMR"] = [
+            round(MD / max(SD, 1), 2) for SD, MD in zip(result.SD, result.MD)
+        ]
+        result = result.set_index(self.column)
+
+        ## limit to / exclude options
+        result = cmn.limit_to_exclude(
+            data=result,
+            axis=0,
+            column=self.column,
+            limit_to=self.limit_to,
+            exclude=self.exclude,
+        )
+
+        ## counters in axis names
+        result = cmn.add_counters_to_axis(
+            X=result, axis=0, data=self.data, column=self.column
+        )
+
+        ## Top by / Top N
+        result = cmn.sort_by_axis(
+            data=result, sort_by=self.top_by, ascending=False, axis=0
+        )
+        result = result.head(self.top_n)
+
+        ## Sort by
+        if self.sort_by in result.columns:
+            result = result.sort_values(self.sort_by, ascending=self.ascending)
+        else:
+            result = cmn.sort_by_axis(
+                data=result, sort_by=self.sort_by, ascending=self.ascending, axis=0
+            )
+
+        if self.view == "Table":
+            return result
+
+        if self.view == "Bar plot":
+            return plt.stacked_bar(
+                X=result[["SD", "MD"]],
+                cmap=self.cmap,
+                ylabel="Num Documents",
+                figsize=(self.width, self.height),
+            )
+
+        if self.view == "Horizontal bar plot":
+            return plt.stacked_barh(
+                X=result[["SD", "MD"]],
+                cmap=self.cmap,
+                xlabel="Num Documents",
+                figsize=(self.width, self.height),
+            )
+
 
 ###############################################################################
 ##
@@ -415,22 +523,138 @@ class DASHapp(DASH, Model):
         Model.__init__(self, data, limit_to, exclude)
         DASH.__init__(self)
 
+        COLUMNS = sorted(
+            [column for column in data.columns if column not in EXCLUDE_COLS]
+        )
+
         self.data = data
         self.app_title = "Terms Analysis"
         self.menu_options = [
             "Terms",
+            "Single/Multiple publication",
+            "Worldmap",
             "Core authors",
             "Core source titles",
             "Top documents",
         ]
         self.panel_widgets = [
-            ###
+            gui.dropdown(
+                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            gui.dropdown(
+                desc="View:",
+                options=[
+                    "Table",
+                    "Bar plot",
+                    "Horizontal bar plot",
+                    "Pie plot",
+                    "Wordcloud",
+                    "Worldmap",
+                    "Treemap",
+                    "S/D Ratio (bar)",
+                    "S/D Ratio (barh)",
+                ],
+            ),
+            gui.dropdown(
+                desc="Top by:",
+                options=[
+                    "Num Documents",
+                    "Times Cited",
+                    "Frac Num Documents",
+                    "Times Cited per Year",
+                    "Avg Times Cited",
+                    "H index",
+                    "M index",
+                    "G index",
+                ],
+            ),
+            gui.top_n(),
+            gui.dropdown(
+                desc="Sort by:",
+                options=[
+                    "Num Documents",
+                    "Frac Num Documents",
+                    "Times Cited",
+                    "Times Cited per Year",
+                    "Avg Times Cited",
+                    "H index",
+                    "M index",
+                    "G index",
+                    "*Index*",
+                ],
+            ),
+            gui.ascending(),
+            gui.cmap(),
+            gui.fig_width(),
+            gui.fig_height(),
         ]
         super().create_grid()
 
     def interactive_output(self, **kwargs):
 
         DASH.interactive_output(self, **kwargs)
+
+        if self.menu == "Single/Multiple publication":
+            self.panel_widgets[0]["widget"].options = [
+                "Authors",
+                "Institutions",
+                "Institution_1st_Author",
+                "Countries",
+                "Country_1st_Author",
+                "Institutions",
+                "Institution_1st_Author",
+            ]
+            self.panel_widgets[1]["widget"].options = [
+                "Table",
+                "Bar plot",
+                "Horizontal bar plot",
+            ]
+            self.panel_widgets[2]["widget"].options = [
+                "Num Documents",
+                "Times Cited",
+            ]
+            self.panel_widgets[4]["widget"].options = [
+                "Alphabetic",
+                "Num Documents",
+                "Times Cited",
+                "SD",
+                "MD",
+                "SMR",
+            ]
+            for i, _ in enumerate(self.panel_widgets):
+                self.panel_widgets[i]["widget"].disabled = False
+
+            if self.panel_widgets[1]["widget"].value == "Table":
+                self.panel_widgets[-3]["widget"].disabled = True
+                self.panel_widgets[-2]["widget"].disabled = True
+                self.panel_widgets[-1]["widget"].disabled = True
+            else:
+                self.panel_widgets[-3]["widget"].disabled = False
+                self.panel_widgets[-2]["widget"].disabled = False
+                self.panel_widgets[-1]["widget"].disabled = False
+
+        if self.menu == "Worldmap":
+            self.panel_widgets[0]["widget"].options = [
+                "Countries",
+                "Country_1st_Author",
+            ]
+            self.panel_widgets[2]["widget"].options = [
+                "Num Documents",
+                "Times Cited",
+            ]
+            self.panel_widgets[0]["widget"].disabled = False
+            self.panel_widgets[1]["widget"].disabled = True
+            self.panel_widgets[2]["widget"].disabled = False
+            self.panel_widgets[3]["widget"].disabled = True
+            self.panel_widgets[4]["widget"].disabled = True
+            self.panel_widgets[5]["widget"].disabled = True
+            self.panel_widgets[6]["widget"].disabled = False
+            self.panel_widgets[7]["widget"].disabled = False
+            self.panel_widgets[8]["widget"].disabled = False
+
+        if self.menu in ["Core authors", "Core source titles", "Top documents"]:
+            for i, _ in enumerate(self.panel_widgets):
+                self.panel_widgets[i]["widget"].disabled = True
 
 
 ###############################################################################
