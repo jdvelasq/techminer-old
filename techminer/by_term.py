@@ -1,8 +1,6 @@
 """
 Analysis by Term
-==================================================================================================
-
-
+==========================================================================
 
 """
 import ipywidgets as widgets
@@ -17,6 +15,80 @@ from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
 
 import techminer.gui as gui
+from techminer.dashboard import DASH
+
+###############################################################################
+##
+##  MODEL
+##
+###############################################################################
+
+
+class Model:
+    def __init__(self, data, limit_to, exclude):
+        #
+        self.data = data
+        self.limit_to = limit_to
+        self.exclude = exclude
+
+    def top_documents(self):
+        """Returns the top 50 documents by Times Cited."""
+        data = self.data
+        data = data.sort_values(["Times_Cited", "Year"], ascending=[False, True])
+        data = data.head(50)
+        data["Times_Cited"] = data.Times_Cited.map(lambda w: int(w))
+        data = data.reset_index(drop=True)
+        data = data.sort_values(["Times_Cited", "Title"], ascending=[False, True])
+        data = data[["Authors", "Year", "Title", "Source_title", "Times_Cited"]]
+        data["Times_Cited"] = data.Times_Cited.map(lambda w: int(w))
+        data = data.reset_index(drop=True)
+        return data
+
+
+###############################################################################
+##
+##  DASHBOARD
+##
+###############################################################################
+
+
+class DASHapp(DASH, Model):
+    def __init__(self, data, limit_to=None, exclude=None):
+        """Dashboard app"""
+
+        Model.__init__(self, data, limit_to, exclude)
+        DASH.__init__(self)
+
+        self.data = data
+        self.app_title = "Terms Analysis"
+        self.menu_options = [
+            "Terms",
+            "Core authors",
+            "Core source titles",
+            "Top documents",
+        ]
+        self.panel_widgets = [
+            ###
+        ]
+        super().create_grid()
+
+    def interactive_output(self, **kwargs):
+
+        DASH.interactive_output(self, **kwargs)
+
+
+###############################################################################
+##
+##  EXTERNAL INTERFACE
+##
+###############################################################################
+
+
+def app(data, limit_to=None, exclude=None):
+    return DASHapp(data=data, limit_to=limit_to, exclude=exclude).run()
+
+
+# - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - #
 
 
 def analytics(
@@ -775,23 +847,23 @@ def __TAB4__(data):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, tab=None):
-    return gui.APP(
-        app_title="Analysis by Term",
-        tab_titles=[
-            "Term Analysis",
-            "Worldmap",
-            "Core Authors",
-            "Core Source titles",
-            "Top Documentes",
-        ],
-        tab_widgets=[
-            __TAB0__(data, limit_to=limit_to, exclude=exclude),
-            __TAB1__(data),
-            __TAB2__(data),
-            __TAB3__(data),
-            __TAB4__(data),
-        ],
-        tab=tab,
-    )
+# def app(data, limit_to=None, exclude=None, tab=None):
+#     return gui.APP(
+#         app_title="Analysis by Term",
+#         tab_titles=[
+#             "Term Analysis",
+#             "Worldmap",
+#             "Core Authors",
+#             "Core Source titles",
+#             "Top Documentes",
+#         ],
+#         tab_widgets=[
+#             __TAB0__(data, limit_to=limit_to, exclude=exclude),
+#             __TAB1__(data),
+#             __TAB2__(data),
+#             __TAB3__(data),
+#             __TAB4__(data),
+#         ],
+#         tab=tab,
+#     )
 
