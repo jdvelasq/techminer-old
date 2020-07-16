@@ -508,6 +508,130 @@ class Model:
                 figsize=(self.width, self.height),
             )
 
+    def impact(self):
+        x = self.data.copy()
+        last_year = x.Year.max()
+        x["Num_Documents"] = 1
+        x["First_Year"] = x.Year
+        x = _explode(
+            x[[self.column, "Num_Documents", "Times_Cited", "First_Year", "ID"]],
+            self.column,
+        )
+        result = x.groupby(self.column, as_index=False).agg(
+            {"Num_Documents": np.sum, "Times_Cited": np.sum, "First_Year": np.min,}
+        )
+        result["Last_Year"] = last_year
+        result = result.assign(Years=result.Last_Year - result.First_Year + 1)
+        result = result.assign(Times_Cited_per_Year=result.Times_Cited / result.Years)
+        result["Times_Cited_per_Year"] = result["Times_Cited_per_Year"].map(
+            lambda w: round(w, 2)
+        )
+        result = result.assign(
+            Avg_Times_Cited=result.Times_Cited / result.Num_Documents
+        )
+        result["Avg_Times_Cited"] = result["Avg_Times_Cited"].map(lambda w: round(w, 2))
+
+        result["Times_Cited"] = result["Times_Cited"].map(lambda x: int(x))
+
+        #
+        # Indice H
+        #
+        z = x[[self.column, "Times_Cited", "ID"]].copy()
+        z = (
+            x.assign(
+                rn=x.sort_values("Times_Cited", ascending=False)
+                .groupby(self.column)
+                .cumcount()
+                + 1
+            )
+        ).sort_values(
+            [self.column, "Times_Cited", "rn"], ascending=[False, False, True]
+        )
+        z["rn2"] = z.rn.map(lambda w: w * w)
+
+        q = z.query("Times_Cited >= rn")
+        q = q.groupby(self.column, as_index=False).agg({"rn": np.max})
+        h_dict = {key: value for key, value in zip(q[self.column], q.rn)}
+
+        result["H_index"] = result[self.column].map(
+            lambda w: h_dict[w] if w in h_dict.keys() else 0
+        )
+
+        #
+        # indice M
+        #
+        result = result.assign(M_index=result.H_index / result.Years)
+        result["M_index"] = result["M_index"].map(lambda w: round(w, 2))
+
+        #
+        # indice G
+        #
+        q = z.query("Times_Cited >= rn2")
+        q = q.groupby(self.column, as_index=False).agg({"rn": np.max})
+        h_dict = {key: value for key, value in zip(q[self.column], q.rn)}
+        result["G_index"] = result[self.column].map(
+            lambda w: h_dict[w] if w in h_dict.keys() else 0
+        )
+
+        ## limit to / exclude options
+        result = cmn.limit_to_exclude(
+            data=result,
+            axis=0,
+            column=self.column,
+            limit_to=self.limit_to,
+            exclude=self.exclude,
+        )
+
+        ## Top by / Top N
+        top = self.top_by.replace(" ", "_").replace("-", "_").replace("/", "_")
+        if top in result.columns:
+            result = result.sort_values(top, ascending=False)
+        else:
+            result = cmn.sort_by_axis(
+                data=result, sort_by=self.top_by, ascending=False, axis=0
+            )
+        result = result.head(self.top_n)
+
+        ## Sort by
+        if self.sort_by in result.columns:
+            result = result.sort_values(self.sort_by, ascending=self.ascending)
+        else:
+            result = cmn.sort_by_axis(
+                data=result, sort_by=self.sort_by, ascending=self.ascending, axis=0
+            )
+
+        ## counters in axis names
+        result = result.set_index("Authors")
+        result = cmn.add_counters_to_axis(
+            X=result, axis=0, data=self.data, column=self.column
+        )
+
+        if self.view == "Table":
+            result.pop("Num_Documents")
+            result.pop("Times_Cited")
+            result.pop("First_Year")
+            result.pop("Last_Year")
+            result.pop("Years")
+            return result
+
+        if self.view == "Bar plot":
+            top_by = self.top_by.replace(" ", "_")
+            return plt.bar(
+                height=result[top_by],
+                cmap=self.cmap,
+                ylabel=self.top_by,
+                figsize=(self.width, self.height),
+            )
+
+        if self.view == "Horizontal bar plot":
+            top_by = self.top_by.replace(" ", "_")
+            return plt.barh(
+                width=result[top_by],
+                cmap=self.cmap,
+                xlabel=self.top_y,
+                figsize=(self.width, self.height),
+            )
+
 
 ###############################################################################
 ##
@@ -531,8 +655,9 @@ class DASHapp(DASH, Model):
         self.app_title = "Terms Analysis"
         self.menu_options = [
             "Terms",
-            "Single/Multiple publication",
             "Worldmap",
+            "Impact",
+            "Single/Multiple publication",
             "Core authors",
             "Core source titles",
             "Top documents",
@@ -594,6 +719,55 @@ class DASHapp(DASH, Model):
 
         DASH.interactive_output(self, **kwargs)
 
+        # ----------------------------------------------------------------------
+        if self.menu == "Impact":
+            self.panel_widgets[0]["widget"].options = [
+                "Authors",
+                "Institutions",
+                "Institution_1st_Author",
+                "Countries",
+                "Country_1st_Author",
+                "Institutions",
+                "Institution_1st_Author",
+                "Source_title",
+            ]
+            self.panel_widgets[1]["widget"].options = [
+                "Table",
+                "Bar plot",
+                "Horizontal bar plot",
+            ]
+            self.panel_widgets[2]["widget"].options = [
+                "Num Documents",
+                "Times Cited",
+                "Times Cited per Year",
+                "Avg Times Cited",
+                "H index",
+                "M index",
+                "G index",
+            ]
+            self.panel_widgets[4]["widget"].options = [
+                "Alphabetic",
+                "Num Documents",
+                "Times Cited",
+                "Times Cited per Year",
+                "Avg Times Cited",
+                "H index",
+                "M index",
+                "G index",
+            ]
+            for i, _ in enumerate(self.panel_widgets):
+                self.panel_widgets[i]["widget"].disabled = False
+
+            if self.panel_widgets[1]["widget"].value == "Table":
+                self.panel_widgets[-3]["widget"].disabled = True
+                self.panel_widgets[-2]["widget"].disabled = True
+                self.panel_widgets[-1]["widget"].disabled = True
+            else:
+                self.panel_widgets[-3]["widget"].disabled = False
+                self.panel_widgets[-2]["widget"].disabled = False
+                self.panel_widgets[-1]["widget"].disabled = False
+
+        # ----------------------------------------------------------------------
         if self.menu == "Single/Multiple publication":
             self.panel_widgets[0]["widget"].options = [
                 "Authors",
@@ -633,6 +807,7 @@ class DASHapp(DASH, Model):
                 self.panel_widgets[-2]["widget"].disabled = False
                 self.panel_widgets[-1]["widget"].disabled = False
 
+        # ----------------------------------------------------------------------
         if self.menu == "Worldmap":
             self.panel_widgets[0]["widget"].options = [
                 "Countries",
@@ -652,6 +827,7 @@ class DASHapp(DASH, Model):
             self.panel_widgets[7]["widget"].disabled = False
             self.panel_widgets[8]["widget"].disabled = False
 
+        # ----------------------------------------------------------------------
         if self.menu in ["Core authors", "Core source titles", "Top documents"]:
             for i, _ in enumerate(self.panel_widgets):
                 self.panel_widgets[i]["widget"].disabled = True
