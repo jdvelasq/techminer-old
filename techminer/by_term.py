@@ -632,6 +632,89 @@ class Model:
                 figsize=(self.width, self.height),
             )
 
+    def general(self):
+        x = self.data.copy()
+        x["Num_Documents"] = 1
+        x = _explode(
+            x[[self.column, "Num_Documents", "Times_Cited", "ID",]], self.column,
+        )
+        result = x.groupby(self.column, as_index=True).agg(
+            {"Num_Documents": np.sum, "Times_Cited": np.sum,}
+        )
+        result = cmn.limit_to_exclude(
+            data=result,
+            axis=0,
+            column=self.column,
+            limit_to=self.limit_to,
+            exclude=self.exclude,
+        )
+        result["Times_Cited"] = result["Times_Cited"].map(lambda w: int(w))
+
+        result = result.reset_index()
+        result = result.reset_index(drop=True)
+        top_by = self.top_by.replace(" ", "_").replace("-", "_").replace("/", "_")
+        result = result.sort_values(top_by, ascending=False)
+        result = result.head(self.top_n)
+
+        if self.sort_by == "Alphabetic":
+            result = result.sort_values(self.column, ascending=self.ascending)
+        else:
+            sort_by = self.sort_by.replace(" ", "_").replace("-", "_")
+            result = result.sort_values(sort_by, ascending=self.ascending)
+        result.index = list(range(len(result)))
+
+        if self.view == "Table":
+            return result
+
+        result = result.set_index(self.column)
+        if self.top_by == "Num Documents":
+            values = result.Num_Documents
+            darkness = result.Times_Cited
+        else:
+            values = result.Times_Cited
+            darkness = result.Num_Documents
+
+        if self.view == "Bar plot":
+            return plt.bar(
+                height=values,
+                darkness=darkness,
+                cmap=self.cmap,
+                ylabel=self.top_by,
+                figsize=(self.width, self.height),
+            )
+
+        if self.view == "Horizontal bar plot":
+            return plt.barh(
+                width=values,
+                darkness=darkness,
+                cmap=self.cmap,
+                xlabel=self.top_by,
+                figsize=(self.width, self.height),
+            )
+        if self.view == "Pie plot":
+            return plt.pie(
+                x=values,
+                darkness=darkness,
+                cmap=self.cmap,
+                figsize=(self.width, self.height),
+            )
+
+        if self.view == "Wordcloud":
+            return plt.wordcloud(
+                x=values,
+                darkness=darkness,
+                cmap=self.cmap,
+                figsize=(self.width, self.height),
+            )
+
+        if self.view == "Treemap":
+            return plt.treemap(
+                x=values,
+                darkness=darkness,
+                cmap=self.cmap,
+                figsize=(self.width, self.height),
+            )
+
 
 ###############################################################################
 ##
@@ -654,7 +737,7 @@ class DASHapp(DASH, Model):
         self.data = data
         self.app_title = "Terms Analysis"
         self.menu_options = [
-            "Terms",
+            "General",
             "Worldmap",
             "Impact",
             "Single/Multiple publication",
@@ -720,7 +803,7 @@ class DASHapp(DASH, Model):
         DASH.interactive_output(self, **kwargs)
 
         # ----------------------------------------------------------------------
-        if self.menu == "Impact":
+        if self.menu == "General":
             self.panel_widgets[0]["widget"].options = [
                 "Authors",
                 "Institutions",
@@ -730,6 +813,40 @@ class DASHapp(DASH, Model):
                 "Institutions",
                 "Institution_1st_Author",
                 "Source_title",
+            ]
+            self.panel_widgets[1]["widget"].options = [
+                "Table",
+                "Bar plot",
+                "Horizontal bar plot",
+                "Pie plot",
+                "Wordcloud",
+                "Treemap",
+            ]
+            self.panel_widgets[2]["widget"].options = [
+                "Num Documents",
+                "Times Cited",
+            ]
+            self.panel_widgets[4]["widget"].options = [
+                "Alphabetic",
+                "Num Documents",
+                "Times Cited",
+            ]
+            for i, _ in enumerate(self.panel_widgets):
+                self.panel_widgets[i]["widget"].disabled = False
+
+            if self.panel_widgets[1]["widget"].value == "Table":
+                self.panel_widgets[-3]["widget"].disabled = True
+                self.panel_widgets[-2]["widget"].disabled = True
+                self.panel_widgets[-1]["widget"].disabled = True
+            else:
+                self.panel_widgets[-3]["widget"].disabled = False
+                self.panel_widgets[-2]["widget"].disabled = False
+                self.panel_widgets[-1]["widget"].disabled = False
+
+        # ----------------------------------------------------------------------
+        if self.menu == "Impact":
+            self.panel_widgets[0]["widget"].options = [
+                z for z in COLUMNS if z in data.columns
             ]
             self.panel_widgets[1]["widget"].options = [
                 "Table",
