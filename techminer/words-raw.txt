@@ -1,410 +1,195 @@
-accelerometer
-    accelerometer
-    accelerometers
-action selection mechanism
-    action selection mechanism
-    action selection mechanisms
-adaptive behavior
-    adaptive behavior
-    behavior adaptation
-    behavior adaptations
-agent based modeling
-    agent based modeling
-    agent-based model
-    agent-based modelling
-algorithm
-    algorithm
-    algorithms
-ambient intelligence
-    ambient intelligence
-    ambient intelligent
-animal
-    animal
-    animals
-animal behavior
-    animal behavior
-    behavior, animal
-applications
-    applications
-    applications.
-attention mechanism
-    attention mechanism
-    attention mechanisms
-behavior analysis
-    behavior analysis
-    behavioral analysis
-behavior genetics
-    behavior genetics
-    genetics, behavioral
-behavior model
-    behavior model
-    behavior modeling
-    behavioral modeling
-behavior patterns
-    behavior patterns
-    behavioral patterns
-behavioral simulation
-    behavioral simulation
-    behavioral simulations
-    behaviour simulation
-    behaviour simulations
-biological model
-    biological model
-    biological modeling
-    models, biological
-blog
-    blog
-    blogging
-    blogs
-change points
-    change points
-    change-points
-cognition
-    cognition
-    cognitive
-communication data
-    communication data
-    data-communication
-computation theory
-    computation theory
-    computational theories
-computational cost
-    computational cost
-    computational costs
-computational social science
-    computational social science
-    social sciences computing
-context awareness
-    context awareness
-    context- awareness
-    context-aware
-context free grammars
-    context free grammars
-    context-free grammars
-crowding
-    crowding
-    crowds
-cuckoo search
-    cuckoo search
-    cuckoo searches
-data visualization
-    data visualization
-    visual data
-decision support
-    decision support
-    decision supports
-decision tree
-    decision tree
-    decision trees
-delay tolerant network
-    delay tolerant network
-    delay tolerant networking
-    delay tolerant networks
-disaster
-    disaster
-    disasters
-domestic activities
-    domestic activities
-    domestic activity
-earthquake
-    earthquake
-    earthquakes
-electric appliances
-    electric appliances
-    electrical appliances
-embodied agent
-    embodied agent
-    embodied agents
-emotion
-    emotion
-    emotions
-emotion identification
-    emotion identification
-    emotion identifications
-emotion model
-    emotion model
-    emotion modeling
-energy efficiency
-    energy efficiency
-    energy-efficient
-ensemble approach
-    ensemble approach
-    ensemble approaches
-environmental factor
-    environmental factor
-    environmental factors
-eye tracking systems
-    eye tracking systems
-    eye-tracking system
-feature extraction
-    feature extraction
-    feature extractions
-group process
-    group process
-    group processes
-hidden markov model
-    hidden markov model
-    hidden markov models
-histogram of oriented gradient (hog)
-    histogram of oriented gradient (hog)
-    histogram of oriented gradients (hog)
-hmm
-    hmm
-    hmms
-human
-    human
-    humans
-human behavior
-    human behavior
-    human behaviors
-    human behaviour
-    human behaviours    
-human behavior model
-    human behavior model
-    human behavior modeling
-    human behavior modelling
-human being
-    human being
-    human beings
-human movement
-    human movement
-    human movements
-human robot interaction
-    human robot interaction
-    human-robot interaction
-    human-robot interactions
-    robot-human interaction
-    human robot interaction (hri)
-    human-robot-interaction (hri)
-human-system interaction
-    human-system interaction
-    human-system interactions
-indoor environment
-    indoor environment
-    indoor environments
-information visual processing
-    information visual processing
-    visual information processing
-intelligent space
-    intelligent space
-    intelligent spaces
-kalman filter
-    kalman filter
-    kalman filters
-life log
-    life log
-    life-logging
-measurement
-    measurement
-    measurements
-micro-blog
-    micro-blog
-    micro-blogging
-mines
-    mines
-    mining
-mobile computer
-    mobile computer
-    mobile computing
-    mobile computing system
-    mobile computing systems
-mobile device
-    mobile device
-    mobile devices
-mobile opportunistic network
-    mobile opportunistic network
-    mobile opportunistic networks
-mobile phone
-    mobile phone
-    mobile phones
-mobile robot
-    mobile robot
-    mobile robots
-mobility model
-    mobility model
-    mobility models
-model
-    model
-    modelling
-    models
-psychological model
-    models, psychological
-    psychological model
-models, theoretical
-    models, theoretical
-    theoretical model
-monitor
-    monitor
-    monitoring
-physiologic monitoring
-    monitoring, physiologic
-    physiologic monitoring
+agent based simulation
+    agent based simulation
+    agent-based simulation
+air pollutants
+    air pollutants
+    air pollution
+business model
+    business model
+    business modeling
+    business modelling
+    business models
+carbon emission
+    carbon emission
+    carbon emissions
+case studies
+    case studies
+    case study
+cities
+    cities
+    city
+city distribution center
+    city distribution center
+    city distribution centers
+city logistic
+    city logistic
+    city logistics
+cost benefit analysis
+    cost benefit analysis
+    cost-benefit analysis
+decision making process
+    decision making process
+    decision-making process
+decision support system
+    decision support system
+    decision support systems
+distance measure
+    distance measure
+    distance measures
+distribution center
+    distribution center
+    distribution centers
+distribution centre
+    distribution centre
+    distribution centres
+electric vehicle
+    electric vehicle
+    electric vehicles
+engineering method
+    engineering method
+    engineering methods
+environmental impact
+    environmental impact
+    environmental impacts
+freight consolidation
+    freight consolidation
+    freight consolidations
+freight transport
+    freight transport
+    freight transportation
+fuzzy cluster analysis
+    fuzzy cluster analysis
+    fuzzy clustering analysis
+fuzzy theories
+    fuzzy theories
+    fuzzy theory
+game theory
+    game theory
+    games theory
+genetic algorithm
+    genetic algorithm
+    genetic algorithms
+geographic information system
+    geographic information system
+    geographic information systems
+joint decision
+    joint decision
+    joint decisions
+last mile
+    last mile
+    last-mile
+last mile delivery
+    last mile delivery
+    last-mile deliveries
+    last-mile delivery
+last mile logistics
+    last mile logistics
+    last-mile logistics
+literature review
+    literature review
+    literature reviews
+location plan
+    location plan
+    location planning
+    location plans
+logistics cost
+    logistics cost
+    logistics costs
+mathematical model
+    mathematical model
+    mathematical models
+mixed integer programming
+    mixed integer programming
+    mixed-integer programming
+    mixed-integer programs
+modeling
+    modeling
+    modelization
 multi agent simulation
     multi agent simulation
     multi-agent simulation
-multi-view
-    multi-view
-    multi-views
-neural network
-    neural network
-    neural networks
-observational method
-    observational method
-    observational methods
-ontologies
-    ontologies
-    ontology
-optical flow method
-    optical flow method
-    optical flow methods
-particle filter
-    particle filter
-    particle filters
-periodic task
-    periodic task
-    periodic tasks
-personal information
-    personal information
-    personalized information
-personality
-    personality
-    personalization
-    personalizations
-physiological
-    physiological
-    physiology
-pocket switched network
-    pocket switched network
-    pocket switched networks
-power law distribution
-    power law distribution
-    power-law distribution
-prisoner's dilemma
-    prisoner's dilemma
-    prisoners' dilemma
-private space
-    private space
-    private spaces
-proactive interface
-    proactive interface
-    proactive interfaces
-psychological process
-    psychological process
-    psychological processes
-reality mining
-    reality mining
-    reality minings
-robot
-    robot
-    robotics
-    robots
-robot behavior
-    robot behavior
-    robot behaviors
-scarf
-    scarf
-    scarfing
-season
-    season
-    seasons
-self help device
-    self help device
-    self-help devices
-self organizing maps
-    self organizing maps
-    self-organizing map
-sensor network
-    sensor network
-    sensor networks
-sensorimotor system
-    sensorimotor system
-    sensorimotor systems
-shape change
-    shape change
-    shape-changing
-signal
-    signal
-    signaling
-    signals
-simulation
-    simulation
-    simulations
-    simulators
-small screen interface
-    small screen interface
-    small screen interfaces
+multi agent systems
+    multi agent systems
+    multi-agent system
+    multi-agent systems
+multi criteria decision making
+    multi criteria decision making
+    multi-criteria decision making
+multi-criteria decision making (mcdm)
+    multi-criteria decision making (mcdm)
+    multi-criteria decision-making (mcdm)
+optimal locating
+    optimal locating
+    optimal locations
+performance measurement
+    performance measurement
+    performance measurements
+planning and layout
+    planning and layout
+    planning and layouts
+probability function
+    probability function
+    probability functions
+public policies
+    public policies
+    public policy
+public private partnerships
+    public private partnerships
+    public-private partnership
+reinforced learning
+    reinforced learning
+    reinforcement learning
 smart cities
     smart cities
     smart city
-smart device
-    smart device
-    smart devices
-smart home
-    smart home
-    smart homes
-social capital
-    social capital
-    social capitals
-social concern
-    social concern
-    social concerns
-social interaction
-    social interaction
-    social interactions
-social network
-    social network
-    social networks
-social robotics
-    social robotics
-    social robots
-support vector machine
-    support vector machine
-    support vector machines
-survey
-    survey
-    surveying
-    surveys
-target tracking
-    target tracking
-    tracking targets
-test facilities
-    test facilities
-    testing facility
-through the wall
-    through the wall
-    through-the-wall
-transfer function
-    transfer function
-    transfer functions
-user fatigue
-    user fatigue
-    user fatigues
-video game
-    video game
-    video games
-virtual environment
-    virtual environment
-    virtual environments
-virtual human
-    virtual human
-    virtual humans
-visual sensor
-    visual sensor
-    visual sensors
-wearable device
-    wearable device
-    wearable devices
-    wearable sensor
-    wearable sensors    
-wearable interface
-    wearable interface
-    wearable interfaces
-wireless networking
-    wireless networking
-    wireless networks
-wireless sensor network
-    wireless sensor network
-    wireless sensor networks
-work environments
-    work environments
-    working environment
+social cost benefit analysis
+    social cost benefit analysis
+    social cost-benefit analysis
+stakeholder
+    stakeholder
+    stakeholders
+transport planning
+    transport planning
+    transportation planning
+transport policy
+    transport policy
+    transportation policy
+uncertain environment
+    uncertain environment
+    uncertain environments
+urban area
+    urban area
+    urban areas
+urban consolidation center
+    urban consolidation center
+    urban consolidation centers
+urban consolidation centre
+    urban consolidation centre
+    urban consolidation centres
+urban consolidation centre (ucc)
+    urban consolidation centre (ucc)
+    urban consolidation centres (uccs)
+urban distribution center
+    urban distribution center
+    urban distribution centers
+urban distribution center (udc)
+    urban distribution center (udc)
+    urban distribution centers (udc)
+urban freight consolidation centre (ufcc)
+    urban freight consolidation centre (ufcc)
+    urban freight consolidation centres (ufccs)
+urban goods movement
+    urban goods movement
+    urban goods movements
+urban logistic
+    urban logistic
+    urban logistics
+urban transport
+    urban transport
+    urban transportation
+urban transport systems
+    urban transport systems
+    urban transportation systems
+vehicle routing problem
+    vehicle routing problem
+    vehicle routing problems
