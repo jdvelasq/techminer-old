@@ -11,8 +11,6 @@ from techminer.document_term import TF_matrix, TFIDF_matrix
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
 
-from techminer.diagram_plot import diagram_plot
-
 import techminer.gui as gui
 
 ###############################################################################
@@ -37,6 +35,7 @@ class Model:
         self.max_terms = None
         self.min_occurrence = None
         self.n_components = None
+        self.n_factors = None
         self.n_iter = None
         self.norm = None
         self.random_state = None
@@ -84,136 +83,110 @@ class Model:
         )
 
         #
-        # 3.-- Data to analyze
+        # 3.-- Correspondence Analysis
         #
-        X = None
-        if self.analysis_type == "Co-occurrence":
-            X = np.matmul(TFIDF_matrix_.transpose().values, TFIDF_matrix_.values)
-            X = pd.DataFrame(
-                X, columns=TFIDF_matrix_.columns, index=TFIDF_matrix_.columns
+        ca = CA()
+        ca.fit(TFIDF_matrix_)
+
+        self.eigenvalues_ = ca.eigenvalues_
+        self.explained_variance_ = ca.explained_variance_
+        self.principal_coordinates_rows_ = ca.principal_coordinates_rows_
+        self.principal_coordinates_cols_ = ca.principal_coordinates_cols_
+
+        #
+        # 4.-- Cluster analysis of first n_factors of CA matrix
+        #
+        X = self.principal_coordinates_cols_[
+            self.principal_coordinates_cols_.columns[0 : self.n_factors]
+        ]
+        kmeans = KMeans(n_clusters=self.n_clusters, max_iter=self.max_iter)
+        kmeans.fit(X)
+        self.cluster_centers_ = pd.DataFrame(
+            kmeans.cluster_centers_, columns=self.principal_coordinates_cols_.columns
+        )
+
+        #
+        # 5.-- Memberships
+        #
+        self.memberships_ = pd.DataFrame(
+            kmeans.labels_,
+            columns=["Cluster"],
+            index=self.self.principal_coordinates_cols_.index,
+        )
+
+        #
+        # 6.-- Cluster names (most frequent term in cluster)
+        #
+        cluster_names = []
+        for i_cluster in range(self.n_clusters):
+            cluster_members = self.memberships_[self.memberships_ == i_cluster]
+            cluster_members = cmn.sort_axis(
+                data=cluster_members, num_documents=True, axis=0, ascending=False
             )
-        if self.analysis_type == "TF*IDF":
-            X = TFIDF_matrix_
+            cluster_names.append(cluster_members.index[0])
+        self.cluster_names_ = pd.DataFrame(cluster_names, columns=["Name"])
 
-        #
-        # 4.-- SVD for a maximum of 20 dimensions
-        #
-        TruncatedSVD_ = TruncatedSVD(
-            n_components=self.n_components,
-            n_iter=self.n_iter,
-            random_state=int(self.random_state),
-        ).fit(X)
+    def cluster_names(self):
+        return self.cluster_names_
 
-        #
-        # 5.-- Results
-        #
-        axis_names = ["dim-{:>02d}".format(i) for i in range(self.n_components)]
-        self.components_ = pd.DataFrame(
-            np.transpose(TruncatedSVD_.components_),
-            columns=axis_names,
-            index=X.columns,
-        )
-        self.statistics_ = pd.DataFrame(
-            TruncatedSVD_.explained_variance_,
-            columns=["Explained Variance"],
-            index=axis_names,
-        )
-        self.statistics_["Explained Variance"] = TruncatedSVD_.explained_variance_
-        self.statistics_[
-            "Explained Variance Ratio"
-        ] = TruncatedSVD_.explained_variance_ratio_
-        self.statistics_["Singular Values"] = TruncatedSVD_.singular_values_
-
-    def table(self):
-        self.apply()
-        X = self.components_
-        X = cmn.limit_to_exclude(
-            data=X,
-            axis=0,
-            column=self.column,
-            limit_to=self.limit_to,
-            exclude=self.exclude,
-        )
-        X = cmn.sort_by_axis(data=X, sort_by=self.top_by, ascending=False, axis=0)
-        X = X.head(self.top_n)
-        X = cmn.sort_by_axis(
-            data=X, sort_by=self.sort_by, ascending=self.ascending, axis=0
-        )
-        return X
-
-    def statistics(self):
-        self.apply()
-        return self.statistics_
+    def cluster_centers(self):
+        return self.cluster_centers_
 
     def plot_singular_values(self):
-
         self.apply()
-
         return plt.barh(width=self.statistics_["Singular Values"])
 
-    def plot_relationships(self):
+    def plot_terms(self):
 
         self.apply()
-        X = self.table()
 
-        return diagram_plot(
-            x=X[X.columns[self.x_axis]],
-            y=X[X.columns[self.y_axis]],
-            labels=X.index,
-            x_axis_at=0,
-            y_axis_at=0,
-            cmap=self.cmap,
-            width=self.width,
-            height=self.height,
+        matplotlib.rc("font", size=11)
+        fig = pyplot.Figure(figsize=(self.width, self.height))
+        ax = fig.subplots()
+        cmap = pyplot.cm.get_cmap(self.cmap)
+
+        X = self.principal_coordinates_cols_()
+        X.columns = X.columns.tolist()
+
+        node_sizes = cmn.counters_to_node_sizes(x=X.index)
+        node_colors = cmn.counters_to_node_colors(x=X.index, cmap=cmap)
+
+        ax.scatter(
+            X[X.columns[self.x_axis]],
+            X[X.columns[self.y_axis]],
+            s=node_sizes,
+            linewidths=1,
+            edgecolors="k",
+            c=node_colors,
         )
 
-        # matplotlib.rc("font", size=11)
-        # fig = pyplot.Figure(figsize=(self.width, self.height))
-        # ax = fig.subplots()
-        # cmap = pyplot.cm.get_cmap(self.cmap)
+        cmn.ax_expand_limits(ax)
+        cmn.ax_text_node_labels(
+            ax,
+            labels=X.index,
+            dict_pos={
+                key: (c, d)
+                for key, c, d in zip(
+                    X.index, X[X.columns[self.x_axis]], X[X.columns[self.y_axis]],
+                )
+            },
+            node_sizes=node_sizes,
+        )
 
-        # X = self.table()
-        # X.columns = X.columns.tolist()
+        ax.axhline(
+            y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1,
+        )
+        ax.axvline(
+            x=0, color="gray", linestyle="--", linewidth=1, zorder=-1,
+        )
 
-        # node_sizes = cmn.counters_to_node_sizes(x=X.index)
-        # node_colors = cmn.counters_to_node_colors(x=X.index, cmap=cmap)
+        ax.axis("off")
 
-        # ax.scatter(
-        #     X[X.columns[self.x_axis]],
-        #     X[X.columns[self.y_axis]],
-        #     s=node_sizes,
-        #     linewidths=1,
-        #     edgecolors="k",
-        #     c=node_colors,
-        # )
+        cmn.set_ax_splines_invisible(ax)
 
-        # cmn.ax_expand_limits(ax)
-        # cmn.ax_text_node_labels(
-        #     ax,
-        #     labels=X.index,
-        #     dict_pos={
-        #         key: (c, d)
-        #         for key, c, d in zip(
-        #             X.index, X[X.columns[self.x_axis]], X[X.columns[self.y_axis]],
-        #         )
-        #     },
-        #     node_sizes=node_sizes,
-        # )
+        fig.set_tight_layout(True)
 
-        # ax.axhline(
-        #     y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1,
-        # )
-        # ax.axvline(
-        #     x=0, color="gray", linestyle="--", linewidth=1, zorder=-1,
-        # )
-
-        # ax.axis("off")
-
-        # cmn.set_ax_splines_invisible(ax)
-
-        # fig.set_tight_layout(True)
-
-        # return fig
+        return fig
 
 
 ###############################################################################
