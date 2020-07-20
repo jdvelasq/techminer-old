@@ -125,6 +125,13 @@ class Model:
     def table(self):
         self.apply()
         X = self.components_
+        X = cmn.limit_to_exclude(
+            data=X,
+            axis=0,
+            column=self.column,
+            limit_to=self.limit_to,
+            exclude=self.exclude,
+        )
         X = cmn.sort_by_axis(data=X, sort_by=self.top_by, ascending=False, axis=0)
         X = X.head(self.top_n)
         X = cmn.sort_by_axis(
