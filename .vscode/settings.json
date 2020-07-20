@@ -8,5 +8,6 @@
     "python.testing.autoTestDiscoverOnSaveEnabled": false,
     "python.testing.pytestArgs": [
         "--doctest-modules"
-    ]
+    ],
+    "editor.formatOnSave": true
 }

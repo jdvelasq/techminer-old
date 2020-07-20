@@ -99,6 +99,24 @@ def max_iter():
         ),
     }
 
+def max_terms():
+    return {
+        "arg": "max_terms",
+        "desc": "Max terms:",
+        "widget": widgets.Dropdown(
+            options=list(range(1000, 5001, 500)), layout=Layout(width="55%"),
+        ),
+    }
+
+def min_occurrence():
+    return {
+        "arg": "min_occurrence",
+        "desc": "Min occurrence:",
+        "widget": widgets.Dropdown(
+            options=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], layout=Layout(width="55%"),
+        ),
+    }
+
 
 def nx_iterations():
     return {
@@ -106,6 +124,16 @@ def nx_iterations():
         "desc": "nx iterations:",
         "widget": widgets.Dropdown(
             options=list(range(5, 101, 1)), layout=Layout(width="55%"),
+        ),
+    }
+
+
+def n_iter():
+    return {
+        "arg": "n_iter",
+        "desc": "number of iterations:",
+        "widget": widgets.Dropdown(
+            options=list(range(5, 51, 1)), layout=Layout(width="55%"),
         ),
     }
 

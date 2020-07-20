@@ -15,7 +15,7 @@ from techminer.dashboard import DASH
 ###############################################################################
 
 
-def TF_matrix(data, column, scheme=None):
+def TF_matrix(data, column, scheme=None, min_occurrence=1):
     X = data[[column, "ID"]].copy()
     X["value"] = 1.0
     X = __explode(X, column)
@@ -24,6 +24,15 @@ def TF_matrix(data, column, scheme=None):
     )
     result.columns = [b for _, b in result.columns]
     result = result.reset_index(drop=True)
+
+    terms = result.sum(axis=0)
+    terms = terms.sort_values(ascending=False)
+    terms = terms[terms >= min_occurrence]
+    result = result.loc[:, terms.index]
+
+    rows = result.sum(axis=1)
+    rows = rows[rows > 0]
+    result = result.loc[rows.index, :]
 
     if scheme is None or scheme == "raw":
         return result
@@ -38,7 +47,12 @@ def TF_matrix(data, column, scheme=None):
 
 
 def TFIDF_matrix(
-    TF_matrix, norm="l2", use_idf=True, smooth_idf=True, sublinear_tf=False
+    TF_matrix,
+    norm="l2",
+    use_idf=True,
+    smooth_idf=True,
+    sublinear_tf=False,
+    max_terms=3000,
 ):
 
     result = (
@@ -50,6 +64,15 @@ def TFIDF_matrix(
     )
 
     result = pd.DataFrame(result, columns=TF_matrix.columns)
+
+    if len(result.columns) > max_terms:
+        terms = result.sum(axis=0)
+        terms = terms.sort_values(ascending=False)
+        result = result.loc[:, terms.index]
+        rows = result.sum(axis=1)
+        rows = rows[rows > 0]
+        result = result.loc[rows.index, :]
+
     return result
 
 
