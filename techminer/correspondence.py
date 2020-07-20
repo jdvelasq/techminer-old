@@ -47,16 +47,13 @@ class CA:
         #        * v: matrix right singular vectors
         #
         u, d, v = np.linalg.svd(Z, full_matrices=False)
+        K = min(len(X.columns), len(X.index))
         u = pd.DataFrame(
-            u,
-            columns=["dim-{}".format(i) for i in range(len(X.columns))],
-            index=X.index,
+            u, columns=["dim-{}".format(i) for i in range(K)], index=X.index,
         )
-        d = pd.Series(d, index=["dim-{}".format(i) for i in range(len(X.columns))])
+        d = pd.Series(d, index=["dim-{}".format(i) for i in range(K)])
         v = pd.DataFrame(
-            v.T,
-            columns=["dim-{}".format(i) for i in range(len(X.columns))],
-            index=X.columns,
+            v.T, columns=["dim-{}".format(i) for i in range(K)], index=X.columns,
         )
 
         #

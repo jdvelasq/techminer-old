@@ -1,8 +1,10 @@
+import json
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import TruncatedSVD
 import matplotlib
 import matplotlib.pyplot as pyplot
+from sklearn.cluster import KMeans
 
 import techminer.plots as plt
 import techminer.common as cmn
@@ -10,6 +12,8 @@ from techminer.dashboard import DASH
 from techminer.document_term import TF_matrix, TFIDF_matrix
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
+from techminer.correspondence import CA
+from techminer.diagram_plot import diagram_plot
 
 import techminer.gui as gui
 
@@ -32,8 +36,11 @@ class Model:
         self.cmap = None
         self.column = None
         self.height = None
+        self.max_iter = None
+        self.max_iters = None
         self.max_terms = None
         self.min_occurrence = None
+        self.n_clusters = None
         self.n_components = None
         self.n_factors = None
         self.n_iter = None
@@ -44,6 +51,7 @@ class Model:
         self.sublinear_tf = None
         self.top_by = None
         self.top_n = None
+        self.top_n = None
         self.use_idf = None
         self.width = None
         self.x_axis = None
@@ -52,8 +60,8 @@ class Model:
     def apply(self):
 
         ##
-        ## SVD for documents x terms matrix & co-occurrence matrix
-        ##   from https://tlab.it/en/allegati/help_en_online/msvd.htm
+        ## Comparative analysis
+        ##   from https://tlab.it/en/allegati/help_en_online/mcluster.htm
         ##
 
         #
@@ -86,6 +94,7 @@ class Model:
         # 3.-- Correspondence Analysis
         #
         ca = CA()
+
         ca.fit(TFIDF_matrix_)
 
         self.eigenvalues_ = ca.eigenvalues_
@@ -99,10 +108,15 @@ class Model:
         X = self.principal_coordinates_cols_[
             self.principal_coordinates_cols_.columns[0 : self.n_factors]
         ]
-        kmeans = KMeans(n_clusters=self.n_clusters, max_iter=self.max_iter)
+        kmeans = KMeans(
+            n_clusters=self.n_clusters,
+            max_iter=self.max_iter,
+            random_state=int(self.random_state),
+        )
         kmeans.fit(X)
         self.cluster_centers_ = pd.DataFrame(
-            kmeans.cluster_centers_, columns=self.principal_coordinates_cols_.columns
+            kmeans.cluster_centers_,
+            columns=self.principal_coordinates_cols_.columns[0 : self.n_factors],
         )
 
         #
@@ -111,15 +125,16 @@ class Model:
         self.memberships_ = pd.DataFrame(
             kmeans.labels_,
             columns=["Cluster"],
-            index=self.self.principal_coordinates_cols_.index,
+            index=self.principal_coordinates_cols_.index,
         )
+        self.memberships_ = self.memberships_.sort_values("Cluster", ascending=True)
 
         #
         # 6.-- Cluster names (most frequent term in cluster)
         #
         cluster_names = []
         for i_cluster in range(self.n_clusters):
-            cluster_members = self.memberships_[self.memberships_ == i_cluster]
+            cluster_members = self.memberships_[self.memberships_.Cluster == i_cluster]
             cluster_members = cmn.sort_axis(
                 data=cluster_members, num_documents=True, axis=0, ascending=False
             )
@@ -127,66 +142,46 @@ class Model:
         self.cluster_names_ = pd.DataFrame(cluster_names, columns=["Name"])
 
     def cluster_names(self):
+        self.apply()
         return self.cluster_names_
 
     def cluster_centers(self):
+        self.apply()
         return self.cluster_centers_
+
+    def memberships(self):
+        self.apply()
+        r = {}
+        for i_cluster in range(self.n_clusters):
+            cluster_members = self.memberships_[self.memberships_.Cluster == i_cluster]
+            cluster_members = cmn.sort_axis(
+                data=cluster_members, num_documents=True, axis=0, ascending=False
+            )
+            m = cluster_members.head(self.top_n)
+            m = m.index.tolist()
+            r[i_cluster] = m
+        r = json.dumps(r, indent=4, sort_keys=True)
+        print(r)
+        return ""
 
     def plot_singular_values(self):
         self.apply()
-        return plt.barh(width=self.statistics_["Singular Values"])
+        return plt.barh(width=self.eigenvalues_)
 
-    def plot_terms(self):
+    def plot_clusters(self):
 
         self.apply()
 
-        matplotlib.rc("font", size=11)
-        fig = pyplot.Figure(figsize=(self.width, self.height))
-        ax = fig.subplots()
-        cmap = pyplot.cm.get_cmap(self.cmap)
-
-        X = self.principal_coordinates_cols_()
-        X.columns = X.columns.tolist()
-
-        node_sizes = cmn.counters_to_node_sizes(x=X.index)
-        node_colors = cmn.counters_to_node_colors(x=X.index, cmap=cmap)
-
-        ax.scatter(
-            X[X.columns[self.x_axis]],
-            X[X.columns[self.y_axis]],
-            s=node_sizes,
-            linewidths=1,
-            edgecolors="k",
-            c=node_colors,
+        return diagram_plot(
+            x=self.cluster_centers_[self.cluster_centers_.columns[self.x_axis]],
+            y=self.cluster_centers_[self.cluster_centers_.columns[self.y_axis]],
+            labels=self.cluster_names_["Name"].tolist(),
+            x_axis_at=0,
+            y_axis_at=0,
+            cmap=self.cmap,
+            width=self.width,
+            height=self.height,
         )
-
-        cmn.ax_expand_limits(ax)
-        cmn.ax_text_node_labels(
-            ax,
-            labels=X.index,
-            dict_pos={
-                key: (c, d)
-                for key, c, d in zip(
-                    X.index, X[X.columns[self.x_axis]], X[X.columns[self.y_axis]],
-                )
-            },
-            node_sizes=node_sizes,
-        )
-
-        ax.axhline(
-            y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1,
-        )
-        ax.axvline(
-            x=0, color="gray", linestyle="--", linewidth=1, zorder=-1,
-        )
-
-        ax.axis("off")
-
-        cmn.set_ax_splines_invisible(ax)
-
-        fig.set_tight_layout(True)
-
-        return fig
 
 
 ###############################################################################
@@ -231,12 +226,13 @@ class DASHapp(DASH, Model):
         self.smooth_idf = smooth_idf
         self.sublinear_tf = sublinear_tf
 
-        self.app_title = "SVD"
+        self.app_title = "Comparative analysis"
         self.menu_options = [
-            "Table",
-            "Statistics",
+            "Cluster names",
+            "Cluster centers",
+            "Memberships",
             "Plot singular values",
-            "Plot relationships",
+            "Plot clusters",
         ]
 
         COLUMNS = sorted(
@@ -245,19 +241,13 @@ class DASHapp(DASH, Model):
 
         self.panel_widgets = [
             gui.dropdown(desc="Column:", options=[t for t in data if t in COLUMNS],),
-            gui.dropdown(desc="Analysis type:", options=["Co-occurrence", "TF*IDF",],),
-            gui.n_components(),
-            gui.random_state(),
-            gui.n_iter(),
             gui.min_occurrence(),
             gui.max_terms(),
-            gui.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-            gui.top_n(),
-            gui.dropdown(
-                desc="Sort by:",
-                options=["Alphabetic", "Num Documents", "Times Cited",],
-            ),
-            gui.ascending(),
+            gui.n_clusters(),
+            gui.max_iter(),
+            gui.random_state(),
+            gui.dropdown(desc="N Factors:", options=list(range(2, 20)),),
+            gui.top_n(m=10, n=51, i=5),
             gui.cmap(),
             gui.x_axis(),
             gui.y_axis(),
@@ -270,23 +260,21 @@ class DASHapp(DASH, Model):
 
         DASH.interactive_output(self, **kwargs)
 
-        self.panel_widgets[-3]["widget"].options = [
-            i for i in range(self.panel_widgets[2]["widget"].value)
-        ]
-        self.panel_widgets[-4]["widget"].options = [
-            i for i in range(self.panel_widgets[2]["widget"].value)
-        ]
+        self.panel_widgets[-3]["widget"].options = [i for i in range(self.n_factors)]
+        self.panel_widgets[-4]["widget"].options = [i for i in range(self.n_factors)]
 
         #
 
         for i in [-1, -2, -3, -4, -5]:
             self.panel_widgets[i]["widget"].disabled = (
-                True if self.menu in ["Table", "Statistics"] else False
+                True
+                if self.menu in ["Cluster names", "Cluster centers", "Memberships"]
+                else False
             )
 
-        for i in [-6, -7, -8, -9]:
+        for i in [-6]:
             self.panel_widgets[i]["widget"].disabled = (
-                False if self.menu in ["Table", "Statistics"] else True
+                False if self.menu in ["Memberships"] else True
             )
 
 
