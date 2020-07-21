@@ -1,6 +1,7 @@
 import ipywidgets as widgets
 from ipywidgets import AppLayout, GridspecLayout, Layout
 from IPython.display import display
+from techminer.gui import processing
 
 
 class DASH:
@@ -28,7 +29,10 @@ class DASH:
         menu = self.menu.replace(" ", "_").replace("-", "_").replace("/", "_").lower()
         self.output.clear_output()
         with self.output:
-            display(getattr(self, menu)())
+            display(processing())
+            result = getattr(self, menu)()
+            self.output.clear_output()
+            display(result)
 
     def create_grid(self):
 

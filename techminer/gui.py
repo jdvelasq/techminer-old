@@ -99,6 +99,7 @@ def max_iter():
         ),
     }
 
+
 def max_terms():
     return {
         "arg": "max_terms",
@@ -107,6 +108,7 @@ def max_terms():
             options=list(range(1000, 5001, 500)), layout=Layout(width="55%"),
         ),
     }
+
 
 def min_occurrence():
     return {
@@ -264,8 +266,8 @@ def processing():
         border: 16px solid #f3f3f3;
         border-radius: 50%;
         border-top: 16px solid #3498db;
-        width: 120px;
-        height: 120px;
+        width: 70px;
+        height: 70px;
         -webkit-animation: spin 2s linear infinite; /* Safari */
         animation: spin 2s linear infinite;
         }
@@ -282,8 +284,8 @@ def processing():
         }
         </style>
         </head>
-        <h3>Processing ...</h3>
-        <div class="loader"></div>
+        <h3>Processing ... </h3>
+        <div class="loader"></div>        
 
         """
     return widgets.HTML(html)
