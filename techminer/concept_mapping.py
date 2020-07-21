@@ -12,7 +12,7 @@ from cdlib import algorithms
 from ipywidgets import AppLayout, GridspecLayout, Layout
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.manifold import MDS
-from techminer.document_term import TF_matrix
+from techminer.document_term import TF_matrix, TFIDF_matrix
 from techminer.explode import __explode
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
@@ -160,6 +160,31 @@ class Model:
         self.data = data
         self.limit_to = limit_to
         self.exclude = exclude
+        #
+        self.affinity = None
+        self.column = None
+        self.height = None
+        self.linkage = None
+        self.max_terms = None
+        self.min_occurrence = None
+        self.n_clusters = None
+        self.n_components = None
+        self.norm = None
+        self.normalization = None
+        self.smooth_idf = None
+        self.sublinear_tf = None
+        self.top_by = None
+        self.top_n = None
+        self.use_idf = None
+        self.width = None
+        self.x_axis = None
+        self.y_axis = None
+
+        #
+        self.centrality_density_ = None
+        #
+        #
+        #
 
     def fit(self):
 
@@ -171,18 +196,29 @@ class Model:
         #
         # 1.-- Co-occurrence matrix
         #
-        X = co_occurrence_matrix(
+        #
+        TF_matrix_ = TF_matrix(
             data=self.data,
             column=self.column,
-            top_by=self.top_by,
-            top_n=self.top_n,
-            sort_c_axis_by="Alphabetic",
-            sort_r_axis_by="Alphabetic",
-            c_axis_ascending=True,
-            r_axis_ascending=True,
-            limit_to=self.limit_to,
-            exclude=self.exclude,
+            scheme=None,
+            min_occurrence=self.min_occurrence,
         )
+
+        TFIDF_matrix_ = TFIDF_matrix(
+            TF_matrix=TF_matrix_,
+            norm=self.norm,
+            use_idf=self.use_idf,
+            smooth_idf=self.smooth_idf,
+            sublinear_tf=self.sublinear_tf,
+            max_terms=self.max_terms,
+        )
+
+        TFIDF_matrix_ = cmn.add_counters_to_axis(
+            X=TFIDF_matrix_, axis=1, data=self.data, column=self.column
+        )
+
+        X = np.matmul(TFIDF_matrix_.transpose().values, TFIDF_matrix_.values)
+        X = pd.DataFrame(X, columns=X.columns, index=X.columns)
 
         #
         # 2.-- Association indexes
@@ -192,9 +228,13 @@ class Model:
         #
         # 3.-- Hierarchical clustering of the dissimilarity matrix
         #
-        clusters_dict = network_clustering(
-            X, n_clusters=self.n_clusters, affinity=self.affinity, linkage=self.linkage
+        clustering = AgglomerativeClustering(
+            n_clusters=self.n_clusters, affinity=self.affinity, linkage=self.linkage
         )
+        clustering.fit(1 - X)
+        clusters_dict = {
+            key: value for key, value in zip(X.columns, clustering.labels_)
+        }
 
         #
         # 4.-- Cluster membership
@@ -324,13 +364,25 @@ COLUMNS = [
 
 
 class DASHapp(DASH, Model):
-    def __init__(self, data, limit_to=None, exclude=None):
+    def __init__(
+        self,
+        data,
+        limit_to=None,
+        exclude=None,
+        use_idf=True,
+        smooth_idf=True,
+        sublinear_tf=False,
+    ):
 
         Model.__init__(self, data, limit_to, exclude)
         DASH.__init__(self)
 
         self.data = data
         self.app_title = "Concept Mapping"
+        self.use_idf = use_idf
+        self.smooth_idf = smooth_idf
+        self.sublinear_tf = sublinear_tf
+
         self.menu_options = [
             "Cluster memberships",
             "Cluster co-occurrence matrix",
@@ -339,13 +391,16 @@ class DASHapp(DASH, Model):
             "CA cluster map",
             "Strategic map",
         ]
+
         self.panel_widgets = [
             gui.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
+            gui.min_occurrence(),
+            gui.max_terms(),
+            gui.normalization(),
             gui.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
             gui.top_n(),
-            gui.normalization(),
             gui.n_clusters(),
             gui.linkage(),
             gui.affinity(),
@@ -412,92 +467,92 @@ def app(data, limit_to=None, exclude=None):
 # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - # - #
 
 
-#
-# Association analysis
-#
-def __TAB2__(data, limit_to, exclude):
-    # -------------------------------------------------------------------------
-    #
-    # UI
-    #
-    # -------------------------------------------------------------------------
-    COLUMNS = sorted([column for column in data.columns if column not in EXCLUDE_COLS])
-    #
-    left_panel = [
-        gui.dropdown(
-            desc="Method:",
-            options=["Multidimensional scaling", "Correspondence analysis"],
-        ),
-        gui.dropdown(
-            desc="Column:", options=[z for z in COLUMNS if z in data.columns],
-        ),
-        gui.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-        gui.top_n(),
-        gui.normalization(),
-        gui.n_components(),
-        gui.n_clusters(),
-        gui.linkage(),
-        gui.x_axis(),
-        gui.y_axis(),
-        gui.fig_width(),
-        gui.fig_height(),
-    ]
-    # -------------------------------------------------------------------------
-    #
-    # Logic
-    #
-    # -------------------------------------------------------------------------
-    def server(**kwargs):
-        #
-        # Logic
-        #
-        method = {"Multidimensional scaling": "MDS", "Correspondence analysis": "CA"}[
-            kwargs["method"]
-        ]
-        column = kwargs["column"]
-        top_by = kwargs["top_by"]
-        top_n = int(kwargs["top_n"])
-        normalization = kwargs["normalization"]
-        n_components = int(kwargs["n_components"])
-        n_clusters = int(kwargs["n_clusters"])
-        x_axis = int(kwargs["x_axis"])
-        y_axis = int(kwargs["y_axis"])
-        width = int(kwargs["width"])
-        height = int(kwargs["height"])
+# #
+# # Association analysis
+# #
+# def __TAB2__(data, limit_to, exclude):
+#     # -------------------------------------------------------------------------
+#     #
+#     # UI
+#     #
+#     # -------------------------------------------------------------------------
+#     COLUMNS = sorted([column for column in data.columns if column not in EXCLUDE_COLS])
+#     #
+#     left_panel = [
+#         gui.dropdown(
+#             desc="Method:",
+#             options=["Multidimensional scaling", "Correspondence analysis"],
+#         ),
+#         gui.dropdown(
+#             desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+#         ),
+#         gui.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+#         gui.top_n(),
+#         gui.normalization(),
+#         gui.n_components(),
+#         gui.n_clusters(),
+#         gui.linkage(),
+#         gui.x_axis(),
+#         gui.y_axis(),
+#         gui.fig_width(),
+#         gui.fig_height(),
+#     ]
+#     # -------------------------------------------------------------------------
+#     #
+#     # Logic
+#     #
+#     # -------------------------------------------------------------------------
+#     def server(**kwargs):
+#         #
+#         # Logic
+#         #
+#         method = {"Multidimensional scaling": "MDS", "Correspondence analysis": "CA"}[
+#             kwargs["method"]
+#         ]
+#         column = kwargs["column"]
+#         top_by = kwargs["top_by"]
+#         top_n = int(kwargs["top_n"])
+#         normalization = kwargs["normalization"]
+#         n_components = int(kwargs["n_components"])
+#         n_clusters = int(kwargs["n_clusters"])
+#         x_axis = int(kwargs["x_axis"])
+#         y_axis = int(kwargs["y_axis"])
+#         width = int(kwargs["width"])
+#         height = int(kwargs["height"])
 
-        left_panel[8]["widget"].options = list(range(n_components))
-        left_panel[9]["widget"].options = list(range(n_components))
-        x_axis = left_panel[8]["widget"].value
-        y_axis = left_panel[9]["widget"].value
+#         left_panel[8]["widget"].options = list(range(n_components))
+#         left_panel[9]["widget"].options = list(range(n_components))
+#         x_axis = left_panel[8]["widget"].value
+#         y_axis = left_panel[9]["widget"].value
 
-        matrix = co_occurrence_matrix(
-            data=data,
-            column=column,
-            top_by=top_by,
-            top_n=top_n,
-            normalization=normalization,
-            limit_to=limit_to,
-            exclude=exclude,
-        )
+#         matrix = co_occurrence_matrix(
+#             data=data,
+#             column=column,
+#             top_by=top_by,
+#             top_n=top_n,
+#             normalization=normalization,
+#             limit_to=limit_to,
+#             exclude=exclude,
+#         )
 
-        output.clear_output()
-        with output:
+#         output.clear_output()
+#         with output:
 
-            display(
-                association_analysis(
-                    X=matrix,
-                    method=method,
-                    n_components=n_components,
-                    n_clusters=n_clusters,
-                    x_axis=x_axis,
-                    y_axis=y_axis,
-                    figsize=(width, height),
-                )
-            )
+#             display(
+#                 association_analysis(
+#                     X=matrix,
+#                     method=method,
+#                     n_components=n_components,
+#                     n_clusters=n_clusters,
+#                     x_axis=x_axis,
+#                     y_axis=y_axis,
+#                     figsize=(width, height),
+#                 )
+#             )
 
-        return
+#         return
 
-    ###
-    output = widgets.Output()
-    return gui.TABapp(left_panel=left_panel, server=server, output=output)
+#     ###
+#     output = widgets.Output()
+#     return gui.TABapp(left_panel=left_panel, server=server, output=output)
 
