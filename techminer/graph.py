@@ -380,7 +380,7 @@ class DASHapp(DASH, Model):
             self.panel_widgets[-1]["widget"].disabled = True
 
         if self.menu in ["Heatmap", "Bubble plot"]:
-            self.panel_widgets[-5]["widget"].disabled = True
+            self.panel_widgets[-5]["widget"].disabled = False
             self.panel_widgets[-4]["widget"].disabled = False
             self.panel_widgets[-3]["widget"].disabled = True
             self.panel_widgets[-2]["widget"].disabled = False
