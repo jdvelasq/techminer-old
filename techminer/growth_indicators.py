@@ -103,6 +103,8 @@ class Model:
         self.data = data
         self.limit_to = limit_to
         self.exclude = exclude
+        #
+        self.top_n = None
 
     def fit(self):
         def average_growth_rate():
@@ -202,6 +204,9 @@ class Model:
         result = pd.merge(result, num_docs, on=self.column)
         result = result.reset_index(drop=True)
         result = result.set_index(self.column)
+        result = cmn.add_counters_to_axis(
+            X=result, axis=0, data=self.data, column=self.column
+        )
 
         result = result.head(self.top_n)
 
