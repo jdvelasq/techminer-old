@@ -400,3 +400,29 @@ class DASH:
         widgets.interactive_output(
             self.interactive_output, args,
         )
+
+    def text_transform(self, text):
+        return (
+            text.replace(" ", "_")
+            .replace("-", "_")
+            .replace("/", "_")
+            .replace(":", "")
+            .lower()
+        )
+
+    def set_enabled(self, name):
+        for index, _ in enumerate(self.panel_widgets):
+            x = self.text_transform(self.panel_widgets[index]["desc"])
+            name = self.text_transform(name)
+            if x == name:
+                self.panel_widgets[index]["widget"].disabled = False
+                return
+
+    def set_disabled(self, name):
+        for index, _ in enumerate(self.panel_widgets):
+            x = self.text_transform(self.panel_widgets[index]["desc"])
+            name = self.text_transform(name)
+            if x == name:
+
+                self.panel_widgets[index]["widget"].disabled = True
+                return

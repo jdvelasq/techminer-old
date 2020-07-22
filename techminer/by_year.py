@@ -156,21 +156,21 @@ class DASHapp(DASH, Model):
 
         if self.menu == self.menu_options[0]:
 
-            self.panel_widgets[0]["widget"].disabled = False
-            self.panel_widgets[1]["widget"].disabled = False
-            self.panel_widgets[2]["widget"].disabled = True
-            self.panel_widgets[3]["widget"].disabled = True
-            self.panel_widgets[4]["widget"].disabled = True
-            self.panel_widgets[5]["widget"].disabled = True
+            self.set_enabled("Sort by:")
+            self.set_enabled("Ascending:")
+            self.set_disabled("Plot:")
+            self.set_disabled("Colormap:")
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
 
         else:
 
-            self.panel_widgets[0]["widget"].disabled = True
-            self.panel_widgets[1]["widget"].disabled = True
-            self.panel_widgets[2]["widget"].disabled = False
-            self.panel_widgets[3]["widget"].disabled = False
-            self.panel_widgets[4]["widget"].disabled = False
-            self.panel_widgets[5]["widget"].disabled = False
+            self.set_disabled("Sort by:")
+            self.set_disabled("Ascending:")
+            self.set_enabled("Plot:")
+            self.set_enabled("Colormap:")
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
 
 
 ###############################################################################
