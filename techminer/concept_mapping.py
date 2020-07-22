@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 import techminer.by_term as by_term
 import techminer.common as common
-import techminer.gui as gui
 import techminer.plots as plt
 from cdlib import algorithms
 from ipywidgets import AppLayout, GridspecLayout, Layout
@@ -18,10 +17,10 @@ from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
 
 import techminer.common as cmn
-import json
 from techminer.dashboard import DASH
 from techminer.correspondence import CA
 from techminer.graph import network_normalization, co_occurrence_matrix
+import techminer.dashboard as dash
 
 
 def network_clustering(X, n_clusters, affinity, linkage):
@@ -393,23 +392,23 @@ class DASHapp(DASH, Model):
         ]
 
         self.panel_widgets = [
-            gui.dropdown(
+            dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
-            gui.min_occurrence(),
-            gui.max_terms(),
-            gui.normalization(),
-            gui.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-            gui.top_n(),
-            gui.n_clusters(),
-            gui.linkage(),
-            gui.affinity(),
-            gui.n_components(),
-            gui.x_axis(),
-            gui.y_axis(),
-            #  gui.cmap(),
-            gui.fig_width(),
-            gui.fig_height(),
+            dash.min_occurrence(),
+            dash.max_terms(),
+            dash.normalization(),
+            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+            dash.top_n(),
+            dash.n_clusters(),
+            dash.linkage(),
+            dash.affinity(),
+            dash.n_components(),
+            dash.x_axis(),
+            dash.y_axis(),
+            #  dash.cmap(),
+            dash.fig_width(),
+            dash.fig_height(),
         ]
 
         super().create_grid()
@@ -479,23 +478,23 @@ def app(data, limit_to=None, exclude=None):
 #     COLUMNS = sorted([column for column in data.columns if column not in EXCLUDE_COLS])
 #     #
 #     left_panel = [
-#         gui.dropdown(
+#         dash.dropdown(
 #             desc="Method:",
 #             options=["Multidimensional scaling", "Correspondence analysis"],
 #         ),
-#         gui.dropdown(
+#         dash.dropdown(
 #             desc="Column:", options=[z for z in COLUMNS if z in data.columns],
 #         ),
-#         gui.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-#         gui.top_n(),
-#         gui.normalization(),
-#         gui.n_components(),
-#         gui.n_clusters(),
-#         gui.linkage(),
-#         gui.x_axis(),
-#         gui.y_axis(),
-#         gui.fig_width(),
-#         gui.fig_height(),
+#         dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+#         dash.top_n(),
+#         dash.normalization(),
+#         dash.n_components(),
+#         dash.n_clusters(),
+#         dash.linkage(),
+#         dash.x_axis(),
+#         dash.y_axis(),
+#         dash.fig_width(),
+#         dash.fig_height(),
 #     ]
 #     # -------------------------------------------------------------------------
 #     #
@@ -554,5 +553,5 @@ def app(data, limit_to=None, exclude=None):
 
 #     ###
 #     output = widgets.Output()
-#     return gui.TABapp(left_panel=left_panel, server=server, output=output)
+#     return dash.TABapp(left_panel=left_panel, server=server, output=output)
 

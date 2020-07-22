@@ -12,7 +12,6 @@ import numpy as np
 import pandas as pd
 import techminer.by_term as by_term
 import techminer.common as cmn
-import techminer.gui as gui
 import techminer.plots as plt
 from IPython.display import HTML, clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
@@ -25,7 +24,7 @@ from techminer.keywords import Keywords
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
 from techminer.document_term import TF_matrix
-
+import techminer.dashboard as dash
 from matplotlib.lines import Line2D
 
 from techminer.dashboard import DASH
@@ -330,30 +329,30 @@ class DASHapp(DASH, Model):
         ]
 
         self.panel_widgets = [
-            gui.dropdown(
+            dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
-            gui.dropdown(
+            dash.dropdown(
                 desc="By:", options=[z for z in COLUMNS if z in data.columns],
             ),
-            gui.dropdown(desc="Method:", options=["pearson", "kendall", "spearman"],),
-            gui.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-            gui.top_n(),
-            gui.dropdown(
+            dash.dropdown(desc="Method:", options=["pearson", "kendall", "spearman"],),
+            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+            dash.top_n(),
+            dash.dropdown(
                 desc="Sort C-axis by:",
                 options=["Alphabetic", "Num Documents", "Times Cited",],
             ),
-            gui.c_axis_ascending(),
-            gui.dropdown(
+            dash.c_axis_ascending(),
+            dash.dropdown(
                 desc="Sort R-axis by:",
                 options=["Alphabetic", "Num Documents", "Times Cited",],
             ),
-            gui.r_axis_ascending(),
-            gui.cmap(),
-            gui.nx_layout(),
-            gui.nx_iterations(),
-            gui.fig_width(),
-            gui.fig_height(),
+            dash.r_axis_ascending(),
+            dash.cmap(),
+            dash.nx_layout(),
+            dash.nx_iterations(),
+            dash.fig_width(),
+            dash.fig_height(),
         ]
         super().create_grid()
 

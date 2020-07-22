@@ -1,17 +1,8 @@
-import json
-
-import ipywidgets as widgets
 import matplotlib
 import matplotlib.pyplot as pyplot
-import numpy as np
 import pandas as pd
-import techminer.by_term as by_term
 import techminer.common as cmn
-import techminer.gui as gui
-from IPython.display import clear_output, display
-from ipywidgets import AppLayout, GridspecLayout, Layout
-from sklearn.cluster import AgglomerativeClustering
-from sklearn.manifold import MDS
+
 from techminer.document_term import TF_matrix, TFIDF_matrix
 
 from techminer.correspondence import CA
@@ -20,7 +11,7 @@ import techminer.plots as plt
 
 from sklearn.cluster import KMeans
 from techminer.dashboard import DASH
-
+import techminer.dashboard as dash
 
 ###############################################################################
 ##
@@ -346,22 +337,22 @@ class DASHapp(DASH, Model):
         ]
 
         self.panel_widgets = [
-            gui.dropdown(
+            dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
-            gui.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-            gui.top_n(n=101,),
-            gui.dropdown(desc="Norm:", options=[None, "L1", "L2"],),
-            gui.dropdown(desc="Use IDF:", options=[True, False,],),
-            gui.dropdown(desc="Smooth IDF:", options=[True, False,],),
-            gui.dropdown(desc="Sublinear TF:", options=[True, False,],),
-            gui.n_clusters(),
-            gui.max_iter(),
-            gui.cmap(),
-            gui.x_axis(),
-            gui.y_axis(),
-            gui.fig_width(),
-            gui.fig_height(),
+            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+            dash.top_n(n=101,),
+            dash.dropdown(desc="Norm:", options=[None, "L1", "L2"],),
+            dash.dropdown(desc="Use IDF:", options=[True, False,],),
+            dash.dropdown(desc="Smooth IDF:", options=[True, False,],),
+            dash.dropdown(desc="Sublinear TF:", options=[True, False,],),
+            dash.n_clusters(),
+            dash.max_iter(),
+            dash.cmap(),
+            dash.x_axis(),
+            dash.y_axis(),
+            dash.fig_width(),
+            dash.fig_height(),
         ]
         super().create_grid()
 

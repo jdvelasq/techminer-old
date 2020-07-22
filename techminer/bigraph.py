@@ -7,7 +7,6 @@ Co-occurrence Analysis
 """
 import warnings
 
-import ipywidgets as widgets
 import matplotlib
 import matplotlib.pyplot as pyplot
 import networkx as nx
@@ -25,9 +24,9 @@ from techminer.keywords import Keywords
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
 import techminer.common as cmn
-import techminer.gui as gui
 
 from techminer.dashboard import DASH
+import techminer.dashboard as dash
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -114,6 +113,7 @@ class Model:
             matrix = cmn.add_counters_to_axis(
                 X=matrix, axis=0, data=self.data, column=self.by
             )
+            self.X_ = matrix
 
         if self.top_by in ["Num Documents", "Times Cited"]:
 
@@ -148,8 +148,8 @@ class Model:
 
             matrix = np.matmul(B.transpose().values, A.values)
             matrix = pd.DataFrame(matrix, columns=A.columns, index=B.columns)
+            self.X_ = matrix
 
-        self.X_ = matrix
         self.sort()
 
     def sort(self):
@@ -493,32 +493,32 @@ class DASHapp(DASH, Model):
         )
 
         self.panel_widgets = [
-            gui.dropdown(
+            dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
-            gui.dropdown(
+            dash.dropdown(
                 desc="By:", options=[z for z in COLUMNS if z in data.columns],
             ),
-            gui.dropdown(
+            dash.dropdown(
                 desc="Top by:", options=["Num Documents", "Times Cited", "Data",],
             ),
-            gui.top_n(),
-            gui.dropdown(
+            dash.top_n(),
+            dash.dropdown(
                 desc="Sort C-axis by:",
                 options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
             ),
-            gui.c_axis_ascending(),
-            gui.dropdown(
+            dash.c_axis_ascending(),
+            dash.dropdown(
                 desc="Sort R-axis by:",
                 options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
             ),
-            gui.r_axis_ascending(),
-            gui.cmap(arg="cmap", desc="Colormap Col:"),
-            gui.cmap(arg="cmap_by", desc="Colormap By:"),
-            gui.nx_layout(),
-            gui.nx_iterations(),
-            gui.fig_width(),
-            gui.fig_height(),
+            dash.r_axis_ascending(),
+            dash.cmap(arg="cmap", desc="Colormap Col:"),
+            dash.cmap(arg="cmap_by", desc="Colormap By:"),
+            dash.nx_layout(),
+            dash.nx_iterations(),
+            dash.fig_width(),
+            dash.fig_height(),
         ]
         super().create_grid()
 

@@ -1,3 +1,66 @@
+def APP(app_title, tab_titles, tab_widgets, tab=None):
+    """Jupyter Lab dashboard.
+    """
+
+    if tab is not None:
+        return AppLayout(
+            header=widgets.HTML(
+                value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+                    app_title + " / " + tab_titles[tab]
+                )
+            ),
+            center=tab_widgets[tab],
+            pane_heights=["80px", "660px", 0],  # tamaño total de la ventana: Ok!
+        )
+
+    body = widgets.Tab()
+    body.children = tab_widgets
+    for i in range(len(tab_widgets)):
+        body.set_title(i, tab_titles[i])
+    return AppLayout(
+        header=widgets.HTML(
+            value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+                app_title
+            )
+        ),
+        center=body,
+        pane_heights=["80px", "720px", 0],
+    )
+
+
+def TABapp(left_panel, server, output):
+
+    #  defines interactive output
+    args = {control["arg"]: control["widget"] for control in left_panel}
+    with output:
+        display(widgets.interactive_output(server, args,))
+
+    grid = GridspecLayout(13, 6, height="650px")
+
+    # left panel layout
+    grid[0:, 0] = widgets.VBox(
+        [
+            widgets.HBox(
+                [
+                    widgets.Label(value=left_panel[index]["desc"]),
+                    left_panel[index]["widget"],
+                ],
+                layout=Layout(
+                    display="flex", justify_content="flex-end", align_content="center",
+                ),
+            )
+            for index in range(len(left_panel))
+        ]
+    )
+
+    # output
+    grid[:, 1:] = widgets.VBox(
+        [output], layout=Layout(height="650px", border="2px solid gray")
+    )
+
+    return grid
+
+
 def associations_map(X, selected, cmap, layout, figsize):
 
     if selected == ():
@@ -133,12 +196,12 @@ def __TAB1__(data, limit_to, exclude):
             ),
         },
         # 2
-        gui.top_n(),
+        dash.top_n(),
         # 3
-        gui.normalization(),
-        gui.cmap(),
+        dash.normalization(),
+        dash.cmap(),
         # 5
-        gui.nx_layout(),
+        dash.nx_layout(),
         # 6
         {
             "arg": "width",
@@ -211,5 +274,5 @@ def __TAB1__(data, limit_to, exclude):
 
     ###
     output = widgets.Output()
-    return gui.TABapp(left_panel=left_panel, server=server, output=output)
+    return dash.TABapp(left_panel=left_panel, server=server, output=output)
 

@@ -2,12 +2,9 @@ import numpy as np
 import pandas as pd
 
 import techminer.plots as plt
-from IPython.display import display
-
-
-from techminer.params import EXCLUDE_COLS
-import techminer.gui as gui
+import techminer.dashboard as dash
 from techminer.dashboard import DASH
+
 
 #  import ipywidgets as widgets
 #  from ipywidgets import AppLayout, GridspecLayout, Layout
@@ -138,7 +135,7 @@ class DASHapp(DASH, Model):
         ]
 
         self.panel_widgets = [
-            gui.dropdown(
+            dash.dropdown(
                 desc="Sort by:",
                 options=[
                     "Year",
@@ -149,11 +146,11 @@ class DASHapp(DASH, Model):
                     "Avg_Times_Cited",
                 ],
             ),
-            gui.ascending(),
-            gui.dropdown(desc="Plot:", options=["Bar plot", "Horizontal bar plot"],),
-            gui.cmap(),
-            gui.fig_width(),
-            gui.fig_height(),
+            dash.ascending(),
+            dash.dropdown(desc="Plot:", options=["Bar plot", "Horizontal bar plot"],),
+            dash.cmap(),
+            dash.fig_width(),
+            dash.fig_height(),
         ]
         super().create_grid()
 

@@ -9,5 +9,6 @@
     "python.testing.pytestArgs": [
         "--doctest-modules"
     ],
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "python.sortImports.path": "/usr/local/bin/isort"
 }

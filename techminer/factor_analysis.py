@@ -19,8 +19,7 @@ from techminer.explode import __explode
 from techminer.keywords import Keywords
 from techminer.plots import COLORMAPS
 import techminer.common as cmn
-import techminer.gui as gui
-
+import techminer.dashboard as dash
 
 from matplotlib.lines import Line2D
 from techminer.dashboard import DASH
@@ -344,25 +343,25 @@ class DASHapp(DASH, Model):
         self.menu_options = ["Factors", "Variances", "Map"]
 
         self.panel_widgets = [
-            gui.dropdown(
+            dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
-            gui.n_components(),
-            gui.random_state(),
-            gui.dropdown(
+            dash.n_components(),
+            dash.random_state(),
+            dash.dropdown(
                 desc="Top by:", options=["Values", "Num Documents", "Times Cited"],
             ),
-            gui.top_n(),
-            gui.dropdown(
+            dash.top_n(),
+            dash.dropdown(
                 desc="Sort by:",
                 options=["Alphabetic", "Num Documents", "Times Cited", "Factor",],
             ),
-            gui.ascending(),
-            gui.cmap(),
-            gui.nx_layout(),
-            gui.nx_iterations(),
-            gui.fig_width(),
-            gui.fig_height(),
+            dash.ascending(),
+            dash.cmap(),
+            dash.nx_layout(),
+            dash.nx_iterations(),
+            dash.fig_width(),
+            dash.fig_height(),
         ]
         super().create_grid()
 

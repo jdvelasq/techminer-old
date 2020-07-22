@@ -1,19 +1,16 @@
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import TruncatedSVD
-import matplotlib
-import matplotlib.pyplot as pyplot
 
 import techminer.plots as plt
 import techminer.common as cmn
 from techminer.dashboard import DASH
 from techminer.document_term import TF_matrix, TFIDF_matrix
 from techminer.params import EXCLUDE_COLS
-from techminer.plots import COLORMAPS
+
 
 from techminer.diagram_plot import diagram_plot
-
-import techminer.gui as gui
+import techminer.dashboard as dash
 
 ###############################################################################
 ##
@@ -271,25 +268,25 @@ class DASHapp(DASH, Model):
         )
 
         self.panel_widgets = [
-            gui.dropdown(desc="Column:", options=[t for t in data if t in COLUMNS],),
-            gui.dropdown(desc="Analysis type:", options=["Co-occurrence", "TF*IDF",],),
-            gui.n_components(),
-            gui.random_state(),
-            gui.n_iter(),
-            gui.min_occurrence(),
-            gui.max_terms(),
-            gui.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-            gui.top_n(),
-            gui.dropdown(
+            dash.dropdown(desc="Column:", options=[t for t in data if t in COLUMNS],),
+            dash.dropdown(desc="Analysis type:", options=["Co-occurrence", "TF*IDF",],),
+            dash.n_components(),
+            dash.random_state(),
+            dash.n_iter(),
+            dash.min_occurrence(),
+            dash.max_terms(),
+            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+            dash.top_n(),
+            dash.dropdown(
                 desc="Sort by:",
                 options=["Alphabetic", "Num Documents", "Times Cited",],
             ),
-            gui.ascending(),
-            gui.cmap(),
-            gui.x_axis(),
-            gui.y_axis(),
-            gui.fig_width(),
-            gui.fig_height(),
+            dash.ascending(),
+            dash.cmap(),
+            dash.x_axis(),
+            dash.y_axis(),
+            dash.fig_width(),
+            dash.fig_height(),
         ]
         super().create_grid()
 

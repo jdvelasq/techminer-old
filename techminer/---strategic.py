@@ -24,7 +24,7 @@ import pandas as pd
 import techminer.by_term
 import techminer.common as cmn
 import techminer.graph as graph
-import techminer.gui as gui
+
 import techminer.plots as plt
 from IPython.display import clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
@@ -36,6 +36,89 @@ from techminer.params import EXCLUDE_COLS
 
 pd.options.display.max_rows = 50
 pd.options.display.max_columns = 50
+
+
+class TABapp_:
+    def __init__(self):
+        self.output_ = widgets.Output()
+        self.panel_ = []
+        self.grid_ = []
+        #
+        self.view = None
+        self.sort_by = None
+        self.ascending = None
+        self.cmap = None
+        self.width = None
+        self.height = None
+        self.plot = None
+        self.column = None
+        self.norm = None
+        self.use_idf = None
+        self.smooth_idf = None
+        self.top_n = None
+        self.sublinear_tf = None
+        self.by = None
+
+    def run(self):
+        return self.grid_
+
+    def gui(self, **kwargs):
+
+        for key in kwargs.keys():
+            setattr(self, key, kwargs[key])
+
+    def update(self, button):
+        pass
+
+    def create_grid(self):
+
+        #  Grid size
+        self.grid_ = GridspecLayout(max(14, len(self.panel_)), 6, height="650px")
+
+        # Button control
+        self.grid_[0, 0] = widgets.Button(
+            description="Calculate",
+            layout=Layout(width="91%", border="2px solid gray"),
+        )
+        self.grid_[0, 0].on_click(self.update)
+
+        self.grid_[1:, 0] = widgets.VBox(
+            [
+                widgets.HBox(
+                    [
+                        widgets.Label(value=self.panel_[index]["desc"]),
+                        self.panel_[index]["widget"],
+                    ],
+                    layout=Layout(
+                        display="flex",
+                        justify_content="flex-end",
+                        align_content="center",
+                    ),
+                )
+                if self.panel_[index]["arg"] != "terms"
+                else widgets.VBox(
+                    [
+                        widgets.Label(value=self.panel_[index]["desc"]),
+                        self.panel_[index]["widget"],
+                    ],
+                    layout=Layout(
+                        display="flex",
+                        justify_content="flex-end",
+                        align_content="center",
+                    ),
+                )
+                for index in range(len(self.panel_))
+            ]
+        )
+
+        #  Output area
+        self.grid_[:, 1:] = widgets.VBox(
+            [self.output_], layout=Layout(height="650px", border="2px solid gray")
+        )
+
+        args = {control["arg"]: control["widget"] for control in self.panel_}
+        with self.output_:
+            display(widgets.interactive_output(self.gui, args,))
 
 
 ###################################################################################################
@@ -208,18 +291,18 @@ class TABapp0(gui.TABapp_):
         )
 
         self.panel_ = [
-            gui.dropdown(desc="View:", options=["Table", "Membership", "Plot"],),
-            gui.dropdown(
+            dash.dropdown(desc="View:", options=["Table", "Membership", "Plot"],),
+            dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
-            gui.dropdown(desc="Top by:", options=["Num Documents", "Times Cited"],),
-            gui.top_n(m=10, n=1001, i=10),
-            gui.normalization(),
-            gui.n_clusters(),
-            gui.linkage(),
-            gui.cmap(),
-            gui.fig_width(),
-            gui.fig_height(),
+            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited"],),
+            dash.top_n(m=10, n=1001, i=10),
+            dash.normalization(),
+            dash.n_clusters(),
+            dash.linkage(),
+            dash.cmap(),
+            dash.fig_width(),
+            dash.fig_height(),
         ]
         super().create_grid()
 

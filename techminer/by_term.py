@@ -14,8 +14,8 @@ from techminer.explode import __explode as _explode
 from techminer.params import EXCLUDE_COLS
 from techminer.plots import COLORMAPS
 import techminer.common as cmn
-import techminer.gui as gui
 from techminer.dashboard import DASH
+import techminer.dashboard as dash
 
 ###############################################################################
 ##
@@ -757,10 +757,10 @@ class DASHapp(DASH, Model):
             "Top documents",
         ]
         self.panel_widgets = [
-            gui.dropdown(
+            dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
-            gui.dropdown(
+            dash.dropdown(
                 desc="View:",
                 options=[
                     "Table",
@@ -774,7 +774,7 @@ class DASHapp(DASH, Model):
                     "S/D Ratio (barh)",
                 ],
             ),
-            gui.dropdown(
+            dash.dropdown(
                 desc="Top by:",
                 options=[
                     "Num Documents",
@@ -787,8 +787,8 @@ class DASHapp(DASH, Model):
                     "G index",
                 ],
             ),
-            gui.top_n(),
-            gui.dropdown(
+            dash.top_n(),
+            dash.dropdown(
                 desc="Sort by:",
                 options=[
                     "Num Documents",
@@ -802,10 +802,10 @@ class DASHapp(DASH, Model):
                     "*Index*",
                 ],
             ),
-            gui.ascending(),
-            gui.cmap(),
-            gui.fig_width(),
-            gui.fig_height(),
+            dash.ascending(),
+            dash.cmap(),
+            dash.fig_width(),
+            dash.fig_height(),
         ]
         super().create_grid()
 

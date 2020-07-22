@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import techminer.by_term as by_term
 import techminer.common as cmn
-import techminer.gui as gui
+
 from IPython.display import clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
 from sklearn.cluster import AgglomerativeClustering
@@ -22,6 +22,7 @@ import techminer.plots as plt
 
 from sklearn.cluster import KMeans
 from techminer.dashboard import DASH
+import techminer.dashboard as dash
 
 
 def growth_indicators(
@@ -346,11 +347,11 @@ class DASHapp(DASH, Model):
         ]
 
         self.panel_widgets = [
-            gui.dropdown(
+            dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in self.data.columns],
             ),
-            gui.dropdown(desc="Time window:", options=[2, 3, 4, 5],),
-            gui.dropdown(
+            dash.dropdown(desc="Time window:", options=[2, 3, 4, 5],),
+            dash.dropdown(
                 desc="Top by:",
                 options=[
                     "Average Growth Rate",
@@ -359,8 +360,8 @@ class DASHapp(DASH, Model):
                     "Number of Document Published",
                 ],
             ),
-            gui.top_n(),
-            gui.dropdown(
+            dash.top_n(),
+            dash.dropdown(
                 desc="Sort by:",
                 options=[
                     "Alphabetic",
@@ -373,11 +374,11 @@ class DASHapp(DASH, Model):
                     "Between",
                 ],
             ),
-            gui.ascending(),
-            gui.dropdown(desc="Plot:", options=["bar", "barh"],),
-            gui.cmap(),
-            gui.fig_width(),
-            gui.fig_height(),
+            dash.ascending(),
+            dash.dropdown(desc="Plot:", options=["bar", "barh"],),
+            dash.cmap(),
+            dash.fig_width(),
+            dash.fig_height(),
         ]
         super().create_grid()
 

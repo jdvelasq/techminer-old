@@ -15,7 +15,7 @@ from techminer.plots import COLORMAPS
 from techminer.correspondence import CA
 from techminer.diagram_plot import diagram_plot
 
-import techminer.gui as gui
+import techminer.dashboard as dash
 
 ###############################################################################
 ##
@@ -240,19 +240,19 @@ class DASHapp(DASH, Model):
         )
 
         self.panel_widgets = [
-            gui.dropdown(desc="Column:", options=[t for t in data if t in COLUMNS],),
-            gui.min_occurrence(),
-            gui.max_terms(),
-            gui.n_clusters(),
-            gui.max_iter(),
-            gui.random_state(),
-            gui.dropdown(desc="N Factors:", options=list(range(2, 20)),),
-            gui.top_n(m=10, n=51, i=5),
-            gui.cmap(),
-            gui.x_axis(),
-            gui.y_axis(),
-            gui.fig_width(),
-            gui.fig_height(),
+            dash.dropdown(desc="Column:", options=[t for t in data if t in COLUMNS],),
+            dash.min_occurrence(),
+            dash.max_terms(),
+            dash.n_clusters(),
+            dash.max_iter(),
+            dash.random_state(),
+            dash.dropdown(desc="N Factors:", options=list(range(2, 20)),),
+            dash.top_n(m=10, n=51, i=5),
+            dash.cmap(),
+            dash.x_axis(),
+            dash.y_axis(),
+            dash.fig_width(),
+            dash.fig_height(),
         ]
         super().create_grid()
 

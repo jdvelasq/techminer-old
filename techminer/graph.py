@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 import techminer.by_term as by_term
 import techminer.common as common
-import techminer.gui as gui
 import techminer.plots as plt
 from cdlib import algorithms
 from ipywidgets import AppLayout, GridspecLayout, Layout
@@ -20,6 +19,7 @@ from techminer.plots import COLORMAPS
 import techminer.common as cmn
 
 from techminer.dashboard import DASH
+import techminer.dashboard as dash
 
 ###############################################################################
 ##
@@ -340,31 +340,31 @@ class DASHapp(DASH, Model):
         )
 
         self.panel_widgets = [
-            gui.dropdown(
+            dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
-            gui.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-            gui.top_n(),
-            gui.dropdown(
+            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+            dash.top_n(),
+            dash.dropdown(
                 desc="Sort C-axis by:",
                 options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
             ),
-            gui.c_axis_ascending(),
-            gui.dropdown(
+            dash.c_axis_ascending(),
+            dash.dropdown(
                 desc="Sort R-axis by:",
                 options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
             ),
-            gui.r_axis_ascending(),
-            gui.normalization(),
-            gui.dropdown(
+            dash.r_axis_ascending(),
+            dash.normalization(),
+            dash.dropdown(
                 desc="Clustering:",
                 options=["Label propagation", "Leiden", "Louvain", "Walktrap",],
             ),
-            gui.cmap(),
-            gui.nx_layout(),
-            gui.nx_iterations(),
-            gui.fig_width(),
-            gui.fig_height(),
+            dash.cmap(),
+            dash.nx_layout(),
+            dash.nx_iterations(),
+            dash.fig_width(),
+            dash.fig_height(),
         ]
         super().create_grid()
 
