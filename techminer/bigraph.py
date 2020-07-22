@@ -12,21 +12,14 @@ import matplotlib.pyplot as pyplot
 import networkx as nx
 import numpy as np
 import pandas as pd
-from IPython.display import HTML, clear_output, display
-from ipywidgets import AppLayout, GridspecLayout, Layout
-from techminer.document_term import TF_matrix
 
-import techminer.by_term as by_term
-import techminer.plots as plt
-from techminer.chord_diagram import ChordDiagram
-from techminer.explode import MULTIVALUED_COLS, __explode
-from techminer.keywords import Keywords
-from techminer.params import EXCLUDE_COLS
-from techminer.plots import COLORMAPS
+
 import techminer.common as cmn
-
-from techminer.dashboard import DASH
 import techminer.dashboard as dash
+import techminer.plots as plt
+from techminer.dashboard import DASH
+from techminer.document_term import TF_matrix
+from techminer.params import EXCLUDE_COLS
 
 warnings.filterwarnings("ignore", category=UserWarning)
 

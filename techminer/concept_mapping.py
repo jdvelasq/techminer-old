@@ -1,26 +1,16 @@
-import ipywidgets as widgets
 import matplotlib
 import matplotlib.pyplot as pyplot
-import networkx as nx
 import numpy as np
 import pandas as pd
-import techminer.by_term as by_term
-import techminer.common as common
-import techminer.plots as plt
-from cdlib import algorithms
-from ipywidgets import AppLayout, GridspecLayout, Layout
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.manifold import MDS
-from techminer.document_term import TF_matrix, TFIDF_matrix
-from techminer.explode import __explode
-from techminer.params import EXCLUDE_COLS
-from techminer.plots import COLORMAPS
 
 import techminer.common as cmn
-from techminer.dashboard import DASH
-from techminer.correspondence import CA
-from techminer.graph import network_normalization, co_occurrence_matrix
 import techminer.dashboard as dash
+from techminer.correspondence import CA
+from techminer.dashboard import DASH
+from techminer.document_term import TF_matrix, TFIDF_matrix
+from techminer.graph import network_normalization
 
 
 def network_clustering(X, n_clusters, affinity, linkage):
@@ -554,4 +544,3 @@ def app(data, limit_to=None, exclude=None):
 #     ###
 #     output = widgets.Output()
 #     return dash.TABapp(left_panel=left_panel, server=server, output=output)
-

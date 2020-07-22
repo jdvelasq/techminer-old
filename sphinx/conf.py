@@ -13,8 +13,8 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
 import os
+import sys
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -359,4 +359,3 @@ epub_exclude_files = ["search.html"]
 
 # If false, no index is generated.
 # epub_use_index = True
-

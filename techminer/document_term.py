@@ -1,11 +1,12 @@
 import numpy as np
 import pandas as pd
-from techminer.explode import __explode
 from sklearn.feature_extraction.text import TfidfTransformer
-import techminer.plots as plt
+
 import techminer.common as cmn
-from techminer.dashboard import DASH
 import techminer.dashboard as dash
+import techminer.plots as plt
+from techminer.dashboard import DASH
+from techminer.explode import __explode
 
 ###############################################################################
 ##
@@ -232,4 +233,3 @@ class DASHapp(DASH, Model):
 
 def app(data, limit_to=None, exclude=None):
     return DASHapp(data=data, limit_to=limit_to, exclude=exclude).run()
-

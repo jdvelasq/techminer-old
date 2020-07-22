@@ -18,6 +18,7 @@ import numpy as np
 import pandas as pd
 from nltk import WordNetLemmatizer, pos_tag
 from nltk.corpus import stopwords
+
 from techminer.params import EXCLUDE_COLS, MULTIVALUED_COLS
 from techminer.text import remove_accents
 from techminer.thesaurus import text_clustering
@@ -30,7 +31,6 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-import nltk
 
 #  nltk.download("stopwords")
 

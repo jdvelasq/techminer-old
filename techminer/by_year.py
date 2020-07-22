@@ -1,13 +1,9 @@
 import numpy as np
 import pandas as pd
 
-import techminer.plots as plt
 import techminer.dashboard as dash
+import techminer.plots as plt
 from techminer.dashboard import DASH
-
-
-#  import ipywidgets as widgets
-#  from ipywidgets import AppLayout, GridspecLayout, Layout
 
 
 class Model:
@@ -186,4 +182,3 @@ class DASHapp(DASH, Model):
 
 def app(data):
     return DASHapp(data=data).run()
-

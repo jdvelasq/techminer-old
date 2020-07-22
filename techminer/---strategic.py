@@ -21,18 +21,18 @@ import matplotlib
 import matplotlib.pyplot as pyplot
 import numpy as np
 import pandas as pd
-import techminer.by_term
-import techminer.common as cmn
-import techminer.graph as graph
-
-import techminer.plots as plt
 from IPython.display import clear_output, display
 from ipywidgets import AppLayout, GridspecLayout, Layout
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.manifold import MDS
+
+import techminer.by_term
+import techminer.common as cmn
+import techminer.graph as graph
+import techminer.plots as plt
 from techminer.document_term import TF_matrix
-from techminer.plots import COLORMAPS
 from techminer.params import EXCLUDE_COLS
+from techminer.plots import COLORMAPS
 
 pd.options.display.max_rows = 50
 pd.options.display.max_columns = 50
@@ -368,4 +368,3 @@ class TABapp0(gui.TABapp_):
 
 
 ##################################################################################################
-

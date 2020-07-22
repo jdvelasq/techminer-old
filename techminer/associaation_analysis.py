@@ -275,4 +275,3 @@ def __TAB1__(data, limit_to, exclude):
     ###
     output = widgets.Output()
     return dash.TABapp(left_panel=left_panel, server=server, output=output)
-

@@ -1,5 +1,5 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 
 class CA:
@@ -116,4 +116,3 @@ class CA:
         for i in scores.index:
             scores.at[i, :] = scores.loc[i, :] / sum_scores[i]
         self.col_scores_ = scores
-

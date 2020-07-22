@@ -1,9 +1,9 @@
 import ipywidgets as widgets
-from ipywidgets import AppLayout, GridspecLayout, Layout
 from IPython.display import display
-
+from ipywidgets import GridspecLayout, Layout
 
 from techminer.plots import COLORMAPS
+
 
 #
 # Common controls GUI definition

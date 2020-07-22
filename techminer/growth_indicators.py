@@ -1,28 +1,11 @@
-import json
-
-import ipywidgets as widgets
-import matplotlib
-import matplotlib.pyplot as pyplot
 import numpy as np
 import pandas as pd
-import techminer.by_term as by_term
+
 import techminer.common as cmn
-
-from IPython.display import clear_output, display
-from ipywidgets import AppLayout, GridspecLayout, Layout
-from sklearn.cluster import AgglomerativeClustering
-from sklearn.manifold import MDS
-from techminer.document_term import TF_matrix, TFIDF_matrix
-
-from techminer.by_term_per_year import _build_table
-
-from techminer.correspondence import CA
-
-import techminer.plots as plt
-
-from sklearn.cluster import KMeans
-from techminer.dashboard import DASH
 import techminer.dashboard as dash
+import techminer.plots as plt
+from techminer.by_term_per_year import _build_table
+from techminer.dashboard import DASH
 
 
 def growth_indicators(

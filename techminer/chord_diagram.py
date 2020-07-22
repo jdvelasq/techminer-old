@@ -10,7 +10,6 @@ import textwrap
 import matplotlib.pyplot as pyplot
 import numpy as np
 
-
 TEXTLEN = 50
 
 

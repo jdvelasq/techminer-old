@@ -5,29 +5,19 @@ Correlation Analysis
 
 """
 
-import ipywidgets as widgets
+
 import matplotlib.pyplot as pyplot
 import networkx as nx
 import numpy as np
 import pandas as pd
-import techminer.by_term as by_term
-import techminer.common as cmn
-import techminer.plots as plt
-from IPython.display import HTML, clear_output, display
-from ipywidgets import AppLayout, GridspecLayout, Layout
-from techminer.chord_diagram import ChordDiagram
-from techminer.graph import co_occurrence_matrix
-
-#  from techminer.bigraph import filter_index
-from techminer.explode import MULTIVALUED_COLS, __explode
-from techminer.keywords import Keywords
-from techminer.params import EXCLUDE_COLS
-from techminer.plots import COLORMAPS
-from techminer.document_term import TF_matrix
-import techminer.dashboard as dash
 from matplotlib.lines import Line2D
 
+import techminer.common as cmn
+import techminer.dashboard as dash
+import techminer.plots as plt
+from techminer.chord_diagram import ChordDiagram
 from techminer.dashboard import DASH
+from techminer.document_term import TF_matrix
 
 ###############################################################################
 ##
@@ -387,4 +377,3 @@ class DASHapp(DASH, Model):
 
 def app(data, limit_to=None, exclude=None):
     return DASHapp(data=data, limit_to=limit_to, exclude=exclude).run()
-

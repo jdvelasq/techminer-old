@@ -1,17 +1,14 @@
 import matplotlib
 import matplotlib.pyplot as pyplot
 import pandas as pd
-import techminer.common as cmn
-
-from techminer.document_term import TF_matrix, TFIDF_matrix
-
-from techminer.correspondence import CA
-
-import techminer.plots as plt
-
 from sklearn.cluster import KMeans
-from techminer.dashboard import DASH
+
+import techminer.common as cmn
 import techminer.dashboard as dash
+import techminer.plots as plt
+from techminer.correspondence import CA
+from techminer.dashboard import DASH
+from techminer.document_term import TF_matrix, TFIDF_matrix
 
 ###############################################################################
 ##

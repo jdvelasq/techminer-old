@@ -5,24 +5,18 @@ Factor analysis
 
 
 """
-import ipywidgets as widgets
+
 import matplotlib.pyplot as pyplot
 import networkx as nx
 import numpy as np
 import pandas as pd
-from IPython.display import HTML, clear_output, display
-from ipywidgets import AppLayout, GridspecLayout, Layout
-from matplotlib import colors
+from matplotlib.lines import Line2D
 from sklearn.decomposition import PCA
-from techminer.document_term import TF_matrix
-from techminer.explode import __explode
-from techminer.keywords import Keywords
-from techminer.plots import COLORMAPS
+
 import techminer.common as cmn
 import techminer.dashboard as dash
-
-from matplotlib.lines import Line2D
 from techminer.dashboard import DASH
+from techminer.document_term import TF_matrix
 
 ###############################################################################
 ##
@@ -402,4 +396,3 @@ class DASHapp(DASH, Model):
 
 def app(data, limit_to=None, exclude=None):
     return DASHapp(data=data, limit_to=limit_to, exclude=exclude).run()
-

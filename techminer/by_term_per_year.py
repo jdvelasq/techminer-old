@@ -4,25 +4,17 @@ Analysis by Term per Year
 
 
 """
-import textwrap
 
-import ipywidgets as widgets
 import numpy as np
 import pandas as pd
-import techminer.by_term as by_term
+
 import techminer.by_year as by_year
-
-import techminer.plots as plt
-from IPython.display import HTML, clear_output, display
-from ipywidgets import AppLayout, GridspecLayout, Layout
-from techminer.explode import __explode as _explode
-from techminer.keywords import Keywords
-from techminer.params import EXCLUDE_COLS
-from techminer.plots import COLORMAPS
-
 import techminer.common as cmn
 import techminer.dashboard as dash
+import techminer.plots as plt
 from techminer.dashboard import DASH
+from techminer.explode import __explode as _explode
+from techminer.params import EXCLUDE_COLS
 
 TEXTLEN = 40
 
@@ -529,4 +521,3 @@ def app(data, limit_to=None, exclude=None, tab=None):
         return MatrixListDASHapp(data=data, limit_to=limit_to, exclude=exclude).run()
 
     return MatrixDASHapp(data=data, limit_to=limit_to, exclude=exclude).run()
-

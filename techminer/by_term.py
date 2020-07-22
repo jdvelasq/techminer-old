@@ -3,19 +3,15 @@ Analysis by Term
 ==========================================================================
 
 """
-import ipywidgets as widgets
 import numpy as np
 import pandas as pd
-from IPython.display import HTML, clear_output, display
-from ipywidgets import AppLayout, GridspecLayout, Layout
 
+import techminer.common as cmn
+import techminer.dashboard as dash
 import techminer.plots as plt
+from techminer.dashboard import DASH
 from techminer.explode import __explode as _explode
 from techminer.params import EXCLUDE_COLS
-from techminer.plots import COLORMAPS
-import techminer.common as cmn
-from techminer.dashboard import DASH
-import techminer.dashboard as dash
 
 ###############################################################################
 ##
@@ -970,4 +966,3 @@ class DASHapp(DASH, Model):
 
 def app(data, limit_to=None, exclude=None):
     return DASHapp(data=data, limit_to=limit_to, exclude=exclude).run()
-

@@ -1,44 +1,13 @@
-// For format details, see https://aka.ms/vscode-remote/devcontainer.json or this file's README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.112.0/containers/python-3
 {
 	"name": "python3-vscode-minimal",
 	"build": {
 		"dockerfile": "Dockerfile",
 		"context": "..",
-		// Update 'VARIANT' to pick a Python version. Rebuild the container 
-		// if it already exists to update. Available variants: 3, 3.6, 3.7, 3.8 
-		// "args": { "VARIANT": "3" }
 	},
-
-	// Set *default* container specific settings.json values on container create.
-	"settings": { 
+	"settings": {
 		"terminal.integrated.shell.linux": "/bin/bash",
-		"python.pythonPath": "/usr/bin/python",
-		"python.linting.enabled": true,
-		"python.linting.pylintEnabled": true,
-		"python.formatting.autopep8Path": "/usr/local/bin/autopep8",
-		"python.formatting.blackPath": "/usr/local/bin/black",
-		"python.formatting.yapfPath": "/usr/local/bin/yapf",
-		"python.linting.banditPath": "/usr/local/py-utils/bin/bandit",
-		"python.linting.flake8Path": "/usr/local/bin/flake8",
-		"python.linting.mypyPath": "/usr/local/bin/mypy",
-		"python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
-		"python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
-		"python.linting.pylintPath": "/usr/local/bin/pylint",
-		"python.testing.pytestPath": "/usr/local/bin/pytest"
 	},
-
-	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-	 	"ms-python.python"
+		"ms-python.python"
 	]
-
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "pip3 install --user -r requirements.txt",
-
-	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
-	// "remoteUser": "vscode"
 }

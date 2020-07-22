@@ -4,16 +4,15 @@ Data Viewer
 
 
 """
+import textwrap
+
 import ipywidgets as widgets
 import pandas as pd
 from IPython.display import display
 from ipywidgets import AppLayout, GridspecLayout, Layout
-import textwrap
 
 import techminer.by_term as by_term
-from techminer.explode import __explode
-
-from techminer.explode import MULTIVALUED_COLS
+from techminer.explode import MULTIVALUED_COLS, __explode
 
 
 def __record_to_HTML(x):

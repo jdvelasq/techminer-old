@@ -1,21 +1,16 @@
 import json
-import numpy as np
+
 import pandas as pd
-from sklearn.decomposition import TruncatedSVD
-import matplotlib
-import matplotlib.pyplot as pyplot
 from sklearn.cluster import KMeans
 
-import techminer.plots as plt
 import techminer.common as cmn
+import techminer.dashboard as dash
+import techminer.plots as plt
+from techminer.correspondence import CA
 from techminer.dashboard import DASH
+from techminer.diagram_plot import diagram_plot
 from techminer.document_term import TF_matrix, TFIDF_matrix
 from techminer.params import EXCLUDE_COLS
-from techminer.plots import COLORMAPS
-from techminer.correspondence import CA
-from techminer.diagram_plot import diagram_plot
-
-import techminer.dashboard as dash
 
 ###############################################################################
 ##

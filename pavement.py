@@ -2,7 +2,7 @@
 
 # from testing python book
 from paver.easy import sh
-from paver.tasks import task, needs
+from paver.tasks import needs, task
 
 
 @task
