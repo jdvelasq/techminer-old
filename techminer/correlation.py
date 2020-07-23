@@ -341,6 +341,7 @@ class DASHapp(DASH, Model):
             dash.r_axis_ascending(),
             dash.cmap(),
             dash.nx_layout(),
+            dash.n_labels(),
             dash.nx_iterations(),
             dash.fig_width(),
             dash.fig_height(),
@@ -351,22 +352,37 @@ class DASHapp(DASH, Model):
 
         DASH.interactive_output(self, **kwargs)
 
-        for i in [-9, -8, -7, -6]:
-            self.panel_widgets[i]["widget"].disabled = (
-                True
-                if self.menu not in ["Matrix", "Heatmap", "Bubble plot",]
-                else False
-            )
+        if self.menu in [
+            "Matrix",
+            "Heatmap",
+            "Bubble plot",
+        ]:
+            self.set_enabled("Sort C-axis by:")
+            self.set_enabled("C-axis ascending:")
+            self.set_enabled("Sort R-axis by:")
+            self.set_enabled("R-axis ascending:")
+        else:
+            self.set_disabled("Sort C-axis by:")
+            self.set_disabled("C-axis ascending:")
+            self.set_disabled("Sort R-axis by:")
+            self.set_disabled("R-axis ascending:")
 
-        self.panel_widgets[-4]["widget"].disabled = self.menu != "Correlation map"
-        self.panel_widgets[-3]["widget"].disabled = (
-            False
-            if self.menu == "Correlation map" and self.layout == "Spring"
-            else True
-        )
+        if self.menu == "Correlation map":
+            self.set_enabled("Layout:")
+        else:
+            self.set_disabled("Layout:")
 
-        self.panel_widgets[-2]["widget"].disabled = self.menu == "Matrix"
-        self.panel_widgets[-1]["widget"].disabled = self.menu == "Matrix"
+        if self.menu == "Correlation map" and self.layout == "Spring":
+            self.set_enabled("nx iterations:")
+        else:
+            self.set_disabled("nx iterations:")
+
+        if self.menu == "Matrix":
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+        else:
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
 
 
 ###############################################################################
