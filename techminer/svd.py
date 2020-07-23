@@ -29,6 +29,7 @@ class Model:
         self.cmap = None
         self.column = None
         self.height = None
+        self.max_items = None
         self.max_terms = None
         self.min_occurrence = None
         self.n_components = None
