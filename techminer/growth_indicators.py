@@ -370,17 +370,16 @@ class DASHapp(DASH, Model):
 
         DASH.interactive_output(self, **kwargs)
 
-        if view == 0:
-            left_panel[-4]["widget"].disabled = True
-            left_panel[-3]["widget"].disabled = True
-            left_panel[-2]["widget"].disabled = True
-            left_panel[-1]["widget"].disabled = True
+        if self.menu == "Table":
+            self.set_disabled("Plot:")
+            self.set_disabled("Colormap:")
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
         else:
-            left_panel[-4]["widget"].disabled = False
-            left_panel[-3]["widget"].disabled = False
-            left_panel[-2]["widget"].disabled = False
-            left_panel[-1]["widget"].disabled = False
-        #
+            self.set_enabled("Plot:")
+            self.set_enabled("Colormap:")
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
 
 
 ###############################################################################
