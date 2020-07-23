@@ -770,8 +770,8 @@ def plot(
             range(len(x)),
             x[x.columns[1]],
             *args,
-            scalex=scalex,
-            scaley=scaley,
+            #  scalex=scalex,
+            #  scaley=scaley,
             **kwargs,
         )
         plt.xticks(
@@ -828,7 +828,7 @@ def wordcloud(
     contour_color="black",
     repeat=False,
     #  include_numbers=False,
-    min_word_length=0,
+    #  min_word_length=0,
 ):
     """Plots a wordcloud from a dataframe.
 
@@ -912,7 +912,7 @@ def wordcloud(
         contour_color=contour_color,
         repeat=repeat,
         #  include_numbers=include_numbers,
-        min_word_length=min_word_length,
+        #  min_word_length=min_word_length,
     )
     wordcloud.generate_from_frequencies(words)
     ax.imshow(wordcloud, interpolation="bilinear")
