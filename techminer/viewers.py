@@ -284,10 +284,7 @@ def matrix(df, top_n=50):
     def server(**kwargs):
         #
         main_column = kwargs["main_column"]
-        term_in_main_column = kwargs["main_term"]
         by_column = kwargs["by_column"]
-        term_in_by_column = kwargs["by_term"]
-        title = kwargs["title"]
         #
         # Populate main_column with top_n terms
         #
@@ -299,12 +296,21 @@ def matrix(df, top_n=50):
         #
 
         if top_n is not None:
-            summary = by_term.analytics(xdf, "_key1_")
+
+            y = xdf.copy()
+            y["Num_Documents"] = 1
+            y = __explode(
+                y[["_key1_", "Num_Documents", "Times_Cited", "ID",]], "_key1_",
+            )
+            y = y.groupby("_key1_", as_index=True).agg(
+                {"Num_Documents": np.sum, "Times_Cited": np.sum,}
+            )
+            y["Times_Cited"] = y["Times_Cited"].map(lambda w: int(w))
             top_terms_freq = set(
-                summary.sort_values("Num_Documents", ascending=False).head(top_n).index
+                y.sort_values("Num_Documents", ascending=False).head(top_n).index
             )
             top_terms_cited_by = set(
-                summary.sort_values("Times_Cited", ascending=False).head(top_n).index
+                y.sort_values("Times_Cited", ascending=False).head(top_n).index
             )
             top_terms = sorted(top_terms_freq | top_terms_cited_by)
             left_panel[1]["widget"].options = top_terms
