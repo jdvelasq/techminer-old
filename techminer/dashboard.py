@@ -317,7 +317,8 @@ class DASH:
         menu = self.menu.replace(" ", "_").replace("-", "_").replace("/", "_").lower()
         self.output.clear_output()
         with self.output:
-            display(processing())
+            # display(processing())
+            display("Processing ...")
         result = getattr(self, menu)()
         self.output.clear_output()
         with self.output:
