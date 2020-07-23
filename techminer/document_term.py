@@ -52,7 +52,7 @@ def TFIDF_matrix(
     use_idf=True,
     smooth_idf=True,
     sublinear_tf=False,
-    max_terms=3000,
+    max_items=3000,
 ):
 
     result = (
@@ -65,9 +65,10 @@ def TFIDF_matrix(
 
     result = pd.DataFrame(result, columns=TF_matrix.columns)
 
-    if len(result.columns) > max_terms:
+    if len(result.columns) > max_items:
         terms = result.sum(axis=0)
         terms = terms.sort_values(ascending=False)
+        terms = terms.head(max_items)
         result = result.loc[:, terms.index]
         rows = result.sum(axis=1)
         rows = rows[rows > 0]

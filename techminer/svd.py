@@ -65,13 +65,15 @@ class Model:
         #
         # 2.-- Computtes TFIDF matrix and select max_term frequent terms
         #
+        #      tf-idf = tf * (log(N / df) + 1)
+        #
         TFIDF_matrix_ = TFIDF_matrix(
             TF_matrix=TF_matrix_,
-            norm=self.norm,
-            use_idf=self.use_idf,
-            smooth_idf=self.smooth_idf,
-            sublinear_tf=self.sublinear_tf,
-            max_terms=self.max_terms,
+            norm=None,
+            use_idf=True,
+            smooth_idf=False,
+            sublinear_tf=False,
+            max_items=self.max_items,
         )
 
         TFIDF_matrix_ = cmn.add_counters_to_axis(
@@ -144,7 +146,11 @@ class Model:
 
         self.apply()
 
-        return plt.barh(width=self.statistics_["Singular Values"])
+        return plt.barh(
+            width=self.statistics_["Singular Values"],
+            cmap=self.cmap,
+            figsize=(self.width, self.height),
+        )
 
     def plot_relationships(self):
 
@@ -184,14 +190,7 @@ COLUMNS = [
 
 class DASHapp(DASH, Model):
     def __init__(
-        self,
-        data,
-        limit_to=None,
-        exclude=None,
-        norm=None,
-        use_idf=True,
-        smooth_idf=True,
-        sublinear_tf=False,
+        self, data, limit_to=None, exclude=None,
     ):
 
         Model.__init__(self, data, limit_to, exclude)
@@ -200,10 +199,6 @@ class DASHapp(DASH, Model):
         self.data = data
         self.limit_to = limit_to
         self.exclude = exclude
-        self.norm = norm
-        self.use_idf = use_idf
-        self.smooth_idf = smooth_idf
-        self.sublinear_tf = sublinear_tf
 
         self.app_title = "SVD"
         self.menu_options = [
@@ -220,13 +215,13 @@ class DASHapp(DASH, Model):
         self.panel_widgets = [
             dash.dropdown(desc="Column:", options=[t for t in data if t in COLUMNS],),
             dash.min_occurrence(),
-            dash.max_terms(),
-            dash.separator(text="SVD:"),
+            dash.max_items(),
+            dash.separator(text="SVD"),
             dash.dropdown(desc="Analysis type:", options=["Co-occurrence", "TF*IDF",],),
             dash.n_components(),
             dash.random_state(),
             dash.n_iter(),
-            dash.separator(text="Visualization:"),
+            dash.separator(text="Visualization"),
             dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
             dash.top_n(),
             dash.dropdown(
@@ -246,24 +241,52 @@ class DASHapp(DASH, Model):
 
         DASH.interactive_output(self, **kwargs)
 
-        self.panel_widgets[-3]["widget"].options = [
-            i for i in range(self.panel_widgets[2]["widget"].value)
-        ]
-        self.panel_widgets[-4]["widget"].options = [
-            i for i in range(self.panel_widgets[2]["widget"].value)
-        ]
+        if self.menu in ["Table"]:
+            self.set_enabled("Top by:")
+            self.set_enabled("Top N:")
+            self.set_enabled("sort by:")
+            self.set_enabled("ascending:")
+            self.set_disabled("Colormap:")
+            self.set_disabled("X-axis:")
+            self.set_disabled("Y-axis:")
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
 
-        #
+        if self.menu in ["Statistics"]:
+            self.set_disabled("Top by:")
+            self.set_disabled("Top N:")
+            self.set_disabled("sort by:")
+            self.set_disabled("ascending:")
+            self.set_disabled("Colormap:")
+            self.set_disabled("X-axis:")
+            self.set_disabled("Y-axis:")
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
 
-        for i in [-1, -2, -3, -4, -5]:
-            self.panel_widgets[i]["widget"].disabled = (
-                True if self.menu in ["Table", "Statistics"] else False
-            )
+        if self.menu in ["Plot singular values"]:
+            self.set_disabled("Top by:")
+            self.set_disabled("Top N:")
+            self.set_disabled("sort by:")
+            self.set_disabled("ascending:")
+            self.set_enabled("Colormap:")
+            self.set_disabled("X-axis:")
+            self.set_disabled("Y-axis:")
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
 
-        for i in [-6, -7, -8, -9]:
-            self.panel_widgets[i]["widget"].disabled = (
-                False if self.menu in ["Table", "Statistics"] else True
-            )
+        if self.menu in ["Plot relationships"]:
+            self.set_disabled("Top by:")
+            self.set_disabled("Top N:")
+            self.set_disabled("sort by:")
+            self.set_disabled("ascending:")
+            self.set_enabled("Colormap:")
+            self.set_enabled("X-axis:")
+            self.set_enabled("Y-axis:")
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
+
+        self.set_options("X-axis:", list(range(self.n_components)))
+        self.set_options("Y-axis:", list(range(self.n_components)))
 
 
 ###############################################################################
@@ -274,20 +297,7 @@ class DASHapp(DASH, Model):
 
 
 def app(
-    data,
-    limit_to=None,
-    exclude=None,
-    norm=None,
-    use_idf=True,
-    smooth_idf=True,
-    sublinear_tf=False,
+    data, limit_to=None, exclude=None,
 ):
-    return DASHapp(
-        data=data,
-        limit_to=limit_to,
-        exclude=exclude,
-        norm=norm,
-        use_idf=use_idf,
-        smooth_idf=smooth_idf,
-        sublinear_tf=sublinear_tf,
-    ).run()
+    return DASHapp(data=data, limit_to=limit_to, exclude=exclude,).run()
+

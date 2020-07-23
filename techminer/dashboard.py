@@ -101,12 +101,12 @@ def max_iter():
     }
 
 
-def max_terms():
+def max_items():
     return {
-        "arg": "max_terms",
-        "desc": "Max terms:",
+        "arg": "max_items",
+        "desc": "Max items:",
         "widget": widgets.Dropdown(
-            options=list(range(1000, 5001, 500)), layout=Layout(width="55%"),
+            options=list(range(100, 3001, 100)), layout=Layout(width="55%"),
         ),
     }
 
@@ -134,7 +134,7 @@ def nx_iterations():
 def n_iter():
     return {
         "arg": "n_iter",
-        "desc": "number of iterations:",
+        "desc": "Iterations:",
         "widget": widgets.Dropdown(
             options=list(range(5, 51, 1)), layout=Layout(width="55%"),
         ),
@@ -154,7 +154,7 @@ def n_clusters():
 def n_components():
     return {
         "arg": "n_components",
-        "desc": "# Comp. :",
+        "desc": "N components:",
         "widget": widgets.Dropdown(
             options=list(range(2, 21)), layout=Layout(width="55%"),
         ),
@@ -237,7 +237,7 @@ def random_state():
 def separator(text):
     return {
         "desc": "*SEPARATOR*",
-        "widget": widgets.HTML("<b>" + text + "</b> <hr>"),
+        "widget": widgets.HTML("<b>" + text + "</b><hr>"),
     }
 
 
@@ -363,17 +363,7 @@ class DASH:
         if self.panel_widgets is not None:
             for index, _ in enumerate(self.panel_widgets):
                 if self.panel_widgets[index]["desc"] == "*SEPARATOR*":
-                    panel_widgets.append(
-                        self.panel_widgets[index]["widget"]
-                        # widgets.HBox(
-                        #     [self.panel_widgets[index]["widget"],],
-                        #     layout=Layout(
-                        #         display="flex",
-                        #         justify_content="flex-start",
-                        #         align_content="center",
-                        #     ),
-                        # )
-                    )
+                    panel_widgets.append(self.panel_widgets[index]["widget"])
                 else:
                     panel_widgets.append(
                         widgets.HBox(
@@ -465,6 +455,13 @@ class DASH:
             x = self.text_transform(self.panel_widgets[index]["desc"])
             name = self.text_transform(name)
             if x == name:
-
                 self.panel_widgets[index]["widget"].disabled = True
+                return
+
+    def set_options(self, name, options):
+        for index, _ in enumerate(self.panel_widgets):
+            x = self.text_transform(self.panel_widgets[index]["desc"])
+            name = self.text_transform(name)
+            if x == name:
+                self.panel_widgets[index]["widget"].options = options
                 return
