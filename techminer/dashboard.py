@@ -234,6 +234,13 @@ def random_state():
     }
 
 
+def separator(text):
+    return {
+        "desc": "*SEPARATOR*",
+        "widget": widgets.HTML("<b>" + text + "</b> <hr>"),
+    }
+
+
 def top_n(m=10, n=51, i=5):
     return {
         "arg": "top_n",
@@ -331,7 +338,7 @@ class DASH:
         panel_len = 0
         if self.panel_widgets is not None:
             panel_len += len(self.panel_widgets)
-        self.app_layout = GridspecLayout(max(14, panel_len + 1), 5, height="720px")
+        self.app_layout = GridspecLayout(max(14, panel_len + 1), 4, height="720px")
 
         ## Panel Title
         panel_widgets = [
@@ -354,20 +361,48 @@ class DASH:
 
         ## Update controls
         if self.panel_widgets is not None:
-            panel_widgets += [
-                widgets.HBox(
-                    [
-                        widgets.Label(value=self.panel_widgets[index]["desc"]),
-                        self.panel_widgets[index]["widget"],
-                    ],
-                    layout=Layout(
-                        display="flex",
-                        justify_content="flex-end",
-                        align_content="center",
-                    ),
-                )
-                for index, _ in enumerate(self.panel_widgets)
-            ]
+            for index, _ in enumerate(self.panel_widgets):
+                if self.panel_widgets[index]["desc"] == "*SEPARATOR*":
+                    panel_widgets.append(
+                        self.panel_widgets[index]["widget"]
+                        # widgets.HBox(
+                        #     [self.panel_widgets[index]["widget"],],
+                        #     layout=Layout(
+                        #         display="flex",
+                        #         justify_content="flex-start",
+                        #         align_content="center",
+                        #     ),
+                        # )
+                    )
+                else:
+                    panel_widgets.append(
+                        widgets.HBox(
+                            [
+                                widgets.Label(value=self.panel_widgets[index]["desc"]),
+                                self.panel_widgets[index]["widget"],
+                            ],
+                            layout=Layout(
+                                display="flex",
+                                justify_content="flex-end",
+                                align_content="center",
+                            ),
+                        )
+                    )
+
+            # panel_widgets += [
+            #     widgets.HBox(
+            #         [
+            #             widgets.Label(value=self.panel_widgets[index]["desc"]),
+            #             self.panel_widgets[index]["widget"],
+            #         ],
+            #         layout=Layout(
+            #             display="flex",
+            #             justify_content="flex-end",
+            #             align_content="center",
+            #         ),
+            #     )
+            #     for index, _ in enumerate(self.panel_widgets)
+            # ]
 
         ## Calculate button
         if self.menu_options is not None:
@@ -397,7 +432,11 @@ class DASH:
         if self.panel_widgets is not None:
             args = {
                 **args,
-                **{control["arg"]: control["widget"] for control in self.panel_widgets},
+                **{
+                    control["arg"]: control["widget"]
+                    for control in self.panel_widgets
+                    if control["desc"] != "*SEPARATOR*"
+                },
             }
 
         widgets.interactive_output(

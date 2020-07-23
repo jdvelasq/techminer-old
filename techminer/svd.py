@@ -162,54 +162,6 @@ class Model:
             height=self.height,
         )
 
-        # matplotlib.rc("font", size=11)
-        # fig = pyplot.Figure(figsize=(self.width, self.height))
-        # ax = fig.subplots()
-        # cmap = pyplot.cm.get_cmap(self.cmap)
-
-        # X = self.table()
-        # X.columns = X.columns.tolist()
-
-        # node_sizes = cmn.counters_to_node_sizes(x=X.index)
-        # node_colors = cmn.counters_to_node_colors(x=X.index, cmap=cmap)
-
-        # ax.scatter(
-        #     X[X.columns[self.x_axis]],
-        #     X[X.columns[self.y_axis]],
-        #     s=node_sizes,
-        #     linewidths=1,
-        #     edgecolors="k",
-        #     c=node_colors,
-        # )
-
-        # cmn.ax_expand_limits(ax)
-        # cmn.ax_text_node_labels(
-        #     ax,
-        #     labels=X.index,
-        #     dict_pos={
-        #         key: (c, d)
-        #         for key, c, d in zip(
-        #             X.index, X[X.columns[self.x_axis]], X[X.columns[self.y_axis]],
-        #         )
-        #     },
-        #     node_sizes=node_sizes,
-        # )
-
-        # ax.axhline(
-        #     y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1,
-        # )
-        # ax.axvline(
-        #     x=0, color="gray", linestyle="--", linewidth=1, zorder=-1,
-        # )
-
-        # ax.axis("off")
-
-        # cmn.set_ax_splines_invisible(ax)
-
-        # fig.set_tight_layout(True)
-
-        # return fig
-
 
 ###############################################################################
 ##
@@ -267,12 +219,14 @@ class DASHapp(DASH, Model):
 
         self.panel_widgets = [
             dash.dropdown(desc="Column:", options=[t for t in data if t in COLUMNS],),
+            dash.min_occurrence(),
+            dash.max_terms(),
+            dash.separator(text="SVD:"),
             dash.dropdown(desc="Analysis type:", options=["Co-occurrence", "TF*IDF",],),
             dash.n_components(),
             dash.random_state(),
             dash.n_iter(),
-            dash.min_occurrence(),
-            dash.max_terms(),
+            dash.separator(text="Visualization:"),
             dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
             dash.top_n(),
             dash.dropdown(
