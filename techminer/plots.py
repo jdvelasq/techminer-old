@@ -827,7 +827,7 @@ def wordcloud(
     contour_width=0,
     contour_color="black",
     repeat=False,
-    include_numbers=False,
+    #  include_numbers=False,
     min_word_length=0,
 ):
     """Plots a wordcloud from a dataframe.
@@ -911,7 +911,7 @@ def wordcloud(
         contour_width=contour_width,
         contour_color=contour_color,
         repeat=repeat,
-        include_numbers=include_numbers,
+        #  include_numbers=include_numbers,
         min_word_length=min_word_length,
     )
     wordcloud.generate_from_frequencies(words)
