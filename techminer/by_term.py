@@ -548,145 +548,198 @@ class DASHapp(DASH, Model):
 
         # ----------------------------------------------------------------------
         if self.menu == "General":
-            self.panel_widgets[0]["widget"].options = [
-                "Authors",
-                "Institutions",
-                "Institution_1st_Author",
-                "Countries",
-                "Country_1st_Author",
-                "Source_title",
-            ]
-            self.panel_widgets[1]["widget"].options = [
-                "Table",
-                "Bar plot",
-                "Horizontal bar plot",
-                "Pie plot",
-                "Wordcloud",
-                "Treemap",
-            ]
-            self.panel_widgets[2]["widget"].options = [
-                "Num Documents",
-                "Times Cited",
-            ]
-            self.panel_widgets[4]["widget"].options = [
-                "Alphabetic",
-                "Num Documents",
-                "Times Cited",
-            ]
-            for i, _ in enumerate(self.panel_widgets):
-                self.panel_widgets[i]["widget"].disabled = False
 
-            if self.panel_widgets[1]["widget"].value == "Table":
-                self.panel_widgets[-3]["widget"].disabled = True
-                self.panel_widgets[-2]["widget"].disabled = True
-                self.panel_widgets[-1]["widget"].disabled = True
+            self.set_options(
+                name="Column:",
+                options=[
+                    "Authors",
+                    "Institutions",
+                    "Institution_1st_Author",
+                    "Countries",
+                    "Country_1st_Author",
+                    "Source_title",
+                ],
+            )
+
+            self.set_options(
+                name="View:",
+                options=[
+                    "Table",
+                    "Bar plot",
+                    "Horizontal bar plot",
+                    "Pie plot",
+                    "Wordcloud",
+                    "Treemap",
+                ],
+            )
+
+            self.set_options(name="Top by:", options=["Num Documents", "Times Cited",])
+
+            self.set_options(
+                name="Sort by:", options=["Alphabetic", "Num Documents", "Times Cited",]
+            )
+
+            if self.view == "Table":
+
+                self.set_enabled("Top by:")
+                self.set_enabled("Top N:")
+                self.set_enabled("Sort by:")
+                self.set_enabled("Ascending:")
+                self.set_disabled("Colormap:")
+                self.set_disabled("Width:")
+                self.set_disabled("Height:")
+
             else:
-                self.panel_widgets[-3]["widget"].disabled = False
-                self.panel_widgets[-2]["widget"].disabled = False
-                self.panel_widgets[-1]["widget"].disabled = False
+
+                if self.view in ["Bar plot", "Horizontal bar plot"]:
+
+                    self.set_enabled("Top by:")
+                    self.set_enabled("Top N:")
+                    self.set_enabled("Sort by:")
+                    self.set_enabled("Ascending:")
+                    self.set_enabled("Colormap:")
+                    self.set_enabled("Width:")
+                    self.set_enabled("Height:")
+
+                else:
+
+                    self.set_enabled("Top by:")
+                    self.set_enabled("Top N:")
+                    self.set_disabled("Sort by:")
+                    self.set_disabled("Ascending:")
+                    self.set_enabled("Colormap:")
+                    self.set_enabled("Width:")
+                    self.set_enabled("Height:")
 
         # ----------------------------------------------------------------------
         if self.menu == "Impact":
+
             COLUMNS = sorted(
                 [column for column in self.data.columns if column not in EXCLUDE_COLS]
             )
 
-            self.panel_widgets[0]["widget"].options = [
-                z for z in COLUMNS if z in self.data.columns
-            ]
-            self.panel_widgets[1]["widget"].options = [
-                "Table",
-                "Bar plot",
-                "Horizontal bar plot",
-            ]
-            self.panel_widgets[2]["widget"].options = [
-                "Num Documents",
-                "Times Cited",
-                "Times Cited per Year",
-                "Avg Times Cited",
-                "H index",
-                "M index",
-                "G index",
-            ]
-            self.panel_widgets[4]["widget"].options = [
-                "Alphabetic",
-                "Num Documents",
-                "Times Cited",
-                "Times Cited per Year",
-                "Avg Times Cited",
-                "H index",
-                "M index",
-                "G index",
-            ]
-            for i, _ in enumerate(self.panel_widgets):
-                self.panel_widgets[i]["widget"].disabled = False
+            self.set_options(
+                "Column:", options=[z for z in COLUMNS if z in self.data.columns]
+            )
 
-            if self.panel_widgets[1]["widget"].value == "Table":
-                self.panel_widgets[-3]["widget"].disabled = True
-                self.panel_widgets[-2]["widget"].disabled = True
-                self.panel_widgets[-1]["widget"].disabled = True
+            self.set_options(
+                "View:", options=["Table", "Bar plot", "Horizontal bar plot",]
+            )
+
+            self.set_options(
+                "Top by:",
+                options=[
+                    "Num Documents",
+                    "Times Cited",
+                    "Times Cited per Year",
+                    "Avg Times Cited",
+                    "H index",
+                    "M index",
+                    "G index",
+                ],
+            )
+
+            self.set_options(
+                "Sort by:",
+                options=[
+                    "Alphabetic",
+                    "Num Documents",
+                    "Times Cited",
+                    "Times Cited per Year",
+                    "Avg Times Cited",
+                    "H index",
+                    "M index",
+                    "G index",
+                ],
+            )
+
+            if self.view == "Table":
+
+                self.set_enabled("View:")
+                self.set_enabled("Top by:")
+                self.set_enabled("Top N:")
+                self.set_enabled("Sort by:")
+                self.set_enabled("Ascending:")
+                self.set_disabled("Colormap:")
+                self.set_disabled("Width:")
+                self.set_disabled("Height:")
+
             else:
-                self.panel_widgets[-3]["widget"].disabled = False
-                self.panel_widgets[-2]["widget"].disabled = False
-                self.panel_widgets[-1]["widget"].disabled = False
+
+                self.set_enabled("Top by:")
+                self.set_enabled("Top N:")
+                self.set_enabled("Sort by:")
+                self.set_enabled("Ascending:")
+                self.set_enabled("Colormap:")
+                self.set_enabled("Width:")
+                self.set_enabled("Height:")
 
         # ----------------------------------------------------------------------
         if self.menu == "Single/Multiple publication":
-            self.panel_widgets[0]["widget"].options = [
-                "Authors",
-                "Institutions",
-                "Institution_1st_Author",
-                "Countries",
-                "Country_1st_Author",
-            ]
-            self.panel_widgets[1]["widget"].options = [
-                "Table",
-                "Bar plot",
-                "Horizontal bar plot",
-            ]
-            self.panel_widgets[2]["widget"].options = [
-                "Num Documents",
-                "Times Cited",
-            ]
-            self.panel_widgets[4]["widget"].options = [
-                "Alphabetic",
-                "Num Documents",
-                "Times Cited",
-                "SD",
-                "MD",
-                "SMR",
-            ]
-            for i, _ in enumerate(self.panel_widgets):
-                self.panel_widgets[i]["widget"].disabled = False
+
+            self.set_options(
+                "Column:",
+                options=[
+                    "Authors",
+                    "Institutions",
+                    "Institution_1st_Author",
+                    "Countries",
+                    "Country_1st_Author",
+                ],
+            )
+
+            self.set_options(
+                "View:", options=["Table", "Bar plot", "Horizontal bar plot",]
+            )
+
+            self.set_options("Top by:", options=["Num Documents", "Times Cited",])
+
+            self.set_options(
+                "Sort by:",
+                options=[
+                    "Alphabetic",
+                    "Num Documents",
+                    "Times Cited",
+                    "SD",
+                    "MD",
+                    "SMR",
+                ],
+            )
 
             if self.panel_widgets[1]["widget"].value == "Table":
-                self.panel_widgets[-3]["widget"].disabled = True
-                self.panel_widgets[-2]["widget"].disabled = True
-                self.panel_widgets[-1]["widget"].disabled = True
+
+                self.set_enabled("Top by:")
+                self.set_enabled("Top N:")
+                self.set_enabled("Sort by:")
+                self.set_enabled("Ascending:")
+                self.set_disabled("Colormap:")
+                self.set_disabled("Width:")
+                self.set_disabled("Height:")
+
             else:
-                self.panel_widgets[-3]["widget"].disabled = False
-                self.panel_widgets[-2]["widget"].disabled = False
-                self.panel_widgets[-1]["widget"].disabled = False
+
+                self.set_enabled("Top by:")
+                self.set_enabled("Top N:")
+                self.set_enabled("Sort by:")
+                self.set_enabled("Ascending:")
+                self.set_enabled("Colormap:")
+                self.set_enabled("Width:")
+                self.set_enabled("Height:")
 
         # ----------------------------------------------------------------------
         if self.menu == "Worldmap":
-            self.panel_widgets[0]["widget"].options = [
-                "Countries",
-                "Country_1st_Author",
-            ]
-            self.panel_widgets[2]["widget"].options = [
-                "Num Documents",
-                "Times Cited",
-            ]
-            self.panel_widgets[0]["widget"].disabled = False
-            self.panel_widgets[1]["widget"].disabled = True
-            self.panel_widgets[2]["widget"].disabled = False
-            self.panel_widgets[3]["widget"].disabled = True
-            self.panel_widgets[4]["widget"].disabled = True
-            self.panel_widgets[5]["widget"].disabled = True
-            self.panel_widgets[6]["widget"].disabled = False
-            self.panel_widgets[7]["widget"].disabled = False
-            self.panel_widgets[8]["widget"].disabled = False
+
+            self.set_options("Column:", options=["Countries", "Country_1st_Author",])
+
+            self.set_options("Top by:", options=["Num Documents", "Times Cited",])
+
+            self.set_disabled("View:")
+            self.set_disabled("Top N:")
+            self.set_disabled("Sort by:")
+            self.set_disabled("Ascending:")
+            self.set_enabled("Colormap:")
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
 
         # ----------------------------------------------------------------------
         if self.menu in ["Core authors", "Core source titles", "Top documents"]:
