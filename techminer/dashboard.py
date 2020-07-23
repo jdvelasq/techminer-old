@@ -317,11 +317,12 @@ class DASH:
         menu = self.menu.replace(" ", "_").replace("-", "_").replace("/", "_").lower()
         self.output.clear_output()
         with self.output:
-            #  display(processing())
-            result = getattr(self, menu)()
-            self.output.clear_output()
-            #  display(result)
-            display(getattr(self, menu)())
+            display(processing())
+        result = getattr(self, menu)()
+        self.output.clear_output()
+        with self.output:
+            display(result)
+        # display(getattr(self, menu)())
 
     def create_grid(self):
 
