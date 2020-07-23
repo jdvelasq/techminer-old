@@ -5,7 +5,7 @@ Data Viewer
 
 """
 import textwrap
-
+import numpy as np
 import ipywidgets as widgets
 import pandas as pd
 from IPython.display import display
@@ -134,19 +134,24 @@ def column(df, top_n=50):
     def server(**kwargs):
         #
         column = kwargs["column"]
-        value = kwargs["value"]
-        title = kwargs["title"]
         #
         # Populate value control with top_n terms
         #
         x = __explode(df, column)
         if top_n is not None:
-            summary = by_term.analytics(df, column)
+
+            y = df.copy()
+            y["Num_Documents"] = 1
+            y = __explode(y[[column, "Num_Documents", "Times_Cited", "ID",]], column,)
+            y = y.groupby(column, as_index=True).agg(
+                {"Num_Documents": np.sum, "Times_Cited": np.sum,}
+            )
+            y["Times_Cited"] = y["Times_Cited"].map(lambda w: int(w))
             top_terms_freq = set(
-                summary.sort_values("Num_Documents", ascending=False).head(top_n).index
+                y.sort_values("Num_Documents", ascending=False).head(top_n).index
             )
             top_terms_cited_by = set(
-                summary.sort_values("Times_Cited", ascending=False).head(top_n).index
+                y.sort_values("Times_Cited", ascending=False).head(top_n).index
             )
             top_terms = sorted(top_terms_freq | top_terms_cited_by)
             left_panel[1]["widget"].options = top_terms
