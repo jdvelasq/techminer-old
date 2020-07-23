@@ -275,8 +275,8 @@ class DASHapp(DASH, Model):
             self.set_enabled("Height:")
 
         if self.menu in ["Plot relationships"]:
-            self.set_disabled("Top by:")
-            self.set_disabled("Top N:")
+            self.set_enabled("Top by:")
+            self.set_enabled("Top N:")
             self.set_disabled("sort by:")
             self.set_disabled("ascending:")
             self.set_enabled("Colormap:")
