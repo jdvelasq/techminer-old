@@ -111,6 +111,16 @@ def max_items():
     }
 
 
+def n_labels():
+    return {
+        "arg": "n_labels",
+        "desc": "N labels:",
+        "widget": widgets.Dropdown(
+            options=list(range(10, 151, 10)), layout=Layout(width="55%"),
+        ),
+    }
+
+
 def min_occurrence():
     return {
         "arg": "min_occurrence",

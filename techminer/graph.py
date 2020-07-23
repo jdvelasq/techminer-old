@@ -68,25 +68,34 @@ def co_occurrence_matrix(
     """
     """
 
+    #
+    # 1.-- Computes TF_matrix with occurrence >= min_occurrence
+    #
     W = data[[column, "ID"]].dropna()
-    A = TF_matrix(W, column)
+    A = TF_matrix(data=W, column=column, scheme=None, min_occurrence=1)
     A = cmn.limit_to_exclude(
         data=A, axis=1, column=column, limit_to=limit_to, exclude=exclude,
     )
 
+    #
+    # 2.-- Select top_n
+    #
     A = cmn.add_counters_to_axis(X=A, axis=1, data=data, column=column)
-
     A = cmn.sort_by_axis(data=A, sort_by=top_by, ascending=False, axis=1)
-
     A = A[A.columns[:top_n]]
 
+    #
+    # 4.-- computes co-occurrence
+    #
     matrix = np.matmul(A.transpose().values, A.values)
     matrix = pd.DataFrame(matrix, columns=A.columns, index=A.columns)
 
+    #
+    # 5.-- Matrix sort
+    #
     matrix = cmn.sort_by_axis(
         data=matrix, sort_by=sort_r_axis_by, ascending=r_axis_ascending, axis=0,
     )
-
     matrix = cmn.sort_by_axis(
         data=matrix, sort_by=sort_c_axis_by, ascending=c_axis_ascending, axis=1,
     )
@@ -95,7 +104,7 @@ def co_occurrence_matrix(
 
 
 def network_map(
-    X, cmap, clustering, layout, only_communities, iterations, figsize=(8, 8)
+    X, cmap, clustering, layout, only_communities, iterations, n_labels, figsize=(8, 8)
 ):
 
     #
@@ -158,7 +167,7 @@ def network_map(
     max_size = max(node_sizes)
     min_size = min(node_sizes)
     node_sizes = [
-        600 + int(2500 * (w - min_size) / (max_size - min_size)) for w in node_sizes
+        300 + int(2500 * (w - min_size) / (max_size - min_size)) for w in node_sizes
     ]
 
     if layout == "Spring":
@@ -202,7 +211,9 @@ def network_map(
         linewidths=1,
     )
 
-    cmn.ax_text_node_labels(ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes)
+    cmn.ax_text_node_labels(
+        ax=ax, labels=terms[0:n_labels], dict_pos=pos, node_sizes=node_sizes
+    )
 
     fig.set_tight_layout(True)
     cmn.ax_expand_limits(ax)
@@ -230,19 +241,20 @@ class Model:
         self.X_ = None
         ##
         self.c_axis_ascending = None
+        self.clustering = None
         self.cmap = None
         self.column = None
         self.height = None
-        self.layout = (None,)
+        self.layout = None
+        self.max_nodes = None
         self.normalization = None
+        self.nx_iterations = None
         self.r_axis_ascending = None
         self.sort_c_axis_by = None
         self.sort_r_axis_by = None
         self.top_by = None
         self.top_n = None
         self.width = None
-        self.nx_iterations = None
-        self.clustering = None
 
     def fit(self):
         self.X_ = co_occurrence_matrix(
@@ -281,12 +293,19 @@ class Model:
 
     def network(self):
         self.fit()
+        self.X_ = cmn.sort_by_axis(
+            data=self.X_, sort_by=self.top_by, ascending=False, axis=0
+        )
+        self.X_ = cmn.sort_by_axis(
+            data=self.X_, sort_by=self.top_by, ascending=False, axis=1
+        )
         return network_map(
             self.X_,
             cmap=self.cmap,
             layout=self.layout,
             clustering=self.clustering,
             only_communities=False,
+            n_labels=self.n_labels,
             iterations=self.nx_iterations,
             figsize=(self.width, self.height),
         )
@@ -355,6 +374,7 @@ class DASHapp(DASH, Model):
             dash.r_axis_ascending(),
             dash.cmap(),
             dash.nx_layout(),
+            dash.n_labels(),
             dash.nx_iterations(),
             dash.fig_width(),
             dash.fig_height(),
@@ -366,25 +386,38 @@ class DASHapp(DASH, Model):
         DASH.interactive_output(self, **kwargs)
 
         if self.menu == "Matrix":
-            self.panel_widgets[-5]["widget"].disabled = True
-            self.panel_widgets[-4]["widget"].disabled = False
-            self.panel_widgets[-3]["widget"].disabled = True
-            self.panel_widgets[-2]["widget"].disabled = True
-            self.panel_widgets[-1]["widget"].disabled = True
+
+            self.set_disabled("Clustering:")
+            self.set_disabled("Colormap:")
+            self.set_disabled("Layout:")
+            self.set_disabled("nx iterations:")
+            self.set_disabled("N labels:")
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
 
         if self.menu in ["Heatmap", "Bubble plot"]:
-            self.panel_widgets[-5]["widget"].disabled = False
-            self.panel_widgets[-4]["widget"].disabled = False
-            self.panel_widgets[-3]["widget"].disabled = True
-            self.panel_widgets[-2]["widget"].disabled = False
-            self.panel_widgets[-1]["widget"].disabled = False
 
-        if self.menu == "Network":
-            self.panel_widgets[-5]["widget"].disabled = False
-            self.panel_widgets[-4]["widget"].disabled = False
-            self.panel_widgets[-3]["widget"].disabled = False
-            self.panel_widgets[-2]["widget"].disabled = False
-            self.panel_widgets[-1]["widget"].disabled = False
+            self.set_disabled("Clustering:")
+            self.set_enabled("Colormap:")
+            self.set_disabled("Layout:")
+            self.set_disabled("nx iterations:")
+            self.set_disabled("N labels:")
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
+
+        if self.menu == "Network" or self.menu == "Communities":
+
+            self.set_enabled("Clustering:")
+            self.set_enabled("Colormap:")
+            self.set_enabled("Layout:")
+            self.set_enabled("N labels:")
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
+
+            if self.menu == "Network" and self.layout == "Spring":
+                self.set_enabled("nx iterations:")
+            else:
+                self.set_disabled("nx iterations:")
 
 
 ###############################################################################
