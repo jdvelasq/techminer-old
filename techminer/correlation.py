@@ -183,7 +183,7 @@ class Model:
 
         ## node positions
         if self.layout == "Spring":
-            pos = nx.spring_layout(G, iterations=self.iterations)
+            pos = nx.spring_layout(G, iterations=self.nx_iterations)
         else:
             pos = {
                 "Circular": nx.circular_layout,
