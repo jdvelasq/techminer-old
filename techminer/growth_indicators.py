@@ -334,6 +334,7 @@ class DASHapp(DASH, Model):
                 desc="Column:", options=[z for z in COLUMNS if z in self.data.columns],
             ),
             dash.dropdown(desc="Time window:", options=[2, 3, 4, 5],),
+            dash.separator(text="Visualization"),
             dash.dropdown(
                 desc="Top by:",
                 options=[

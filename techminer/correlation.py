@@ -326,6 +326,7 @@ class DASHapp(DASH, Model):
                 desc="By:", options=[z for z in COLUMNS if z in data.columns],
             ),
             dash.dropdown(desc="Method:", options=["pearson", "kendall", "spearman"],),
+            dash.separator(text="Visualization"),
             dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
             dash.top_n(),
             dash.dropdown(

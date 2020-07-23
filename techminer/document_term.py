@@ -201,11 +201,12 @@ class DASHapp(DASH, Model):
 
         self.panel_widgets = [
             dash.dropdown(desc="Column:", options=[t for t in data if t in COLUMNS],),
-            dash.top_n(),
             dash.dropdown(desc="Norm:", options=[None, "L1", "L2"],),
             dash.dropdown(desc="Use IDF:", options=[True, False,],),
             dash.dropdown(desc="Smooth IDF:", options=[True, False,],),
             dash.dropdown(desc="Sublinear TF:", options=[True, False,],),
+            dash.separator(text="Visualization"),
+            dash.top_n(),
             dash.dropdown(
                 desc="Sort by:",
                 options=["Alphabetic", "Num Documents", "Times Cited", "TF*IDF",],
@@ -221,8 +222,12 @@ class DASHapp(DASH, Model):
 
         DASH.interactive_output(self, **kwargs)
 
-        self.panel_widgets[-2]["widget"].disabled = self.menu == self.menu_options[0]
-        self.panel_widgets[-1]["widget"].disabled = self.menu == self.menu_options[0]
+        if self.menu == self.menu_options[0]:
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+        else:
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
 
 
 ###############################################################################

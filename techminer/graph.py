@@ -335,6 +335,12 @@ class DASHapp(DASH, Model):
             dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
+            dash.normalization(),
+            dash.dropdown(
+                desc="Clustering:",
+                options=["Label propagation", "Leiden", "Louvain", "Walktrap",],
+            ),
+            dash.separator(text="Visualization"),
             dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
             dash.top_n(),
             dash.dropdown(
@@ -347,11 +353,6 @@ class DASHapp(DASH, Model):
                 options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
             ),
             dash.r_axis_ascending(),
-            dash.normalization(),
-            dash.dropdown(
-                desc="Clustering:",
-                options=["Label propagation", "Leiden", "Louvain", "Walktrap",],
-            ),
             dash.cmap(),
             dash.nx_layout(),
             dash.nx_iterations(),

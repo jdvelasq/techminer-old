@@ -492,6 +492,7 @@ class DASHapp(DASH, Model):
             dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
+            dash.separator(text="Visualization"),
             dash.dropdown(
                 desc="View:",
                 options=[

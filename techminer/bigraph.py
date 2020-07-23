@@ -492,6 +492,7 @@ class DASHapp(DASH, Model):
             dash.dropdown(
                 desc="By:", options=[z for z in COLUMNS if z in data.columns],
             ),
+            dash.separator(text="Visualization"),
             dash.dropdown(
                 desc="Top by:", options=["Num Documents", "Times Cited", "Data",],
             ),

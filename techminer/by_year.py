@@ -131,6 +131,7 @@ class DASHapp(DASH, Model):
         ]
 
         self.panel_widgets = [
+            dash.separator(text="Visualization"),
             dash.dropdown(
                 desc="Sort by:",
                 options=[
