@@ -202,11 +202,11 @@ def network_map(
         linewidths=1,
     )
 
-    common.ax_text_node_labels(ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes)
+    cmn.ax_text_node_labels(ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes)
 
     fig.set_tight_layout(True)
-    common.ax_expand_limits(ax)
-    common.set_ax_splines_invisible(ax)
+    cmn.ax_expand_limits(ax)
+    cmn.set_ax_splines_invisible(ax)
     ax.set_aspect("equal")
     ax.axis("off")
 
@@ -299,6 +299,7 @@ class Model:
             layout=self.layout,
             clustering=self.clustering,
             only_communities=True,
+            iterations=self.nx_iterations,
             figsize=(self.width, self.height),
         )
 
