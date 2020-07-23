@@ -281,6 +281,7 @@ class MatrixListDASHapp(DASH, MatrixListModel):
             dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
+            dash.separator(text="Visualization"),
             dash.dropdown(
                 desc="Top by:",
                 options=[
@@ -482,6 +483,7 @@ class MatrixDASHapp(DASH, MatrixModel):
             dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
+            dash.separator(text="Visualization"),
             dash.dropdown(
                 desc="Top by:",
                 options=[
@@ -506,6 +508,13 @@ class MatrixDASHapp(DASH, MatrixModel):
     def interactive_output(self, **kwargs):
 
         DASH.interactive_output(self, **kwargs)
+
+        if self.menu == "Matrix":
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+        else:
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
 
 
 ###############################################################################
