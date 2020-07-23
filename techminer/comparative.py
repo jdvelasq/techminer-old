@@ -33,7 +33,7 @@ class Model:
         self.height = None
         self.max_iter = None
         self.max_iters = None
-        self.max_terms = None
+        self.max_items = None
         self.min_occurrence = None
         self.n_clusters = None
         self.n_components = None
@@ -72,13 +72,15 @@ class Model:
         #
         # 2.-- Computtes TFIDF matrix and select max_term frequent terms
         #
+        #      tf-idf = tf * (log(N / df) + 1)
+        #
         TFIDF_matrix_ = TFIDF_matrix(
             TF_matrix=TF_matrix_,
-            norm=self.norm,
-            use_idf=self.use_idf,
-            smooth_idf=self.smooth_idf,
-            sublinear_tf=self.sublinear_tf,
-            max_terms=self.max_terms,
+            norm=None,
+            use_idf=True,
+            smooth_idf=False,
+            sublinear_tf=False,
+            max_items=self.max_items,
         )
 
         TFIDF_matrix_ = cmn.add_counters_to_axis(
@@ -146,22 +148,23 @@ class Model:
 
     def memberships(self):
         self.apply()
-        r = {}
+        result = []
         for i_cluster in range(self.n_clusters):
             cluster_members = self.memberships_[self.memberships_.Cluster == i_cluster]
             cluster_members = cmn.sort_axis(
                 data=cluster_members, num_documents=True, axis=0, ascending=False
             )
             m = cluster_members.head(self.top_n)
-            m = m.index.tolist()
-            r[i_cluster] = m
-        r = json.dumps(r, indent=4, sort_keys=True)
-        print(r)
-        return ""
+            m = m.reset_index()
+            result.append(m)
+        result = pd.concat(result)
+        result.columns = [self.column, "Cluster"]
+        result = result.reset_index(drop=True)
+        return result
 
     def plot_singular_values(self):
         self.apply()
-        return plt.barh(width=self.eigenvalues_)
+        return plt.barh(width=self.eigenvalues_[:20])
 
     def plot_clusters(self):
 
@@ -200,14 +203,7 @@ COLUMNS = [
 
 class DASHapp(DASH, Model):
     def __init__(
-        self,
-        data,
-        limit_to=None,
-        exclude=None,
-        norm=None,
-        use_idf=True,
-        smooth_idf=True,
-        sublinear_tf=False,
+        self, data, limit_to=None, exclude=None,
     ):
 
         Model.__init__(self, data, limit_to, exclude)
@@ -216,10 +212,6 @@ class DASHapp(DASH, Model):
         self.data = data
         self.limit_to = limit_to
         self.exclude = exclude
-        self.norm = norm
-        self.use_idf = use_idf
-        self.smooth_idf = smooth_idf
-        self.sublinear_tf = sublinear_tf
 
         self.app_title = "Comparative analysis"
         self.menu_options = [
@@ -237,11 +229,13 @@ class DASHapp(DASH, Model):
         self.panel_widgets = [
             dash.dropdown(desc="Column:", options=[t for t in data if t in COLUMNS],),
             dash.min_occurrence(),
-            dash.max_terms(),
+            dash.max_items(),
+            dash.separator(text="Clustering (K-means)"),
+            dash.dropdown(desc="N Factors:", options=list(range(2, 20)),),
             dash.n_clusters(),
             dash.max_iter(),
             dash.random_state(),
-            dash.dropdown(desc="N Factors:", options=list(range(2, 20)),),
+            dash.separator(text="Visualization"),
             dash.top_n(m=10, n=51, i=5),
             dash.cmap(),
             dash.x_axis(),
@@ -281,20 +275,7 @@ class DASHapp(DASH, Model):
 
 
 def app(
-    data,
-    limit_to=None,
-    exclude=None,
-    norm=None,
-    use_idf=True,
-    smooth_idf=True,
-    sublinear_tf=False,
+    data, limit_to=None, exclude=None,
 ):
-    return DASHapp(
-        data=data,
-        limit_to=limit_to,
-        exclude=exclude,
-        norm=norm,
-        use_idf=use_idf,
-        smooth_idf=smooth_idf,
-        sublinear_tf=sublinear_tf,
-    ).run()
+    return DASHapp(data=data, limit_to=limit_to, exclude=exclude,).run()
+

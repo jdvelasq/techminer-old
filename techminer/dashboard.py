@@ -94,7 +94,7 @@ def linkage():
 def max_iter():
     return {
         "arg": "max_iter",
-        "desc": "Max # of iterations:",
+        "desc": "Max iterations:",
         "widget": widgets.Dropdown(
             options=list(range(50, 501, 50)), layout=Layout(width="55%"),
         ),
@@ -144,7 +144,7 @@ def n_iter():
 def n_clusters():
     return {
         "arg": "n_clusters",
-        "desc": "# Clusters:",
+        "desc": "N Clusters:",
         "widget": widgets.Dropdown(
             options=list(range(2, 21)), layout=Layout(width="55%"),
         ),
@@ -324,13 +324,11 @@ class DASH:
         menu = self.menu.replace(" ", "_").replace("-", "_").replace("/", "_").lower()
         self.output.clear_output()
         with self.output:
-            # display(processing())
-            display("Processing ...")
+            print("Processing ...")
         result = getattr(self, menu)()
         self.output.clear_output()
         with self.output:
             display(result)
-        # display(getattr(self, menu)())
 
     def create_grid(self):
 
