@@ -28,15 +28,14 @@ class Model:
         self.cmap = None
         self.column = None
         self.height = None
+        self.max_items = None
         self.max_iter = None
+        self.min_occurrence = None
         self.n_clusters = None
-        self.norm = None
-        self.smooth_idf = None
         self.sort_by = None
-        self.sublinear_tf = None
         self.top_by = None
         self.top_n = None
-        self.use_idf = None
+        self.random_state = None
         self.width = None
         self.x_axis = None
         self.y_axis = None
@@ -51,37 +50,27 @@ class Model:
         #
         # 1.-- Construye TF_matrix binaria
         #
-        TF_matrix_ = TF_matrix(self.data, self.column, scheme="binary")
-        TF_matrix_ = cmn.limit_to_exclude(
-            data=TF_matrix_,
-            axis=1,
-            column=self.column,
-            limit_to=self.limit_to,
-            exclude=self.exclude,
+        TF_matrix_ = TF_matrix(
+            self.data, self.column, scheme="binary", min_occurrence=self.min_occurrence,
         )
+
         TF_matrix_ = cmn.add_counters_to_axis(
             X=TF_matrix_, axis=1, data=self.data, column=self.column
         )
-        #  TF_matrix_ = cmn.sort_by_axis(
-        #      data=TF_matrix_, sort_by=self.top_by, ascending=False, axis=1
-        #  )
-        #  TF_matrix_ = TF_matrix_[TF_matrix_.columns[: self.top_n]]
 
         #
         # 2.-- Construye TF-IDF y escala filas to longitud unitaria (norma euclidiana).
         #      En sklearn: norm='l2'
         #
-        #      En TLAB se usa tf * log( N / df).
-        #      Para sklearn:
-        #        * use_idf = False
-        #        * sublinear_tf = False
+        #      tf-idf = tf * (log(N / df) + 1)
         #
         TF_IDF_matrix_ = TFIDF_matrix(
             TF_matrix=TF_matrix_,
-            norm=self.norm,
-            use_idf=self.use_idf,
-            smooth_idf=self.smooth_idf,
-            sublinear_tf=self.sublinear_tf,
+            norm="l2",
+            use_idf=True,
+            smooth_idf=False,
+            sublinear_tf=False,
+            max_items=self.max_items,
         )
 
         #
@@ -89,7 +78,11 @@ class Model:
         #      En TLAB se usa bisecting k-means.
         #      Se implementa sklearn.cluster.KMeans
         #
-        kmeans = KMeans(n_clusters=self.n_clusters, max_iter=self.max_iter)
+        kmeans = KMeans(
+            n_clusters=self.n_clusters,
+            max_iter=self.max_iter,
+            random_state=int(self.random_state),
+        )
         labels = kmeans.fit_predict(X=TF_IDF_matrix_)
 
         #
@@ -104,20 +97,18 @@ class Model:
         #
         # 5.-- Memberships
         #
-        memberships = None
+        memberships = []
         for cluster in self.contingency_table_.columns:
             grp = self.contingency_table_[cluster]
             grp = grp[grp > 0]
-            grp = grp.sort_values(ascending=False)
+            grp = cmn.sort_by_axis(
+                data=grp, sort_by="Num Documents", ascending=False, axis=0
+            )
             grp = grp.head(self.top_n)
-            index = [(cluster, w) for w in grp.index]
-            index = pd.MultiIndex.from_tuples(index, names=["Cluster", "Term"])
-            grp = pd.DataFrame(grp.values, columns=["Values"], index=index)
-            if memberships is None:
-                memberships = grp
-            else:
-                memberships = pd.concat([memberships, grp])
-        self.memberships_ = memberships
+            df = pd.DataFrame(grp.index, columns=[self.column])
+            df["Cluster"] = cluster
+            memberships.append(df)
+        self.memberships_ = pd.concat(memberships)
 
         #
         # 6.-- Top n for contingency table
@@ -137,17 +128,10 @@ class Model:
 
         #
         # 8.-- Tamaño de los clusters.
-        #         Cantidad de documentos
-        #         Cantidad de citas
         #
-        W = self.data[[self.column, "Times_Cited"]]
-        W = W.dropna()
-        W.pop(self.column)
-        W["Num_Documents"] = 1
+        W = TF_IDF_matrix_.copy()
         W["*cluster*"] = labels
-        W = W.groupby("*cluster*").sum()
-        self.num_documents_ = W["Num_Documents"].to_dict()
-        self.times_cited_ = W["Times_Cited"].to_dict()
+        W = W.groupby("*cluster*").count()
 
         #
         # 9.-- Correspondence Analysis
@@ -337,14 +321,15 @@ class DASHapp(DASH, Model):
             dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
-            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-            dash.top_n(n=101,),
-            dash.dropdown(desc="Norm:", options=[None, "L1", "L2"],),
-            dash.dropdown(desc="Use IDF:", options=[True, False,],),
-            dash.dropdown(desc="Smooth IDF:", options=[True, False,],),
-            dash.dropdown(desc="Sublinear TF:", options=[True, False,],),
+            dash.min_occurrence(),
+            dash.max_items(),
+            dash.separator(text="Clustering (K-means)"),
             dash.n_clusters(),
             dash.max_iter(),
+            dash.random_state(),
+            dash.separator(text="Visualization"),
+            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+            dash.top_n(n=101,),
             dash.cmap(),
             dash.x_axis(),
             dash.y_axis(),

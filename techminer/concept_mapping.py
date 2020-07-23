@@ -197,11 +197,11 @@ class Model:
 
         TFIDF_matrix_ = TFIDF_matrix(
             TF_matrix=TF_matrix_,
-            norm=self.norm,
-            use_idf=self.use_idf,
-            smooth_idf=self.smooth_idf,
-            sublinear_tf=self.sublinear_tf,
-            max_terms=self.max_terms,
+            norm=None,
+            use_idf=True,
+            smooth_idf=False,
+            sublinear_tf=False,
+            max_items=self.max_items,
         )
 
         TFIDF_matrix_ = cmn.add_counters_to_axis(
@@ -356,13 +356,7 @@ COLUMNS = [
 
 class DASHapp(DASH, Model):
     def __init__(
-        self,
-        data,
-        limit_to=None,
-        exclude=None,
-        use_idf=True,
-        smooth_idf=True,
-        sublinear_tf=False,
+        self, data, limit_to=None, exclude=None,
     ):
 
         Model.__init__(self, data, limit_to, exclude)
@@ -370,10 +364,6 @@ class DASHapp(DASH, Model):
 
         self.data = data
         self.app_title = "Concept Mapping"
-        self.use_idf = use_idf
-        self.smooth_idf = smooth_idf
-        self.sublinear_tf = sublinear_tf
-
         self.menu_options = [
             "Cluster memberships",
             "Cluster co-occurrence matrix",
@@ -388,17 +378,19 @@ class DASHapp(DASH, Model):
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
             dash.min_occurrence(),
-            dash.max_terms(),
+            dash.max_items(),
             dash.normalization(),
-            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-            dash.top_n(),
+            dash.separator(text="Aglomerative Clustering"),
             dash.n_clusters(),
-            dash.linkage(),
             dash.affinity(),
+            dash.linkage(),
+            dash.separator(text="MDS/CA diagram"),
             dash.n_components(),
             dash.x_axis(),
             dash.y_axis(),
-            #  dash.cmap(),
+            dash.separator(text="Visualization"),
+            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+            dash.top_n(),
             dash.fig_width(),
             dash.fig_height(),
         ]
@@ -422,8 +414,6 @@ class DASHapp(DASH, Model):
                 self.set_enabled("Width:")
                 self.set_enabled("Height:")
 
-
-
             if self.menu in [
                 "MDS cluster map",
                 "CA cluster map",
@@ -436,7 +426,6 @@ class DASHapp(DASH, Model):
 
             if self.menu == "MDS cluster map":
 
-                
                 self.panel_widgets[-5]["widget"].disabled = False
                 self.panel_widgets[8]["widget"].options = list(range(self.n_components))
                 self.panel_widgets[9]["widget"].options = list(range(self.n_components))

@@ -16,7 +16,7 @@ from sklearn.decomposition import PCA
 import techminer.common as cmn
 import techminer.dashboard as dash
 from techminer.dashboard import DASH
-from techminer.document_term import TF_matrix
+from techminer.document_term import TF_matrix, TFIDF_matrix
 
 ###############################################################################
 ##
@@ -50,19 +50,35 @@ class Model:
         X = self.data.copy()
 
         #
-        # 1.-- Term-frequency matrix
+        # 1.-- TF matrix
         #
-        TF_matrix_ = TF_matrix(X, self.column)
+        TF_matrix_ = TF_matrix(
+            data=X, column=self.column, scheme=None, min_occurrence=self.min_occurrence,
+        )
+
+        #
+        # 2.-- Computtes TFIDF matrix and select max_term frequent terms
+        #
+        #      tf-idf = tf * (log(N / df) + 1)
+        #
+        TFIDF_matrix_ = TFIDF_matrix(
+            TF_matrix=TF_matrix_,
+            norm=None,
+            use_idf=False,
+            smooth_idf=False,
+            sublinear_tf=False,
+            max_items=self.max_items,
+        )
 
         #
         # 2.-- PCA (VantagePoint pag 170)
         #
         pca = PCA(n_components=self.n_components, random_state=int(self.random_state))
-        R = np.transpose(pca.fit(X=TF_matrix_.values).components_)
+        R = np.transpose(pca.fit(X=TFIDF_matrix_.values).components_)
         R = pd.DataFrame(
             R,
             columns=["F" + str(i) for i in range(self.n_components)],
-            index=TF_matrix_.columns,
+            index=TFIDF_matrix_.columns,
         )
 
         #
@@ -340,8 +356,12 @@ class DASHapp(DASH, Model):
             dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
+            dash.min_occurrence(),
+            dash.max_items(),
+            dash.separator(text="PCA"),
             dash.n_components(),
             dash.random_state(),
+            dash.separator(text="Visualization"),
             dash.dropdown(
                 desc="Top by:", options=["Values", "Num Documents", "Times Cited"],
             ),
@@ -363,28 +383,48 @@ class DASHapp(DASH, Model):
 
         DASH.interactive_output(self, **kwargs)
 
-        self.panel_widgets[5]["widget"].disabled = not self.menu == "Factors"
-        self.panel_widgets[6]["widget"].disabled = not self.menu == "Factors"
-        self.panel_widgets[7]["widget"].disabled = (
-            True if self.menu == "Variances" else False
-        )
-        self.panel_widgets[8]["widget"].disabled = True if self.menu != "Map" else False
-        self.panel_widgets[9]["widget"].disabled = True if self.menu != "Map" else False
-        self.panel_widgets[10]["widget"].disabled = (
-            True if self.menu != "Map" else False
-        )
-        self.panel_widgets[11]["widget"].disabled = (
-            True if self.menu != "Map" else False
-        )
-        self.panel_widgets[9]["widget"].disabled = (
-            True if self.panel_widgets[8]["widget"].value != "Spring" else False
+        self.set_options(
+            "Sort by:",
+            ["Alphabetic", "Num Documents", "Times Cited",]
+            + ["F{}".format(i) for i in range(self.n_components)],
         )
 
-        self.panel_widgets[5]["widget"].options = [
-            "Alphabetic",
-            "Num Documents",
-            "Times Cited",
-        ] + ["F{}".format(i) for i in range(self.n_components)]
+        if self.menu == "Factors":
+            self.set_enabled("Top by:")
+            self.set_enabled("Top N:")
+            self.set_enabled("Sort by:")
+            self.set_enabled("Ascending:")
+            self.set_enabled("Colormap:")
+            self.set_disabled("Layout:")
+            self.set_disabled("nx iterations:")
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+
+        if self.menu == "Variances":
+            self.set_disabled("Top by:")
+            self.set_disabled("Top N:")
+            self.set_disabled("Sort by:")
+            self.set_disabled("Ascending:")
+            self.set_disabled("Colormap:")
+            self.set_disabled("Layout:")
+            self.set_disabled("nx iterations:")
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+
+        if self.menu == "Map":
+            self.set_disabled("Top by:")
+            self.set_disabled("Top N:")
+            self.set_disabled("Sort by:")
+            self.set_disabled("Ascending:")
+            self.set_enabled("Colormap:")
+            self.set_enabled("Layout:")
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
+
+            if self.layout == "Spring":
+                self.set_enabled("nx iterations:")
+            else:
+                self.set_disabled("nx iterations:")
 
 
 ###############################################################################
