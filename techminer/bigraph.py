@@ -520,10 +520,7 @@ class DASHapp(DASH, Model):
 
         DASH.interactive_output(self, **kwargs)
 
-        if (
-            self.panel_widgets[0]["widget"].value
-            == self.panel_widgets[1]["widget"].value
-        ):
+        if self.column == self.by:
             for i, _ in enumerate(self.panel_widgets[2:]):
                 self.panel_widgets[i + 2]["widget"].disabled = True
             return
@@ -531,22 +528,27 @@ class DASHapp(DASH, Model):
             for i, _ in enumerate(self.panel_widgets[2:]):
                 self.panel_widgets[i + 2]["widget"].disabled = False
 
-        for k in [-1, -2]:
-            self.panel_widgets[k]["widget"].disabled = (
-                True if self.menu == "Matrix" else False
-            )
+        if self.menu == "Matrix":
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+        else:
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
 
-        self.panel_widgets[9]["widget"].disabled = (
-            True if self.menu not in ["Network", "Slope chart"] else False
-        )
+        if self.menu in ["Network", "Slope chart"]:
+            self.set_enabled("Colormap by:")
+        else:
+            self.set_disabled("Colormap by:")
 
-        self.panel_widgets[10]["widget"].disabled = (
-            True if self.menu != "Network" else False
-        )
+        if self.menu == "Network":
+            self.set_enabled("Layout:")
+        else:
+            self.set_disabled("Layout:")
 
-        self.panel_widgets[-3]["widget"].disabled = (
-            False if self.menu == "Network" and self.layout == "Spring" else True
-        )
+        if self.menu == "Network" and self.layout == "Spring":
+            self.set_enabled("nx interations:")
+        else:
+            self.set_disabled("nx iterations:")
 
 
 ###############################################################################
