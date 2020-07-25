@@ -331,7 +331,14 @@ class DASH:
 
     def calculate(self, button):
 
-        menu = self.menu.replace(" ", "_").replace("-", "_").replace("/", "_").lower()
+        menu = (
+            self.menu.replace(" ", "_")
+            .replace("-", "_")
+            .replace("/", "_")
+            .replace("(", "")
+            .replace(")", "")
+            .lower()
+        )
         self.output.clear_output()
         with self.output:
             print("Processing ...")

@@ -20,6 +20,7 @@ import techminer.plots as plt
 from techminer.dashboard import DASH
 from techminer.document_term import TF_matrix
 from techminer.params import EXCLUDE_COLS
+from pyvis.network import Network
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -295,8 +296,6 @@ class Model:
         ##
 
         X = self.X_
-
-        from pyvis.network import Network
 
         G = Network("700px", "870px", notebook=True)
 

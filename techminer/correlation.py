@@ -11,13 +11,14 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 from matplotlib.lines import Line2D
-
+import matplotlib
 import techminer.common as cmn
 import techminer.dashboard as dash
 import techminer.plots as plt
 from techminer.chord_diagram import ChordDiagram
 from techminer.dashboard import DASH
 from techminer.document_term import TF_matrix
+from pyvis.network import Network
 
 ###############################################################################
 ##
@@ -159,7 +160,7 @@ class Model:
 
         return cd.plot(figsize=(self.width, self.height))
 
-    def correlation_map(self):
+    def correlation_map_nx(self):
         self.fit()
 
         if len(self.X_.columns) > 50:
@@ -279,6 +280,55 @@ class Model:
 
         return fig
 
+    def correlation_map_interactive(self):
+        ##
+        self.fit()
+        ##
+        if len(self.X_.columns) > 50:
+            return "Maximum number of nodes exceded!"
+
+        G = Network("700px", "870px", notebook=True)
+
+        ## Data preparation
+        terms = self.X_.columns.tolist()
+        node_sizes = cmn.counters_to_node_sizes(x=terms)
+        node_colors = cmn.counters_to_node_colors(
+            x=terms, cmap=pyplot.cm.get_cmap(self.cmap)
+        )
+        node_colors = [matplotlib.colors.rgb2hex(t[:3]) for t in node_colors]
+
+        ## Add nodes
+        for i_term, term in enumerate(terms):
+            G.add_node(
+                term, size=node_sizes[i_term] / 100, color=node_colors[i_term],
+            )
+
+        ## links
+        m = self.X_.stack().to_frame().reset_index()
+        m = m[m.level_0 < m.level_1]
+        m.columns = ["from_", "to_", "link_"]
+        m = m[m.link_ > 0.0]
+        m = m.reset_index(drop=True)
+
+        d = {
+            0: {"width": 4, "style": "solid", "color": "black"},
+            1: {"width": 2, "style": "solid", "color": "black"},
+            2: {"width": 1, "style": "dashed", "color": "gray"},
+            3: {"width": 1, "style": "dotted", "color": "gray"},
+        }
+
+        for idx in range(len(m)):
+
+            key = (
+                0
+                if m.link_[idx] > 0.75
+                else (1 if m.link_[idx] > 0.50 else (2 if m.link_[idx] > 0.25 else 3))
+            )
+
+            G.add_edge(m.from_[idx], m.to_[idx], **(d[key]))
+
+        return G.show("net.html")
+
 
 ###############################################################################
 ##
@@ -314,7 +364,8 @@ class DASHapp(DASH, Model):
             "Matrix",
             "Heatmap",
             "Bubble plot",
-            "Correlation map",
+            "Correlation map (nx)",
+            "Correlation map (interactive)",
             "Chord diagram",
         ]
 
@@ -367,17 +418,19 @@ class DASHapp(DASH, Model):
             self.set_disabled("Sort R-axis by:")
             self.set_disabled("R-axis ascending:")
 
-        if self.menu == "Correlation map":
+        if self.menu == "Correlation map (nx)":
             self.set_enabled("Layout:")
+            self.set_enabled("N labels:")
         else:
             self.set_disabled("Layout:")
+            self.set_disabled("N labels:")
 
         if self.menu == "Correlation map" and self.layout == "Spring":
             self.set_enabled("nx iterations:")
         else:
             self.set_disabled("nx iterations:")
 
-        if self.menu == "Matrix":
+        if self.menu in ["Matrix", "Correlation map (interactive)"]:
             self.set_disabled("Width:")
             self.set_disabled("Height:")
         else:
