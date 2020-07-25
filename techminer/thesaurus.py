@@ -9,8 +9,13 @@ import re
 import pandas as pd
 
 from techminer.explode import __explode
-from techminer.text import (fingerprint, one_gram, stemmer_porter,
-                            stemmer_snowball, two_gram)
+from techminer.text import (
+    fingerprint,
+    one_gram,
+    stemmer_porter,
+    stemmer_snowball,
+    two_gram,
+)
 
 
 def text_clustering(x, name_strategy="mostfrequent", key="porter", transformer=None):
@@ -126,6 +131,7 @@ def text_clustering(x, name_strategy="mostfrequent", key="porter", transformer=N
     x["key"] = x.col.map(f)
     grp = x.groupby(by="key").agg({"col": list})
     grp["listlen"] = grp.col.map(len)
+    grp_isolated = grp[grp.listlen.map(lambda w: w == 1)]
     grp = grp[grp.listlen.map(lambda w: w > 1)]
     grp["col"] = grp.col.map(lambda w: pd.Series(w))
     grp["groupname"] = None
@@ -148,6 +154,7 @@ def text_clustering(x, name_strategy="mostfrequent", key="porter", transformer=N
     if transformer is not None:
         grp["groupname"] = grp.groupname.map(transformer)
     result = {key: sorted(value.tolist()) for key, value in zip(grp.groupname, grp.col)}
+    result = {**result, **{value[0]: value for value in grp_isolated.col}}
     return Thesaurus(result, ignore_case=False, full_match=True, use_re=False)
 
 
@@ -160,15 +167,32 @@ def read_textfile(filename):
     #
     file = open(filename, "r")
     for word in file:
+        if len(word.strip()) == 0 or word.strip() == "\n":
+            continue
         word = word[:-1] if word[-1] == "\n" else word
         if word[0] != " ":
             if key is not None:
+                if values == []:
+                    raise Exception(
+                        "Key '"
+                        + key
+                        + "' in file '"
+                        + filename
+                        + "' without values associated"
+                    )
                 dic[key] = values
             key = word.strip()
             values = []
         else:
             values.append(word.strip())
-    return Thesaurus(x=dic, ignore_case=True, full_match=False, use_re=False)
+    if key not in dic.keys():
+        if values == []:
+            raise Exception(
+                "Key '" + key + "' in file '" + filename + "' without values associated"
+            )
+        dic[key] = values
+    th = Thesaurus(x=dic, ignore_case=True, full_match=False, use_re=False)
+    return th
 
 
 class Thesaurus:
@@ -179,6 +203,7 @@ class Thesaurus:
         self._use_re = use_re
         self._dict = None
         self._compiled = None
+        return None
 
     @property
     def thesaurus(self):
