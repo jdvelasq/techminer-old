@@ -175,7 +175,7 @@ class Model:
             self.X_, axis=0, cmap=self.cmap, figsize=(self.width, self.height),
         )
 
-    def network(self):
+    def network_nx(self):
         ##
         self.fit()
         ##
@@ -285,6 +285,69 @@ class Model:
         ax.axis("off")
         cmn.set_ax_splines_invisible(ax)
         return fig
+
+    ##
+    ##
+    ## inferfaz con pyviz
+    def network_interactive(self):
+        ##
+        self.fit()
+        ##
+
+        X = self.X_
+
+        from pyvis.network import Network
+
+        G = Network("700px", "870px", notebook=True)
+
+        ## Data preparation
+        terms = X.columns.tolist() + X.index.tolist()
+
+        node_sizes = cmn.counters_to_node_sizes(x=terms)
+        column_node_sizes = node_sizes[: len(X.index)]
+        index_node_sizes = node_sizes[len(X.index) :]
+
+        node_colors = cmn.counters_to_node_colors(x=terms, cmap=lambda w: w)
+        column_node_colors = node_colors[: len(X.index)]
+        index_node_colors = node_colors[len(X.index) :]
+
+        cmap = pyplot.cm.get_cmap(self.cmap)
+        cmap_by = pyplot.cm.get_cmap(self.cmap_by)
+        column_node_colors = [cmap(t) for t in column_node_colors]
+        column_node_colors = [
+            matplotlib.colors.rgb2hex(t[:3]) for t in column_node_colors
+        ]
+        index_node_colors = [cmap_by(t) for t in index_node_colors]
+        index_node_colors = [
+            matplotlib.colors.rgb2hex(t[:3]) for t in index_node_colors
+        ]
+
+        for i_term, term in enumerate(X.columns.tolist()):
+            G.add_node(
+                term,
+                size=column_node_sizes[i_term] / 100,
+                color=column_node_colors[i_term],
+            )
+
+        for i_term, term in enumerate(X.index.tolist()):
+            G.add_node(
+                term,
+                size=index_node_sizes[i_term] / 100,
+                color=index_node_colors[i_term],
+            )
+
+        # links
+        m = X.stack().to_frame().reset_index()
+        m.columns = ["from_", "to_", "link_"]
+        m = m[m.link_ > 0.0]
+        m = m.reset_index(drop=True)
+
+        max_width = m.link_.max()
+        for idx in range(len(m)):
+            value = 0.5 + 2.5 * m.link_[idx] / max_width
+            G.add_edge(m.from_[idx], m.to_[idx], width=value, color="black")
+
+        return G.show("net.html")
 
     def slope_chart(self):
         ##
@@ -477,7 +540,8 @@ class DASHapp(DASH, Model):
             "Matrix",
             "Heatmap",
             "Bubble plot",
-            "Network",
+            "Network nx",
+            "Network interactive",
             "Slope chart",
         ]
 
@@ -528,24 +592,24 @@ class DASHapp(DASH, Model):
             for i, _ in enumerate(self.panel_widgets[2:]):
                 self.panel_widgets[i + 2]["widget"].disabled = False
 
-        if self.menu == "Matrix":
+        if self.menu in ["Matrix", "Network interactive"]:
             self.set_disabled("Width:")
             self.set_disabled("Height:")
         else:
             self.set_enabled("Width:")
             self.set_enabled("Height:")
 
-        if self.menu in ["Network", "Slope chart"]:
+        if self.menu in ["Network nx", "Network interactive", "Slope chart"]:
             self.set_enabled("Colormap by:")
         else:
             self.set_disabled("Colormap by:")
 
-        if self.menu == "Network":
+        if self.menu == "Network nx":
             self.set_enabled("Layout:")
         else:
             self.set_disabled("Layout:")
 
-        if self.menu == "Network" and self.layout == "Spring":
+        if self.menu == "Network nx" and self.layout == "Spring":
             self.set_enabled("nx interations:")
         else:
             self.set_disabled("nx iterations:")

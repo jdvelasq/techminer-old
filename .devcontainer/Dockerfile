@@ -11,7 +11,9 @@ RUN python3 -m pip install \
     pywaffle \
     sklearn \
     squarify \
-    wordcloud 
+    wordcloud \
+    pyvis \
+    jsonpickle
 
 
 RUN python3 -c "import nltk; nltk.download('stopwords'); nltk.download('wordnet'); nltk.download('averaged_perceptron_tagger')"
