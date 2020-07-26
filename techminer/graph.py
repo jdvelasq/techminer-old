@@ -4,7 +4,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 from cdlib import algorithms
-
+from pyvis.network import Network
 import techminer.common as cmn
 import techminer.dashboard as dash
 import techminer.plots as plt
@@ -29,7 +29,7 @@ def network_normalization(X, normalization=None):
         X = X.applymap(lambda w: int(w))
     else:
         X = X.applymap(lambda w: float(w))
-        M = X.copy()
+    M = X.copy()
     if normalization == "association":
         for col in M.columns:
             for row in M.index:
@@ -103,7 +103,7 @@ def co_occurrence_matrix(
     return matrix
 
 
-def network_map(
+def network_map_nx(
     X, cmap, clustering, layout, only_communities, iterations, n_labels, figsize=(8, 8)
 ):
 
@@ -291,7 +291,7 @@ class Model:
             self.X_, axis=0, cmap=self.cmap, figsize=(self.width, self.height)
         )
 
-    def network(self):
+    def network_nx(self):
         self.fit()
         self.X_ = cmn.sort_by_axis(
             data=self.X_, sort_by=self.top_by, ascending=False, axis=0
@@ -299,7 +299,7 @@ class Model:
         self.X_ = cmn.sort_by_axis(
             data=self.X_, sort_by=self.top_by, ascending=False, axis=1
         )
-        return network_map(
+        return network_map_nx(
             self.X_,
             cmap=self.cmap,
             layout=self.layout,
@@ -312,15 +312,64 @@ class Model:
 
     def communities(self):
         self.fit()
-        return network_map(
+        return network_map_nx(
             self.X_,
             cmap=self.cmap,
             layout=self.layout,
             clustering=self.clustering,
             only_communities=True,
             iterations=self.nx_iterations,
+            n_labels=None,
             figsize=(self.width, self.height),
         )
+
+    def network_interactive(self):
+        ##
+        self.fit()
+        ##
+
+        X = self.X_.copy()
+        G = nx.Graph()
+
+        # Network generation
+        terms = X.columns.tolist()
+        n = len(terms)
+        G.add_nodes_from(terms)
+
+        max_width = X.max().max()
+        m = X.stack().to_frame().reset_index()
+        m = m[m.level_0 < m.level_1]
+        m.columns = ["from_", "to_", "link_"]
+        m = m[m.link_ > 0.001]
+        m = m.reset_index(drop=True)
+
+        for idx in range(len(m)):
+            value = 0.1 + 1.4 * m.link_[idx] / max_width
+            G.add_edge(
+                m.from_[idx], m.to_[idx], width=value, color="lightgray", physics=False
+            )
+
+        R = {
+            "Label propagation": algorithms.label_propagation,
+            "Leiden": algorithms.leiden,
+            "Louvain": algorithms.louvain,
+            "Walktrap": algorithms.walktrap,
+        }[self.clustering](G).communities
+
+        for i_community, community in enumerate(R):
+            for item in community:
+                G.nodes[item]["group"] = i_community
+
+        node_sizes = cmn.counters_to_node_sizes(terms)
+        node_sizes = [size / 100 for size in node_sizes]
+
+        for i_term, term in enumerate(terms):
+            G.nodes[term]["size"] = node_sizes[i_term]
+
+        nt = Network("700px", "870px", notebook=True)
+        nt.from_nx(G)
+
+        return nt.show("net.html")
 
 
 ###############################################################################
@@ -342,7 +391,8 @@ class DASHapp(DASH, Model):
             "Matrix",
             "Heatmap",
             "Bubble plot",
-            "Network",
+            "Network (nx)",
+            "Network (interactive)",
             "Communities",
         ]
 
@@ -405,7 +455,7 @@ class DASHapp(DASH, Model):
             self.set_enabled("Width:")
             self.set_enabled("Height:")
 
-        if self.menu == "Network" or self.menu == "Communities":
+        if self.menu == "Network (nx)" or self.menu == "Communities":
 
             self.set_enabled("Clustering:")
             self.set_enabled("Colormap:")
@@ -418,6 +468,16 @@ class DASHapp(DASH, Model):
                 self.set_enabled("nx iterations:")
             else:
                 self.set_disabled("nx iterations:")
+
+        if self.menu == "Network (interactive)":
+
+            self.set_enabled("Clustering:")
+            self.set_disabled("Colormap:")
+            self.set_disabled("Layout:")
+            self.set_disabled("N labels:")
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+            self.set_disabled("nx iterations:")
 
 
 ###############################################################################

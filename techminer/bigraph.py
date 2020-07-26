@@ -295,7 +295,7 @@ class Model:
         self.fit()
         ##
 
-        X = self.X_
+        X = self.X_.copy()
 
         G = Network("700px", "870px", notebook=True)
 
@@ -344,7 +344,9 @@ class Model:
         max_width = m.link_.max()
         for idx in range(len(m)):
             value = 0.5 + 2.5 * m.link_[idx] / max_width
-            G.add_edge(m.from_[idx], m.to_[idx], width=value, color="black")
+            G.add_edge(
+                m.from_[idx], m.to_[idx], width=value, color="lightgray", physics=False
+            )
 
         return G.show("net.html")
 

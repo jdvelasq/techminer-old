@@ -311,10 +311,10 @@ class Model:
         m = m.reset_index(drop=True)
 
         d = {
-            0: {"width": 4, "style": "solid", "color": "black"},
-            1: {"width": 2, "style": "solid", "color": "black"},
-            2: {"width": 1, "style": "dashed", "color": "gray"},
-            3: {"width": 1, "style": "dotted", "color": "gray"},
+            0: {"width": 4, "style": "solid", "color": "gray"},
+            1: {"width": 2, "style": "solid", "color": "gray"},
+            2: {"width": 1, "style": "dashed", "color": "lightgray"},
+            3: {"width": 1, "style": "dotted", "color": "lightgray"},
         }
 
         for idx in range(len(m)):
@@ -325,7 +325,7 @@ class Model:
                 else (1 if m.link_[idx] > 0.50 else (2 if m.link_[idx] > 0.25 else 3))
             )
 
-            G.add_edge(m.from_[idx], m.to_[idx], **(d[key]))
+            G.add_edge(m.from_[idx], m.to_[idx], physics=False, **(d[key]))
 
         return G.show("net.html")
 
