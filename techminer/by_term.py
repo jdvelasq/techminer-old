@@ -5,6 +5,8 @@ Analysis by Term
 """
 import numpy as np
 import pandas as pd
+import ipywidgets as widgets
+
 
 import techminer.common as cmn
 import techminer.dashboard as dash
@@ -458,6 +460,27 @@ class Model:
                 figsize=(self.width, self.height),
             )
 
+    def list_of_core_source_titles(self):
+
+        x = self.data.copy()
+        x["Num_Documents"] = 1
+        x = _explode(x[["Source_title", "Num_Documents", "ID",]], "Source_title",)
+        m = x.groupby("Source_title", as_index=True).agg({"Num_Documents": np.sum,})
+        m = m[["Num_Documents"]]
+        m = m.sort_values(by="Num_Documents", ascending=False)
+        m["Cum_Num_Documents"] = m.Num_Documents.cumsum()
+        m = m[m.Cum_Num_Documents <= int(len(self.data) / 3)]
+        HTML = "1 st. Bradford' Group<br>"
+        for value in m.Num_Documents.unique():
+            n = m[m.Num_Documents == value]
+            HTML += "======================================================<br>"
+            HTML += "Num Documents Published:" + str(value) + "<br>"
+            HTML += "<br>"
+            for source in n.index:
+                HTML += "    " + source + "<br>"
+            HTML += "<br><br>"
+        return widgets.HTML("<pre>" + HTML + "</pre>")
+
 
 ###############################################################################
 ##
@@ -487,6 +510,7 @@ class DASHapp(DASH, Model):
             "Core authors",
             "Core source titles",
             "Top documents",
+            "List of core source titles",
         ]
         self.panel_widgets = [
             dash.dropdown(
