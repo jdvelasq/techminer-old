@@ -355,6 +355,8 @@ class MatrixModel:
                 "Times_Cited_per_Year": 1,
                 "%_Num_Documents_per_Year": 2,
                 "%_Times_Cited_per_Year": 3,
+                "Num_Documents": 4,
+                "Times_Cited": 5,
             }[top_by]
         else:
             top_by = self.top_by
@@ -364,6 +366,8 @@ class MatrixModel:
             1: "Times_Cited_per_Year",
             2: "%_Num_Documents_per_Year",
             3: "%_Times_Cited_per_Year",
+            4: "Num_Documents_per_Year",
+            5: "Times_Cited_per_Year",
         }[top_by]
 
         for col in [
@@ -376,6 +380,9 @@ class MatrixModel:
             if col != selected_col:
                 result.pop(col)
 
+        #
+        # Table pivot
+        #
         result = pd.pivot_table(
             result,
             values=selected_col,
@@ -384,11 +391,32 @@ class MatrixModel:
             fill_value=0,
         )
 
-        max = result.max(axis=0)
-        max = max.sort_values(ascending=False)
-        if self.top_n is not None:
-            max = max.head(self.top_n)
-        result = result[max.index]
+        result = cmn.add_counters_to_axis(
+            X=result, axis=1, data=self.data, column=self.column
+        )
+
+        if top_by == 4:
+            ## top_by num documents
+            result = cmn.sort_axis(
+                data=result, num_documents=True, axis=1, ascending=False
+            )
+            selected_columns = result.columns[: self.top_n]
+            result = result[selected_columns]
+
+        elif top_by == 5:
+            ## top_by times cited
+            result = cmn.sort_axis(
+                data=result, num_documents=False, axis=1, ascending=False
+            )
+            selected_columns = result.columns[: self.top_n]
+            result = result[selected_columns]
+
+        else:
+            max = result.max(axis=0)
+            max = max.sort_values(ascending=False)
+            if self.top_n is not None:
+                max = max.head(self.top_n)
+            result = result[max.index]
 
         sum_years = result.sum(axis=1)
         for year, index in zip(sum_years, sum_years.index):
@@ -396,10 +424,6 @@ class MatrixModel:
                 result = result.drop(axis=0, labels=index)
             else:
                 break
-
-        result = cmn.add_counters_to_axis(
-            X=result, axis=1, data=self.data, column=self.column
-        )
 
         #
         # sort_by
@@ -491,6 +515,8 @@ class MatrixDASHapp(DASH, MatrixModel):
                     "Times Cited per Year",
                     "% Num Documents per Year",
                     "% Times Cited per Year",
+                    "Num Documents",
+                    "Times Cited",
                 ],
             ),
             dash.top_n(),
