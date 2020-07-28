@@ -47,6 +47,7 @@ def set_ax_splines_invisible(ax, exclude=None):
 def sort_by_axis(data, sort_by, ascending, axis):
 
     X = data.copy()
+    #  sort_by = sort_by.replace(' ', '_').replace('-','_').replace('/','_').replace('(', '').replace(')', '')
 
     axis_to_sort = {0: [0], 1: [1], 2: [0, 1],}[axis]
 
@@ -57,12 +58,18 @@ def sort_by_axis(data, sort_by, ascending, axis):
                 axis=m, ascending=ascending
             )
 
-    elif sort_by == "Num Documents" or sort_by == "Times Cited":
+    elif (
+        sort_by == "Num Documents"
+        or sort_by == "Times Cited"
+        or sort_by == "Num_Documents"
+        or sort_by == "Times_Cited"
+    ):
 
         for m in axis_to_sort:
             X = sort_axis(
                 data=X,
-                num_documents=sort_by == "Num Documents",
+                num_documents=(sort_by == "Num_Documents")
+                or (sort_by == "Num Documents"),
                 axis=m,
                 ascending=ascending,
             )

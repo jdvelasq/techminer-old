@@ -317,6 +317,9 @@ class Model:
             lambda w: h_dict[w] if w in h_dict.keys() else 0
         )
 
+        ## counters in axis names
+        result.index = result[self.column]
+
         ## limit to / exclude options
         result = cmn.limit_to_exclude(
             data=result,
@@ -326,32 +329,34 @@ class Model:
             exclude=self.exclude,
         )
 
-        ## Top by / Top N
-        top = self.top_by.replace(" ", "_").replace("-", "_").replace("/", "_")
-        if top in result.columns:
-            result = result.sort_values(top, ascending=False)
-        else:
-            result = cmn.sort_by_axis(
-                data=result, sort_by=self.top_by, ascending=False, axis=0
-            )
-        result = result.head(self.top_n)
-
-        ## counters in axis names
-        result = result.set_index(self.column)
         result = cmn.add_counters_to_axis(
             X=result, axis=0, data=self.data, column=self.column
         )
 
+        ## Top by / Top N
+        top_by = self.top_by.replace(" ", "_").replace("-", "_").replace("/", "_")
+        if top_by in ["Num_Documents", "Times_Cited"]:
+            result = cmn.sort_axis(
+                data=result,
+                num_documents=(top_by == "Num_Documents"),
+                axis=0,
+                ascending=False,
+            )
+        else:
+            result = result.sort_values(top, ascending=False)
+        result = result.head(self.top_n)
+
         ## Sort by
         sort_by = self.sort_by.replace(" ", "_").replace("-", "_").replace("/", "_")
-        if sort_by in result.columns:
-            result = result.sort_values(sort_by, ascending=self.ascending)
-        else:
+        if sort_by in ["Alphabetic", "Num_Documents", "Times_Cited"]:
             result = cmn.sort_by_axis(
                 data=result, sort_by=self.sort_by, ascending=self.ascending, axis=0
             )
+        else:
+            result = result.sort_values(sort_by, ascending=self.ascending)
 
         if self.view == "Table":
+            result.pop(self.column)
             result.pop("Num_Documents")
             result.pop("Times_Cited")
             result.pop("First_Year")
@@ -383,7 +388,7 @@ class Model:
         x = _explode(
             x[[self.column, "Num_Documents", "Times_Cited", "ID",]], self.column,
         )
-        result = x.groupby(self.column, as_index=True).agg(
+        result = x.groupby(self.column, as_index=False).agg(
             {"Num_Documents": np.sum, "Times_Cited": np.sum,}
         )
         result = cmn.limit_to_exclude(
@@ -394,19 +399,27 @@ class Model:
             exclude=self.exclude,
         )
         result["Times_Cited"] = result["Times_Cited"].map(lambda w: int(w))
-
-        result = result.reset_index()
-        result = result.reset_index(drop=True)
+        result.index = result[self.column]
+        result = cmn.add_counters_to_axis(
+            X=result, axis=0, data=self.data, column=self.column
+        )
         top_by = self.top_by.replace(" ", "_").replace("-", "_").replace("/", "_")
-        result = result.sort_values(top_by, ascending=False)
+        result = cmn.sort_axis(
+            data=result,
+            num_documents=(top_by == "Num_Documents"),
+            axis=0,
+            ascending=False,
+        )
         result = result.head(self.top_n)
 
-        if self.sort_by == "Alphabetic":
-            result = result.sort_values(self.column, ascending=self.ascending)
-        else:
-            sort_by = self.sort_by.replace(" ", "_").replace("-", "_")
-            result = result.sort_values(sort_by, ascending=self.ascending)
-        result.index = list(range(len(result)))
+        result = cmn.sort_axis(
+            data=result,
+            num_documents=(self.sort_by == "Num Documents"),
+            axis=0,
+            ascending=self.ascending,
+        )
+
+        result = result.reset_index(drop=True)
 
         if self.view == "Table":
             return result
