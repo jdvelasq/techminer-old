@@ -161,6 +161,16 @@ def n_clusters():
     }
 
 
+def n_clusters_ac():
+    return {
+        "arg": "n_clusters",
+        "desc": "N Clusters:",
+        "widget": widgets.Dropdown(
+            options=["None"] + list(range(2, 21)), layout=Layout(width="55%"),
+        ),
+    }
+
+
 def n_components():
     return {
         "arg": "n_components",
@@ -353,7 +363,7 @@ class DASH:
         panel_len = 0
         if self.panel_widgets is not None:
             panel_len += len(self.panel_widgets)
-        self.app_layout = GridspecLayout(max(14, panel_len + 1), 4, height="720px")
+        self.app_layout = GridspecLayout(max(14, panel_len + 1), 4, height="770px")
 
         ## Panel Title
         panel_widgets = [
@@ -394,21 +404,6 @@ class DASH:
                         )
                     )
 
-            # panel_widgets += [
-            #     widgets.HBox(
-            #         [
-            #             widgets.Label(value=self.panel_widgets[index]["desc"]),
-            #             self.panel_widgets[index]["widget"],
-            #         ],
-            #         layout=Layout(
-            #             display="flex",
-            #             justify_content="flex-end",
-            #             align_content="center",
-            #         ),
-            #     )
-            #     for index, _ in enumerate(self.panel_widgets)
-            # ]
-
         ## Calculate button
         if self.menu_options is not None:
             calculate_button = widgets.Button(
@@ -424,7 +419,7 @@ class DASH:
         ## Output area
         self.output = widgets.Output()
         self.app_layout[:, 1:] = widgets.VBox(
-            [self.output], layout=Layout(height="720px", border="2px solid gray"),
+            [self.output], layout=Layout(height="770px", border="2px solid gray"),
         )
 
         ## interactive

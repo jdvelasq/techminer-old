@@ -5,13 +5,17 @@ Factor analysis
 
 
 """
-
+import ipywidgets as widgets
 import matplotlib.pyplot as pyplot
 import networkx as nx
 import numpy as np
 import pandas as pd
 from matplotlib.lines import Line2D
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA, FactorAnalysis, FastICA, TruncatedSVD
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.manifold import MDS
+from scipy.spatial import ConvexHull
+import matplotlib.pyplot as pyplot
 
 import techminer.common as cmn
 import techminer.dashboard as dash
@@ -44,79 +48,6 @@ class Model:
         self.top_by = None
         self.top_n = None
         self.width = None
-
-    def fit(self):
-        #
-        X = self.data.copy()
-
-        #
-        # 1.-- TF matrix
-        #
-        TF_matrix_ = TF_matrix(
-            data=X, column=self.column, scheme=None, min_occurrence=self.min_occurrence,
-        )
-
-        #
-        # 2.-- Computtes TFIDF matrix and select max_term frequent terms
-        #
-        #      tf-idf = tf * (log(N / df) + 1)
-        #
-        TFIDF_matrix_ = TFIDF_matrix(
-            TF_matrix=TF_matrix_,
-            norm=None,
-            use_idf=False,
-            smooth_idf=False,
-            sublinear_tf=False,
-            max_items=self.max_items,
-        )
-
-        #
-        # 2.-- PCA (VantagePoint pag 170)
-        #
-        pca = PCA(n_components=self.n_components, random_state=int(self.random_state))
-        R = np.transpose(pca.fit(X=TFIDF_matrix_.values).components_)
-        R = pd.DataFrame(
-            R,
-            columns=["F" + str(i) for i in range(self.n_components)],
-            index=TFIDF_matrix_.columns,
-        )
-
-        #
-        # 3.-- limit to/exclude terms
-        #
-        R = cmn.limit_to_exclude(
-            data=R,
-            axis=0,
-            column=self.column,
-            limit_to=self.limit_to,
-            exclude=self.exclude,
-        )
-        R = cmn.add_counters_to_axis(X=R, axis=0, data=X, column=self.column)
-
-        #
-        # 4.-- Top 50 values
-        #
-        m = R.copy()
-        set0 = m.applymap(abs).max(axis=1).sort_values(ascending=False).head(50).index
-        set1 = (
-            cmn.sort_by_axis(data=R, sort_by="Num Documents", ascending=False, axis=0)
-            .head(50)
-            .index
-        )
-        set2 = (
-            cmn.sort_by_axis(data=R, sort_by="Times Cited", ascending=False, axis=0)
-            .head(50)
-            .index
-        )
-        terms = set0 | set1 | set2
-        R = R.loc[terms, :]
-
-        self.factors_ = R
-        self.variances_ = pd.DataFrame(
-            pca.explained_variance_, columns=["Explained variance"]
-        )
-        self.variances_["Explained ratio"] = pca.explained_variance_ratio_
-        self.variances_["Singular values"] = pca.singular_values_
 
     def sort(self):
 
@@ -341,39 +272,59 @@ COLUMNS = [
 ]
 
 
-class DASHapp(DASH, Model):
+class DASHapp(DASH):
     def __init__(self, data, limit_to=None, exclude=None):
         """Dashboard app"""
 
-        Model.__init__(self, data, limit_to, exclude)
+        # Model.__init__(self, data, limit_to, exclude)
         DASH.__init__(self)
 
         self.data = data
+        self.limit_to = limit_to
+        self.exclude = exclude
+        #
+        self.ascending = None
+        self.cmap = None
+        self.column = None
+        self.height = None
+        self.iterations = None
+        self.layout = None
+        self.n_components = None
+        self.random_state = None
+        self.sort_by = None
+        self.top_by = None
+        self.top_n = None
+        self.width = None
+        #
         self.app_title = "Factor Analysis"
-        self.menu_options = ["Factors", "Variances", "Map"]
-
+        self.menu_options = [
+            "Memberships",
+            "Cluster plot",
+        ]
+        #
         self.panel_widgets = [
             dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
             dash.min_occurrence(),
             dash.max_items(),
-            dash.separator(text="PCA"),
+            dash.separator(text="Decomposition"),
+            dash.dropdown(desc="Apply to:", options=["TF matrix", "TF*IDF matrix",],),
+            dash.dropdown(
+                desc="Method:",
+                options=["Factor Analysis", "PCA", "Fast ICA", "SVD", "MDS"],
+            ),
             dash.n_components(),
             dash.random_state(),
+            dash.separator(text="Aglomerative Clustering"),
+            dash.n_clusters(),
+            dash.affinity(),
+            dash.linkage(),
             dash.separator(text="Visualization"),
-            dash.dropdown(
-                desc="Top by:", options=["Values", "Num Documents", "Times Cited"],
-            ),
+            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited"],),
             dash.top_n(),
-            dash.dropdown(
-                desc="Sort by:",
-                options=["Alphabetic", "Num Documents", "Times Cited", "Factor",],
-            ),
-            dash.ascending(),
-            dash.cmap(),
-            dash.nx_layout(),
-            dash.nx_iterations(),
+            dash.x_axis(),
+            dash.y_axis(),
             dash.fig_width(),
             dash.fig_height(),
         ]
@@ -383,48 +334,184 @@ class DASHapp(DASH, Model):
 
         DASH.interactive_output(self, **kwargs)
 
-        self.set_options(
-            "Sort by:",
-            ["Alphabetic", "Num Documents", "Times Cited",]
-            + ["F{}".format(i) for i in range(self.n_components)],
-        )
-
-        if self.menu == "Factors":
-            self.set_enabled("Top by:")
-            self.set_enabled("Top N:")
-            self.set_enabled("Sort by:")
-            self.set_enabled("Ascending:")
-            self.set_enabled("Colormap:")
-            self.set_disabled("Layout:")
-            self.set_disabled("nx iterations:")
+        if self.menu == "Memberships":
+            self.set_disabled("X-axis:")
+            self.set_disabled("Y-axis:")
             self.set_disabled("Width:")
             self.set_disabled("Height:")
 
-        if self.menu == "Variances":
-            self.set_disabled("Top by:")
-            self.set_disabled("Top N:")
-            self.set_disabled("Sort by:")
-            self.set_disabled("Ascending:")
-            self.set_disabled("Colormap:")
-            self.set_disabled("Layout:")
-            self.set_disabled("nx iterations:")
-            self.set_disabled("Width:")
-            self.set_disabled("Height:")
-
-        if self.menu == "Map":
-            self.set_disabled("Top by:")
-            self.set_disabled("Top N:")
-            self.set_disabled("Sort by:")
-            self.set_disabled("Ascending:")
-            self.set_enabled("Colormap:")
-            self.set_enabled("Layout:")
+        if self.menu == "Cluster plot":
+            self.set_enabled("X-axis:")
+            self.set_enabled("Y-axis:")
             self.set_enabled("Width:")
             self.set_enabled("Height:")
 
-            if self.layout == "Spring":
-                self.set_enabled("nx iterations:")
-            else:
-                self.set_disabled("nx iterations:")
+        self.set_options(name="X-axis:", options=list(range(self.n_components)))
+        self.set_options(name="Y-axis:", options=list(range(self.n_components)))
+
+    def fit(self):
+        #
+        X = self.data.copy()
+
+        #
+        # 1.-- TF matrix
+        #
+        M = TF_matrix(
+            data=X, column=self.column, scheme=None, min_occurrence=self.min_occurrence,
+        )
+
+        #
+        # 2.-- Computtes TFIDF matrix and select max_term frequent terms
+        #
+        #      tf-idf = tf * (log(N / df) + 1)
+        #
+        if self.apply_to == "TF*IDF matrix":
+            M = TFIDF_matrix(
+                TF_matrix=M,
+                norm=None,
+                use_idf=False,
+                smooth_idf=False,
+                sublinear_tf=False,
+                max_items=self.max_items,
+            )
+
+        #
+        # 3.-- Add counters to axes
+        #
+        M = cmn.add_counters_to_axis(X=M, axis=1, data=self.data, column=self.column)
+
+        #
+        # 4.-- Factor decomposition
+        #
+        model = {
+            "Factor Analysis": FactorAnalysis,
+            "PCA": PCA,
+            "Fast ICA": FastICA,
+            "SVD": TruncatedSVD,
+            "MDS": MDS,
+        }[self.method](
+            n_components=self.n_components, random_state=int(self.random_state)
+        )
+
+        R = np.transpose(model.fit(X=M.values).components_)
+        R = pd.DataFrame(
+            R,
+            columns=["Dim-{:>02d}".format(i) for i in range(self.n_components)],
+            index=M.columns,
+        )
+
+        #
+        # 5.-- limit to/exclude terms
+        #
+        R = cmn.limit_to_exclude(
+            data=R,
+            axis=0,
+            column=self.column,
+            limit_to=self.limit_to,
+            exclude=self.exclude,
+        )
+        # R = cmn.add_counters_to_axis(X=R, axis=0, data=X, column=self.column)
+
+        #
+        # 6.-- Clustering
+        #
+        clustering = AgglomerativeClustering(
+            n_clusters=int(self.n_clusters),
+            affinity=self.affinity,
+            linkage=self.linkage,
+        )
+        clustering.fit(R)
+        R["Cluster"] = clustering.labels_
+
+        #
+        # 7.-- Cluster centers
+        #
+        self.centers_ = R.groupby("Cluster").mean()
+
+        #
+        # 8.-- Cluster name
+        #
+        names = []
+        for i_cluster in range(self.n_clusters):
+            X = R[R.Cluster == i_cluster]
+            X = cmn.sort_axis(
+                data=X,
+                num_documents=(self.top_by == "Num Documents"),
+                axis=0,
+                ascending=False,
+            )
+            names.append(X.index[0])
+        self.centers_["Name"] = names
+
+        #
+        # 8.-- Results
+        #
+        self.X_ = R
+
+    def memberships(self):
+        ##
+        self.fit()
+        ##
+        HTML = ""
+        for i_cluster in range(self.n_clusters):
+            X = self.X_[self.X_.Cluster == i_cluster]
+            X = cmn.sort_axis(
+                data=X,
+                num_documents=(self.top_by == "Num Documents"),
+                axis=0,
+                ascending=False,
+            )
+            X = X.head(self.top_n)
+
+            HTML += (
+                "==================================================================<br>"
+            )
+            HTML += "Cluster: " + str(i_cluster) + "<br>"
+            for t in X.index:
+                HTML += "    {:>45s}".format(t) + "<br>"
+            HTML += "<br>"
+        return widgets.HTML("<pre>" + HTML + "</pre>")
+
+    def cluster_plot(self):
+        ##
+        self.fit()
+        ##
+
+        fig = pyplot.Figure(figsize=(self.width, self.height))
+        ax = fig.subplots()
+        #  cmap=pyplot.cm.get_cmap(self.cmap)
+        cmap = pyplot.cm.get_cmap("Greys")
+
+        x = self.centers_["Dim-{:>02d}".format(self.x_axis)]
+        y = self.centers_["Dim-{:>02d}".format(self.y_axis)]
+        names = self.centers_["Name"]
+        node_sizes = cmn.counters_to_node_sizes(names)
+        node_colors = cmn.counters_to_node_colors(names, cmap)
+
+        ax.scatter(
+            x,
+            y,
+            marker="o",
+            s=node_sizes,
+            c=node_colors,
+            alpha=0.7,
+            linewidths=1,
+            edgecolors="k",
+        )
+
+        pos = {term: (x[idx], y[idx]) for idx, term in enumerate(self.centers_.Name)}
+        cmn.ax_text_node_labels(
+            ax=ax, labels=self.centers_.Name, dict_pos=pos, node_sizes=node_sizes
+        )
+
+        cmn.ax_expand_limits(ax)
+        cmn.set_ax_splines_invisible(ax)
+        ax.axhline(y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
+        ax.axvline(x=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
+        ax.set_axis_off()
+        fig.set_tight_layout(True)
+
+        return fig
 
 
 ###############################################################################
