@@ -201,7 +201,7 @@ def counters_to_node_colors(x, cmap):
     max_citations = max(node_colors)
     min_citations = min(node_colors)
     node_colors = [
-        cmap(0.2 + 0.80 * (i - min_citations) / (max_citations - min_citations))
+        cmap(0.4 + 0.60 * (i - min_citations) / (max_citations - min_citations))
         for i in node_colors
     ]
     return node_colors

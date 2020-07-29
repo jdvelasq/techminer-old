@@ -296,7 +296,7 @@ class DASHapp(DASH):
         self.top_n = None
         self.width = None
         #
-        self.app_title = "Factor Analysis"
+        self.app_title = "Latent Semantic Analysis"
         self.menu_options = [
             "Memberships",
             "Cluster plot",
@@ -487,6 +487,9 @@ class DASHapp(DASH):
         names = self.centers_["Name"]
         node_sizes = cmn.counters_to_node_sizes(names)
         node_colors = cmn.counters_to_node_colors(names, cmap)
+        # edge_colors = cmn.counters_to_edgecolors(names, cmap)
+
+        from cycler import cycler
 
         ax.scatter(
             x,
@@ -494,9 +497,9 @@ class DASHapp(DASH):
             marker="o",
             s=node_sizes,
             c=node_colors,
-            alpha=0.7,
-            linewidths=1,
-            edgecolors="k",
+            alpha=0.5,
+            linewidths=2,
+            #  edgecolors=node_colors),
         )
 
         pos = {term: (x[idx], y[idx]) for idx, term in enumerate(self.centers_.Name)}
