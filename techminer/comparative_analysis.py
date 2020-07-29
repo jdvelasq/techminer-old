@@ -1,5 +1,5 @@
 import json
-
+import ipywidgets as widgets
 import pandas as pd
 from sklearn.cluster import KMeans
 
@@ -12,20 +12,37 @@ from techminer.diagram_plot import diagram_plot
 from techminer.document_term import TF_matrix, TFIDF_matrix
 from techminer.params import EXCLUDE_COLS
 
+
 ###############################################################################
 ##
-##  MODEL
+##  DASHBOARD
 ##
 ###############################################################################
 
 
-class Model:
-    def __init__(self, data, limit_to, exclude):
-        #
+COLUMNS = [
+    "Author_Keywords",
+    "Index_Keywords",
+    "Abstract_words_CL",
+    "Abstract_words",
+    "Title_words_CL",
+    "Title_words",
+    "Author_Keywords_CL",
+    "Index_Keywords_CL",
+]
+
+
+class DASHapp(DASH):
+    def __init__(
+        self, data, limit_to=None, exclude=None,
+    ):
+
+        DASH.__init__(self)
+
         self.data = data
         self.limit_to = limit_to
         self.exclude = exclude
-        #
+
         self.analysis_type = None
         self.ascending = None
         self.cmap = None
@@ -51,6 +68,59 @@ class Model:
         self.width = None
         self.x_axis = None
         self.y_axis = None
+
+        self.app_title = "Comparative analysis"
+        self.menu_options = [
+            "Cluster names",
+            "Cluster centers",
+            "Memberships",
+            "Plot singular values",
+            "Plot clusters",
+        ]
+
+        COLUMNS = sorted(
+            [column for column in data.columns if column not in EXCLUDE_COLS]
+        )
+
+        self.panel_widgets = [
+            dash.dropdown(desc="Column:", options=[t for t in data if t in COLUMNS],),
+            dash.min_occurrence(),
+            dash.max_items(),
+            dash.separator(text="Clustering (K-means)"),
+            dash.dropdown(desc="N Factors:", options=list(range(2, 20)),),
+            dash.n_clusters(),
+            dash.max_iter(),
+            dash.random_state(),
+            dash.separator(text="Visualization"),
+            dash.top_n(m=10, n=51, i=5),
+            dash.cmap(),
+            dash.x_axis(),
+            dash.y_axis(),
+            dash.fig_width(),
+            dash.fig_height(),
+        ]
+        super().create_grid()
+
+    def interactive_output(self, **kwargs):
+
+        DASH.interactive_output(self, **kwargs)
+
+        self.panel_widgets[-3]["widget"].options = [i for i in range(self.n_factors)]
+        self.panel_widgets[-4]["widget"].options = [i for i in range(self.n_factors)]
+
+        #
+
+        for i in [-1, -2, -3, -4, -5]:
+            self.panel_widgets[i]["widget"].disabled = (
+                True
+                if self.menu in ["Cluster names", "Cluster centers", "Memberships"]
+                else False
+            )
+
+        for i in [-6]:
+            self.panel_widgets[i]["widget"].disabled = (
+                False if self.menu in ["Memberships"] else True
+            )
 
     def apply(self):
 
@@ -147,20 +217,24 @@ class Model:
         return self.cluster_centers_
 
     def memberships(self):
+        ##
         self.apply()
-        result = []
+        ##
+        HTML = ""
         for i_cluster in range(self.n_clusters):
             cluster_members = self.memberships_[self.memberships_.Cluster == i_cluster]
             cluster_members = cmn.sort_axis(
                 data=cluster_members, num_documents=True, axis=0, ascending=False
             )
             m = cluster_members.head(self.top_n)
-            m = m.reset_index()
-            result.append(m)
-        result = pd.concat(result)
-        result.columns = [self.column, "Cluster"]
-        result = result.reset_index(drop=True)
-        return result
+            HTML += (
+                "==================================================================<br>"
+            )
+            HTML += "Cluster: " + str(i_cluster) + "<br>"
+            for t in m.index:
+                HTML += "    {:>45s}".format(t) + "<br>"
+            HTML += "<br>"
+        return widgets.HTML("<pre>" + HTML + "</pre>")
 
     def plot_singular_values(self):
         self.apply()
@@ -180,91 +254,6 @@ class Model:
             width=self.width,
             height=self.height,
         )
-
-
-###############################################################################
-##
-##  DASHBOARD
-##
-###############################################################################
-
-
-COLUMNS = [
-    "Author_Keywords",
-    "Index_Keywords",
-    "Abstract_words_CL",
-    "Abstract_words",
-    "Title_words_CL",
-    "Title_words",
-    "Author_Keywords_CL",
-    "Index_Keywords_CL",
-]
-
-
-class DASHapp(DASH, Model):
-    def __init__(
-        self, data, limit_to=None, exclude=None,
-    ):
-
-        Model.__init__(self, data, limit_to, exclude)
-        DASH.__init__(self)
-
-        self.data = data
-        self.limit_to = limit_to
-        self.exclude = exclude
-
-        self.app_title = "Comparative analysis"
-        self.menu_options = [
-            "Cluster names",
-            "Cluster centers",
-            "Memberships",
-            "Plot singular values",
-            "Plot clusters",
-        ]
-
-        COLUMNS = sorted(
-            [column for column in data.columns if column not in EXCLUDE_COLS]
-        )
-
-        self.panel_widgets = [
-            dash.dropdown(desc="Column:", options=[t for t in data if t in COLUMNS],),
-            dash.min_occurrence(),
-            dash.max_items(),
-            dash.separator(text="Clustering (K-means)"),
-            dash.dropdown(desc="N Factors:", options=list(range(2, 20)),),
-            dash.n_clusters(),
-            dash.max_iter(),
-            dash.random_state(),
-            dash.separator(text="Visualization"),
-            dash.top_n(m=10, n=51, i=5),
-            dash.cmap(),
-            dash.x_axis(),
-            dash.y_axis(),
-            dash.fig_width(),
-            dash.fig_height(),
-        ]
-        super().create_grid()
-
-    def interactive_output(self, **kwargs):
-
-        DASH.interactive_output(self, **kwargs)
-
-        self.panel_widgets[-3]["widget"].options = [i for i in range(self.n_factors)]
-        self.panel_widgets[-4]["widget"].options = [i for i in range(self.n_factors)]
-
-        #
-
-        for i in [-1, -2, -3, -4, -5]:
-            self.panel_widgets[i]["widget"].disabled = (
-                True
-                if self.menu in ["Cluster names", "Cluster centers", "Memberships"]
-                else False
-            )
-
-        for i in [-6]:
-            self.panel_widgets[i]["widget"].disabled = (
-                False if self.menu in ["Memberships"] else True
-            )
 
 
 ###############################################################################
