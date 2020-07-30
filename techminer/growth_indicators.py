@@ -81,14 +81,116 @@ def growth_indicators(
 ###############################################################################
 
 
-class Model:
-    def __init__(self, data, limit_to, exclude):
-        #
+# class Model:
+#     def __init__(self, data, limit_to, exclude):
+#         #
+#         self.data = data
+#         self.limit_to = limit_to
+#         self.exclude = exclude
+#         #
+#         self.top_n = None
+
+
+###############################################################################
+##
+##  DASHBOARD
+##
+###############################################################################
+
+COLUMNS = [
+    "Authors",
+    "Countries",
+    "Institutions",
+    "Author_Keywords",
+    "Index_Keywords",
+    "Abstract_words_CL",
+    "Abstract_words",
+    "Title_words_CL",
+    "Title_words",
+    "Affiliations",
+    "Author_Keywords_CL",
+    "Index_Keywords_CL",
+]
+
+
+class DASHapp(DASH):
+    def __init__(self, data, limit_to=None, exclude=None, year_range=None):
+        """Dashboard app"""
+
+        if year_range is not None:
+            initial_year, final_year = year_range
+            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
+
+        DASH.__init__(self)
+
         self.data = data
         self.limit_to = limit_to
         self.exclude = exclude
-        #
-        self.top_n = None
+
+        self.app_title = "Growth Indicators"
+        self.menu_options = [
+            "Table",
+            "Average Growth Rate",
+            "Average Documents per Year",
+            "Percentage of Documents in Last Years",
+            "Num Documents",
+        ]
+
+        self.panel_widgets = [
+            dash.dropdown(
+                desc="Column:", options=[z for z in COLUMNS if z in self.data.columns],
+            ),
+            dash.dropdown(desc="Time window:", options=[2, 3, 4, 5],),
+            dash.separator(text="Visualization"),
+            dash.dropdown(
+                desc="Top by:",
+                options=[
+                    "Num Documents",
+                    "Times Cited",
+                    "Average Growth Rate",
+                    "Average Documents per Year",
+                    "Percentage of Documents in Last Years",
+                    "Number of Document Published",
+                    "Before",
+                    "Between",
+                ],
+            ),
+            dash.top_n(),
+            dash.dropdown(
+                desc="Sort by:",
+                options=[
+                    "Alphabetic",
+                    "Num Documents",
+                    "Times Cited",
+                    "Average Growth Rate",
+                    "Average Documents per Year",
+                    "Percentage of Documents in Last Years",
+                    "Before",
+                    "Between",
+                ],
+            ),
+            dash.ascending(),
+            dash.dropdown(desc="Plot:", options=["bar", "barh"],),
+            dash.cmap(),
+            dash.fig_width(),
+            dash.fig_height(),
+        ]
+        super().create_grid()
+
+    def interactive_output(self, **kwargs):
+
+        DASH.interactive_output(self, **kwargs)
+
+        if self.menu == "Table":
+            self.set_disabled("Plot:")
+            self.set_disabled("Colormap:")
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+        else:
+            self.set_enabled("Plot:")
+            self.set_enabled("Colormap:")
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
 
     def fit(self):
         def average_growth_rate():
@@ -192,6 +294,27 @@ class Model:
             X=result, axis=0, data=self.data, column=self.column
         )
 
+        if self.top_by in ["Alphabetic", "Num Documents", "Times Cited"]:
+            result = cmn.sort_by_axis(
+                data=result, sort_by=self.top_by, ascending=False, axis=0
+            )
+        elif self.top_by == "Average Growth Rate":
+            result = result.sort_values(["AGR", "ADY", "PDLY"], ascending=False)
+        elif self.top_by == "Average Documents per Year":
+            result = result.sort_values(["ADY", "AGR", "PDLY"], ascending=False)
+        elif self.top_by == "Percentage of Documents in Last Years":
+            result = result.sort_values(["PDLY", "ADY", "AGR"], ascending=False)
+        elif self.top_by == "Before":
+            result = result.sort_values(
+                [result.columns[-2], result.columns[-1]], ascending=False
+            )
+        elif self.top_by == "Between":
+            result = result.sort_values(
+                [result.columns[-1], result.columns[-2]], ascending=False
+            )
+        else:
+            pass
+
         result = result.head(self.top_n)
 
         if self.sort_by in ["Alphabetic", "Num Documents", "Times Cited"]:
@@ -200,15 +323,15 @@ class Model:
             )
         else:
 
-            if isinstance(sort_by, str):
-                sort_by = sort_by.replace(" ", "_")
+            if isinstance(self.sort_by, str):
+                sort_by = self.sort_by.replace(" ", "_")
                 sort_by = {
                     "Average_Growth_Rate": 3,
                     "Average_Documents_per_Year": 4,
                     "Percentage_of_Documents_in_Last_Years": 5,
                     "Before": 6,
                     "Between": 7,
-                }[self.sort_by]
+                }[sort_by]
 
             if sort_by == 3:
                 result = result.sort_values(
@@ -292,102 +415,13 @@ class Model:
 
 ###############################################################################
 ##
-##  DASHBOARD
-##
-###############################################################################
-
-COLUMNS = [
-    "Authors",
-    "Countries",
-    "Institutions",
-    "Author_Keywords",
-    "Index_Keywords",
-    "Abstract_words_CL",
-    "Abstract_words",
-    "Title_words_CL",
-    "Title_words",
-    "Affiliations",
-    "Author_Keywords_CL",
-    "Index_Keywords_CL",
-]
-
-
-class DASHapp(DASH, Model):
-    def __init__(self, data, limit_to=None, exclude=None):
-        """Dashboard app"""
-
-        Model.__init__(self, data, limit_to, exclude)
-        DASH.__init__(self)
-
-        self.data = data
-        self.app_title = "Growth Indicators"
-        self.menu_options = [
-            "Table",
-            "Average Growth Rate",
-            "Average Documents per Year",
-            "Percentage of Documents in Last Years",
-            "Num Documents",
-        ]
-
-        self.panel_widgets = [
-            dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in self.data.columns],
-            ),
-            dash.dropdown(desc="Time window:", options=[2, 3, 4, 5],),
-            dash.separator(text="Visualization"),
-            dash.dropdown(
-                desc="Top by:",
-                options=[
-                    "Average Growth Rate",
-                    "Average Documents per Year",
-                    "Percentage of Documents in Last Years",
-                    "Number of Document Published",
-                ],
-            ),
-            dash.top_n(),
-            dash.dropdown(
-                desc="Sort by:",
-                options=[
-                    "Alphabetic",
-                    "Num Documents",
-                    "Times Cited",
-                    "Average Growth Rate",
-                    "Average Documents per Year",
-                    "Percentage of Documents in Last Years",
-                    "Before",
-                    "Between",
-                ],
-            ),
-            dash.ascending(),
-            dash.dropdown(desc="Plot:", options=["bar", "barh"],),
-            dash.cmap(),
-            dash.fig_width(),
-            dash.fig_height(),
-        ]
-        super().create_grid()
-
-    def interactive_output(self, **kwargs):
-
-        DASH.interactive_output(self, **kwargs)
-
-        if self.menu == "Table":
-            self.set_disabled("Plot:")
-            self.set_disabled("Colormap:")
-            self.set_disabled("Width:")
-            self.set_disabled("Height:")
-        else:
-            self.set_enabled("Plot:")
-            self.set_enabled("Colormap:")
-            self.set_enabled("Width:")
-            self.set_enabled("Height:")
-
-
-###############################################################################
-##
 ##  EXTERNAL INTERFACE
 ##
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None):
-    return DASHapp(data=data, limit_to=limit_to, exclude=exclude).run()
+def app(data, limit_to=None, exclude=None, year_range=None):
+    return DASHapp(
+        data=data, limit_to=limit_to, exclude=exclude, year_range=year_range
+    ).run()
+

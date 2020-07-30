@@ -137,8 +137,13 @@ def _build_table(data, limit_to, exclude, column, top_by):
 
 
 class MatrixListModel:
-    def __init__(self, data, limit_to, exclude):
+    def __init__(self, data, limit_to, exclude, year_range=None):
         #
+
+        if year_range is not None:
+            initial_year, final_year = year_range
+            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
+
         self.data = data
         self.limit_to = limit_to
         self.exclude = exclude
@@ -261,8 +266,12 @@ class MatrixListModel:
 
 
 class MatrixListDASHapp(DASH, MatrixListModel):
-    def __init__(self, data, limit_to=None, exclude=None):
+    def __init__(self, data, limit_to=None, exclude=None, year_range=None):
         """Dashboard app"""
+
+        if year_range is not None:
+            initial_year, final_year = year_range
+            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
 
         MatrixListModel.__init__(self, data, limit_to, exclude)
         DASH.__init__(self)
@@ -550,9 +559,14 @@ class MatrixDASHapp(DASH, MatrixModel):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, tab=None):
+def app(data, limit_to=None, exclude=None, tab=None, year_range=None):
 
     if tab == 1:
-        return MatrixListDASHapp(data=data, limit_to=limit_to, exclude=exclude).run()
+        return MatrixListDASHapp(
+            data=data, limit_to=limit_to, exclude=exclude, year_range=year_range
+        ).run()
 
-    return MatrixDASHapp(data=data, limit_to=limit_to, exclude=exclude).run()
+    return MatrixDASHapp(
+        data=data, limit_to=limit_to, exclude=exclude, year_range=year_range
+    ).run()
+

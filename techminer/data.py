@@ -34,6 +34,7 @@ logging.basicConfig(
 
 #  nltk.download("stopwords")
 
+
 ##
 ##
 ##  Data importation
@@ -401,6 +402,11 @@ def load_scopus(x):
         logging.info("Counting number of authors per document...")
         x["Num_Authors"] = x.Authors.map(
             lambda w: len(w.split(";")) if not pd.isna(w) else 0
+        )
+
+        logging.info("Counting frac number of documents per author...")
+        x["Frac_Num_Documents"] = x.Authors.map(
+            lambda w: 1.0 / len(w.split(";")) if not pd.isna(w) else 0
         )
 
     if "Authors_ID" in x.columns:

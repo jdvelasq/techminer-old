@@ -273,11 +273,15 @@ COLUMNS = [
 
 
 class DASHapp(DASH):
-    def __init__(self, data, limit_to=None, exclude=None):
+    def __init__(self, data, limit_to=None, exclude=None, year_range=None):
         """Dashboard app"""
 
         # Model.__init__(self, data, limit_to, exclude)
         DASH.__init__(self)
+
+        if year_range is not None:
+            initial_year, final_year = year_range
+            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
 
         self.data = data
         self.limit_to = limit_to
@@ -524,5 +528,8 @@ class DASHapp(DASH):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None):
-    return DASHapp(data=data, limit_to=limit_to, exclude=exclude).run()
+def app(data, limit_to=None, exclude=None, year_range=None):
+    return DASHapp(
+        data=data, limit_to=limit_to, exclude=exclude, year_range=year_range
+    ).run()
+

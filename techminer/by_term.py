@@ -257,13 +257,37 @@ class Model:
         last_year = x.Year.max()
         x["Num_Documents"] = 1
         x["First_Year"] = x.Year
-        x = _explode(
-            x[[self.column, "Num_Documents", "Times_Cited", "First_Year", "ID"]],
-            self.column,
-        )
-        result = x.groupby(self.column, as_index=False).agg(
-            {"Num_Documents": np.sum, "Times_Cited": np.sum, "First_Year": np.min,}
-        )
+        if self.column == "Authors":
+            x = _explode(
+                x[
+                    [
+                        self.column,
+                        "Frac_Num_Documents",
+                        "Num_Documents",
+                        "Times_Cited",
+                        "First_Year",
+                        "ID",
+                    ]
+                ],
+                self.column,
+            )
+            result = x.groupby(self.column, as_index=False).agg(
+                {
+                    "Frac_Num_Documents": np.sum,
+                    "Num_Documents": np.sum,
+                    "Times_Cited": np.sum,
+                    "First_Year": np.min,
+                }
+            )
+        else:
+            x = _explode(
+                x[[self.column, "Num_Documents", "Times_Cited", "First_Year", "ID"]],
+                self.column,
+            )
+            result = x.groupby(self.column, as_index=False).agg(
+                {"Num_Documents": np.sum, "Times_Cited": np.sum, "First_Year": np.min,}
+            )
+
         result["Last_Year"] = last_year
         result = result.assign(Years=result.Last_Year - result.First_Year + 1)
         result = result.assign(Times_Cited_per_Year=result.Times_Cited / result.Years)
@@ -383,14 +407,17 @@ class Model:
             )
 
     def general(self):
+
         x = self.data.copy()
+
         x["Num_Documents"] = 1
         x = _explode(
             x[[self.column, "Num_Documents", "Times_Cited", "ID",]], self.column,
         )
-        result = x.groupby(self.column, as_index=False).agg(
+        result = x.groupby(self.column, as_index=True).agg(
             {"Num_Documents": np.sum, "Times_Cited": np.sum,}
         )
+
         result = cmn.limit_to_exclude(
             data=result,
             axis=0,
@@ -398,8 +425,9 @@ class Model:
             limit_to=self.limit_to,
             exclude=self.exclude,
         )
+
         result["Times_Cited"] = result["Times_Cited"].map(lambda w: int(w))
-        result.index = result[self.column]
+
         result = cmn.add_counters_to_axis(
             X=result, axis=0, data=self.data, column=self.column
         )
@@ -419,12 +447,12 @@ class Model:
             ascending=self.ascending,
         )
 
-        result = result.reset_index(drop=True)
+        #  result = result.reset_index(drop=True)
 
         if self.view == "Table":
             return result
 
-        result = result.set_index(self.column)
+        #  result = result.set_index(self.column)
         if self.top_by == "Num Documents":
             values = result.Num_Documents
             darkness = result.Times_Cited
@@ -458,6 +486,9 @@ class Model:
             )
 
         if self.view == "Wordcloud":
+            ## remueve num_documents:times_cited from terms
+            values.index = [" ".join(term.split(" ")[:-1]) for term in values.index]
+            darkness.index = [" ".join(term.split(" ")[:-1]) for term in darkness.index]
             return plt.wordcloud(
                 x=values,
                 darkness=darkness,
@@ -503,8 +534,12 @@ class Model:
 
 
 class DASHapp(DASH, Model):
-    def __init__(self, data, limit_to=None, exclude=None):
+    def __init__(self, data, limit_to=None, exclude=None, year_range=None):
         """Dashboard app"""
+
+        if year_range is not None:
+            initial_year, final_year = year_range
+            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
 
         Model.__init__(self, data, limit_to, exclude)
         DASH.__init__(self)
@@ -588,14 +623,9 @@ class DASHapp(DASH, Model):
 
             self.set_options(
                 name="Column:",
-                options=[
-                    "Authors",
-                    "Institutions",
-                    "Institution_1st_Author",
-                    "Countries",
-                    "Country_1st_Author",
-                    "Source_title",
-                ],
+                options=sorted(
+                    [column for column in data.columns if column not in EXCLUDE_COLS]
+                ),
             )
 
             self.set_options(
@@ -618,6 +648,7 @@ class DASHapp(DASH, Model):
 
             if self.view == "Table":
 
+                self.set_enabled("Column:")
                 self.set_enabled("Top by:")
                 self.set_enabled("Top N:")
                 self.set_enabled("Sort by:")
@@ -630,6 +661,7 @@ class DASHapp(DASH, Model):
 
                 if self.view in ["Bar plot", "Horizontal bar plot"]:
 
+                    self.set_enabled("Column:")
                     self.set_enabled("Top by:")
                     self.set_enabled("Top N:")
                     self.set_enabled("Sort by:")
@@ -640,6 +672,7 @@ class DASHapp(DASH, Model):
 
                 else:
 
+                    self.set_enabled("Column:")
                     self.set_enabled("Top by:")
                     self.set_enabled("Top N:")
                     self.set_disabled("Sort by:")
@@ -692,6 +725,7 @@ class DASHapp(DASH, Model):
 
             if self.view == "Table":
 
+                self.set_enabled("Column:")
                 self.set_enabled("View:")
                 self.set_enabled("Top by:")
                 self.set_enabled("Top N:")
@@ -745,6 +779,7 @@ class DASHapp(DASH, Model):
 
             if self.panel_widgets[1]["widget"].value == "Table":
 
+                self.set_enabled("Column:")
                 self.set_enabled("Top by:")
                 self.set_enabled("Top N:")
                 self.set_enabled("Sort by:")
@@ -755,6 +790,7 @@ class DASHapp(DASH, Model):
 
             else:
 
+                self.set_enabled("Column:")
                 self.set_enabled("Top by:")
                 self.set_enabled("Top N:")
                 self.set_enabled("Sort by:")
@@ -770,6 +806,7 @@ class DASHapp(DASH, Model):
 
             self.set_options("Top by:", options=["Num Documents", "Times Cited",])
 
+            self.set_enabled("Column:")
             self.set_disabled("View:")
             self.set_disabled("Top N:")
             self.set_disabled("Sort by:")
@@ -791,5 +828,8 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None):
-    return DASHapp(data=data, limit_to=limit_to, exclude=exclude).run()
+def app(data, limit_to=None, exclude=None, year_range=None):
+    return DASHapp(
+        data=data, limit_to=limit_to, exclude=exclude, year_range=year_range
+    ).run()
+

@@ -113,8 +113,12 @@ class Model:
 
 
 class DASHapp(DASH, Model):
-    def __init__(self, data):
+    def __init__(self, data, year_range=None):
         """Dashboard app"""
+
+        if year_range is not None:
+            initial_year, final_year = year_range
+            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
 
         Model.__init__(self, data)
         DASH.__init__(self)
@@ -181,5 +185,5 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def app(data):
-    return DASHapp(data=data).run()
+def app(data, year_range=None):
+    return DASHapp(data=data, year_range=year_range).run()

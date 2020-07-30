@@ -1,0 +1,105 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 870px;
+            height: 700px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"group": 0, "id": "batteries 126:2059", "label": "batteries 126:2059", "shape": "dot", "size": 26}, {"group": 0, "id": "demand side management 043:0778", "label": "demand side management 043:0778", "shape": "dot", "size": 9}, {"group": 0, "id": "electric vehicle 027:0349", "label": "electric vehicle 027:0349", "shape": "dot", "size": 6}, {"group": 0, "id": "fuel cell 025:0869", "label": "fuel cell 025:0869", "shape": "dot", "size": 6}, {"group": 0, "id": "microgrid 035:0669", "label": "microgrid 035:0669", "shape": "dot", "size": 8}, {"group": 1, "id": "optimization 069:1450", "label": "optimization 069:1450", "shape": "dot", "size": 15}, {"group": 0, "id": "residential building 028:0799", "label": "residential building 028:0799", "shape": "dot", "size": 6}, {"group": 2, "id": "self-consumption 038:0636", "label": "self-consumption 038:0636", "shape": "dot", "size": 8}, {"group": 0, "id": "wind 044:1091", "label": "wind 044:1091", "shape": "dot", "size": 10}, {"group": 0, "id": "distributed generation 038:0753", "label": "distributed generation 038:0753", "shape": "dot", "size": 8}, {"group": 0, "id": "energy efficiency 024:0357", "label": "energy efficiency 024:0357", "shape": "dot", "size": 6}, {"group": 0, "id": "energy management 019:0569", "label": "energy management 019:0569", "shape": "dot", "size": 5}, {"group": 1, "id": "life cycle cost 019:0121", "label": "life cycle cost 019:0121", "shape": "dot", "size": 5}, {"group": 2, "id": "net metering 027:0427", "label": "net metering 027:0427", "shape": "dot", "size": 6}, {"group": 2, "id": "sensitivity analysis 020:0310", "label": "sensitivity analysis 020:0310", "shape": "dot", "size": 5}, {"group": 1, "id": "rural electrification 036:0934", "label": "rural electrification 036:0934", "shape": "dot", "size": 8}, {"group": 1, "id": "hybrid energy system 141:4245", "label": "hybrid energy system 141:4245", "shape": "dot", "size": 30}, {"group": 2, "id": "feed in tariff 028:0542", "label": "feed in tariff 028:0542", "shape": "dot", "size": 6}, {"group": 1, "id": "homer 128:2908", "label": "homer 128:2908", "shape": "dot", "size": 27}, {"group": 1, "id": "wind turbine 020:0348", "label": "wind turbine 020:0348", "shape": "dot", "size": 5}]);
+        edges = new vis.DataSet([{"color": "lightgray", "from": "batteries 126:2059", "physics": false, "to": "demand side management 043:0778", "weight": 1, "width": 0.1343669250645995}, {"color": "lightgray", "from": "batteries 126:2059", "physics": false, "to": "electric vehicle 027:0349", "weight": 1, "width": 0.1390946502057613}, {"color": "lightgray", "from": "batteries 126:2059", "physics": false, "to": "fuel cell 025:0869", "weight": 1, "width": 0.13377777777777777}, {"color": "lightgray", "from": "batteries 126:2059", "physics": false, "to": "microgrid 035:0669", "weight": 1, "width": 0.14222222222222222}, {"color": "lightgray", "from": "batteries 126:2059", "physics": false, "to": "optimization 069:1450", "weight": 1, "width": 0.13365539452495975}, {"color": "lightgray", "from": "batteries 126:2059", "physics": false, "to": "residential building 028:0799", "weight": 1, "width": 0.13015873015873017}, {"color": "lightgray", "from": "batteries 126:2059", "physics": false, "to": "self-consumption 038:0636", "weight": 1, "width": 0.17222222222222222}, {"color": "lightgray", "from": "batteries 126:2059", "physics": false, "to": "wind 044:1091", "weight": 1, "width": 0.12878787878787878}, {"color": "lightgray", "from": "demand side management 043:0778", "physics": false, "to": "distributed generation 038:0753", "weight": 1, "width": 0.1325581395348837}, {"color": "lightgray", "from": "demand side management 043:0778", "physics": false, "to": "energy efficiency 024:0357", "weight": 1, "width": 0.17732558139534885}, {"color": "lightgray", "from": "demand side management 043:0778", "physics": false, "to": "energy management 019:0569", "weight": 1, "width": 0.2302325581395349}, {"color": "lightgray", "from": "demand side management 043:0778", "physics": false, "to": "life cycle cost 019:0121", "weight": 1, "width": 0.1325581395348837}, {"color": "lightgray", "from": "demand side management 043:0778", "physics": false, "to": "microgrid 035:0669", "weight": 1, "width": 0.13534883720930233}, {"color": "lightgray", "from": "demand side management 043:0778", "physics": false, "to": "optimization 069:1450", "weight": 1, "width": 0.12689585439838222}, {"color": "lightgray", "from": "demand side management 043:0778", "physics": false, "to": "self-consumption 038:0636", "weight": 1, "width": 0.16511627906976745}, {"color": "lightgray", "from": "distributed generation 038:0753", "physics": false, "to": "electric vehicle 027:0349", "weight": 1, "width": 0.17777777777777776}, {"color": "lightgray", "from": "distributed generation 038:0753", "physics": false, "to": "energy efficiency 024:0357", "weight": 1, "width": 0.1875}, {"color": "lightgray", "from": "distributed generation 038:0753", "physics": false, "to": "fuel cell 025:0869", "weight": 1, "width": 0.128}, {"color": "lightgray", "from": "distributed generation 038:0753", "physics": false, "to": "microgrid 035:0669", "weight": 1, "width": 0.14}, {"color": "lightgray", "from": "distributed generation 038:0753", "physics": false, "to": "net metering 027:0427", "weight": 1, "width": 0.15185185185185185}, {"color": "lightgray", "from": "distributed generation 038:0753", "physics": false, "to": "sensitivity analysis 020:0310", "weight": 1, "width": 0.135}, {"color": "lightgray", "from": "electric vehicle 027:0349", "physics": false, "to": "energy efficiency 024:0357", "weight": 1, "width": 0.1410493827160494}, {"color": "lightgray", "from": "electric vehicle 027:0349", "physics": false, "to": "energy management 019:0569", "weight": 1, "width": 0.15185185185185185}, {"color": "lightgray", "from": "electric vehicle 027:0349", "physics": false, "to": "optimization 069:1450", "weight": 1, "width": 0.12855609232420828}, {"color": "lightgray", "from": "electric vehicle 027:0349", "physics": false, "to": "residential building 028:0799", "weight": 1, "width": 0.13518518518518519}, {"color": "lightgray", "from": "energy efficiency 024:0357", "physics": false, "to": "fuel cell 025:0869", "weight": 1, "width": 0.14433333333333334}, {"color": "lightgray", "from": "energy efficiency 024:0357", "physics": false, "to": "microgrid 035:0669", "weight": 1, "width": 0.13166666666666668}, {"color": "lightgray", "from": "energy efficiency 024:0357", "physics": false, "to": "residential building 028:0799", "weight": 1, "width": 0.17916666666666664}, {"color": "lightgray", "from": "energy efficiency 024:0357", "physics": false, "to": "rural electrification 036:0934", "weight": 1, "width": 0.13078703703703703}, {"color": "lightgray", "from": "energy management 019:0569", "physics": false, "to": "hybrid energy system 141:4245", "weight": 1, "width": 0.1297872340425532}, {"color": "lightgray", "from": "energy management 019:0569", "physics": false, "to": "microgrid 035:0669", "weight": 1, "width": 0.26}, {"color": "lightgray", "from": "energy management 019:0569", "physics": false, "to": "wind 044:1091", "weight": 1, "width": 0.16363636363636364}, {"color": "lightgray", "from": "feed in tariff 028:0542", "physics": false, "to": "life cycle cost 019:0121", "weight": 1, "width": 0.15}, {"color": "lightgray", "from": "feed in tariff 028:0542", "physics": false, "to": "net metering 027:0427", "weight": 1, "width": 0.2759259259259259}, {"color": "lightgray", "from": "feed in tariff 028:0542", "physics": false, "to": "self-consumption 038:0636", "weight": 1, "width": 0.15}, {"color": "lightgray", "from": "feed in tariff 028:0542", "physics": false, "to": "sensitivity analysis 020:0310", "weight": 1, "width": 0.195}, {"color": "lightgray", "from": "fuel cell 025:0869", "physics": false, "to": "homer 128:2908", "weight": 1, "width": 0.13325}, {"color": "lightgray", "from": "fuel cell 025:0869", "physics": false, "to": "hybrid energy system 141:4245", "weight": 1, "width": 0.19809929078014185}, {"color": "lightgray", "from": "fuel cell 025:0869", "physics": false, "to": "microgrid 035:0669", "weight": 1, "width": 0.13040000000000002}, {"color": "lightgray", "from": "fuel cell 025:0869", "physics": false, "to": "wind 044:1091", "weight": 1, "width": 0.14836363636363636}, {"color": "lightgray", "from": "fuel cell 025:0869", "physics": false, "to": "wind turbine 020:0348", "weight": 1, "width": 0.2596}, {"color": "lightgray", "from": "homer 128:2908", "physics": false, "to": "hybrid energy system 141:4245", "weight": 1, "width": 0.17221852836879434}, {"color": "lightgray", "from": "homer 128:2908", "physics": false, "to": "microgrid 035:0669", "weight": 1, "width": 0.135625}, {"color": "lightgray", "from": "homer 128:2908", "physics": false, "to": "optimization 069:1450", "weight": 1, "width": 0.1602355072463768}, {"color": "lightgray", "from": "homer 128:2908", "physics": false, "to": "rural electrification 036:0934", "weight": 1, "width": 0.15195312500000002}, {"color": "lightgray", "from": "homer 128:2908", "physics": false, "to": "sensitivity analysis 020:0310", "weight": 1, "width": 0.16234375}, {"color": "lightgray", "from": "homer 128:2908", "physics": false, "to": "wind 044:1091", "weight": 1, "width": 0.16139914772727273}, {"color": "lightgray", "from": "homer 128:2908", "physics": false, "to": "wind turbine 020:0348", "weight": 1, "width": 0.18312499999999998}, {"color": "lightgray", "from": "hybrid energy system 141:4245", "physics": false, "to": "life cycle cost 019:0121", "weight": 1, "width": 0.1397163120567376}, {"color": "lightgray", "from": "hybrid energy system 141:4245", "physics": false, "to": "microgrid 035:0669", "weight": 1, "width": 0.13773049645390073}, {"color": "lightgray", "from": "hybrid energy system 141:4245", "physics": false, "to": "optimization 069:1450", "weight": 1, "width": 0.15468187891869667}, {"color": "lightgray", "from": "hybrid energy system 141:4245", "physics": false, "to": "rural electrification 036:0934", "weight": 1, "width": 0.15764381402679276}, {"color": "lightgray", "from": "hybrid energy system 141:4245", "physics": false, "to": "sensitivity analysis 020:0310", "weight": 1, "width": 0.1471631205673759}, {"color": "lightgray", "from": "hybrid energy system 141:4245", "physics": false, "to": "wind 044:1091", "weight": 1, "width": 0.20718891038039977}, {"color": "lightgray", "from": "hybrid energy system 141:4245", "physics": false, "to": "wind turbine 020:0348", "weight": 1, "width": 0.2226241134751773}, {"color": "lightgray", "from": "life cycle cost 019:0121", "physics": false, "to": "optimization 069:1450", "weight": 1, "width": 0.16086956521739132}, {"color": "lightgray", "from": "life cycle cost 019:0121", "physics": false, "to": "residential building 028:0799", "weight": 1, "width": 0.24999999999999997}, {"color": "lightgray", "from": "microgrid 035:0669", "physics": false, "to": "optimization 069:1450", "weight": 1, "width": 0.17710144927536234}, {"color": "lightgray", "from": "microgrid 035:0669", "physics": false, "to": "residential building 028:0799", "weight": 1, "width": 0.12714285714285714}, {"color": "lightgray", "from": "microgrid 035:0669", "physics": false, "to": "wind 044:1091", "weight": 1, "width": 0.13454545454545455}, {"color": "lightgray", "from": "microgrid 035:0669", "physics": false, "to": "wind turbine 020:0348", "weight": 1, "width": 0.138}, {"color": "lightgray", "from": "net metering 027:0427", "physics": false, "to": "self-consumption 038:0636", "weight": 1, "width": 0.17777777777777776}, {"color": "lightgray", "from": "net metering 027:0427", "physics": false, "to": "sensitivity analysis 020:0310", "weight": 1, "width": 0.14925925925925926}, {"color": "lightgray", "from": "optimization 069:1450", "physics": false, "to": "residential building 028:0799", "weight": 1, "width": 0.16884057971014493}, {"color": "lightgray", "from": "optimization 069:1450", "physics": false, "to": "rural electrification 036:0934", "weight": 1, "width": 0.13212560386473432}, {"color": "lightgray", "from": "optimization 069:1450", "physics": false, "to": "sensitivity analysis 020:0310", "weight": 1, "width": 0.1963768115942029}, {"color": "lightgray", "from": "residential building 028:0799", "physics": false, "to": "self-consumption 038:0636", "weight": 1, "width": 0.15}, {"color": "lightgray", "from": "residential building 028:0799", "physics": false, "to": "wind turbine 020:0348", "weight": 1, "width": 0.1475}, {"color": "lightgray", "from": "self-consumption 038:0636", "physics": false, "to": "sensitivity analysis 020:0310", "weight": 1, "width": 0.135}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

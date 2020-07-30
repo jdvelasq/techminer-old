@@ -382,6 +382,10 @@ class Model:
 class DASHapp(DASH, Model):
     def __init__(self, data, limit_to=None, exclude=None):
 
+        if year_range is not None:
+            initial_year, final_year = year_range
+            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
+
         Model.__init__(self, data, limit_to, exclude)
         DASH.__init__(self)
 
