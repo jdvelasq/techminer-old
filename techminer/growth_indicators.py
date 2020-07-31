@@ -76,23 +76,6 @@ def growth_indicators(
 
 ###############################################################################
 ##
-##  MODEL
-##
-###############################################################################
-
-
-# class Model:
-#     def __init__(self, data, limit_to, exclude):
-#         #
-#         self.data = data
-#         self.limit_to = limit_to
-#         self.exclude = exclude
-#         #
-#         self.top_n = None
-
-
-###############################################################################
-##
 ##  DASHBOARD
 ##
 ###############################################################################
@@ -114,18 +97,12 @@ COLUMNS = [
 
 
 class DASHapp(DASH):
-    def __init__(self, data, limit_to=None, exclude=None, year_range=None):
+    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
         """Dashboard app"""
 
-        if year_range is not None:
-            initial_year, final_year = year_range
-            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
-
-        DASH.__init__(self)
-
-        self.data = data
-        self.limit_to = limit_to
-        self.exclude = exclude
+        DASH.__init__(
+            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        )
 
         self.app_title = "Growth Indicators"
         self.menu_options = [
@@ -420,8 +397,8 @@ class DASHapp(DASH):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, year_range=None):
+def app(data, limit_to=None, exclude=None, years_range=None):
     return DASHapp(
-        data=data, limit_to=limit_to, exclude=exclude, year_range=year_range
+        data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()
 

@@ -10,36 +10,83 @@ from techminer.correspondence import CA
 from techminer.dashboard import DASH
 from techminer.document_term import TF_matrix, TFIDF_matrix
 
+
 ###############################################################################
 ##
-##  MODEL
+##  DASHBOARD
 ##
 ###############################################################################
 
 
-class Model:
-    def __init__(self, data, limit_to, exclude):
-        #
-        self.data = data
-        self.limit_to = limit_to
-        self.exclude = exclude
-        ##
-        self.ascending = None
-        self.cmap = None
-        self.column = None
-        self.height = None
-        self.max_items = None
-        self.max_iter = None
-        self.min_occurrence = None
-        self.n_clusters = None
-        self.sort_by = None
-        self.top_by = None
-        self.top_n = None
-        self.random_state = None
-        self.width = None
-        self.x_axis = None
-        self.y_axis = None
-        ##
+COLUMNS = [
+    "Authors",
+    "Countries",
+    "Institutions",
+    "Author_Keywords",
+    "Index_Keywords",
+    "Abstract_words_CL",
+    "Abstract_words",
+    "Title_words_CL",
+    "Title_words",
+    "Affiliations",
+    "Author_Keywords_CL",
+    "Index_Keywords_CL",
+]
+
+
+class DASHapp(DASH):
+    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
+        """Dashboard app"""
+
+        DASH.__init__(
+            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        )
+
+        self.app_title = "Thematic Analysis"
+        self.menu_options = [
+            "Contingency table",
+            "Memberships table",
+            "Cluster ppal coordinates",
+            "Term ppal coordinates",
+            "Clusters plot",
+            "Terms plot",
+        ]
+
+        self.panel_widgets = [
+            dash.dropdown(
+                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            dash.min_occurrence(),
+            dash.max_items(),
+            dash.separator(text="Clustering (K-means)"),
+            dash.n_clusters(),
+            dash.max_iter(),
+            dash.random_state(),
+            dash.separator(text="Visualization"),
+            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+            dash.top_n(n=101,),
+            dash.cmap(),
+            dash.x_axis(),
+            dash.y_axis(),
+            dash.fig_width(),
+            dash.fig_height(),
+        ]
+        super().create_grid()
+
+    def interactive_output(self, **kwargs):
+
+        DASH.interactive_output(self, **kwargs)
+
+        self.panel_widgets[-4]["widget"].options = list(range(self.n_clusters))
+        self.panel_widgets[-3]["widget"].options = list(range(self.n_clusters))
+
+        for i in [-1, -2, -3, -4, -5]:
+            self.panel_widgets[i]["widget"].disabled = self.menu in [
+                "Contingency table",
+                "Memberships table",
+                "Cluster ppal coordinates",
+                "Term ppal coordinates",
+            ]
 
     def fit(self):
 
@@ -278,95 +325,13 @@ class Model:
 
 ###############################################################################
 ##
-##  DASHBOARD
-##
-###############################################################################
-
-
-COLUMNS = [
-    "Authors",
-    "Countries",
-    "Institutions",
-    "Author_Keywords",
-    "Index_Keywords",
-    "Abstract_words_CL",
-    "Abstract_words",
-    "Title_words_CL",
-    "Title_words",
-    "Affiliations",
-    "Author_Keywords_CL",
-    "Index_Keywords_CL",
-]
-
-
-class DASHapp(DASH, Model):
-    def __init__(self, data, limit_to=None, exclude=None, year_range=None):
-        """Dashboard app"""
-
-        Model.__init__(self, data, limit_to, exclude)
-        DASH.__init__(self)
-
-        if year_range is not None:
-            initial_year, final_year = year_range
-            data = data[(data.Year >= initial_year) & data.Year <= final_year]
-
-        self.data = data
-        self.app_title = "Thematic Analysis"
-        self.menu_options = [
-            "Contingency table",
-            "Memberships table",
-            "Cluster ppal coordinates",
-            "Term ppal coordinates",
-            "Clusters plot",
-            "Terms plot",
-        ]
-
-        self.panel_widgets = [
-            dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
-            ),
-            dash.min_occurrence(),
-            dash.max_items(),
-            dash.separator(text="Clustering (K-means)"),
-            dash.n_clusters(),
-            dash.max_iter(),
-            dash.random_state(),
-            dash.separator(text="Visualization"),
-            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-            dash.top_n(n=101,),
-            dash.cmap(),
-            dash.x_axis(),
-            dash.y_axis(),
-            dash.fig_width(),
-            dash.fig_height(),
-        ]
-        super().create_grid()
-
-    def interactive_output(self, **kwargs):
-
-        DASH.interactive_output(self, **kwargs)
-
-        self.panel_widgets[-4]["widget"].options = list(range(self.n_clusters))
-        self.panel_widgets[-3]["widget"].options = list(range(self.n_clusters))
-
-        for i in [-1, -2, -3, -4, -5]:
-            self.panel_widgets[i]["widget"].disabled = self.menu in [
-                "Contingency table",
-                "Memberships table",
-                "Cluster ppal coordinates",
-                "Term ppal coordinates",
-            ]
-
-
-###############################################################################
-##
 ##  EXTERNAL INTERFACE
 ##
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, year_range=None):
+def app(data, limit_to=None, exclude=None, years_range=None):
     return DASHapp(
-        data=data, limit_to=limit_to, exclude=exclude, year_range=year_range
+        data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()
 

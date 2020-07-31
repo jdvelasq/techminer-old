@@ -49,33 +49,13 @@ COLUMNS = sorted(
 
 
 class DASHapp(DASH):
-    def __init__(self, data, limit_to=None, exclude=None, year_range=None):
+    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
         """Dashboard app"""
 
-        if year_range is not None:
-            initial_year, final_year = year_range
-            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
+        DASH.__init__(
+            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        )
 
-        # Model.__init__(self, data, limit_to, exclude)
-        DASH.__init__(self)
-
-        self.data = data
-        self.limit_to = limit_to
-        self.exclude = exclude
-        #
-        self.ascending = None
-        self.cmap = None
-        self.column = None
-        self.height = None
-        self.iterations = None
-        self.layout = None
-        self.n_components = None
-        self.random_state = None
-        self.sort_by = None
-        self.top_by = None
-        self.top_n = None
-        self.width = None
-        #
         self.app_title = "Factor Analysis"
         self.menu_options = [
             "Memberships",
@@ -302,8 +282,8 @@ class DASHapp(DASH):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, year_range=None):
+def app(data, limit_to=None, exclude=None, years_range=None):
     return DASHapp(
-        data=data, limit_to=limit_to, exclude=exclude, year_range=year_range
+        data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()
 

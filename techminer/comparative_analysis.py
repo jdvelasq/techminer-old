@@ -33,43 +33,11 @@ COLUMNS = [
 
 
 class DASHapp(DASH):
-    def __init__(self, data, limit_to=None, exclude=None, year_range=None):
+    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
 
-        DASH.__init__(self)
-
-        if year_range is not None:
-            initial_year, final_year = year_range
-            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
-
-        self.data = data
-        self.limit_to = limit_to
-        self.exclude = exclude
-
-        self.analysis_type = None
-        self.ascending = None
-        self.cmap = None
-        self.column = None
-        self.height = None
-        self.max_iter = None
-        self.max_iters = None
-        self.max_items = None
-        self.min_occurrence = None
-        self.n_clusters = None
-        self.n_components = None
-        self.n_factors = None
-        self.n_iter = None
-        self.norm = None
-        self.random_state = None
-        self.smooth_idf = None
-        self.sort_by = None
-        self.sublinear_tf = None
-        self.top_by = None
-        self.top_n = None
-        self.top_n = None
-        self.use_idf = None
-        self.width = None
-        self.x_axis = None
-        self.y_axis = None
+        DASH.__init__(
+            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        )
 
         self.app_title = "Comparative analysis"
         self.menu_options = [
@@ -266,9 +234,9 @@ class DASHapp(DASH):
 
 
 def app(
-    data, limit_to=None, exclude=None, year_range=None,
+    data, limit_to=None, exclude=None, years_range=None,
 ):
     return DASHapp(
-        data=data, limit_to=limit_to, exclude=exclude, year_range=year_range
+        data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()
 

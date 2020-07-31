@@ -91,18 +91,66 @@ class Model:
         self.limit_to = limit_to
         self.exclude = exclude
         ##
-        self.ascending = None
-        self.sort_by = None
-        self.norm = None
-        self.column = None
-        self.smooth_idf = None
-        self.use_idf = None
-        self.sublinear_tf = None
-        self.top_n = None
-        self.cmap = None
-        self.height = None
-        self.width = None
-        ##
+
+
+###############################################################################
+##
+##  DASH
+##
+###############################################################################
+
+COLUMNS = {
+    "Author_Keywords",
+    "Index_Keywords",
+    "Author_Keywords_CL",
+    "Index_Keywords_CL",
+    "Abstract_words",
+    "Title_words",
+    "Abstract_words_CL",
+    "Title_words_CL",
+}
+
+
+class DASHapp(DASH, Model):
+    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
+        """Dashboard app"""
+
+        DASH.__init__(
+            self, data=data, limit_to=None, exclude=None, years_range=years_range
+        )
+
+        self.app_title = "TF*IDF Analysis"
+        self.menu_options = ["Table", "Bar plot", "Horizontal bar plot"]
+
+        self.panel_widgets = [
+            dash.dropdown(desc="Column:", options=[t for t in data if t in COLUMNS],),
+            dash.dropdown(desc="Norm:", options=[None, "L1", "L2"],),
+            dash.dropdown(desc="Use IDF:", options=[True, False,],),
+            dash.dropdown(desc="Smooth IDF:", options=[True, False,],),
+            dash.dropdown(desc="Sublinear TF:", options=[True, False,],),
+            dash.separator(text="Visualization"),
+            dash.top_n(),
+            dash.dropdown(
+                desc="Sort by:",
+                options=["Alphabetic", "Num Documents", "Times Cited", "TF*IDF",],
+            ),
+            dash.ascending(),
+            dash.cmap(),
+            dash.fig_width(),
+            dash.fig_height(),
+        ]
+        super().create_grid()
+
+    def interactive_output(self, **kwargs):
+
+        DASH.interactive_output(self, **kwargs)
+
+        if self.menu == self.menu_options[0]:
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+        else:
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
 
     def fit(self):
 
@@ -172,77 +220,13 @@ class Model:
 
 ###############################################################################
 ##
-##  DASH
-##
-###############################################################################
-
-COLUMNS = {
-    "Author_Keywords",
-    "Index_Keywords",
-    "Author_Keywords_CL",
-    "Index_Keywords_CL",
-    "Abstract_words",
-    "Title_words",
-    "Abstract_words_CL",
-    "Title_words_CL",
-}
-
-
-class DASHapp(DASH, Model):
-    def __init__(self, data, limit_to=None, exclude=None, year_range=None):
-        """Dashboard app"""
-
-        if year_range is not None:
-            initial_year, final_year = year_range
-            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
-
-        Model.__init__(self, data, limit_to, exclude)
-        DASH.__init__(self)
-
-        self.data = data
-        self.app_title = "TF*IDF Analysis"
-        self.menu_options = ["Table", "Bar plot", "Horizontal bar plot"]
-
-        self.panel_widgets = [
-            dash.dropdown(desc="Column:", options=[t for t in data if t in COLUMNS],),
-            dash.dropdown(desc="Norm:", options=[None, "L1", "L2"],),
-            dash.dropdown(desc="Use IDF:", options=[True, False,],),
-            dash.dropdown(desc="Smooth IDF:", options=[True, False,],),
-            dash.dropdown(desc="Sublinear TF:", options=[True, False,],),
-            dash.separator(text="Visualization"),
-            dash.top_n(),
-            dash.dropdown(
-                desc="Sort by:",
-                options=["Alphabetic", "Num Documents", "Times Cited", "TF*IDF",],
-            ),
-            dash.ascending(),
-            dash.cmap(),
-            dash.fig_width(),
-            dash.fig_height(),
-        ]
-        super().create_grid()
-
-    def interactive_output(self, **kwargs):
-
-        DASH.interactive_output(self, **kwargs)
-
-        if self.menu == self.menu_options[0]:
-            self.set_disabled("Width:")
-            self.set_disabled("Height:")
-        else:
-            self.set_enabled("Width:")
-            self.set_enabled("Height:")
-
-
-###############################################################################
-##
 ##  EXTERNAL INTERFACE
 ##
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, year_range=None):
+def app(data, limit_to=None, exclude=None, years_range=None):
     return DASHapp(
-        data=data, limit_to=limit_to, exclude=exclude, year_range=year_range
+        data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()
 

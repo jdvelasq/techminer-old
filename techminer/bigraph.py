@@ -27,42 +27,12 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 ###############################################################################
 ##
-##  MODEL
-##
-###############################################################################
-
-
-class Model:
-    def __init__(self, data, limit_to, exclude):
-        #
-        self.data = data
-        self.limit_to = limit_to
-        self.exclude = exclude
-        ##
-        self.column = None
-        self.by = None
-        self.top_by = None
-        self.top_n = None
-        self.r_axis_ascending = None
-        self.c_axis_ascending = None
-        self.cmap = None
-        self.cmap_by = None
-        self.layout = None
-        self.sort_c_axis_by = None
-        self.sort_r_axis_by = None
-        self.width = None
-        self.height = None
-        self.nx_iterations = None
-
-
-###############################################################################
-##
 ##  DASHBOARD
 ##
 ###############################################################################
 
 
-class DASHapp(DASH, Model):
+class DASHapp(DASH):
     def __init__(self, data, limit_to=None, exclude=None, years_range=None):
 
         DASH.__init__(
@@ -619,8 +589,8 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, year_range=None):
+def app(data, limit_to=None, exclude=None, years_range=None):
     return DASHapp(
-        data=data, limit_to=limit_to, exclude=exclude, year_range=year_range
+        data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()
 
