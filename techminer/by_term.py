@@ -542,7 +542,9 @@ class DASHapp(DASH, Model):
             data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
 
         Model.__init__(self, data, limit_to, exclude)
-        DASH.__init__(self)
+        DASH.__init__(
+            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        )
 
         COLUMNS = sorted(
             [column for column in data.columns if column not in EXCLUDE_COLS]
