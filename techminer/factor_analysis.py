@@ -125,9 +125,9 @@ class DASHapp(DASH):
         #
         #      tf-idf = tf * (log(N / df) + 1)
         #
-        TF_matrix_ = cmn.add_counters_to_axis(
-            X=TF_matrix_, axis=1, data=self.data, column=self.column
-        )
+        # TF_matrix_ = cmn.add_counters_to_axis(
+        #      X=TF_matrix_, axis=1, data=self.data, column=self.column
+        #  )
 
         M = np.matmul(TF_matrix_.transpose().values, TF_matrix_.values)
         M = pd.DataFrame(M, columns=TF_matrix_.columns, index=TF_matrix_.columns)
