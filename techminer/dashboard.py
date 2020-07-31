@@ -343,20 +343,22 @@ class DASH:
         self.output = None
 
         ## user gui selections
-        self.column = None
+        self.ascending = None
         self.by = None
-        self.top_by = None
-        self.top_n = None
-        self.r_axis_ascending = None
         self.c_axis_ascending = None
         self.cmap = None
         self.cmap_by = None
+        self.column = None
+        self.height = None
         self.layout = None
+        self.nx_iterations = None
+        self.r_axis_ascending = None
+        self.sort_by = None
         self.sort_c_axis_by = None
         self.sort_r_axis_by = None
+        self.top_by = None
+        self.top_n = None
         self.width = None
-        self.height = None
-        self.nx_iterations = None
 
     def run(self):
         return self.app_layout

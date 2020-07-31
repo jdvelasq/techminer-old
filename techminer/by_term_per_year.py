@@ -129,6 +129,7 @@ def _build_table(data, limit_to, exclude, column, top_by):
 ##
 ##
 
+
 ###############################################################################
 ##
 ##  DASHBOARD
@@ -136,24 +137,58 @@ def _build_table(data, limit_to, exclude, column, top_by):
 ###############################################################################
 
 
-class MatrixListModel:
-    def __init__(self, data, limit_to, exclude, year_range=None):
-        #
+class MatrixListDASHapp(DASH):
+    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
+        """Dashboard app"""
 
-        if year_range is not None:
-            initial_year, final_year = year_range
-            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
+        DASH.__init__(
+            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        )
+
+        COLUMNS = sorted(
+            [column for column in data.columns if column not in EXCLUDE_COLS]
+        )
 
         self.data = data
-        self.limit_to = limit_to
-        self.exclude = exclude
-        ##
-        self.top_by = None
-        self.top_n = None
-        self.sort_by = None
-        self.ascending = None
-        self.column = None
-        self.cmap = None
+        self.app_title = "Terms by Year Analysis"
+        self.menu_options = [
+            "Table",
+        ]
+
+        self.panel_widgets = [
+            dash.dropdown(
+                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            dash.separator(text="Visualization"),
+            dash.dropdown(
+                desc="Top by:",
+                options=[
+                    "Num Documents per Year",
+                    "Times Cited per Year",
+                    "% Num Documents per Year",
+                    "% Times Cited per Year",
+                ],
+            ),
+            dash.top_n(),
+            dash.dropdown(
+                desc="Sort by:",
+                options=[
+                    "Alphabetic",
+                    "Year",
+                    "Num Documents per Year",
+                    "Times Cited per Year",
+                    "% Num Documents per Year",
+                    "% Times Cited per Year",
+                ],
+            ),
+            dash.ascending(),
+            dash.cmap(),
+        ]
+        super().create_grid()
+
+    def interactive_output(self, **kwargs):
+
+        DASH.interactive_output(self, **kwargs)
 
     def fit(self):
         #
@@ -258,6 +293,15 @@ class MatrixListModel:
         return self.X_
 
 
+##
+##
+##
+##  M A T R I X
+##
+##
+##
+
+
 ###############################################################################
 ##
 ##  DASHBOARD
@@ -265,26 +309,21 @@ class MatrixListModel:
 ###############################################################################
 
 
-class MatrixListDASHapp(DASH, MatrixListModel):
-    def __init__(self, data, limit_to=None, exclude=None, year_range=None):
+class MatrixDASHapp(DASH):
+    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
         """Dashboard app"""
 
-        if year_range is not None:
-            initial_year, final_year = year_range
-            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
-
-        MatrixListModel.__init__(self, data, limit_to, exclude)
-        DASH.__init__(self)
+        DASH.__init__(
+            self, data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        )
 
         COLUMNS = sorted(
             [column for column in data.columns if column not in EXCLUDE_COLS]
         )
 
         self.data = data
-        self.app_title = "Terms by Year Analysis"
-        self.menu_options = [
-            "Table",
-        ]
+        self.app_title = "Term by Year Analysis"
+        self.menu_options = ["Matrix", "Heatmap", "Bubble plot", "Gant", "Gant0"]
 
         self.panel_widgets = [
             dash.dropdown(
@@ -298,22 +337,19 @@ class MatrixListDASHapp(DASH, MatrixListModel):
                     "Times Cited per Year",
                     "% Num Documents per Year",
                     "% Times Cited per Year",
+                    "Num Documents",
+                    "Times Cited",
                 ],
             ),
             dash.top_n(),
             dash.dropdown(
                 desc="Sort by:",
-                options=[
-                    "Alphabetic",
-                    "Year",
-                    "Num Documents per Year",
-                    "Times Cited per Year",
-                    "% Num Documents per Year",
-                    "% Times Cited per Year",
-                ],
+                options=["Alphabetic", "Values", "Num Documents", "Times Cited"],
             ),
             dash.ascending(),
             dash.cmap(),
+            dash.fig_width(),
+            dash.fig_height(),
         ]
         super().create_grid()
 
@@ -321,31 +357,12 @@ class MatrixListDASHapp(DASH, MatrixListModel):
 
         DASH.interactive_output(self, **kwargs)
 
-
-##
-##
-##
-##  M A T R I X
-##
-##
-##
-
-
-class MatrixModel:
-    def __init__(self, data, limit_to, exclude):
-        #
-        self.data = data
-        self.limit_to = limit_to
-        self.exclude = exclude
-        ##
-        self.ascending = None
-        self.cmap = None
-        self.column = None
-        self.height = None
-        self.sort_by = None
-        self.top_by = None
-        self.top_n = None
-        self.width = None
+        if self.menu == "Matrix":
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+        else:
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
 
     def fit(self):
 
@@ -492,81 +509,19 @@ class MatrixModel:
 
 ###############################################################################
 ##
-##  DASHBOARD
-##
-###############################################################################
-
-
-class MatrixDASHapp(DASH, MatrixModel):
-    def __init__(self, data, limit_to=None, exclude=None):
-        """Dashboard app"""
-
-        MatrixListModel.__init__(self, data, limit_to, exclude)
-        DASH.__init__(self)
-
-        COLUMNS = sorted(
-            [column for column in data.columns if column not in EXCLUDE_COLS]
-        )
-
-        self.data = data
-        self.app_title = "Term by Year Analysis"
-        self.menu_options = ["Matrix", "Heatmap", "Bubble plot", "Gant", "Gant0"]
-
-        self.panel_widgets = [
-            dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
-            ),
-            dash.separator(text="Visualization"),
-            dash.dropdown(
-                desc="Top by:",
-                options=[
-                    "Num Documents per Year",
-                    "Times Cited per Year",
-                    "% Num Documents per Year",
-                    "% Times Cited per Year",
-                    "Num Documents",
-                    "Times Cited",
-                ],
-            ),
-            dash.top_n(),
-            dash.dropdown(
-                desc="Sort by:",
-                options=["Alphabetic", "Values", "Num Documents", "Times Cited"],
-            ),
-            dash.ascending(),
-            dash.cmap(),
-            dash.fig_width(),
-            dash.fig_height(),
-        ]
-        super().create_grid()
-
-    def interactive_output(self, **kwargs):
-
-        DASH.interactive_output(self, **kwargs)
-
-        if self.menu == "Matrix":
-            self.set_disabled("Width:")
-            self.set_disabled("Height:")
-        else:
-            self.set_enabled("Width:")
-            self.set_enabled("Height:")
-
-
-###############################################################################
-##
 ##  EXTERNAL INTERFACE
 ##
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, tab=None, year_range=None):
+def app(data, limit_to=None, exclude=None, tab=None, years_range=None):
 
     if tab == 1:
         return MatrixListDASHapp(
-            data=data, limit_to=limit_to, exclude=exclude, year_range=year_range
+            data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
         ).run()
 
     return MatrixDASHapp(
-        data=data, limit_to=limit_to, exclude=exclude, year_range=year_range
+        data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()
 
