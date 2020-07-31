@@ -1,0 +1,105 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 870px;
+            height: 700px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"group": 2, "id": "Australia 02:100", "label": "Australia 02:100", "shape": "dot", "size": 6}, {"group": 2, "id": "China 11:111", "label": "China 11:111", "shape": "dot", "size": 18}, {"group": 0, "id": "Brazil 03:004", "label": "Brazil 03:004", "shape": "dot", "size": 7}, {"group": 0, "id": "Spain 08:154", "label": "Spain 08:154", "shape": "dot", "size": 14}, {"group": 0, "id": "Colombia 04:032", "label": "Colombia 04:032", "shape": "dot", "size": 9}, {"group": 1, "id": "France 13:059", "label": "France 13:059", "shape": "dot", "size": 21}, {"group": 0, "id": "Italy 19:232", "label": "Italy 19:232", "shape": "dot", "size": 30}, {"group": 0, "id": "United Kingdom 14:289", "label": "United Kingdom 14:289", "shape": "dot", "size": 23}, {"group": 1, "id": "Japan 05:016", "label": "Japan 05:016", "shape": "dot", "size": 10}, {"group": 1, "id": "United States 03:042", "label": "United States 03:042", "shape": "dot", "size": 7}, {"group": 1, "id": "Indonesia 05:017", "label": "Indonesia 05:017", "shape": "dot", "size": 10}, {"group": 0, "id": "Netherlands 10:194", "label": "Netherlands 10:194", "shape": "dot", "size": 17}, {"group": 3, "id": "Belgium 08:107", "label": "Belgium 08:107", "shape": "dot", "size": 14.72}, {"group": 4, "id": "Canada 01:160", "label": "Canada 01:160", "shape": "dot", "size": 5.0}, {"group": 5, "id": "Germany 04:012", "label": "Germany 04:012", "shape": "dot", "size": 9.16}, {"group": 6, "id": "Greece 02:003", "label": "Greece 02:003", "shape": "dot", "size": 6.38}, {"group": 7, "id": "Serbia 02:029", "label": "Serbia 02:029", "shape": "dot", "size": 6.38}, {"group": 8, "id": "Singapore 05:038", "label": "Singapore 05:038", "shape": "dot", "size": 10.55}, {"group": 9, "id": "Sweden 05:063", "label": "Sweden 05:063", "shape": "dot", "size": 10.55}, {"group": 10, "id": "Turkey 03:002", "label": "Turkey 03:002", "shape": "dot", "size": 7.77}]);
+        edges = new vis.DataSet([{"color": "lightgray", "from": "Australia 02:100", "physics": false, "to": "China 11:111", "weight": 1, "width": 0.16363636363636364}, {"color": "lightgray", "from": "Brazil 03:004", "physics": false, "to": "Spain 08:154", "weight": 1, "width": 0.15833333333333333}, {"color": "lightgray", "from": "Colombia 04:032", "physics": false, "to": "France 13:059", "weight": 1, "width": 0.15384615384615385}, {"color": "lightgray", "from": "Colombia 04:032", "physics": false, "to": "Italy 19:232", "weight": 1, "width": 0.11842105263157895}, {"color": "lightgray", "from": "Colombia 04:032", "physics": false, "to": "Spain 08:154", "weight": 1, "width": 0.14375}, {"color": "lightgray", "from": "Colombia 04:032", "physics": false, "to": "United Kingdom 14:289", "weight": 1, "width": 0.125}, {"color": "lightgray", "from": "France 13:059", "physics": false, "to": "Japan 05:016", "weight": 1, "width": 0.12153846153846154}, {"color": "lightgray", "from": "France 13:059", "physics": false, "to": "United Kingdom 14:289", "weight": 1, "width": 0.11538461538461539}, {"color": "lightgray", "from": "France 13:059", "physics": false, "to": "United States 03:042", "weight": 1, "width": 0.13589743589743591}, {"color": "lightgray", "from": "Indonesia 05:017", "physics": false, "to": "Japan 05:016", "weight": 1, "width": 0.268}, {"color": "lightgray", "from": "Italy 19:232", "physics": false, "to": "Spain 08:154", "weight": 1, "width": 0.10921052631578948}, {"color": "lightgray", "from": "Italy 19:232", "physics": false, "to": "United Kingdom 14:289", "weight": 1, "width": 0.1105263157894737}, {"color": "lightgray", "from": "Netherlands 10:194", "physics": false, "to": "Spain 08:154", "weight": 1, "width": 0.135}, {"color": "lightgray", "from": "Netherlands 10:194", "physics": false, "to": "United Kingdom 14:289", "weight": 1, "width": 0.11}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

@@ -27,6 +27,10 @@ TEXTLEN = 40
 def _build_table(data, limit_to, exclude, column, top_by):
 
     x = data.copy()
+
+    #
+    # 1.-- Number of documents and times cited by term per year
+    #
     x = _explode(x[["Year", column, "Times_Cited", "ID"]], column)
     x["Num_Documents"] = 1
     result = x.groupby([column, "Year"], as_index=False).agg(
@@ -37,9 +41,18 @@ def _build_table(data, limit_to, exclude, column, top_by):
     )
     result["Times_Cited"] = result["Times_Cited"].map(lambda x: int(x))
 
-    ## Indicators from scientoPy
+    #
+    # 2.-- Summary per year
+    #
+    summ = _explode(x[["Year", "Times_Cited", "ID"]], "Year")
+    summ.loc[:, "Num_Documents"] = 1
+    summ = summ.groupby("Year", as_index=True).agg(
+        {"Times_Cited": np.sum, "Num_Documents": np.size}
+    )
 
-    summ = by_year.Model(data).X_
+    #
+    # 3.-- dictionaries using the year as a key
+    #
     num_documents_by_year = {
         key: value for key, value in zip(summ.index, summ.Num_Documents)
     }
@@ -47,6 +60,9 @@ def _build_table(data, limit_to, exclude, column, top_by):
         key: value for key, value in zip(summ.index, summ.Times_Cited)
     }
 
+    #
+    # 4.-- indicators from ScientoPy
+    #
     result["summary_documents_by_year"] = result.Year.apply(
         lambda w: num_documents_by_year[w]
     )
@@ -86,18 +102,6 @@ def _build_table(data, limit_to, exclude, column, top_by):
         }
     )
 
-    # ## top_by
-    # if isinstance(top_by, str):
-    #     top_by = top_by.replace(" ", "_")
-    #     top_by = {
-    #         "Num_Documents_per_Year": 0,
-    #         "Times_Cited_per_Year": 1,
-    #         "%_Num_Documents_per_Year": 2,
-    #         "%_Times_Cited_per_Year": 3,
-    #         "Num_Documents": 4,
-    #         "Times_Cited": 5,
-    #     }[top_by]
-
     ## Limit to
     if isinstance(limit_to, dict):
         if column in limit_to.keys():
@@ -119,178 +123,6 @@ def _build_table(data, limit_to, exclude, column, top_by):
         result = result[result[column].map(lambda w: w not in exclude)]
 
     return result
-
-
-##
-##
-##
-##  M A T R I X   L I S T
-##
-##
-##
-
-
-###############################################################################
-##
-##  DASHBOARD
-##
-###############################################################################
-
-
-class MatrixListDASHapp(DASH):
-    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
-        """Dashboard app"""
-
-        DASH.__init__(
-            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
-        )
-
-        COLUMNS = sorted(
-            [column for column in data.columns if column not in EXCLUDE_COLS]
-        )
-
-        self.data = data
-        self.app_title = "Terms by Year Analysis"
-        self.menu_options = [
-            "Table",
-        ]
-
-        self.panel_widgets = [
-            dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
-            ),
-            dash.separator(text="Visualization"),
-            dash.dropdown(
-                desc="Top by:",
-                options=[
-                    "Num Documents per Year",
-                    "Times Cited per Year",
-                    "% Num Documents per Year",
-                    "% Times Cited per Year",
-                ],
-            ),
-            dash.top_n(),
-            dash.dropdown(
-                desc="Sort by:",
-                options=[
-                    "Alphabetic",
-                    "Year",
-                    "Num Documents per Year",
-                    "Times Cited per Year",
-                    "% Num Documents per Year",
-                    "% Times Cited per Year",
-                ],
-            ),
-            dash.ascending(),
-            dash.cmap(),
-        ]
-        super().create_grid()
-
-    def interactive_output(self, **kwargs):
-
-        DASH.interactive_output(self, **kwargs)
-
-    def fit(self):
-        #
-        result = _build_table(
-            data=self.data,
-            limit_to=self.limit_to,
-            exclude=self.exclude,
-            column=self.column,
-            top_by=self.top_by,
-        )
-
-        ## top_n
-        if isinstance(self.top_by, str):
-            top_by = self.top_by.replace(" ", "_")
-            top_by = {
-                "Num_Documents_per_Year": 0,
-                "Times_Cited_per_Year": 1,
-                "%_Num_Documents_per_Year": 2,
-                "%_Times_Cited_per_Year": 3,
-                "Num_Documents": 4,
-                "Times_Cited": 5,
-            }[top_by]
-        else:
-            top_by = self.top_by
-
-        columns = {
-            0: ["Num_Documents_per_Year", "Times_Cited_per_Year"],
-            1: ["Times_Cited_per_Year", "Num_Documents_per_Year"],
-            2: ["%_Num_Documents_per_Year", "%_Times_Cited_per_Year"],
-            3: ["%_Times_Cited_per_Year", "%_Num_Documents_per_Year"],
-            4: ["Num_Documents", "Times_Cited"],
-            5: ["Times_Cited", "Num_Documents"],
-        }[top_by]
-
-        result.sort_values(
-            columns, ascending=False, inplace=True,
-        )
-
-        if self.top_n is not None:
-            result = result.head(self.top_n)
-            result = result.reset_index(drop=True)
-
-        ## sort_by
-        if isinstance(self.sort_by, str):
-            sort_by = self.sort_by.replace(" ", "_")
-            sort_by = {
-                "Alphabetic": 0,
-                "Year": 1,
-                "Num_Documents_per_Year": 2,
-                "Times_Cited_per_Year": 3,
-                "%_Num_Documents_per_Year": 4,
-                "%_Times_Cited_per_Year": 5,
-            }[sort_by]
-        else:
-            sort_by = self.sort_by
-
-        if isinstance(self.ascending, str):
-            self.ascending = {"True": True, "False": False,}[self.ascending]
-
-        if sort_by == 0:
-            result = result.sort_values([self.column], ascending=self.ascending)
-        else:
-            result = result.sort_values(
-                {
-                    1: ["Year", "Num_Documents_per_Year", "Times_Cited_per_Year"],
-                    2: ["Num_Documents_per_Year", "Times_Cited_per_Year", "Year"],
-                    3: ["Times_Cited_per_Year", "Num_Documents_per_Year", "Year"],
-                    4: ["%_Num_Documents_per_Year", "%_Times_Cited_per_Year", "Year"],
-                    5: ["%_Times_Cited_per_Year", "%_Num_Documents_per_Year", "Year"],
-                }[sort_by],
-                ascending=self.ascending,
-            )
-
-        ###
-        result.index = result[self.column]
-        result = cmn.add_counters_to_axis(
-            X=result, axis=0, data=self.data, column=self.column
-        )
-        result[self.column] = result.index
-        result = result.reset_index(drop=True)
-        ###
-        result.pop("ID")
-        result = result[
-            [
-                self.column,
-                "Year",
-                "Num_Documents_per_Year",
-                "Times_Cited_per_Year",
-                "%_Num_Documents_per_Year",
-                "%_Times_Cited_per_Year",
-            ]
-        ]
-        ###
-        self.X_ = result
-
-    def table(self):
-        ###
-        self.fit()
-        ###
-        if self.cmap is not None:
-            return self.X_.style.background_gradient(cmap=self.cmap, axis=0)
-        return self.X_
 
 
 ##
@@ -505,6 +337,178 @@ class MatrixDASHapp(DASH):
         self.fit()
         ##
         return plt.gant0(x=self.X_, figsize=(self.width, self.height))
+
+
+##
+##
+##
+##  M A T R I X   L I S T
+##
+##
+##
+
+
+###############################################################################
+##
+##  DASHBOARD
+##
+###############################################################################
+
+
+class MatrixListDASHapp(DASH):
+    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
+        """Dashboard app"""
+
+        DASH.__init__(
+            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        )
+
+        COLUMNS = sorted(
+            [column for column in data.columns if column not in EXCLUDE_COLS]
+        )
+
+        self.data = data
+        self.app_title = "Terms by Year Analysis"
+        self.menu_options = [
+            "Table",
+        ]
+
+        self.panel_widgets = [
+            dash.dropdown(
+                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            dash.separator(text="Visualization"),
+            dash.dropdown(
+                desc="Top by:",
+                options=[
+                    "Num Documents per Year",
+                    "Times Cited per Year",
+                    "% Num Documents per Year",
+                    "% Times Cited per Year",
+                ],
+            ),
+            dash.top_n(),
+            dash.dropdown(
+                desc="Sort by:",
+                options=[
+                    "Alphabetic",
+                    "Year",
+                    "Num Documents per Year",
+                    "Times Cited per Year",
+                    "% Num Documents per Year",
+                    "% Times Cited per Year",
+                ],
+            ),
+            dash.ascending(),
+            dash.cmap(),
+        ]
+        super().create_grid()
+
+    def interactive_output(self, **kwargs):
+
+        DASH.interactive_output(self, **kwargs)
+
+    def fit(self):
+        #
+        result = _build_table(
+            data=self.data,
+            limit_to=self.limit_to,
+            exclude=self.exclude,
+            column=self.column,
+            top_by=self.top_by,
+        )
+
+        ## top_n
+        if isinstance(self.top_by, str):
+            top_by = self.top_by.replace(" ", "_")
+            top_by = {
+                "Num_Documents_per_Year": 0,
+                "Times_Cited_per_Year": 1,
+                "%_Num_Documents_per_Year": 2,
+                "%_Times_Cited_per_Year": 3,
+                "Num_Documents": 4,
+                "Times_Cited": 5,
+            }[top_by]
+        else:
+            top_by = self.top_by
+
+        columns = {
+            0: ["Num_Documents_per_Year", "Times_Cited_per_Year"],
+            1: ["Times_Cited_per_Year", "Num_Documents_per_Year"],
+            2: ["%_Num_Documents_per_Year", "%_Times_Cited_per_Year"],
+            3: ["%_Times_Cited_per_Year", "%_Num_Documents_per_Year"],
+            4: ["Num_Documents", "Times_Cited"],
+            5: ["Times_Cited", "Num_Documents"],
+        }[top_by]
+
+        result.sort_values(
+            columns, ascending=False, inplace=True,
+        )
+
+        if self.top_n is not None:
+            result = result.head(self.top_n)
+            result = result.reset_index(drop=True)
+
+        ## sort_by
+        if isinstance(self.sort_by, str):
+            sort_by = self.sort_by.replace(" ", "_")
+            sort_by = {
+                "Alphabetic": 0,
+                "Year": 1,
+                "Num_Documents_per_Year": 2,
+                "Times_Cited_per_Year": 3,
+                "%_Num_Documents_per_Year": 4,
+                "%_Times_Cited_per_Year": 5,
+            }[sort_by]
+        else:
+            sort_by = self.sort_by
+
+        if isinstance(self.ascending, str):
+            self.ascending = {"True": True, "False": False,}[self.ascending]
+
+        if sort_by == 0:
+            result = result.sort_values([self.column], ascending=self.ascending)
+        else:
+            result = result.sort_values(
+                {
+                    1: ["Year", "Num_Documents_per_Year", "Times_Cited_per_Year"],
+                    2: ["Num_Documents_per_Year", "Times_Cited_per_Year", "Year"],
+                    3: ["Times_Cited_per_Year", "Num_Documents_per_Year", "Year"],
+                    4: ["%_Num_Documents_per_Year", "%_Times_Cited_per_Year", "Year"],
+                    5: ["%_Times_Cited_per_Year", "%_Num_Documents_per_Year", "Year"],
+                }[sort_by],
+                ascending=self.ascending,
+            )
+
+        ###
+        result.index = result[self.column]
+        result = cmn.add_counters_to_axis(
+            X=result, axis=0, data=self.data, column=self.column
+        )
+        result[self.column] = result.index
+        result = result.reset_index(drop=True)
+        ###
+        result.pop("ID")
+        result = result[
+            [
+                self.column,
+                "Year",
+                "Num_Documents_per_Year",
+                "Times_Cited_per_Year",
+                "%_Num_Documents_per_Year",
+                "%_Times_Cited_per_Year",
+            ]
+        ]
+        ###
+        self.X_ = result
+
+    def table(self):
+        ###
+        self.fit()
+        ###
+        if self.cmap is not None:
+            return self.X_.style.background_gradient(cmap=self.cmap, axis=0)
+        return self.X_
 
 
 ###############################################################################
