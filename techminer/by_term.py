@@ -534,11 +534,11 @@ class Model:
 
 
 class DASHapp(DASH, Model):
-    def __init__(self, data, limit_to=None, exclude=None, year_range=None):
+    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
         """Dashboard app"""
 
-        if year_range is not None:
-            initial_year, final_year = year_range
+        if years_range is not None:
+            initial_year, final_year = years_range
             data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
 
         Model.__init__(self, data, limit_to, exclude)
