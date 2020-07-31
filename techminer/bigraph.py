@@ -54,11 +54,101 @@ class Model:
         self.height = None
         self.nx_iterations = None
 
-    def fit(self):
 
-        # if self.obj_.matrix_ is None:
-        #     display(widgets.HTML("Different columns must be selected!"))
-        #     return
+###############################################################################
+##
+##  DASHBOARD
+##
+###############################################################################
+
+
+class DASHapp(DASH, Model):
+    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
+
+        DASH.__init__(
+            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        )
+
+        self.app_title = "Bigraph Analysis"
+        self.menu_options = [
+            "Matrix",
+            "Heatmap",
+            "Bubble plot",
+            "Network nx",
+            "Network interactive",
+            "Slope chart",
+        ]
+
+        COLUMNS = sorted(
+            [column for column in data.columns if column not in EXCLUDE_COLS]
+        )
+
+        self.panel_widgets = [
+            dash.dropdown(
+                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            dash.dropdown(
+                desc="By:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            dash.separator(text="Visualization"),
+            dash.dropdown(
+                desc="Top by:", options=["Num Documents", "Times Cited", "Data",],
+            ),
+            dash.top_n(),
+            dash.dropdown(
+                desc="Sort C-axis by:",
+                options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
+            ),
+            dash.c_axis_ascending(),
+            dash.dropdown(
+                desc="Sort R-axis by:",
+                options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
+            ),
+            dash.r_axis_ascending(),
+            dash.cmap(arg="cmap", desc="Colormap Col:"),
+            dash.cmap(arg="cmap_by", desc="Colormap By:"),
+            dash.nx_layout(),
+            dash.nx_iterations(),
+            dash.fig_width(),
+            dash.fig_height(),
+        ]
+        super().create_grid()
+
+    def interactive_output(self, **kwargs):
+
+        DASH.interactive_output(self, **kwargs)
+
+        if self.column == self.by:
+            for i, _ in enumerate(self.panel_widgets[2:]):
+                self.panel_widgets[i + 2]["widget"].disabled = True
+            return
+        else:
+            for i, _ in enumerate(self.panel_widgets[2:]):
+                self.panel_widgets[i + 2]["widget"].disabled = False
+
+        if self.menu in ["Matrix", "Network interactive"]:
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+        else:
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
+
+        if self.menu in ["Network nx", "Network interactive", "Slope chart"]:
+            self.set_enabled("Colormap by:")
+        else:
+            self.set_disabled("Colormap by:")
+
+        if self.menu == "Network nx":
+            self.set_enabled("Layout:")
+        else:
+            self.set_disabled("Layout:")
+
+        if self.menu == "Network nx" and self.layout == "Spring":
+            self.set_enabled("nx interations:")
+        else:
+            self.set_disabled("nx iterations:")
+
+    def fit(self):
 
         if self.column == self.by:
             self.X_ = None
@@ -520,104 +610,6 @@ class Model:
         ax.axis("off")
 
         return fig
-
-
-###############################################################################
-##
-##  DASHBOARD
-##
-###############################################################################
-
-
-class DASHapp(DASH, Model):
-    def __init__(self, data, limit_to=None, exclude=None, year_range=None):
-
-        if year_range is not None:
-            initial_year, final_year = year_range
-            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
-
-        Model.__init__(self, data, limit_to, exclude)
-        DASH.__init__(self)
-
-        self.data = data
-        self.app_title = "Bigraph Analysis"
-        self.menu_options = [
-            "Matrix",
-            "Heatmap",
-            "Bubble plot",
-            "Network nx",
-            "Network interactive",
-            "Slope chart",
-        ]
-
-        COLUMNS = sorted(
-            [column for column in data.columns if column not in EXCLUDE_COLS]
-        )
-
-        self.panel_widgets = [
-            dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
-            ),
-            dash.dropdown(
-                desc="By:", options=[z for z in COLUMNS if z in data.columns],
-            ),
-            dash.separator(text="Visualization"),
-            dash.dropdown(
-                desc="Top by:", options=["Num Documents", "Times Cited", "Data",],
-            ),
-            dash.top_n(),
-            dash.dropdown(
-                desc="Sort C-axis by:",
-                options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
-            ),
-            dash.c_axis_ascending(),
-            dash.dropdown(
-                desc="Sort R-axis by:",
-                options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
-            ),
-            dash.r_axis_ascending(),
-            dash.cmap(arg="cmap", desc="Colormap Col:"),
-            dash.cmap(arg="cmap_by", desc="Colormap By:"),
-            dash.nx_layout(),
-            dash.nx_iterations(),
-            dash.fig_width(),
-            dash.fig_height(),
-        ]
-        super().create_grid()
-
-    def interactive_output(self, **kwargs):
-
-        DASH.interactive_output(self, **kwargs)
-
-        if self.column == self.by:
-            for i, _ in enumerate(self.panel_widgets[2:]):
-                self.panel_widgets[i + 2]["widget"].disabled = True
-            return
-        else:
-            for i, _ in enumerate(self.panel_widgets[2:]):
-                self.panel_widgets[i + 2]["widget"].disabled = False
-
-        if self.menu in ["Matrix", "Network interactive"]:
-            self.set_disabled("Width:")
-            self.set_disabled("Height:")
-        else:
-            self.set_enabled("Width:")
-            self.set_enabled("Height:")
-
-        if self.menu in ["Network nx", "Network interactive", "Slope chart"]:
-            self.set_enabled("Colormap by:")
-        else:
-            self.set_disabled("Colormap by:")
-
-        if self.menu == "Network nx":
-            self.set_enabled("Layout:")
-        else:
-            self.set_disabled("Layout:")
-
-        if self.menu == "Network nx" and self.layout == "Spring":
-            self.set_enabled("nx interations:")
-        else:
-            self.set_disabled("nx iterations:")
 
 
 ###############################################################################

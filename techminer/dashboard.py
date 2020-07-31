@@ -320,7 +320,17 @@ def processing():
 
 
 class DASH:
-    def __init__(self):
+    def __init__(self, data, limit_to, exclude, years_range):
+
+        ## biblographic data
+
+        if years_range is not None:
+            initial_year, final_year = years_range
+            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
+
+        self.data = data
+        self.limit_to = limit_to
+        self.exclude = exclude
 
         ## layout
         self.app_layout = []
@@ -331,6 +341,22 @@ class DASH:
         self.menu = None
         self.panel_widgets = []
         self.output = None
+
+        ## user gui selections
+        self.column = None
+        self.by = None
+        self.top_by = None
+        self.top_n = None
+        self.r_axis_ascending = None
+        self.c_axis_ascending = None
+        self.cmap = None
+        self.cmap_by = None
+        self.layout = None
+        self.sort_c_axis_by = None
+        self.sort_r_axis_by = None
+        self.width = None
+        self.height = None
+        self.nx_iterations = None
 
     def run(self):
         return self.app_layout
