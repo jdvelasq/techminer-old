@@ -140,109 +140,23 @@ def strategic_map(centrality, density, cluster_names, cluster_co_occurrence, fig
 
 ###############################################################################
 ##
-##  DASHBOARD
+##  MODEL
 ##
 ###############################################################################
 
-COLUMNS = [
-    "Authors",
-    "Countries",
-    "Institutions",
-    "Author_Keywords",
-    "Index_Keywords",
-    "Abstract_words_CL",
-    "Abstract_words",
-    "Title_words_CL",
-    "Title_words",
-    "Affiliations",
-    "Author_Keywords_CL",
-    "Index_Keywords_CL",
-]
 
+class Model:
+    def __init__(self, data, limit_to, exclude, years_range):
+        ##
+        if years_range is not None:
+            initial_year, final_year = years_range
+            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
 
-class DASHapp(DASH):
-    def __init__(
-        self, data, limit_to=None, exclude=None, years_range=None,
-    ):
+        self.data = data
+        self.limit_to = limit_to
+        self.exclude = exclude
 
-        DASH.__init__(
-            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
-        )
-
-        self.app_title = "Concept Mapping"
-        self.menu_options = [
-            "Cluster memberships",
-            "Cluster co-occurrence matrix",
-            "Centratlity-Density table",
-            "MDS cluster map",
-            "CA cluster map",
-            "Strategic map",
-        ]
-
-        self.panel_widgets = [
-            dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
-            ),
-            dash.min_occurrence(),
-            dash.max_items(),
-            dash.normalization(),
-            dash.separator(text="Aglomerative Clustering"),
-            dash.n_clusters(),
-            dash.affinity(),
-            dash.linkage(),
-            dash.separator(text="MDS/CA diagram"),
-            dash.n_components(),
-            dash.x_axis(),
-            dash.y_axis(),
-            dash.separator(text="Visualization"),
-            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-            dash.top_n(),
-            dash.fig_width(),
-            dash.fig_height(),
-        ]
-
-        super().create_grid()
-
-    def interactive_output(self, **kwargs):
-
-        DASH.interactive_output(self, **kwargs)
-
-        with self.output:
-
-            if self.menu in [
-                "Cluster memberships",
-                "Cluster co-occurrence matrix",
-                "Centratlity-Density table",
-            ]:
-                self.set_disabled("Width:")
-                self.set_disabled("Height:")
-            else:
-                self.set_enabled("Width:")
-                self.set_enabled("Height:")
-
-            if self.menu in [
-                "MDS cluster map",
-                "CA cluster map",
-            ]:
-                self.set_enabled("X-axis:")
-                self.set_enabled("Y-axis:")
-            else:
-                self.set_disabled("X-axis:")
-                self.set_disabled("Y-axis:")
-
-            if self.menu == "MDS cluster map":
-
-                self.panel_widgets[-5]["widget"].disabled = False
-                self.panel_widgets[8]["widget"].options = list(range(self.n_components))
-                self.panel_widgets[9]["widget"].options = list(range(self.n_components))
-            else:
-                self.panel_widgets[-5]["widget"].disabled = True
-
-            if self.menu == "CA cluster map":
-                self.panel_widgets[8]["widget"].options = list(range(self.n_clusters))
-                self.panel_widgets[9]["widget"].options = list(range(self.n_clusters))
-
-    def fit(self):
+    def apply(self):
 
         ##
         ## Concept mapping
@@ -343,7 +257,7 @@ class DASHapp(DASH):
         self.centrality_density_ = str_map
 
     def cluster_memberships(self):
-        self.fit()
+        self.apply()
         text = []
         for key in self.memberships_:
             text += ["=" * 60]
@@ -353,11 +267,11 @@ class DASHapp(DASH):
         return widgets.HTML("\n".join(text))
 
     def cluster_co_occurrence_matrix(self):
-        self.fit()
+        self.apply()
         return self.cluster_co_occurrence_
 
     def mds_cluster_map(self):
-        self.fit()
+        self.apply()
         return cluster_plot(
             X=self.cluster_co_occurrence_,
             method="MDS",
@@ -368,7 +282,7 @@ class DASHapp(DASH):
         )
 
     def ca_cluster_map(self):
-        self.fit()
+        self.apply()
         return cluster_plot(
             X=self.cluster_co_occurrence_,
             method="CA",
@@ -379,11 +293,11 @@ class DASHapp(DASH):
         )
 
     def centratlity_density_table(self):
-        self.fit()
+        self.apply()
         return self.centrality_density_
 
     def strategic_map(self):
-        self.fit()
+        self.apply()
         cluster_co_occurrence = [
             self.cluster_co_occurrence_[i][i]
             for i in self.cluster_co_occurrence_.columns
@@ -395,6 +309,111 @@ class DASHapp(DASH):
             cluster_co_occurrence=cluster_co_occurrence,
             figsize=(self.width, self.height),
         )
+
+
+###############################################################################
+##
+##  DASHBOARD
+##
+###############################################################################
+
+COLUMNS = [
+    "Authors",
+    "Countries",
+    "Institutions",
+    "Author_Keywords",
+    "Index_Keywords",
+    "Abstract_words_CL",
+    "Abstract_words",
+    "Title_words_CL",
+    "Title_words",
+    "Affiliations",
+    "Author_Keywords_CL",
+    "Index_Keywords_CL",
+]
+
+
+class DASHapp(DASH, Model):
+    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
+        """Dashboard app"""
+
+        Model.__init__(
+            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        )
+        DASH.__init__(self)
+
+        self.app_title = "Concept Mapping"
+        self.menu_options = [
+            "Cluster memberships",
+            "Cluster co-occurrence matrix",
+            "Centratlity-Density table",
+            "MDS cluster map",
+            "CA cluster map",
+            "Strategic map",
+        ]
+
+        self.panel_widgets = [
+            dash.dropdown(
+                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            dash.min_occurrence(),
+            dash.max_items(),
+            dash.normalization(),
+            dash.separator(text="Aglomerative Clustering"),
+            dash.n_clusters(),
+            dash.affinity(),
+            dash.linkage(),
+            dash.separator(text="MDS/CA diagram"),
+            dash.n_components(),
+            dash.x_axis(),
+            dash.y_axis(),
+            dash.separator(text="Visualization"),
+            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+            dash.top_n(),
+            dash.fig_width(),
+            dash.fig_height(),
+        ]
+
+        super().create_grid()
+
+    def interactive_output(self, **kwargs):
+
+        DASH.interactive_output(self, **kwargs)
+
+        with self.output:
+
+            if self.menu in [
+                "Cluster memberships",
+                "Cluster co-occurrence matrix",
+                "Centratlity-Density table",
+            ]:
+                self.set_disabled("Width:")
+                self.set_disabled("Height:")
+            else:
+                self.set_enabled("Width:")
+                self.set_enabled("Height:")
+
+            if self.menu in [
+                "MDS cluster map",
+                "CA cluster map",
+            ]:
+                self.set_enabled("X-axis:")
+                self.set_enabled("Y-axis:")
+            else:
+                self.set_disabled("X-axis:")
+                self.set_disabled("Y-axis:")
+
+            if self.menu == "MDS cluster map":
+
+                self.panel_widgets[-5]["widget"].disabled = False
+                self.panel_widgets[8]["widget"].options = list(range(self.n_components))
+                self.panel_widgets[9]["widget"].options = list(range(self.n_components))
+            else:
+                self.panel_widgets[-5]["widget"].disabled = True
+
+            if self.menu == "CA cluster map":
+                self.panel_widgets[8]["widget"].options = list(range(self.n_clusters))
+                self.panel_widgets[9]["widget"].options = list(range(self.n_clusters))
 
 
 ###############################################################################

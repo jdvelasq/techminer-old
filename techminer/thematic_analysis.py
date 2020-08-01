@@ -13,82 +13,23 @@ from techminer.document_term import TF_matrix, TFIDF_matrix
 
 ###############################################################################
 ##
-##  DASHBOARD
+##  MODEL
 ##
 ###############################################################################
 
 
-COLUMNS = [
-    "Authors",
-    "Countries",
-    "Institutions",
-    "Author_Keywords",
-    "Index_Keywords",
-    "Abstract_words_CL",
-    "Abstract_words",
-    "Title_words_CL",
-    "Title_words",
-    "Affiliations",
-    "Author_Keywords_CL",
-    "Index_Keywords_CL",
-]
+class Model:
+    def __init__(self, data, limit_to, exclude, years_range):
+        ##
+        if years_range is not None:
+            initial_year, final_year = years_range
+            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
 
+        self.data = data
+        self.limit_to = limit_to
+        self.exclude = exclude
 
-class DASHapp(DASH):
-    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
-        """Dashboard app"""
-
-        DASH.__init__(
-            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
-        )
-
-        self.app_title = "Thematic Analysis"
-        self.menu_options = [
-            "Contingency table",
-            "Memberships table",
-            "Cluster ppal coordinates",
-            "Term ppal coordinates",
-            "Clusters plot",
-            "Terms plot",
-        ]
-
-        self.panel_widgets = [
-            dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
-            ),
-            dash.min_occurrence(),
-            dash.max_items(),
-            dash.separator(text="Clustering (K-means)"),
-            dash.n_clusters(),
-            dash.max_iter(),
-            dash.random_state(),
-            dash.separator(text="Visualization"),
-            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-            dash.top_n(n=101,),
-            dash.cmap(),
-            dash.x_axis(),
-            dash.y_axis(),
-            dash.fig_width(),
-            dash.fig_height(),
-        ]
-        super().create_grid()
-
-    def interactive_output(self, **kwargs):
-
-        DASH.interactive_output(self, **kwargs)
-
-        self.panel_widgets[-4]["widget"].options = list(range(self.n_clusters))
-        self.panel_widgets[-3]["widget"].options = list(range(self.n_clusters))
-
-        for i in [-1, -2, -3, -4, -5]:
-            self.panel_widgets[i]["widget"].disabled = self.menu in [
-                "Contingency table",
-                "Memberships table",
-                "Cluster ppal coordinates",
-                "Term ppal coordinates",
-            ]
-
-    def fit(self):
+    def apply(self):
 
         ##
         ## Fuente:
@@ -189,23 +130,23 @@ class DASHapp(DASH):
         self.term_ppal_coordinates_ = ca.principal_coordinates_rows_
 
     def contingency_table(self):
-        self.fit()
+        self.apply()
         return self.contingency_table_
 
     def memberships_table(self):
-        self.fit()
+        self.apply()
         return self.memberships_
 
     def cluster_ppal_coordinates(self):
-        self.fit()
+        self.apply()
         return self.cluster_ppal_coordinates_
 
     def term_ppal_coordinates(self):
-        self.fit()
+        self.apply()
         return self.term_ppal_coordinates_
 
     def clusters_plot(self):
-        self.fit()
+        self.apply()
         x = self.cluster_ppal_coordinates_[
             self.cluster_ppal_coordinates_.columns[self.x_axis]
         ]
@@ -267,7 +208,7 @@ class DASHapp(DASH):
         return fig
 
     def terms_plot(self):
-        self.fit()
+        self.apply()
         x = self.term_ppal_coordinates_[
             self.term_ppal_coordinates_.columns[self.x_axis]
         ]
@@ -321,6 +262,85 @@ class DASHapp(DASH):
         fig.set_tight_layout(True)
 
         return fig
+
+
+###############################################################################
+##
+##  DASHBOARD
+##
+###############################################################################
+
+
+COLUMNS = [
+    "Authors",
+    "Countries",
+    "Institutions",
+    "Author_Keywords",
+    "Index_Keywords",
+    "Abstract_words_CL",
+    "Abstract_words",
+    "Title_words_CL",
+    "Title_words",
+    "Affiliations",
+    "Author_Keywords_CL",
+    "Index_Keywords_CL",
+]
+
+
+class DASHapp(DASH, Model):
+    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
+        """Dashboard app"""
+
+        Model.__init__(
+            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        )
+        DASH.__init__(self)
+
+        self.app_title = "Thematic Analysis"
+        self.menu_options = [
+            "Contingency table",
+            "Memberships table",
+            "Cluster ppal coordinates",
+            "Term ppal coordinates",
+            "Clusters plot",
+            "Terms plot",
+        ]
+
+        self.panel_widgets = [
+            dash.dropdown(
+                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            dash.min_occurrence(),
+            dash.max_items(),
+            dash.separator(text="Clustering (K-means)"),
+            dash.n_clusters(),
+            dash.max_iter(),
+            dash.random_state(),
+            dash.separator(text="Visualization"),
+            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+            dash.top_n(n=101,),
+            dash.cmap(),
+            dash.x_axis(),
+            dash.y_axis(),
+            dash.fig_width(),
+            dash.fig_height(),
+        ]
+        super().create_grid()
+
+    def interactive_output(self, **kwargs):
+
+        DASH.interactive_output(self, **kwargs)
+
+        self.panel_widgets[-4]["widget"].options = list(range(self.n_clusters))
+        self.panel_widgets[-3]["widget"].options = list(range(self.n_clusters))
+
+        for i in [-1, -2, -3, -4, -5]:
+            self.panel_widgets[i]["widget"].disabled = self.menu in [
+                "Contingency table",
+                "Memberships table",
+                "Cluster ppal coordinates",
+                "Term ppal coordinates",
+            ]
 
 
 ###############################################################################
