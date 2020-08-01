@@ -26,88 +26,21 @@ from techminer.graph import network_normalization
 
 ###############################################################################
 ##
-##  DASHBOARD
+##  MODEL
 ##
 ###############################################################################
 
-COLUMNS = sorted(
-    [
-        "Authors",
-        "Countries",
-        "Institutions",
-        "Author_Keywords",
-        "Index_Keywords",
-        "Abstract_words_CL",
-        "Abstract_words",
-        "Title_words_CL",
-        "Title_words",
-        "Affiliations",
-        "Author_Keywords_CL",
-        "Index_Keywords_CL",
-    ]
-)
 
+class Model:
+    def __init__(self, data, limit_to, exclude, years_range):
+        ##
+        if years_range is not None:
+            initial_year, final_year = years_range
+            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
 
-class DASHapp(DASH):
-    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
-        """Dashboard app"""
-
-        DASH.__init__(
-            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
-        )
-
-        self.app_title = "Factor Analysis"
-        self.menu_options = [
-            "Memberships",
-            "Cluster plot",
-        ]
-        #
-        self.panel_widgets = [
-            dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
-            ),
-            dash.min_occurrence(),
-            dash.max_items(),
-            dash.normalization(),
-            dash.separator(text="Decomposition"),
-            dash.dropdown(
-                desc="Method:",
-                options=["Factor Analysis", "PCA", "Fast ICA", "SVD", "MDS"],
-            ),
-            dash.n_components(),
-            dash.random_state(),
-            dash.separator(text="Aglomerative Clustering"),
-            dash.n_clusters(),
-            dash.affinity(),
-            dash.linkage(),
-            dash.separator(text="Visualization"),
-            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited"],),
-            dash.top_n(),
-            dash.x_axis(),
-            dash.y_axis(),
-            dash.fig_width(),
-            dash.fig_height(),
-        ]
-        super().create_grid()
-
-    def interactive_output(self, **kwargs):
-
-        DASH.interactive_output(self, **kwargs)
-
-        if self.menu == "Memberships":
-            self.set_disabled("X-axis:")
-            self.set_disabled("Y-axis:")
-            self.set_disabled("Width:")
-            self.set_disabled("Height:")
-
-        if self.menu == "Cluster plot":
-            self.set_enabled("X-axis:")
-            self.set_enabled("Y-axis:")
-            self.set_enabled("Width:")
-            self.set_enabled("Height:")
-
-        self.set_options(name="X-axis:", options=list(range(self.n_components)))
-        self.set_options(name="Y-axis:", options=list(range(self.n_components)))
+        self.data = data
+        self.limit_to = limit_to
+        self.exclude = exclude
 
     def fit(self):
         #
@@ -273,6 +206,93 @@ class DASHapp(DASH):
         fig.set_tight_layout(True)
 
         return fig
+
+
+###############################################################################
+##
+##  DASHBOARD
+##
+###############################################################################
+
+COLUMNS = sorted(
+    [
+        "Authors",
+        "Countries",
+        "Institutions",
+        "Author_Keywords",
+        "Index_Keywords",
+        "Abstract_words_CL",
+        "Abstract_words",
+        "Title_words_CL",
+        "Title_words",
+        "Affiliations",
+        "Author_Keywords_CL",
+        "Index_Keywords_CL",
+    ]
+)
+
+
+class DASHapp(DASH, Model):
+    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
+        """Dashboard app"""
+
+        Model.__init__(
+            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        )
+        DASH.__init__(self)
+
+        self.app_title = "Factor Analysis"
+        self.menu_options = [
+            "Memberships",
+            "Cluster plot",
+        ]
+        #
+        self.panel_widgets = [
+            dash.dropdown(
+                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            dash.min_occurrence(),
+            dash.max_items(),
+            dash.normalization(),
+            dash.separator(text="Decomposition"),
+            dash.dropdown(
+                desc="Method:",
+                options=["Factor Analysis", "PCA", "Fast ICA", "SVD", "MDS"],
+            ),
+            dash.n_components(),
+            dash.random_state(),
+            dash.separator(text="Aglomerative Clustering"),
+            dash.n_clusters(),
+            dash.affinity(),
+            dash.linkage(),
+            dash.separator(text="Visualization"),
+            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited"],),
+            dash.top_n(),
+            dash.x_axis(),
+            dash.y_axis(),
+            dash.fig_width(),
+            dash.fig_height(),
+        ]
+        super().create_grid()
+
+    def interactive_output(self, **kwargs):
+
+        DASH.interactive_output(self, **kwargs)
+
+        if self.menu == "Memberships":
+            self.set_disabled("X-axis:")
+            self.set_disabled("Y-axis:")
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+
+        if self.menu == "Cluster plot":
+            self.set_enabled("X-axis:")
+            self.set_enabled("Y-axis:")
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
+
+        self.set_options(name="X-axis:", options=list(range(self.n_components)))
+        self.set_options(name="Y-axis:", options=list(range(self.n_components)))
 
 
 ###############################################################################

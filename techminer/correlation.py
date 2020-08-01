@@ -23,113 +23,23 @@ from pyvis.network import Network
 
 ###############################################################################
 ##
-##  DASHBOARD
+##  MODEL
 ##
 ###############################################################################
 
-COLUMNS = [
-    "Authors",
-    "Countries",
-    "Institutions",
-    "Author_Keywords",
-    "Index_Keywords",
-    "Abstract_words_CL",
-    "Abstract_words",
-    "Title_words_CL",
-    "Title_words",
-    "Affiliations",
-    "Author_Keywords_CL",
-    "Index_Keywords_CL",
-]
 
+class Model:
+    def __init__(self, data, limit_to, exclude, years_range):
+        ##
+        if years_range is not None:
+            initial_year, final_year = years_range
+            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
 
-class DASHapp(DASH):
-    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
-        """Dashboard app"""
+        self.data = data
+        self.limit_to = limit_to
+        self.exclude = exclude
 
-        DASH.__init__(
-            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
-        )
-
-        self.app_title = "Correlation Analysis"
-        self.menu_options = [
-            "Matrix",
-            "Heatmap",
-            "Bubble plot",
-            "Correlation map (nx)",
-            "Correlation map (interactive)",
-            "Chord diagram",
-        ]
-
-        self.panel_widgets = [
-            dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
-            ),
-            dash.dropdown(
-                desc="By:", options=[z for z in COLUMNS if z in data.columns],
-            ),
-            dash.dropdown(desc="Method:", options=["pearson", "kendall", "spearman"],),
-            dash.separator(text="Visualization"),
-            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-            dash.top_n(),
-            dash.dropdown(
-                desc="Sort C-axis by:",
-                options=["Alphabetic", "Num Documents", "Times Cited",],
-            ),
-            dash.c_axis_ascending(),
-            dash.dropdown(
-                desc="Sort R-axis by:",
-                options=["Alphabetic", "Num Documents", "Times Cited",],
-            ),
-            dash.r_axis_ascending(),
-            dash.cmap(),
-            dash.nx_layout(),
-            dash.n_labels(),
-            dash.nx_iterations(),
-            dash.fig_width(),
-            dash.fig_height(),
-        ]
-        super().create_grid()
-
-    def interactive_output(self, **kwargs):
-
-        DASH.interactive_output(self, **kwargs)
-
-        if self.menu in [
-            "Matrix",
-            "Heatmap",
-            "Bubble plot",
-        ]:
-            self.set_enabled("Sort C-axis by:")
-            self.set_enabled("C-axis ascending:")
-            self.set_enabled("Sort R-axis by:")
-            self.set_enabled("R-axis ascending:")
-        else:
-            self.set_disabled("Sort C-axis by:")
-            self.set_disabled("C-axis ascending:")
-            self.set_disabled("Sort R-axis by:")
-            self.set_disabled("R-axis ascending:")
-
-        if self.menu == "Correlation map (nx)":
-            self.set_enabled("Layout:")
-            self.set_enabled("N labels:")
-        else:
-            self.set_disabled("Layout:")
-            self.set_disabled("N labels:")
-
-        if self.menu == "Correlation map" and self.layout == "Spring":
-            self.set_enabled("nx iterations:")
-        else:
-            self.set_disabled("nx iterations:")
-
-        if self.menu in ["Matrix", "Correlation map (interactive)"]:
-            self.set_disabled("Width:")
-            self.set_disabled("Height:")
-        else:
-            self.set_enabled("Width:")
-            self.set_enabled("Height:")
-
-    def fit(self):
+    def apply(self):
 
         x = self.data.copy()
 
@@ -185,23 +95,23 @@ class DASHapp(DASH):
         self.X_ = matrix
 
     def matrix(self):
-        self.fit()
+        self.apply()
         return self.X_.style.format("{:+4.3f}").background_gradient(
             cmap=self.cmap, axis=None
         )
 
     def heatmap(self):
-        self.fit()
+        self.apply()
         return plt.heatmap(self.X_, cmap=self.cmap, figsize=(self.width, self.height))
 
     def bubble_plot(self):
-        self.fit()
+        self.apply()
         return plt.bubble(
             self.X_, axis=0, cmap=self.cmap, figsize=(self.width, self.height),
         )
 
     def chord_diagram(self):
-        self.fit()
+        self.apply()
         x = self.X_.copy()
         terms = self.X_.columns.tolist()
         node_sizes = cmn.counters_to_node_sizes(x=terms)
@@ -239,7 +149,9 @@ class DASHapp(DASH):
         return cd.plot(figsize=(self.width, self.height))
 
     def correlation_map_nx(self):
-        self.fit()
+        ##
+        self.apply()
+        ##
 
         if len(self.X_.columns) > 50:
             return "Maximum number of nodes exceded!"
@@ -360,7 +272,7 @@ class DASHapp(DASH):
 
     def correlation_map_interactive(self):
         ##
-        self.fit()
+        self.apply()
         ##
         if len(self.X_.columns) > 50:
             return "Maximum number of nodes exceded!"
@@ -406,6 +318,116 @@ class DASHapp(DASH):
             G.add_edge(m.from_[idx], m.to_[idx], physics=False, **(d[key]))
 
         return G.show("net.html")
+
+
+###############################################################################
+##
+##  DASHBOARD
+##
+###############################################################################
+
+COLUMNS = [
+    "Authors",
+    "Countries",
+    "Institutions",
+    "Author_Keywords",
+    "Index_Keywords",
+    "Abstract_words_CL",
+    "Abstract_words",
+    "Title_words_CL",
+    "Title_words",
+    "Affiliations",
+    "Author_Keywords_CL",
+    "Index_Keywords_CL",
+]
+
+
+class DASHapp(DASH, Model):
+    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
+        """Dashboard app"""
+
+        Model.__init__(
+            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        )
+        DASH.__init__(self)
+
+        self.app_title = "Correlation Analysis"
+        self.menu_options = [
+            "Matrix",
+            "Heatmap",
+            "Bubble plot",
+            "Correlation map (nx)",
+            "Correlation map (interactive)",
+            "Chord diagram",
+        ]
+
+        self.panel_widgets = [
+            dash.dropdown(
+                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            dash.dropdown(
+                desc="By:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            dash.dropdown(desc="Method:", options=["pearson", "kendall", "spearman"],),
+            dash.separator(text="Visualization"),
+            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+            dash.top_n(),
+            dash.dropdown(
+                desc="Sort C-axis by:",
+                options=["Alphabetic", "Num Documents", "Times Cited",],
+            ),
+            dash.c_axis_ascending(),
+            dash.dropdown(
+                desc="Sort R-axis by:",
+                options=["Alphabetic", "Num Documents", "Times Cited",],
+            ),
+            dash.r_axis_ascending(),
+            dash.cmap(),
+            dash.nx_layout(),
+            dash.n_labels(),
+            dash.nx_iterations(),
+            dash.fig_width(),
+            dash.fig_height(),
+        ]
+        super().create_grid()
+
+    def interactive_output(self, **kwargs):
+
+        DASH.interactive_output(self, **kwargs)
+
+        if self.menu in [
+            "Matrix",
+            "Heatmap",
+            "Bubble plot",
+        ]:
+            self.set_enabled("Sort C-axis by:")
+            self.set_enabled("C-axis ascending:")
+            self.set_enabled("Sort R-axis by:")
+            self.set_enabled("R-axis ascending:")
+        else:
+            self.set_disabled("Sort C-axis by:")
+            self.set_disabled("C-axis ascending:")
+            self.set_disabled("Sort R-axis by:")
+            self.set_disabled("R-axis ascending:")
+
+        if self.menu == "Correlation map (nx)":
+            self.set_enabled("Layout:")
+            self.set_enabled("N labels:")
+        else:
+            self.set_disabled("Layout:")
+            self.set_disabled("N labels:")
+
+        if self.menu == "Correlation map" and self.layout == "Spring":
+            self.set_enabled("nx iterations:")
+        else:
+            self.set_disabled("nx iterations:")
+
+        if self.menu in ["Matrix", "Correlation map (interactive)"]:
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+        else:
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
 
 
 ###############################################################################
