@@ -320,17 +320,15 @@ def processing():
 
 
 class DASH:
-    def __init__(self, data, limit_to, exclude, years_range):
+    def __init__(self):
 
-        ## biblographic data
+        # if years_range is not None:
+        #     initial_year, final_year = years_range
+        #     data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
 
-        if years_range is not None:
-            initial_year, final_year = years_range
-            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
-
-        self.data = data
-        self.limit_to = limit_to
-        self.exclude = exclude
+        # self.data = data
+        # self.limit_to = limit_to
+        # self.exclude = exclude
 
         ## layout
         self.app_layout = []
@@ -341,49 +339,6 @@ class DASH:
         self.menu = None
         self.panel_widgets = []
         self.output = None
-
-        ## user gui selections
-
-        self.affinity = None
-        self.analysis_type = None
-        self.ascending = None
-        self.by = None
-        self.c_axis_ascending = None
-        self.clustering = None
-        self.cmap = None
-        self.cmap_by = None
-        self.column = None
-        self.height = None
-        self.iterations = None
-        self.layout = None
-        self.linkage = None
-        self.max_items = None
-        self.max_iter = None
-        self.max_iters = None
-        self.max_nodes = None
-        self.max_terms = None
-        self.method = None
-        self.min_occurrence = None
-        self.n_clusters = None
-        self.n_components = None
-        self.n_factors = None
-        self.n_iter = None
-        self.norm = None
-        self.normalization = None
-        self.nx_iterations = None
-        self.r_axis_ascending = None
-        self.random_state = None
-        self.smooth_idf = None
-        self.sort_by = None
-        self.sort_c_axis_by = None
-        self.sort_r_axis_by = None
-        self.sublinear_tf = None
-        self.top_by = None
-        self.top_n = None
-        self.use_idf = None
-        self.width = None
-        self.x_axis = None
-        self.y_axis = None
 
     def run(self):
         return self.app_layout
