@@ -16,6 +16,13 @@ from techminer.explode import __explode as _explode
 from techminer.params import EXCLUDE_COLS
 
 
+###############################################################################
+##
+##  MODEL
+##
+###############################################################################
+
+
 class Model:
     def __init__(self, data, limit_to, exclude, years_range):
         ##

@@ -19,110 +19,126 @@ from techminer.params import EXCLUDE_COLS
 TEXTLEN = 40
 
 
-##
-##
-##  Common functions
-##
-##
-def _build_table(data, limit_to, exclude, column, top_by):
+class BaseModel:
+    def __init__(self, data, limit_to, exclude, years_range):
+        ##
+        if years_range is not None:
+            initial_year, final_year = years_range
+            data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
 
-    x = data.copy()
+        self.data = data
+        self.limit_to = limit_to
+        self.exclude = exclude
 
-    #
-    # 1.-- Number of documents and times cited by term per year
-    #
-    x = _explode(x[["Year", column, "Times_Cited", "ID"]], column)
-    x["Num_Documents"] = 1
-    result = x.groupby([column, "Year"], as_index=False).agg(
-        {"Times_Cited": np.sum, "Num_Documents": np.size}
-    )
-    result = result.assign(
-        ID=x.groupby([column, "Year"]).agg({"ID": list}).reset_index()["ID"]
-    )
-    result["Times_Cited"] = result["Times_Cited"].map(lambda x: int(x))
+    def build_table(self):
 
-    #
-    # 2.-- Summary per year
-    #
-    summ = _explode(x[["Year", "Times_Cited", "ID"]], "Year")
-    summ.loc[:, "Num_Documents"] = 1
-    summ = summ.groupby("Year", as_index=True).agg(
-        {"Times_Cited": np.sum, "Num_Documents": np.size}
-    )
+        x = self.data.copy()
 
-    #
-    # 3.-- dictionaries using the year as a key
-    #
-    num_documents_by_year = {
-        key: value for key, value in zip(summ.index, summ.Num_Documents)
-    }
-    times_cited_by_year = {
-        key: value for key, value in zip(summ.index, summ.Times_Cited)
-    }
-
-    #
-    # 4.-- indicators from ScientoPy
-    #
-    result["summary_documents_by_year"] = result.Year.apply(
-        lambda w: num_documents_by_year[w]
-    )
-    result["summary_documents_by_year"] = result.summary_documents_by_year.map(
-        lambda w: 1 if w == 0 else w
-    )
-    result["summary_times_cited_by_year"] = result.Year.apply(
-        lambda w: times_cited_by_year[w]
-    )
-    result["summary_times_cited_by_year"] = result.summary_times_cited_by_year.map(
-        lambda w: 1 if w == 0 else w
-    )
-
-    result["Perc_Num_Documents"] = 0.0
-    result = result.assign(
-        Perc_Num_Documents=round(
-            result.Num_Documents / result.summary_documents_by_year * 100, 2
+        #
+        # 1.-- Number of documents and times cited by term per year
+        #
+        x = _explode(x[["Year", self.column, "Times_Cited", "ID"]], self.column)
+        x["Num_Documents"] = 1
+        result = x.groupby([self.column, "Year"], as_index=False).agg(
+            {"Times_Cited": np.sum, "Num_Documents": np.size}
         )
-    )
-
-    result["Perc_Times_Cited"] = 0.0
-    result = result.assign(
-        Perc_Times_Cited=round(
-            result.Times_Cited / result.summary_times_cited_by_year * 100, 2
+        result = result.assign(
+            ID=x.groupby([self.column, "Year"]).agg({"ID": list}).reset_index()["ID"]
         )
-    )
+        result["Times_Cited"] = result["Times_Cited"].map(lambda x: int(x))
 
-    result.pop("summary_documents_by_year")
-    result.pop("summary_times_cited_by_year")
+        #
+        # 2.-- Summary per year
+        #
+        summ = _explode(x[["Year", "Times_Cited", "ID"]], "Year")
+        summ.loc[:, "Num_Documents"] = 1
+        summ = summ.groupby("Year", as_index=True).agg(
+            {"Times_Cited": np.sum, "Num_Documents": np.size}
+        )
 
-    result = result.rename(
-        columns={
-            "Num_Documents": "Num_Documents_per_Year",
-            "Times_Cited": "Times_Cited_per_Year",
-            "Perc_Num_Documents": "%_Num_Documents_per_Year",
-            "Perc_Times_Cited": "%_Times_Cited_per_Year",
+        #
+        # 3.-- dictionaries using the year as a key
+        #
+        num_documents_by_year = {
+            key: value for key, value in zip(summ.index, summ.Num_Documents)
         }
-    )
+        times_cited_by_year = {
+            key: value for key, value in zip(summ.index, summ.Times_Cited)
+        }
 
-    ## Limit to
-    if isinstance(limit_to, dict):
-        if column in limit_to.keys():
-            limit_to = limit_to[column]
-        else:
-            limit_to = None
+        #
+        # 4.-- indicators from ScientoPy
+        #
+        result["summary_documents_by_year"] = result.Year.apply(
+            lambda w: num_documents_by_year[w]
+        )
+        result["summary_documents_by_year"] = result.summary_documents_by_year.map(
+            lambda w: 1 if w == 0 else w
+        )
+        result["summary_times_cited_by_year"] = result.Year.apply(
+            lambda w: times_cited_by_year[w]
+        )
+        result["summary_times_cited_by_year"] = result.summary_times_cited_by_year.map(
+            lambda w: 1 if w == 0 else w
+        )
 
-    if limit_to is not None:
-        result = result[result[column].map(lambda w: w in limit_to)]
+        result["Perc_Num_Documents"] = 0.0
+        result = result.assign(
+            Perc_Num_Documents=round(
+                result.Num_Documents / result.summary_documents_by_year * 100, 2
+            )
+        )
 
-    ## Exclude
-    if isinstance(exclude, dict):
-        if column in exclude.keys():
-            exclude = exclude[column]
-        else:
-            exclude = None
+        result["Perc_Times_Cited"] = 0.0
+        result = result.assign(
+            Perc_Times_Cited=round(
+                result.Times_Cited / result.summary_times_cited_by_year * 100, 2
+            )
+        )
 
-    if exclude is not None:
-        result = result[result[column].map(lambda w: w not in exclude)]
+        result.pop("summary_documents_by_year")
+        result.pop("summary_times_cited_by_year")
 
-    return result
+        result = result.rename(
+            columns={
+                "Num_Documents": "Num_Documents_per_Year",
+                "Times_Cited": "Times_Cited_per_Year",
+                "Perc_Num_Documents": "%_Num_Documents_per_Year",
+                "Perc_Times_Cited": "%_Times_Cited_per_Year",
+            }
+        )
+
+        ## Limit to
+        limit_to = self.limit_to
+        if isinstance(limit_to, dict):
+            if self.column in limit_to.keys():
+                limit_to = limit_to[self.column]
+            else:
+                limit_to = None
+
+        if limit_to is not None:
+            result = result[result[self.column].map(lambda w: w in limit_to)]
+
+        ## Exclude
+        exclude = self.exclude
+        if isinstance(exclude, dict):
+            if column in exclude.keys():
+                exclude = exclude[self.column]
+            else:
+                exclude = None
+
+        if exclude is not None:
+            result = result[result[self.column].map(lambda w: w not in exclude)]
+
+        return result
+
+    def table(self):
+        ###
+        self.apply()
+        ###
+        if self.cmap is not None:
+            return self.X_.style.background_gradient(cmap=self.cmap, axis=0)
+        return self.X_
 
 
 ##
@@ -133,78 +149,30 @@ def _build_table(data, limit_to, exclude, column, top_by):
 ##
 ##
 
-
 ###############################################################################
 ##
-##  DASHBOARD
+##  MODEL
 ##
 ###############################################################################
 
 
-class MatrixDASHapp(DASH):
-    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
-        """Dashboard app"""
-
-        DASH.__init__(
-            self, data, limit_to=limit_to, exclude=exclude, years_range=years_range
+class MatrixModel(BaseModel):
+    def __init__(self, data, limit_to, exclude, years_range):
+        ##
+        BaseModel.__init__(
+            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
         )
 
-        COLUMNS = sorted(
-            [column for column in data.columns if column not in EXCLUDE_COLS]
-        )
+        self.top_by = None
+        self.top_n = None
+        self.sort_by = None
+        self.ascending = None
+        self.column = None
+        self.cmap = None
 
-        self.data = data
-        self.app_title = "Term by Year Analysis"
-        self.menu_options = ["Matrix", "Heatmap", "Bubble plot", "Gant", "Gant0"]
+    def apply(self):
 
-        self.panel_widgets = [
-            dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
-            ),
-            dash.separator(text="Visualization"),
-            dash.dropdown(
-                desc="Top by:",
-                options=[
-                    "Num Documents per Year",
-                    "Times Cited per Year",
-                    "% Num Documents per Year",
-                    "% Times Cited per Year",
-                    "Num Documents",
-                    "Times Cited",
-                ],
-            ),
-            dash.top_n(),
-            dash.dropdown(
-                desc="Sort by:",
-                options=["Alphabetic", "Values", "Num Documents", "Times Cited"],
-            ),
-            dash.ascending(),
-            dash.cmap(),
-            dash.fig_width(),
-            dash.fig_height(),
-        ]
-        super().create_grid()
-
-    def interactive_output(self, **kwargs):
-
-        DASH.interactive_output(self, **kwargs)
-
-        if self.menu == "Matrix":
-            self.set_disabled("Width:")
-            self.set_disabled("Height:")
-        else:
-            self.set_enabled("Width:")
-            self.set_enabled("Height:")
-
-    def fit(self):
-
-        result = _build_table(
-            data=self.data,
-            limit_to=self.limit_to,
-            exclude=self.exclude,
-            column=self.column,
-            top_by=self.top_by,
-        )
+        result = self.build_table()
 
         if isinstance(self.top_by, str):
             top_by = self.top_by.replace(" ", "_")
@@ -300,7 +268,7 @@ class MatrixDASHapp(DASH):
 
     def matrix(self):
         ##
-        self.fit()
+        self.apply()
         ##
         if self.cmap is None:
             return self.X_
@@ -309,7 +277,7 @@ class MatrixDASHapp(DASH):
 
     def heatmap(self):
         ##
-        self.fit()
+        self.apply()
         ##
         return plt.heatmap(
             X=self.X_.transpose(), cmap=self.cmap, figsize=(self.width, self.height)
@@ -317,7 +285,7 @@ class MatrixDASHapp(DASH):
 
     def bubble_plot(self):
         ##
-        self.fit()
+        self.apply()
         ##
         return plt.bubble(
             X=self.X_.transpose(),
@@ -328,24 +296,15 @@ class MatrixDASHapp(DASH):
 
     def gant(self):
         ##
-        self.fit()
+        self.apply()
         ##
         return plt.gant(X=self.X_, cmap=self.cmap, figsize=(self.width, self.height))
 
     def gant0(self):
         ##
-        self.fit()
+        self.apply()
         ##
         return plt.gant0(x=self.X_, figsize=(self.width, self.height))
-
-
-##
-##
-##
-##  M A T R I X   L I S T
-##
-##
-##
 
 
 ###############################################################################
@@ -355,23 +314,21 @@ class MatrixDASHapp(DASH):
 ###############################################################################
 
 
-class MatrixListDASHapp(DASH):
+class MatrixDASHapp(DASH, MatrixModel):
     def __init__(self, data, limit_to=None, exclude=None, years_range=None):
         """Dashboard app"""
 
-        DASH.__init__(
+        MatrixModel.__init__(
             self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
         )
+        DASH.__init__(self)
 
         COLUMNS = sorted(
             [column for column in data.columns if column not in EXCLUDE_COLS]
         )
 
-        self.data = data
-        self.app_title = "Terms by Year Analysis"
-        self.menu_options = [
-            "Table",
-        ]
+        self.app_title = "Term by Year Analysis"
+        self.menu_options = ["Matrix", "Heatmap", "Bubble plot", "Gant", "Gant0"]
 
         self.panel_widgets = [
             dash.dropdown(
@@ -385,22 +342,19 @@ class MatrixListDASHapp(DASH):
                     "Times Cited per Year",
                     "% Num Documents per Year",
                     "% Times Cited per Year",
+                    "Num Documents",
+                    "Times Cited",
                 ],
             ),
             dash.top_n(),
             dash.dropdown(
                 desc="Sort by:",
-                options=[
-                    "Alphabetic",
-                    "Year",
-                    "Num Documents per Year",
-                    "Times Cited per Year",
-                    "% Num Documents per Year",
-                    "% Times Cited per Year",
-                ],
+                options=["Alphabetic", "Values", "Num Documents", "Times Cited"],
             ),
             dash.ascending(),
             dash.cmap(),
+            dash.fig_width(),
+            dash.fig_height(),
         ]
         super().create_grid()
 
@@ -408,15 +362,39 @@ class MatrixListDASHapp(DASH):
 
         DASH.interactive_output(self, **kwargs)
 
-    def fit(self):
-        #
-        result = _build_table(
-            data=self.data,
-            limit_to=self.limit_to,
-            exclude=self.exclude,
-            column=self.column,
-            top_by=self.top_by,
+        if self.menu == "Matrix":
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+        else:
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
+
+
+##
+##
+##
+##  M A T R I X   L I S T
+##
+##
+##
+
+###############################################################################
+##
+##  MODEL
+##
+###############################################################################
+
+
+class MatrixListModel(BaseModel):
+    def __init__(self, data, limit_to, exclude, years_range):
+        ##
+        BaseModel.__init__(
+            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
         )
+
+    def apply(self):
+        #
+        result = self.build_table()
 
         ## top_n
         if isinstance(self.top_by, str):
@@ -502,13 +480,66 @@ class MatrixListDASHapp(DASH):
         ###
         self.X_ = result
 
-    def table(self):
-        ###
-        self.fit()
-        ###
-        if self.cmap is not None:
-            return self.X_.style.background_gradient(cmap=self.cmap, axis=0)
-        return self.X_
+
+###############################################################################
+##
+##  DASHBOARD
+##
+###############################################################################
+
+
+class MatrixListDASHapp(DASH, MatrixListModel):
+    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
+        """Dashboard app"""
+
+        MatrixListModel.__init__(
+            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        )
+        DASH.__init__(self)
+
+        COLUMNS = sorted(
+            [column for column in data.columns if column not in EXCLUDE_COLS]
+        )
+
+        self.app_title = "Terms by Year Analysis"
+        self.menu_options = [
+            "Table",
+        ]
+
+        self.panel_widgets = [
+            dash.dropdown(
+                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            dash.separator(text="Visualization"),
+            dash.dropdown(
+                desc="Top by:",
+                options=[
+                    "Num Documents per Year",
+                    "Times Cited per Year",
+                    "% Num Documents per Year",
+                    "% Times Cited per Year",
+                ],
+            ),
+            dash.top_n(),
+            dash.dropdown(
+                desc="Sort by:",
+                options=[
+                    "Alphabetic",
+                    "Year",
+                    "Num Documents per Year",
+                    "Times Cited per Year",
+                    "% Num Documents per Year",
+                    "% Times Cited per Year",
+                ],
+            ),
+            dash.ascending(),
+            dash.cmap(),
+        ]
+        super().create_grid()
+
+    def interactive_output(self, **kwargs):
+
+        DASH.interactive_output(self, **kwargs)
 
 
 ###############################################################################
