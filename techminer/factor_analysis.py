@@ -101,13 +101,13 @@ class Model:
         #
         # 6.-- limit to/exclude terms
         #
-        R = cmn.limit_to_exclude(
-            data=R,
-            axis=0,
-            column=self.column,
-            limit_to=self.limit_to,
-            exclude=self.exclude,
-        )
+        # R = cmn.limit_to_exclude(
+        #     data=R,
+        #     axis=0,
+        #     column=self.column,
+        #     limit_to=self.limit_to,
+        #     exclude=self.exclude,
+        # )
 
         #
         # 7.-- Clustering
@@ -160,9 +160,7 @@ class Model:
             )
             X = X.head(self.top_n)
 
-            HTML += (
-                "==================================================================<br>"
-            )
+            HTML += "-" * 50 + "<br>"
             HTML += "Cluster: " + str(i_cluster) + "<br>"
             for t in X.index:
                 HTML += "    {:>45s}".format(t) + "<br>"
@@ -312,4 +310,3 @@ def app(data, limit_to=None, exclude=None, years_range=None):
     return DASHapp(
         data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()
-
