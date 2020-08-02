@@ -54,26 +54,32 @@ class Model:
         )
 
         #
-        # 2.-- Co-occurrence matrix and normalization
+        # 2.-- Limit to / Exclude
         #
-        #      tf-idf = tf * (log(N / df) + 1)
+        TF_matrix_ = cmn.limit_to_exclude(
+            data=TF_matrix_,
+            axis=1,
+            column=self.column,
+            limit_to=self.limit_to,
+            exclude=self.exclude,
+        )
+
         #
-        # TF_matrix_ = cmn.add_counters_to_axis(
-        #      X=TF_matrix_, axis=1, data=self.data, column=self.column
-        #  )
+        # 3.-- Co-occurrence matrix and normalization
+        #
 
         M = np.matmul(TF_matrix_.transpose().values, TF_matrix_.values)
         M = pd.DataFrame(M, columns=TF_matrix_.columns, index=TF_matrix_.columns)
         M = network_normalization(M, normalization=self.normalization)
 
         #
-        # 3.-- Add counters to axes
+        # 4.-- Add counters to axes
         #
         M = cmn.add_counters_to_axis(X=M, axis=0, data=self.data, column=self.column)
         M = cmn.add_counters_to_axis(X=M, axis=1, data=self.data, column=self.column)
 
         #
-        # 4.-- Factor decomposition
+        # 5.-- Factor decomposition
         #
         model = {
             "Factor Analysis": FactorAnalysis,
@@ -93,7 +99,7 @@ class Model:
         )
 
         #
-        # 5.-- limit to/exclude terms
+        # 6.-- limit to/exclude terms
         #
         R = cmn.limit_to_exclude(
             data=R,
@@ -104,7 +110,7 @@ class Model:
         )
 
         #
-        # 6.-- Clustering
+        # 7.-- Clustering
         #
         clustering = AgglomerativeClustering(
             n_clusters=int(self.n_clusters),
@@ -115,12 +121,12 @@ class Model:
         R["Cluster"] = clustering.labels_
 
         #
-        # 7.-- Cluster centers
+        # 8.-- Cluster centers
         #
         self.centers_ = R.groupby("Cluster").mean()
 
         #
-        # 8.-- Cluster name
+        # 9.-- Cluster name
         #
         names = []
         for i_cluster in range(self.n_clusters):
@@ -135,7 +141,7 @@ class Model:
         self.centers_["Name"] = names
 
         #
-        # 8.-- Results
+        # 10.-- Results
         #
         self.X_ = R
 
