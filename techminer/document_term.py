@@ -123,9 +123,11 @@ class Model:
         TFIDF_matrix_.columns = ["TF*IDF"]
 
         if self.sort_by == "TF*IDF":
+            TFIDF_matrix_["TEXT"] = TFIDF_matrix_.index.map(lambda w: w.split(" ")[-1])
             TFIDF_matrix_ = TFIDF_matrix_.sort_values(
-                "TF*IDF", ascending=self.ascending
+                ["TF*IDF", "TEXT"], ascending=self.ascending
             )
+            TFIDF_matrix_.pop("TEXT")
         else:
             TFIDF_matrix_ = cmn.sort_by_axis(
                 data=TFIDF_matrix_,
@@ -134,14 +136,17 @@ class Model:
                 axis=0,
             )
 
+        if self.use_idf is False:
+            TFIDF_matrix_["TF*IDF"] = TFIDF_matrix_["TF*IDF"].map(int)
+
         self.X_ = TFIDF_matrix_
 
     def table(self):
-        self.fit()
-        return self.X_.style.background_gradient(cmap=self.cmap)
+        self.apply()
+        return self.X_.style.set_precision(2).background_gradient(cmap=self.cmap)
 
     def bar_plot(self):
-        self.fit()
+        self.apply()
         return plt.bar(
             height=self.X_["TF*IDF"],
             darkness=None,
@@ -151,7 +156,7 @@ class Model:
         )
 
     def horizontal_bar_plot(self):
-        self.fit()
+        self.apply()
         return plt.barh(
             width=self.X_["TF*IDF"],
             darkness=None,
@@ -188,6 +193,8 @@ class DASHapp(DASH, Model):
         )
         DASH.__init__(self)
 
+        self.pandas_max_rows = 300
+
         self.app_title = "TF*IDF Analysis"
         self.menu_options = ["Table", "Bar plot", "Horizontal bar plot"]
 
@@ -198,7 +205,7 @@ class DASHapp(DASH, Model):
             dash.dropdown(desc="Smooth IDF:", options=[True, False,],),
             dash.dropdown(desc="Sublinear TF:", options=[True, False,],),
             dash.separator(text="Visualization"),
-            dash.top_n(),
+            dash.top_n(m=10, n=301, i=10),
             dash.dropdown(
                 desc="Sort by:",
                 options=["Alphabetic", "Num Documents", "Times Cited", "TF*IDF",],

@@ -217,8 +217,16 @@ class Model:
             memberships[cluster] = sorted(
                 memberships[cluster], key=lambda w: w.split(" ")[-1], reverse=True
             )
-
-        self.memberships_ = memberships
+        communities = pd.DataFrame(
+            "", columns=range(self.n_clusters), index=range(self.top_n)
+        )
+        for i_key, key in enumerate(memberships.keys()):
+            community = memberships[key]
+            if len(community) > self.top_n:
+                community = community[0 : self.top_n]
+            communities.at[0 : len(community) - 1, i_key] = community
+        communities.columns = ["Cluster {}".format(i) for i in range(self.n_clusters)]
+        self.memberships_ = communities
 
         #
         # 5.-- Cluster co-occurrence
@@ -258,13 +266,7 @@ class Model:
 
     def cluster_memberships(self):
         self.apply()
-        text = []
-        for key in self.memberships_:
-            text += ["=" * 60]
-            text += [str(key)]
-            for t in self.memberships_[key]:
-                text += ["      {:>50}".format(t)]
-        return widgets.HTML("\n".join(text))
+        return self.memberships_
 
     def cluster_co_occurrence_matrix(self):
         self.apply()
@@ -360,7 +362,7 @@ class DASHapp(DASH, Model):
             dash.max_items(),
             dash.normalization(),
             dash.separator(text="Aglomerative Clustering"),
-            dash.n_clusters(),
+            dash.n_clusters(m=3, n=50, i=1),
             dash.affinity(),
             dash.linkage(),
             dash.separator(text="MDS/CA diagram"),

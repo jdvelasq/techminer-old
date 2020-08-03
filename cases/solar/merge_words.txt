@@ -1,0 +1,64 @@
+renewable energies
+   100% renewable energy
+battery energy storage system
+    bess
+building integrated photovoltaic
+    bipv
+cost of energy
+    coe
+levelised cost of energy
+    lcoe
+levelised cost of energy
+    levelised cost of electri ity (lcoe)
+    levelized cost of electricity
+    levelised cost of electricity
+combined cooling heat and power (cchp)
+    cchp
+combined heat and power
+    chp
+embodied green house gas emissions (gwp)
+    gwp
+feed in tariff
+    fit (feed-in tariff)
+geographic information system
+    gis
+hybrid optimization model for electric renewable (homer)
+    homer
+internal rate of return
+    irr
+life cycle cost
+    lcc
+life cycle assessment
+    lca
+linear programming
+    linear optimization
+    mixed binary mixed binary linear programming
+    mixed integer linear programming
+maximum power point tracker (mppt)
+    mppt
+mixed integer linear programming
+    milp
+nearly zero energy buildings (nzeb)
+    nzeb
+net present cost
+    npc
+net present value
+    npv
+particle swarm optimization
+    pso
+    pso optimization
+    particle swarm optimisation
+photovoltaic
+    pv
+photovoltaic/thermal
+    pvt
+renewable energy source
+    res (renewable energy sources)
+system advisor model (sam)
+    systems advisory model (sam)
+time of use (tou)
+    tou
+total net present cost
+    tnpc
+solar pv
+    photovoltaic solar

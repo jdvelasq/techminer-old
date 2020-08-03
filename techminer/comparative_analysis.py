@@ -98,24 +98,31 @@ class Model:
         #
         # 5.-- Memberships
         #
-        self.memberships_ = pd.DataFrame(
+        R = pd.DataFrame(
             kmeans.labels_,
             columns=["Cluster"],
             index=self.principal_coordinates_cols_.index,
         )
-        self.memberships_ = self.memberships_.sort_values("Cluster", ascending=True)
+
+        communities = pd.DataFrame(
+            "", columns=range(self.n_clusters), index=range(self.top_n)
+        )
+        for i_cluster in range(self.n_clusters):
+            X = R[R.Cluster == i_cluster]
+            X = cmn.sort_axis(data=X, num_documents=True, axis=0, ascending=False,)
+            community = X.index
+            community = community.tolist()[0 : self.top_n]
+            communities.at[0 : len(community) - 1, i_cluster] = community
+        communities.columns = ["Cluster {}".format(i) for i in range(self.n_clusters)]
+        self.memberships_ = communities
 
         #
         # 6.-- Cluster names (most frequent term in cluster)
         #
-        cluster_names = []
+        names = []
         for i_cluster in range(self.n_clusters):
-            cluster_members = self.memberships_[self.memberships_.Cluster == i_cluster]
-            cluster_members = cmn.sort_axis(
-                data=cluster_members, num_documents=True, axis=0, ascending=False
-            )
-            cluster_names.append(cluster_members.index[0])
-        self.cluster_names_ = pd.DataFrame(cluster_names, columns=["Name"])
+            names.append(self.memberships_.loc[0, self.memberships_.columns[i_cluster]])
+        self.cluster_names_ = names
 
     def cluster_names(self):
         self.apply()
@@ -126,24 +133,8 @@ class Model:
         return self.cluster_centers_
 
     def memberships(self):
-        ##
         self.apply()
-        ##
-        HTML = ""
-        for i_cluster in range(self.n_clusters):
-            cluster_members = self.memberships_[self.memberships_.Cluster == i_cluster]
-            cluster_members = cmn.sort_axis(
-                data=cluster_members, num_documents=True, axis=0, ascending=False
-            )
-            m = cluster_members.head(self.top_n)
-            HTML += (
-                "==================================================================<br>"
-            )
-            HTML += "Cluster: " + str(i_cluster) + "<br>"
-            for t in m.index:
-                HTML += "    {:>45s}".format(t) + "<br>"
-            HTML += "<br>"
-        return widgets.HTML("<pre>" + HTML + "</pre>")
+        return self.memberships_
 
     def plot_singular_values(self):
         self.apply()
@@ -211,8 +202,8 @@ class DASHapp(DASH, Model):
             dash.min_occurrence(),
             dash.max_items(),
             dash.separator(text="Clustering (K-means)"),
-            dash.dropdown(desc="N Factors:", options=list(range(2, 20)),),
-            dash.n_clusters(),
+            dash.dropdown(desc="N Factors:", options=list(range(2, 11)),),
+            dash.n_clusters(m=3, n=21, i=1),
             dash.max_iter(),
             dash.random_state(),
             dash.separator(text="Visualization"),

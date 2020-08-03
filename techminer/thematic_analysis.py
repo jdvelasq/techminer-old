@@ -85,18 +85,22 @@ class Model:
         #
         # 5.-- Memberships
         #
-        memberships = []
-        for cluster in self.contingency_table_.columns:
+        communities = pd.DataFrame(
+            "", columns=range(self.n_clusters), index=range(self.top_n)
+        )
+        for i_cluster, cluster in enumerate(self.contingency_table_.columns):
             grp = self.contingency_table_[cluster]
             grp = grp[grp > 0]
             grp = cmn.sort_by_axis(
                 data=grp, sort_by="Num Documents", ascending=False, axis=0
             )
             grp = grp.head(self.top_n)
-            df = pd.DataFrame(grp.index, columns=[self.column])
-            df["Cluster"] = cluster
-            memberships.append(df)
-        self.memberships_ = pd.concat(memberships)
+            communities.at[0 : len(grp) - 1, i_cluster] = grp.index
+
+        communities.columns = [
+            "Theme {}".format(i) for i, _ in enumerate(self.contingency_table_.columns)
+        ]
+        self.memberships_ = communities
 
         #
         # 6.-- Top n for contingency table
@@ -313,7 +317,7 @@ class DASHapp(DASH, Model):
             dash.min_occurrence(),
             dash.max_items(),
             dash.separator(text="Clustering (K-means)"),
-            dash.n_clusters(),
+            dash.n_clusters(m=3, n=51, i=1),
             dash.max_iter(),
             dash.random_state(),
             dash.separator(text="Visualization"),

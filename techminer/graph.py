@@ -154,8 +154,20 @@ def network_map_nx(
         }[clustering](G).communities
 
         if only_communities:
-            R = [sorted(r) for r in R]
-            return R
+            n_communities = len(R)
+            max_len = max([len(r) for r in R])
+            communities = pd.DataFrame(
+                pd.NA, columns=range(n_communities), index=range(max_len)
+            )
+            for i_community in range(n_communities):
+                community = R[i_community]
+                community = sorted(
+                    community, key=(lambda w: w.split(" ")[-1]), reverse=True
+                )
+                communities.at[0 : len(community) - 1, i_community] = community
+            communities = communities.head(n_labels)
+            communities.columns = ["Cluster {}".format(i) for i in range(n_communities)]
+            return communities
 
         clusters = {}
         for idx, r in enumerate(R):
@@ -280,7 +292,7 @@ class Model:
         if self.normalization == "None":
             return self.X_.style.background_gradient(cmap=self.cmap, axis=None)
         else:
-            return self.X_.style.format("{:0.3f}").background_gradient(
+            return self.X_.style.set_precision(2).background_gradient(
                 cmap=self.cmap, axis=None
             )
 
@@ -322,7 +334,7 @@ class Model:
             clustering=self.clustering,
             only_communities=True,
             iterations=self.nx_iterations,
-            n_labels=None,
+            n_labels=self.n_labels,
             figsize=(self.width, self.height),
         )
 
@@ -335,6 +347,14 @@ class Model:
         G = nx.Graph()
 
         # Network generation
+        X = cmn.sort_axis(
+            data=X,
+            num_documents=(self.top_by == "Num Documents"),
+            axis=1,
+            ascending=False,
+        )
+        top_terms = X.columns.tolist()[0 : self.n_labels]
+
         terms = X.columns.tolist()
         n = len(terms)
         G.add_nodes_from(terms)
@@ -371,6 +391,10 @@ class Model:
 
         nt = Network("700px", "870px", notebook=True)
         nt.from_nx(G)
+
+        for i, _ in enumerate(nt.nodes):
+            if nt.nodes[i]["label"] not in top_terms:
+                nt.nodes[i]["label"] = ""
 
         return nt.show("net.html")
 
@@ -416,7 +440,7 @@ class DASHapp(DASH, Model):
             ),
             dash.separator(text="Visualization"),
             dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-            dash.top_n(),
+            dash.top_n(m=10, n=301, i=10),
             dash.dropdown(
                 desc="Sort C-axis by:",
                 options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
@@ -479,7 +503,7 @@ class DASHapp(DASH, Model):
             self.set_enabled("Clustering:")
             self.set_disabled("Colormap:")
             self.set_disabled("Layout:")
-            self.set_disabled("N labels:")
+            self.set_enabled("N labels:")
             self.set_disabled("Width:")
             self.set_disabled("Height:")
             self.set_disabled("nx iterations:")

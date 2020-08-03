@@ -91,7 +91,7 @@ class Model:
             n_components=self.n_components, random_state=int(self.random_state)
         )
 
-        R = np.transpose(model.fit(X=M.values).components_)
+        R = np.transpose(model.fit_transform(X=M.values).components_)
         R = pd.DataFrame(
             R,
             columns=["Dim-{:>02d}".format(i) for i in range(self.n_components)],
@@ -99,18 +99,7 @@ class Model:
         )
 
         #
-        # 6.-- limit to/exclude terms
-        #
-        # R = cmn.limit_to_exclude(
-        #     data=R,
-        #     axis=0,
-        #     column=self.column,
-        #     limit_to=self.limit_to,
-        #     exclude=self.exclude,
-        # )
-
-        #
-        # 7.-- Clustering
+        # 6.-- Clustering
         #
         clustering = AgglomerativeClustering(
             n_clusters=int(self.n_clusters),
@@ -121,12 +110,32 @@ class Model:
         R["Cluster"] = clustering.labels_
 
         #
-        # 8.-- Cluster centers
+        # 7.-- Cluster centers
         #
         self.centers_ = R.groupby("Cluster").mean()
 
         #
-        # 9.-- Cluster name
+        # 8.-- Communities
+        #
+        communities = pd.DataFrame(
+            pd.NA, columns=range(self.n_clusters), index=range(self.top_n)
+        )
+        for i_cluster in range(self.n_clusters):
+            X = R[R.Cluster == i_cluster]
+            X = cmn.sort_axis(
+                data=X,
+                num_documents=(self.top_by == "Num Documents"),
+                axis=0,
+                ascending=False,
+            )
+            community = X.index
+            community = community.tolist()[0 : self.top_n]
+            communities.at[0 : len(community) - 1, i_cluster] = community
+        communities.columns = ["Cluster {}".format(i) for i in range(self.n_clusters)]
+        self.communities_ = communities
+
+        #
+        # 8.-- Cluster name
         #
         names = []
         for i_cluster in range(self.n_clusters):
@@ -145,27 +154,9 @@ class Model:
         #
         self.X_ = R
 
-    def memberships(self):
-        ##
+    def communities(self):
         self.fit()
-        ##
-        HTML = ""
-        for i_cluster in range(self.n_clusters):
-            X = self.X_[self.X_.Cluster == i_cluster]
-            X = cmn.sort_axis(
-                data=X,
-                num_documents=(self.top_by == "Num Documents"),
-                axis=0,
-                ascending=False,
-            )
-            X = X.head(self.top_n)
-
-            HTML += "-" * 50 + "<br>"
-            HTML += "Cluster: " + str(i_cluster) + "<br>"
-            for t in X.index:
-                HTML += "    {:>45s}".format(t) + "<br>"
-            HTML += "<br>"
-        return widgets.HTML("<pre>" + HTML + "</pre>")
+        return self.communities_
 
     def cluster_plot(self):
         ##
@@ -247,7 +238,7 @@ class DASHapp(DASH, Model):
 
         self.app_title = "Factor Analysis"
         self.menu_options = [
-            "Memberships",
+            "Communities",
             "Cluster plot",
         ]
         #

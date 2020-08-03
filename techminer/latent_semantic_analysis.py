@@ -41,6 +41,9 @@ class Model:
         self.limit_to = limit_to
         self.exclude = exclude
 
+        # TLAB suggestion
+        self.n_components = 20
+
     def apply(self):
         #
         X = self.data.copy()
@@ -73,6 +76,11 @@ class Model:
         M = cmn.add_counters_to_axis(X=M, axis=1, data=self.data, column=self.column)
 
         #
+        # 4.-- Transpose
+        #
+        M = M.transpose()
+
+        #
         # 4.-- Factor decomposition
         #
         model = {
@@ -85,11 +93,14 @@ class Model:
             n_components=self.n_components, random_state=int(self.random_state)
         )
 
-        R = np.transpose(model.fit(X=M.values).components_)
+        if self.method == "MDS":
+            R = model.fit_transform(X=M.values)
+        else:
+            R = model.fit_transform(X=M.values)
         R = pd.DataFrame(
             R,
             columns=["Dim-{:>02d}".format(i) for i in range(self.n_components)],
-            index=M.columns,
+            index=M.index,
         )
 
         #
@@ -121,9 +132,11 @@ class Model:
         self.centers_ = R.groupby("Cluster").mean()
 
         #
-        # 8.-- Cluster name
+        # 8.-- Cluster members
         #
-        names = []
+        communities = pd.DataFrame(
+            "", columns=range(self.n_clusters), index=range(self.top_n)
+        )
         for i_cluster in range(self.n_clusters):
             X = R[R.Cluster == i_cluster]
             X = cmn.sort_axis(
@@ -132,7 +145,20 @@ class Model:
                 axis=0,
                 ascending=False,
             )
-            names.append(X.index[0])
+            community = X.index
+            community = community.tolist()[0 : self.top_n]
+            communities.at[0 : len(community) - 1, i_cluster] = community
+        communities.columns = ["Cluster {}".format(i) for i in range(self.n_clusters)]
+        self.cluster_members_ = communities
+
+        #
+        # 8.-- Cluster name
+        #
+        names = []
+        for i_cluster in range(self.n_clusters):
+            names.append(
+                self.cluster_members_.loc[0, self.cluster_members_.columns[i_cluster]]
+            )
         self.centers_["Name"] = names
 
         #
@@ -144,25 +170,7 @@ class Model:
         ##
         self.apply()
         ##
-        HTML = ""
-        for i_cluster in range(self.n_clusters):
-            X = self.X_[self.X_.Cluster == i_cluster]
-            X = cmn.sort_axis(
-                data=X,
-                num_documents=(self.top_by == "Num Documents"),
-                axis=0,
-                ascending=False,
-            )
-            X = X.head(self.top_n)
-
-            HTML += (
-                "==================================================================<br>"
-            )
-            HTML += "Cluster: " + str(i_cluster) + "<br>"
-            for t in X.index:
-                HTML += "    {:>45s}".format(t) + "<br>"
-            HTML += "<br>"
-        return widgets.HTML("<pre>" + HTML + "</pre>")
+        return self.cluster_members_
 
     def cluster_plot(self):
         ##
@@ -265,7 +273,7 @@ class DASHapp(DASH, Model):
                 desc="Method:",
                 options=["Factor Analysis", "PCA", "Fast ICA", "SVD", "MDS"],
             ),
-            dash.n_components(),
+            ## dash.n_components(), # n_components = 20
             dash.random_state(),
             dash.separator(text="Aglomerative Clustering"),
             dash.n_clusters(),

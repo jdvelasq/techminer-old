@@ -10,6 +10,7 @@ import pandas as pd
 
 from techminer.explode import __explode
 from techminer.text import (
+    find_string,
     fingerprint,
     one_gram,
     stemmer_porter,
@@ -112,12 +113,39 @@ def text_clustering(x, name_strategy="mostfrequent", key="porter", transformer=N
 
 
     """
+
+    def remove_parenthesis(x):
+        if "(" in x:
+            text_to_remove = x[x.find("(") : x.find(")") + 1]
+            x = x.replace(text_to_remove, "")
+            x = " ".join([w.strip() for w in x.split()])
+        return x
+
+    #
+    # Preprocessing
+    #
     x = x.dropna()
     x = x.map(lambda w: w.split(";"))
     x = x.explode()
     x = x.map(lambda w: w.strip())
     x = x.unique()
-    x = pd.DataFrame({"col": x.tolist()})
+
+    #
+    # Creates a dataframe
+    #
+    x = pd.DataFrame({"word": x.tolist()})
+
+    #
+    # Delete terms between '(' and ')'
+    #  Repace & by and
+    #
+    x["word_alt"] = x["word"].copy()
+    x["word_alt"] = x["word_alt"].map(lambda w: remove_parenthesis(w))
+    x["word_alt"] = x["word_alt"].map(lambda w: w.replace("&", "and"))
+
+    #
+    # key computation
+    #
     if key == "fingerprint":
         f = fingerprint
     elif key == "1-gram":
@@ -128,39 +156,48 @@ def text_clustering(x, name_strategy="mostfrequent", key="porter", transformer=N
         f = stemmer_porter
     else:
         f = stemmer_snowball
-    x["key"] = x.col.map(f)
-    grp = x.groupby(by="key").agg({"col": list})
-    grp["listlen"] = grp.col.map(len)
+    x["key"] = x.word_alt.map(f)
+
+    #
+    # groupsby key
+    #
+    grp = x.groupby(by="key").agg({"word": list})
+
+    #
+    # group name selection
+    #
+    grp["listlen"] = grp.word.map(len)
     grp_isolated = grp[grp.listlen.map(lambda w: w == 1)]
     grp = grp[grp.listlen.map(lambda w: w > 1)]
-    grp["col"] = grp.col.map(lambda w: pd.Series(w))
+    grp["word"] = grp.word.map(lambda w: pd.Series(w))
     grp["groupname"] = None
     if name_strategy is None:
         name_strategy = "mostfrequent"
     if name_strategy == "mostfrequent":
-        grp["groupname"] = grp.col.map(
+        grp["groupname"] = grp.word.map(
             lambda w: w.value_counts()[w.value_counts() == w.value_counts().max()]
             .sort_index()
             .index[0]
         )
     if name_strategy == "longest":
-        grp["groupname"] = grp.col.map(
+        grp["groupname"] = grp.word.map(
             lambda w: sorted(w.tolist(), key=len, reverse=True)[0]
         )
     if name_strategy == "shortest":
-        grp["groupname"] = grp.col.map(
+        grp["groupname"] = grp.word.map(
             lambda w: sorted(w.tolist(), key=len, reverse=False)[0]
         )
     if transformer is not None:
         grp["groupname"] = grp.groupname.map(transformer)
-    result = {key: sorted(value.tolist()) for key, value in zip(grp.groupname, grp.col)}
-    result = {**result, **{value[0]: value for value in grp_isolated.col}}
+    result = {
+        key: sorted(value.tolist()) for key, value in zip(grp.groupname, grp.word)
+    }
+    result = {**result, **{value[0]: value for value in grp_isolated.word}}
     return Thesaurus(result, ignore_case=False, full_match=True, use_re=False)
 
 
-def read_textfile(filename):
-    """
-    """
+def load_file_as_dict(filename):
+    #
     dic = {}
     key = None
     values = None
@@ -191,7 +228,12 @@ def read_textfile(filename):
                 "Key '" + key + "' in file '" + filename + "' without values associated"
             )
         dic[key] = values
-    th = Thesaurus(x=dic, ignore_case=True, full_match=False, use_re=False)
+    return dic
+
+
+def read_textfile(filename):
+    dict_ = load_file_as_dict(filename)
+    th = Thesaurus(x=dict_, ignore_case=True, full_match=False, use_re=False)
     return th
 
 
@@ -215,6 +257,18 @@ class Thesaurus:
                 file.write(key + "\n")
                 for item in self._thesaurus[key]:
                     file.write("    " + item + "\n")
+
+    def find_key(
+        self, patterns, ignore_case=True, full_match=False, use_re=False, explode=True
+    ):
+        return find_string(
+            patterns=patterns,
+            x=list(self._thesaurus.keys()),
+            ignore_case=ignore_case,
+            full_match=full_match,
+            use_re=use_re,
+            explode=explode,
+        )
 
     def __repr__(self):
         """Returns a json representation of the Thesaurus.
@@ -411,6 +465,11 @@ class Thesaurus:
         else:
             self._thesaurus[key] = self._thesaurus[key] + self._thesaurus[popkey]
             self._thesaurus.pop(popkey)
+
+    def merge_keys_from_textfile(self, filename):
+        dict_ = load_file_as_dict(filename)
+        for key in dict_.keys():
+            self.merge_keys(key, dict_[key])
 
     def pop_key(self, key):
         """Deletes key from thesaurus.

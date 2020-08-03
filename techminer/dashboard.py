@@ -1,7 +1,7 @@
 import ipywidgets as widgets
 from IPython.display import display
 from ipywidgets import GridspecLayout, Layout
-
+import pandas as pd
 from techminer.plots import COLORMAPS
 
 
@@ -151,12 +151,12 @@ def n_iter():
     }
 
 
-def n_clusters():
+def n_clusters(m=2, n=21, i=1):
     return {
         "arg": "n_clusters",
         "desc": "N Clusters:",
         "widget": widgets.Dropdown(
-            options=list(range(2, 21)), layout=Layout(width="55%"),
+            options=list(range(m, n, i)), layout=Layout(width="55%"),
         ),
     }
 
@@ -333,6 +333,9 @@ class DASH:
         ## layout
         self.app_layout = []
 
+        ## display pandas options
+        self.pandas_max_rows = 50
+
         ## Panel controls
         self.app_title = "None"
         self.menu_options = None
@@ -362,8 +365,9 @@ class DASH:
             print("Processing ...")
         result = getattr(self, menu)()
         self.output.clear_output()
-        with self.output:
-            display(result)
+        with pd.option_context("max_rows", self.pandas_max_rows):
+            with self.output:
+                display(result)
 
     def create_grid(self):
 
