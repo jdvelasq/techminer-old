@@ -65,18 +65,33 @@ class Model:
         )
 
         #
+        # 4.-- Add counters to axes
+        #
+        TF_matrix_ = cmn.add_counters_to_axis(
+            X=TF_matrix_, axis=1, data=self.data, column=self.column
+        )
+        # M = cmn.add_counters_to_axis(X=M, axis=0, data=self.data, column=self.column)
+        #  M = cmn.add_counters_to_axis(X=M, axis=1, data=self.data, column=self.column)
+
+        #
+        # 3.-- Select top terms
+        #
+        TF_matrix_ = cmn.sort_axis(
+            data=TF_matrix_, num_documents=True, axis=1, ascending=False
+        )
+        if len(TF_matrix_.columns) > self.max_items:
+            TF_matrix_ = TF_matrix_.loc[:, TF_matrix_.columns[0 : self.max_items]]
+            rows = TF_matrix_.sum(axis=1)
+            rows = rows[rows > 0]
+            TF_matrix_ = TF_matrix_.loc[rows.index, :]
+
+        #
         # 3.-- Co-occurrence matrix and normalization
         #
 
         M = np.matmul(TF_matrix_.transpose().values, TF_matrix_.values)
         M = pd.DataFrame(M, columns=TF_matrix_.columns, index=TF_matrix_.columns)
         M = network_normalization(M, normalization=self.normalization)
-
-        #
-        # 4.-- Add counters to axes
-        #
-        M = cmn.add_counters_to_axis(X=M, axis=0, data=self.data, column=self.column)
-        M = cmn.add_counters_to_axis(X=M, axis=1, data=self.data, column=self.column)
 
         #
         # 5.-- Factor decomposition
@@ -118,7 +133,7 @@ class Model:
         # 8.-- Communities
         #
         communities = pd.DataFrame(
-            pd.NA, columns=range(self.n_clusters), index=range(self.top_n)
+            "", columns=range(self.n_clusters), index=range(self.top_n)
         )
         for i_cluster in range(self.n_clusters):
             X = R[R.Cluster == i_cluster]
