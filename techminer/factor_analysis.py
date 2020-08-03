@@ -91,7 +91,7 @@ class Model:
             n_components=self.n_components, random_state=int(self.random_state)
         )
 
-        R = np.transpose(model.fit_transform(X=M.values).components_)
+        R = model.fit_transform(X=M.values)
         R = pd.DataFrame(
             R,
             columns=["Dim-{:>02d}".format(i) for i in range(self.n_components)],
@@ -236,6 +236,8 @@ class DASHapp(DASH, Model):
         )
         DASH.__init__(self)
 
+        self.n_components = 20
+
         self.app_title = "Factor Analysis"
         self.menu_options = [
             "Communities",
@@ -254,7 +256,7 @@ class DASHapp(DASH, Model):
                 desc="Method:",
                 options=["Factor Analysis", "PCA", "Fast ICA", "SVD", "MDS"],
             ),
-            dash.n_components(),
+            ## dash.n_components(),
             dash.random_state(),
             dash.separator(text="Aglomerative Clustering"),
             dash.n_clusters(),
