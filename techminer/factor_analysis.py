@@ -10,6 +10,7 @@ import matplotlib.pyplot as pyplot
 import networkx as nx
 import numpy as np
 import pandas as pd
+import matplotlib
 from matplotlib.lines import Line2D
 from sklearn.decomposition import PCA, FactorAnalysis, FastICA, TruncatedSVD
 from sklearn.cluster import AgglomerativeClustering
@@ -23,6 +24,9 @@ from techminer.dashboard import DASH
 from techminer.document_term import TF_matrix, TFIDF_matrix
 from techminer.graph import network_normalization
 
+
+from matplotlib import patches
+from scipy.spatial import ConvexHull
 
 ###############################################################################
 ##
@@ -70,8 +74,6 @@ class Model:
         TF_matrix_ = cmn.add_counters_to_axis(
             X=TF_matrix_, axis=1, data=self.data, column=self.column
         )
-        # M = cmn.add_counters_to_axis(X=M, axis=0, data=self.data, column=self.column)
-        #  M = cmn.add_counters_to_axis(X=M, axis=1, data=self.data, column=self.column)
 
         #
         # 3.-- Select top terms
@@ -94,6 +96,14 @@ class Model:
         M = network_normalization(M, normalization=self.normalization)
 
         #
+        # 4.-- Dissimilarity matrix
+        #
+        if self.normalization == "None":
+            M = M.max().max() - M
+        else:
+            M = 1 - M
+
+        #
         # 5.-- Factor decomposition
         #
         model = {
@@ -102,9 +112,19 @@ class Model:
             "Fast ICA": FastICA,
             "SVD": TruncatedSVD,
             "MDS": MDS,
-        }[self.method](
-            n_components=self.n_components, random_state=int(self.random_state)
-        )
+        }[self.method]
+
+        if self.method == "MDS":
+            model = model(
+                n_components=self.n_components,
+                random_state=int(self.random_state),
+                dissimilarity="precomputed",
+            )
+        else:
+
+            model = model(
+                n_components=self.n_components, random_state=int(self.random_state)
+            )
 
         R = model.fit_transform(X=M.values)
         R = pd.DataFrame(
@@ -121,8 +141,11 @@ class Model:
             affinity=self.affinity,
             linkage=self.linkage,
         )
-        clustering.fit(R)
+        ## from bibliometrix
+        clustering.fit(R.loc[:, R.columns[[0, 1]]])
+        ## clustering.fit(R)
         R["Cluster"] = clustering.labels_
+        self.coordinates_ = R
 
         #
         # 7.-- Cluster centers
@@ -172,6 +195,80 @@ class Model:
     def communities(self):
         self.fit()
         return self.communities_
+
+    def mds_map(self):
+        #
+        def encircle(x, y, ax, **kw):
+            p = np.c_[x, y]
+            hull = ConvexHull(p)
+            poly = pyplot.Polygon(p[hull.vertices, :], **kw)
+            ax.add_patch(poly)
+
+        #
+
+        self.fit()
+
+        matplotlib.rc("font", size=11)
+        fig = pyplot.Figure(figsize=(self.width, self.height))
+        ax = fig.subplots()
+
+        R = self.coordinates_
+        for i_cluster in range(self.n_clusters):
+            X = R[R.Cluster == i_cluster]
+            X = cmn.sort_axis(
+                data=X,
+                num_documents=(self.top_by == "Num Documents"),
+                axis=0,
+                ascending=False,
+            )
+            X.pop("Cluster")
+            X = X.head(self.top_n)
+            x = X[X.columns[self.x_axis]]
+            y = X[X.columns[self.y_axis]]
+            ax.scatter(
+                x,
+                y,
+                marker=".",
+                alpha=1.0,
+                #  c=colors,
+            )
+
+            if len(X) > 3:
+                encircle(x, y, ax=ax, ec="k", fc="gold", alpha=0.1)
+
+        # -------------------------
+        cmap = pyplot.cm.get_cmap("Greys")
+        x = self.centers_["Dim-{:>02d}".format(self.x_axis)]
+        y = self.centers_["Dim-{:>02d}".format(self.y_axis)]
+        names = self.centers_["Name"]
+        for i_cluster in range(self.n_clusters):
+            ax.text(
+                x=x[i_cluster],
+                y=y[i_cluster],
+                s=names[i_cluster],
+                fontsize=10,
+                bbox=dict(
+                    facecolor="w",
+                    alpha=1.0,
+                    edgecolor="gray",
+                    boxstyle="round,pad=0.5",
+                ),
+                horizontalalignment="left",
+                verticalalignment="top",
+            )
+        # -----------------------------------------
+
+        ax.axhline(
+            y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1,
+        )
+        ax.axvline(
+            x=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1,
+        )
+        ax.axis("off")
+        ax.set_aspect("equal")
+        cmn.set_ax_splines_invisible(ax)
+        fig.set_tight_layout(True)
+        return fig
 
     def cluster_plot(self):
         ##
@@ -257,6 +354,7 @@ class DASHapp(DASH, Model):
         self.menu_options = [
             "Communities",
             "Cluster plot",
+            "MDS map",
         ]
         #
         self.panel_widgets = [
@@ -269,7 +367,7 @@ class DASHapp(DASH, Model):
             dash.separator(text="Decomposition"),
             dash.dropdown(
                 desc="Method:",
-                options=["Factor Analysis", "PCA", "Fast ICA", "SVD", "MDS"],
+                options=["MDS", "Factor Analysis", "PCA", "Fast ICA", "SVD"],
             ),
             ## dash.n_components(),
             dash.random_state(),
