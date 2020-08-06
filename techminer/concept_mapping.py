@@ -4,8 +4,17 @@ import matplotlib
 import matplotlib.pyplot as pyplot
 import numpy as np
 import pandas as pd
-from sklearn.cluster import AgglomerativeClustering
+from sklearn.cluster import (
+    AgglomerativeClustering,
+    AffinityPropagation,
+    Birch,
+    DBSCAN,
+    FeatureAgglomeration,
+    KMeans,
+    MeanShift,
+)
 from sklearn.manifold import MDS
+
 
 import techminer.common as cmn
 import techminer.dashboard as dash
@@ -13,129 +22,6 @@ from techminer.correspondence import CA
 from techminer.dashboard import DASH
 from techminer.document_term import TF_matrix, TFIDF_matrix
 from techminer.graph import network_normalization
-
-
-def network_clustering(X, n_clusters, affinity, linkage):
-
-    clustering = AgglomerativeClustering(
-        n_clusters=n_clusters, affinity=affinity, linkage=linkage
-    )
-    clustering.fit(1 - X)
-    return {key: value for key, value in zip(X.columns, clustering.labels_)}
-
-
-def cluster_plot(X, method, n_components, x_axis, y_axis, figsize):
-
-    matplotlib.rc("font", size=11)
-    fig = pyplot.Figure(figsize=figsize)
-    ax = fig.subplots()
-
-    n_clusters = len(X.columns)
-    #
-    # Both methods use the dissimilitud matrix
-    #
-    if method == "MDS":
-        embedding = MDS(n_components=n_components)
-        X_transformed = embedding.fit_transform(1 - X,)
-        x_axis = X_transformed[:, x_axis]
-        y_axis = X_transformed[:, y_axis]
-    if method == "CA":
-        ca = CA()
-        ca.fit(1 - X)
-        X_transformed = ca.principal_coordinates_cols_
-        x_axis = X_transformed.loc[:, X_transformed.columns[x_axis]]
-        y_axis = X_transformed.loc[:, X_transformed.columns[y_axis]]
-
-    colors = []
-    for cmap_name in ["tab20", "tab20b", "tab20c"]:
-        cmap = pyplot.cm.get_cmap(cmap_name)
-        colors += [cmap(0.025 + 0.05 * i) for i in range(20)]
-
-    node_sizes = cmn.counters_to_node_sizes(X.columns)
-
-    node_colors = [cmap(0.2 + 0.80 * t / (n_clusters - 1)) for t in range(n_clusters)]
-
-    ax.scatter(
-        x_axis, y_axis, s=node_sizes, linewidths=1, edgecolors="k", c=node_colors
-    )
-
-    cmn.ax_expand_limits(ax)
-
-    pos = {term: (x_axis[idx], y_axis[idx]) for idx, term in enumerate(X.columns)}
-    cmn.ax_text_node_labels(
-        ax=ax, labels=X.columns, dict_pos=pos, node_sizes=node_sizes
-    )
-    ax.axhline(y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
-    ax.axvline(x=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
-
-    ax.set_aspect("equal")
-    ax.axis("off")
-    cmn.set_ax_splines_invisible(ax)
-
-    fig.set_tight_layout(True)
-
-    return fig
-
-
-def strategic_map(centrality, density, cluster_names, cluster_co_occurrence, figsize):
-
-    matplotlib.rc("font", size=11)
-    fig = pyplot.Figure(figsize=figsize)
-    ax = fig.subplots()
-
-    min_co_occurrence = min(cluster_co_occurrence)
-    max_co_occurrence = max(cluster_co_occurrence)
-
-    node_sizes = 500 + 2500 * (cluster_co_occurrence - min_co_occurrence) / (
-        max_co_occurrence - min_co_occurrence
-    )
-    node_sizes = node_sizes.tolist()
-
-    cmap = pyplot.cm.get_cmap("tab20")
-
-    median_centrality = centrality.median()
-    median_density = density.median()
-
-    node_colors = []
-    for i_cluster, _ in enumerate(centrality):
-        if centrality[i_cluster] > median_centrality:
-            if density[i_cluster] >= median_density:
-                node_colors.append(cmap(0.0))
-            else:
-                node_colors.append(cmap(0.25))
-        else:
-            if density[i_cluster] >= median_density:
-                node_colors.append(cmap(0.50))
-            else:
-                node_colors.append(cmap(0.75))
-
-    ax.scatter(
-        centrality, density, s=node_sizes, linewidths=1, edgecolors="k", c=node_colors,
-    )
-
-    cmn.ax_expand_limits(ax)
-    cmn.ax_text_node_labels(
-        ax,
-        labels=cluster_names,
-        dict_pos={key: (c, d) for key, c, d in zip(cluster_names, centrality, density)},
-        node_sizes=node_sizes,
-    )
-
-    ax.axhline(
-        y=median_density, color="gray", linestyle="--", linewidth=1, zorder=-1,
-    )
-    ax.axvline(
-        x=median_centrality, color="gray", linestyle="--", linewidth=1, zorder=-1,
-    )
-
-    #  ax.set_aspect("equal")
-    ax.axis("off")
-
-    cmn.set_ax_splines_invisible(ax)
-
-    fig.set_tight_layout(True)
-
-    return fig
 
 
 ###############################################################################
@@ -174,143 +60,334 @@ class Model:
             min_occurrence=self.min_occurrence,
         )
 
-        TFIDF_matrix_ = TFIDF_matrix(
-            TF_matrix=TF_matrix_,
-            norm=None,
-            use_idf=True,
-            smooth_idf=False,
-            sublinear_tf=False,
-            max_items=self.max_items,
+        #
+        # 2.-- Limit to/Exclude
+        #
+        TF_matrix_ = cmn.limit_to_exclude(
+            data=TF_matrix_,
+            axis=1,
+            column=self.column,
+            limit_to=self.limit_to,
+            exclude=self.exclude,
         )
 
-        TFIDF_matrix_ = cmn.add_counters_to_axis(
-            X=TFIDF_matrix_, axis=1, data=self.data, column=self.column
+        #
+        # 3.-- Select max items
+        #
+        TF_matrix_ = cmn.add_counters_to_axis(
+            X=TF_matrix_, axis=1, data=self.data, column=self.column
         )
-
-        X = np.matmul(TFIDF_matrix_.transpose().values, TFIDF_matrix_.values)
-        X = pd.DataFrame(X, columns=TFIDF_matrix_.columns, index=TFIDF_matrix_.columns)
+        TF_matrix_ = cmn.sort_by_axis(
+            data=TF_matrix_, sort_by="Num Documents", ascending=False, axis=1
+        )
+        TF_matrix_ = TF_matrix_[TF_matrix_.columns[: self.max_items]]
+        if len(TF_matrix_.columns) > self.max_items:
+            top_items = TF_matrix_.sum(axis=0)
+            top_items = top_items.sort_values(ascending=False)
+            top_items = top_items.head(self.max_items)
+            TF_matrix_ = TF_matrix_.loc[:, top_items.index]
+            rows = TF_matrix_.sum(axis=1)
+            rows = rows[rows > 0]
+            TF_matrix_ = TF_matrix_.loc[rows.index, :]
 
         #
-        # 2.-- Association indexes
+        # 4.-- Co-occurrence matrix and association index
         #
+        X = np.matmul(TF_matrix_.transpose().values, TF_matrix_.values)
+        X = pd.DataFrame(X, columns=TF_matrix_.columns, index=TF_matrix_.columns)
         X = network_normalization(X=X, normalization=self.normalization)
 
         #
-        # 3.-- Hierarchical clustering of the dissimilarity matrix
+        # 5.-- Clustering of the dissimilarity matrix
         #
-        clustering = AgglomerativeClustering(
-            n_clusters=self.n_clusters, affinity=self.affinity, linkage=self.linkage
-        )
-        clustering.fit(1 - X)
-        clusters_dict = {
-            key: value for key, value in zip(X.columns, clustering.labels_)
-        }
+        if self.clustering_method == "Affinity Propagation":
+            labels = AffinityPropagation(
+                random_state=int(self.random_state)
+            ).fit_predict(1 - X)
+            self.n_clusters = len(set(labels))
+
+        if self.clustering_method == "Agglomerative Clustering":
+            labels = AgglomerativeClustering(
+                n_clusters=self.n_clusters, affinity=self.affinity, linkage=self.linkage
+            ).fit_predict(1 - X)
+
+        if self.clustering_method == "Birch":
+            labels = Birch(n_clusters=self.n_clusters).fit_predict(1 - X)
+
+        if self.clustering_method == "DBSCAN":
+            labels = DBSCAN().fit_predict(1 - X)
+            self.n_clusters = len(set(labels))
+
+        #  if self.clustering_method == "Feature Agglomeration":
+        #      m = FeatureAgglomeration(
+        #          n_clusters=self.n_clusters, affinity=self.affinity, linkage=self.linkage
+        #      ).fit(1 - X)
+        #      labels =
+
+        if self.clustering_method == "KMeans":
+            labels = KMeans(
+                n_clusters=self.n_clusters, random_state=int(self.random_state)
+            ).fit_predict(1 - X)
+
+        if self.clustering_method == "Mean Shift":
+            labels = MeanShift().fit_predict(1 - X)
+            self.n_clusters = len(set(labels))
 
         #
         # 4.-- Cluster membership
         #
-        memberships = {key: [] for key in range(self.n_clusters)}
-        for t in X.columns:
-            cluster = clusters_dict[t]
-            memberships[cluster] += [t]
-        for cluster in range(self.n_clusters):
-            memberships[cluster] = sorted(
-                memberships[cluster], key=lambda w: w.split(" ")[-1], reverse=True
-            )
-        communities = pd.DataFrame(
+        self.cluster_membership_ = pd.DataFrame({"Cluster": labels}, index=X.index)
+        memberships_table = pd.DataFrame(
             "", columns=range(self.n_clusters), index=range(self.top_n)
         )
-        for i_key, key in enumerate(memberships.keys()):
-            community = memberships[key]
-            if len(community) > self.top_n:
-                community = community[0 : self.top_n]
-            communities.at[0 : len(community) - 1, i_key] = community
-        communities.columns = ["Cluster {}".format(i) for i in range(self.n_clusters)]
-        self.memberships_ = communities
+        for i_cluster in range(self.n_clusters):
+            cluster_members = self.cluster_membership_[
+                self.cluster_membership_.Cluster == i_cluster
+            ]
+            cluster_members = cmn.sort_axis(
+                data=cluster_members, num_documents=True, axis=0, ascending=False
+            )
+            cluster_members = cluster_members.head(self.top_n)
+            memberships_table.at[
+                0 : len(cluster_members) - 1, i_cluster
+            ] = cluster_members.index
+        self.memberships_table_ = memberships_table
 
         #
         # 5.-- Cluster co-occurrence
         #
         M = X.copy()
-        M["CLUSTER"] = M.index
-        M["CLUSTER"] = M["CLUSTER"].map(lambda t: clusters_dict[t])
+        M["CLUSTER"] = labels
         M = M.groupby("CLUSTER").sum()
+        #
         M = M.transpose()
-
-        M["CLUSTER"] = M.index
-        M["CLUSTER"] = M["CLUSTER"].map(lambda t: clusters_dict[t])
+        M["CLUSTER"] = labels
         M = M.groupby("CLUSTER").sum()
+        #
         M.columns = ["Cluster {}".format(i) for i in range(self.n_clusters)]
         M.index = M.columns
+        ## M = network_normalization(X=M, normalization=self.normalization)
+        ## M = 1 - M
         self.cluster_co_occurrence_ = M
 
         #
         # 6.-- Strategic Map
         #
-        cluster_names = [memberships[cluster][0] for cluster in range(self.n_clusters)]
-        str_map = pd.DataFrame(cluster_names, columns=["Cluster name"], index=M.columns)
 
-        str_map["Density"] = 0.0
-        str_map["Centrality"] = 0.0
+        ## clusters name
+        cluster_names = self.memberships_table_.loc[0, :].tolist()
+        strategic_map = pd.DataFrame(
+            cluster_names, columns=["Cluster name"], index=M.columns
+        )
+        strategic_map["Density"] = 0.0
+        strategic_map["Centrality"] = 0.0
 
         ## Density -- internal conections
         for cluster in M.columns:
-            str_map.at[cluster, "Density"] = M[cluster][cluster]
+            strategic_map.at[cluster, "Density"] = M[cluster][cluster]
 
         ## Centrality -- outside conections
-        S = M.sum()
-        str_map["Centrality"] = S
-        str_map["Centrality"] = str_map["Centrality"] - str_map["Density"]
+        strategic_map["Centrality"] = M.sum()
+        strategic_map["Centrality"] = (
+            strategic_map["Centrality"] - strategic_map["Density"]
+        )
 
-        self.centrality_density_ = str_map
+        self.strategic_map_ = strategic_map
 
     def cluster_memberships(self):
         self.apply()
-        return self.memberships_
+        return self.memberships_table_
 
     def cluster_co_occurrence_matrix(self):
         self.apply()
         return self.cluster_co_occurrence_
 
+    def cluster_plot(self, method):
+
+        if method == "MDS":
+            x_axis = 0
+            y_axis = 1
+        else:
+            x_axis = self.x_axis
+            y_axis = self.y_axis
+
+        X = self.cluster_co_occurrence_
+
+        matplotlib.rc("font", size=11)
+        fig = pyplot.Figure(figsize=(self.width, self.height))
+        ax = fig.subplots()
+
+        #
+        # Both methods use the dissimilitud matrix
+        #
+        if method == "MDS":
+            embedding = MDS(n_components=self.n_components)
+            X_transformed = embedding.fit_transform(1 - X,)
+            x_axis = X_transformed[:, x_axis]
+            y_axis = X_transformed[:, y_axis]
+        if method == "CA":
+            ca = CA()
+            ca.fit(1 - X)
+            X_transformed = ca.principal_coordinates_cols_
+            x_axis = X_transformed.loc[:, X_transformed.columns[x_axis]]
+            y_axis = X_transformed.loc[:, X_transformed.columns[y_axis]]
+
+        colors = []
+        for cmap_name in ["tab20", "tab20b", "tab20c"]:
+            cmap = pyplot.cm.get_cmap(cmap_name)
+            colors += [cmap(0.025 + 0.05 * i) for i in range(20)]
+
+        node_sizes = cmn.counters_to_node_sizes(X.columns)
+
+        node_colors = [
+            cmap(0.2 + 0.80 * t / (self.n_clusters - 1)) for t in range(self.n_clusters)
+        ]
+
+        ax.scatter(x_axis, y_axis, s=node_sizes, c=node_colors, alpha=0.5)
+
+        cmn.ax_expand_limits(ax)
+
+        pos = {term: (x_axis[idx], y_axis[idx]) for idx, term in enumerate(X.columns)}
+        cmn.ax_text_node_labels(
+            ax=ax, labels=X.columns, dict_pos=pos, node_sizes=node_sizes
+        )
+        ax.axhline(y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
+        ax.axvline(x=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
+
+        ax.set_aspect("equal")
+        ax.axis("off")
+        cmn.set_ax_splines_invisible(ax)
+
+        fig.set_tight_layout(True)
+
+        return fig
+
     def mds_cluster_map(self):
         self.apply()
-        return cluster_plot(
-            X=self.cluster_co_occurrence_,
-            method="MDS",
-            n_components=self.n_components,
-            x_axis=self.x_axis,
-            y_axis=self.y_axis,
-            figsize=((self.width, self.height)),
-        )
+        return self.cluster_plot(method="MDS")
 
     def ca_cluster_map(self):
         self.apply()
-        return cluster_plot(
-            X=self.cluster_co_occurrence_,
-            method="CA",
-            n_components=self.n_components,
-            x_axis=self.x_axis,
-            y_axis=self.y_axis,
-            figsize=(self.width, self.height),
-        )
+        return self.cluster_plot(method="CA")
 
     def centratlity_density_table(self):
         self.apply()
-        return self.centrality_density_
+        return self.strategic_map_
 
     def strategic_map(self):
+        ##
         self.apply()
-        cluster_co_occurrence = [
-            self.cluster_co_occurrence_[i][i]
-            for i in self.cluster_co_occurrence_.columns
-        ]
-        return strategic_map(
-            centrality=self.centrality_density_.Centrality,
-            density=self.centrality_density_.Density,
-            cluster_names=self.centrality_density_["Cluster name"],
-            cluster_co_occurrence=cluster_co_occurrence,
-            figsize=(self.width, self.height),
+        ##
+
+        matplotlib.rc("font", size=11)
+        fig = pyplot.Figure(figsize=(self.width, self.height))
+        ax = fig.subplots()
+
+        strategic_map = self.strategic_map_.copy()
+
+        strategic_map["node_sizes"] = strategic_map["Cluster name"].map(
+            lambda w: w.split(" ")[-1]
         )
+        strategic_map["node_sizes"] = strategic_map.node_sizes.map(
+            lambda w: w.split(":")[0]
+        )
+        strategic_map["node_sizes"] = strategic_map.node_sizes.map(int)
+        max_node_size = strategic_map.node_sizes.max()
+        min_node_size = strategic_map.node_sizes.min()
+        strategic_map["node_sizes"] = strategic_map.node_sizes.map(
+            lambda w: 200 + 2800 * (w - min_node_size) / (max_node_size - min_node_size)
+        )
+
+        median_density = self.strategic_map_.Density.median()
+        median_centrality = self.strategic_map_.Centrality.median()
+
+        node_colors = ["tomato"] * len(self.strategic_map_)
+        if self.colors == "4 Quadrants":
+
+            strategic_map["node_colors"] = "red"
+
+            strategic_map.at[
+                (strategic_map.Centrality < median_centrality)
+                & ((strategic_map.Density < median_density)),
+                "node_colors",
+            ] = "gold"
+
+            strategic_map.at[
+                (strategic_map.Centrality < median_centrality)
+                & ((strategic_map.Density > median_density)),
+                "node_colors",
+            ] = "darkseagreen"
+
+            strategic_map.at[
+                (strategic_map.Centrality > median_centrality)
+                & ((strategic_map.Density < median_density)),
+                "node_colors",
+            ] = "cornflowerblue"
+
+        elif self.colors == "Groups":
+
+            colors = []
+            for cmap_name in ["tab20", "tab20b", "tab20c", "tab20", "tab20b", "tab20c"]:
+                cmap = pyplot.cm.get_cmap(cmap_name)
+                colors += [cmap(0.025 + 0.05 * i) for i in range(20)]
+            strategic_map["node_colors"] = colors[0 : self.n_clusters]
+
+        else:
+
+            cmap = pyplot.cm.get_cmap(self.colors)
+
+            strategic_map["node_colors"] = strategic_map["Cluster name"].map(
+                lambda w: w.split(" ")[-1]
+            )
+            strategic_map["node_colors"] = strategic_map.node_colors.map(
+                lambda w: w.split(":")[1]
+            )
+            strategic_map["node_colors"] = strategic_map.node_colors.map(int)
+
+            max_node_color = strategic_map.node_colors.max()
+            min_node_color = strategic_map.node_colors.min()
+            strategic_map["node_colors"] = strategic_map.node_colors.map(
+                lambda w: 0.2
+                + 0.8 * (w - min_node_color) / (max_node_color - min_node_color)
+            )
+            strategic_map["node_colors"] = strategic_map.node_colors.map(cmap)
+
+        ax.scatter(
+            self.strategic_map_.Centrality,
+            self.strategic_map_.Density,
+            s=strategic_map.node_sizes.tolist(),
+            c=strategic_map.node_colors.tolist(),
+            alpha=0.4,
+        )
+
+        cmn.ax_expand_limits(ax)
+        cmn.ax_text_node_labels(
+            ax,
+            labels=self.strategic_map_["Cluster name"],
+            dict_pos={
+                key: (c, d)
+                for key, c, d in zip(
+                    self.strategic_map_["Cluster name"],
+                    self.strategic_map_.Centrality,
+                    self.strategic_map_.Density,
+                )
+            },
+            node_sizes=strategic_map.node_sizes.tolist(),
+        )
+
+        ax.axhline(
+            y=median_density, color="gray", linestyle="--", linewidth=1, zorder=-1,
+        )
+        ax.axvline(
+            x=median_centrality, color="gray", linestyle="--", linewidth=1, zorder=-1,
+        )
+
+        #  ax.set_aspect("equal")
+        ax.axis("off")
+        cmn.set_ax_splines_invisible(ax)
+        fig.set_tight_layout(True)
+
+        return fig
 
 
 ###############################################################################
@@ -319,20 +396,18 @@ class Model:
 ##
 ###############################################################################
 
-COLUMNS = [
-    "Authors",
-    "Countries",
-    "Institutions",
-    "Author_Keywords",
-    "Index_Keywords",
-    "Abstract_words_CL",
-    "Abstract_words",
-    "Title_words_CL",
-    "Title_words",
-    "Affiliations",
-    "Author_Keywords_CL",
-    "Index_Keywords_CL",
-]
+COLUMNS = sorted(
+    [
+        "Author_Keywords",
+        "Index_Keywords",
+        "Abstract_words_CL",
+        "Abstract_words",
+        "Title_words_CL",
+        "Title_words",
+        "Author_Keywords_CL",
+        "Index_Keywords_CL",
+    ]
+)
 
 
 class DASHapp(DASH, Model):
@@ -361,20 +436,35 @@ class DASHapp(DASH, Model):
             dash.min_occurrence(),
             dash.max_items(),
             dash.normalization(),
-            dash.separator(text="Aglomerative Clustering"),
+            dash.separator(text="Clustering"),
+            dash.clustering_method(),
             dash.n_clusters(m=3, n=50, i=1),
             dash.affinity(),
             dash.linkage(),
-            dash.separator(text="MDS/CA diagram"),
-            dash.n_components(),
+            dash.random_state(),
+            dash.separator(text="CA diagram"),
             dash.x_axis(),
             dash.y_axis(),
             dash.separator(text="Visualization"),
-            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
             dash.top_n(),
+            dash.dropdown(
+                desc="Colors:",
+                options=[
+                    "4 Quadrants",
+                    "Groups",
+                    "Greys",
+                    "Purples",
+                    "Blues",
+                    "Greens",
+                    "Oranges",
+                    "Reds",
+                ],
+            ),
             dash.fig_width(),
             dash.fig_height(),
         ]
+
+        self.n_components = 10
 
         super().create_grid()
 
@@ -396,7 +486,6 @@ class DASHapp(DASH, Model):
                 self.set_enabled("Height:")
 
             if self.menu in [
-                "MDS cluster map",
                 "CA cluster map",
             ]:
                 self.set_enabled("X-axis:")
@@ -406,16 +495,50 @@ class DASHapp(DASH, Model):
                 self.set_disabled("Y-axis:")
 
             if self.menu == "MDS cluster map":
+                self.set_disabled("X-axis:")
+                self.set_disabled("Y-axis:")
 
-                self.panel_widgets[-5]["widget"].disabled = False
-                self.panel_widgets[8]["widget"].options = list(range(self.n_components))
-                self.panel_widgets[9]["widget"].options = list(range(self.n_components))
-            else:
-                self.panel_widgets[-5]["widget"].disabled = True
+            if self.clustering_method in ["Affinity Propagation"]:
+                self.set_disabled("N Clusters:")
+                self.set_disabled("Affinity:")
+                self.set_disabled("Linkage:")
+                self.set_enabled("Random State:")
 
-            if self.menu == "CA cluster map":
-                self.panel_widgets[8]["widget"].options = list(range(self.n_clusters))
-                self.panel_widgets[9]["widget"].options = list(range(self.n_clusters))
+            if self.clustering_method in ["Agglomerative Clustering"]:
+                self.set_enabled("N Clusters:")
+                self.set_enabled("Affinity:")
+                self.set_enabled("Linkage:")
+                self.set_disabled("Random State:")
+
+            if self.clustering_method in ["Birch"]:
+                self.set_enabled("N Clusters:")
+                self.set_disabled("Affinity:")
+                self.set_disabled("Linkage:")
+                self.set_disabled("Random State:")
+
+            if self.clustering_method in ["DBSCAN"]:
+                self.set_disabled("N Clusters:")
+                self.set_disabled("Affinity:")
+                self.set_disabled("Linkage:")
+                self.set_disabled("Random State:")
+
+            if self.clustering_method in ["Feature Agglomeration"]:
+                self.set_enabled("N Clusters:")
+                self.set_enabled("Affinity:")
+                self.set_enabled("Linkage:")
+                self.set_disabled("Random State:")
+
+            if self.clustering_method in ["KMeans"]:
+                self.set_enabled("N Clusters:")
+                self.set_disabled("Affinity:")
+                self.set_disabled("Linkage:")
+                self.set_disabled("Random State:")
+
+            if self.clustering_method in ["Mean Shift"]:
+                self.set_disabled("N Clusters:")
+                self.set_disabled("Affinity:")
+                self.set_disabled("Linkage:")
+                self.set_disabled("Random State:")
 
 
 ###############################################################################

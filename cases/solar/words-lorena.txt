@@ -1,0 +1,667 @@
+agent-based model
+    agent-based model
+    agent-based modeling
+    agent-based modelling
+aggregation
+    aggregation
+    aggregator
+    aggregators
+air source heat pumps
+    air source heat pumps
+    air-source heat pump
+artificial neural network
+    artificial neural network
+    artificial neural networks
+barrier
+    barrier
+    barriers
+batteries
+    batteries
+    battery
+    battery energy storage system
+    battery energy storage systems
+    battery storage
+    storage battery
+    battery storage system
+    battery storage systems
+    energy storage
+bill savings
+    bill savings
+    billing saving
+building energy system
+    building energy system
+    building energy systems
+building integrated photovoltaic
+    building integrated photovoltaic
+    building integrated photovoltaics
+    building-integrated photovoltaics
+building integrated photovoltaic (bipv)
+    building integrated photovoltaic (bipv)
+    building-integrated photovoltaic (bipv)
+business model
+    business model
+    business models
+carbon dioxide emission
+    carbon dioxide emission
+    carbon dioxide emissions
+carbon emission
+    carbon emission
+    carbon emissions
+carbon tax
+    carbon tax
+    carbon taxes
+cluster
+    cluster
+    clustering
+co2 emission
+    co2 emission
+    co2 emissions
+coe (cost of energy)
+    coe (cost of energy)
+    cost of energy (coe)
+combined heat and power
+    combined heat and power
+    combined heating and power
+configuration optimization
+    configuration optimization
+    optimal configuration
+controllable load
+    controllable load
+    controllable loads
+    load control
+cost
+    cost
+    costs
+cost benefit analysis
+    cost benefit analysis
+    cost-benefit analysis
+cost effectiveness
+    cost effectiveness
+    cost-effectiveness
+cost optimal
+    cost optimal
+    cost optimization
+    cost-optimality
+decision making
+    decision making
+    decision-making
+demand side management
+    demand response
+    demand responsiveness
+    demand side management
+    demand-side management
+deployment modeling
+    deployment modeling
+    deployment models
+design optimization
+    design optimization
+    optimal design
+
+diesel generator
+    diesel generator
+    diesel generators
+distributed energy resource
+    distributed energy resource
+    distributed energy resources
+distributed generation
+    distributed generation
+    distributed generations
+    distributed generators
+distribution network
+    distribution network
+    distribution networks
+distribution system
+    distribution system
+    distribution systems
+dynamic simulation
+    dynamic simulation
+    dynamic simulations
+economic
+    economic
+    economics
+economic assessment
+    economic assessment
+    economical assessment
+economic feasibility
+    economic feasibility
+    economical feasibility
+electric energy
+    electric energy
+    electrical energy
+electric energy storage
+    electric energy storage
+    electrical energy storage
+    electricity energy storage
+electric vehicle
+    electric vehicle
+    electric vehicles
+    electrical vehicle
+electrical storage
+    electrical storage
+    electricity storage
+electrically driven heat pump
+    electrically driven heat pump
+    electricity driven heat pump
+electricity grid
+    electricity grid
+    electricity grids
+    grid electricity
+electricity market
+    electricity market
+    electricity markets
+electricity rate
+    electricity rate
+    electricity rates
+electricity tariff
+    electricity tariff
+    electricity tariffs
+emission
+    emission
+    emissions
+energy cost
+    energy cost
+    energy costs
+energy cost optimization
+    energy cost optimization
+    optimal energy cost
+energy efficiency measures
+    energy efficiency measures
+    energy-efficient measures
+energy management system
+    energy management system
+    energy management systems
+energy modeling
+    energy modeling
+    energy models
+energy policies
+    energy policies
+    energy policy
+energy saving
+    energy saving
+    energy savings
+energy service companies
+    energy service companies
+    energy service company
+energy simulation
+    energy simulation
+    energy simulations
+energy storage system
+    energy storage system
+    energy storage systems
+energy sustainability
+    energy sustainability
+    sustainable energy
+energy system model
+    energy system model
+    energy system modeling
+energy transaction
+    energy transaction
+    transactive energy
+environmental impact
+    environmental impact
+    environmental impacts
+feed in tariff
+    feed in tariff
+    feed in tariffs
+    feed-in tariff
+    feed-in tariffs
+    feed-in-tariff
+finance
+    finance
+    financing
+fuel cell
+    fuel cell
+    fuel cells
+    fuel-cells
+fuzzy logic control
+    fuzzy logic control
+    fuzzy logic controller
+generation
+    generation
+    generator
+genetic algorithm
+    genetic algorithm
+    genetic algorithms
+geographic information system
+    geographic information system
+    geographic information systems
+    geographical information systems
+ghg emission
+    ghg emission
+    ghg emissions
+greenhouse gas emission
+    greenhouse gas emission
+    greenhouse gas emissions
+grid connected
+    grid connected
+    grid connection
+    grid-connected
+grid connected pv
+    grid connected pv
+    grid-connected pv
+grid connected pv system
+    grid connected pv system
+    grid connected pv systems
+    grid-connected pv systems
+grid connected system
+    grid connected system
+    grid-connected system
+    grid-connected systems
+grid defection
+    grid defection
+    grid-defection
+grid parity
+    grid parity
+    grid-parity
+grid-connected photovoltaic
+    grid-connected photovoltaic
+    grid-connected photovoltaics
+ground source heat pump
+    ground source heat pump
+    ground-source heat pump
+heat
+    heat
+    heating
+heat pump
+    heat pump
+    heat pumps
+home-to-vehicle
+    home-to-vehicle
+    vehicle-to-home
+household
+    household
+    households
+hybrid energy system
+    hybrid energy system
+    hybrid energy systems
+    hybrid generation system
+    hybrid generation systems
+    hybrid mini-grid
+    hybrid mini-grids
+    hybrid power system
+    hybrid power system.
+    hybrid power systems
+    hybrid power system (hps)
+    hybrid power systems (hps)
+    hybrid pv/wind system
+    pv/wind hybrid system
+    hybrid renewable energy system
+    hybrid renewable energy systems
+    hybrid system
+    hybrid systems
+hydrogen & fuel cell
+    hydrogen & fuel cell
+    hydrogen fuel cell
+inverter
+    inverter
+    inverters
+lca (life cycle assessment)
+    lca (life cycle assessment)
+    life cycle assessment (lca)
+lcc (life cycle costing)
+    lcc (life cycle costing)
+    life cycle cost (lcc)
+lcoe (levelized cost of electricity)
+    lcoe (levelized cost of electricity)
+    levelized cost of electricity (lcoe)
+lead acid battery
+    lead acid battery
+    lead-acid battery
+learning curve
+    learning curve
+    learning curves
+levelized cost of electricity
+    levelized cost of electricity
+    levelized costs of electricity
+li-ion batteries
+    li-ion batteries
+    li-ion battery
+life cycle assessment
+    life cycle assessment
+    life-cycle assessment
+life cycle cost
+    life cycle cost
+    life cycle costing
+    life-cycle cost
+    life-cycle costing
+    life-cycle costs
+    life-cycle-cost
+lithium ion battery
+    lithium ion battery
+    lithium-ion batteries
+    lithium-ion battery
+load leveling
+    load leveling
+    load-leveling
+load match
+    load match
+    load matching
+load profile
+    load profile
+    load profiles
+low income household
+    low income household
+    low-income household
+low voltage networks
+    low voltage networks
+    low-voltage networks
+lv network
+    lv network
+    lv networks
+market power
+    market power
+    power market
+mathematical model
+    mathematical model
+    mathematical models
+micro generation
+    micro generation
+    micro-generation
+micro grid
+    micro grid
+    micro-grid
+microgrid
+    microgrid
+    microgrids
+mixed integer linear programming
+    mixed integer linear programming
+    mixed-integer linear programming
+model
+    model
+    modeling
+    modelling
+monte carlo simulation
+    monte carlo simulation
+    monte carlo simulations
+nearly zero energy buildings (nzeb)
+    nearly zero energy buildings (nzeb)
+    nearly zero-energy buildings (nzeb)
+    nzebs (nearly zero energy buildings)
+net metering
+    net metering
+    net-metering
+net metering policy
+    net metering policy
+    net-metering policy
+net present cost (npc)
+    net present cost (npc)
+    npc (net present cost)
+net zero energy
+    net zero energy
+    net-zero energy
+net zero energy building
+    net zero energy building
+    net zero energy buildings
+    net-zero energy building
+off grid
+    off grid
+    off-grid
+operation strategies
+    operation strategies
+    operation strategy
+    operational strategies
+optimal size
+    optimal size
+    optimal sizing
+    size optimization
+optimal system
+    optimal system
+    system optimization
+optimization
+    optimization
+    optimizations
+payback time
+    payback time
+    payback-time
+peak shave
+    peak shave
+    peak shaving
+photovoltaic
+    photovoltaic
+    photovoltaics
+photovoltaic (pv)
+    photovoltaic (pv)
+    photovoltaics (pv)
+    pv (photovoltaic)
+photovoltaic (pv) system
+    photovoltaic (pv) system
+    photovoltaic (pv) systems
+photovoltaic battery system
+    photovoltaic battery system
+    photovoltaic battery systems
+photovoltaic cell
+    photovoltaic cell
+    photovoltaic cells
+photovoltaic panel
+    photovoltaic panel
+    photovoltaic panels
+photovoltaic solar
+    photovoltaic solar
+    solar photovoltaic
+    solar photovoltaics
+photovoltaic system
+    photovoltaic system
+    photovoltaic systems
+policies
+    policies
+    policy
+productive use
+    productive use
+    productive uses
+prosumer
+    prosumer
+    prosumers
+pumped hydro energy storage
+    pumped hydro energy storage
+    pumped-hydro energy storage
+pv array
+    pv array
+    pv arrays
+pv battery system
+    pv battery system
+    pv-battery system
+    pv-battery systems
+pv microgrid
+    pv microgrid
+    pv microgrids
+pv module
+    pv module
+    pv modules
+pv panel
+    pv panel
+    pv panels
+pv system
+    pv system
+    pv systems
+real option
+    real option
+    real options
+real option valuation
+    real option valuation
+    real options valuation
+real time pricing
+    real time pricing
+    real-time pricing
+    real-time' pricing
+remote area
+    remote area
+    remote area.
+renewable
+    renewable
+    renewables
+renewable energies
+    renewable energies
+    renewable energy
+renewable energy resources
+    renewable energy resources
+    renewable resource energy
+    renewables energy resources
+renewable energy source
+    renewable energy source
+    renewable energy sources
+renewable energy sources (res)
+    renewable energy sources (res)
+    res (renewable energy sources)
+renewable energy system
+    renewable energy system
+    renewable energy systems
+resident
+    resident
+    residents
+residential application
+    residential application
+    residential applications
+residential batteries
+    residential batteries
+    residential battery
+residential building
+    residential building
+    residential buildings
+
+residential load
+    residential load
+    residential loads
+residential microgrid
+    residential microgrid
+    residential microgrids
+residential pv system
+    residential pv system
+    residential pv systems
+residential solar photovoltaic
+    residential solar photovoltaic
+    residential solar photovoltaics
+retail rate
+    retail rate
+    retail rates
+retrofit
+    retrofit
+    retrofitting
+rooftop photovoltaic
+    rooftop photovoltaic
+    rooftop photovoltaics
+rural area
+    rural area
+    rural areas
+rural electrification
+    rural electrification
+    rural electrifications
+scenario analysis
+    scenario analysis
+    scenarios analysis
+simulation
+    simulation
+    simulations
+smart building
+    smart building
+    smart buildings
+smart cities
+    smart cities
+    smart city
+smart grid
+    smart grid
+    smart grids
+smart home
+    smart home
+    smart homes
+smart meter
+    smart meter
+    smart metering
+social network
+    social network
+    social networks
+solar home system
+    solar home system
+    solar home systems
+solar home system (shs)
+    solar home system (shs)
+    solar home systems (shs)
+solar irradiance
+    solar irradiance
+    solar irradiation
+solar panel
+    solar panel
+    solar panels
+solar photovoltaic system
+    solar photovoltaic system
+    solar photovoltaic systems
+solar pv
+    solar pv
+    solar-pv
+solar pv system
+    solar pv system
+    solar pv systems
+solar thermal collectors
+    solar thermal collectors
+    solar-thermal collectors
+stand alone
+    stand alone
+    stand-alone
+stand alone systems
+    stand alone systems
+    stand-alone system
+stand-alone photovoltaic system
+    stand-alone photovoltaic system
+    stand-alone photovoltaic systems
+stand-alone power system
+    stand-alone power system
+    stand-alone power systems
+state of charge
+    state of charge
+    state-of-charge
+storage system
+    storage system
+    storage systems
+sub saharan africa
+    sub saharan africa
+    sub-saharan africa
+subsidies
+    subsidies
+    subsidy
+survey
+    survey
+    surveys
+systems thinking
+    systems thinking
+    systems-thinking
+techno economic analysis
+    techno economic analysis
+    techno-economic analysis
+    techno-economical analysis
+techno-economic
+    techno-economic
+    techno-economics
+techno-economic modeling
+    techno-economic modeling
+    techno-economic modelling
+time of use tariff
+    time of use tariff
+    time-of-use tariff
+    time-of-use tariffs
+uncertainties
+    uncertainties
+    uncertainty
+vehicle to grid (v2g)
+    vehicle to grid (v2g)
+    vehicle-to-grid (v2g)
+vehicle to home v2h
+    vehicle to home v2h
+    vehicle-to-home (v2h)
+virtual power plant
+    virtual power plant
+    virtual power plants
+water energy nexus
+    water energy nexus
+    water-energy nexus
+wind turbine
+    wind turbine
+    wind turbines
+zero energy buildings
+    zero energy buildings
+    zero-energy building
+    zero-energy buildings
+homer
+    homer
+    homer software
+wind
+    wind energy
+    wind

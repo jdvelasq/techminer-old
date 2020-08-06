@@ -13,7 +13,7 @@ def affinity():
         "arg": "affinity",
         "desc": "Affinity:",
         "widget": widgets.Dropdown(
-            options=["euclidean", "l1", "l2", "manhattan", "cossine"],
+            options=["euclidean", "l1", "l2", "manhattan", "cosine"],
             layout=Layout(width="55%"),
         ),
     }
@@ -40,6 +40,24 @@ def r_axis_ascending():
         "arg": "r_axis_ascending",
         "desc": "R-axis ascending:",
         "widget": widgets.Dropdown(options=[True, False], layout=Layout(width="55%"),),
+    }
+
+
+def clustering_method():
+    return {
+        "arg": "clustering_method",
+        "desc": "Clustering Method:",
+        "widget": widgets.Dropdown(
+            options=[
+                "Affinity Propagation",
+                "Agglomerative Clustering",
+                "Birch",
+                "DBSCAN",
+                "KMeans",
+                "Mean Shift",
+            ],
+            layout=Layout(width="55%"),
+        ),
     }
 
 
@@ -106,7 +124,8 @@ def max_items():
         "arg": "max_items",
         "desc": "Max items:",
         "widget": widgets.Dropdown(
-            options=list(range(100, 3001, 100)), layout=Layout(width="55%"),
+            options=list(range(5, 101, 5)) + list(range(100, 3001, 100)),
+            layout=Layout(width="55%"),
         ),
     }
 
@@ -151,7 +170,7 @@ def n_iter():
     }
 
 
-def n_clusters(m=2, n=21, i=1):
+def n_clusters(m=3, n=21, i=1):
     return {
         "arg": "n_clusters",
         "desc": "N Clusters:",
@@ -186,7 +205,19 @@ def normalization():
         "arg": "normalization",
         "desc": "Normalization:",
         "widget": widgets.Dropdown(
-            options=["None", "association", "inclusion", "jaccard", "salton"],
+            options=["None"]
+            + sorted(
+                [
+                    "Association",
+                    "Jaccard",
+                    "Dice",
+                    "Salton",
+                    "Equivalence",
+                    "Inclusion",
+                    "Cosine",
+                    "Mutual Information",
+                ]
+            ),
             layout=Layout(width="55%"),
         ),
     }
@@ -271,19 +302,19 @@ def top_n(m=10, n=51, i=5):
     }
 
 
-def x_axis():
+def x_axis(n=10):
     return {
         "arg": "x_axis",
         "desc": "X-axis:",
-        "widget": widgets.Dropdown(options=[0], layout=Layout(width="55%"),),
+        "widget": widgets.Dropdown(options=list(range(n)), layout=Layout(width="55%"),),
     }
 
 
-def y_axis():
+def y_axis(n=10):
     return {
         "arg": "y_axis",
         "desc": "Y-axis:",
-        "widget": widgets.Dropdown(options=[0], layout=Layout(width="55%"),),
+        "widget": widgets.Dropdown(options=list(range(n)), layout=Layout(width="55%"),),
     }
 
 
@@ -322,19 +353,12 @@ def processing():
 class DASH:
     def __init__(self):
 
-        # if years_range is not None:
-        #     initial_year, final_year = years_range
-        #     data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
-
-        # self.data = data
-        # self.limit_to = limit_to
-        # self.exclude = exclude
-
         ## layout
         self.app_layout = []
 
         ## display pandas options
         self.pandas_max_rows = 50
+        self.pandas_max_columns = 100
 
         ## Panel controls
         self.app_title = "None"
@@ -365,7 +389,9 @@ class DASH:
             print("Processing ...")
         result = getattr(self, menu)()
         self.output.clear_output()
-        with pd.option_context("max_rows", self.pandas_max_rows):
+        with pd.option_context(
+            "max_rows", self.pandas_max_rows, "max_columns", self.pandas_max_columns
+        ):
             with self.output:
                 display(result)
 

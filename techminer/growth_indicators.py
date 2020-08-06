@@ -4,9 +4,9 @@ import pandas as pd
 import techminer.common as cmn
 import techminer.dashboard as dash
 import techminer.plots as plt
-from techminer.by_term_per_year import _build_table
+import techminer.by_term_per_year
 from techminer.dashboard import DASH
-
+from techminer.explode import __explode as _explode
 
 ###############################################################################
 ##
@@ -34,15 +34,12 @@ class Model:
             #                          Y_end - Y_start + 1
             #
             #
-            result = _build_table(
-                data=self.data,
-                limit_to=self.limit_to,
-                exclude=self.exclude,
-                column=self.column,
-                top_by="Num Documents per Year",
+            result = self.data.copy()
+            result = _explode(result[["Year", self.column, "ID"]], self.column)
+            result["Num_Documents_per_Year"] = 1
+            result = result.groupby([self.column, "Year"], as_index=False).agg(
+                {"Num_Documents_per_Year": np.size}
             )
-
-            #  result.pop("ID")
 
             years_AGR = sorted(set(result.Year))[-(self.time_window + 1) :]
             years_AGR = [years_AGR[0], years_AGR[-1]]
@@ -69,13 +66,13 @@ class Model:
             #  AGR = -----------------------------------------
             #                  Y_end - Y_start + 1
             #
-            result = _build_table(
-                data=self.data,
-                limit_to=self.limit_to,
-                exclude=self.exclude,
-                column=self.column,
-                top_by="Num Documents per Year",
+            result = self.data.copy()
+            result = _explode(result[["Year", self.column, "ID"]], self.column)
+            result["Num_Documents_per_Year"] = 1
+            result = result.groupby([self.column, "Year"], as_index=False).agg(
+                {"Num_Documents_per_Year": np.size}
             )
+
             years_ADY = sorted(set(result.Year))[-self.time_window :]
             result = result[result.Year.map(lambda w: w in years_ADY)]
             result = result.groupby([self.column], as_index=False).agg(
@@ -86,13 +83,14 @@ class Model:
             return result
 
         def compute_num_documents():
-            result = _build_table(
-                data=self.data,
-                limit_to=self.limit_to,
-                exclude=self.exclude,
-                column=self.column,
-                top_by="Num Documents per Year",
+
+            result = self.data.copy()
+            result = _explode(result[["Year", self.column, "ID"]], self.column)
+            result["Num_Documents_per_Year"] = 1
+            result = result.groupby([self.column, "Year"], as_index=False).agg(
+                {"Num_Documents_per_Year": np.size}
             )
+
             years_between = sorted(set(result.Year))[-self.time_window :]
             years_before = sorted(set(result.Year))[0 : -self.time_window]
             between = result[result.Year.map(lambda w: w in years_between)]
@@ -124,6 +122,15 @@ class Model:
         result = pd.merge(result, num_docs, on=self.column)
         result = result.reset_index(drop=True)
         result = result.set_index(self.column)
+
+        result = cmn.limit_to_exclude(
+            data=result,
+            axis=0,
+            column=self.column,
+            limit_to=self.limit_to,
+            exclude=self.exclude,
+        )
+
         result = cmn.add_counters_to_axis(
             X=result, axis=0, data=self.data, column=self.column
         )

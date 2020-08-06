@@ -122,7 +122,7 @@ class BaseModel:
         ## Exclude
         exclude = self.exclude
         if isinstance(exclude, dict):
-            if column in exclude.keys():
+            if self.column in exclude.keys():
                 exclude = exclude[self.column]
             else:
                 exclude = None

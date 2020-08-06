@@ -1,3 +1,836 @@
+agent-based model
+    agent-based model
+    agent-based modeling
+    agent-based modelling
+aggregation
+    aggregation
+    aggregator
+    aggregators
+air source heat pumps
+    air source heat pumps
+    air-source heat pump
+artificial neural network
+    artificial neural network
+    artificial neural networks
+analytic hierarchy process
+    analytic hierarchy process
+    ahp
+barrier
+    barrier
+    barriers
+batteries
+    batteries
+    battery
+    battery energy storage system
+    battery energy storage system (bess)
+    battery energy storage systems
+    battery storage
+    storage battery
+    battery storage system
+    battery storage systems        
+    bess    
+bill savings
+    bill savings
+    billing saving
+building energy system
+    building energy system
+    building energy systems
+building integrated photovoltaic
+    building integrated photovoltaic
+    building integrated photovoltaic (bipv)
+    building integrated photovoltaics
+    building-integrated photovoltaic (bipv)
+    building-integrated photovoltaics
+    building integrated photovoltaic systems   
+    bipv
+energy storage    
+    energy storage    
+business model
+    business model
+    business models
+carbon dioxide emission
+    carbon dioxide emission
+    carbon dioxide emissions
+carbon emission
+    carbon emission
+    carbon emissions
+carbon tax
+    carbon tax
+    carbon taxes    
+cluster
+    cluster
+    clustering    
+co2 emission
+    co2 emission
+    co2 emissions
+cost of energy
+    cost of energy
+    cost of energy (coe)
+    coe
+    coe (cost of energy)
+combined cooling heat and power (cchp)
+    combined cooling heat and power (cchp)    
+combined heat and power
+    combined heat and power
+    combined heat and power (chp)
+    combined heating and power
+    chp    
+configuration optimization
+    configuration optimization
+    optimal configuration
+controllable load
+    controllable load
+    controllable loads
+    load control
+cost
+    cost
+    costs    
+cost benefit analysis
+    cost benefit analysis
+    cost-benefit analysis    
+cost effectiveness
+    cost effectiveness
+    cost-effectiveness
+cost optimal
+    cost optimal
+    cost optimization
+    cost-optimality
+decision making
+    decision making
+    decision-making
+demand side management
+    demand side management
+    demand side management (dsm)
+    demand-side management
+demand response    
+    demand-side response
+    demand response
+    demand responsiveness
+deployment modeling
+    deployment modeling
+    deployment models
+design optimization
+    design optimization
+    optimal design
+developed countries
+    developed countries
+developing countries        
+    developing countries    
+diesel generator
+    diesel generator
+    diesel generators
+distributed energy resource
+    distributed energy resource
+    distributed energy resources
+    distributed energy resources (der)    
+distributed generation
+    distributed generation
+    distributed generation (dg)
+    distributed generations
+    distributed generators    
+distribution network
+    distribution network
+    distribution network (dn)
+    distribution networks
+distribution system
+    distribution system
+    distribution systems
+dynamic simulation
+    dynamic simulation
+    dynamic simulations 
+economic
+    economic
+    economics    
+econometric analysis
+    econometric analysis
+    econometrics    
+economic assessment
+    economic assessment
+    economical assessment
+economic feasibility
+    economic feasibility
+    economical feasibility    
+economic feasibility analysis
+    economic feasibility analysis
+    economic feasibility study    
+electric energy
+    electric energy
+    electrical energy    
+electric energy storage
+    electric energy storage
+    electrical energy storage
+    electricity energy storage    
+electric vehicle
+    electric vehicle
+    electric vehicle (ev)
+    electric vehicles
+    electrical vehicle
+electrical storage
+    electrical storage
+    electricity storage
+electrically driven heat pump
+    electrically driven heat pump
+    electricity driven heat pump
+electricity grid
+    electricity grid
+    electricity grids
+    grid electricity
+electricity market
+    electricity market
+    electricity markets    
+electricity rate
+    electricity rate
+    electricity rates
+electricity tariff
+    electricity tariff
+    electricity tariffs
+embodied green house gas emissions (gwp)
+    embodied green house gas emissions (gwp)    
+    gwp    
+emission
+    emission
+    emissions    
+energy cost
+    energy cost
+    energy costs
+energy cost optimization
+    energy cost optimization
+    optimal energy cost    
+energy efficiency measures
+    energy efficiency measures
+    energy-efficient measures    
+energy management system
+    energy management system
+    energy management systems
+energy modeling
+    energy modeling
+    energy models
+energy policy
+    energy policies
+    energy policy    
+energy saving
+    energy saving
+    energy savings
+energy service company
+    energy service companies
+    energy service company
+energy simulation
+    energy simulation
+    energy simulations    
+energy storage system
+    energy storage system
+    energy storage system (ess)
+    energy storage systems    
+energy sustainability
+    energy sustainability
+    sustainable energy    
+energy system model
+    energy system model
+    energy system modeling    
+energy transaction
+    energy transaction
+    transactive energy
+environmental impact
+    environmental impact
+    environmental impacts
+feed in tariff
+    feed in tariff
+    feed in tariffs
+    feed-in tariff
+    feed-in tariffs
+    feed-in-tariff    
+    fit (feed-in tariff)    
+finance
+    finance
+    financing    
+fuel cell
+    fuel cell
+    fuel cells
+    fuel-cells
+fuzzy logic control
+    fuzzy logic control
+    fuzzy logic controller    
+generation
+    generation
+    generator    
+genetic algorithm
+    genetic algorithm
+    genetic algorithm (ga)
+    genetic algorithms
+    genetic algorithm optimization    
+geographic information system
+    geographic information system
+    geographic information system (gis)
+    geographic information systems
+    geographical information systems  
+    gis    
+ghg
+    ghg
+    greenhouse gas
+    greenhouse gases    
+ghg emission
+    ghg emission
+    ghg emissions    
+    greenhouse gas emission
+    greenhouse gas emissions
+grid connected
+    grid connected
+    grid connection
+    grid-connected
+grid connected pv
+    grid connected pv
+    grid-connected pv    
+grid connected pv system
+    grid connected pv system
+    grid connected pv systems
+    grid-connected pv systems
+grid connected system
+    grid connected system
+    grid-connected system
+    grid-connected systems
+grid defection
+    grid defection
+    grid-defection    
+grid parity
+    grid parity
+    grid-parity
+grid-connected photovoltaic
+    grid-connected photovoltaic
+    grid-connected photovoltaics    
+ground source heat pump
+    ground source heat pump
+    ground-source heat pump    
+heat
+    heat
+    heating
+heat pump
+    heat pump
+    heat pumps
+vehicle-to-home
+    home-to-vehicle
+    vehicle-to-home
+    vehicle-to-home (v2h) 
+    v2h    
+    vehicle to home v2h    
+household
+    household
+    households
+homer
+    homer
+    homer (hybrid optimization of multiple energy resources)
+    hybrid optimisation model for electric renewables
+    hybrid optimization model for electric renewable (homer)
+    hybrid optimization of multiple energy resources (homer) software
+    homer energy
+    homer grid
+    homer model
+    homer optimization
+    homer pro
+    homer pro software
+    homer pro tool
+    homer program
+    homer pro®
+    homer simulation    
+    optimization with homer    
+    homer software
+hybrid system
+    hybrid energy system
+    hybrid energy systems    
+    hybrid generation system
+    hybrid generation systems
+    hybrid mini-grid
+    hybrid mini-grids
+    hybrid mini-grid system
+    hybrid minigrid    
+    hybrid microgrid
+    hybrid microgrids (hmgs)
+    hybrid microgrid system    
+    hybrid power system
+    hybrid power system (hps)
+    hybrid power system.
+    hybrid power systems
+    hybrid power systems (hps)    
+    hybrid pv/wind system
+    pv/wind hybrid system    
+    hybrid renewable energy system
+    hybrid renewable energy system (hres)
+    hybrid renewable energy system (pv/wind/bioenergy)
+    hybrid renewable energy systems    
+    hybrid systems    
+hydrogen & fuel cell
+    hydrogen & fuel cell
+    hydrogen fuel cell  
+internal rate of return
+    internal rate of return
+    internal rate of return (irr)
+    irr
+    the internal rate of return    
+inverter
+    inverter
+    inverters
+life cycle
+    life cycle
+life cycle analysis
+    life cycle analysis
+life cycle cost (lcc) analysis
+    life cycle cost (lcc) analysis
+    life cycle cost analysis
+life cycle emissions analysis
+    life cycle emissions analysis
+life cycle energy analysis
+    life cycle energy analysis
+life cycle saving analysis (lcsa)
+    life cycle saving analysis (lcsa)
+life cycle savings
+    life cycle savings
+life cycle zero energy buildings
+    life cycle zero energy buildings
+life cycle assessment
+    lca
+    lca (life cycle assessment)  
+    life cycle assessment
+    life cycle assessment (lca)
+    life-cycle assessment    
+life cycle cost
+    life cycle cost
+    life cycle cost (lcc)
+    life cycle costing
+    life-cycle cost
+    life-cycle costing
+    life-cycle costs
+    life-cycle-cost
+    lcc
+    lcc (life cycle costing)
+levelized cost of electricity
+    lcoe
+    lcoe (levelized cost of electricity)    
+    levelized cost of electricity
+    levelized cost of electricity (lcoe)
+    levelized costs of electricity
+    levelised cost of electricity
+    levelised cost of electri ity (lcoe)
+levelised cost of energy
+    levelised cost of energy
+    levelised cost of energy (lcoe)
+    levelized cost of energy analysis
+    lcoe (levelized cost of produced energy) analysis
+    levelized cost of energy
+    levelized cost of energy (lcoe)
+lead acid battery
+    lead acid battery
+    lead-acid battery    
+learning curve
+    learning curve
+    learning curves
+li-ion batteries
+    li-ion batteries
+    li-ion battery    
+linear optimization
+    linear optimization    
+    linear programming
+lithium ion battery
+    lithium ion battery
+    lithium-ion batteries
+    lithium-ion battery
+    lithium-ion battery energy storage    
+load leveling
+    load leveling
+    load-leveling    
+load match
+    load match
+    load matching
+load profile
+    load profile
+    load profiles
+low income household
+    low income household
+    low-income household
+low voltage networks
+    low voltage networks
+    low-voltage networks    
+    lv network
+    lv networks    
+market power
+    market power
+    power market    
+mathematical model
+    mathematical model
+    mathematical models
+maximum power point tracker (mppt)
+    maximum power point tracker (mppt)
+    mppt
+micro generation
+    micro generation
+    micro-generation
+micro grid
+    micro grid
+    micro-grid    
+    microgrid
+    microgrids    
+mixed integer linear programming
+    mixed integer linear programming
+    mixed integer linear programming (milp)
+    mixed-integer linear programming
+    milp    
+mixed-integer programming
+    mixed-integer programming    
+    mip    
+model
+    model
+    modeling
+    modelling
+monte carlo simulation
+    monte carlo (mc) simulations
+    monte carlo simulation
+    monte carlo simulations    
+    monte carlo analysis
+    monte carlo approach    
+nearly zero energy buildings (nzeb)
+    nearly zero energy buildings (nzeb)
+    nearly zero energy buildings (nzec)
+    nearly zero-energy building
+    near zero energy building    
+    nearly zero-energy buildings (nzeb)
+    net zero energy building
+    net zero energy buildings
+    net-zero energy building
+    net-zero energy building (nzeb)    
+    nzeb
+    nzebs (nearly zero energy buildings)  
+    net or nearly zero energy buildings    
+net metering
+    net metering
+    net-metering
+net metering policy
+    net metering policy
+    net-metering policy    
+net present cost
+    net present cost
+    net present cost (npc)    
+    npc
+    npc (net present cost)    
+net present value
+    net present value
+    net present value (npv)
+    npv    
+net zero energy
+    net zero energy
+    net-zero energy    
+off grid
+    off grid
+    off-grid
+operation strategies
+    operation strategies
+    operation strategy
+    operational strategies
+optimal size
+    optimal size
+    optimal sizing
+    size optimization    
+optimal system
+    optimal system
+    system optimization
+optimization
+    optimization
+    optimizations    
+    optimisation    
+particle swarm optimization
+    particle swarm optimization
+    particle swarm optimization (pso)
+    particle swarm optimisation    
+    pso
+    pso optimization    
+payback time
+    payback time
+    payback-time    
+peak shave
+    peak shave
+    peak shaving    
+photovoltaic
+    photovoltaic
+    photovoltaic (pv)
+    photovoltaics
+    photovoltaics (pv)    
+    pv
+    pv (photovoltaic)   
+    photo voltaic (pv)
+    photo-voltaic 
+    photovoltaik    
+photovoltaic system
+    photovoltaic (pv) system
+    photovoltaic (pv) systems
+    photovoltaic system
+    photovoltaic systems
+    photo voltaic system    
+photovoltaic battery system
+    photovoltaic battery system
+    photovoltaic battery systems 
+photovoltaic cell
+    photovoltaic cell
+    photovoltaic cells    
+photovoltaic (pv) panels
+    photovoltaic (pv) panels
+    photovoltaic panel
+    photovoltaic panels    
+photovoltaic power
+    photovoltaic (pv) power
+    photovoltaic power
+    photovoltaic (pv) power systems    
+photovoltaic solar
+    photovoltaic solar
+    solar photovoltaic
+    solar photovoltaic (pv)
+    solar photovoltaics
+    solar photo voltaic 
+    solar pv
+    solar-pv    
+    photovoltaic solar energy    
+photovoltaic/thermal
+    photovoltaic/thermal   
+    pvt
+    pvt (photovoltaic/thermal)    
+    photovoltaic-thermal systems    
+policies
+    policies
+    policy    
+productive use
+    productive use
+    productive uses    
+prosumer
+    prosumer
+    prosumers
+pumped hydro energy storage
+    pumped hydro energy storage
+    pumped-hydro energy storage    
+photovoltaic array    
+    pv array
+    pv arrays    
+    photovoltaic (pv) array
+pv battery system
+    pv battery system
+    pv-battery system
+    pv-battery systems
+pv microgrid
+    pv microgrid
+    pv microgrids
+pv module
+    pv module
+    pv modules    
+pv panel
+    pv panel
+    pv panels    
+pv system
+    pv system
+    pv systems    
+real option
+    real option
+    real options
+    real option valuation
+    real options valuation    
+real time pricing
+    real time pricing
+    real-time pricing
+    real-time' pricing    
+remote area
+    remote area
+    remote area.    
+renewable
+    renewable
+    renewables
+renewable energy
+    renewable energies
+    renewable energy    
+    100% renewable energy    
+renewable energy resources
+    renewable energy resources
+    renewable resource energy
+    renewables energy resources    
+renewable energy source
+    renewable energy source
+    renewable energy sources
+    renewable energy sources (res)    
+    res (renewable energy sources)    
+renewable energy system
+    renewable energy system
+    renewable energy system (res)
+    renewable energy systems  
+resident
+    resident
+    residents
+residential application
+    residential application
+    residential applications    
+residential batteries
+    residential batteries
+    residential battery    
+residential building
+    residential building
+    residential buildings
+residential consumer
+    residential consumer
+    residential consumers    
+residential load
+    residential load
+    residential loads
+residential microgrid
+    residential microgrid
+    residential microgrids    
+residential pv system
+    residential pv system
+    residential pv systems
+    residential photovoltaic systems    
+residential solar photovoltaic
+    residential solar photovoltaic
+    residential solar photovoltaics
+retail rate
+    retail rate
+    retail rates
+retrofit
+    retrofit
+    retrofitting
+rooftop photovoltaic
+    rooftop photovoltaic
+    rooftop photovoltaics
+    rooftop pv    
+    roof-top photovoltaic (pv)    
+rooftop photovoltaic (pv) systems
+    rooftop photovoltaic (pv) systems
+    rooftop photovoltaic system (rtpvs)    
+rural area
+    rural area
+    rural areas    
+rural electrification
+    rural electrification
+    rural electrifications
+scenario analysis
+    scenario analysis
+    scenarios analysis
+simulation
+    simulation
+    simulations
+smart building
+    smart building
+    smart buildings
+smart cities
+    smart cities
+    smart city
+smart grid
+    smart grid
+    smart grids    
+smart home
+    smart home
+    smart home (sh)
+    smart homes    
+smart meter
+    smart meter
+    smart metering
+social network
+    social network
+    social networks
+solar home system
+    solar home system
+    solar home system (shs)
+    solar home systems
+    solar home systems (shs)
+solar irradiance
+    solar irradiance
+    solar irradiation
+solar panel
+    solar panel
+    solar panels    
+solar photovoltaic system
+    solar photovoltaic system
+    solar photovoltaic systems
+    solar photo voltaic (spv) systems
+    solar pv system
+    solar pv systems
+solar thermal collectors
+    solar thermal collectors
+    solar-thermal collectors
+stand alone
+    stand alone
+    stand-alone
+stand alone systems
+    stand alone systems
+    stand-alone system
+stand-alone photovoltaic system
+    stand-alone photovoltaic system
+    stand-alone photovoltaic systems
+stand-alone power system
+    stand-alone power system
+    stand-alone power systems    
+state of charge
+    state of charge
+    state-of-charge
+storage system
+    storage system
+    storage systems
+sub saharan africa
+    sub saharan africa
+    sub-saharan africa
+subsidies
+    subsidies
+    subsidy  
+survey
+    survey
+    surveys
+systems thinking
+    systems thinking
+    systems-thinking    
+techno economic analysis
+    techno economic analysis
+    techno-economic analysis
+    techno-economical analysis    
+    technical-economic analysis 
+    techno-economic assessment    
+    techno-economic evaluation    
+    techno-economic feasibility    
+    techno-economic study    
+techno-economic
+    techno-economic
+    techno-economics    
+techno-economic modeling
+    techno-economic modeling
+    techno-economic modelling  
+time of use (tou)
+    time of use (tou)
+    time-of-use
+    tou    
+time of use tariff
+    time of use tariff
+    time-of-use tariff
+    time-of-use tariffs    
+total net present cost
+    total net present cost
+    total net present cost (npc)
+    total net present cost (tnpc)
+    tnpc    
+uncertainties
+    uncertainties
+    uncertainty
+vehicle to grid (v2g)
+    vehicle to grid (v2g)
+    vehicle-to-grid
+    vehicle-to-grid (v2g)    
+    v2g        
+virtual power plant
+    virtual power plant
+    virtual power plants    
+water energy nexus
+    water energy nexus
+    water-energy nexus    
+wind
+    wind    
+    wind energy    
+wind turbine
+    wind turbine
+    wind turbine (wt)
+    wind turbines    
+zero energy buildings
+    zero energy buildings
+    zero energy buildings (zeb)
+    zero-energy building
+    zero-energy buildings    
 3d map
     3d map
 abc algorithm
@@ -56,29 +889,17 @@ african rural environment
     african rural environment
 ageing
     ageing
-agent-based model
-    agent-based model
-    agent-based modeling
-    agent-based modelling
-aggregation
-    aggregation
-    aggregator
-    aggregators
 aggregation entities
     aggregation entities
 agricultural farm
     agricultural farm
-ahp
-    ahp
+
 air conditioning
     air conditioning
 air pollution
     air pollution
 air quality
     air quality
-air source heat pumps
-    air source heat pumps
-    air-source heat pump
 air/water heat pumps
     air/water heat pumps
 airport
@@ -95,8 +916,7 @@ anaerobic digestion
     anaerobic digestion
 analog ensemble
     analog ensemble
-analytic hierarchy process
-    analytic hierarchy process
+
 anchor-business-community model
     anchor-business-community model
 ancillary services
@@ -127,9 +947,6 @@ arid climate
     arid climate
 armidale nsw
     armidale nsw
-artificial neural network
-    artificial neural network
-    artificial neural networks
 artisanal fishing
     artisanal fishing
 ashp
@@ -176,15 +993,10 @@ balance of systems
     balance of systems
 bangladesh
     bangladesh
-barrier
-    barrier
-    barriers
+
 base transceiver station (btss)
     base transceiver station (btss)
     base transceiver stations
-batteries
-    batteries
-    battery
 battery aging
     battery aging
 battery bank
@@ -201,11 +1013,7 @@ battery energy
     battery energy
 battery energy storage
     battery energy storage
-battery energy storage system
-    battery energy storage system
-    battery energy storage system (bess)
-    battery energy storage systems
-    bess
+
 battery management
     battery management
 battery management strategy
@@ -218,14 +1026,10 @@ battery operation
     battery operation
 battery state of charge
     battery state of charge
-battery storage
-    battery storage
-    storage battery
+
 battery storage application
     battery storage application
-battery storage system
-    battery storage system
-    battery storage systems
+
 battery system
     battery system
 battery technology
@@ -242,15 +1046,14 @@ benin
     benin
 beopt
     beopt
+
 best mix
     best mix
 best-worst scaling
     best-worst scaling
 bidirectional inverter
     bidirectional inverter
-bill savings
-    bill savings
-    billing saving
+
 bim
     bim
 bioclimatic house
@@ -273,12 +1076,13 @@ biomass energy
     biomass energy
 biomass gasification
     biomass gasification
-biomass gasifier
     biomass gasifier
 biomass/biogas system
     biomass/biogas system
 biophilic design
     biophilic design
+bipv
+    bipv
 bipv generator
     bipv generator
 bipvt
@@ -311,7 +1115,6 @@ break-even analysis
     break-even analysis
 break-even cost
     break-even cost
-breakeven cost
     breakeven cost
 breakeven grid distance
     breakeven grid distance
@@ -337,24 +1140,14 @@ building energy performance
     building energy performance
 building energy refurbishment
     building energy refurbishment
-building energy system
-    building energy system
-    building energy systems
 building energy use efficiency
     building energy use efficiency
 building integrated energy savings technologies
     building integrated energy savings technologies
 building integrated grid-connected pv
     building integrated grid-connected pv
-building integrated photovoltaic
-    building integrated photovoltaic
-    building integrated photovoltaic (bipv)
-    building integrated photovoltaics
-    building-integrated photovoltaic (bipv)
-    building-integrated photovoltaics
-    bipv
-building integrated photovoltaic systems
-    building integrated photovoltaic systems
+
+
 building integrated solar thermal systems (bists)
     building integrated solar thermal systems (bists)
 building modeling and simulation
@@ -391,9 +1184,6 @@ building-integrated solar
     building-integrated solar
 buildings
     buildings
-business model
-    business model
-    business models
 c33
     c33
 c36
@@ -426,12 +1216,6 @@ car-free' living
     car-free' living
 carbon dioxide
     carbon dioxide
-carbon dioxide emission
-    carbon dioxide emission
-    carbon dioxide emissions
-carbon emission
-    carbon emission
-    carbon emissions
 carbon emission pinch analysis
     carbon emission pinch analysis
 carbon finance
@@ -442,9 +1226,7 @@ carbon neutral
     carbon neutral
 carbon neutral building design
     carbon neutral building design
-carbon tax
-    carbon tax
-    carbon taxes
+
 case study
     case study
 cash flow
@@ -491,6 +1273,7 @@ choice experiment
     choice experiment
 choice-diffusion model
     choice-diffusion model
+
 circuit panel
     circuit panel
 circular economy
@@ -513,9 +1296,7 @@ climate and energy scenarios
     climate and energy scenarios
 climate change
     climate change
-climate change impacts
     climate change impacts
-climate change mitigation
     climate change mitigation
 climate classification
     climate classification
@@ -527,9 +1308,7 @@ clipping consumption
     clipping consumption
 cloud energy storage
     cloud energy storage
-cluster
-    cluster
-    clustering
+
 cluster analysis
     cluster analysis
 cmaq
@@ -542,13 +1321,12 @@ co-generation
     co-generation
 co-simulation
     co-simulation
-co2 emission
-    co2 emission
-    co2 emissions
+
 co2 emissions reduction
     co2 emissions reduction
 co2 mitigation potential
     co2 mitigation potential
+
 cogeneration
     cogeneration
 cohousing
@@ -561,18 +1339,12 @@ combination of applications
     combination of applications
 combination system
     combination system
-combined cooling heat and power (cchp)
-    combined cooling heat and power (cchp)
-    cchp
+
 combined dispatch (cd) strategy
     combined dispatch (cd) strategy
 combined heat & power (chp) plant
     combined heat & power (chp) plant
-combined heat and power
-    combined heat and power
-    combined heat and power (chp)
-    combined heating and power
-    chp
+
 combined heat and power coupling
     combined heat and power coupling
 combined heat and power systems
@@ -627,9 +1399,7 @@ conduct
     conduct
 confidence interval
     confidence interval
-configuration optimization
-    configuration optimization
-    optimal configuration
+
 conjoint analysis
     conjoint analysis
 consensus
@@ -668,10 +1438,7 @@ control logic
     control logic
 control system
     control system
-controllable load
-    controllable load
-    controllable loads
-    load control
+
 controller
     controller
 conventional
@@ -690,19 +1457,14 @@ correlation
     correlation
 cosmo-rea6
     cosmo-rea6
-cost
-    cost
-    costs
+
 cost analysis
     cost analysis
-cost benefit analysis
-    cost benefit analysis
-    cost-benefit analysis
+
 cost comparison
     cost comparison
-cost effectiveness
-    cost effectiveness
-    cost-effectiveness
+
+    
 cost effectiveness of energy supply
     cost effectiveness of energy supply
 cost efficiency
@@ -717,20 +1479,12 @@ cost of conserved energy (cce)
     cost of conserved energy (cce)
 cost of electricity
     cost of electricity
-cost of energy
-    cost of energy
-    cost of energy (coe)
-    coe
-    coe (cost of energy)
-cost optimal
-    cost optimal
-    cost optimization
-    cost-optimality
+
+
 cost optimisation
     cost optimisation
-cost per kilowatt-hour
-    cost per kilowatt-hour
 cost per kwh
+    cost per kilowatt-hour
     cost per kwh
 cost reduction
     cost reduction
@@ -794,11 +1548,9 @@ dc-dc converters
     dc-dc converters
 decarbonisation
     decarbonisation
-decarbonization
     decarbonization
-decentralised
-    decentralised
 decentralization
+    decentralised
     decentralization
 decentralized energy generation
     decentralized energy generation
@@ -812,9 +1564,6 @@ decentralized rural electrification
     decentralized rural electrification
 decentralized storage
     decentralized storage
-decision making
-    decision making
-    decision-making
 decomposition
     decomposition
 deep learning
@@ -831,26 +1580,14 @@ demand charge
     demand charge
 demand growth
     demand growth
-demand response
-    demand response
-    demand responsiveness
 demand response contract
     demand response contract
 demand response mechanisms
     demand response mechanisms
 demand response program
     demand response program
-demand side management
-    demand side management
-    demand side management (dsm)
-    demand-side management
-demand-side response
-    demand-side response
 demographic structure
     demographic structure
-deployment modeling
-    deployment modeling
-    deployment models
 desalination
     desalination
 desalination system
@@ -861,9 +1598,7 @@ design decision-making
     design decision-making
 design for social diversity
     design for social diversity
-design optimization
-    design optimization
-    optimal design
+
 design space
     design space
 developed countries
@@ -879,9 +1614,6 @@ diesel
     diesel
 diesel electricity generation
     diesel electricity generation
-diesel generator
-    diesel generator
-    diesel generators
 diesel genset
     diesel genset
 diesel group
@@ -948,21 +1680,12 @@ distributed energy adoption
     distributed energy adoption
 distributed energy generation system
     distributed energy generation system
-distributed energy resource
-    distributed energy resource
-    distributed energy resources
-    distributed energy resources (der)
 distributed energy storage
     distributed energy storage
 distributed energy systems
     distributed energy systems
 distributed fuzzy control
     distributed fuzzy control
-distributed generation
-    distributed generation
-    distributed generation (dg)
-    distributed generations
-    distributed generators
 distributed photovoltaic power generation
     distributed photovoltaic power generation
 distributed photovoltaic power production
@@ -981,13 +1704,6 @@ distribution grids
     distribution grids
 distribution management
     distribution management
-distribution network
-    distribution network
-    distribution network (dn)
-    distribution networks
-distribution system
-    distribution system
-    distribution systems
 distribution transformer
     distribution transformer
 distributional impact
@@ -1050,9 +1766,6 @@ dynamic payback
     dynamic payback
 dynamic programming
     dynamic programming
-dynamic simulation
-    dynamic simulation
-    dynamic simulations
 dynamic tariff
     dynamic tariff
 dynamic time-of-use tariff
@@ -1075,13 +1788,6 @@ eco-tourism
     eco-tourism
 ecological storm water management
     ecological storm water management
-econometric analysis
-    econometric analysis
-econometrics
-    econometrics
-economic
-    economic
-    economics
 economic adoption model
     economic adoption model
 economic analysis
@@ -1090,9 +1796,7 @@ economic and environmental analysis
     economic and environmental analysis
 economic aspects
     economic aspects
-economic assessment
-    economic assessment
-    economical assessment
+
 economic benefit
     economic benefit
 economic dispatch
@@ -1105,13 +1809,6 @@ economic estimation
     economic estimation
 economic evaluation
     economic evaluation
-economic feasibility
-    economic feasibility
-    economical feasibility
-economic feasibility analysis
-    economic feasibility analysis
-economic feasibility study
-    economic feasibility study
 economic impact analysis
     economic impact analysis
 economic incentive
@@ -1176,13 +1873,6 @@ electre iii outranking method
     electre iii outranking method
 electric and thermal storage
     electric and thermal storage
-electric energy
-    electric energy
-    electrical energy
-electric energy storage
-    electric energy storage
-    electrical energy storage
-    electricity energy storage
 electric heat pumps
     electric heat pumps
 electric load
@@ -1191,11 +1881,6 @@ electric power consumption
     electric power consumption
 electric storage systems
     electric storage systems
-electric vehicle
-    electric vehicle
-    electric vehicle (ev)
-    electric vehicles
-    electrical vehicle
 electric vehicle battery
     electric vehicle battery
 electric vehicle home-charging
@@ -1210,12 +1895,6 @@ electrical engineering
     electrical engineering
 electrical production
     electrical production
-electrical storage
-    electrical storage
-    electricity storage
-electrically driven heat pump
-    electrically driven heat pump
-    electricity driven heat pump
 electricity
     electricity
 electricity access
@@ -1234,17 +1913,10 @@ electricity generation
     electricity generation
 electricity generation from fuel
     electricity generation from fuel
-electricity grid
-    electricity grid
-    electricity grids
-    grid electricity
 electricity load forecast
     electricity load forecast
 electricity losses
     electricity losses
-electricity market
-    electricity market
-    electricity markets
 electricity monitoring
     electricity monitoring
 electricity network
@@ -1253,9 +1925,6 @@ electricity price
     electricity price
 electricity production companies
     electricity production companies
-electricity rate
-    electricity rate
-    electricity rates
 electricity rate design
     electricity rate design
 electricity rate spiral
@@ -1270,9 +1939,6 @@ electricity supply companies
     electricity supply companies
 electricity system dispatch modeling
     electricity system dispatch modeling
-electricity tariff
-    electricity tariff
-    electricity tariffs
 electricity transmission
     electricity transmission
 electricity utility revenue
@@ -1294,16 +1960,10 @@ embedded network
 embodied energy
     embodied energy
     embodied energy (ced)
-embodied green house gas emissions (gwp)
-    embodied green house gas emissions (gwp)
-    gwp
 emerging economies
     emerging economies
 emerging technology
     emerging technology
-emission
-    emission
-    emissions
 emission analysis
     emission analysis
 emission costs
@@ -1348,12 +2008,6 @@ energy consumption
     energy consumption
 energy conversion
     energy conversion
-energy cost
-    energy cost
-    energy costs
-energy cost optimization
-    energy cost optimization
-    optimal energy cost
 energy crisis
     energy crisis
 energy cultures framework
@@ -1364,9 +2018,6 @@ energy economics
     energy economics
 energy efficiency
     energy efficiency
-energy efficiency measures
-    energy efficiency measures
-    energy-efficient measures
 energy efficient buildings
     energy efficient buildings
 energy efficient housing
@@ -1391,16 +2042,10 @@ energy management
     energy management
 energy management strategies
     energy management strategies
-energy management system
-    energy management system
-    energy management systems
 energy market
     energy market
 energy microgeneration
     energy microgeneration
-energy modeling
-    energy modeling
-    energy models
 energy negotiation
     energy negotiation
 energy optimization
@@ -1413,9 +2058,7 @@ energy performance requirements
     energy performance requirements
 energy planning
     energy planning
-energy policies
-    energy policies
-    energy policy
+
 energy policy design
     energy policy design
 energy poverty
@@ -1432,41 +2075,27 @@ energy retrofit
     energy retrofit
 energy return on energy invested
     energy return on energy invested
-energy saving
-    energy saving
-    energy savings
+
 energy sector
     energy sector
 energy security
     energy security
-energy service companies
-    energy service companies
-    energy service company
-energy simulation
-    energy simulation
-    energy simulations
-energy storage
-    energy storage
+
+
+
 energy storage devices
     energy storage devices
-energy storage system
-    energy storage system
-    energy storage system (ess)
-    energy storage systems
+
 energy subsidies
     energy subsidies
 energy supply
     energy supply
 energy supply systems
     energy supply systems
-energy sustainability
-    energy sustainability
-    sustainable energy
+
 energy system analysis
     energy system analysis
-energy system model
-    energy system model
-    energy system modeling
+
 energy system modeling framework
     energy system modeling framework
 energy system planning
@@ -1477,9 +2106,7 @@ energy trade-off
     energy trade-off
 energy trading
     energy trading
-energy transaction
-    energy transaction
-    transactive energy
+
 energy transformation
     energy transformation
 energy transitions
@@ -1522,9 +2149,7 @@ environmental emissions
     environmental emissions
 environmental evaluation
     environmental evaluation
-environmental impact
-    environmental impact
-    environmental impacts
+
 environmental justice
     environmental justice
 environmental performances
@@ -1605,13 +2230,7 @@ feasibility study
     feasibility study
 fee-for-service concessions
     fee-for-service concessions
-feed in tariff
-    feed in tariff
-    feed in tariffs
-    feed-in tariff
-    feed-in tariffs
-    feed-in-tariff
-    fit (feed-in tariff)
+
 feed-in remuneration
     feed-in remuneration
 feed-in tariff design
@@ -1634,9 +2253,7 @@ final energy
     final energy
 final energy consumption in a building
     final energy consumption in a building
-finance
-    finance
-    financing
+
 financial analysis
     financial analysis
 financial and environmental feasibility
@@ -1663,6 +2280,7 @@ finite element method
     finite element method
 finland
     finland
+
 fixed charges
     fixed charges
 fixed effects
@@ -1709,10 +2327,7 @@ frequency restoration reserve
     frequency restoration reserve
 frequency-duration
     frequency-duration
-fuel cell
-    fuel cell
-    fuel cells
-    fuel-cells
+
 fuel cell cogeneration system
     fuel cell cogeneration system
 fuel cell power generation systems
@@ -1735,9 +2350,7 @@ fuzzy
     fuzzy
 fuzzy logic
     fuzzy logic
-fuzzy logic control
-    fuzzy logic control
-    fuzzy logic controller
+
 g.pot
     g.pot
 galapagos islands
@@ -1754,27 +2367,15 @@ gcc residential sector
     gcc residential sector
 general algebraic modeling system
     general algebraic modeling system
-generation
-    generation
-    generator
+
 generation curtailment
     generation curtailment
 generation profile
     generation profile
 generation-grid-load-storage
     generation-grid-load-storage
-genetic algorithm
-    genetic algorithm
-    genetic algorithm (ga)
-    genetic algorithms
-genetic algorithm optimization
-    genetic algorithm optimization
-geographic information system
-    geographic information system
-    geographic information system (gis)
-    geographic information systems
-    geographical information systems
-    gis
+
+
 geographic zone
     geographic zone
 geospatial planning
@@ -1795,15 +2396,14 @@ ghana
     ghana
 ghg
     ghg
-ghg emission
-    ghg emission
-    ghg emissions
+
 ghg emission penalties
     ghg emission penalties
 ghg emissions reduction
     ghg emissions reduction
 ghg reduction
     ghg reduction
+
 gis modeling
     gis modeling
 global solar radiation
@@ -1834,39 +2434,21 @@ green transportation
     green transportation
 greenhouse emissions
     greenhouse emissions
-greenhouse gas
-    greenhouse gas
-greenhouse gas emission
-    greenhouse gas emission
-    greenhouse gas emissions
-greenhouse gases
-    greenhouse gases
+
+
+
 grid
     grid
 grid access
     grid access
 grid congestion management
     grid congestion management
-grid connected
-    grid connected
-    grid connection
-    grid-connected
-grid connected pv
-    grid connected pv
-    grid-connected pv
-grid connected pv system
-    grid connected pv system
-    grid connected pv systems
-    grid-connected pv systems
+
+
 grid connected rooftop photovoltaics
     grid connected rooftop photovoltaics
-grid connected system
-    grid connected system
-    grid-connected system
-    grid-connected systems
-grid defection
-    grid defection
-    grid-defection
+
+
 grid economics
     grid economics
 grid extension
@@ -1877,9 +2459,7 @@ grid optimization
     grid optimization
 grid outages
     grid outages
-grid parity
-    grid parity
-    grid-parity
+
 grid parity proximity
     grid parity proximity
 grid power system
@@ -1896,9 +2476,7 @@ grid-connected micro-grid
     grid-connected micro-grid
 grid-connected mode
     grid-connected mode
-grid-connected photovoltaic
-    grid-connected photovoltaic
-    grid-connected photovoltaics
+
 grid-connected photovoltaic system
     grid-connected photovoltaic system
 grid-connected pv power system
@@ -1919,9 +2497,7 @@ grid-interactive solar pv
     grid-interactive solar pv
 gridlab-d
     gridlab-d
-ground source heat pump
-    ground source heat pump
-    ground-source heat pump
+
 ground-coupled heat pump
     ground-coupled heat pump
 groundwater
@@ -1934,6 +2510,7 @@ guatemala
     guatemala
 gwo
     gwo
+
 harmonic and asymmetry compensation
     harmonic and asymmetry compensation
 harmony search
@@ -1942,16 +2519,12 @@ health clinic
     health clinic
 healthcare services
     healthcare services
-heat
-    heat
-    heating
+
 heat engine
     heat engine
 heat insulation solar glass
     heat insulation solar glass
-heat pump
-    heat pump
-    heat pumps
+
 heat recovery
     heat recovery
 heat recovery steam generator
@@ -2004,41 +2577,17 @@ home storage system
     home storage system
 home wind-solar-storage system
     home wind-solar-storage system
-home-to-vehicle
-    home-to-vehicle
-    vehicle-to-home
-    vehicle-to-home (v2h)
-homer energy
-    homer energy
-homer grid
-    homer grid
-homer model
-    homer model
-homer optimization
-    homer optimization
-homer pro
-    homer pro
-homer pro software
-    homer pro software
-homer pro tool
-    homer pro tool
-homer program
-    homer program
-homer pro®
-    homer pro®
-homer simulation
-    homer simulation
-homer software
-    homer software
+
+
+
+
 honduras
     honduras
 host country
     host country
 hot water tanks
     hot water tanks
-household
-    household
-    households
+
 household budget constraints
     household budget constraints
 household case study
@@ -2087,38 +2636,17 @@ hybrid energy storage
     hybrid energy storage
 hybrid energy storage system
     hybrid energy storage system
-hybrid energy system
-    hybrid energy system
-    hybrid energy systems
+
 hybrid energy technologies
     hybrid energy technologies
-hybrid generation system
-    hybrid generation system
-    hybrid generation systems
+
 hybrid heating system
     hybrid heating system
-hybrid microgrid
-    hybrid microgrid
-    hybrid microgrids (hmgs)
-hybrid microgrid system
-    hybrid microgrid system
-hybrid mini-grid
-    hybrid mini-grid
-    hybrid mini-grids
-hybrid mini-grid system
-    hybrid mini-grid system
-hybrid minigrid
-    hybrid minigrid
+
+
 hybrid network
     hybrid network
-hybrid optimisation model for electric renewables
-    hybrid optimisation model for electric renewables
-hybrid optimization model for electric renewable (homer)
-    hybrid optimization model for electric renewable (homer)
-    homer
-    homer (hybrid optimization of multiple energy resources)
-hybrid optimization of multiple energy resources (homer) software
-    hybrid optimization of multiple energy resources (homer) software
+
 hybrid photovoltaic
     hybrid photovoltaic
 hybrid photovoltaic thermal collector
@@ -2139,12 +2667,7 @@ hybrid pmsg-pv system
     hybrid pmsg-pv system
 hybrid power source
     hybrid power source
-hybrid power system
-    hybrid power system
-    hybrid power system (hps)
-    hybrid power system.
-    hybrid power systems
-    hybrid power systems (hps)
+
 hybrid prime mover
     hybrid prime mover
 hybrid pv-battery-diesel generator system
@@ -2159,9 +2682,7 @@ hybrid pv/diesel system
     hybrid pv/diesel system
 hybrid pv/t plant
     hybrid pv/t plant
-hybrid pv/wind system
-    hybrid pv/wind system
-    pv/wind hybrid system
+
 hybrid pv/wind/fc/battery system
     hybrid pv/wind/fc/battery system
 hybrid pvt collector
@@ -2174,11 +2695,7 @@ hybrid renewable energy microgrid
     hybrid renewable energy microgrid
 hybrid renewable energy sources (hres)
     hybrid renewable energy sources (hres)
-hybrid renewable energy system
-    hybrid renewable energy system
-    hybrid renewable energy system (hres)
-    hybrid renewable energy system (pv/wind/bioenergy)
-    hybrid renewable energy systems
+
 hybrid renewable energy system sizing
     hybrid renewable energy system sizing
 hybrid renewable mini-grid
@@ -2189,9 +2706,7 @@ hybrid solar-wind grid system
     hybrid solar-wind grid system
 hybrid supply system
     hybrid supply system
-hybrid system
-    hybrid system
-    hybrid systems
+
 hybrid system simulation
     hybrid system simulation
 hybrid wind
@@ -2204,12 +2719,10 @@ hybrid wind/solar system
     hybrid wind/solar system
 hydrogen
     hydrogen
-hydrogen & fuel cell
-    hydrogen & fuel cell
+
 hydrogen economy
     hydrogen economy
-hydrogen fuel cell
-    hydrogen fuel cell
+
 hydrogen refuelling station
     hydrogen refuelling station
 hydrogen storage
@@ -2314,17 +2827,12 @@ intelligent community
     intelligent community
 intelligent system
     intelligent system
-internal rate of return
-    internal rate of return
-    internal rate of return (irr)
-    irr
+
 interoperability
     interoperability
 interviews
     interviews
-inverter
-    inverter
-    inverters
+
 inverter control
     inverter control
 inverterpower factor
@@ -2345,6 +2853,7 @@ iran
     iran
 ireland
     ireland
+
 irradiation
     irradiation
 irradiation uncertainty
@@ -2401,16 +2910,8 @@ law
     law
 lcm (life cycle management)
     lcm (life cycle management)
-lcoe
-    lcoe
-    lcoe (levelized cost of electricity)
-lcoe (levelized cost of produced energy) analysis
-    lcoe (levelized cost of produced energy) analysis
 lcoe comparison
     lcoe comparison
-lead acid battery
-    lead acid battery
-    lead-acid battery
 lead-acid
     lead-acid
 lead–acid battery energy storage
@@ -2419,9 +2920,7 @@ leapfrogging
     leapfrogging
 learning by doing
     learning by doing
-learning curve
-    learning curve
-    learning curves
+
 learning effect
     learning effect
 learning rates
@@ -2441,64 +2940,15 @@ led lighting
 led technology
     led technology
 levelised cost
-    levelised cost
-levelised cost of energy
-    levelised cost of energy
-    levelised cost of energy (lcoe)
-    levelised cost of electri ity (lcoe)
-    levelized cost of electricity
-    levelized cost of electricity (lcoe)
-    levelized costs of electricity
-    levelised cost of electricity
+    levelised cost    
 levelized cost
     levelized cost
-levelized cost of energy
-    levelized cost of energy
-    levelized cost of energy (lcoe)
-levelized cost of energy analysis
-    levelized cost of energy analysis
 levelized cost of hydrogen
     levelized cost of hydrogen
 levelized cost of use
     levelized cost of use
-li-ion batteries
-    li-ion batteries
-    li-ion battery
 lidar
     lidar
-life cycle
-    life cycle
-life cycle analysis
-    life cycle analysis
-life cycle assessment
-    life cycle assessment
-    life cycle assessment (lca)
-    life-cycle assessment
-    lca
-    lca (life cycle assessment)
-life cycle cost
-    life cycle cost
-    life cycle cost (lcc)
-    life cycle costing
-    life-cycle cost
-    life-cycle costing
-    life-cycle costs
-    life-cycle-cost
-    lcc
-    lcc (life cycle costing)
-life cycle cost (lcc) analysis
-    life cycle cost (lcc) analysis
-    life cycle cost analysis
-life cycle emissions analysis
-    life cycle emissions analysis
-life cycle energy analysis
-    life cycle energy analysis
-life cycle saving analysis (lcsa)
-    life cycle saving analysis (lcsa)
-life cycle savings
-    life cycle savings
-life cycle zero energy buildings
-    life cycle zero energy buildings
 lifespan cost estimation
     lifespan cost estimation
 lifetime economic analysis
@@ -2517,22 +2967,8 @@ linear concentrating photovoltaic
     linear concentrating photovoltaic
 linear fresnel lens
     linear fresnel lens
-linear programming
-    linear programming
-    linear optimization
-    mixed binary mixed binary linear programming
-    mixed integer linear programming
-    mixed integer linear programming (milp)
-    mixed-integer linear programming
-    milp
-lithium ion battery
-    lithium ion battery
-    lithium-ion batteries
-    lithium-ion battery
 lithium-ion
     lithium-ion
-lithium-ion battery energy storage
-    lithium-ion battery energy storage
 lithonia visual software (lvs)
     lithonia visual software (lvs)
 living environment
@@ -2549,23 +2985,17 @@ load following
     load following
 load forecast
     load forecast
-load leveling
-    load leveling
-    load-leveling
+
 load management
     load management
-load match
-    load match
-    load matching
+
 load matching and grid interaction (lmgi)
     load matching and grid interaction (lmgi)
 load modeling
     load modeling
 load patterns
     load patterns
-load profile
-    load profile
-    load profiles
+
 load scheduling
     load scheduling
 load sharing
@@ -2616,17 +3046,13 @@ low energy residence
     low energy residence
 low exergy (lowex) buildings
     low exergy (lowex) buildings
-low income household
-    low income household
-    low-income household
+
 low to zero energy/carbon housing
     low to zero energy/carbon housing
 low voltage distribution network
     low voltage distribution network
     low-voltage distribution network (lvdn)
-low voltage networks
-    low voltage networks
-    low-voltage networks
+
 low-carbon benefit
     low-carbon benefit
 low-carbon consumer society
@@ -2645,9 +3071,7 @@ lpsp
     lpsp
 lumen
     lumen
-lv network
-    lv network
-    lv networks
+
 lyapunov optimization
     lyapunov optimization
 machine learning
@@ -2676,9 +3100,7 @@ market diffusion
     market diffusion
 market optimisation
     market optimisation
-market power
-    market power
-    power market
+
 market tracking
     market tracking
 market-based incentives
@@ -2692,14 +3114,8 @@ markov decision process (mdp)
     markov decision processes
 markov model
     markov model
-mathematical model
-    mathematical model
-    mathematical models
 matlab
     matlab
-maximum power point tracker (mppt)
-    maximum power point tracker (mppt)
-    mppt
 mediterranean
     mediterranean
 medium-term analysis
@@ -2716,12 +3132,6 @@ micro combined heat and power
     micro combined heat and power
 micro gas turbine
     micro gas turbine
-micro generation
-    micro generation
-    micro-generation
-micro grid
-    micro grid
-    micro-grid
 micro hydro
     micro hydro
 micro hydro and feasibility
@@ -2730,6 +3140,7 @@ micro integrated energy system (mies)
     micro integrated energy system (mies)
 micro-chp
     micro-chp
+    microchp    
 micro-credit
     micro-credit
 micro-enterprise
@@ -2742,33 +3153,24 @@ micro-hydro power generation
     micro-hydro power generation
 micro-multigeneration
     micro-multigeneration
-micro-turbines
-    micro-turbines
-microchp
-    microchp
-microgeneration
-    microgeneration
-microgrid
-    microgrid
-    microgrids
-microgrid optimization
-    microgrid optimization
 microturbine (mt)
     microturbine (mt)
+    micro-turbines
+microgeneration
+    microgeneration
+microgrid optimization
+    microgrid optimization
 mini-grid
     mini-grid
-minigrids
     minigrids
 mining
     mining
-mip
-    mip
 mitigation cost
     mitigation cost
+mixed binary mixed binary linear programming
+    mixed binary mixed binary linear programming
 mixed-integer non-linear programming
     mixed-integer non-linear programming
-mixed-integer programming
-    mixed-integer programming
 mixed-use buildings
     mixed-use buildings
 mmc (modern methods of construction)
@@ -2781,10 +3183,6 @@ mobile solar
     mobile solar
 mode-based scheduling
     mode-based scheduling
-model
-    model
-    modeling
-    modelling
 model analysis
     model analysis
 model based predictive control
@@ -2798,14 +3196,6 @@ modeling cost of energy
     modeling cost of energy
 monetary saving
     monetary saving
-monte carlo (mc) simulations
-    monte carlo (mc) simulations
-    monte carlo simulation
-    monte carlo simulations
-monte carlo analysis
-    monte carlo analysis
-monte carlo approach
-    monte carlo approach
 moradabad
     moradabad
 morocco
@@ -2882,25 +3272,15 @@ nanicl2 batteries
     nanicl2 batteries
 nano-grid
     nano-grid
+    nanogrids    
 nanogrid/ microgrid
     nanogrid/ microgrid
-nanogrids
-    nanogrids
 nash equilibrium game
     nash equilibrium game
 natural ventilation
     natural ventilation
-near zero energy building
-    near zero energy building
 near-term economic
     near-term economic
-nearly zero energy buildings (nzeb)
-    nearly zero energy buildings (nzeb)
-    nearly zero energy buildings (nzec)
-    nearly zero-energy building
-    nearly zero-energy buildings (nzeb)
-    nzeb
-    nzebs (nearly zero energy buildings)
 nearly zero energy cities (nzec)
     nearly zero energy cities (nzec)
 needs evaluation
@@ -2917,41 +3297,16 @@ net domestic carbon emissions reduction
     net domestic carbon emissions reduction
 net energy metering
     net energy metering
-net metering
-    net metering
-    net-metering
-net metering policy
-    net metering policy
-    net-metering policy
 net metering systems
     net metering systems
-net or nearly zero energy buildings
-    net or nearly zero energy buildings
 net plus-energy building (npeb)
     net plus-energy building (npeb)
 net power cost (npc)
     net power cost (npc)
-net present cost
-    net present cost
-    net present cost (npc)
-    npc
-    npc (net present cost)
-net present value
-    net present value
-    net present value (npv)
-    npv
 net present value analysis
     net present value analysis
 net zero
     net zero
-net zero energy
-    net zero energy
-    net-zero energy
-net zero energy building
-    net zero energy building
-    net zero energy buildings
-    net-zero energy building
-    net-zero energy building (nzeb)
 net zero energy home
     net zero energy home
 net-zero buildings
@@ -3012,9 +3367,6 @@ obia
     obia
 obstacles
     obstacles
-off grid
-    off grid
-    off-grid
 off-grid electricity service
     off-grid electricity service
 off-grid electrification
@@ -3065,10 +3417,6 @@ operation and maintenance investment
     operation and maintenance investment
 operation simulation
     operation simulation
-operation strategies
-    operation strategies
-    operation strategy
-    operational strategies
 operational expenditure
     operational expenditure
 operational planning
@@ -3095,22 +3443,10 @@ optimal power management
     optimal power management
 optimal scheduling
     optimal scheduling
-optimal size
-    optimal size
-    optimal sizing
-    size optimization
 optimal sizing and positioning
     optimal sizing and positioning
-optimal system
-    optimal system
-    system optimization
-optimisation
-    optimisation
 optimisation software
     optimisation software
-optimization
-    optimization
-    optimizations
 optimization analysis
     optimization analysis
 optimization bidding strategy
@@ -3123,8 +3459,6 @@ optimization results
     optimization results
 optimization using surface fitting techniques
     optimization using surface fitting techniques
-optimization with homer
-    optimization with homer
 optimum design
     optimum design
 optimum energy systems
@@ -3167,12 +3501,6 @@ participatory planning
     participatory planning
 participatory power market
     participatory power market
-particle swarm optimization
-    particle swarm optimization
-    particle swarm optimization (pso)
-    pso
-    pso optimization
-    particle swarm optimisation
 partnerships
     partnerships
 passive cooling
@@ -3185,15 +3513,11 @@ passivhaus and plusenergie® housing
     passivhaus and plusenergie® housing
 pay-back period
     pay-back period
+    payback period    
 payback
     payback
-payback period
-    payback period
 payback period and carbon credit
     payback period and carbon credit
-payback time
-    payback time
-    payback-time
 payback year
     payback year
 peak demand
@@ -3204,9 +3528,6 @@ peak load cutting
     peak load cutting
 peak saving
     peak saving
-peak shave
-    peak shave
-    peak shaving
 peak sun approach
     peak sun approach
 peak-load reduction
@@ -3242,25 +3563,10 @@ phase change material
     phase change material
 philippines
     philippines
-photo voltaic (pv)
-    photo voltaic (pv)
-    photo-voltaic
-photo voltaic system
-    photo voltaic system
 photo-voltaic-wind-hydrogen hybrid system
     photo-voltaic-wind-hydrogen hybrid system
 photometric tool
     photometric tool
-photovoltaic
-    photovoltaic
-    photovoltaic (pv)
-    photovoltaics
-    photovoltaics (pv)
-    pv
-    pv (photovoltaic)
-photovoltaic (pv) array
-    photovoltaic (pv) array
-    photovoltaic array
 photovoltaic (pv) generation and energy storage (es) systems
     photovoltaic (pv) generation and energy storage (es) systems
 photovoltaic (pv) inverter
@@ -3270,29 +3576,9 @@ photovoltaic (pv) micro generation
 photovoltaic (pv) module
     photovoltaic (pv) module
     photovoltaic module
-photovoltaic (pv) panels
-    photovoltaic (pv) panels
-    photovoltaic panel
-    photovoltaic panels
-photovoltaic (pv) power
-    photovoltaic (pv) power
-    photovoltaic power
-photovoltaic (pv) power systems
-    photovoltaic (pv) power systems
 photovoltaic (pv) self-consumption
     photovoltaic (pv) self-consumption
     photovoltaic self-consumption
-photovoltaic (pv) system
-    photovoltaic (pv) system
-    photovoltaic (pv) systems
-    photovoltaic system
-    photovoltaic systems
-photovoltaic battery system
-    photovoltaic battery system
-    photovoltaic battery systems
-photovoltaic cell
-    photovoltaic cell
-    photovoltaic cells
 photovoltaic distributed generation
     photovoltaic distributed generation
 photovoltaic economic potential
@@ -3337,8 +3623,6 @@ photovoltaic sizing
     photovoltaic sizing
 photovoltaic solar cell
     photovoltaic solar cell
-photovoltaic solar energy
-    photovoltaic solar energy
 photovoltaic system performance
     photovoltaic system performance
 photovoltaic system subsystems
@@ -3349,16 +3633,8 @@ photovoltaic water-supply scheme
     photovoltaic water-supply scheme
 photovoltaic with energy storage system
     photovoltaic with energy storage system
-photovoltaic-thermal systems
-    photovoltaic-thermal systems
-photovoltaic/thermal
-    photovoltaic/thermal
-    pvt
-    pvt (photovoltaic/thermal)
 photovoltaics in developing countries
     photovoltaics in developing countries
-photovoltaik
-    photovoltaik
 phps
     phps
 pi
@@ -3387,9 +3663,6 @@ pmsm
     pmsm
 poisson
     poisson
-policies
-    policies
-    policy
 policy cost-effectiveness
     policy cost-effectiveness
 policy evaluation
@@ -3528,9 +3801,6 @@ product design
     product design
 product-service system
     product-service system
-productive use
-    productive use
-    productive uses
 profitability
     profitability
 profitability analysis
@@ -3547,9 +3817,6 @@ property yield
     property yield
 prospect theory
     prospect theory
-prosumer
-    prosumer
-    prosumers
 prosumer load profiles
     prosumer load profiles
 prosumer program
@@ -3566,9 +3833,6 @@ public acceptance
     public acceptance
 public perceptions
     public perceptions
-pumped hydro energy storage
-    pumped hydro energy storage
-    pumped-hydro energy storage
 pumped storage
     pumped storage
 purchase intention
@@ -3577,13 +3841,6 @@ purchase motives
     purchase motives
 pv adoption
     pv adoption
-pv array
-    pv array
-    pv arrays
-pv battery system
-    pv battery system
-    pv-battery system
-    pv-battery systems
 pv cells
     pv cells
 pv compensation mechanism
@@ -3604,14 +3861,8 @@ pv incentives
     pv incentives
 pv management
     pv management
-pv microgrid
-    pv microgrid
-    pv microgrids
 pv microinstallation
     pv microinstallation
-pv module
-    pv module
-    pv modules
 pv modules technologies
     pv modules technologies
 pv optimization
@@ -3622,9 +3873,6 @@ pv output and load power forecast
     pv output and load power forecast
 pv output forecast
     pv output forecast
-pv panel
-    pv panel
-    pv panels
 pv performance
     pv performance
 pv potential
@@ -3649,9 +3897,6 @@ pv solar panels
     pv solar panels
 pv subsidies
     pv subsidies
-pv system
-    pv system
-    pv systems
 pv systems penetration
     pv systems penetration
 pv technology
@@ -3740,16 +3985,6 @@ real estate economics
     real estate economics
 real estate prices
     real estate prices
-real option
-    real option
-    real options
-real option valuation
-    real option valuation
-    real options valuation
-real time pricing
-    real time pricing
-    real-time pricing
-    real-time' pricing
 real-life experimental application
     real-life experimental application
 real-time control strategy
@@ -3800,9 +4035,6 @@ reliable supply
     reliable supply
 remote
     remote
-remote area
-    remote area
-    remote area.
 remote area power supply
     remote area power supply
 remote loads
@@ -3811,15 +4043,8 @@ remote terminal unit
     remote terminal unit
 remote town
     remote town
-renewable
-    renewable
-    renewables
 renewable electricity
     renewable electricity
-renewable energies
-    renewable energies
-    renewable energy
-    100% renewable energy
 renewable energy application
     renewable energy application
 renewable energy charging station
@@ -3846,25 +4071,12 @@ renewable energy policy
     renewable energy policy
 renewable energy production
     renewable energy production
-renewable energy resources
-    renewable energy resources
-    renewable resource energy
-    renewables energy resources
 renewable energy share
     renewable energy share
-renewable energy source
-    renewable energy source
-    renewable energy sources
-    renewable energy sources (res)
-    res (renewable energy sources)
 renewable energy supply systems
     renewable energy supply systems
 renewable energy support
     renewable energy support
-renewable energy system
-    renewable energy system
-    renewable energy system (res)
-    renewable energy systems
 renewable energy technologies
     renewable energy technologies
 renewable energy transitions
@@ -3900,26 +4112,14 @@ resco approach
     resco approach
 reserve system
     reserve system
-resident
-    resident
-    residents
 residential
     residential
 residential aggregator
     residential aggregator
-residential application
-    residential application
-    residential applications
-residential batteries
-    residential batteries
-    residential battery
 residential battery storage
     residential battery storage
 residential bes
     residential bes
-residential building
-    residential building
-    residential buildings
 residential building energy
     residential building energy
 residential building simulation
@@ -3963,14 +4163,8 @@ residential heating
     residential heating
 residential house
     residential house
-residential load
-    residential load
-    residential loads
 residential micro-cogeneration
     residential micro-cogeneration
-residential microgrid
-    residential microgrid
-    residential microgrids
 residential neighborhood types
     residential neighborhood types
 residential net-zero energy building
@@ -3979,8 +4173,6 @@ residential photovoltaic
     residential photovoltaic
 residential photovoltaic installations
     residential photovoltaic installations
-residential photovoltaic systems
-    residential photovoltaic systems
 residential progressive electricity tariffs
     residential progressive electricity tariffs
 residential pv
@@ -3989,9 +4181,6 @@ residential pv adoption
     residential pv adoption
 residential pv storage
     residential pv storage
-residential pv system
-    residential pv system
-    residential pv systems
 residential pv-battery systems
     residential pv-battery systems
 residential rooftop photovoltaics
@@ -4004,9 +4193,6 @@ residential solar
     residential solar
 residential solar energy
     residential solar energy
-residential solar photovoltaic
-    residential solar photovoltaic
-    residential solar photovoltaics
 residential solar pv
     residential solar pv
 residential solar pv policy
@@ -4029,14 +4215,8 @@ responsive load demand
     responsive load demand
 retail
     retail
-retail rate
-    retail rate
-    retail rates
 retail tariff
     retail tariff
-retrofit
-    retrofit
-    retrofitting
 retscreen
     retscreen
 return on investment
@@ -4063,20 +4243,10 @@ rolling horizon
     rolling horizon
 rolling optimization
     rolling optimization
-roof-top photovoltaic (pv)
-    roof-top photovoltaic (pv)
 rooftop
     rooftop
 rooftop detection
     rooftop detection
-rooftop photovoltaic
-    rooftop photovoltaic
-    rooftop photovoltaics
-rooftop photovoltaic (pv) systems
-    rooftop photovoltaic (pv) systems
-    rooftop photovoltaic system (rtpvs)
-rooftop pv
-    rooftop pv
 rooftop pv penetration
     rooftop pv penetration
 rooftop pv system
@@ -4091,14 +4261,8 @@ rsaaps
     rsaaps
 run-off canal
     run-off canal
-rural area
-    rural area
-    rural areas
 rural communities
     rural communities
-rural electrification
-    rural electrification
-    rural electrifications
 rural electrification concession
     rural electrification concession
 rural electrification development
@@ -4147,9 +4311,6 @@ scatter plot matrix
     scatter plot matrix
 scenario aggregation
     scenario aggregation
-scenario analysis
-    scenario analysis
-    scenarios analysis
 scenarios
     scenarios
 scene reduction
@@ -4238,9 +4399,6 @@ simple payback
     simple payback
 simulated annealing
     simulated annealing
-simulation
-    simulation
-    simulations
 simulation of energy systems
     simulation of energy systems
 simulation-based optimization
@@ -4265,12 +4423,6 @@ small to medium tourist hotel accommodation
     small to medium tourist hotel accommodation
 small-scale pv-bwro
     small-scale pv-bwro
-smart building
-    smart building
-    smart buildings
-smart cities
-    smart cities
-    smart city
 smart community
     smart community
 smart contracts
@@ -4281,20 +4433,10 @@ smart energy island
     smart energy island
 smart energy network system
     smart energy network system
-smart grid
-    smart grid
-    smart grids
 smart grid communications
     smart grid communications
-smart home
-    smart home
-    smart home (sh)
-    smart homes
 smart infrastructure
     smart infrastructure
-smart meter
-    smart meter
-    smart metering
 smart meter measurements
     smart meter measurements
 smart power supply control system
@@ -4319,9 +4461,6 @@ social housing program
     social housing program
 social influence
     social influence
-social network
-    social network
-    social networks
 social risk
     social risk
 social welfare
@@ -4398,46 +4537,28 @@ solar heating and cooling
     solar heating and cooling
 solar heating and cooling systems
     solar heating and cooling systems
-solar home system
-    solar home system
-    solar home system (shs)
-    solar home systems
-    solar home systems (shs)
 solar house
     solar house
 solar hydrogen
     solar hydrogen
 solar incentive policies
     solar incentive policies
-solar irradiance
-    solar irradiance
-    solar irradiation
 solar lantern
     solar lantern
 solar leasing
     solar leasing
 solar lighting systems
     solar lighting systems
-solar panel
-    solar panel
-    solar panels
 solar panel efficiency
     solar panel efficiency
 solar parabolic troughs (pt)
     solar parabolic troughs (pt)
-solar photo voltaic
-    solar photo voltaic
-solar photo voltaic (spv) systems
-    solar photo voltaic (spv) systems
 solar photovoltaic (pv) panels
     solar photovoltaic (pv) panels
 solar photovoltaic electricity
     solar photovoltaic electricity
 solar photovoltaic power generation
     solar photovoltaic power generation
-solar photovoltaic system
-    solar photovoltaic system
-    solar photovoltaic systems
 solar plant design
     solar plant design
 solar plus
@@ -4448,13 +4569,6 @@ solar potential
     solar potential
 solar power
     solar power
-solar pv
-    solar pv
-    solar-pv
-    photovoltaic solar
-    solar photovoltaic
-    solar photovoltaic (pv)
-    solar photovoltaics
 solar pv adoption
     solar pv adoption
 solar pv cost
@@ -4469,9 +4583,6 @@ solar pv pico hydro system
     solar pv pico hydro system
 solar pv potential
     solar pv potential
-solar pv system
-    solar pv system
-    solar pv systems
 solar pv units
     solar pv units
 solar radiation
@@ -4498,9 +4609,6 @@ solar technologies
     solar technologies
 solar thermal
     solar thermal
-solar thermal collectors
-    solar thermal collectors
-    solar-thermal collectors
 solar thermal system
     solar thermal system
 solar tracking
@@ -4523,12 +4631,9 @@ solar-pv homes
     solar-pv homes
 solar-wind hybrid
     solar-wind hybrid
+    solarwind hybrid    
 solar-wind-battery system
     solar-wind-battery system
-solarwind hybrid
-    solarwind hybrid
-solar–wind hybrid
-    solar–wind hybrid
 solid oxide fuel cells
     solid oxide fuel cells
 south africa
@@ -4565,26 +4670,14 @@ stack-effect ventilation
     stack-effect ventilation
 stakeholder analysis
     stakeholder analysis
-stand alone
-    stand alone
-    stand-alone
 stand alone photovoltaic
     stand alone photovoltaic
-stand alone systems
-    stand alone systems
-    stand-alone system
 stand-alone desalination
     stand-alone desalination
 stand-alone hybrid system
     stand-alone hybrid system
 stand-alone microgrid
     stand-alone microgrid
-stand-alone photovoltaic system
-    stand-alone photovoltaic system
-    stand-alone photovoltaic systems
-stand-alone power system
-    stand-alone power system
-    stand-alone power systems
 standalone diesel system
     standalone diesel system
 standalone photovoltaic (sapv)
@@ -4601,9 +4694,6 @@ statcom/bes
     statcom/bes
 state estimation
     state estimation
-state of charge
-    state of charge
-    state-of-charge
 state policy impact
     state policy impact
 stated preference methods
@@ -4628,21 +4718,12 @@ storage capacity
     storage capacity
 storage operation and maintenance costs
     storage operation and maintenance costs
-storage system
-    storage system
-    storage systems
 storage system operation
     storage system operation
 strategic conservation
     strategic conservation
 strategic niche management
     strategic niche management
-sub saharan africa
-    sub saharan africa
-    sub-saharan africa
-subsidies
-    subsidies
-    subsidy
 subsidized charge
     subsidized charge
 substation automation
@@ -4675,9 +4756,6 @@ supporting policies
     supporting policies
 surplus photovoltaic power
     surplus photovoltaic power
-survey
-    survey
-    surveys
 sustainability
     sustainability
 sustainable buildings
@@ -4712,7 +4790,6 @@ synthetic fuels
     synthetic fuels
 system advisor model (sam)
     system advisor model (sam)
-    systems advisory model (sam)
 system design
     system design
 system dynamics modeling
@@ -4737,9 +4814,8 @@ systemic effects
     systemic effects
 systems
     systems
-systems thinking
-    systems thinking
-    systems-thinking
+systems advisory model (sam)
+    systems advisory model (sam)
 tabu search (ts)
     tabu search (ts)
 tanzania
@@ -4770,32 +4846,12 @@ technical losses
     technical losses
 technical potential
     technical potential
-technical-economic analysis
-    technical-economic analysis
-techno economic analysis
-    techno economic analysis
-    techno-economic analysis
-    techno-economical analysis
-techno-economic
-    techno-economic
-    techno-economics
-techno-economic assessment
-    techno-economic assessment
-techno-economic evaluation
-    techno-economic evaluation
-techno-economic feasibility
-    techno-economic feasibility
-techno-economic modeling
-    techno-economic modeling
-    techno-economic modelling
 techno-economic modelling and optimisation
     techno-economic modelling and optimisation
 techno-economic optimization
     techno-economic optimization
 techno-economic simulation
     techno-economic simulation
-techno-economic study
-    techno-economic study
 techno-economic-environmental analysis
     techno-economic-environmental analysis
 technoeconomic
@@ -4828,8 +4884,6 @@ the effects of ambient temperature
     the effects of ambient temperature
 the green deal
     the green deal
-the internal rate of return
-    the internal rate of return
 thermal
     thermal
 thermal adequacy
@@ -4870,14 +4924,6 @@ tilt angle
     tilt angle
 timber material
     timber material
-time of use (tou)
-    time of use (tou)
-    time-of-use
-    tou
-time of use tariff
-    time of use tariff
-    time-of-use tariff
-    time-of-use tariffs
 time series analysis
     time series analysis
 time-of-day pricing
@@ -4892,11 +4938,6 @@ total cost
     total cost
 total cost of ownership
     total cost of ownership
-total net present cost
-    total net present cost
-    total net present cost (npc)
-    total net present cost (tnpc)
-    tnpc
 townhouse
     townhouse
 traditional backup generators
@@ -4941,9 +4982,6 @@ unavailability
     unavailability
 uncertain scenarios
     uncertain scenarios
-uncertainties
-    uncertainties
-    uncertainty
 uncertainty analysis
     uncertainty analysis
 underground thermal energy storage
@@ -5014,10 +5052,6 @@ utility transformer
     utility transformer
 v-shape roof guide vane
     v-shape roof guide vane
-v2g
-    v2g
-v2h
-    v2h
 vacation homes
     vacation homes
 valuation
@@ -5028,14 +5062,8 @@ variable demand
     variable demand
 variable renewable energy
     variable renewable energy
-vehicle to grid (v2g)
-    vehicle to grid (v2g)
-    vehicle-to-grid
-    vehicle-to-grid (v2g)
 vehicle to home technology
     vehicle to home technology
-vehicle to home v2h
-    vehicle to home v2h
 vehicle-to-building
     vehicle-to-building
 ventilated roof
@@ -5044,9 +5072,6 @@ viability study
     viability study
 vietnam
     vietnam
-virtual power plant
-    virtual power plant
-    virtual power plants
 visibility
     visibility
 visualisation approach
@@ -5081,9 +5106,6 @@ water balance
     water balance
 water desalination
     water desalination
-water energy nexus
-    water energy nexus
-    water-energy nexus
 water footprint
     water footprint
 water pumping
@@ -5107,34 +5129,25 @@ willingness to invest
 willingness to pay
     willingness to pay
     willingness to pay (wtp)
-wind
-    wind
 wind & economic viability
     wind & economic viability
 wind and solar power
     wind and solar power
-wind energy
-    wind energy
 wind energy conversion system (wecs)
     wind energy conversion system (wecs)
     wind energy conversion systems
 wind energy potential
     wind energy potential
-wind energy system
-    wind energy system
 wind power
     wind power
     wind power (wp)
 wind power system
     wind power system
+    wind energy system    
 wind speed
     wind speed
 wind system
     wind system
-wind turbine
-    wind turbine
-    wind turbine (wt)
-    wind turbines
 wind turbine farm
     wind turbine farm
 wind, pv, micro-generation
@@ -5153,10 +5166,5 @@ wwtp
     wwtp
 zambia
     zambia
-zero energy buildings
-    zero energy buildings
-    zero energy buildings (zeb)
-    zero-energy building
-    zero-energy buildings
 zero energy house
     zero energy house
