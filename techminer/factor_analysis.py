@@ -290,11 +290,6 @@ class Model:
 
         colors += colors + colors
 
-        #  colors = []
-        #  for cmap_name in ["tab20", "tab20b", "tab20c", "tab20", "tab20b"]:
-        #      cmap = pyplot.cm.get_cmap(cmap_name)
-        #      colors += [cmap(0.025 + 0.05 * i) for i in range(20)]
-
         #
         # 3.-- Plot the points of each cluster
         #
@@ -396,24 +391,54 @@ class Model:
 
         fig = pyplot.Figure(figsize=(self.width, self.height))
         ax = fig.subplots()
-        #  cmap=pyplot.cm.get_cmap(self.cmap)
-        cmap = pyplot.cm.get_cmap("Greys")
-
         x = self.centers_["Dim-{:>02d}".format(self.x_axis)]
         y = self.centers_["Dim-{:>02d}".format(self.y_axis)]
         names = self.centers_["Name"]
         node_sizes = cmn.counters_to_node_sizes(names)
-        node_colors = cmn.counters_to_node_colors(names, cmap)
-        # edge_colors = cmn.counters_to_edgecolors(names, cmap)
+        #  node_colors = cmn.counters_to_node_colors(names, cmap)
 
-        from cycler import cycler
+        colors = [
+            "tab:blue",
+            "tab:orange",
+            "tab:green",
+            "tab:red",
+            "tab:purple",
+            "tab:brown",
+            "tab:pink",
+            "tab:gray",
+            "tab:olive",
+            "tab:cyan",
+            "cornflowerblue",
+            "lightsalmon",
+            "limegreen",
+            "tomato",
+            "mediumvioletred",
+            "darkgoldenrod",
+            "lightcoral",
+            "silver",
+            "darkkhaki",
+            "skyblue",
+            "dodgerblue",
+            "orangered",
+            "turquoise",
+            "crimson",
+            "violet",
+            "goldenrod",
+            "thistle",
+            "grey",
+            "yellowgreen",
+            "lightcyan",
+        ]
+
+        colors += colors + colors
 
         ax.scatter(
             x,
             y,
             marker="o",
             s=node_sizes,
-            c=node_colors,
+            c=colors[: len(x)],
+            #  c=node_colors,
             alpha=0.5,
             linewidths=2,
             #  edgecolors=node_colors),
@@ -425,6 +450,28 @@ class Model:
         )
 
         cmn.ax_expand_limits(ax)
+
+        xlim = ax.get_xlim()
+        ylim = ax.get_ylim()
+        ax.text(
+            x=xlim[1],
+            y=0.01 * (ylim[1] - ylim[0]),
+            s="Dim-0",
+            fontsize=9,
+            color="dimgray",
+            horizontalalignment="right",
+            verticalalignment="bottom",
+        )
+        ax.text(
+            x=0.01 * (xlim[1] - xlim[0]),
+            y=ylim[1],
+            s="Dim-1",
+            fontsize=9,
+            color="dimgray",
+            horizontalalignment="left",
+            verticalalignment="top",
+        )
+
         cmn.set_ax_splines_invisible(ax)
         ax.axhline(y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
         ax.axvline(x=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
