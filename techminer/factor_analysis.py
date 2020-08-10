@@ -13,7 +13,15 @@ import pandas as pd
 import matplotlib
 from matplotlib.lines import Line2D
 from sklearn.decomposition import PCA, FactorAnalysis, FastICA, TruncatedSVD
-from sklearn.cluster import AgglomerativeClustering
+from sklearn.cluster import (
+    AgglomerativeClustering,
+    AffinityPropagation,
+    Birch,
+    DBSCAN,
+    FeatureAgglomeration,
+    KMeans,
+    MeanShift,
+)
 from sklearn.manifold import MDS
 from scipy.spatial import ConvexHull
 import matplotlib.pyplot as pyplot
@@ -26,7 +34,7 @@ from techminer.graph import network_normalization
 
 
 from matplotlib import patches
-from scipy.spatial import ConvexHull
+
 
 ###############################################################################
 ##
@@ -102,7 +110,8 @@ class Model:
             M = M.max().max() - M
         else:
             M = 1 - M
-
+            for i in M.columns.tolist():
+                M.at[i, i] = 0.0
         #
         # 5.-- Factor decomposition
         #
@@ -136,15 +145,43 @@ class Model:
         #
         # 6.-- Clustering
         #
-        clustering = AgglomerativeClustering(
-            n_clusters=int(self.n_clusters),
-            affinity=self.affinity,
-            linkage=self.linkage,
-        )
-        ## from bibliometrix
-        clustering.fit(R.loc[:, R.columns[[0, 1]]])
-        ## clustering.fit(R)
-        R["Cluster"] = clustering.labels_
+        ## from bibliometrix: clustering of two first axes
+        W = R.loc[:, R.columns[[0, 1]]]
+        ##
+        if self.clustering_method == "Affinity Propagation":
+            labels = AffinityPropagation(
+                random_state=int(self.random_state)
+            ).fit_predict(W)
+            self.n_clusters = len(set(labels))
+
+        if self.clustering_method == "Agglomerative Clustering":
+            labels = AgglomerativeClustering(
+                n_clusters=self.n_clusters, affinity=self.affinity, linkage=self.linkage
+            ).fit_predict(W)
+
+        if self.clustering_method == "Birch":
+            labels = Birch(n_clusters=self.n_clusters).fit_predict(W)
+
+        if self.clustering_method == "DBSCAN":
+            labels = DBSCAN().fit_predict(W)
+            self.n_clusters = len(set(labels))
+
+        #  if self.clustering_method == "Feature Agglomeration":
+        #      m = FeatureAgglomeration(
+        #          n_clusters=self.n_clusters, affinity=self.affinity, linkage=self.linkage
+        #      ).fit(1 - X)
+        #      labels = ???
+
+        if self.clustering_method == "KMeans":
+            labels = KMeans(
+                n_clusters=self.n_clusters, random_state=int(self.random_state)
+            ).fit_predict(W)
+
+        if self.clustering_method == "Mean Shift":
+            labels = MeanShift().fit_predct(W)
+            self.n_clusters = len(set(labels))
+
+        R["Cluster"] = labels
         self.coordinates_ = R
 
         #
@@ -156,7 +193,7 @@ class Model:
         # 8.-- Communities
         #
         communities = pd.DataFrame(
-            "", columns=range(self.n_clusters), index=range(self.top_n)
+            pd.NA, columns=range(self.n_clusters), index=range(self.top_n)
         )
         for i_cluster in range(self.n_clusters):
             X = R[R.Cluster == i_cluster]
@@ -170,21 +207,20 @@ class Model:
             community = community.tolist()[0 : self.top_n]
             communities.at[0 : len(community) - 1, i_cluster] = community
         communities.columns = ["Cluster {}".format(i) for i in range(self.n_clusters)]
+        ## Delete empty rows
+        row_ids = []
+        for row in communities.iterrows():
+            if any([not pd.isna(a) for a in row[1]]):
+                row_ids.append(row[0])
+        communities = communities.loc[row_ids, :]
+        communities = communities.applymap(lambda w: "" if pd.isna(w) else w)
+        ##
         self.communities_ = communities
 
         #
         # 8.-- Cluster name
         #
-        names = []
-        for i_cluster in range(self.n_clusters):
-            X = R[R.Cluster == i_cluster]
-            X = cmn.sort_axis(
-                data=X,
-                num_documents=(self.top_by == "Num Documents"),
-                axis=0,
-                ascending=False,
-            )
-            names.append(X.index[0])
+        names = communities.loc[0, :].tolist()
         self.centers_["Name"] = names
 
         #
@@ -200,18 +236,68 @@ class Model:
         #
         def encircle(x, y, ax, **kw):
             p = np.c_[x, y]
-            hull = ConvexHull(p)
+            hull = ConvexHull(p, qhull_options="QJ")
             poly = pyplot.Polygon(p[hull.vertices, :], **kw)
             ax.add_patch(poly)
 
         #
-
-        self.fit()
-
+        # 1.-- Creates the plot in memory
+        #
         matplotlib.rc("font", size=11)
         fig = pyplot.Figure(figsize=(self.width, self.height))
         ax = fig.subplots()
 
+        #
+        # 2.-- Data clustering
+        #
+        self.fit()
+
+        #
+        # 3.-- Cluster colors (max 100 clusters)
+        # º
+        colors = [
+            "tab:blue",
+            "tab:orange",
+            "tab:green",
+            "tab:red",
+            "tab:purple",
+            "tab:brown",
+            "tab:pink",
+            "tab:gray",
+            "tab:olive",
+            "tab:cyan",
+            "cornflowerblue",
+            "lightsalmon",
+            "limegreen",
+            "tomato",
+            "mediumvioletred",
+            "darkgoldenrod",
+            "lightcoral",
+            "silver",
+            "darkkhaki",
+            "skyblue",
+            "dodgerblue",
+            "orangered",
+            "turquoise",
+            "crimson",
+            "violet",
+            "goldenrod",
+            "thistle",
+            "grey",
+            "yellowgreen",
+            "lightcyan",
+        ]
+
+        colors += colors + colors
+
+        #  colors = []
+        #  for cmap_name in ["tab20", "tab20b", "tab20c", "tab20", "tab20b"]:
+        #      cmap = pyplot.cm.get_cmap(cmap_name)
+        #      colors += [cmap(0.025 + 0.05 * i) for i in range(20)]
+
+        #
+        # 3.-- Plot the points of each cluster
+        #
         R = self.coordinates_
         for i_cluster in range(self.n_clusters):
             X = R[R.Cluster == i_cluster]
@@ -226,37 +312,47 @@ class Model:
             x = X[X.columns[self.x_axis]]
             y = X[X.columns[self.y_axis]]
             ax.scatter(
-                x,
-                y,
-                marker=".",
-                alpha=1.0,
-                #  c=colors,
+                x, y, marker="o", s=12, alpha=0.8, c=colors[i_cluster],
             )
 
-            if len(X) > 3:
-                encircle(x, y, ax=ax, ec="k", fc="gold", alpha=0.1)
+            if len(X) > 2:
+                encircle(x, y, ax=ax, ec="k", fc=colors[i_cluster], alpha=0.1)
 
-        # -------------------------
-        cmap = pyplot.cm.get_cmap("Greys")
-        x = self.centers_["Dim-{:>02d}".format(self.x_axis)]
-        y = self.centers_["Dim-{:>02d}".format(self.y_axis)]
-        names = self.centers_["Name"]
-        for i_cluster in range(self.n_clusters):
-            ax.text(
-                x=x[i_cluster],
-                y=y[i_cluster],
-                s=names[i_cluster],
-                fontsize=10,
-                bbox=dict(
-                    facecolor="w",
-                    alpha=1.0,
-                    edgecolor="gray",
-                    boxstyle="round,pad=0.5",
-                ),
-                horizontalalignment="left",
-                verticalalignment="top",
-            )
-        # -----------------------------------------
+            xlim = ax.get_xlim()
+            ylim = ax.get_ylim()
+
+            for x_, y_, t in zip(x.tolist(), y.tolist(), X.index):
+                ax.text(
+                    x=x_ + 0.01 * (xlim[1] - xlim[0]),
+                    y=y_ - 0.01 * (ylim[1] - ylim[0]),
+                    s=t,
+                    fontsize=9,
+                    color=colors[i_cluster],
+                    horizontalalignment="left",
+                    verticalalignment="top",
+                )
+
+        # ------------------------------------------------------------------------------------
+        #  cmap = pyplot.cm.get_cmap("Greys")
+        #  x = self.centers_["Dim-{:>02d}".format(self.x_axis)]
+        #  y = self.centers_["Dim-{:>02d}".format(self.y_axis)]
+        #  names = self.centers_["Name"]
+        # for i_cluster in range(self.n_clusters):
+        #     ax.text(
+        #         x=x[i_cluster],
+        #         y=y[i_cluster],
+        #         s=names[i_cluster],
+        #         fontsize=10,
+        #         bbox=dict(
+        #             facecolor="w",
+        #             alpha=1.0,
+        #             edgecolor="gray",
+        #             boxstyle="round,pad=0.5",
+        #         ),
+        #         horizontalalignment="left",
+        #         verticalalignment="top",
+        #     )
+        # ------------------------------------------------------------------------------------
 
         ax.axhline(
             y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1,
@@ -267,6 +363,29 @@ class Model:
         ax.axis("off")
         ax.set_aspect("equal")
         cmn.set_ax_splines_invisible(ax)
+        ax.grid(axis="both", color="lightgray", linestyle="--", linewidth=0.5)
+
+        xlim = ax.get_xlim()
+        ylim = ax.get_ylim()
+        ax.text(
+            x=xlim[1],
+            y=0.01 * (ylim[1] - ylim[0]),
+            s="Dim-0",
+            fontsize=9,
+            color="dimgray",
+            horizontalalignment="right",
+            verticalalignment="bottom",
+        )
+        ax.text(
+            x=0.01 * (xlim[1] - xlim[0]),
+            y=ylim[1],
+            s="Dim-1",
+            fontsize=9,
+            color="dimgray",
+            horizontalalignment="left",
+            verticalalignment="top",
+        )
+
         fig.set_tight_layout(True)
         return fig
 
@@ -348,7 +467,9 @@ class DASHapp(DASH, Model):
         )
         DASH.__init__(self)
 
-        self.n_components = 20
+        self.n_components = 2
+        self.x_axis = 0
+        self.y_axis = 1
 
         self.app_title = "Factor Analysis"
         self.menu_options = [
@@ -363,7 +484,19 @@ class DASHapp(DASH, Model):
             ),
             dash.min_occurrence(),
             dash.max_items(),
-            dash.normalization(),
+            dash.dropdown(
+                desc="Normalization:",
+                options=[
+                    "Association",
+                    "Jaccard",
+                    "Dice",
+                    "Salton",
+                    "Equivalence",
+                    "Inclusion",
+                    "Cosine",
+                    "Mutual Information",
+                ],
+            ),
             dash.separator(text="Decomposition"),
             dash.dropdown(
                 desc="Method:",
@@ -371,15 +504,17 @@ class DASHapp(DASH, Model):
             ),
             ## dash.n_components(),
             dash.random_state(),
-            dash.separator(text="Aglomerative Clustering"),
-            dash.n_clusters(),
+            dash.separator(text="Clustering"),
+            dash.clustering_method(),
+            dash.n_clusters(m=3, n=50, i=1),
             dash.affinity(),
             dash.linkage(),
+            dash.random_state(),
             dash.separator(text="Visualization"),
             dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited"],),
             dash.top_n(),
-            dash.x_axis(),
-            dash.y_axis(),
+            #  dash.x_axis(),
+            #  dash.y_axis(),
             dash.fig_width(),
             dash.fig_height(),
         ]
@@ -403,6 +538,48 @@ class DASHapp(DASH, Model):
 
         self.set_options(name="X-axis:", options=list(range(self.n_components)))
         self.set_options(name="Y-axis:", options=list(range(self.n_components)))
+
+        if self.clustering_method in ["Affinity Propagation"]:
+            self.set_disabled("N Clusters:")
+            self.set_disabled("Affinity:")
+            self.set_disabled("Linkage:")
+            self.set_enabled("Random State:")
+
+        if self.clustering_method in ["Agglomerative Clustering"]:
+            self.set_enabled("N Clusters:")
+            self.set_enabled("Affinity:")
+            self.set_enabled("Linkage:")
+            self.set_disabled("Random State:")
+
+        if self.clustering_method in ["Birch"]:
+            self.set_enabled("N Clusters:")
+            self.set_disabled("Affinity:")
+            self.set_disabled("Linkage:")
+            self.set_disabled("Random State:")
+
+        if self.clustering_method in ["DBSCAN"]:
+            self.set_disabled("N Clusters:")
+            self.set_disabled("Affinity:")
+            self.set_disabled("Linkage:")
+            self.set_disabled("Random State:")
+
+        if self.clustering_method in ["Feature Agglomeration"]:
+            self.set_enabled("N Clusters:")
+            self.set_enabled("Affinity:")
+            self.set_enabled("Linkage:")
+            self.set_disabled("Random State:")
+
+        if self.clustering_method in ["KMeans"]:
+            self.set_enabled("N Clusters:")
+            self.set_disabled("Affinity:")
+            self.set_disabled("Linkage:")
+            self.set_disabled("Random State:")
+
+        if self.clustering_method in ["Mean Shift"]:
+            self.set_disabled("N Clusters:")
+            self.set_disabled("Affinity:")
+            self.set_disabled("Linkage:")
+            self.set_disabled("Random State:")
 
 
 ###############################################################################
