@@ -98,7 +98,6 @@ class Model:
         #
         # 3.-- Co-occurrence matrix and normalization
         #
-
         M = np.matmul(TF_matrix_.transpose().values, TF_matrix_.values)
         M = pd.DataFrame(M, columns=TF_matrix_.columns, index=TF_matrix_.columns)
         M = network_normalization(M, normalization=self.normalization)
