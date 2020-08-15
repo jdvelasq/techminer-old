@@ -18,7 +18,7 @@ import numpy as np
 import pandas as pd
 from nltk import WordNetLemmatizer, pos_tag
 from nltk.corpus import stopwords
-
+import datetime
 
 from techminer.text import remove_accents
 from techminer.thesaurus import text_clustering
@@ -28,9 +28,10 @@ from techminer.thesaurus import text_clustering
 #  from techminer.explode import MULTIVALUED_COLS, __explode
 
 #  logging.basicConfig(
-#      level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+#      level=logging_info, format="%(asctime)s - %(levelname)s - %(message)s"
 #  )
 
+from techminer.explode import MULTIVALUED_COLS
 
 #  nltk.download("stopwords")
 
@@ -340,9 +341,12 @@ def load_scopus(x):
     """Import filter for Scopus data.
     """
 
-    logging.basicConfig(
-        level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-    )
+    def logging_info(msg):
+        print(
+            "{} - INFO - {}".format(
+                datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), msg
+            )
+        )
 
     scopus2tags = {
         "Abbreviated Source Title": "Abb_Source_Title",
@@ -381,30 +385,30 @@ def load_scopus(x):
     }
 
     x = x.copy()
-    logging.info("Renaming and selecting columns ...")
+    logging_info("Renaming and selecting columns ...")
     x = x.rename(columns=scopus2tags)
 
-    logging.info("Removing accents ...")
+    logging_info("Removing accents ...")
     x = x.applymap(lambda w: remove_accents(w) if isinstance(w, str) else w)
 
     if "Authors" in x.columns:
 
-        logging.info('Removing  "[No author name available]" ...')
+        logging_info('Removing  "[No author name available]" ...')
         x["Authors"] = x.Authors.map(
             lambda w: pd.NA if w == "[No author name available]" else w
         )
 
-        logging.info("Formatting author names ...")
+        logging_info("Formatting author names ...")
         x["Authors"] = x.Authors.map(
             lambda w: w.replace(",", ";").replace(".", "") if pd.isna(w) is False else w
         )
 
-        logging.info("Counting number of authors per document...")
+        logging_info("Counting number of authors per document...")
         x["Num_Authors"] = x.Authors.map(
             lambda w: len(w.split(";")) if not pd.isna(w) else 0
         )
 
-        logging.info("Counting frac number of documents per author...")
+        logging_info("Counting frac number of documents per author...")
         x["Frac_Num_Documents"] = x.Authors.map(
             lambda w: 1.0 / len(w.split(";")) if not pd.isna(w) else 0
         )
@@ -415,39 +419,39 @@ def load_scopus(x):
         )
 
     if "Authors" in x.columns and "Authors_ID" in x.columns:
-        logging.info("Disambiguate author names ...")
+        logging_info("Disambiguate author names ...")
         x = __disambiguate_authors(x)
 
     if "Title" in x.columns:
-        logging.info("Removing part of titles in foreing languages ...")
+        logging_info("Removing part of titles in foreing languages ...")
         x["Title"] = x.Title.map(
             lambda w: w[0 : w.find("[")] if pd.isna(w) is False and w[-1] == "]" else w
         )
 
     if "Affiliations" in x.columns:
-        logging.info("Extracting country names ...")
+        logging_info("Extracting country names ...")
         x["Countries"] = __MAP(x, "Affiliations", __extract_country)
 
-        logging.info("Extracting country of first author ...")
+        logging_info("Extracting country of first author ...")
         x["Country_1st_Author"] = x.Countries.map(
             lambda w: w.split(";")[0] if isinstance(w, str) else w
         )
 
-        logging.info("Extracting institutions from affiliations ...")
+        logging_info("Extracting institutions from affiliations ...")
         x["Institutions"] = __MAP(x, "Affiliations", __extract_institution)
 
-        logging.info("Extracting institution of first author ...")
+        logging_info("Extracting institution of first author ...")
         x["Institution_1st_Author"] = x.Institutions.map(
             lambda w: w.split(";")[0] if isinstance(w, str) else w
         )
 
-        logging.info("Reducing list of countries ...")
+        logging_info("Reducing list of countries ...")
         x["Countries"] = x.Countries.map(
             lambda w: ";".join(set(w.split(";"))) if isinstance(w, str) else w
         )
 
     if "Author_Keywords" in x.columns:
-        logging.info("Transforming Author Keywords to lower case ...")
+        logging_info("Transforming Author Keywords to lower case ...")
         x["Author_Keywords"] = x.Author_Keywords.map(
             lambda w: w.lower() if not pd.isna(w) else w
         )
@@ -458,7 +462,7 @@ def load_scopus(x):
         )
 
     if "Index_Keywords" in x.columns:
-        logging.info("Transforming Index Keywords to lower case ...")
+        logging_info("Transforming Index Keywords to lower case ...")
         x["Index_Keywords"] = x.Index_Keywords.map(
             lambda w: w.lower() if not pd.isna(w) else w
         )
@@ -474,29 +478,29 @@ def load_scopus(x):
             lambda w: w[0 : w.find("\u00a9")] if not pd.isna(w) else w
         )
 
-        logging.info("Extracting Abstract words ...")
+        logging_info("Extracting Abstract words ...")
         x["Abstract_words"] = __MAP(x, "Abstract", __NLP)
-        # logging.info("Clustering Abstract Keywords ...")
+        # logging_info("Clustering Abstract Keywords ...")
         #  thesaurus = text_clustering(x.Abstract_CL, transformer=lambda u: u.lower())
-        #  logging.info("Cleaning Abstract Keywords ...")
+        #  logging_info("Cleaning Abstract Keywords ...")
         #  thesaurus = thesaurus.compile()
         # x["Abstract_CL"] = __MAP(x, "Abstract_CL", thesaurus.apply)
 
     if "Title" in x.columns:
-        logging.info("Extracting Title words ...")
+        logging_info("Extracting Title words ...")
         x["Title_words"] = __MAP(x, "Title", __NLP)
-        # logging.info("Clustering Title Keywords ...")
+        # logging_info("Clustering Title Keywords ...")
         #  thesaurus = text_clustering(x.Title_CL, transformer=lambda u: u.lower())
-        #  logging.info("Cleaning Title Keywords ...")
+        #  logging_info("Cleaning Title Keywords ...")
         #  thesaurus = thesaurus.compile()
         #  x["Title_CL"] = __MAP(x, "Title_CL", thesaurus.apply)
 
     if "Times_Cited" in x.columns:
-        logging.info("Removing <NA> from Times_Cited field ...")
+        logging_info("Removing <NA> from Times_Cited field ...")
         x["Times_Cited"] = x["Times_Cited"].map(lambda w: 0 if pd.isna(w) else w)
 
     if "Abb_Source_Title" in x.columns:
-        logging.info("Removing '.' from Abb_Source_Title field ...")
+        logging_info("Removing '.' from Abb_Source_Title field ...")
         x["Abb_Source_Title"] = x["Abb_Source_Title"].map(
             lambda w: w.replace(".", "") if isinstance(w, str) else w
         )
