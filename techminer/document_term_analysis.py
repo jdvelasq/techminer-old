@@ -1,8 +1,9 @@
-from techminer.tfidf import TFIDF_matrix, TF_matrix
+from techminer.tfidf import TF_matrix, TFIDF_matrix
 
 import techminer.common as cmn
 import techminer.dashboard as dash
-import techminer.plots as plt
+from techminer.bar_plot import bar_plot
+from techminer.barh_plot import barh_plot
 from techminer.dashboard import DASH
 
 
@@ -76,7 +77,7 @@ class Model:
 
     def bar_plot(self):
         self.apply()
-        return plt.bar(
+        return bar_plot(
             height=self.X_["TF*IDF"],
             darkness=None,
             cmap=self.cmap,
@@ -86,7 +87,7 @@ class Model:
 
     def horizontal_bar_plot(self):
         self.apply()
-        return plt.barh(
+        return barh_plot(
             width=self.X_["TF*IDF"],
             darkness=None,
             cmap=self.cmap,
