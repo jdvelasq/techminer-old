@@ -2,8 +2,6 @@
 Data Importation and Manipulation Functions
 ==================================================================================================
 
-
-
 """
 
 import json
@@ -12,29 +10,13 @@ import re
 import string
 from os.path import dirname, join
 
-import ipywidgets as widgets
 import nltk
-import numpy as np
 import pandas as pd
-from nltk import WordNetLemmatizer, pos_tag
-from nltk.corpus import stopwords
+from nltk import WordNetLemmatizer
 import datetime
 
 from techminer.text import remove_accents
-from techminer.thesaurus import text_clustering
-
-#  from IPython.display import HTML, clear_output, display
-# from ipywidgets import AppLayout, Layout
-#  from techminer.explode import MULTIVALUED_COLS, __explode
-
-#  logging.basicConfig(
-#      level=logging_info, format="%(asctime)s - %(levelname)s - %(message)s"
-#  )
-
-from techminer.explode import MULTIVALUED_COLS
-
-#  nltk.download("stopwords")
-
+from techminer.map import map_
 
 ##
 ##
@@ -123,29 +105,6 @@ def __disambiguate_authors(x):
     )
 
     return x
-
-
-def __MAP(x, column, f):
-    """Applies function f to column in dataframe x.
-
-    >>> import pandas as pd
-    >>> x = pd.DataFrame({'Affiliations': ['USA; Russian Federation']})
-    >>> __MAP(x, 'Affiliations', lambda w: __extract_country(w))
-    0    United States;Russia
-    Name: Affiliations, dtype: object
-
-
-    """
-    x = x.copy()
-    if column in MULTIVALUED_COLS:
-        z = x[column].map(lambda w: w.split(";") if not pd.isna(w) else w)
-        z = z.map(lambda w: [f(z) for z in w] if isinstance(w, list) else w)
-        z = z.map(
-            lambda w: [z for z in w if not pd.isna(z)] if isinstance(w, list) else w
-        )
-        z = z.map(lambda w: ";".join(w) if isinstance(w, list) else w)
-        return z
-    return x[column].map(lambda w: f(w))
 
 
 def __extract_country(x):
@@ -430,7 +389,7 @@ def load_scopus(x):
 
     if "Affiliations" in x.columns:
         logging_info("Extracting country names ...")
-        x["Countries"] = __MAP(x, "Affiliations", __extract_country)
+        x["Countries"] = map_(x, "Affiliations", __extract_country)
 
         logging_info("Extracting country of first author ...")
         x["Country_1st_Author"] = x.Countries.map(
@@ -438,7 +397,7 @@ def load_scopus(x):
         )
 
         logging_info("Extracting institutions from affiliations ...")
-        x["Institutions"] = __MAP(x, "Affiliations", __extract_institution)
+        x["Institutions"] = map_(x, "Affiliations", __extract_institution)
 
         logging_info("Extracting institution of first author ...")
         x["Institution_1st_Author"] = x.Institutions.map(
@@ -479,21 +438,21 @@ def load_scopus(x):
         )
 
         logging_info("Extracting Abstract words ...")
-        x["Abstract_words"] = __MAP(x, "Abstract", __NLP)
+        x["Abstract_words"] = map_(x, "Abstract", __NLP)
         # logging_info("Clustering Abstract Keywords ...")
         #  thesaurus = text_clustering(x.Abstract_CL, transformer=lambda u: u.lower())
         #  logging_info("Cleaning Abstract Keywords ...")
         #  thesaurus = thesaurus.compile()
-        # x["Abstract_CL"] = __MAP(x, "Abstract_CL", thesaurus.apply)
+        # x["Abstract_CL"] = map_(x, "Abstract_CL", thesaurus.apply)
 
     if "Title" in x.columns:
         logging_info("Extracting Title words ...")
-        x["Title_words"] = __MAP(x, "Title", __NLP)
+        x["Title_words"] = map_(x, "Title", __NLP)
         # logging_info("Clustering Title Keywords ...")
         #  thesaurus = text_clustering(x.Title_CL, transformer=lambda u: u.lower())
         #  logging_info("Cleaning Title Keywords ...")
         #  thesaurus = thesaurus.compile()
-        #  x["Title_CL"] = __MAP(x, "Title_CL", thesaurus.apply)
+        #  x["Title_CL"] = map_(x, "Title_CL", thesaurus.apply)
 
     if "Times_Cited" in x.columns:
         logging_info("Removing <NA> from Times_Cited field ...")

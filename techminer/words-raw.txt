@@ -183,7 +183,6 @@ barrier
     barriers
 base transceiver station (btss)
     base transceiver station (btss)
-base transceiver stations
     base transceiver stations
 batteries
     batteries
@@ -206,9 +205,8 @@ battery energy storage
     battery energy storage
 battery energy storage system
     battery energy storage system
-    battery energy storage systems
-battery energy storage system (bess)
     battery energy storage system (bess)
+    battery energy storage systems
 battery management
     battery management
 battery management strategy
@@ -355,11 +353,10 @@ building integrated grid-connected pv
     building integrated grid-connected pv
 building integrated photovoltaic
     building integrated photovoltaic
-    building integrated photovoltaics
-    building-integrated photovoltaics
-building integrated photovoltaic (bipv)
     building integrated photovoltaic (bipv)
+    building integrated photovoltaics
     building-integrated photovoltaic (bipv)
+    building-integrated photovoltaics
 building integrated photovoltaic systems
     building integrated photovoltaic systems
 building integrated solar thermal systems (bists)
@@ -562,9 +559,7 @@ co2 mitigation potential
     co2 mitigation potential
 coe
     coe
-coe (cost of energy)
     coe (cost of energy)
-    cost of energy (coe)
 cogeneration
     cogeneration
 cohousing
@@ -585,9 +580,8 @@ combined heat & power (chp) plant
     combined heat & power (chp) plant
 combined heat and power
     combined heat and power
-    combined heating and power
-combined heat and power (chp)
     combined heat and power (chp)
+    combined heating and power
 combined heat and power coupling
     combined heat and power coupling
 combined heat and power systems
@@ -734,6 +728,7 @@ cost of electricity
     cost of electricity
 cost of energy
     cost of energy
+    cost of energy (coe)
 cost optimal
     cost optimal
     cost optimization
@@ -854,9 +849,8 @@ demand response program
     demand response program
 demand side management
     demand side management
-    demand-side management
-demand side management (dsm)
     demand side management (dsm)
+    demand-side management
 demand-side response
     demand-side response
 demographic structure
@@ -964,7 +958,6 @@ distributed energy generation system
 distributed energy resource
     distributed energy resource
     distributed energy resources
-distributed energy resources (der)
     distributed energy resources (der)
 distributed energy storage
     distributed energy storage
@@ -974,10 +967,9 @@ distributed fuzzy control
     distributed fuzzy control
 distributed generation
     distributed generation
+    distributed generation (dg)
     distributed generations
     distributed generators
-distributed generation (dg)
-    distributed generation (dg)
 distributed photovoltaic power generation
     distributed photovoltaic power generation
 distributed photovoltaic power production
@@ -998,9 +990,8 @@ distribution management
     distribution management
 distribution network
     distribution network
-    distribution networks
-distribution network (dn)
     distribution network (dn)
+    distribution networks
 distribution system
     distribution system
     distribution systems
@@ -1209,10 +1200,9 @@ electric storage systems
     electric storage systems
 electric vehicle
     electric vehicle
+    electric vehicle (ev)
     electric vehicles
     electrical vehicle
-electric vehicle (ev)
-    electric vehicle (ev)
 electric vehicle battery
     electric vehicle battery
 electric vehicle home-charging
@@ -1310,7 +1300,6 @@ embedded network
     embedded network
 embodied energy
     embodied energy
-embodied energy (ced)
     embodied energy (ced)
 embodied green house gas emissions (gwp)
     embodied green house gas emissions (gwp)
@@ -1468,9 +1457,8 @@ energy storage devices
     energy storage devices
 energy storage system
     energy storage system
-    energy storage systems
-energy storage system (ess)
     energy storage system (ess)
+    energy storage systems
 energy subsidies
     energy subsidies
 energy supply
@@ -1784,17 +1772,15 @@ generation-grid-load-storage
     generation-grid-load-storage
 genetic algorithm
     genetic algorithm
-    genetic algorithms
-genetic algorithm (ga)
     genetic algorithm (ga)
+    genetic algorithms
 genetic algorithm optimization
     genetic algorithm optimization
 geographic information system
     geographic information system
+    geographic information system (gis)
     geographic information systems
     geographical information systems
-geographic information system (gis)
-    geographic information system (gis)
 geographic zone
     geographic zone
 geospatial planning
@@ -2012,11 +1998,9 @@ home energy
     home energy
 home energy management
     home energy management
-home energy management (hem)
     home energy management (hem)
 home energy management system
     home energy management system
-home energy management system (hems)
     home energy management system (hems)
 home energy storage
     home energy storage
@@ -2033,9 +2017,9 @@ home wind-solar-storage system
 home-to-vehicle
     home-to-vehicle
     vehicle-to-home
+    vehicle-to-home (v2h)
 homer
     homer
-homer (hybrid optimization of multiple energy resources)
     homer (hybrid optimization of multiple energy resources)
 homer energy
     homer energy
@@ -2128,10 +2112,9 @@ hybrid heating system
     hybrid heating system
 hybrid microgrid
     hybrid microgrid
+    hybrid microgrids (hmgs)
 hybrid microgrid system
     hybrid microgrid system
-hybrid microgrids (hmgs)
-    hybrid microgrids (hmgs)
 hybrid mini-grid
     hybrid mini-grid
     hybrid mini-grids
@@ -2169,10 +2152,9 @@ hybrid power source
     hybrid power source
 hybrid power system
     hybrid power system
+    hybrid power system (hps)
     hybrid power system.
     hybrid power systems
-hybrid power system (hps)
-    hybrid power system (hps)
     hybrid power systems (hps)
 hybrid prime mover
     hybrid prime mover
@@ -2205,11 +2187,9 @@ hybrid renewable energy sources (hres)
     hybrid renewable energy sources (hres)
 hybrid renewable energy system
     hybrid renewable energy system
-    hybrid renewable energy systems
-hybrid renewable energy system (hres)
     hybrid renewable energy system (hres)
-hybrid renewable energy system (pv/wind/bioenergy)
     hybrid renewable energy system (pv/wind/bioenergy)
+    hybrid renewable energy systems
 hybrid renewable energy system sizing
     hybrid renewable energy system sizing
 hybrid renewable mini-grid
@@ -2237,9 +2217,10 @@ hydrogen
     hydrogen
 hydrogen & fuel cell
     hydrogen & fuel cell
-    hydrogen fuel cell
 hydrogen economy
     hydrogen economy
+hydrogen fuel cell
+    hydrogen fuel cell
 hydrogen refuelling station
     hydrogen refuelling station
 hydrogen storage
@@ -2346,7 +2327,6 @@ intelligent system
     intelligent system
 internal rate of return
     internal rate of return
-internal rate of return (irr)
     internal rate of return (irr)
 interoperability
     interoperability
@@ -2433,21 +2413,15 @@ law
     law
 lca
     lca
-lca (life cycle assessment)
     lca (life cycle assessment)
-    life cycle assessment (lca)
 lcc
     lcc
-lcc (life cycle costing)
     lcc (life cycle costing)
-    life cycle cost (lcc)
 lcm (life cycle management)
     lcm (life cycle management)
 lcoe
     lcoe
-lcoe (levelized cost of electricity)
     lcoe (levelized cost of electricity)
-    levelized cost of electricity (lcoe)
 lcoe (levelized cost of produced energy) analysis
     lcoe (levelized cost of produced energy) analysis
 lcoe comparison
@@ -2492,16 +2466,15 @@ levelised cost of electricity
     levelised cost of electricity
 levelised cost of energy
     levelised cost of energy
-levelised cost of energy (lcoe)
     levelised cost of energy (lcoe)
 levelized cost
     levelized cost
 levelized cost of electricity
     levelized cost of electricity
+    levelized cost of electricity (lcoe)
     levelized costs of electricity
 levelized cost of energy
     levelized cost of energy
-levelized cost of energy (lcoe)
     levelized cost of energy (lcoe)
 levelized cost of energy analysis
     levelized cost of energy analysis
@@ -2520,9 +2493,11 @@ life cycle analysis
     life cycle analysis
 life cycle assessment
     life cycle assessment
+    life cycle assessment (lca)
     life-cycle assessment
 life cycle cost
     life cycle cost
+    life cycle cost (lcc)
     life cycle costing
     life-cycle cost
     life-cycle costing
@@ -2530,7 +2505,6 @@ life cycle cost
     life-cycle-cost
 life cycle cost (lcc) analysis
     life cycle cost (lcc) analysis
-life cycle cost analysis
     life cycle cost analysis
 life cycle emissions analysis
     life cycle emissions analysis
@@ -2662,6 +2636,7 @@ low to zero energy/carbon housing
     low to zero energy/carbon housing
 low voltage distribution network
     low voltage distribution network
+    low-voltage distribution network (lvdn)
 low voltage networks
     low voltage networks
     low-voltage networks
@@ -2675,8 +2650,6 @@ low-carbon practice
     low-carbon practice
 low-cost monitoring
     low-cost monitoring
-low-voltage distribution network (lvdn)
-    low-voltage distribution network (lvdn)
 lpg
     lpg
 lppt
@@ -2729,7 +2702,6 @@ markets
     markets
 markov decision process (mdp)
     markov decision process (mdp)
-markov decision processes
     markov decision processes
 markov model
     markov model
@@ -2811,9 +2783,8 @@ mixed binary mixed binary linear programming
     mixed binary mixed binary linear programming
 mixed integer linear programming
     mixed integer linear programming
-    mixed-integer linear programming
-mixed integer linear programming (milp)
     mixed integer linear programming (milp)
+    mixed-integer linear programming
 mixed-integer non-linear programming
     mixed-integer non-linear programming
 mixed-integer programming
@@ -2840,7 +2811,6 @@ model based predictive control
     model based predictive control
 model predictive control
     model predictive control
-model predictive control (mpc)
     model predictive control (mpc)
 model simulation
     model simulation
@@ -2850,13 +2820,12 @@ monetary saving
     monetary saving
 monte carlo (mc) simulations
     monte carlo (mc) simulations
+    monte carlo simulation
+    monte carlo simulations
 monte carlo analysis
     monte carlo analysis
 monte carlo approach
     monte carlo approach
-monte carlo simulation
-    monte carlo simulation
-    monte carlo simulations
 moradabad
     moradabad
 morocco
@@ -2949,14 +2918,11 @@ near-term economic
     near-term economic
 nearly zero energy buildings (nzeb)
     nearly zero energy buildings (nzeb)
-    nearly zero-energy buildings (nzeb)
-    nzebs (nearly zero energy buildings)
-nearly zero energy buildings (nzec)
     nearly zero energy buildings (nzec)
+    nearly zero-energy building
+    nearly zero-energy buildings (nzeb)
 nearly zero energy cities (nzec)
     nearly zero energy cities (nzec)
-nearly zero-energy building
-    nearly zero-energy building
 needs evaluation
     needs evaluation
 neighborhood scales
@@ -2987,12 +2953,9 @@ net power cost (npc)
     net power cost (npc)
 net present cost
     net present cost
-net present cost (npc)
     net present cost (npc)
-    npc (net present cost)
 net present value
     net present value
-net present value (npv)
     net present value (npv)
 net present value analysis
     net present value analysis
@@ -3005,12 +2968,11 @@ net zero energy building
     net zero energy building
     net zero energy buildings
     net-zero energy building
+    net-zero energy building (nzeb)
 net zero energy home
     net zero energy home
 net-zero buildings
     net-zero buildings
-net-zero energy building (nzeb)
-    net-zero energy building (nzeb)
 network business
     network business
 network upgrade
@@ -3055,6 +3017,7 @@ northern nigeria
     northern nigeria
 npc
     npc
+    npc (net present cost)
 npv
     npv
 nsga-ii
@@ -3067,6 +3030,7 @@ nunavik
     nunavik
 nzeb
     nzeb
+    nzebs (nearly zero energy buildings)
 o&m
     o&m
 obia
@@ -3232,7 +3196,6 @@ particle swarm optimisation
     particle swarm optimisation
 particle swarm optimization
     particle swarm optimization
-particle swarm optimization (pso)
     particle swarm optimization (pso)
 partnerships
     partnerships
@@ -3278,10 +3241,9 @@ peer-to-peer
     peer-to-peer
 peer-to-peer (p2p) energy trading
     peer-to-peer (p2p) energy trading
+    peer-to-peer energy trading
 peer-to-peer energy sharing
     peer-to-peer energy sharing
-peer-to-peer energy trading
-    peer-to-peer energy trading
 penetration level
     penetration level
 perception
@@ -3306,23 +3268,21 @@ philippines
     philippines
 photo voltaic (pv)
     photo voltaic (pv)
+    photo-voltaic
 photo voltaic system
     photo voltaic system
-photo-voltaic
-    photo-voltaic
 photo-voltaic-wind-hydrogen hybrid system
     photo-voltaic-wind-hydrogen hybrid system
 photometric tool
     photometric tool
 photovoltaic
     photovoltaic
-    photovoltaics
-photovoltaic (pv)
     photovoltaic (pv)
+    photovoltaics
     photovoltaics (pv)
-    pv (photovoltaic)
 photovoltaic (pv) array
     photovoltaic (pv) array
+    photovoltaic array
 photovoltaic (pv) generation and energy storage (es) systems
     photovoltaic (pv) generation and energy storage (es) systems
 photovoltaic (pv) inverter
@@ -3331,19 +3291,24 @@ photovoltaic (pv) micro generation
     photovoltaic (pv) micro generation
 photovoltaic (pv) module
     photovoltaic (pv) module
+    photovoltaic module
 photovoltaic (pv) panels
     photovoltaic (pv) panels
+    photovoltaic panel
+    photovoltaic panels
 photovoltaic (pv) power
     photovoltaic (pv) power
+    photovoltaic power
 photovoltaic (pv) power systems
     photovoltaic (pv) power systems
 photovoltaic (pv) self-consumption
     photovoltaic (pv) self-consumption
+    photovoltaic self-consumption
 photovoltaic (pv) system
     photovoltaic (pv) system
     photovoltaic (pv) systems
-photovoltaic array
-    photovoltaic array
+    photovoltaic system
+    photovoltaic systems
 photovoltaic battery system
     photovoltaic battery system
     photovoltaic battery systems
@@ -3372,19 +3337,12 @@ photovoltaic generation system
     photovoltaic generation system
 photovoltaic mini-grid
     photovoltaic mini-grid
-photovoltaic module
-    photovoltaic module
-photovoltaic panel
-    photovoltaic panel
-    photovoltaic panels
 photovoltaic park
     photovoltaic park
 photovoltaic penetration level
     photovoltaic penetration level
 photovoltaic plant
     photovoltaic plant
-photovoltaic power
-    photovoltaic power
 photovoltaic power forecast
     photovoltaic power forecast
 photovoltaic power generation
@@ -3395,8 +3353,6 @@ photovoltaic projects
     photovoltaic projects
 photovoltaic pump
     photovoltaic pump
-photovoltaic self-consumption
-    photovoltaic self-consumption
 photovoltaic simulation tool
     photovoltaic simulation tool
 photovoltaic sizing
@@ -3404,14 +3360,12 @@ photovoltaic sizing
 photovoltaic solar
     photovoltaic solar
     solar photovoltaic
+    solar photovoltaic (pv)
     solar photovoltaics
 photovoltaic solar cell
     photovoltaic solar cell
 photovoltaic solar energy
     photovoltaic solar energy
-photovoltaic system
-    photovoltaic system
-    photovoltaic systems
 photovoltaic system performance
     photovoltaic system performance
 photovoltaic system subsystems
@@ -3652,6 +3606,7 @@ purchase motives
     purchase motives
 pv
     pv
+    pv (photovoltaic)
 pv adoption
     pv adoption
 pv array
@@ -3781,7 +3736,6 @@ pvsyst
     pvsyst
 pvt
     pvt
-pvt (photovoltaic/thermal)
     pvt (photovoltaic/thermal)
 pwm
     pwm
@@ -3935,18 +3889,15 @@ renewable energy share
 renewable energy source
     renewable energy source
     renewable energy sources
-renewable energy sources (res)
     renewable energy sources (res)
-    res (renewable energy sources)
 renewable energy supply systems
     renewable energy supply systems
 renewable energy support
     renewable energy support
 renewable energy system
     renewable energy system
-    renewable energy systems
-renewable energy system (res)
     renewable energy system (res)
+    renewable energy systems
 renewable energy technologies
     renewable energy technologies
 renewable energy transitions
@@ -3955,7 +3906,6 @@ renewable financing
     renewable financing
 renewable fraction
     renewable fraction
-renewable fraction (rf)
     renewable fraction (rf)
 renewable generation
     renewable generation
@@ -3979,6 +3929,8 @@ repeated sales
     repeated sales
 repurposed batteries
     repurposed batteries
+res (renewable energy sources)
+    res (renewable energy sources)
 resco approach
     resco approach
 reserve system
@@ -4157,7 +4109,6 @@ rooftop photovoltaic
     rooftop photovoltaics
 rooftop photovoltaic (pv) systems
     rooftop photovoltaic (pv) systems
-rooftop photovoltaic system (rtpvs)
     rooftop photovoltaic system (rtpvs)
 rooftop pv
     rooftop pv
@@ -4372,9 +4323,8 @@ smart grid communications
     smart grid communications
 smart home
     smart home
-    smart homes
-smart home (sh)
     smart home (sh)
+    smart homes
 smart infrastructure
     smart infrastructure
 smart meter
@@ -4485,9 +4435,8 @@ solar heating and cooling systems
     solar heating and cooling systems
 solar home system
     solar home system
-    solar home systems
-solar home system (shs)
     solar home system (shs)
+    solar home systems
     solar home systems (shs)
 solar house
     solar house
@@ -4515,8 +4464,6 @@ solar photo voltaic
     solar photo voltaic
 solar photo voltaic (spv) systems
     solar photo voltaic (spv) systems
-solar photovoltaic (pv)
-    solar photovoltaic (pv)
 solar photovoltaic (pv) panels
     solar photovoltaic (pv) panels
 solar photovoltaic electricity
@@ -4957,6 +4904,7 @@ timber material
     timber material
 time of use (tou)
     time of use (tou)
+    time-of-use
 time of use tariff
     time of use tariff
     time-of-use tariff
@@ -4965,8 +4913,6 @@ time series analysis
     time series analysis
 time-of-day pricing
     time-of-day pricing
-time-of-use
-    time-of-use
 time-shifting
     time-shifting
 timiaouine
@@ -4981,9 +4927,7 @@ total cost of ownership
     total cost of ownership
 total net present cost
     total net present cost
-total net present cost (npc)
     total net present cost (npc)
-total net present cost (tnpc)
     total net present cost (tnpc)
 tou
     tou
@@ -5120,16 +5064,14 @@ variable renewable energy
     variable renewable energy
 vehicle to grid (v2g)
     vehicle to grid (v2g)
+    vehicle-to-grid
     vehicle-to-grid (v2g)
 vehicle to home technology
     vehicle to home technology
 vehicle to home v2h
     vehicle to home v2h
-    vehicle-to-home (v2h)
 vehicle-to-building
     vehicle-to-building
-vehicle-to-grid
-    vehicle-to-grid
 ventilated roof
     ventilated roof
 viability study
@@ -5198,7 +5140,6 @@ willingness to invest
     willingness to invest
 willingness to pay
     willingness to pay
-willingness to pay (wtp)
     willingness to pay (wtp)
 wind
     wind
@@ -5210,7 +5151,6 @@ wind energy
     wind energy
 wind energy conversion system (wecs)
     wind energy conversion system (wecs)
-wind energy conversion systems
     wind energy conversion systems
 wind energy potential
     wind energy potential
@@ -5218,7 +5158,6 @@ wind energy system
     wind energy system
 wind power
     wind power
-wind power (wp)
     wind power (wp)
 wind power system
     wind power system
@@ -5228,9 +5167,8 @@ wind system
     wind system
 wind turbine
     wind turbine
-    wind turbines
-wind turbine (wt)
     wind turbine (wt)
+    wind turbines
 wind turbine farm
     wind turbine farm
 wind, pv, micro-generation
@@ -5251,9 +5189,8 @@ zambia
     zambia
 zero energy buildings
     zero energy buildings
+    zero energy buildings (zeb)
     zero-energy building
     zero-energy buildings
-zero energy buildings (zeb)
-    zero energy buildings (zeb)
 zero energy house
     zero energy house
