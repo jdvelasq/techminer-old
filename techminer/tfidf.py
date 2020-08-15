@@ -1,0 +1,68 @@
+import numpy as np
+import pandas as pd
+
+from techminer.explode import explode
+from sklearn.feature_extraction.text import TfidfTransformer
+
+
+def TF_matrix(data, column, scheme=None, min_occurrence=1):
+    X = data[[column, "ID"]].copy()
+    X["value"] = 1.0
+    X = explode(X, column)
+    result = pd.pivot_table(
+        data=X, index="ID", columns=column, margins=False, fill_value=0.0,
+    )
+    result.columns = [b for _, b in result.columns]
+    result = result.reset_index(drop=True)
+
+    terms = result.sum(axis=0)
+    terms = terms.sort_values(ascending=False)
+    terms = terms[terms >= min_occurrence]
+    result = result.loc[:, terms.index]
+
+    rows = result.sum(axis=1)
+    rows = rows[rows > 0]
+    result = result.loc[rows.index, :]
+
+    if scheme is None or scheme == "raw":
+        return result
+
+    if scheme == "binary":
+        result = result.applymap(lambda w: 1 if w > 0 else 0)
+
+    if scheme == "log":
+        result = result.applymap(lambda w: np.log(1 + w))
+
+    return result
+
+
+def TFIDF_matrix(
+    TF_matrix,
+    norm="l2",
+    use_idf=True,
+    smooth_idf=True,
+    sublinear_tf=False,
+    max_items=3000,
+):
+
+    result = (
+        TfidfTransformer(
+            norm=norm, use_idf=use_idf, smooth_idf=smooth_idf, sublinear_tf=sublinear_tf
+        )
+        .fit_transform(TF_matrix)
+        .toarray()
+    )
+
+    result = pd.DataFrame(result, columns=TF_matrix.columns)
+
+    if len(result.columns) > max_items:
+        terms = result.sum(axis=0)
+        terms = terms.sort_values(ascending=False)
+        terms = terms.head(max_items)
+        result = result.loc[:, terms.index]
+        rows = result.sum(axis=1)
+        rows = rows[rows > 0]
+        result = result.loc[rows.index, :]
+
+    return result
+

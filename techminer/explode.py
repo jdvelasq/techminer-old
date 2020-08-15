@@ -1,7 +1,7 @@
 from techminer.params import MULTIVALUED_COLS
 
 
-def __explode(x, column):
+def explode(x, column):
     """Transform each element of a field to a row, reseting index values.
 
     Args:
@@ -27,7 +27,7 @@ def __explode(x, column):
     1                    author 3   1
     2                    author 4   2
 
-    >>> __explode(x, 'Authors')
+    >>> explode(x, 'Authors')
         Authors  ID
     0  author 0   0
     1  author 1   0

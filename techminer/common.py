@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from techminer.explode import __explode
+from techminer.explode import explode
 
 
 #
@@ -165,7 +165,7 @@ def add_counters_to_axis(X, axis, data, column):
     data = data.copy()
     data["Num_Documents"] = 1
     m = (
-        __explode(data[[column, "Num_Documents", "Times_Cited", "ID"]], column)
+        explode(data[[column, "Num_Documents", "Times_Cited", "ID"]], column)
         .groupby(column, as_index=True)
         .agg({"Num_Documents": np.sum, "Times_Cited": np.sum,})
     )
