@@ -1,13 +1,15 @@
 adaptive dynamic programming
     adaptive dynamic programming
-agent-based simulation
+agent-based modelling
+    agent-based modelling
     agent-based simulation
-multi-agent simulation
+    agent-based simulation
     multi-agent simulation
-    multi-agent system
-    multi-agent systems
+    multi-agent simulation
 ahp
     ahp
+an integration platform
+    an integration platform
 analytic mathematical model
     analytic mathematical model
 approximate dynamic programming
@@ -16,121 +18,180 @@ assessment
     assessment
 barriers
     barriers
+battery electric vehicles
+    battery electric vehicles
 biased randomization
     biased randomization
 binary particle swarm optimization (bpso)
     binary particle swarm optimization (bpso)
 bottom-up model
     bottom-up model
+bristol-bath
+    bristol-bath
 business model
     business model 
-    business models
+    business models 
 business modelling
     business modelling
 bwm
     bwm
-carbon emissions
+canvas business model
+    canvas business model
+cap and trade
+    cap and trade
+carbon credit points
+    carbon credit points
+carbon emission
+    carbon emission
     carbon emissions
     co2 emissions
+    co2 emissions
     polluting emissions
-    pm2.5
+    polluting emissions
+carbon footprint
+    carbon footprint
+cargo bikes
+    cargo bikes
+carriers
+    carriers
 case studies
     case studies
     case study
 certain environment
     certain environment
+chaotic system
+    chaotic system
 cities
     cities
+    city
     inner-city
-urban consolidation centre
-    urban consolidation centre
+    inner-city
+city distribution
+    city distribution
+urban consolidation center
     urban consolidation center
-    urban consolidation centers
     urban consolidation center (ucc)
+    urban consolidation centers
     urban consolidation centre
-    urban consolidation centres
+    urban consolidation centre
     urban consolidation centre (ucc)
+    urban consolidation centres
     urban consolidation centres (uccs)
-    urban consolidation centres smart cities
+    city distribution center
     city distribution center
     city distribution centers
+    centros de distribuicao urbana
+    centros de distribuicao urbana
+    city logistics centers
     city logistics centers
     city logistics centre
-    consolidation centres
-    distribution center
-    logistics center
-    distribution center
-    distribution centers
-    distribution centre
-    micro-consolidation
-    multi-modal urban distribution centre
+    city logistics centre
     udc
+    udc
+    urban consolidation centres smart cities
+    urban consolidation centres smart cities
+    urban consolodation center
+    urban consolodation center
     urban distribution center
-    urban distribution centers
+    urban distribution center
     urban distribution center (udc)
+    urban distribution centers
     urban distribution centers (udc)
     urban distribution centre
+    urban distribution centre
     urban freight consolidation center
+    urban freight consolidation center
+    urban freight consolidation centre
     urban freight consolidation centre
     urban freight consolidation centre (ufcc)
     urban freight consolidation centres (ufccs)
-freight facilities
-    freight facilities
-    freight consolidation centre
-    freight consolidation centre
-urban logistic 
-    urban logistics 
-    city logistic
-    city logistics
-    smart cities
-    smart city
-    smart city logistics
+consolidation centres
+    consolidation centres
+    distribution center
+    distribution center
+    distribution centers
+    distribution centre
+    distribution centre
+logistics center
+    logistics center
+    logistics platform
+    logistics platform
+logistics distribution center
+    logistics distribution center
+    transshipment distribution center
+    transshipment distribution center
 classification
     classification
 cluster
     cluster
 collaboration
     collaboration
+collaborative logistics
     collaborative logistics
-    collaborative logistics
+collaborative urban logistics
     collaborative urban logistics
-    cooperative freight transport systems
-    cooperation strategies
-    horizontal cooperation
+combinatorial optimization
+    combinatorial optimization
 combined approach
     combined approach
 congestion
     congestion
-    traffic
+congestion charging
+    congestion charging
 consolidation strategies
     consolidation strategies
+construction
+    construction
+construction innovation
+    construction innovation
 content analysis
     content analysis
 continuous approximation (ca)
     continuous approximation (ca)
+continuous approximation methods
     continuous approximation methods
+cooperation strategies
+    cooperation strategies
+cooperative freight transport systems
+    cooperative freight transport systems
 core
     core
 corporate social responsibility
     corporate social responsibility
-correlation
-    correlation
+cost allocation
+    cost allocation
 cost-effective distance of transport
     cost-effective distance of transport
+criteria
+    criteria
 critical factors
     critical factors
+crowdsourcing
+    crowdsourcing
 customer satisfaction
     customer satisfaction
 customer satisfaction index
     customer satisfaction index
 customer service
     customer service
+decision hierarchy structure
+    decision hierarchy structure
 decision levels
     decision levels
+decision making
+    decision making
 decision support system
     decision support system
+decision-making process
+    decision-making process
+decomposition strategy
+    decomposition strategy
 delphi method
     delphi method
+demand quantity
+    demand quantity
+diffusion of innovation theory
+    diffusion of innovation theory
 dijkstra
     dijkstra
 discrete event simulation
@@ -139,29 +200,32 @@ dispatching problem
     dispatching problem
 distance measures
     distance measures
+distribution
+    distribution
 distribution networks
     distribution networks
 double auction
     double auction
+e-commerce
+    e-commerce
 economic assessment
     economic assessment
 edas
     edas
 efficiency
     efficiency
-electric vehicle
-    electric vehicle
-    electric vehicles
+electric tricycles
     electric tricycles
-    fuelled-electric vehicles
-    fully electric vehicles
-    green vehicle
 end consumer movements
     end consumer movements
 energy consumption
     energy consumption
+energy efficiency
+    energy efficiency
 engineering method
     engineering method
+enter-of-gravity model
+    enter-of-gravity model
 entropy
     entropy
 environmental and social sustainability
@@ -170,9 +234,22 @@ environmental economics
     environmental economics
 environmental impacts
     environmental impacts
+equality
+    equality
 evaluation
     evaluation
+evaluation framework
     evaluation framework
+evolutionary game theory
+    evolutionary game theory
+experimental economics
+    experimental economics
+facility layout
+    facility layout
+facility location
+    facility location
+fatores localizacao
+    fatores localizacao
 feasibility study
     feasibility study
 financial balance
@@ -181,8 +258,18 @@ flow consolidation schemes
     flow consolidation schemes
 freight consolidation
     freight consolidation
+freight consolidation center
+    freight consolidation center
+freight consolidation policy
+    freight consolidation policy
 freight delivering
     freight delivering
+freight distribution network
+    freight distribution network
+freight facilities
+    freight facilities
+    freight terminal
+    freight terminal
 freight modeling
     freight modeling
 freight scheme evaluation
@@ -192,10 +279,21 @@ freight transport
     freight transportation
 freight vehicle routing
     freight vehicle routing
-freight distribution network
-    freight distribution network
+fruit and vegetable distribution
+    fruit and vegetable distribution
+fruit fly optimization algorithm
+    fruit fly optimization algorithm
 fruits and vegetables hall
     fruits and vegetables hall
+    fruits and vegetables market halls
+    fruits and vegetables market halls
+fuelled-electric vehicles
+    fuelled-electric vehicles
+    fully electric vehicles
+    fully electric vehicles
+    electric vehicle
+    electric vehicle
+    electric vehicles
 fuzzy cluster analysis
     fuzzy cluster analysis
 fuzzy preferences
@@ -216,22 +314,28 @@ genetic algorithm
 geographic information system
     geographic information system
     geographic information systems (gis)
-gothenburg region
-    gothenburg region
 grading
     grading
+greedy algorithm
+    greedy algorithm
 green logistics
     green logistics
+green logistics center
+    green logistics center
+green vehicle
+    green vehicle
 greenhouse gas emissions
     greenhouse gas emissions
 heterogeneous fleet
     heterogeneous fleet
-heuristic algorithm
-    heuristic algorithm
 historical cities
     historical cities
+horizontal cooperation
+    horizontal cooperation
 hybrid spatial-fuzzy multi-criteria decision-making
     hybrid spatial-fuzzy multi-criteria decision-making
+hypercube model
+    hypercube model
 impact assessment
     impact assessment
 implementation
@@ -246,71 +350,123 @@ integer programming
     integer programming
 integrated maintenance
     integrated maintenance
+intelligent truck parking
+    intelligent truck parking
+inter-organisational innovation
+    inter-organisational innovation
 inter-organizational interaction
     inter-organizational interaction
+internet of things
+    internet of things
 interoperability
     interoperability
+intervention mechanism
+    intervention mechanism
+iterative method
+    iterative method
+joint decision
+    joint decision
 joint delivery systems
     joint delivery systems
+lagrangian slack operator
+    lagrangian slack operator
 lamilo project
     lamilo project
-last mile delivery
+last mile distribution
+    last mile distribution
+    last mile delivery
     last mile delivery
     last-mile deliveries
-    last mile distribution
+    last-mile delivery
     last mile logistics
-    last-mile network
+    last mile logistics
+    last-mile logistics
+last-mile
     last-mile
+last-mile network
+    last-mile network
+layout optimization model
+    layout optimization model
+layout planning
+    layout planning
 lbl freight consolidation
     lbl freight consolidation
 lbl urban freight boxes
     lbl urban freight boxes
+life cycle cost analysis
+    life cycle cost analysis
 linear programming
     linear programming
 linguistic variable
     linguistic variable
+lisboa
+    lisboa
+lisbon
+    lisbon
 literature review
     literature review
-load factors
-    load factors
+systematic review
+    systematic review
+structural literature review
+    structural literature review
 local impact
     local impact
-location routing problem
-    location routing problem
-    location-routing
-    location selection
-    localisation
+localization
     localization
+location
     location
-    location mode
-    location model
-    multiple location decision
-    facility location
-    optimal locating method
+location factors
+    location factors
+location optimization
+    location optimization
 location plan
     location plan
     location planning
+location routing problem
+    location routing problem
+    location-routing
+    location-routing
+location selection
+    location selection
+logistic system
+    logistic system
+    logistics system
 logistics
     logistics
-    logistics system
 logistics cost
     logistics cost
+logistics engineering
+    logistics engineering
+logistics information platform
+    logistics information platform
+logistics pooling
+    logistics pooling
 logistics simulations
     logistics simulations
 logistics sprawl
     logistics sprawl
 long distance transport
     long distance transport
+low carbon
+    low carbon
+low emission zones
+    low emission zones
 lucca
     lucca
 mathematical model
     mathematical model
-medium-sized cities
-    medium-sized cities
 metaheuristics
     metaheuristics
+    matheuristics
+    matheuristics
+medium-sized cities
+    medium-sized cities
+micro-consolidation
+    micro-consolidation
 micro-simulation
     micro-simulation
+mixed-integer programming
+    mixed-integer programming
 modeling urban distribution center
     modeling urban distribution center
 modelization
@@ -319,42 +475,66 @@ modified customer satisfaction index
     modified customer satisfaction index
 moves
     moves
-multi-criteria decision making
+multi-actor multi-criteria analysis
+    multi-actor multi-criteria analysis
+    multi-actor multi-criteria analysis (mamca)
+multi-agent system
+    multi-agent system
+    multi-agent systems
+multi-criteria decision analysis (mcda)
+    multi-criteria decision analysis (mcda)
+    multi-criteria decision making
     multi-criteria decision making
     multi-criteria decision making (mcdm)
     multi-criteria decision-making (mcdm)
-multi-layer logistics facility
-    multi-layer logistics facility
+multi-modal urban distribution centre
+    multi-modal urban distribution centre
 multi-objective mixed-integer linear programming
     multi-objective mixed-integer linear programming
 multi-objective optimization
     multi-objective optimization
 multi-tenant buildings
     multi-tenant buildings
+multiple location decision
+    multiple location decision
+multivariate factorial analysis
+    multivariate factorial analysis
 multivariate statistical analysis
     multivariate statistical analysis
-    multivariate factorial analysis
-    multivariate factorial analysis
+municipality
+    municipality
 negative externalities
     negative externalities
+network
+    network
 network design
     network design
 network flow problem
     network flow problem
+network logistics
+    network logistics
+nihub
+    nihub
 non-motorized modes
     non-motorized modes
+nordic
+    nordic
 novi sad
     novi sad
+optimal locating method
+    optimal locating method
 optimization
     optimization
 optimization of freight transport
     optimization of freight transport
 order sharing
     order sharing
+overall factor
+    overall factor
 p-median problem
     p-median problem
-partical swarm optimization
-    partical swarm optimization
+pavement
+    pavement
 performance evaluation
     performance evaluation
 performance measurement
@@ -365,12 +545,16 @@ planning and evaluation methods
     planning and evaluation methods
 planning and layout
     planning and layout
+pm2.5
+    pm2.5
 policy
     policy
 policy evaluation
     policy evaluation
 policy support
     policy support
+port
+    port
 possibilictic linear programming
     possibilictic linear programming
 post-evaluation deliberation
@@ -379,10 +563,16 @@ probability function
     probability function
 profitability
     profitability
+public policies
+    public policies
 q-methodology
     q-methodology
+queuing location problem
+    queuing location problem
 queuing theory
     queuing theory
+r and shiny
+    r and shiny
 rail transport
     rail transport
 receivers
@@ -391,27 +581,47 @@ region multi-level logistics distribution
     region multi-level logistics distribution
 reinforcement learning
     reinforcement learning
+retailer
+    retailer
+    retailers
 retailers' point of view
     retailers' point of view
+reverse logistics
+    reverse logistics
+rolling horizon
+    rolling horizon
 scenario planning
     scenario planning
+scheme selection
+    scheme selection
+scp-pca
+    scp-pca
 sensitivity analysis
     sensitivity analysis
 serbia
     serbia
-service radius
-    service radius
 sharing resources
     sharing resources
 simulation model
     simulation model
 simulation platform
     simulation platform
+single location selection
+    single location selection
+site testing
+    site testing
+smart cities
+    smart cities
+    smart city
+    smart city logistics
+    smart city logistics
 social cost benefit analysis
     social cost benefit analysis
     social cost-benefit analysis
 spatial analysis
     spatial analysis
+stakeholder analysis
+    stakeholder analysis
 stakeholder engagement
     stakeholder engagement
 stakeholders
@@ -424,6 +634,8 @@ stated preference
     stated preference
 strategic planning
     strategic planning
+sub-gradient
+    sub-gradient
 subcontracting strategy
     subcontracting strategy
 sustainability
@@ -442,10 +654,8 @@ sustainable transport
     sustainable transport
 sustainable urban freight transport
     sustainable urban freight transport
-systematic review
-    systematic review
-structural literature review
-    structural literature review
+system dynamics
+    system dynamics
 thowa operator
     thowa operator
 time-dependent
@@ -454,6 +664,10 @@ topsis
     topsis
 touristic cities
     touristic cities
+traffic
+    traffic
+traffic wardens
+    traffic wardens
 transferability
     transferability
 transport demand analysis
@@ -477,31 +691,52 @@ urban areas
 urban delivery
     urban delivery
     urban distribution
+    urban distribution
 urban freight
     urban freight
-urban freight delivery
-    urban freight delivery
-    urban freight distribution
-    urban goods distribution
-    urban goods movement
-    urban goods movements
 urban freight demand models
     urban freight demand models
-urban freight transport
+urban freight distribution
+    urban freight distribution
+    urban freight delivery
+    urban freight delivery
+    urban freight transport
     urban freight transport
 urban freight transport agents
     urban freight transport agents
+urban goods distribution
+    urban goods distribution
+    urban goods movement
+    urban goods movement
+    urban goods movements
+urban logistic
+    urban logistic
+    urban logistics
+    city logistic
+    city logistic
+    city logistics
+    logistica urbana
+    logistica urbana
 urban planning
     urban planning
 urban pollution
     urban pollution
+urban transport
+    urban transport
 urban transportation simulation
     urban transportation simulation
- vehicle routing problem
-    vehicle routing problem
+urban-rural distribution
+    urban-rural distribution
+urban-rural integration
+    urban-rural integration
+vehicle routing
     vehicle routing
+    vehicle routing problem
+    vehicle routing problem
+vehicle routing problem with time windows
     vehicle routing problem with time windows
-    vehicle routing problem with time windows
+virtual pricing
+    virtual pricing
 warehouse design
     warehouse design
 well-to-wheel analysis
