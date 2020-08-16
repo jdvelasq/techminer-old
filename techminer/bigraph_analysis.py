@@ -16,11 +16,14 @@ import pandas as pd
 
 import techminer.common as cmn
 import techminer.dashboard as dash
-import techminer.plots as plt
 from techminer.dashboard import DASH
-from techminer.document_term import TF_matrix
+from techminer.tfidf import TF_matrix
 from techminer.params import EXCLUDE_COLS
 from pyvis.network import Network
+
+from techminer.heatmap import heatmap as heatmap_
+from techminer.bubble_plot import bubble_plot
+
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -152,11 +155,11 @@ class Model:
 
     def heatmap(self):
         self.apply()
-        return plt.heatmap(self.X_, cmap=self.cmap, figsize=(self.width, self.height),)
+        return heatmap_(self.X_, cmap=self.cmap, figsize=(self.width, self.height),)
 
     def bubble_plot(self):
         self.apply()
-        return plt.bubble(
+        return bubble_plot(
             self.X_, axis=0, cmap=self.cmap, figsize=(self.width, self.height),
         )
 
