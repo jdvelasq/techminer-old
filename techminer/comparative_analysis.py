@@ -1,27 +1,18 @@
 import json
 import ipywidgets as widgets
 import pandas as pd
-from sklearn.cluster import (
-    AgglomerativeClustering,
-    AffinityPropagation,
-    Birch,
-    DBSCAN,
-    FeatureAgglomeration,
-    KMeans,
-    MeanShift,
-)
 
 import matplotlib.pyplot as pyplot
 
 import techminer.common as cmn
 import techminer.dashboard as dash
-import techminer.plots as plt
-from techminer.correspondence import CA
+
+from techminer.ca import CA
 from techminer.dashboard import DASH
 from techminer.diagram_plot import diagram_plot
-from techminer.document_term import TF_matrix, TFIDF_matrix
+from techminer.tfidf import TF_matrix, TFIDF_matrix
 from techminer.params import EXCLUDE_COLS
-
+from techminer.clustering import clustering
 
 ###############################################################################
 ##
@@ -117,73 +108,24 @@ class Model:
         #
         # 7.-- Cluster analysis of first n_factors of CA matrix
         #
-        if self.clustering_method == "Affinity Propagation":
-            labels = AffinityPropagation(
-                random_state=int(self.random_state)
-            ).fit_predict(X)
-            self.n_clusters = len(set(labels))
-
-        if self.clustering_method == "Agglomerative Clustering":
-            labels = AgglomerativeClustering(
-                n_clusters=self.n_clusters, affinity=self.affinity, linkage=self.linkage
-            ).fit_predict(X)
-
-        if self.clustering_method == "Birch":
-            labels = Birch(n_clusters=self.n_clusters).fit_predict(X)
-
-        if self.clustering_method == "DBSCAN":
-            labels = DBSCAN().fit_predict(X)
-            self.n_clusters = len(set(labels))
-
-        #  if self.clustering_method == "Feature Agglomeration":
-        #      m = FeatureAgglomeration(
-        #          n_clusters=self.n_clusters, affinity=self.affinity, linkage=self.linkage
-        #      ).fit(X)
-        #      labels = ???
-
-        if self.clustering_method == "KMeans":
-            labels = KMeans(
-                n_clusters=self.n_clusters, random_state=int(self.random_state)
-            ).fit_predict(X)
-
-        if self.clustering_method == "Mean Shift":
-            labels = MeanShift().fit_predct(X)
-            self.n_clusters = len(set(labels))
-
-        #
-        # 8.-- Cluster centers
-        #
-        X["CLUSTER"] = labels
-        self.cluster_centers_ = X.groupby("CLUSTER").mean()
-
-        #
-        # 9.-- Memberships
-        #
-        communities = pd.DataFrame(
-            pd.NA, columns=range(self.n_clusters), index=range(self.top_n)
+        (
+            self.n_clusters,
+            self.labels_,
+            self.cluster_members_,
+            self.cluster_centers_,
+            self.cluster_names_,
+        ) = clustering(
+            X=X,
+            method=self.clustering_method,
+            n_clusters=self.n_clusters,
+            affinity=self.affinity,
+            linkage=self.linkage,
+            random_state=self.random_state,
+            top_n=self.top_n,
+            name_prefix="Cluster {}",
         )
-        for i_cluster in range(self.n_clusters):
-            R = X[X.CLUSTER == i_cluster]
-            R = cmn.sort_axis(data=R, num_documents=True, axis=0, ascending=False,)
-            community = R.index
-            community = community.tolist()[0 : self.top_n]
-            communities.at[0 : len(community) - 1, i_cluster] = community
-        communities.columns = ["Cluster {}".format(i) for i in range(self.n_clusters)]
-        ## Delete empty rows
-        row_ids = []
-        for row in communities.iterrows():
-            if any([not pd.isna(a) for a in row[1]]):
-                row_ids.append(row[0])
-        communities = communities.loc[row_ids, :]
-        communities = communities.applymap(lambda w: "" if pd.isna(w) else w)
-        ##
-        self.memberships_ = communities
 
-        #
-        # 10.-- Cluster names (most frequent term in cluster)
-        #
-        names = communities.loc[0, :].tolist()
-        self.cluster_names_ = names
+        X["CLUSTER"] = self.labels_
 
     def cluster_names(self):
         self.apply()
@@ -193,9 +135,9 @@ class Model:
         self.apply()
         return self.cluster_centers_
 
-    def memberships(self):
+    def cluster_members(self):
         self.apply()
-        return self.memberships_
+        return self.cluster_members_
 
     def plot_singular_values(self):
         self.apply()
@@ -328,9 +270,9 @@ class DASHapp(DASH, Model):
 
         self.app_title = "Comparative analysis"
         self.menu_options = [
+            "Cluster members",
             "Cluster names",
             "Cluster centers",
-            "Memberships",
             "Plot singular values",
             "Plot clusters",
         ]

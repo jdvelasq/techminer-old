@@ -1,15 +1,15 @@
 import matplotlib
 import matplotlib.pyplot as pyplot
 import pandas as pd
-from sklearn.cluster import KMeans
 
 import techminer.common as cmn
 import techminer.dashboard as dash
 import techminer.plots as plt
-from techminer.correspondence import CA
+from techminer.ca import CA
 from techminer.dashboard import DASH
-from techminer.document_term import TF_matrix, TFIDF_matrix
+from techminer.tfidf import TF_matrix, TFIDF_matrix
 
+from techminer.clustering import clustering
 
 ###############################################################################
 ##
@@ -66,41 +66,31 @@ class Model:
         #      En TLAB se usa bisecting k-means.
         #      Se implementa sklearn.cluster.KMeans
         #
-        kmeans = KMeans(
+        (
+            self.n_clusters,
+            self.labels_,
+            self.cluster_members_,
+            self.cluster_centers_,
+            self.cluster_names_,
+        ) = clustering(
+            X=TF_IDF_matrix_,
+            method=self.clustering_method,
             n_clusters=self.n_clusters,
-            max_iter=self.max_iter,
-            random_state=int(self.random_state),
+            affinity=self.affinity,
+            linkage=self.linkage,
+            random_state=self.random_state,
+            top_n=None,
+            name_prefix="Theme {}",
         )
-        labels = kmeans.fit_predict(X=TF_IDF_matrix_)
 
         #
         # 4.-- Matriz de contingencia.
         #
         matrix = TF_IDF_matrix_.copy()
-        matrix["*cluster*"] = labels
+        matrix["*cluster*"] = self.labels_
         matrix = matrix.groupby(by="*cluster*").sum()
-        matrix.index = ["Cluster {:>2d}".format(i) for i in range(self.n_clusters)]
+        matrix.index = ["Theme {:>2d}".format(i) for i in range(self.n_clusters)]
         self.contingency_table_ = matrix.transpose()
-
-        #
-        # 5.-- Memberships
-        #
-        communities = pd.DataFrame(
-            "", columns=range(self.n_clusters), index=range(self.top_n)
-        )
-        for i_cluster, cluster in enumerate(self.contingency_table_.columns):
-            grp = self.contingency_table_[cluster]
-            grp = grp[grp > 0]
-            grp = cmn.sort_by_axis(
-                data=grp, sort_by="Num Documents", ascending=False, axis=0
-            )
-            grp = grp.head(self.top_n)
-            communities.at[0 : len(grp) - 1, i_cluster] = grp.index
-
-        communities.columns = [
-            "Theme {}".format(i) for i, _ in enumerate(self.contingency_table_.columns)
-        ]
-        self.memberships_ = communities
 
         #
         # 6.-- Top n for contingency table
@@ -111,18 +101,10 @@ class Model:
         self.contingency_table_ = self.contingency_table_.head(self.top_n)
 
         #
-        # 7.-- Nombres de los clusters.
-        #
-        self.cluster_names_ = {}
-        for c in self.contingency_table_:
-            m = self.contingency_table_.sort_values(by=c, ascending=False)
-            self.cluster_names_[c] = m.index[0]
-
-        #
         # 8.-- Tamaño de los clusters.
         #
         W = TF_IDF_matrix_.copy()
-        W["*cluster*"] = labels
+        W["*cluster*"] = self.labels_
         W = W.groupby("*cluster*").count()
 
         #
@@ -137,9 +119,9 @@ class Model:
         self.apply()
         return self.contingency_table_
 
-    def memberships_table(self):
+    def cluster_members(self):
         self.apply()
-        return self.memberships_
+        return self.cluster_members_
 
     def cluster_ppal_coordinates(self):
         self.apply()
@@ -302,8 +284,8 @@ class DASHapp(DASH, Model):
 
         self.app_title = "Thematic Analysis"
         self.menu_options = [
+            "Cluster members",
             "Contingency table",
-            "Memberships table",
             "Cluster ppal coordinates",
             "Term ppal coordinates",
             "Clusters plot",
@@ -316,9 +298,11 @@ class DASHapp(DASH, Model):
             ),
             dash.min_occurrence(),
             dash.max_items(),
-            dash.separator(text="Clustering (K-means)"),
-            dash.n_clusters(m=3, n=51, i=1),
-            dash.max_iter(),
+            dash.separator(text="Clustering"),
+            dash.clustering_method(),
+            dash.n_clusters(m=3, n=50, i=1),
+            dash.affinity(),
+            dash.linkage(),
             dash.random_state(),
             dash.separator(text="Visualization"),
             dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
@@ -341,7 +325,7 @@ class DASHapp(DASH, Model):
         for i in [-1, -2, -3, -4, -5]:
             self.panel_widgets[i]["widget"].disabled = self.menu in [
                 "Contingency table",
-                "Memberships table",
+                "Cluster members",
                 "Cluster ppal coordinates",
                 "Term ppal coordinates",
             ]

@@ -4,25 +4,17 @@ import matplotlib
 import matplotlib.pyplot as pyplot
 import numpy as np
 import pandas as pd
-from sklearn.cluster import (
-    AgglomerativeClustering,
-    AffinityPropagation,
-    Birch,
-    DBSCAN,
-    FeatureAgglomeration,
-    KMeans,
-    MeanShift,
-)
+
 from sklearn.manifold import MDS
 
 
 import techminer.common as cmn
 import techminer.dashboard as dash
-from techminer.correspondence import CA
+from techminer.ca import CA
 from techminer.dashboard import DASH
-from techminer.document_term import TF_matrix, TFIDF_matrix
-from techminer.graph import network_normalization
-
+from techminer.tfidf import TF_matrix, TFIDF_matrix
+from techminer.normalize_network import normalize_network
+from techminer.clustering import clustering
 
 ###############################################################################
 ##
@@ -95,79 +87,42 @@ class Model:
         #
         X = np.matmul(TF_matrix_.transpose().values, TF_matrix_.values)
         X = pd.DataFrame(X, columns=TF_matrix_.columns, index=TF_matrix_.columns)
-        X = network_normalization(X=X, normalization=self.normalization)
+        X = normalize_network(X=X, normalization=self.normalization)
 
         #
         # 5.-- Clustering of the dissimilarity matrix
         #
-        if self.clustering_method == "Affinity Propagation":
-            labels = AffinityPropagation(
-                random_state=int(self.random_state)
-            ).fit_predict(1 - X)
-            self.n_clusters = len(set(labels))
-
-        if self.clustering_method == "Agglomerative Clustering":
-            labels = AgglomerativeClustering(
-                n_clusters=self.n_clusters, affinity=self.affinity, linkage=self.linkage
-            ).fit_predict(1 - X)
-
-        if self.clustering_method == "Birch":
-            labels = Birch(n_clusters=self.n_clusters).fit_predict(1 - X)
-
-        if self.clustering_method == "DBSCAN":
-            labels = DBSCAN().fit_predict(1 - X)
-            self.n_clusters = len(set(labels))
-
-        #  if self.clustering_method == "Feature Agglomeration":
-        #      m = FeatureAgglomeration(
-        #          n_clusters=self.n_clusters, affinity=self.affinity, linkage=self.linkage
-        #      ).fit(1 - X)
-        #      labels =
-
-        if self.clustering_method == "KMeans":
-            labels = KMeans(
-                n_clusters=self.n_clusters, random_state=int(self.random_state)
-            ).fit_predict(1 - X)
-
-        if self.clustering_method == "Mean Shift":
-            labels = MeanShift().fit_predict(1 - X)
-            self.n_clusters = len(set(labels))
-
-        #
-        # 4.-- Cluster membership
-        #
-        self.cluster_membership_ = pd.DataFrame({"Cluster": labels}, index=X.index)
-        memberships_table = pd.DataFrame(
-            "", columns=range(self.n_clusters), index=range(self.top_n)
+        (
+            self.n_clusters,
+            self.labels_,
+            self.cluster_members_,
+            self.cluster_centers_,
+            self.cluster_names_,
+        ) = clustering(
+            X=1 - X,
+            method=self.clustering_method,
+            n_clusters=self.n_clusters,
+            affinity=self.affinity,
+            linkage=self.linkage,
+            random_state=self.random_state,
+            top_n=self.top_n,
+            name_prefix="Cluster {}",
         )
-        for i_cluster in range(self.n_clusters):
-            cluster_members = self.cluster_membership_[
-                self.cluster_membership_.Cluster == i_cluster
-            ]
-            cluster_members = cmn.sort_axis(
-                data=cluster_members, num_documents=True, axis=0, ascending=False
-            )
-            cluster_members = cluster_members.head(self.top_n)
-            memberships_table.at[
-                0 : len(cluster_members) - 1, i_cluster
-            ] = cluster_members.index
-        self.memberships_table_ = memberships_table
 
         #
         # 5.-- Cluster co-occurrence
         #
         M = X.copy()
-        M["CLUSTER"] = labels
+        M["CLUSTER"] = self.labels_
         M = M.groupby("CLUSTER").sum()
         #
         M = M.transpose()
-        M["CLUSTER"] = labels
+        M["CLUSTER"] = self.labels_
         M = M.groupby("CLUSTER").sum()
         #
         M.columns = ["Cluster {}".format(i) for i in range(self.n_clusters)]
         M.index = M.columns
-        ## M = network_normalization(X=M, normalization=self.normalization)
-        ## M = 1 - M
+        #
         self.cluster_co_occurrence_ = M
 
         #
@@ -175,9 +130,8 @@ class Model:
         #
 
         ## clusters name
-        cluster_names = self.memberships_table_.loc[0, :].tolist()
         strategic_map = pd.DataFrame(
-            cluster_names, columns=["Cluster name"], index=M.columns
+            self.cluster_names_, columns=["Cluster name"], index=M.columns
         )
         strategic_map["Density"] = 0.0
         strategic_map["Centrality"] = 0.0
@@ -194,9 +148,9 @@ class Model:
 
         self.strategic_map_ = strategic_map
 
-    def cluster_memberships(self):
+    def cluster_members(self):
         self.apply()
-        return self.memberships_table_
+        return self.cluster_members_
 
     def cluster_co_occurrence_matrix(self):
         self.apply()
@@ -421,7 +375,7 @@ class DASHapp(DASH, Model):
 
         self.app_title = "Concept Mapping"
         self.menu_options = [
-            "Cluster memberships",
+            "Cluster members",
             "Cluster co-occurrence matrix",
             "Centratlity-Density table",
             "MDS cluster map",

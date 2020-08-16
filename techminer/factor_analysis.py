@@ -13,15 +13,7 @@ import pandas as pd
 import matplotlib
 from matplotlib.lines import Line2D
 from sklearn.decomposition import PCA, FactorAnalysis, FastICA, TruncatedSVD
-from sklearn.cluster import (
-    AgglomerativeClustering,
-    AffinityPropagation,
-    Birch,
-    DBSCAN,
-    FeatureAgglomeration,
-    KMeans,
-    MeanShift,
-)
+from techminer.clustering import clustering
 from sklearn.manifold import MDS
 from scipy.spatial import ConvexHull
 import matplotlib.pyplot as pyplot
@@ -29,8 +21,8 @@ import matplotlib.pyplot as pyplot
 import techminer.common as cmn
 import techminer.dashboard as dash
 from techminer.dashboard import DASH
-from techminer.document_term import TF_matrix, TFIDF_matrix
-from techminer.graph import network_normalization
+from techminer.tfidf import TF_matrix, TFIDF_matrix
+from techminer.normalize_network import normalize_network
 
 
 from matplotlib import patches
@@ -100,7 +92,7 @@ class Model:
         #
         M = np.matmul(TF_matrix_.transpose().values, TF_matrix_.values)
         M = pd.DataFrame(M, columns=TF_matrix_.columns, index=TF_matrix_.columns)
-        M = network_normalization(M, normalization=self.normalization)
+        M = normalize_network(M, normalization=self.normalization)
 
         #
         # 4.-- Dissimilarity matrix
@@ -144,92 +136,39 @@ class Model:
         #
         # 6.-- Clustering
         #
+
         ## from bibliometrix: clustering of two first axes
         W = R.loc[:, R.columns[[0, 1]]]
-        ##
-        if self.clustering_method == "Affinity Propagation":
-            labels = AffinityPropagation(
-                random_state=int(self.random_state)
-            ).fit_predict(W)
-            self.n_clusters = len(set(labels))
 
-        if self.clustering_method == "Agglomerative Clustering":
-            labels = AgglomerativeClustering(
-                n_clusters=self.n_clusters, affinity=self.affinity, linkage=self.linkage
-            ).fit_predict(W)
-
-        if self.clustering_method == "Birch":
-            labels = Birch(n_clusters=self.n_clusters).fit_predict(W)
-
-        if self.clustering_method == "DBSCAN":
-            labels = DBSCAN().fit_predict(W)
-            self.n_clusters = len(set(labels))
-
-        #  if self.clustering_method == "Feature Agglomeration":
-        #      m = FeatureAgglomeration(
-        #          n_clusters=self.n_clusters, affinity=self.affinity, linkage=self.linkage
-        #      ).fit(1 - X)
-        #      labels = ???
-
-        if self.clustering_method == "KMeans":
-            labels = KMeans(
-                n_clusters=self.n_clusters, random_state=int(self.random_state)
-            ).fit_predict(W)
-
-        if self.clustering_method == "Mean Shift":
-            labels = MeanShift().fit_predct(W)
-            self.n_clusters = len(set(labels))
-
-        R["Cluster"] = labels
-        self.coordinates_ = R
-
-        #
-        # 7.-- Cluster centers
-        #
-        self.centers_ = R.groupby("Cluster").mean()
-
-        #
-        # 8.-- Communities
-        #
-        communities = pd.DataFrame(
-            pd.NA, columns=range(self.n_clusters), index=range(self.top_n)
+        (
+            self.n_clusters,
+            self.labels_,
+            self.cluster_members_,
+            self.cluster_centers_,
+            self.cluster_names_,
+        ) = clustering(
+            X=W,
+            method=self.clustering_method,
+            n_clusters=self.n_clusters,
+            affinity=self.affinity,
+            linkage=self.linkage,
+            random_state=self.random_state,
+            top_n=self.top_n,
+            name_prefix="Cluster {}",
         )
-        for i_cluster in range(self.n_clusters):
-            X = R[R.Cluster == i_cluster]
-            X = cmn.sort_axis(
-                data=X,
-                num_documents=(self.top_by == "Num Documents"),
-                axis=0,
-                ascending=False,
-            )
-            community = X.index
-            community = community.tolist()[0 : self.top_n]
-            communities.at[0 : len(community) - 1, i_cluster] = community
-        communities.columns = ["Cluster {}".format(i) for i in range(self.n_clusters)]
-        ## Delete empty rows
-        row_ids = []
-        for row in communities.iterrows():
-            if any([not pd.isna(a) for a in row[1]]):
-                row_ids.append(row[0])
-        communities = communities.loc[row_ids, :]
-        communities = communities.applymap(lambda w: "" if pd.isna(w) else w)
-        ##
-        self.communities_ = communities
 
-        #
-        # 8.-- Cluster name
-        #
-        names = communities.loc[0, :].tolist()
-        self.centers_["Name"] = names
+        R["Cluster"] = self.labels_
+
+        self.coordinates_ = R
 
         #
         # 10.-- Results
         #
         self.X_ = R
 
-    def communities(self):
+    def cluster_members(self):
         self.fit()
-        return self.communities_
+        return self.cluster_members_
 
     def mds_map(self):
         #
@@ -519,7 +458,7 @@ class DASHapp(DASH, Model):
 
         self.app_title = "Factor Analysis"
         self.menu_options = [
-            "Communities",
+            "Cluster members",
             "Cluster plot",
             "MDS map",
         ]
