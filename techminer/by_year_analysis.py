@@ -2,8 +2,10 @@ import numpy as np
 import pandas as pd
 
 import techminer.dashboard as dash
-import techminer.plots as plt
 from techminer.dashboard import DASH
+from techminer.bar_plot import bar_plot
+from techminer.barh_plot import barh_plot
+
 
 ###############################################################################
 ##
@@ -64,7 +66,7 @@ class Model:
     def plot_(self, values, darkness, label, figsize):
         self.apply()
         if self.plot == "Bar plot":
-            return plt.bar(
+            return bar_plot(
                 height=values,
                 darkness=darkness,
                 ylabel=label,
@@ -73,7 +75,7 @@ class Model:
             )
 
         if self.plot == "Horizontal bar plot":
-            return plt.barh(
+            return barh_plot(
                 width=values,
                 darkness=darkness,
                 xlabel=label,
