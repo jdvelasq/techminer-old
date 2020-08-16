@@ -8,12 +8,15 @@ Analysis by Term per Year
 import numpy as np
 import pandas as pd
 
-import techminer.by_year as by_year
+from techminer.gant_plot import gant_plot
+from techminer.gant0_plot import gant0_plot
+from techminer.bubble_plot import bubble_plot
+from techminer.heatmap import heatmap
+import techminer.by_year_analysis as by_year_analysis
 import techminer.common as cmn
 import techminer.dashboard as dash
-import techminer.plots as plt
 from techminer.dashboard import DASH
-from techminer.explode import __explode as _explode
+from techminer.explode import explode
 from techminer.params import EXCLUDE_COLS
 
 TEXTLEN = 40
@@ -37,7 +40,7 @@ class BaseModel:
         #
         # 1.-- Number of documents and times cited by term per year
         #
-        x = _explode(x[["Year", self.column, "Times_Cited", "ID"]], self.column)
+        x = explode(x[["Year", self.column, "Times_Cited", "ID"]], self.column)
         x["Num_Documents"] = 1
         result = x.groupby([self.column, "Year"], as_index=False).agg(
             {"Times_Cited": np.sum, "Num_Documents": np.size}
@@ -50,7 +53,7 @@ class BaseModel:
         #
         # 2.-- Summary per year
         #
-        summ = _explode(x[["Year", "Times_Cited", "ID"]], "Year")
+        summ = explode(x[["Year", "Times_Cited", "ID"]], "Year")
         summ.loc[:, "Num_Documents"] = 1
         summ = summ.groupby("Year", as_index=True).agg(
             {"Times_Cited": np.sum, "Num_Documents": np.size}
@@ -279,7 +282,7 @@ class MatrixModel(BaseModel):
         ##
         self.apply()
         ##
-        return plt.heatmap(
+        return heatmap(
             X=self.X_.transpose(), cmap=self.cmap, figsize=(self.width, self.height)
         )
 
@@ -287,7 +290,7 @@ class MatrixModel(BaseModel):
         ##
         self.apply()
         ##
-        return plt.bubble(
+        return bubble_plot(
             X=self.X_.transpose(),
             darkness=None,
             cmap=self.cmap,
@@ -298,13 +301,13 @@ class MatrixModel(BaseModel):
         ##
         self.apply()
         ##
-        return plt.gant(X=self.X_, cmap=self.cmap, figsize=(self.width, self.height))
+        return gant_plot(X=self.X_, cmap=self.cmap, figsize=(self.width, self.height))
 
     def gant0(self):
         ##
         self.apply()
         ##
-        return plt.gant0(x=self.X_, figsize=(self.width, self.height))
+        return gant0_plot(x=self.X_, figsize=(self.width, self.height))
 
 
 ###############################################################################

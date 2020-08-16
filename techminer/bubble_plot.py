@@ -7,7 +7,7 @@ import pandas as pd
 TEXTLEN = 40
 
 
-def bubble(
+def bubble_plot(
     X,
     darkness=None,
     figsize=(6, 6),

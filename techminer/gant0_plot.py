@@ -7,7 +7,7 @@ import pandas as pd
 TEXTLEN = 40
 
 
-def gant0(
+def gant0_plot(
     x,
     figsize=(8, 8),
     fontsize=12,
