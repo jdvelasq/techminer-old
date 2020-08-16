@@ -3,10 +3,13 @@ import pandas as pd
 
 import techminer.common as cmn
 import techminer.dashboard as dash
-import techminer.plots as plt
-import techminer.by_term_per_year
+import techminer.by_term_per_year_analysis
 from techminer.dashboard import DASH
-from techminer.explode import __explode as _explode
+from techminer.explode import explode
+from techminer.bar_plot import bar_plot
+from techminer.barh_plot import barh_plot
+from techminer.stacked_bar import stacked_bar
+from techminer.stacked_barh import stacked_barh
 
 ###############################################################################
 ##
@@ -35,7 +38,7 @@ class Model:
             #
             #
             result = self.data.copy()
-            result = _explode(result[["Year", self.column, "ID"]], self.column)
+            result = explode(result[["Year", self.column, "ID"]], self.column)
             result["Num_Documents_per_Year"] = 1
             result = result.groupby([self.column, "Year"], as_index=False).agg(
                 {"Num_Documents_per_Year": np.size}
@@ -67,7 +70,7 @@ class Model:
             #                  Y_end - Y_start + 1
             #
             result = self.data.copy()
-            result = _explode(result[["Year", self.column, "ID"]], self.column)
+            result = explode(result[["Year", self.column, "ID"]], self.column)
             result["Num_Documents_per_Year"] = 1
             result = result.groupby([self.column, "Year"], as_index=False).agg(
                 {"Num_Documents_per_Year": np.size}
@@ -85,7 +88,7 @@ class Model:
         def compute_num_documents():
 
             result = self.data.copy()
-            result = _explode(result[["Year", self.column, "ID"]], self.column)
+            result = explode(result[["Year", self.column, "ID"]], self.column)
             result["Num_Documents_per_Year"] = 1
             result = result.groupby([self.column, "Year"], as_index=False).agg(
                 {"Num_Documents_per_Year": np.size}
@@ -208,46 +211,46 @@ class Model:
     def average_growth_rate(self):
         self.apply()
         if self.plot == "bar":
-            return plt.bar(
+            return bar_plot(
                 height=self.X_.AGR, cmap=self.cmap, figsize=(self.width, self.height)
             )
         if self.plot == "barh":
-            return plt.barh(
+            return barh_plot(
                 width=self.X_.AGR, cmap=self.cmap, figsize=(self.width, self.height)
             )
 
     def average_documents_per_year(self):
         self.apply()
         if self.plot == "bar":
-            return plt.bar(
+            return bar_plot(
                 height=self.X_.ADY, cmap=self.cmap, figsize=(self.width, self.height)
             )
         if self.plot == "barh":
-            return plt.barh(
+            return barh_plot(
                 width=self.X_.ADY, cmap=self.cmap, figsize=(self.width, self.height)
             )
 
     def percentage_of_documents_in_last_years(self):
         self.apply()
         if self.plot == "bar":
-            return plt.bar(
+            return bar_plot(
                 height=self.X_.PDLY, cmap=self.cmap, figsize=(self.width, self.height)
             )
         if self.plot == "barh":
-            return plt.barh(
+            return barh_plot(
                 width=self.X_.PDLY, cmap=self.cmap, figsize=(self.width, self.height)
             )
 
     def num_documents(self):
         self.apply()
         if self.plot == "bar":
-            return plt.stacked_bar(
+            return stacked_bar(
                 self.X_[[self.X_.columns[-2], self.X_.columns[-1]]],
                 cmap=self.cmap,
                 figsize=(self.width, self.height),
             )
         if self.plot == "barh":
-            return plt.stacked_barh(
+            return stacked_barh(
                 self.X_[[self.X_.columns[-2], self.X_.columns[-1]]],
                 cmap=self.cmap,
                 figsize=(self.width, self.height),
