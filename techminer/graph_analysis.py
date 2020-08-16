@@ -1,267 +1,21 @@
 import matplotlib
 import matplotlib.pyplot as pyplot
-import networkx as nx
+
 import numpy as np
 import pandas as pd
 from cdlib import algorithms
 from pyvis.network import Network
 import techminer.common as cmn
 import techminer.dashboard as dash
-import techminer.plots as plt
+
 from techminer.dashboard import DASH
-from techminer.document_term import TF_matrix
+from techminer.tfidf import TF_matrix
 from techminer.params import EXCLUDE_COLS
 
-###############################################################################
-##
-##  BASE FUNCTIONS
-##
-###############################################################################
-
-
-def network_normalization(X, normalization=None):
-    """
-    """
-    X = X.copy()
-    if isinstance(normalization, str) and normalization == "None":
-        normalization = None
-    if normalization is None:
-        X = X.applymap(lambda w: int(w))
-    else:
-        X = X.applymap(lambda w: float(w))
-    M = X.copy()
-
-    if normalization == "Jaccard":
-        for col in M.columns:
-            for row in M.index:
-                X.at[row, col] = M.at[row, col] / (
-                    M.loc[row, row] + M.at[col, col] - M.at[row, col]
-                )
-
-    if normalization == "Dice":
-        for col in M.columns:
-            for row in M.index:
-                X.at[row, col] = M.at[row, col] / (
-                    M.loc[row, row] + M.at[col, col] + 2 * M.at[row, col]
-                )
-
-    if normalization in ["Salton", "Cosine"]:
-        for col in M.columns:
-            for row in M.index:
-                X.at[row, col] = M.at[row, col] / np.sqrt(
-                    (M.loc[row, row] * M.at[col, col])
-                )
-
-    if normalization == "Equivalence":
-        for col in M.columns:
-            for row in M.index:
-                X.at[row, col] = M.at[row, col] ** 2 / (
-                    M.loc[row, row] * M.at[col, col]
-                )
-
-    ## inclusion
-    if normalization == "Inclusion":
-        for col in M.columns:
-            for row in M.index:
-                X.at[row, col] = M.at[row, col] / min(M.loc[row, row], M.at[col, col])
-
-    if normalization == "Mutual Information":
-        N = len(M.columns)
-        for col in M.columns:
-            for row in M.index:
-                X.at[row, col] = np.log(
-                    M.at[row, col] / (N * M.loc[row, row] * M.at[col, col])
-                )
-
-    if normalization == "Association":
-        for col in M.columns:
-            for row in M.index:
-                X.at[row, col] = M.at[row, col] / (M.loc[row, row] * M.at[col, col])
-
-    return X
-
-
-def co_occurrence_matrix(
-    data,
-    column,
-    top_by,
-    top_n,
-    sort_c_axis_by,
-    sort_r_axis_by,
-    c_axis_ascending,
-    r_axis_ascending,
-    limit_to,
-    exclude,
-):
-    """
-    """
-
-    #
-    # 1.-- Computes TF_matrix with occurrence >= min_occurrence
-    #
-    W = data[[column, "ID"]].dropna()
-    A = TF_matrix(data=W, column=column, scheme=None, min_occurrence=1)
-    A = cmn.limit_to_exclude(
-        data=A, axis=1, column=column, limit_to=limit_to, exclude=exclude,
-    )
-
-    #
-    # 2.-- Select top_n
-    #
-    A = cmn.add_counters_to_axis(X=A, axis=1, data=data, column=column)
-    A = cmn.sort_by_axis(data=A, sort_by=top_by, ascending=False, axis=1)
-    A = A[A.columns[:top_n]]
-
-    #
-    # 4.-- computes co-occurrence
-    #
-    matrix = np.matmul(A.transpose().values, A.values)
-    matrix = pd.DataFrame(matrix, columns=A.columns, index=A.columns)
-
-    #
-    # 5.-- Matrix sort
-    #
-    matrix = cmn.sort_by_axis(
-        data=matrix, sort_by=sort_r_axis_by, ascending=r_axis_ascending, axis=0,
-    )
-    matrix = cmn.sort_by_axis(
-        data=matrix, sort_by=sort_c_axis_by, ascending=c_axis_ascending, axis=1,
-    )
-
-    return matrix
-
-
-def network_map_nx(
-    X, cmap, clustering, layout, only_communities, iterations, n_labels, figsize=(8, 8)
-):
-
-    #
-    # Network generation
-    #
-    matplotlib.rc("font", size=11)
-    fig = pyplot.Figure(figsize=figsize)
-    ax = fig.subplots()
-    G = nx.Graph(ax=ax)
-    G.clear()
-
-    terms = X.columns.tolist()
-    n = len(terms)
-    G.add_nodes_from(terms)
-
-    max_width = 0
-    for icol in range(n - 1):
-        for irow in range(icol + 1, n):
-            link = X.loc[X.columns[irow], X.columns[icol]]
-            if link > 0:
-                G.add_edge(terms[icol], terms[irow], width=link)
-                if max_width < link:
-                    max_width = link
-
-    if clustering is None:
-        cmap = pyplot.cm.get_cmap(cmap)
-        node_colors = [int(t.split(" ")[-1].split(":")[1]) for t in X.columns]
-        max_citations = max(node_colors)
-        min_citations = min(node_colors)
-        node_colors = [
-            cmap(0.2 + 0.80 * (i - min_citations) / (max_citations - min_citations))
-            for i in node_colors
-        ]
-
-    if clustering in ["Label propagation", "Leiden", "Louvain", "Markov", "Walktrap"]:
-
-        colors = []
-        for cmap_name in ["tab20", "tab20b", "tab20c"]:
-            cmap = pyplot.cm.get_cmap(cmap_name)
-            colors += [cmap(0.025 + 0.05 * i) for i in range(20)]
-
-        R = {
-            "Label propagation": algorithms.label_propagation,
-            "Leiden": algorithms.leiden,
-            "Louvain": algorithms.louvain,
-            "Walktrap": algorithms.walktrap,
-        }[clustering](G).communities
-
-        if only_communities:
-            n_communities = len(R)
-            max_len = max([len(r) for r in R])
-            communities = pd.DataFrame(
-                pd.NA, columns=range(n_communities), index=range(max_len)
-            )
-            for i_community in range(n_communities):
-                community = R[i_community]
-                community = sorted(
-                    community, key=(lambda w: w.split(" ")[-1]), reverse=True
-                )
-                communities.at[0 : len(community) - 1, i_community] = community
-            communities = communities.head(n_labels)
-            communities.columns = ["Cluster {}".format(i) for i in range(n_communities)]
-            return communities
-
-        clusters = {}
-        for idx, r in enumerate(R):
-            for e in r:
-                clusters[e] = idx
-        node_colors = [colors[clusters[t]] for t in terms]
-
-    node_sizes = [int(t.split(" ")[-1].split(":")[0]) for t in X.columns]
-    max_size = max(node_sizes)
-    min_size = min(node_sizes)
-    node_sizes = [
-        300 + int(2500 * (w - min_size) / (max_size - min_size)) for w in node_sizes
-    ]
-
-    if layout == "Spring":
-        pos = nx.spring_layout(G, iterations=iterations)
-    else:
-        pos = {
-            "Circular": nx.circular_layout,
-            "Kamada Kawai": nx.kamada_kawai_layout,
-            "Planar": nx.planar_layout,
-            "Random": nx.random_layout,
-            "Spectral": nx.spectral_layout,
-            "Spring": nx.spring_layout,
-            "Shell": nx.shell_layout,
-        }[layout](G)
-
-    for e in G.edges.data():
-        a, b, width = e
-        edge = [(a, b)]
-        width = 0.2 + 4.0 * width["width"] / max_width
-        nx.draw_networkx_edges(
-            G,
-            pos=pos,
-            ax=ax,
-            edgelist=edge,
-            width=width,
-            edge_color="k",
-            with_labels=False,
-            node_size=1,
-        )
-
-    nx.draw_networkx_nodes(
-        G,
-        pos,
-        ax=ax,
-        edge_color="k",
-        nodelist=terms,
-        node_size=node_sizes,
-        node_color=node_colors,
-        node_shape="o",
-        edgecolors="k",
-        linewidths=1,
-    )
-
-    cmn.ax_text_node_labels(
-        ax=ax, labels=terms[0:n_labels], dict_pos=pos, node_sizes=node_sizes
-    )
-
-    fig.set_tight_layout(True)
-    cmn.ax_expand_limits(ax)
-    cmn.set_ax_splines_invisible(ax)
-    ax.set_aspect("equal")
-    ax.axis("off")
-
-    return fig
+from techminer.normalize_network import normalize_network
+from techminer.heatmap import heatmap as heatmap_
+from techminer.bubble_plot import bubble_plot as bubble_plot_
+from techminer.network import Network
 
 
 ###############################################################################
@@ -296,24 +50,60 @@ class Model:
         self.sort_c_axis_by = None
         self.sort_r_axis_by = None
         self.top_by = None
-        self.top_n = None
         self.width = None
 
     def fit(self):
-        self.X_ = co_occurrence_matrix(
+
+        #
+        # 1.-- Computes TF_matrix with occurrence >= min_occurrence
+        #
+        TF_matrix_ = TF_matrix(
             data=self.data,
             column=self.column,
-            top_by=self.top_by,
-            top_n=self.top_n,
-            sort_c_axis_by=self.sort_c_axis_by,
-            sort_r_axis_by=self.sort_r_axis_by,
-            c_axis_ascending=self.c_axis_ascending,
-            r_axis_ascending=self.r_axis_ascending,
+            scheme=None,
+            min_occurrence=self.min_occurrence,
+        )
+
+        #
+        # 2.-- Limit to/Exclude
+        #
+        TF_matrix_ = cmn.limit_to_exclude(
+            data=TF_matrix_,
+            axis=1,
+            column=self.column,
             limit_to=self.limit_to,
             exclude=self.exclude,
         )
 
-        self.X_ = network_normalization(X=self.X_, normalization=self.normalization)
+        #
+        # 3.-- Select max_items
+        #
+        TF_matrix_ = cmn.add_counters_to_axis(
+            X=TF_matrix_, axis=1, data=self.data, column=self.column
+        )
+
+        TF_matrix_ = cmn.sort_by_axis(
+            data=TF_matrix_, sort_by=self.top_by, ascending=False, axis=1
+        )
+
+        TF_matrix_ = TF_matrix_[TF_matrix_.columns[: self.max_items]]
+        if len(TF_matrix_.columns) > self.max_items:
+            top_items = TF_matrix_.sum(axis=0)
+            top_items = top_items.sort_values(ascending=False)
+            top_items = top_items.head(self.max_items)
+            TF_matrix_ = TF_matrix_.loc[:, top_items.index]
+            rows = TF_matrix_.sum(axis=1)
+            rows = rows[rows > 0]
+            TF_matrix_ = TF_matrix_.loc[rows.index, :]
+
+        #
+        # 4.-- Co-occurrence matrix and association index
+        #
+        X = np.matmul(TF_matrix_.transpose().values, TF_matrix_.values)
+        X = pd.DataFrame(X, columns=TF_matrix_.columns, index=TF_matrix_.columns)
+        X = normalize_network(X, self.normalization)
+
+        self.X_ = X
 
     def matrix(self):
         self.fit()
@@ -326,105 +116,45 @@ class Model:
 
     def heatmap(self):
         self.fit()
-        return plt.heatmap(self.X_, cmap=self.cmap, figsize=(self.width, self.height))
+        return heatmap_(self.X_, cmap=self.cmap, figsize=(self.width, self.height))
 
     def bubble_plot(self):
         self.fit()
-        return plt.bubble(
+        return bubble_plot_(
             self.X_, axis=0, cmap=self.cmap, figsize=(self.width, self.height)
         )
 
     def network_nx(self):
         self.fit()
-        self.X_ = cmn.sort_by_axis(
-            data=self.X_, sort_by=self.top_by, ascending=False, axis=0
-        )
-        self.X_ = cmn.sort_by_axis(
-            data=self.X_, sort_by=self.top_by, ascending=False, axis=1
-        )
-        return network_map_nx(
-            self.X_,
-            cmap=self.cmap,
-            layout=self.layout,
-            clustering=self.clustering,
-            only_communities=False,
+        return Network(
+            X=self.X_,
+            top_by=self.top_by,
             n_labels=self.n_labels,
+            clustering=self.clustering,
+        ).networkx_plot(
+            layout=self.layout,
             iterations=self.nx_iterations,
             figsize=(self.width, self.height),
         )
 
     def communities(self):
         self.fit()
-        return network_map_nx(
-            self.X_,
-            cmap=self.cmap,
-            layout=self.layout,
-            clustering=self.clustering,
-            only_communities=True,
-            iterations=self.nx_iterations,
+        return Network(
+            X=self.X_,
+            top_by=self.top_by,
             n_labels=self.n_labels,
-            figsize=(self.width, self.height),
-        )
+            clustering=self.clustering,
+        ).cluster_members_
 
     def network_interactive(self):
-        ##
+
         self.fit()
-        ##
-
-        X = self.X_.copy()
-        G = nx.Graph()
-
-        # Network generation
-        X = cmn.sort_axis(
-            data=X,
-            num_documents=(self.top_by == "Num Documents"),
-            axis=1,
-            ascending=False,
-        )
-        top_terms = X.columns.tolist()[0 : self.n_labels]
-
-        terms = X.columns.tolist()
-        n = len(terms)
-        G.add_nodes_from(terms)
-
-        max_width = X.max().max()
-        m = X.stack().to_frame().reset_index()
-        m = m[m.level_0 < m.level_1]
-        m.columns = ["from_", "to_", "link_"]
-        m = m[m.link_ > 0.001]
-        m = m.reset_index(drop=True)
-
-        for idx in range(len(m)):
-            value = 0.1 + 1.4 * m.link_[idx] / max_width
-            G.add_edge(
-                m.from_[idx], m.to_[idx], width=value, color="lightgray", physics=False
-            )
-
-        R = {
-            "Label propagation": algorithms.label_propagation,
-            "Leiden": algorithms.leiden,
-            "Louvain": algorithms.louvain,
-            "Walktrap": algorithms.walktrap,
-        }[self.clustering](G).communities
-
-        for i_community, community in enumerate(R):
-            for item in community:
-                G.nodes[item]["group"] = i_community
-
-        node_sizes = cmn.counters_to_node_sizes(terms)
-        node_sizes = [size / 100 for size in node_sizes]
-
-        for i_term, term in enumerate(terms):
-            G.nodes[term]["size"] = node_sizes[i_term]
-
-        nt = Network("700px", "870px", notebook=True)
-        nt.from_nx(G)
-
-        for i, _ in enumerate(nt.nodes):
-            if nt.nodes[i]["label"] not in top_terms:
-                nt.nodes[i]["label"] = ""
-
-        return nt.show("net.html")
+        return Network(
+            X=self.X_,
+            top_by=self.top_by,
+            n_labels=self.n_labels,
+            clustering=self.clustering,
+        ).pyvis_plot()
 
 
 ###############################################################################
@@ -461,6 +191,8 @@ class DASHapp(DASH, Model):
             dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
+            dash.min_occurrence(),
+            dash.max_items(),
             dash.normalization(),
             dash.dropdown(
                 desc="Clustering:",
@@ -468,7 +200,6 @@ class DASHapp(DASH, Model):
             ),
             dash.separator(text="Visualization"),
             dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-            dash.top_n(m=10, n=301, i=10),
             dash.dropdown(
                 desc="Sort C-axis by:",
                 options=["Alphabetic", "Num Documents", "Times Cited", "Data",],

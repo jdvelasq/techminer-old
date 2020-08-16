@@ -17,8 +17,8 @@ import techminer.dashboard as dash
 import techminer.plots as plt
 from techminer.chord_diagram import ChordDiagram
 from techminer.dashboard import DASH
-from techminer.document_term import TF_matrix
-from pyvis.network import Network
+from techminer.tfidf import TF_matrix
+from techminer.network import Network
 
 
 ###############################################################################
@@ -45,7 +45,19 @@ class Model:
 
         if self.column == self.by:
 
-            A = TF_matrix(x, column=self.column)
+            #
+            # 1.-- Drop NA from column
+            #
+            w = x[[self.column, "ID"]].dropna()
+
+            #
+            # 2.-- Computes TF_matrix with occurrence >= min_occurrence
+            #
+            A = TF_matrix(w, column=self.column)
+
+            #
+            # 3.-- Limit to/Exclude
+            #
             A = cmn.limit_to_exclude(
                 data=A,
                 axis=1,
@@ -53,16 +65,47 @@ class Model:
                 limit_to=self.limit_to,
                 exclude=self.exclude,
             )
-            A = cmn.add_counters_to_axis(X=A, axis=1, data=x, column=self.column)
+
+            #
+            # 4.-- Select max_items
+            #
+            A = cmn.add_counters_to_axis(
+                X=A, axis=1, data=self.data, column=self.column
+            )
+
             A = cmn.sort_by_axis(data=A, sort_by=self.top_by, ascending=False, axis=1)
-            A = A[A.columns[: self.top_n]]
+
+            A = A[A.columns[: self.max_items]]
+
+            if len(A.columns) > self.max_items:
+                top_items = A.sum(axis=0)
+                top_items = top_items.sort_values(ascending=False)
+                top_items = top_items.head(self.max_items)
+                A = A.loc[:, top_items.index]
+                rows = A.sum(axis=1)
+                rows = rows[rows > 0]
+                A = A.loc[rows.index, :]
+
+            #
+            # 5.-- Computes correlation
+            #
             matrix = A.corr(method=self.method)
 
         else:
 
+            #
+            # 1.-- Drop NA from column
+            #
             w = x[[self.column, self.by, "ID"]].dropna()
 
+            #
+            # 2.-- Computes TF_matrix with occurrence >= min_occurrence
+            #
             A = TF_matrix(w, column=self.column)
+
+            #
+            # 3.-- Limit to/Exclude
+            #
             A = cmn.limit_to_exclude(
                 data=A,
                 axis=1,
@@ -70,10 +113,21 @@ class Model:
                 limit_to=self.limit_to,
                 exclude=self.exclude,
             )
-            A = cmn.add_counters_to_axis(X=A, axis=1, data=x, column=self.column)
-            A = cmn.sort_by_axis(data=A, sort_by=self.top_by, ascending=False, axis=1)
-            A = A[A.columns[: self.top_n]]
 
+            #
+            # 4.-- Select max_items
+            #
+            A = cmn.add_counters_to_axis(
+                X=A, axis=1, data=self.data, column=self.column
+            )
+
+            A = cmn.sort_by_axis(data=A, sort_by=self.top_by, ascending=False, axis=1)
+
+            A = A[A.columns[: self.max_items]]
+
+            #
+            # 5.-- Computes correlation
+            #
             B = TF_matrix(w, column=self.by)
             matrix = np.matmul(B.transpose().values, A.values)
             matrix = pd.DataFrame(matrix, columns=A.columns, index=B.columns)
@@ -149,175 +203,197 @@ class Model:
         return cd.plot(figsize=(self.width, self.height))
 
     def correlation_map_nx(self):
-        ##
         self.apply()
-        ##
-
-        if len(self.X_.columns) > 50:
-            return "Maximum number of nodes exceded!"
-
-        ## Networkx
-        fig = pyplot.Figure(figsize=(self.width, self.height))
-        ax = fig.subplots()
-        G = nx.Graph(ax=ax)
-        G.clear()
-
-        ## Data preparation
-        terms = self.X_.columns.tolist()
-        node_sizes = cmn.counters_to_node_sizes(x=terms)
-        node_colors = cmn.counters_to_node_colors(
-            x=terms, cmap=pyplot.cm.get_cmap(self.cmap)
+        return Network(
+            X=self.X_,
+            top_by=self.top_by,
+            n_labels=self.n_labels,
+            clustering=self.clustering,
+        ).networkx_plot(
+            layout=self.layout,
+            iterations=self.nx_iterations,
+            figsize=(self.width, self.height),
         )
 
-        ## Add nodes
-        G.add_nodes_from(terms)
+        # if len(self.X_.columns) > 50:
+        #     return "Maximum number of nodes exceded!"
 
-        ## node positions
-        if self.layout == "Spring":
-            pos = nx.spring_layout(G, iterations=self.nx_iterations)
-        else:
-            pos = {
-                "Circular": nx.circular_layout,
-                "Kamada Kawai": nx.kamada_kawai_layout,
-                "Planar": nx.planar_layout,
-                "Random": nx.random_layout,
-                "Spectral": nx.spectral_layout,
-                "Spring": nx.spring_layout,
-                "Shell": nx.shell_layout,
-            }[self.layout](G)
+        # ## Networkx
+        # fig = pyplot.Figure(figsize=(self.width, self.height))
+        # ax = fig.subplots()
+        # G = nx.Graph(ax=ax)
+        # G.clear()
 
-        ## links
-        m = self.X_.stack().to_frame().reset_index()
-        m = m[m.level_0 < m.level_1]
-        m.columns = ["from_", "to_", "link_"]
-        m = m[m.link_ > 0.0]
-        m = m.reset_index(drop=True)
+        # ## Data preparation
+        # terms = self.X_.columns.tolist()
+        # node_sizes = cmn.counters_to_node_sizes(x=terms)
+        # node_colors = cmn.counters_to_node_colors(
+        #     x=terms, cmap=pyplot.cm.get_cmap(self.cmap)
+        # )
 
-        d = {
-            0: {"width": 4, "style": "solid", "edge_color": "k"},
-            1: {"width": 2, "style": "solid", "edge_color": "k"},
-            2: {"width": 1, "style": "dashed", "edge_color": "gray"},
-            3: {"width": 1, "style": "dotted", "edge_color": "gray"},
-        }
+        # ## Add nodes
+        # G.add_nodes_from(terms)
 
-        n_edges_0 = 0
-        n_edges_25 = 0
-        n_edges_50 = 0
-        n_edges_75 = 0
+        # ## node positions
+        # if self.layout == "Spring":
+        #     pos = nx.spring_layout(G, iterations=self.nx_iterations)
+        # else:
+        #     pos = {
+        #         "Circular": nx.circular_layout,
+        #         "Kamada Kawai": nx.kamada_kawai_layout,
+        #         "Planar": nx.planar_layout,
+        #         "Random": nx.random_layout,
+        #         "Spectral": nx.spectral_layout,
+        #         "Spring": nx.spring_layout,
+        #         "Shell": nx.shell_layout,
+        #     }[self.layout](G)
 
-        for idx in range(len(m)):
+        # ## links
+        # m = self.X_.stack().to_frame().reset_index()
+        # m = m[m.level_0 < m.level_1]
+        # m.columns = ["from_", "to_", "link_"]
+        # m = m[m.link_ > 0.0]
+        # m = m.reset_index(drop=True)
 
-            edge = [(m.from_[idx], m.to_[idx])]
-            key = (
-                0
-                if m.link_[idx] > 0.75
-                else (1 if m.link_[idx] > 0.50 else (2 if m.link_[idx] > 0.25 else 3))
-            )
+        # d = {
+        #     0: {"width": 4, "style": "solid", "edge_color": "k"},
+        #     1: {"width": 2, "style": "solid", "edge_color": "k"},
+        #     2: {"width": 1, "style": "dashed", "edge_color": "gray"},
+        #     3: {"width": 1, "style": "dotted", "edge_color": "gray"},
+        # }
 
-            n_edges_75 += 1 if m.link_[idx] >= 0.75 else 0
-            n_edges_50 += 1 if m.link_[idx] >= 0.50 and m.link_[idx] < 0.75 else 0
-            n_edges_25 += 1 if m.link_[idx] >= 0.25 and m.link_[idx] < 0.50 else 0
-            n_edges_0 += 1 if m.link_[idx] > 0 and m.link_[idx] < 0.25 else 0
+        # n_edges_0 = 0
+        # n_edges_25 = 0
+        # n_edges_50 = 0
+        # n_edges_75 = 0
 
-            nx.draw_networkx_edges(
-                G,
-                pos=pos,
-                ax=ax,
-                node_size=1,
-                with_labels=False,
-                edgelist=edge,
-                **(d[key])
-            )
+        # for idx in range(len(m)):
 
-        ## nodes
-        nx.draw_networkx_nodes(
-            G,
-            pos=pos,
-            ax=ax,
-            edge_color="k",
-            nodelist=terms,
-            node_size=node_sizes,
-            node_color=node_colors,
-            node_shape="o",
-            edgecolors="k",
-            linewidths=1,
-        )
+        #     edge = [(m.from_[idx], m.to_[idx])]
+        #     key = (
+        #         0
+        #         if m.link_[idx] > 0.75
+        #         else (1 if m.link_[idx] > 0.50 else (2 if m.link_[idx] > 0.25 else 3))
+        #     )
 
-        ## node labels
-        cmn.ax_text_node_labels(
-            ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes
-        )
+        #     n_edges_75 += 1 if m.link_[idx] >= 0.75 else 0
+        #     n_edges_50 += 1 if m.link_[idx] >= 0.50 and m.link_[idx] < 0.75 else 0
+        #     n_edges_25 += 1 if m.link_[idx] >= 0.25 and m.link_[idx] < 0.50 else 0
+        #     n_edges_0 += 1 if m.link_[idx] > 0 and m.link_[idx] < 0.25 else 0
 
-        ## Figure size
-        cmn.ax_expand_limits(ax)
+        #     nx.draw_networkx_edges(
+        #         G,
+        #         pos=pos,
+        #         ax=ax,
+        #         node_size=1,
+        #         with_labels=False,
+        #         edgelist=edge,
+        #         **(d[key])
+        #     )
 
-        ##
-        legend_lines = [
-            Line2D([0], [0], color="k", linewidth=4, linestyle="-"),
-            Line2D([0], [0], color="k", linewidth=2, linestyle="-"),
-            Line2D([0], [0], color="gray", linewidth=1, linestyle="--"),
-            Line2D([0], [0], color="gray", linewidth=1, linestyle=":"),
-        ]
+        # ## nodes
+        # nx.draw_networkx_nodes(
+        #     G,
+        #     pos=pos,
+        #     ax=ax,
+        #     edge_color="k",
+        #     nodelist=terms,
+        #     node_size=node_sizes,
+        #     node_color=node_colors,
+        #     node_shape="o",
+        #     edgecolors="k",
+        #     linewidths=1,
+        # )
 
-        text_75 = "> 0.75 ({})".format(n_edges_75)
-        text_50 = "0.50-0.75 ({})".format(n_edges_50)
-        text_25 = "0.25-0.50 ({})".format(n_edges_25)
-        text_0 = "< 0.25 ({})".format(n_edges_0)
+        # ## node labels
+        # cmn.ax_text_node_labels(
+        #     ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes
+        # )
 
-        ax.legend(legend_lines, [text_75, text_50, text_25, text_0])
+        # ## Figure size
+        # cmn.ax_expand_limits(ax)
 
-        ax.axis("off")
+        # ##
+        # legend_lines = [
+        #     Line2D([0], [0], color="k", linewidth=4, linestyle="-"),
+        #     Line2D([0], [0], color="k", linewidth=2, linestyle="-"),
+        #     Line2D([0], [0], color="gray", linewidth=1, linestyle="--"),
+        #     Line2D([0], [0], color="gray", linewidth=1, linestyle=":"),
+        # ]
 
-        return fig
+        # text_75 = "> 0.75 ({})".format(n_edges_75)
+        # text_50 = "0.50-0.75 ({})".format(n_edges_50)
+        # text_25 = "0.25-0.50 ({})".format(n_edges_25)
+        # text_0 = "< 0.25 ({})".format(n_edges_0)
+
+        # ax.legend(legend_lines, [text_75, text_50, text_25, text_0])
+
+        # ax.axis("off")
+
+        # return fig
+
+    def communities(self):
+        self.fit()
+        return Network(
+            X=self.X_,
+            top_by=self.top_by,
+            n_labels=self.n_labels,
+            clustering=self.clustering,
+        ).cluster_members_
 
     def correlation_map_interactive(self):
-        ##
         self.apply()
-        ##
-        if len(self.X_.columns) > 50:
-            return "Maximum number of nodes exceded!"
+        return Network(
+            X=self.X_,
+            top_by=self.top_by,
+            n_labels=self.n_labels,
+            clustering=self.clustering,
+        ).pyvis_plot()
 
-        G = Network("700px", "870px", notebook=True)
+        # if len(self.X_.columns) > 50:
+        #     return "Maximum number of nodes exceded!"
 
-        ## Data preparation
-        terms = self.X_.columns.tolist()
-        node_sizes = cmn.counters_to_node_sizes(x=terms)
-        node_colors = cmn.counters_to_node_colors(
-            x=terms, cmap=pyplot.cm.get_cmap(self.cmap)
-        )
-        node_colors = [matplotlib.colors.rgb2hex(t[:3]) for t in node_colors]
+        # G = Network("700px", "870px", notebook=True)
 
-        ## Add nodes
-        for i_term, term in enumerate(terms):
-            G.add_node(
-                term, size=node_sizes[i_term] / 100, color=node_colors[i_term],
-            )
+        # ## Data preparation
+        # terms = self.X_.columns.tolist()
+        # node_sizes = cmn.counters_to_node_sizes(x=terms)
+        # node_colors = cmn.counters_to_node_colors(
+        #     x=terms, cmap=pyplot.cm.get_cmap(self.cmap)
+        # )
+        # node_colors = [matplotlib.colors.rgb2hex(t[:3]) for t in node_colors]
 
-        ## links
-        m = self.X_.stack().to_frame().reset_index()
-        m = m[m.level_0 < m.level_1]
-        m.columns = ["from_", "to_", "link_"]
-        m = m[m.link_ > 0.0]
-        m = m.reset_index(drop=True)
+        # ## Add nodes
+        # for i_term, term in enumerate(terms):
+        #     G.add_node(
+        #         term, size=node_sizes[i_term] / 100, color=node_colors[i_term],
+        #     )
 
-        d = {
-            0: {"width": 4, "style": "solid", "color": "gray"},
-            1: {"width": 2, "style": "solid", "color": "gray"},
-            2: {"width": 1, "style": "dashed", "color": "lightgray"},
-            3: {"width": 1, "style": "dotted", "color": "lightgray"},
-        }
+        # ## links
+        # m = self.X_.stack().to_frame().reset_index()
+        # m = m[m.level_0 < m.level_1]
+        # m.columns = ["from_", "to_", "link_"]
+        # m = m[m.link_ > 0.0]
+        # m = m.reset_index(drop=True)
 
-        for idx in range(len(m)):
+        # d = {
+        #     0: {"width": 4, "style": "solid", "color": "gray"},
+        #     1: {"width": 2, "style": "solid", "color": "gray"},
+        #     2: {"width": 1, "style": "dashed", "color": "lightgray"},
+        #     3: {"width": 1, "style": "dotted", "color": "lightgray"},
+        # }
 
-            key = (
-                0
-                if m.link_[idx] > 0.75
-                else (1 if m.link_[idx] > 0.50 else (2 if m.link_[idx] > 0.25 else 3))
-            )
+        # for idx in range(len(m)):
 
-            G.add_edge(m.from_[idx], m.to_[idx], physics=False, **(d[key]))
+        #     key = (
+        #         0
+        #         if m.link_[idx] > 0.75
+        #         else (1 if m.link_[idx] > 0.50 else (2 if m.link_[idx] > 0.25 else 3))
+        #     )
 
-        return G.show("net.html")
+        #     G.add_edge(m.from_[idx], m.to_[idx], physics=False, **(d[key]))
+
+        # return G.show("net.html")
 
 
 ###############################################################################
@@ -369,9 +445,14 @@ class DASHapp(DASH, Model):
                 desc="By:", options=[z for z in COLUMNS if z in data.columns],
             ),
             dash.dropdown(desc="Method:", options=["pearson", "kendall", "spearman"],),
+            dash.min_occurrence(),
+            dash.max_items(),
+            dash.dropdown(
+                desc="Clustering:",
+                options=["Label propagation", "Leiden", "Louvain", "Walktrap",],
+            ),
             dash.separator(text="Visualization"),
             dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
-            dash.top_n(),
             dash.dropdown(
                 desc="Sort C-axis by:",
                 options=["Alphabetic", "Num Documents", "Times Cited",],
