@@ -8,13 +8,20 @@ import pandas as pd
 import ipywidgets as widgets
 
 
+from techminer.bar_plot import bar_plot
+from techminer.barh_plot import barh_plot
+from techminer.wordcloud_ import wordcloud_
+from techminer.treemap import treemap
+from techminer.pie_plot import pie_plot
+
 import techminer.common as cmn
 import techminer.dashboard as dash
-import techminer.plots as plt
 from techminer.dashboard import DASH
-from techminer.explode import __explode as _explode
+from techminer.explode import explode
 from techminer.params import EXCLUDE_COLS
-
+from techminer.worldmap import worldmap
+from techminer.stacked_bar import stacked_bar
+from techminer.stacked_barh import stacked_barh
 
 ###############################################################################
 ##
@@ -49,7 +56,7 @@ class Model:
 
         x = self.data.copy()
         x["Num_Documents"] = 1
-        x = _explode(x[["Source_title", "Num_Documents", "ID",]], "Source_title",)
+        x = explode(x[["Source_title", "Num_Documents", "ID",]], "Source_title",)
         m = x.groupby("Source_title", as_index=True).agg({"Num_Documents": np.sum,})
         m = m[["Num_Documents"]]
         m = m.groupby(["Num_Documents"]).size()
@@ -105,7 +112,7 @@ class Model:
         # 1.-- Num_Documents per Author
         #
         x["Num_Documents"] = 1
-        x = _explode(x[["Authors", "Num_Documents", "ID",]], "Authors",)
+        x = explode(x[["Authors", "Num_Documents", "ID",]], "Authors",)
         result = x.groupby("Authors", as_index=True).agg({"Num_Documents": np.sum,})
         z = result
         authors_dict = {
@@ -129,7 +136,7 @@ class Model:
             str(round(100 * a / sum(z["Num Authors"]), 2)) + " %"
             for a in z["Acum Num Authors"]
         ]
-        m = _explode(self.data[["Authors", "ID"]], "Authors")
+        m = explode(self.data[["Authors", "ID"]], "Authors")
         m = m.dropna()
         m["Documents_written"] = m.Authors.map(lambda w: authors_dict[w])
 
@@ -182,14 +189,14 @@ class Model:
     def worldmap(self):
         x = self.data.copy()
         x["Num_Documents"] = 1
-        x = _explode(
+        x = explode(
             x[[self.column, "Num_Documents", "Times_Cited", "ID",]], self.column,
         )
         result = x.groupby(self.column, as_index=True).agg(
             {"Num_Documents": np.sum, "Times_Cited": np.sum,}
         )
         top_by = self.top_by.replace(" ", "_")
-        return plt.worldmap(
+        return worldmap(
             x=result[top_by], figsize=(self.width, self.height), cmap=self.cmap,
         )
 
@@ -201,7 +208,7 @@ class Model:
         x["MD"] = x[self.column].map(
             lambda w: 1 if isinstance(w, str) and len(w.split(";")) > 1 else 0
         )
-        x = _explode(x[[self.column, "SD", "MD", "ID",]], self.column,)
+        x = explode(x[[self.column, "SD", "MD", "ID",]], self.column,)
         result = x.groupby(self.column, as_index=False).agg(
             {"SD": np.sum, "MD": np.sum,}
         )
@@ -242,7 +249,7 @@ class Model:
             return result
 
         if self.view == "Bar plot":
-            return plt.stacked_bar(
+            return stacked_bar(
                 X=result[["SD", "MD"]],
                 cmap=self.cmap,
                 ylabel="Num Documents",
@@ -250,7 +257,7 @@ class Model:
             )
 
         if self.view == "Horizontal bar plot":
-            return plt.stacked_barh(
+            return stacked_barh(
                 X=result[["SD", "MD"]],
                 cmap=self.cmap,
                 xlabel="Num Documents",
@@ -263,7 +270,7 @@ class Model:
         x["Num_Documents"] = 1
         x["First_Year"] = x.Year
         if self.column == "Authors":
-            x = _explode(
+            x = explode(
                 x[
                     [
                         self.column,
@@ -285,7 +292,7 @@ class Model:
                 }
             )
         else:
-            x = _explode(
+            x = explode(
                 x[[self.column, "Num_Documents", "Times_Cited", "First_Year", "ID"]],
                 self.column,
             )
@@ -372,7 +379,7 @@ class Model:
                 ascending=False,
             )
         else:
-            result = result.sort_values(top, ascending=False)
+            result = result.sort_values(top_by, ascending=False)
         result = result.head(self.top_n)
 
         ## Sort by
@@ -395,7 +402,7 @@ class Model:
 
         if self.view == "Bar plot":
             top_by = self.top_by.replace(" ", "_")
-            return plt.bar(
+            return bar_plot(
                 height=result[top_by],
                 cmap=self.cmap,
                 ylabel=self.top_by,
@@ -404,7 +411,7 @@ class Model:
 
         if self.view == "Horizontal bar plot":
             top_by = self.top_by.replace(" ", "_")
-            return plt.barh(
+            return barh_plot(
                 width=result[top_by],
                 cmap=self.cmap,
                 xlabel=self.top_by,
@@ -416,7 +423,7 @@ class Model:
         x = self.data.copy()
 
         x["Num_Documents"] = 1
-        x = _explode(
+        x = explode(
             x[[self.column, "Num_Documents", "Times_Cited", "ID",]], self.column,
         )
         result = x.groupby(self.column, as_index=True).agg(
@@ -466,7 +473,7 @@ class Model:
             darkness = result.Num_Documents
 
         if self.view == "Bar plot":
-            return plt.bar(
+            return bar_plot(
                 height=values,
                 darkness=darkness,
                 cmap=self.cmap,
@@ -475,7 +482,7 @@ class Model:
             )
 
         if self.view == "Horizontal bar plot":
-            return plt.barh(
+            return barh_plot(
                 width=values,
                 darkness=darkness,
                 cmap=self.cmap,
@@ -483,7 +490,7 @@ class Model:
                 figsize=(self.width, self.height),
             )
         if self.view == "Pie plot":
-            return plt.pie(
+            return pie_plot(
                 x=values,
                 darkness=darkness,
                 cmap=self.cmap,
@@ -494,7 +501,7 @@ class Model:
             ## remueve num_documents:times_cited from terms
             values.index = [" ".join(term.split(" ")[:-1]) for term in values.index]
             darkness.index = [" ".join(term.split(" ")[:-1]) for term in darkness.index]
-            return plt.wordcloud(
+            return wordcloud_(
                 x=values,
                 darkness=darkness,
                 cmap=self.cmap,
@@ -502,7 +509,7 @@ class Model:
             )
 
         if self.view == "Treemap":
-            return plt.treemap(
+            return treemap(
                 x=values,
                 darkness=darkness,
                 cmap=self.cmap,
@@ -513,7 +520,7 @@ class Model:
 
         x = self.data.copy()
         x["Num_Documents"] = 1
-        x = _explode(x[["Source_title", "Num_Documents", "ID",]], "Source_title",)
+        x = explode(x[["Source_title", "Num_Documents", "ID",]], "Source_title",)
         m = x.groupby("Source_title", as_index=True).agg({"Num_Documents": np.sum,})
         m = m[["Num_Documents"]]
         m = m.sort_values(by="Num_Documents", ascending=False)
@@ -626,7 +633,11 @@ class DASHapp(DASH, Model):
             self.set_options(
                 name="Column:",
                 options=sorted(
-                    [column for column in data.columns if column not in EXCLUDE_COLS]
+                    [
+                        column
+                        for column in self.data.columns
+                        if column not in EXCLUDE_COLS
+                    ]
                 ),
             )
 

@@ -6,7 +6,7 @@ from wordcloud import WordCloud
 TEXTLEN = 40
 
 
-def wordcloud(
+def wordcloud_(
     x,
     darkness=None,
     figsize=(6, 6),
