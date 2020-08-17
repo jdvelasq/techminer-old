@@ -1,44 +1,3 @@
-urban freight transport
-    urban freight transport
-    urban freight delivery
-    urban freight distribution
-urban distribution
-    urban distribution
-    city distribution
-    urban delivery
-urban goods distribution
-    urban goods distribution
-    urban goods movement
-    urban goods movements
-freight transport
-    freight transport
-    freight transportation
-    freight delivering
-logistics platform
-    logistics platform
-    logistics center
-    terminal
-    intermodal terminals
-consolidation centres
-    consolidation centres
-    distribution center
-    distribution centers
-    distribution centre
-    logistics distribution center
-    transshipment distribution center
-    freight facilities
-freight consolidation center
-    freight consolidation center
-    freight terminal
-    freight terminals
-    intermodal freight terminal
-    lbl freight consolidation
-urban freight consolidation center
-    urban freight consolidation center
-    urban freight consolidation centre
-    urban freight consolidation centre (ufcc)
-    urban freight consolidation centres (ufccs)
-    lbl urban freight boxes
 urban consolidation center
     urban consolidation center
     urban consolidation center (ucc)
@@ -60,6 +19,42 @@ urban consolidation center
     city logistics centers
     city logistics centre
     udc
+    urban freight consolidation center
+    urban freight consolidation center
+    urban freight consolidation centre
+    urban freight consolidation centre (ufcc)
+    urban freight consolidation centres (ufccs)
+    lbl urban freight boxes
+    freight consolidation center
+    transshipment distribution center
+    freight facilities
+    freight terminal
+    freight terminals
+    consolidation centres
+    logistics center
+    logistics distribution center
+    distribution center
+    distribution centers
+    distribution centre
+    logistics platform
+    intermodal terminals
+    intermodal freight terminal
+    lbl freight consolidation
+    terminal
+    multi-modal urban distribution centre    
+urban freight transport
+    urban freight transport
+    urban freight delivery
+    urban freight distribution
+    urban goods distribution
+    urban goods movement
+    urban goods movements
+    urban distribution
+    city distribution
+    urban delivery
+    freight transport
+    freight transportation
+    freight delivering
 urban logistic
     urban logistic
     urban logistics
@@ -70,30 +65,22 @@ smart cities
     smart cities
     smart city
     smart city logistics
-last mile
-    last mile
-    last-mile
 last mile delivery
     last mile delivery
     last-mile deliveries
     last-mile delivery
     last mile distribution
-last mile logistics
     last mile logistics
     last-mile logistics
-last-mile network
+    last mile
+    last-mile
     last-mile network
 stakeholders
     stakeholders
-stakeholder analysis
     stakeholder analysis
-stakeholder engagement
     stakeholder engagement
-stakeholders perception
     stakeholders perception
-stakeholders’ commitment
     stakeholders’ commitment
-multi-stakeholder
     multi-stakeholder
 electric vehicle
     electric vehicle
@@ -103,48 +90,64 @@ electric vehicle
     fuelled-electric vehicles
     fully electric vehicles
     green vehicle
-carbon emission
+greenhouse gas emissions
+    greenhouse gas emissions
+    low carbon
+    low emission zones
+    zero-emission zones
+    carbon credit points
+    carbon footprint
     carbon emission
     carbon emissions
     co2 emissions
     polluting emissions
     pm2.5
     urban pollution
-facility location
-    facility location
-localization
-    localization
+location
     location
-location factors
+    localization
     location factors
-location plan
     location plan
     location planning
+    facility location
+    location selection
+    single location selection
+    optimal locating method
+    multiple location decision
+    fatores localizacao
+    hub location problemsemisio
 location routing problem
     location routing problem
     location-routing
-location selection
-    location selection
 vehicle routing problem
     vehicle routing problem
     vehicle routing problem with time windows
-multi-criteria
-    multi-criteria
+    two-echelon vehicle routing problem
+    vehicle routing
+    freight vehicle routing
 multi-criteria decision analysis (mcda)
     multi-criteria decision analysis (mcda)
     multi-criteria decision making
     multi-criteria decision making (mcdm)
     multi-criteria decision-making (mcdm)
-multi-criteria evaluation
     multi-criteria evaluation
-multi-criteria evaluation framework
     multi-criteria evaluation framework
-multi-criteria objective
     multi-criteria objective
+    multi-criteria
+    multi-actor multi-criteria analysis (mamca)
+    multi-actor multi-criteria analysis
+    ahp
+    promethee
+optimization
+    optimization
+    multi-objective optimization
+    optimization of freight transport
+    fruit fly optimization algorithm
+    robust optimization
+    layout optimization model
+    combinatorial optimization
 urban freight
     urban freight
-multi-modal urban distribution centre
-    multi-modal urban distribution centre
 urban freight demand models
     urban freight demand models
 urban freight flows
@@ -161,8 +164,10 @@ adaptive dynamic programming
 agent-based modelling
     agent-based modelling
     agent-based simulation
-ahp
-    ahp
+    multi-agent system
+    multi-agent systems
+    multi-agent models
+    multi-agent simulation
 an integration platform
     an integration platform
 analytic mathematical model
@@ -178,8 +183,6 @@ biased randomization
     biased randomization
 big data applications
     big data applications
-binary particle swarm optimization (bpso)
-    binary particle swarm optimization (bpso)
 bottom-up model
     bottom-up model
 bristol-bath
@@ -194,10 +197,6 @@ canvas business model
     canvas business model
 cap and trade
     cap and trade
-carbon credit points
-    carbon credit points
-carbon footprint
-    carbon footprint
 cargo bikes
     cargo bikes
 carriers
@@ -217,16 +216,14 @@ classification
     classification
 cluster
     cluster
-collaboration
-    collaboration
-horizontal cooperation
-    horizontal cooperation
-collaborative logistics
-    collaborative logistics
 collaborative urban logistics
     collaborative urban logistics
-combinatorial optimization
-    combinatorial optimization
+    collaborative logistics
+    collaborative logistics
+    collaboration
+    horizontal cooperation
+    cooperation strategies
+    cooperative freight transport systems
 combined approach
     combined approach
 comparative analysis
@@ -244,10 +241,6 @@ content analysis
 continuous approximation (ca)
     continuous approximation (ca)
     continuous approximation methods
-cooperation strategies
-    cooperation strategies
-cooperative freight transport systems
-    cooperative freight transport systems
 core
     core
 corporate social responsibility
@@ -332,8 +325,6 @@ experimental economics
     experimental economics
 facility layout
     facility layout
-fatores localizacao
-    fatores localizacao
 feasibility study
     feasibility study
 financial balance
@@ -352,12 +343,8 @@ freight scheme evaluation
     freight scheme evaluation
 freight trip generation
     freight trip generation
-freight vehicle routing
-    freight vehicle routing
 fruit and vegetable distribution
     fruit and vegetable distribution
-fruit fly optimization algorithm
-    fruit fly optimization algorithm
 fruits and vegetables hall
     fruits and vegetables hall
     fruits and vegetables market halls
@@ -392,14 +379,10 @@ green logistics
     green logistics
 green logistics center
     green logistics center
-greenhouse gas emissions
-    greenhouse gas emissions
 heterogeneous fleet
     heterogeneous fleet
 historical cities
     historical cities
-hub location problems
-    hub location problems
 hybrid spatial-fuzzy multi-criteria decision-making
     hybrid spatial-fuzzy multi-criteria decision-making
 hypercube model
@@ -444,8 +427,6 @@ lagrangian slack operator
     lagrangian slack operator
 lamilo project
     lamilo project
-layout optimization model
-    layout optimization model
 layout planning
     layout planning
 life cycle cost analysis
@@ -481,11 +462,6 @@ logistics sprawl
     logistics sprawl
 long distance transport
     long distance transport
-low carbon
-    low carbon
-low emission zones
-    low emission zones
-    zero-emission zones
 lucca
     lucca
 mathematical model
@@ -495,6 +471,7 @@ medium-sized cities
 metaheuristics
     metaheuristics
     matheuristics
+    binary particle swarm optimization (bpso)
 micro-consolidation
     micro-consolidation
 micro-simulation
@@ -507,23 +484,10 @@ modelization
     modelization
 moves
     moves
-multi-actor multi-criteria analysis (mamca)
-    multi-actor multi-criteria analysis (mamca)
-    multi-actor multi-criteria analysis
-multi-agent simulation
-    multi-agent simulation
-multi-agent system
-    multi-agent system
-    multi-agent systems
-    multi-agent models
 multi-objective mixed-integer linear programming
     multi-objective mixed-integer linear programming
-multi-objective optimization
-    multi-objective optimization
 multi-tenant buildings
     multi-tenant buildings
-multiple location decision
-    multiple location decision
 multivariate factorial analysis
     multivariate factorial analysis
     multivariate statistical analysis
@@ -531,14 +495,11 @@ municipality
     municipality
 negative externalities
     negative externalities
-network
-    network
-network design
-    network design
-network flow problem
-    network flow problem
 network logistics
     network logistics
+    network
+    network design
+    network flow problem
 nihub
     nihub
 non-motorized modes
@@ -547,12 +508,6 @@ nordic
     nordic
 novi sad
     novi sad
-optimal locating method
-    optimal locating method
-optimization
-    optimization
-optimization of freight transport
-    optimization of freight transport
 order sharing
     order sharing
 overall factor
@@ -587,16 +542,13 @@ probability function
     probability function
 profitability
     profitability
-promethee
-    promethee
 public policies
     public policies
 q-methodology
     q-methodology
-queuing location problem
-    queuing location problem
 queuing theory
     queuing theory
+    queuing location problem
 r and shiny
     r and shiny
 rail transport
@@ -613,8 +565,6 @@ retailer
     retailers' point of view
 reverse logistics
     reverse logistics
-robust optimization
-    robust optimization
 rolling horizon
     rolling horizon
 saudi arabia
@@ -634,8 +584,6 @@ simulation model
     simulation model
 simulation platform
     simulation platform
-single location selection
-    single location selection
 site testing
     site testing
 social cost benefit analysis
@@ -667,12 +615,10 @@ sustainable collaborative network
     sustainable collaborative network
 sustainable development
     sustainable development
-sustainable freight transport
-    sustainable freight transport
-sustainable transport
-    sustainable transport
 sustainable urban freight transport
     sustainable urban freight transport
+    sustainable freight transport
+    sustainable transport
 system dynamics
     system dynamics
 systematic review
@@ -711,8 +657,6 @@ transport policy
     transport policy
 trucks
     trucks
-two-echelon vehicle routing problem
-    two-echelon vehicle routing problem
 uncertain environment
     uncertain environment
 urban areas
@@ -725,8 +669,6 @@ urban transportation simulation
     urban transportation simulation
 urban-rural distribution
     urban-rural distribution
-vehicle routing
-    vehicle routing
 virtual pricing
     virtual pricing
 visum modelling

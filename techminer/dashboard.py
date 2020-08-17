@@ -200,26 +200,24 @@ def n_components():
     }
 
 
-def normalization():
+def normalization(include_none=True):
+    options = sorted(
+        [
+            "Association",
+            "Jaccard",
+            "Dice",
+            "Salton/Cosine",
+            "Equivalence",
+            "Inclusion",
+            "Mutual Information",
+        ]
+    )
+    if include_none is True:
+        options = ["None"] + options
     return {
         "arg": "normalization",
         "desc": "Normalization:",
-        "widget": widgets.Dropdown(
-            options=["None"]
-            + sorted(
-                [
-                    "Association",
-                    "Jaccard",
-                    "Dice",
-                    "Salton",
-                    "Equivalence",
-                    "Inclusion",
-                    "Cosine",
-                    "Mutual Information",
-                ]
-            ),
-            layout=Layout(width="55%"),
-        ),
+        "widget": widgets.Dropdown(options=options, layout=Layout(width="55%"),),
     }
 
 

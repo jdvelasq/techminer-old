@@ -31,8 +31,13 @@ def clustering(
     labels = None
 
     if method == "Affinity Propagation":
-        labels = AffinityPropagation(random_state=int(random_state)).fit_predict(1 - X)
-        n_clusters = len(set(labels))
+        try:
+            labels = AffinityPropagation(random_state=int(random_state)).fit_predict(
+                1 - X
+            )
+            n_clusters = len(set(labels))
+        except:
+            raise Exception("Affinity Propagation did not converge")
 
     if method == "Agglomerative Clustering":
         labels = AgglomerativeClustering(

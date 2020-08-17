@@ -5,7 +5,7 @@ Factor analysis
 
 
 """
-import matplotlib.pyplot as pyplot
+
 import networkx as nx
 from numpy.lib.index_tricks import RClass
 import pandas as pd
@@ -21,6 +21,8 @@ import techminer.dashboard as dash
 from techminer.dashboard import DASH
 from techminer.tfidf import TF_matrix, TFIDF_matrix
 from techminer.limit_to_exclude import limit_to_exclude
+
+from techminer.xy_clusters_plot import xy_clusters_plot
 
 ###############################################################################
 ##
@@ -40,8 +42,8 @@ class Model:
         self.limit_to = limit_to
         self.exclude = exclude
 
-        # TLAB suggestion
-        self.n_components = 20
+        ## TLAB suggestion
+        self.n_components = 10
 
     def apply(self):
         #
@@ -79,6 +81,15 @@ class Model:
                 sublinear_tf=False,
                 max_items=self.max_items,
             )
+        else:
+            if len(M.columns) > self.max_items:
+                top_items = M.sum(axis=0)
+                top_items = top_items.sort_values(ascending=False)
+                top_items = top_items.head(self.max_items)
+                M = M.loc[:, top_items.index]
+                rows = M.sum(axis=1)
+                rows = rows[rows > 0]
+                M = M.loc[rows.index, :]
 
         #
         # 4.-- Add counters to axes
@@ -107,6 +118,7 @@ class Model:
             R = model.fit_transform(X=M.values)
         else:
             R = model.fit_transform(X=M.values)
+
         R = pd.DataFrame(
             R,
             columns=["Dim-{:>02d}".format(i) for i in range(self.n_components)],
@@ -114,18 +126,7 @@ class Model:
         )
 
         #
-        # 7.-- limit to/exclude terms
-        #
-        R = limit_to_exclude(
-            data=R,
-            axis=0,
-            column=self.column,
-            limit_to=self.limit_to,
-            exclude=self.exclude,
-        )
-
-        #
-        # 8.-- Clustering
+        # 7.-- Clustering
         #
         (
             self.n_clusters,
@@ -148,7 +149,7 @@ class Model:
         R["Cluster"] = self.labels_
 
         #
-        # 12.-- Results
+        # 8.-- Results
         #
         self.X_ = R
 
@@ -157,105 +158,26 @@ class Model:
         return self.cluster_members_
 
     def cluster_plot(self):
-        ##
-        self.apply()
-        ##
 
-        fig = pyplot.Figure(figsize=(self.width, self.height))
-        ax = fig.subplots()
+        ## clustering
+        try:
+            self.apply()
+        except:
+            return "Clustering algorithm did not converge"
 
-        colors = [
-            "tab:blue",
-            "tab:orange",
-            "tab:green",
-            "tab:red",
-            "tab:purple",
-            "tab:brown",
-            "tab:pink",
-            "tab:gray",
-            "tab:olive",
-            "tab:cyan",
-            "cornflowerblue",
-            "lightsalmon",
-            "limegreen",
-            "tomato",
-            "mediumvioletred",
-            "darkgoldenrod",
-            "lightcoral",
-            "silver",
-            "darkkhaki",
-            "skyblue",
-            "dodgerblue",
-            "orangered",
-            "turquoise",
-            "crimson",
-            "violet",
-            "goldenrod",
-            "thistle",
-            "grey",
-            "yellowgreen",
-            "lightcyan",
-        ]
-
-        colors += colors + colors
-
-        x = self.centers_["Dim-{:>02d}".format(self.x_axis)]
-        y = self.centers_["Dim-{:>02d}".format(self.y_axis)]
-        names = self.centers_["Name"]
-        node_sizes = cmn.counters_to_node_sizes(names)
-
-        # node_colors = cmn.counters_to_node_colors(names, cmap)
-        # edge_colors = cmn.counters_to_edgecolors(names, cmap)
-
-        from cycler import cycler
-
-        ax.scatter(
-            x,
-            y,
-            marker="o",
-            s=node_sizes,
-            c=colors[: len(x)],
-            #  c=node_colors,
-            alpha=0.5,
-            linewidths=2,
-            #  edgecolors=node_colors),
+        ## plot
+        return xy_clusters_plot(
+            x=self.cluster_centers_[self.cluster_centers_.columns[self.x_axis]],
+            y=self.cluster_centers_[self.cluster_centers_.columns[self.y_axis]],
+            x_axis_at=0,
+            y_axis_at=0,
+            labels=self.cluster_names_,
+            node_sizes=cmn.counters_to_node_sizes(self.cluster_names_),
+            color_scheme="4 Quadrants",
+            xlabel="Dim-{}".format(self.x_axis),
+            ylabel="Dim-{}".format(self.y_axis),
+            figsize=(self.width, self.height),
         )
-
-        pos = {term: (x[idx], y[idx]) for idx, term in enumerate(self.centers_.Name)}
-        cmn.ax_text_node_labels(
-            ax=ax, labels=self.centers_.Name, dict_pos=pos, node_sizes=node_sizes
-        )
-
-        cmn.ax_expand_limits(ax)
-        cmn.set_ax_splines_invisible(ax)
-        ax.axhline(y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
-        ax.axvline(x=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
-        ax.set_axis_off()
-
-        xlim = ax.get_xlim()
-        ylim = ax.get_ylim()
-        ax.text(
-            x=xlim[1],
-            y=0.01 * (ylim[1] - ylim[0]),
-            s="Dim-{}".format(self.x_axis),
-            fontsize=9,
-            color="dimgray",
-            horizontalalignment="right",
-            verticalalignment="bottom",
-        )
-        ax.text(
-            x=0.01 * (xlim[1] - xlim[0]),
-            y=ylim[1],
-            s="Dim-{}".format(self.y_axis),
-            fontsize=9,
-            color="dimgray",
-            horizontalalignment="left",
-            verticalalignment="top",
-        )
-
-        fig.set_tight_layout(True)
-
-        return fig
 
 
 ###############################################################################
@@ -264,20 +186,18 @@ class Model:
 ##
 ###############################################################################
 
-COLUMNS = [
-    "Authors",
-    "Countries",
-    "Institutions",
-    "Author_Keywords",
-    "Index_Keywords",
-    "Abstract_words_CL",
-    "Abstract_words",
-    "Title_words_CL",
-    "Title_words",
-    "Affiliations",
-    "Author_Keywords_CL",
-    "Index_Keywords_CL",
-]
+COLUMNS = sorted(
+    [
+        "Author_Keywords",
+        "Index_Keywords",
+        "Abstract_words_CL",
+        "Abstract_words",
+        "Title_words_CL",
+        "Title_words",
+        "Author_Keywords_CL",
+        "Index_Keywords_CL",
+    ]
+)
 
 ###############################################################################
 ##

@@ -1,0 +1,253 @@
+##################################################################
+##
+##  Búsqueda #1
+##    147 documentos
+##
+##################################################################
+
+(
+  TITLE 
+  ( 
+    (
+      city  
+      PRE/1 
+      ( 
+        consolidation  
+        OR  distribution  
+        OR  freight  
+        OR  logistic  
+        OR  transhipment  
+        OR  terminal 
+      )  
+      PRE/1  
+      ( 
+        cent*  
+        OR  depot*  
+        OR  platform*  
+      ) 
+    )  
+    OR  
+    ( 
+      urban  
+      PRE/1  
+      ( 
+        consolidation  
+        OR  cross*  
+        OR  distribution  
+        OR  freight  
+        OR  logistic  
+        OR  terminal  
+        OR  transhipment 
+      )  
+      PRE/1  
+      ( 
+        cent*  
+        OR  depot*  
+        OR  platform*  
+      ) 
+    ) 
+  )  
+  OR  KEY 
+  (
+    (
+      city  
+      PRE/1 
+      ( 
+        consolidation  
+        OR  distribution  
+        OR  freight  
+        OR  logistic  
+        OR  transhipment  
+        OR  terminal 
+      )  
+      PRE/1  
+      ( 
+        cent*  
+        OR  depot*  
+        OR  platform*  
+      ) 
+    )  
+    OR  
+    ( 
+      urban  
+      PRE/1  
+      ( 
+        consolidation  
+        OR  cross*  
+        OR  distribution  
+        OR  freight  
+        OR  logistic  
+        OR  terminal  
+        OR  transhipment 
+      )  
+      PRE/1  
+      ( 
+        cent*  
+        OR  depot*  
+        OR  platform*  
+      ) 
+    ) 
+  )
+)
+
+
+
+
+##################################################################
+##
+##  Búsqueda #2
+##    33 documentos
+##
+##################################################################
+
+
+(
+  TITLE 
+  ( 
+    (
+      urban
+      OR city
+    ) 
+    PRE/1 
+    (
+      cross-docking 
+      OR crossdocking 
+      OR "cross docking" 
+      OR terminal
+    )
+  )  
+  OR KEY 
+  (
+    (
+      urban
+      OR city
+    ) 
+    PRE/1 
+    (
+      cross-docking 
+      OR crossdocking 
+      OR "cross docking" 
+      OR terminal
+    )
+  )
+)
+
+
+##################################################################
+##
+##  #1 OR #2
+##
+##    180 documentos
+##
+##################################################################
+
+( ( TITLE ( ( city  PRE/1  ( consolidation  OR  distribution  OR  freight  OR  logistic  OR  transhipment  OR  terminal )  PRE/1  ( cent*  OR  depot*  OR  platform* ) )  OR  ( urban  PRE/1  ( consolidation  OR  cross*  OR  distribution  OR  freight  OR  logistic  OR  terminal  OR  transhipment )  PRE/1  ( cent*  OR  depot*  OR  platform* ) ) )  OR  KEY ( ( city  PRE/1  ( consolidation  OR  distribution  OR  freight  OR  logistic  OR  transhipment  OR  terminal )  PRE/1  ( cent*  OR  depot*  OR  platform* ) )  OR  ( urban  PRE/1  ( consolidation  OR  cross*  OR  distribution  OR  freight  OR  logistic  OR  terminal  OR  transhipment )  PRE/1  ( cent*  OR  depot*  OR  platform* ) ) ) ) )  OR  ( ( TITLE ( ( urban  OR  city )  PRE/1  ( cross-docking  OR  crossdocking  OR  "cross docking"  OR  terminal ) )  OR  KEY ( ( urban  OR  city )  PRE/1  ( cross-docking  OR  crossdocking  OR  "cross docking"  OR  terminal ) ) ) ) 
+
+
+
+
+##################################################################
+##
+##  Borrados
+##
+##################################################################
+
+#12   Kingdom City Cruise Terminal
+
+#35   National City Marine Terminal Berth 24-10 Rehabilitation
+
+#102  Risk assessment modeling of air pollutants emissions in 
+      Beihaghi Terminal
+
+#109  Pavement life cycle cost analysis for city logistics
+
+#132  Concentrations, sources and health risk assessments of 
+      heavy metals in ground surface dust from urban bus terminals 
+      of Fuzhou city
+
+#138  Final technical paper-EU-00258 the nordic intelligent 
+      truck hub-"NiHub"
+
+#139  Location of urban logistic terminals as hub location 
+      problem
+
+#145  Locating urban logistics terminals and shopping centres 
+      in a Chinese city
+
+
+#154  Locating intra city bus terminals using fuzzy logic with 
+      emphasis on city development and community alliance: Case 
+      study of Tasuj
+
+#156  Efficiency evaluation of urban transit terminals based on the 
+      cloud model
+
+#159  Analyses of the transfer waiting time in urban public 
+      transportation terminals
+
+#162  Analysis of queue system in urban transportation terminal
+
+#163  Geotechnical considerations for national city marine terminal 
+      development
+
+#164  New York city cruise terminal developments
+
+#165  Application of fuzzy multi-attribute decision making method 
+      in urban transportation terminal scheme optimum selection
+
+#167  Port planning: Texas City international terminal
+
+#169  A GIS-based planning approach to locating urban rail terminals
+
+#170  Study on method of layout and siting of inter city bus terminal
+
+#171  Wireless relay networks
+
+#172  Aircraft solvent depainting alternatives feasibility 
+      demonstration Oklahoma City Air Logistics Center, Tinker AFB, OK 
+
+#173  Oklahoma City Air Logistics Center (USAF) aging aircraft 
+      corrosion program
+
+#174  NEW AIR TERMINAL IN THE HEART OF WARSAW.
+
+#175  AUTOMATIC TESTING OF CONSTANT SPEED DRIVES.
+
+#176  OKLAHOMA CITY AIR LOGISTICS CENTER APPROACH TO EMBEDDED COMPUTER 
+      SYSTEM SUPPORT.
+
+#177  An inter-city terminal access modal choice model
+
+#178  SIMULATION STUDY EXAMINING THE BENEFITS OF AN URBAN CONSOLIDATED 
+      TERMINAL.
+
+#179  LOCATION PRINCIPLE OF URBAN TERMINAL DISTRIBUTION.
+
+#180  Optimization of urban transportation terminal network
+
+
+
+
+
+
+city logistics 48:510	48
+urban consolidation centre 18:288	18
+urban freight transport 14:177	14
+urban consolidation center 12:080	12
+urban distribution center 11:219	11
+urban consolidation centres 10:095	10
+urban logistics 09:018	9
+sustainability 08:222	8
+urban distribution centers 08:021	8
+location selection 07:121	7
+urban distribution centre 06:030	6
+urban consolidation centers 06:029	6
+freight transport 04:132	4
+urban distribution 04:024	4
+logistics 04:016	4
+collaboration 04:003	4
+freight consolidation 03:022	3
+last mile delivery 03:021	3
+business model 03:020	3
+ahp 03:009	3
+

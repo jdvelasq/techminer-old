@@ -30,7 +30,7 @@ def normalize_network(X, normalization=None):
                     M.loc[row, row] + M.at[col, col] + 2 * M.at[row, col]
                 )
 
-    if normalization in ["Salton", "Cosine"]:
+    if normalization == "Salton/Cosine":
         for col in M.columns:
             for row in M.index:
                 X.at[row, col] = M.at[row, col] / np.sqrt(

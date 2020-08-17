@@ -388,7 +388,7 @@ class DASHapp(DASH, Model):
             ),
             dash.min_occurrence(),
             dash.max_items(),
-            dash.normalization(),
+            dash.normalization(include_none=False),
             dash.separator(text="Clustering"),
             dash.clustering_method(),
             dash.n_clusters(m=3, n=50, i=1),
