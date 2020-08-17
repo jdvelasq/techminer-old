@@ -53,7 +53,12 @@ class Model:
             #
             # 2.-- Computes TF_matrix with occurrence >= min_occurrence
             #
-            A = TF_matrix(w, column=self.column)
+            A = TF_matrix(
+                data=w,
+                column=self.column,
+                scheme=None,
+                min_occurrence=self.min_occurrence,
+            )
 
             #
             # 3.-- Limit to/Exclude
@@ -101,7 +106,7 @@ class Model:
             #
             # 2.-- Computes TF_matrix with occurrence >= min_occurrence
             #
-            A = TF_matrix(w, column=self.column)
+            A = TF_matrix(data=w, column=self.column, scheme=None, min_occurrence=None,)
 
             #
             # 3.-- Limit to/Exclude
@@ -115,7 +120,15 @@ class Model:
             )
 
             #
-            # 4.-- Select max_items
+            # 4.-- Minimal occurrence
+            #
+            terms = A.sum(axis=0)
+            terms = terms.sort_values(ascending=False)
+            terms = terms[terms >= self.min_occurrence]
+            A = A.loc[:, terms.index]
+
+            #
+            # 5.-- Select max_items
             #
             A = cmn.add_counters_to_axis(
                 X=A, axis=1, data=self.data, column=self.column
@@ -123,10 +136,11 @@ class Model:
 
             A = cmn.sort_by_axis(data=A, sort_by=self.top_by, ascending=False, axis=1)
 
-            A = A[A.columns[: self.max_items]]
+            if len(A.columns) > self.max_items:
+                A = A[A.columns[: self.max_items]]
 
             #
-            # 5.-- Computes correlation
+            # 6.-- Computes correlation
             #
             B = TF_matrix(w, column=self.by)
             matrix = np.matmul(B.transpose().values, A.values)
