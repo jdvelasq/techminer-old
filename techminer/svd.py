@@ -9,6 +9,7 @@ from techminer.dashboard import DASH
 from techminer.diagram_plot import diagram_plot
 from techminer.document_term import TF_matrix, TFIDF_matrix
 from techminer.params import EXCLUDE_COLS
+from techminer.limit_to_exclude import limit_to_exclude
 
 ###############################################################################
 ##
@@ -125,7 +126,7 @@ class Model:
     def table(self):
         self.apply()
         X = self.components_
-        X = cmn.limit_to_exclude(
+        X = limit_to_exclude(
             data=X,
             axis=0,
             column=self.column,

@@ -20,7 +20,7 @@ import techminer.common as cmn
 import techminer.dashboard as dash
 from techminer.dashboard import DASH
 from techminer.tfidf import TF_matrix, TFIDF_matrix
-
+from techminer.limit_to_exclude import limit_to_exclude
 
 ###############################################################################
 ##
@@ -57,7 +57,7 @@ class Model:
         #
         # 2.-- Limit to / Exclude
         #
-        M = cmn.limit_to_exclude(
+        M = limit_to_exclude(
             data=M,
             axis=1,
             column=self.column,
@@ -116,7 +116,7 @@ class Model:
         #
         # 7.-- limit to/exclude terms
         #
-        R = cmn.limit_to_exclude(
+        R = limit_to_exclude(
             data=R,
             axis=0,
             column=self.column,

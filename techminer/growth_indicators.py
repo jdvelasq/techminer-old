@@ -10,6 +10,8 @@ from techminer.bar_plot import bar_plot
 from techminer.barh_plot import barh_plot
 from techminer.stacked_bar import stacked_bar
 from techminer.stacked_barh import stacked_barh
+from techminer.limit_to_exclude import limit_to_exclude
+
 
 ###############################################################################
 ##
@@ -126,7 +128,7 @@ class Model:
         result = result.reset_index(drop=True)
         result = result.set_index(self.column)
 
-        result = cmn.limit_to_exclude(
+        result = limit_to_exclude(
             data=result,
             axis=0,
             column=self.column,

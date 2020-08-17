@@ -22,6 +22,7 @@ from techminer.params import EXCLUDE_COLS
 from techminer.worldmap import worldmap
 from techminer.stacked_bar import stacked_bar
 from techminer.stacked_barh import stacked_barh
+from techminer.limit_to_exclude import limit_to_exclude
 
 ###############################################################################
 ##
@@ -218,7 +219,7 @@ class Model:
         result = result.set_index(self.column)
 
         ## limit to / exclude options
-        result = cmn.limit_to_exclude(
+        result = limit_to_exclude(
             data=result,
             axis=0,
             column=self.column,
@@ -357,7 +358,7 @@ class Model:
         result.index = result[self.column]
 
         ## limit to / exclude options
-        result = cmn.limit_to_exclude(
+        result = limit_to_exclude(
             data=result,
             axis=0,
             column=self.column,
@@ -430,7 +431,7 @@ class Model:
             {"Num_Documents": np.sum, "Times_Cited": np.sum,}
         )
 
-        result = cmn.limit_to_exclude(
+        result = limit_to_exclude(
             data=result,
             axis=0,
             column=self.column,

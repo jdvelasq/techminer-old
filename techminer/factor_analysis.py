@@ -23,7 +23,7 @@ import techminer.dashboard as dash
 from techminer.dashboard import DASH
 from techminer.tfidf import TF_matrix, TFIDF_matrix
 from techminer.normalize_network import normalize_network
-
+from techminer.limit_to_exclude import limit_to_exclude
 
 from matplotlib import patches
 
@@ -46,7 +46,7 @@ class Model:
         self.limit_to = limit_to
         self.exclude = exclude
 
-    def fit(self):
+    def apply(self):
         #
         X = self.data.copy()
 
@@ -60,7 +60,7 @@ class Model:
         #
         # 2.-- Limit to / Exclude
         #
-        TF_matrix_ = cmn.limit_to_exclude(
+        TF_matrix_ = limit_to_exclude(
             data=TF_matrix_,
             axis=1,
             column=self.column,
@@ -167,7 +167,7 @@ class Model:
         self.X_ = R
 
     def cluster_members(self):
-        self.fit()
+        self.apply()
         return self.cluster_members_
 
     def mds_map(self):
@@ -324,7 +324,7 @@ class Model:
 
     def cluster_plot(self):
         ##
-        self.fit()
+        self.apply()
         ##
 
         fig = pyplot.Figure(figsize=(self.width, self.height))

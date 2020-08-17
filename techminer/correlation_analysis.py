@@ -19,7 +19,7 @@ from techminer.chord_diagram import ChordDiagram
 from techminer.dashboard import DASH
 from techminer.tfidf import TF_matrix
 from techminer.network import Network
-
+from techminer.limit_to_exclude import limit_to_exclude
 
 ###############################################################################
 ##
@@ -58,7 +58,7 @@ class Model:
             #
             # 3.-- Limit to/Exclude
             #
-            A = cmn.limit_to_exclude(
+            A = limit_to_exclude(
                 data=A,
                 axis=1,
                 column=self.column,
@@ -106,7 +106,7 @@ class Model:
             #
             # 3.-- Limit to/Exclude
             #
-            A = cmn.limit_to_exclude(
+            A = limit_to_exclude(
                 data=A,
                 axis=1,
                 column=self.column,

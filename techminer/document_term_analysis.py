@@ -5,7 +5,7 @@ import techminer.dashboard as dash
 from techminer.bar_plot import bar_plot
 from techminer.barh_plot import barh_plot
 from techminer.dashboard import DASH
-
+from techminer.limit_to_exclude import limit_to_exclude
 
 ###############################################################################
 ##
@@ -28,7 +28,7 @@ class Model:
     def apply(self):
 
         matrix = TF_matrix(data=self.data, column=self.column, scheme="raw")
-        matrix = cmn.limit_to_exclude(
+        matrix = limit_to_exclude(
             data=matrix,
             axis=1,
             column=self.column,

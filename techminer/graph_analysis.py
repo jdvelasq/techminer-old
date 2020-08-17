@@ -16,7 +16,7 @@ from techminer.normalize_network import normalize_network
 from techminer.heatmap import heatmap as heatmap_
 from techminer.bubble_plot import bubble_plot as bubble_plot_
 from techminer.network import Network
-
+from techminer.limit_to_exclude import limit_to_exclude
 
 ###############################################################################
 ##
@@ -52,7 +52,7 @@ class Model:
         self.top_by = None
         self.width = None
 
-    def fit(self):
+    def apply(self):
 
         #
         # 1.-- Computes TF_matrix with occurrence >= min_occurrence
@@ -67,7 +67,7 @@ class Model:
         #
         # 2.-- Limit to/Exclude
         #
-        TF_matrix_ = cmn.limit_to_exclude(
+        TF_matrix_ = limit_to_exclude(
             data=TF_matrix_,
             axis=1,
             column=self.column,
@@ -76,7 +76,7 @@ class Model:
         )
 
         #
-        # 3.-- Select max_items
+        # 3.-- Adds counters to axis
         #
         TF_matrix_ = cmn.add_counters_to_axis(
             X=TF_matrix_, axis=1, data=self.data, column=self.column
@@ -86,6 +86,9 @@ class Model:
             data=TF_matrix_, sort_by=self.top_by, ascending=False, axis=1
         )
 
+        #
+        # 3.-- Select max_items
+        #
         TF_matrix_ = TF_matrix_[TF_matrix_.columns[: self.max_items]]
         if len(TF_matrix_.columns) > self.max_items:
             top_items = TF_matrix_.sum(axis=0)
@@ -106,7 +109,7 @@ class Model:
         self.X_ = X
 
     def matrix(self):
-        self.fit()
+        self.apply()
         if self.normalization == "None":
             return self.X_.style.background_gradient(cmap=self.cmap, axis=None)
         else:
@@ -115,17 +118,17 @@ class Model:
             )
 
     def heatmap(self):
-        self.fit()
+        self.apply()
         return heatmap_(self.X_, cmap=self.cmap, figsize=(self.width, self.height))
 
     def bubble_plot(self):
-        self.fit()
+        self.apply()
         return bubble_plot_(
             self.X_, axis=0, cmap=self.cmap, figsize=(self.width, self.height)
         )
 
     def network_nx(self):
-        self.fit()
+        self.apply()
         return Network(
             X=self.X_,
             top_by=self.top_by,
@@ -138,7 +141,7 @@ class Model:
         )
 
     def communities(self):
-        self.fit()
+        self.apply()
         return Network(
             X=self.X_,
             top_by=self.top_by,
@@ -148,7 +151,7 @@ class Model:
 
     def network_interactive(self):
 
-        self.fit()
+        self.apply()
         return Network(
             X=self.X_,
             top_by=self.top_by,

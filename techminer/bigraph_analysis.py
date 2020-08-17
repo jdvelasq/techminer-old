@@ -23,6 +23,7 @@ from pyvis.network import Network
 
 from techminer.heatmap import heatmap as heatmap_
 from techminer.bubble_plot import bubble_plot
+from techminer.limit_to_exclude import limit_to_exclude
 
 
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -57,14 +58,14 @@ class Model:
 
         if self.top_by == "Data":
 
-            A = cmn.limit_to_exclude(
+            A = limit_to_exclude(
                 data=A,
                 axis=1,
                 column=self.column,
                 limit_to=self.limit_to,
                 exclude=self.exclude,
             )
-            B = cmn.limit_to_exclude(
+            B = limit_to_exclude(
                 data=B,
                 axis=1,
                 column=self.by,
@@ -98,7 +99,7 @@ class Model:
 
         if self.top_by in ["Num Documents", "Times Cited"]:
 
-            A = cmn.limit_to_exclude(
+            A = limit_to_exclude(
                 data=A,
                 axis=1,
                 column=self.column,
@@ -114,7 +115,7 @@ class Model:
 
             A = A[A.columns[: self.top_n]]
 
-            B = cmn.limit_to_exclude(
+            B = limit_to_exclude(
                 data=B,
                 axis=1,
                 column=self.by,

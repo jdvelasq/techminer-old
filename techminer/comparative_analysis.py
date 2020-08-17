@@ -13,6 +13,7 @@ from techminer.diagram_plot import diagram_plot
 from techminer.tfidf import TF_matrix, TFIDF_matrix
 from techminer.params import EXCLUDE_COLS
 from techminer.clustering import clustering
+from techminer.limit_to_exclude import limit_to_exclude
 
 ###############################################################################
 ##
@@ -52,7 +53,7 @@ class Model:
         #
         # 2.-- Limit to / Exclude
         #
-        TF_matrix_ = cmn.limit_to_exclude(
+        TF_matrix_ = limit_to_exclude(
             data=TF_matrix_,
             axis=1,
             column=self.column,
