@@ -1,5 +1,3 @@
-2e-cvrp
-    2e-cvrp
 adaptive dynamic programming
     adaptive dynamic programming
 agent-based modelling
@@ -12,20 +10,18 @@ an integration platform
     an integration platform
 analytic mathematical model
     analytic mathematical model
-ann
-    ann
 approximate dynamic programming
     approximate dynamic programming
 assessment
     assessment
-attribute
-    attribute
 barriers
     barriers
 battery electric vehicles
     battery electric vehicles
 biased randomization
     biased randomization
+big data applications
+    big data applications
 binary particle swarm optimization (bpso)
     binary particle swarm optimization (bpso)
 bottom-up model
@@ -38,10 +34,6 @@ business model
     business models
 bwm
     bwm
-calculation method
-    calculation method
-canvas business model
-    canvas business model
 cap and trade
     cap and trade
 carbon credit points
@@ -67,8 +59,6 @@ chaotic system
 cities
     cities
     city
-city distribution
-    city distribution
 city distribution center
     city distribution center
     city distribution centers
@@ -79,9 +69,6 @@ city logistics centers
     city logistics centers
 city logistics centre
     city logistics centre
-city logistics facilities
-    city logistics facilities
-    city logistics facility
 classification
     classification
 cluster
@@ -94,14 +81,12 @@ collaborative logistics
     collaborative logistics
 collaborative urban logistics
     collaborative urban logistics
-combinatorial auctions
-    combinatorial auctions
 combinatorial optimization
     combinatorial optimization
 combined approach
     combined approach
-commodity supply and demand
-    commodity supply and demand
+comparative analysis
+    comparative analysis
 congestion
     congestion
 congestion charging
@@ -128,8 +113,6 @@ core
     core
 corporate social responsibility
     corporate social responsibility
-correlation
-    correlation
 cost allocation
     cost allocation
 cost-effective distance of transport
@@ -152,7 +135,6 @@ decision levels
     decision levels
 decision making
     decision making
-    decision-making
 decision support system
     decision support system
 decision-making process
@@ -161,8 +143,6 @@ decomposition strategy
     decomposition strategy
 delphi method
     delphi method
-demand model
-    demand model
 demand quantity
     demand quantity
 diffusion of innovation theory
@@ -199,14 +179,10 @@ electric tricycles
 electric vehicle
     electric vehicle
     electric vehicles
-empty-truck model
-    empty-truck model
 end consumer movements
     end consumer movements
 energy consumption
     energy consumption
-energy efficiency
-    energy efficiency
 engineering method
     engineering method
 enter-of-gravity model
@@ -229,8 +205,6 @@ evolutionary game theory
     evolutionary game theory
 experimental economics
     experimental economics
-facilities
-    facilities
 facility layout
     facility layout
 facility location
@@ -247,29 +221,25 @@ freight consolidation
     freight consolidation
 freight consolidation center
     freight consolidation center
-freight consolidation centre
-    freight consolidation centre
 freight consolidation policy
     freight consolidation policy
 freight delivering
     freight delivering
 freight distribution network
     freight distribution network
-freight distribution point
-    freight distribution point
 freight facilities
     freight facilities
-freight flows
-    freight flows
 freight modeling
     freight modeling
 freight scheme evaluation
     freight scheme evaluation
-freight terminal
-    freight terminal
+freight terminals
+    freight terminals
 freight transport
     freight transport
     freight transportation
+freight trip generation
+    freight trip generation
 freight vehicle routing
     freight vehicle routing
 fruit and vegetable distribution
@@ -288,14 +258,12 @@ fuzzy cluster analysis
     fuzzy cluster analysis
 fuzzy preferences
     fuzzy preferences
-fuzzy synthetic evaluation(fse)
-    fuzzy synthetic evaluation(fse)
 fuzzy theories
     fuzzy theories
 fuzzy topsis
     fuzzy topsis
-fuzzy-ahp
-    fuzzy-ahp
+gaia
+    gaia
 gain-sharing
     gain-sharing
 game theory
@@ -308,8 +276,6 @@ genetic method
 geographic information system
     geographic information system
     geographic information systems (gis)
-gothenburg region
-    gothenburg region
 grading
     grading
 greedy algorithm
@@ -324,8 +290,6 @@ greenhouse gas emissions
     greenhouse gas emissions
 heterogeneous fleet
     heterogeneous fleet
-heuristic algorithm
-    heuristic algorithm
 historical cities
     historical cities
 horizontal cooperation
@@ -350,16 +314,14 @@ integer programming
     integer programming
 integrated maintenance
     integrated maintenance
-intelligent truck parking
-    intelligent truck parking
 inter-organisational innovation
     inter-organisational innovation
 inter-organizational interaction
     inter-organizational interaction
-intermodal facilities
-    intermodal facilities
-intermodal freight logistics centre
-    intermodal freight logistics centre
+intermodal freight terminal
+    intermodal freight terminal
+intermodal terminals
+    intermodal terminals
 internet of things
     internet of things
 interoperability
@@ -372,21 +334,25 @@ joint decision
     joint decision
 joint delivery systems
     joint delivery systems
+key performance indicators
+    key performance indicators
+lagrangian relaxation
+    lagrangian relaxation
 lagrangian slack operator
     lagrangian slack operator
 lamilo project
     lamilo project
+last mile
+    last mile
+    last-mile
 last mile delivery
     last mile delivery
     last-mile deliveries
-    last-mile delivery
 last mile distribution
     last mile distribution
 last mile logistics
     last mile logistics
     last-mile logistics
-last-mile
-    last-mile
 last-mile network
     last-mile network
 layout optimization model
@@ -397,8 +363,6 @@ lbl freight consolidation
     lbl freight consolidation
 lbl urban freight boxes
     lbl urban freight boxes
-life cycle cost analysis
-    life cycle cost analysis
 linear programming
     linear programming
 linguistic variable
@@ -409,33 +373,21 @@ lisbon
     lisbon
 literature review
     literature review
-load factors
-    load factors
 local impact
     local impact
-localisation
-    localisation
 localization
     localization
 location
     location
 location factors
     location factors
-location mode
-    location mode
-location model
-    location model
 location plan
     location plan
     location planning
-location problem
-    location problem
 location routing problem
     location routing problem
 location selection
     location selection
-location-based accessibility
-    location-based accessibility
 location-routing
     location-routing
 logistic system
@@ -475,10 +427,6 @@ mathematical model
     mathematical model
 matheuristics
     matheuristics
-maximum coverage location
-    maximum coverage location
-mechanism design
-    mechanism design
 medium-sized cities
     medium-sized cities
 metaheuristics
@@ -500,25 +448,35 @@ moves
 multi-actor multi-criteria analysis
     multi-actor multi-criteria analysis
     multi-actor multi-criteria analysis (mamca)
+multi-agent models
+    multi-agent models
 multi-agent simulation
     multi-agent simulation
 multi-agent system
     multi-agent system
     multi-agent systems
+multi-criteria
+    multi-criteria
 multi-criteria decision analysis (mcda)
     multi-criteria decision analysis (mcda)
 multi-criteria decision making
     multi-criteria decision making
     multi-criteria decision making (mcdm)
     multi-criteria decision-making (mcdm)
-multi-layer logistics facility
-    multi-layer logistics facility
+multi-criteria evaluation
+    multi-criteria evaluation
+multi-criteria evaluation framework
+    multi-criteria evaluation framework
+multi-criteria objective
+    multi-criteria objective
 multi-modal urban distribution centre
     multi-modal urban distribution centre
 multi-objective mixed-integer linear programming
     multi-objective mixed-integer linear programming
 multi-objective optimization
     multi-objective optimization
+multi-stakeholder
+    multi-stakeholder
 multi-tenant buildings
     multi-tenant buildings
 multiple location decision
@@ -535,18 +493,12 @@ network
     network
 network design
     network design
-network equilibrium
-    network equilibrium
 network flow problem
     network flow problem
 network logistics
     network logistics
-nihub
-    nihub
 non-motorized modes
     non-motorized modes
-nordic
-    nordic
 novi sad
     novi sad
 optimal locating method
@@ -561,14 +513,10 @@ overall factor
     overall factor
 p-median problem
     p-median problem
-parking slot assignment problem
-    parking slot assignment problem
-partical swarm optimization
-    partical swarm optimization
-pavement
-    pavement
 performance evaluation
     performance evaluation
+performance indices
+    performance indices
 performance measurement
     performance measurement
 perspectives
@@ -587,8 +535,6 @@ policy support
     policy support
 polluting emissions
     polluting emissions
-port
-    port
 possibilictic linear programming
     possibilictic linear programming
 post-evaluation deliberation
@@ -597,6 +543,8 @@ probability function
     probability function
 profitability
     profitability
+promethee
+    promethee
 public policies
     public policies
 q-methodology
@@ -622,26 +570,22 @@ retailers' point of view
     retailers' point of view
 reverse logistics
     reverse logistics
+robust optimization
+    robust optimization
 rolling horizon
     rolling horizon
-scenario assessment
-    scenario assessment
 scenario planning
     scenario planning
 scheme selection
     scheme selection
-selection
-    selection
 sensitivity analysis
     sensitivity analysis
+sensitivy analysis
+    sensitivy analysis
 serbia
     serbia
-service radius
-    service radius
 sharing resources
     sharing resources
-similarity degree
-    similarity degree
 simulation model
     simulation model
 simulation platform
@@ -672,10 +616,10 @@ stakeholders’ commitment
     stakeholders’ commitment
 stated preference
     stated preference
-storage facilities
-    storage facilities
 strategic planning
     strategic planning
+strategic transport modelling
+    strategic transport modelling
 structural literature review
     structural literature review
 sub-gradient
@@ -698,18 +642,20 @@ sustainable transport
     sustainable transport
 sustainable urban freight transport
     sustainable urban freight transport
-synthetic matrix estimation
-    synthetic matrix estimation
 system dynamics
     system dynamics
 systematic review
     systematic review
+the netherlands
+    the netherlands
 thowa operator
     thowa operator
 time-dependent
     time-dependent
 topsis
     topsis
+tour formation
+    tour formation
 touristic cities
     touristic cities
 traffic
@@ -728,14 +674,8 @@ transport planning
     transport planning
 transport policy
     transport policy
-transportation planning model
-    transportation planning model
 transshipment distribution center
     transshipment distribution center
-triangular fuzzy number
-    triangular fuzzy number
-truck model
-    truck model
 trucks
     trucks
 two-echelon vehicle routing problem
@@ -746,8 +686,6 @@ uncertain environment
     uncertain environment
 urban areas
     urban areas
-urban consolidation
-    urban consolidation
 urban consolidation center
     urban consolidation center
     urban consolidation center (ucc)
@@ -772,8 +710,6 @@ urban distribution center
     urban distribution centers (udc)
 urban distribution centre
     urban distribution centre
-urban facilities
-    urban facilities
 urban freight
     urban freight
 urban freight consolidation center
@@ -788,10 +724,14 @@ urban freight demand models
     urban freight demand models
 urban freight distribution
     urban freight distribution
+urban freight flows
+    urban freight flows
 urban freight transport
     urban freight transport
 urban freight transport agents
     urban freight transport agents
+urban freight transportation demand
+    urban freight transportation demand
 urban goods distribution
     urban goods distribution
 urban goods movement
@@ -804,14 +744,10 @@ urban planning
     urban planning
 urban pollution
     urban pollution
-urban transport
-    urban transport
 urban transportation simulation
     urban transportation simulation
 urban-rural distribution
     urban-rural distribution
-variational inequalities
-    variational inequalities
 vehicle routing
     vehicle routing
 vehicle routing problem
@@ -820,6 +756,8 @@ vehicle routing problem with time windows
     vehicle routing problem with time windows
 virtual pricing
     virtual pricing
+visum modelling
+    visum modelling
 warehouse design
     warehouse design
 well-to-wheel analysis
@@ -828,3 +766,5 @@ westpomeranian region of poland
     westpomeranian region of poland
 yogyakarta special region province
     yogyakarta special region province
+zero-emission zones
+    zero-emission zones

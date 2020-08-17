@@ -8,7 +8,6 @@ import re
 
 import pandas as pd
 
-from techminer.explode import __explode
 from techminer.text import (
     find_string,
     fingerprint,

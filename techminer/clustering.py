@@ -83,8 +83,6 @@ def clustering(
         name_prefix.format(i_cluster) for i_cluster in range(n_clusters)
     ]
 
-    print(cluster_members.index)
-
     row_ids = []
     for row in cluster_members.iterrows():
         if any([not pd.isna(a) for a in row[1]]):
