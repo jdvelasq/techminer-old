@@ -135,13 +135,106 @@
 
 ##################################################################
 ##
-##  #1 OR #2
+##  Búsqueda #3
+##    58 documentos
+##
+##################################################################
+
+(
+  TITLE 
+  ( 
+     (
+         (urban OR mobile) PRE/1 (warehouse* OR depot*)
+     )
+     OR
+     (
+         "micro-consolidation" OR microconsolidation
+     )
+     OR
+     (
+         (
+             (
+                 micro-consolidation 
+                 OR microconsolidation 
+                 OR micro-distribution
+                 OR microdistribution
+                 OR micro-deconsolidation
+                 OR microdeconsolidation
+             ) 
+             PRE/1 
+             (
+                 platform* OR cent*
+             )
+         )
+     )
+     OR
+     (
+         (moving OR mobile) PRE/1 ("cargo distribution" OR "package distribution")
+     )
+     OR
+     (
+         parcel PRE/1 (locker* OR terminal*)
+     )
+  )
+  OR KEY
+  (
+     (
+         (urban OR mobile) PRE/1 (warehouse* OR depot*)
+     )
+     OR
+     (
+         "micro-consolidation" OR microconsolidation
+     )
+     OR
+     (
+         (
+             (
+                 micro-consolidation 
+                 OR microconsolidation 
+                 OR micro-distribution
+                 OR microdistribution
+                 OR micro-deconsolidation
+                 OR microdeconsolidation
+             ) 
+             PRE/1 
+             (
+                 platform* OR cent*
+             )
+         )
+     )
+     OR
+     (
+         (moving OR mobile) PRE/1 ("cargo distribution" OR "package distribution")
+     )
+     OR
+     (
+         parcel PRE/1 (locker* OR terminal*)
+     )
+  )
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##################################################################
+##
+##  #1 OR #2 OR #3
 ##
 ##    180 documentos
 ##
 ##################################################################
 
-( ( TITLE ( ( city  PRE/1  ( consolidation  OR  distribution  OR  freight  OR  logistic  OR  transhipment  OR  terminal )  PRE/1  ( cent*  OR  depot*  OR  platform* ) )  OR  ( urban  PRE/1  ( consolidation  OR  cross*  OR  distribution  OR  freight  OR  logistic  OR  terminal  OR  transhipment )  PRE/1  ( cent*  OR  depot*  OR  platform* ) ) )  OR  KEY ( ( city  PRE/1  ( consolidation  OR  distribution  OR  freight  OR  logistic  OR  transhipment  OR  terminal )  PRE/1  ( cent*  OR  depot*  OR  platform* ) )  OR  ( urban  PRE/1  ( consolidation  OR  cross*  OR  distribution  OR  freight  OR  logistic  OR  terminal  OR  transhipment )  PRE/1  ( cent*  OR  depot*  OR  platform* ) ) ) ) )  OR  ( ( TITLE ( ( urban  OR  city )  PRE/1  ( cross-docking  OR  crossdocking  OR  "cross docking"  OR  terminal ) )  OR  KEY ( ( urban  OR  city )  PRE/1  ( cross-docking  OR  crossdocking  OR  "cross docking"  OR  terminal ) ) ) ) 
+( ( TITLE ( ( urban  OR  city )  PRE/1  ( cross-docking  OR  crossdocking  OR  "cross docking"  OR  terminal ) )  OR  KEY ( ( urban  OR  city )  PRE/1  ( cross-docking  OR  crossdocking  OR  "cross docking"  OR  terminal ) ) ) )  OR  ( ( TITLE ( ( city  PRE/1  ( consolidation  OR  distribution  OR  freight  OR  logistic  OR  transhipment  OR  terminal )  PRE/1  ( cent*  OR  depot*  OR  platform* ) )  OR  ( urban  PRE/1  ( consolidation  OR  cross*  OR  distribution  OR  freight  OR  logistic  OR  terminal  OR  transhipment )  PRE/1  ( cent*  OR  depot*  OR  platform* ) ) )  OR  KEY ( ( city  PRE/1  ( consolidation  OR  distribution  OR  freight  OR  logistic  OR  transhipment  OR  terminal )  PRE/1  ( cent*  OR  depot*  OR  platform* ) )  OR  ( urban  PRE/1  ( consolidation  OR  cross*  OR  distribution  OR  freight  OR  logistic  OR  terminal  OR  transhipment )  PRE/1  ( cent*  OR  depot*  OR  platform* ) ) ) ) )  OR  ( ( TITLE ( ( ( urban  OR  mobile )  PRE/1  ( warehouse*  OR  depot* ) )  OR  ( "micro-consolidation"  OR  microconsolidation )  OR  ( ( ( micro-consolidation  OR  microconsolidation  OR  micro-distribution  OR  microdistribution  OR  micro-deconsolidation  OR  microdeconsolidation )  PRE/1  ( platform*  OR  cent* ) ) )  OR  ( ( moving  OR  mobile )  PRE/1  ( "cargo distribution"  OR  "package distribution" ) )  OR  ( parcel  PRE/1  ( locker*  OR  terminal* ) ) )  OR  KEY ( ( ( urban  OR  mobile )  PRE/1  ( warehouse*  OR  depot* ) )  OR  ( "micro-consolidation"  OR  microconsolidation )  OR  ( ( ( micro-consolidation  OR  microconsolidation  OR  micro-distribution  OR  microdistribution  OR  micro-deconsolidation  OR  microdeconsolidation )  PRE/1  ( platform*  OR  cent* ) ) )  OR  ( ( moving  OR  mobile )  PRE/1  ( "cargo distribution"  OR  "package distribution" ) )  OR  ( parcel  PRE/1  ( locker*  OR  terminal* ) ) ) ) ) 
 
 
 
@@ -152,79 +245,154 @@
 ##
 ##################################################################
 
-#12   Kingdom City Cruise Terminal
+#21   Kingdom City Cruise Terminal
 
-#35   National City Marine Terminal Berth 24-10 Rehabilitation
+#24   A genetic-algorithm based method for storage location 
+      assignments in mobile rack warehouses
 
-#102  Risk assessment modeling of air pollutants emissions in 
+#25   Optimizing Field Productivity by Mobile Warehouse Deployment 
+      Using Evolutionary Algorithms 
+
+#27   Heuristic-based Multiple Mobile Depots Route Planning 
+      for Recharging Persistent Surveillance Robots
+
+#32   Flexible mobile hub for e-bike sharing and cruise tourism: 
+      A case study
+
+#34   Decentralized Multiple Mobile Depots Route Planning for 
+      Replenishing Persistent Surveillance Robots
+
+#53   Network-Embedding Based Storage Location Assignment in 
+      Mobile Rack Warehouse
+
+#55   National City Marine Terminal Berth 24-10 Rehabilitation
+
+#74   Urban vehicle access regulations 
+
+#77   Built to stock. Versatility of hennebique’s urban 
+      warehouses in Belgium (1892–1914)
+
+#80   The simulation and evaluation method and technology of 
+      passenger flow in urban rail terminal
+
+#104  Implementation Schemes for Electrified Bus Fleets at 
+      Intra-Urban Depots with Optimized Energy Procurements 
+      in Virtual Power Plant Operations
+
+#113  Dynamic scheduling of mobile-robotic warehouse 
+      logistics system
+
+#140  Risk assessment modeling of air pollutants emissions in 
       Beihaghi Terminal
 
-#109  Pavement life cycle cost analysis for city logistics
+#147  Pavement life cycle cost analysis for city logistics
 
-#132  Concentrations, sources and health risk assessments of 
+#151  High capacity trucks serving as mobile depots for waste 
+      collection in iot-enabled smart cities
+
+#152  Design and analysis of urban maglev depot using simulation 
+      model
+
+#153  Application of lean six sigma process improvement at 
+      tobyhanna army depot
+
+#155  Using containers as storage facilities in humanitarian 
+      logistics
+
+#160  Research on construction of urban logistics information platform
+
+#178  Concentrations, sources and health risk assessments of 
       heavy metals in ground surface dust from urban bus terminals 
       of Fuzhou city
 
-#138  Final technical paper-EU-00258 the nordic intelligent 
+#184  Using rail to make urban freight distributionmore sustainable
+
+#185  Final technical paper-EU-00258 the nordic intelligent 
       truck hub-"NiHub"
 
-#139  Location of urban logistic terminals as hub location 
+#186  Location of urban logistic terminals as hub location 
       problem
 
-#145  Locating urban logistics terminals and shopping centres 
+#189  Study on the prediction of air pollutants in urban oil 
+      depot based on grey dynamic model
+
+#193  Locating urban logistics terminals and shopping centres 
       in a Chinese city
 
+#196  Design of athens' tram and urban bus depots surrounding areas 
+      based on noise levels monitoring 
 
-#154  Locating intra city bus terminals using fuzzy logic with 
+#204  Locating intra city bus terminals using fuzzy logic with 
       emphasis on city development and community alliance: Case 
       study of Tasuj
 
-#156  Efficiency evaluation of urban transit terminals based on the 
+#206  Efficiency evaluation of urban transit terminals based on the 
       cloud model
 
-#159  Analyses of the transfer waiting time in urban public 
+#209  Analyses of the transfer waiting time in urban public 
       transportation terminals
 
-#162  Analysis of queue system in urban transportation terminal
+#210  Minimizing the completion time of the transfer operations in 
+      a central parcel consolidation terminal with 
+      unequal-batch-size inbound trailers
 
-#163  Geotechnical considerations for national city marine terminal 
+#212  Modelling impacts of urban freight terminal location decisions
+
+#213  Analysis of queue system in urban transportation terminal
+
+#214  Geotechnical considerations for national city marine terminal 
       development
 
-#164  New York city cruise terminal developments
+#215  New York city cruise terminal developments
 
-#165  Application of fuzzy multi-attribute decision making method 
+#216  Application of fuzzy multi-attribute decision making method 
       in urban transportation terminal scheme optimum selection
 
-#167  Port planning: Texas City international terminal
+#217  A variable neighborhood descent algorithm for a real waste 
+      collection problem with mobile depots
 
-#169  A GIS-based planning approach to locating urban rail terminals
+#218  Simulation-based scheduling for parcel consolidation 
+      terminals: A comparison of iterative improvement and 
+      simulated annealing
+      
+#220  ntelligent cache management for mobile data warehouse systems      
 
-#170  Study on method of layout and siting of inter city bus terminal
+#221  Port planning: Texas City international terminal
 
-#171  Wireless relay networks
+#223  Pure-push incremental view maintenance algorithm for 
+      mobile data warehouses
 
-#172  Aircraft solvent depainting alternatives feasibility 
+#224  A GIS-based planning approach to locating urban rail terminals
+
+#225  Study on method of layout and siting of inter city bus terminal
+
+#226  Incremental view update for a mobile data warehouse
+
+#227  Wireless relay networks
+
+#228  Aircraft solvent depainting alternatives feasibility 
       demonstration Oklahoma City Air Logistics Center, Tinker AFB, OK 
 
-#173  Oklahoma City Air Logistics Center (USAF) aging aircraft 
+#229  Oklahoma City Air Logistics Center (USAF) aging aircraft 
       corrosion program
 
-#174  NEW AIR TERMINAL IN THE HEART OF WARSAW.
+#230  NEW AIR TERMINAL IN THE HEART OF WARSAW.
 
-#175  AUTOMATIC TESTING OF CONSTANT SPEED DRIVES.
+#231  AUTOMATIC TESTING OF CONSTANT SPEED DRIVES.
 
-#176  OKLAHOMA CITY AIR LOGISTICS CENTER APPROACH TO EMBEDDED COMPUTER 
+#232  OKLAHOMA CITY AIR LOGISTICS CENTER APPROACH TO EMBEDDED COMPUTER 
       SYSTEM SUPPORT.
 
-#177  An inter-city terminal access modal choice model
+#233  An inter-city terminal access modal choice model
 
-#178  SIMULATION STUDY EXAMINING THE BENEFITS OF AN URBAN CONSOLIDATED 
+#234  SIMULATION STUDY EXAMINING THE BENEFITS OF AN URBAN CONSOLIDATED 
       TERMINAL.
 
-#179  LOCATION PRINCIPLE OF URBAN TERMINAL DISTRIBUTION.
+#235  LOCATION PRINCIPLE OF URBAN TERMINAL DISTRIBUTION.
 
-#180  Optimization of urban transportation terminal network
+#236  Optimization of urban transportation terminal network
 
+#237  A mobile warehouse
 
 
 

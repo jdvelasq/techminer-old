@@ -1,3 +1,18 @@
+"case survey methodology"
+    "case survey methodology"
+"e-commerce"
+    "e-commerce"
+    e-commerce
+"location problems"
+    "location problems"
+"parcel lockers location"
+    "parcel lockers location"
+"parcel lockers"
+    "parcel lockers"
+    parcel locker
+    parcel lockers
+activity chains
+    activity chains
 adaptive dynamic programming
     adaptive dynamic programming
 agent-based modelling
@@ -14,6 +29,18 @@ approximate dynamic programming
     approximate dynamic programming
 assessment
     assessment
+automated collection point (acp)
+    automated collection point (acp)
+automated parcel delivery terminals
+    automated parcel delivery terminals
+automated parcel lockers
+    automated parcel lockers
+autonomous vehicles
+    autonomous vehicles
+b2c
+    b2c
+b2c e-commerce
+    b2c e-commerce
 barriers
     barriers
 battery electric vehicles
@@ -34,6 +61,8 @@ business model
     business models
 bwm
     bwm
+c51 mcu
+    c51 mcu
 cap and trade
     cap and trade
 carbon credit points
@@ -41,10 +70,12 @@ carbon credit points
 carbon emission
     carbon emission
     carbon emissions
-carbon footprint
-    carbon footprint
 cargo bikes
     cargo bikes
+cargo tricycles
+    cargo tricycles
+carrier-deployed unmanned air vehicle
+    carrier-deployed unmanned air vehicle
 carriers
     carriers
 case studies
@@ -69,18 +100,24 @@ city logistics centers
     city logistics centers
 city logistics centre
     city logistics centre
+city logistics management
+    city logistics management
 classification
     classification
 cluster
     cluster
 co2 emissions
     co2 emissions
+co2 impact
+    co2 impact
 collaboration
     collaboration
 collaborative logistics
     collaborative logistics
 collaborative urban logistics
     collaborative urban logistics
+collection and delivery point (cdp)
+    collection and delivery point (cdp)
 combinatorial optimization
     combinatorial optimization
 combined approach
@@ -89,14 +126,10 @@ comparative analysis
     comparative analysis
 congestion
     congestion
-congestion charging
-    congestion charging
 consolidation centres
     consolidation centres
 consolidation strategies
     consolidation strategies
-construction
-    construction
 construction innovation
     construction innovation
 content analysis
@@ -115,20 +148,34 @@ corporate social responsibility
     corporate social responsibility
 cost allocation
     cost allocation
+cost-benefit analysis
+    cost-benefit analysis
 cost-effective distance of transport
     cost-effective distance of transport
+costs
+    costs
 criteria
     criteria
 critical factors
     critical factors
+cross-docking
+    cross-docking
+crowdshipping
+    crowdshipping
 crowdsourcing
     crowdsourcing
+customer choices
+    customer choices
+customer pickup
+    customer pickup
 customer satisfaction
     customer satisfaction
 customer satisfaction index
     customer satisfaction index
 customer service
     customer service
+customer value
+    customer value
 decision hierarchy structure
     decision hierarchy structure
 decision levels
@@ -141,16 +188,21 @@ decision-making process
     decision-making process
 decomposition strategy
     decomposition strategy
+delivery services
+    delivery services
 delphi method
     delphi method
 demand quantity
     demand quantity
+design for service
+    design for service
 diffusion of innovation theory
     diffusion of innovation theory
 dijkstra
     dijkstra
 discrete event simulation
     discrete event simulation
+    discrete-event simulation
 dispatching problem
     dispatching problem
 distance measures
@@ -166,8 +218,10 @@ distribution networks
     distribution networks
 double auction
     double auction
-e-commerce
-    e-commerce
+dummy regression
+    dummy regression
+dynamic location planning
+    dynamic location planning
 economic assessment
     economic assessment
 edas
@@ -179,10 +233,16 @@ electric tricycles
 electric vehicle
     electric vehicle
     electric vehicles
+electronic commerce
+    electronic commerce
+empirical analysis
+    empirical analysis
 end consumer movements
     end consumer movements
 energy consumption
     energy consumption
+energy efficiency
+    energy efficiency
 engineering method
     engineering method
 enter-of-gravity model
@@ -205,6 +265,8 @@ evolutionary game theory
     evolutionary game theory
 experimental economics
     experimental economics
+express demand region
+    express demand region
 facility layout
     facility layout
 facility location
@@ -217,6 +279,8 @@ financial balance
     financial balance
 flow consolidation schemes
     flow consolidation schemes
+focus groups
+    focus groups
 freight consolidation
     freight consolidation
 freight consolidation center
@@ -238,8 +302,6 @@ freight terminals
 freight transport
     freight transport
     freight transportation
-freight trip generation
-    freight trip generation
 freight vehicle routing
     freight vehicle routing
 fruit and vegetable distribution
@@ -276,6 +338,10 @@ genetic method
 geographic information system
     geographic information system
     geographic information systems (gis)
+gis
+    gis
+gprs
+    gprs
 grading
     grading
 greedy algorithm
@@ -288,16 +354,24 @@ green vehicle
     green vehicle
 greenhouse gas emissions
     greenhouse gas emissions
+gsm
+    gsm
 heterogeneous fleet
     heterogeneous fleet
+heuristics
+    heuristics
 historical cities
     historical cities
+home deliveries
+    home deliveries
 horizontal cooperation
     horizontal cooperation
 hybrid spatial-fuzzy multi-criteria decision-making
     hybrid spatial-fuzzy multi-criteria decision-making
 hypercube model
     hypercube model
+ils
+    ils
 impact assessment
     impact assessment
 implementation
@@ -310,16 +384,18 @@ inner-city
     inner-city
 innovative solution
     innovative solution
+input data
+    input data
 integer programming
     integer programming
 integrated maintenance
     integrated maintenance
+intelligent extraction mailbox
+    intelligent extraction mailbox
 inter-organisational innovation
     inter-organisational innovation
 inter-organizational interaction
     inter-organizational interaction
-intermodal freight terminal
-    intermodal freight terminal
 intermodal terminals
     intermodal terminals
 internet of things
@@ -328,8 +404,14 @@ interoperability
     interoperability
 intervention mechanism
     intervention mechanism
+inventory
+    inventory
+iot
+    iot
 iterative method
     iterative method
+its
+    its
 joint decision
     joint decision
 joint delivery systems
@@ -345,7 +427,8 @@ lamilo project
 last mile
     last mile
     last-mile
-last mile delivery
+last mile deliveries
+    last mile deliveries
     last mile delivery
     last-mile deliveries
 last mile distribution
@@ -384,12 +467,15 @@ location factors
 location plan
     location plan
     location planning
+location routing
+    location routing
+    location-routing
 location routing problem
     location routing problem
 location selection
     location selection
-location-routing
-    location-routing
+location set-covering model
+    location set-covering model
 logistic system
     logistic system
     logistics system
@@ -405,12 +491,12 @@ logistics distribution center
     logistics distribution center
 logistics engineering
     logistics engineering
-logistics information platform
-    logistics information platform
 logistics platform
     logistics platform
 logistics pooling
     logistics pooling
+logistics services outsourcing
+    logistics services outsourcing
 logistics simulations
     logistics simulations
 logistics sprawl
@@ -419,8 +505,6 @@ long distance transport
     long distance transport
 low carbon
     low carbon
-low emission zones
-    low emission zones
 lucca
     lucca
 mathematical model
@@ -429,18 +513,34 @@ matheuristics
     matheuristics
 medium-sized cities
     medium-sized cities
+meeting ant colony optimization
+    meeting ant colony optimization
 metaheuristics
     metaheuristics
 micro-consolidation
     micro-consolidation
 micro-simulation
     micro-simulation
+mixed integer linear programming
+    mixed integer linear programming
 mixed-integer programming
     mixed-integer programming
+mobile depot
+    mobile depot
+    mobile depots
+mobile racks
+    mobile racks
+mobile warehouse
+    mobile warehouse
+    mobile warehouses
+mobility behaviour
+    mobility behaviour
 modeling urban distribution center
     modeling urban distribution center
 modelization
     modelization
+    modelling
+    models
 modified customer satisfaction index
     modified customer satisfaction index
 moves
@@ -469,8 +569,6 @@ multi-criteria evaluation framework
     multi-criteria evaluation framework
 multi-criteria objective
     multi-criteria objective
-multi-modal urban distribution centre
-    multi-modal urban distribution centre
 multi-objective mixed-integer linear programming
     multi-objective mixed-integer linear programming
 multi-objective optimization
@@ -497,12 +595,18 @@ network flow problem
     network flow problem
 network logistics
     network logistics
+neural networks
+    neural networks
 non-motorized modes
     non-motorized modes
 novi sad
     novi sad
+optimal localization
+    optimal localization
 optimal locating method
     optimal locating method
+optimal location
+    optimal location
 optimization
     optimization
 optimization of freight transport
@@ -511,8 +615,23 @@ order sharing
     order sharing
 overall factor
     overall factor
+p-median model
+    p-median model
 p-median problem
     p-median problem
+packstations
+    packstations
+parcel delivery
+    parcel delivery
+parcel delivery industry
+    parcel delivery industry
+parcel delivery service
+    parcel delivery service
+    parcel delivery service (pds)
+parcel transport
+    parcel transport
+parcel transshipment operations
+    parcel transshipment operations
 performance evaluation
     performance evaluation
 performance indices
@@ -521,6 +640,8 @@ performance measurement
     performance measurement
 perspectives
     perspectives
+picker routing
+    picker routing
 planning and evaluation methods
     planning and evaluation methods
 planning and layout
@@ -533,7 +654,8 @@ policy evaluation
     policy evaluation
 policy support
     policy support
-polluting emissions
+pollutant emissions
+    pollutant emissions
     polluting emissions
 possibilictic linear programming
     possibilictic linear programming
@@ -545,18 +667,22 @@ profitability
     profitability
 promethee
     promethee
+public health
+    public health
 public policies
     public policies
 q-methodology
     q-methodology
+quasi-birth-and-death (qbd) process
+    quasi-birth-and-death (qbd) process
 queuing location problem
     queuing location problem
 queuing theory
     queuing theory
 r and shiny
     r and shiny
-rail transport
-    rail transport
+range constraint
+    range constraint
 receivers
     receivers
 region multi-level logistics distribution
@@ -574,16 +700,28 @@ robust optimization
     robust optimization
 rolling horizon
     rolling horizon
+safety
+    safety
 scenario planning
     scenario planning
+scheduling
+    scheduling
 scheme selection
     scheme selection
+self-service technology
+    self-service technology
+semi-structured interviews
+    semi-structured interviews
 sensitivity analysis
     sensitivity analysis
 sensitivy analysis
     sensitivy analysis
+sequencing
+    sequencing
 serbia
     serbia
+set-covering problem
+    set-covering problem
 sharing resources
     sharing resources
 simulation model
@@ -616,16 +754,20 @@ stakeholders’ commitment
     stakeholders’ commitment
 stated preference
     stated preference
+stock-out costs
+    stock-out costs
 strategic planning
     strategic planning
-strategic transport modelling
-    strategic transport modelling
 structural literature review
     structural literature review
 sub-gradient
     sub-gradient
 subcontracting strategy
     subcontracting strategy
+supply chain design
+    supply chain design
+supply chain management
+    supply chain management
 sustainability
     sustainability
 sustainability disciplines
@@ -636,8 +778,12 @@ sustainable collaborative network
     sustainable collaborative network
 sustainable development
     sustainable development
+sustainable economy
+    sustainable economy
 sustainable freight transport
     sustainable freight transport
+sustainable logistics
+    sustainable logistics
 sustainable transport
     sustainable transport
 sustainable urban freight transport
@@ -646,6 +792,8 @@ system dynamics
     system dynamics
 systematic review
     systematic review
+terminal
+    terminal
 the netherlands
     the netherlands
 thowa operator
@@ -664,6 +812,10 @@ traffic wardens
     traffic wardens
 transferability
     transferability
+transferability of urban freight transport measures
+    transferability of urban freight transport measures
+transitions
+    transitions
 transport demand analysis
     transport demand analysis
 transport externalities
@@ -674,16 +826,28 @@ transport planning
     transport planning
 transport policy
     transport policy
+transportation
+    transportation
 transshipment distribution center
     transshipment distribution center
+transshipment terminal
+    transshipment terminal
 trucks
     trucks
+turnover rate
+    turnover rate
+two-echelon vehicle routing
+    two-echelon vehicle routing
 two-echelon vehicle routing problem
     two-echelon vehicle routing problem
+two-tier distribution systems
+    two-tier distribution systems
 udc
     udc
 uncertain environment
     uncertain environment
+unmanned parcel locker
+    unmanned parcel locker
 urban areas
     urban areas
 urban consolidation center
@@ -724,8 +888,6 @@ urban freight demand models
     urban freight demand models
 urban freight distribution
     urban freight distribution
-urban freight flows
-    urban freight flows
 urban freight transport
     urban freight transport
 urban freight transport agents
@@ -748,6 +910,8 @@ urban transportation simulation
     urban transportation simulation
 urban-rural distribution
     urban-rural distribution
+user classification: parcel lockers
+    user classification: parcel lockers
 vehicle routing
     vehicle routing
 vehicle routing problem
@@ -756,10 +920,10 @@ vehicle routing problem with time windows
     vehicle routing problem with time windows
 virtual pricing
     virtual pricing
-visum modelling
-    visum modelling
 warehouse design
     warehouse design
+warehousing
+    warehousing
 well-to-wheel analysis
     well-to-wheel analysis
 westpomeranian region of poland

@@ -215,123 +215,6 @@ class Model:
             figsize=(self.width, self.height),
         )
 
-        # if len(self.X_.columns) > 50:
-        #     return "Maximum number of nodes exceded!"
-
-        # ## Networkx
-        # fig = pyplot.Figure(figsize=(self.width, self.height))
-        # ax = fig.subplots()
-        # G = nx.Graph(ax=ax)
-        # G.clear()
-
-        # ## Data preparation
-        # terms = self.X_.columns.tolist()
-        # node_sizes = cmn.counters_to_node_sizes(x=terms)
-        # node_colors = cmn.counters_to_node_colors(
-        #     x=terms, cmap=pyplot.cm.get_cmap(self.cmap)
-        # )
-
-        # ## Add nodes
-        # G.add_nodes_from(terms)
-
-        # ## node positions
-        # if self.layout == "Spring":
-        #     pos = nx.spring_layout(G, iterations=self.nx_iterations)
-        # else:
-        #     pos = {
-        #         "Circular": nx.circular_layout,
-        #         "Kamada Kawai": nx.kamada_kawai_layout,
-        #         "Planar": nx.planar_layout,
-        #         "Random": nx.random_layout,
-        #         "Spectral": nx.spectral_layout,
-        #         "Spring": nx.spring_layout,
-        #         "Shell": nx.shell_layout,
-        #     }[self.layout](G)
-
-        # ## links
-        # m = self.X_.stack().to_frame().reset_index()
-        # m = m[m.level_0 < m.level_1]
-        # m.columns = ["from_", "to_", "link_"]
-        # m = m[m.link_ > 0.0]
-        # m = m.reset_index(drop=True)
-
-        # d = {
-        #     0: {"width": 4, "style": "solid", "edge_color": "k"},
-        #     1: {"width": 2, "style": "solid", "edge_color": "k"},
-        #     2: {"width": 1, "style": "dashed", "edge_color": "gray"},
-        #     3: {"width": 1, "style": "dotted", "edge_color": "gray"},
-        # }
-
-        # n_edges_0 = 0
-        # n_edges_25 = 0
-        # n_edges_50 = 0
-        # n_edges_75 = 0
-
-        # for idx in range(len(m)):
-
-        #     edge = [(m.from_[idx], m.to_[idx])]
-        #     key = (
-        #         0
-        #         if m.link_[idx] > 0.75
-        #         else (1 if m.link_[idx] > 0.50 else (2 if m.link_[idx] > 0.25 else 3))
-        #     )
-
-        #     n_edges_75 += 1 if m.link_[idx] >= 0.75 else 0
-        #     n_edges_50 += 1 if m.link_[idx] >= 0.50 and m.link_[idx] < 0.75 else 0
-        #     n_edges_25 += 1 if m.link_[idx] >= 0.25 and m.link_[idx] < 0.50 else 0
-        #     n_edges_0 += 1 if m.link_[idx] > 0 and m.link_[idx] < 0.25 else 0
-
-        #     nx.draw_networkx_edges(
-        #         G,
-        #         pos=pos,
-        #         ax=ax,
-        #         node_size=1,
-        #         with_labels=False,
-        #         edgelist=edge,
-        #         **(d[key])
-        #     )
-
-        # ## nodes
-        # nx.draw_networkx_nodes(
-        #     G,
-        #     pos=pos,
-        #     ax=ax,
-        #     edge_color="k",
-        #     nodelist=terms,
-        #     node_size=node_sizes,
-        #     node_color=node_colors,
-        #     node_shape="o",
-        #     edgecolors="k",
-        #     linewidths=1,
-        # )
-
-        # ## node labels
-        # cmn.ax_text_node_labels(
-        #     ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes
-        # )
-
-        # ## Figure size
-        # cmn.ax_expand_limits(ax)
-
-        # ##
-        # legend_lines = [
-        #     Line2D([0], [0], color="k", linewidth=4, linestyle="-"),
-        #     Line2D([0], [0], color="k", linewidth=2, linestyle="-"),
-        #     Line2D([0], [0], color="gray", linewidth=1, linestyle="--"),
-        #     Line2D([0], [0], color="gray", linewidth=1, linestyle=":"),
-        # ]
-
-        # text_75 = "> 0.75 ({})".format(n_edges_75)
-        # text_50 = "0.50-0.75 ({})".format(n_edges_50)
-        # text_25 = "0.25-0.50 ({})".format(n_edges_25)
-        # text_0 = "< 0.25 ({})".format(n_edges_0)
-
-        # ax.legend(legend_lines, [text_75, text_50, text_25, text_0])
-
-        # ax.axis("off")
-
-        # return fig
-
     def communities(self):
         self.fit()
         return Network(
@@ -350,51 +233,6 @@ class Model:
             clustering=self.clustering,
         ).pyvis_plot()
 
-        # if len(self.X_.columns) > 50:
-        #     return "Maximum number of nodes exceded!"
-
-        # G = Network("700px", "870px", notebook=True)
-
-        # ## Data preparation
-        # terms = self.X_.columns.tolist()
-        # node_sizes = cmn.counters_to_node_sizes(x=terms)
-        # node_colors = cmn.counters_to_node_colors(
-        #     x=terms, cmap=pyplot.cm.get_cmap(self.cmap)
-        # )
-        # node_colors = [matplotlib.colors.rgb2hex(t[:3]) for t in node_colors]
-
-        # ## Add nodes
-        # for i_term, term in enumerate(terms):
-        #     G.add_node(
-        #         term, size=node_sizes[i_term] / 100, color=node_colors[i_term],
-        #     )
-
-        # ## links
-        # m = self.X_.stack().to_frame().reset_index()
-        # m = m[m.level_0 < m.level_1]
-        # m.columns = ["from_", "to_", "link_"]
-        # m = m[m.link_ > 0.0]
-        # m = m.reset_index(drop=True)
-
-        # d = {
-        #     0: {"width": 4, "style": "solid", "color": "gray"},
-        #     1: {"width": 2, "style": "solid", "color": "gray"},
-        #     2: {"width": 1, "style": "dashed", "color": "lightgray"},
-        #     3: {"width": 1, "style": "dotted", "color": "lightgray"},
-        # }
-
-        # for idx in range(len(m)):
-
-        #     key = (
-        #         0
-        #         if m.link_[idx] > 0.75
-        #         else (1 if m.link_[idx] > 0.50 else (2 if m.link_[idx] > 0.25 else 3))
-        #     )
-
-        #     G.add_edge(m.from_[idx], m.to_[idx], physics=False, **(d[key]))
-
-        # return G.show("net.html")
-
 
 ###############################################################################
 ##
@@ -402,20 +240,22 @@ class Model:
 ##
 ###############################################################################
 
-COLUMNS = [
-    "Authors",
-    "Countries",
-    "Institutions",
-    "Author_Keywords",
-    "Index_Keywords",
-    "Abstract_words_CL",
-    "Abstract_words",
-    "Title_words_CL",
-    "Title_words",
-    "Affiliations",
-    "Author_Keywords_CL",
-    "Index_Keywords_CL",
-]
+COLUMNS = sorted(
+    [
+        "Authors",
+        "Countries",
+        "Institutions",
+        "Author_Keywords",
+        "Index_Keywords",
+        "Abstract_words_CL",
+        "Abstract_words",
+        "Title_words_CL",
+        "Title_words",
+        "Affiliations",
+        "Author_Keywords_CL",
+        "Index_Keywords_CL",
+    ]
+)
 
 
 class DASHapp(DASH, Model):

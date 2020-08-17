@@ -124,7 +124,7 @@ def max_items():
         "arg": "max_items",
         "desc": "Max items:",
         "widget": widgets.Dropdown(
-            options=list(range(5, 101, 5)) + list(range(100, 3001, 100)),
+            options=list(range(5, 100, 5)) + list(range(100, 3001, 100)),
             layout=Layout(width="55%"),
         ),
     }
@@ -511,3 +511,40 @@ class DASH:
             if x == name:
                 self.panel_widgets[index]["widget"].options = options
                 return
+
+    def enable_disable_clustering_options(self):
+
+        if self.clustering_method in ["Affinity Propagation"]:
+            self.set_disabled("N Clusters:")
+            self.set_disabled("Affinity:")
+            self.set_disabled("Linkage:")
+
+        if self.clustering_method in ["Agglomerative Clustering"]:
+            self.set_enabled("N Clusters:")
+            self.set_enabled("Affinity:")
+            self.set_enabled("Linkage:")
+
+        if self.clustering_method in ["Birch"]:
+            self.set_enabled("N Clusters:")
+            self.set_disabled("Affinity:")
+            self.set_disabled("Linkage:")
+
+        if self.clustering_method in ["DBSCAN"]:
+            self.set_disabled("N Clusters:")
+            self.set_disabled("Affinity:")
+            self.set_disabled("Linkage:")
+
+        if self.clustering_method in ["Feature Agglomeration"]:
+            self.set_enabled("N Clusters:")
+            self.set_enabled("Affinity:")
+            self.set_enabled("Linkage:")
+
+        if self.clustering_method in ["KMeans"]:
+            self.set_enabled("N Clusters:")
+            self.set_disabled("Affinity:")
+            self.set_disabled("Linkage:")
+
+        if self.clustering_method in ["Mean Shift"]:
+            self.set_disabled("N Clusters:")
+            self.set_disabled("Affinity:")
+            self.set_disabled("Linkage:")

@@ -228,14 +228,13 @@ class DASHapp(DASH, Model):
             ),
             dash.min_occurrence(),
             dash.max_items(),
+            dash.random_state(),
             dash.separator(text="Decomposition"),
             dash.dropdown(desc="Apply to:", options=["TF matrix", "TF*IDF matrix",],),
             dash.dropdown(
                 desc="Method:",
                 options=["Factor Analysis", "PCA", "Fast ICA", "SVD", "MDS"],
             ),
-            ## dash.n_components(), # n_components = 20
-            dash.random_state(),
             dash.separator(text="Clustering"),
             dash.clustering_method(),
             dash.n_clusters(m=3, n=50, i=1),
@@ -255,7 +254,7 @@ class DASHapp(DASH, Model):
 
         DASH.interactive_output(self, **kwargs)
 
-        if self.menu == "Memberships":
+        if self.menu == "Cluster members":
             self.set_disabled("X-axis:")
             self.set_disabled("Y-axis:")
             self.set_disabled("Width:")
@@ -267,47 +266,7 @@ class DASHapp(DASH, Model):
             self.set_enabled("Width:")
             self.set_enabled("Height:")
 
-        if self.clustering_method in ["Affinity Propagation"]:
-            self.set_disabled("N Clusters:")
-            self.set_disabled("Affinity:")
-            self.set_disabled("Linkage:")
-            #  self.set_enabled("Random State:")
-
-        if self.clustering_method in ["Agglomerative Clustering"]:
-            self.set_enabled("N Clusters:")
-            self.set_enabled("Affinity:")
-            self.set_enabled("Linkage:")
-            # self.set_disabled("Random State:")
-
-        if self.clustering_method in ["Birch"]:
-            self.set_enabled("N Clusters:")
-            self.set_disabled("Affinity:")
-            self.set_disabled("Linkage:")
-            # self.set_disabled("Random State:")
-
-        if self.clustering_method in ["DBSCAN"]:
-            self.set_disabled("N Clusters:")
-            self.set_disabled("Affinity:")
-            self.set_disabled("Linkage:")
-            # self.set_disabled("Random State:")
-
-        if self.clustering_method in ["Feature Agglomeration"]:
-            self.set_enabled("N Clusters:")
-            self.set_enabled("Affinity:")
-            self.set_enabled("Linkage:")
-            #  self.set_disabled("Random State:")
-
-        if self.clustering_method in ["KMeans"]:
-            self.set_enabled("N Clusters:")
-            self.set_disabled("Affinity:")
-            self.set_disabled("Linkage:")
-            #  self.set_disabled("Random State:")
-
-        if self.clustering_method in ["Mean Shift"]:
-            self.set_disabled("N Clusters:")
-            self.set_disabled("Affinity:")
-            self.set_disabled("Linkage:")
-            #  self.set_disabled("Random State:")
+        self.enable_disable_clustering_options()
 
         self.set_options(name="X-axis:", options=list(range(self.n_components)))
         self.set_options(name="Y-axis:", options=list(range(self.n_components)))
