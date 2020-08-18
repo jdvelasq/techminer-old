@@ -69,6 +69,37 @@ def cmap(arg="cmap", desc="Colormap:"):
     }
 
 
+def color_scheme():
+    return {
+        "arg": "color_scheme",
+        "desc": "Color Scheme:",
+        "widget": widgets.Dropdown(
+            options=[
+                "4 Quadrants",
+                "Clusters",
+                "Greys",
+                "Purples",
+                "Blues",
+                "Greens",
+                "Oranges",
+                "Reds",
+            ],
+            layout=Layout(width="55%"),
+        ),
+    }
+
+
+def decomposition_method():
+    return {
+        "arg": "decomposition_method",
+        "desc": "Decompostion method:",
+        "widget": widgets.Dropdown(
+            options=["Factor Analysis", "PCA", "Fast ICA", "SVD"],
+            layout=Layout(width="55%"),
+        ),
+    }
+
+
 def dropdown(desc, options):
     arg = desc.replace(":", "").replace(" ", "_").replace("-", "_").lower()
     return {
@@ -145,7 +176,7 @@ def min_occurrence():
         "arg": "min_occurrence",
         "desc": "Min occurrence:",
         "widget": widgets.Dropdown(
-            options=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], layout=Layout(width="55%"),
+            options=list(range(1, 21)), layout=Layout(width="55%"),
         ),
     }
 
@@ -195,7 +226,7 @@ def n_components():
         "arg": "n_components",
         "desc": "N components:",
         "widget": widgets.Dropdown(
-            options=list(range(2, 21)), layout=Layout(width="55%"),
+            options=list(range(2, 11)), layout=Layout(width="55%"),
         ),
     }
 
@@ -308,11 +339,13 @@ def x_axis(n=10):
     }
 
 
-def y_axis(n=10):
+def y_axis(n=10, value=1):
     return {
         "arg": "y_axis",
         "desc": "Y-axis:",
-        "widget": widgets.Dropdown(options=list(range(n)), layout=Layout(width="55%"),),
+        "widget": widgets.Dropdown(
+            options=list(range(n)), value=1, layout=Layout(width="55%"),
+        ),
     }
 
 
@@ -548,3 +581,4 @@ class DASH:
             self.set_disabled("N Clusters:")
             self.set_disabled("Affinity:")
             self.set_disabled("Linkage:")
+

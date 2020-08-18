@@ -1,5 +1,4 @@
 import matplotlib.pyplot as pyplot
-from matplotlib.lines import Line2D
 
 from techminer.expand_ax_limits import expand_ax_limits
 

@@ -230,7 +230,7 @@
 ##
 ##  #1 OR #2 OR #3
 ##
-##    180 documentos
+##    237 documentos
 ##
 ##################################################################
 
@@ -274,6 +274,8 @@
 
 #80   The simulation and evaluation method and technology of 
       passenger flow in urban rail terminal
+
+#94   Sequencing of picking orders in mobile rack warehouses
 
 #104  Implementation Schemes for Electrified Bus Fleets at 
       Intra-Urban Depots with Optimized Energy Procurements 
@@ -395,27 +397,4 @@
 #237  A mobile warehouse
 
 
-
-
-
-city logistics 48:510	48
-urban consolidation centre 18:288	18
-urban freight transport 14:177	14
-urban consolidation center 12:080	12
-urban distribution center 11:219	11
-urban consolidation centres 10:095	10
-urban logistics 09:018	9
-sustainability 08:222	8
-urban distribution centers 08:021	8
-location selection 07:121	7
-urban distribution centre 06:030	6
-urban consolidation centers 06:029	6
-freight transport 04:132	4
-urban distribution 04:024	4
-logistics 04:016	4
-collaboration 04:003	4
-freight consolidation 03:022	3
-last mile delivery 03:021	3
-business model 03:020	3
-ahp 03:009	3
 

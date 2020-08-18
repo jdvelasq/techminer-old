@@ -15,7 +15,7 @@ from matplotlib.lines import Line2D
 from sklearn.decomposition import PCA, FactorAnalysis, FastICA, TruncatedSVD
 from techminer.clustering import clustering
 from sklearn.manifold import MDS
-from scipy.spatial import ConvexHull
+
 import matplotlib.pyplot as pyplot
 
 import techminer.common as cmn
@@ -24,8 +24,8 @@ from techminer.dashboard import DASH
 from techminer.tfidf import TF_matrix, TFIDF_matrix
 from techminer.normalize_network import normalize_network
 from techminer.limit_to_exclude import limit_to_exclude
-
-from matplotlib import patches
+from techminer.conceptual_structure_map import conceptual_structure_map
+from techminer.xy_clusters_plot import xy_clusters_plot
 
 
 ###############################################################################
@@ -69,14 +69,14 @@ class Model:
         )
 
         #
-        # 4.-- Add counters to axes
+        # 3.-- Add counters to axes
         #
         TF_matrix_ = cmn.add_counters_to_axis(
             X=TF_matrix_, axis=1, data=self.data, column=self.column
         )
 
         #
-        # 3.-- Select top terms
+        # 4.-- Select top terms
         #
         TF_matrix_ = cmn.sort_axis(
             data=TF_matrix_, num_documents=True, axis=1, ascending=False
@@ -88,23 +88,26 @@ class Model:
             TF_matrix_ = TF_matrix_.loc[rows.index, :]
 
         #
-        # 3.-- Co-occurrence matrix and normalization
+        # 5.-- Co-occurrence matrix and normalization
         #
         M = np.matmul(TF_matrix_.transpose().values, TF_matrix_.values)
         M = pd.DataFrame(M, columns=TF_matrix_.columns, index=TF_matrix_.columns)
         M = normalize_network(M, normalization=self.normalization)
 
         #
-        # 4.-- Dissimilarity matrix
+        # 6.-- Dissimilarity matrix
         #
-        if self.normalization == "None":
-            M = M.max().max() - M
-        else:
-            M = 1 - M
-            for i in M.columns.tolist():
-                M.at[i, i] = 0.0
+        M = 1 - M
+        for i in M.columns.tolist():
+            M.at[i, i] = 0.0
+
         #
-        # 5.-- Factor decomposition
+        # 5.-- Number of factors
+        #
+        # self.n_components = 2 if self.decomposition_method == "MDS" else 10
+
+        #
+        # 6.-- Factor decomposition
         #
         model = {
             "Factor Analysis": FactorAnalysis,
@@ -112,34 +115,30 @@ class Model:
             "Fast ICA": FastICA,
             "SVD": TruncatedSVD,
             "MDS": MDS,
-        }[self.method]
+        }[self.decomposition_method]
 
-        if self.method == "MDS":
-            model = model(
+        model = (
+            model(
                 n_components=self.n_components,
                 random_state=int(self.random_state),
                 dissimilarity="precomputed",
             )
-        else:
-
-            model = model(
+            if self.decomposition_method == "MDS"
+            else model(
                 n_components=self.n_components, random_state=int(self.random_state)
             )
+        )
 
         R = model.fit_transform(X=M.values)
         R = pd.DataFrame(
             R,
-            columns=["Dim-{:>02d}".format(i) for i in range(self.n_components)],
+            columns=["Dim-{}".format(i) for i in range(self.n_components)],
             index=M.columns,
         )
 
         #
-        # 6.-- Clustering
+        # 7.-- Clustering
         #
-
-        ## from bibliometrix: clustering of two first axes
-        W = R.loc[:, R.columns[[0, 1]]]
-
         (
             self.n_clusters,
             self.labels_,
@@ -147,7 +146,7 @@ class Model:
             self.cluster_centers_,
             self.cluster_names_,
         ) = clustering(
-            X=W,
+            X=R,
             method=self.clustering_method,
             n_clusters=self.n_clusters,
             affinity=self.affinity,
@@ -162,7 +161,7 @@ class Model:
         self.coordinates_ = R
 
         #
-        # 10.-- Results
+        # 8.-- Results
         #
         self.X_ = R
 
@@ -170,253 +169,32 @@ class Model:
         self.apply()
         return self.cluster_members_
 
-    def mds_map(self):
-        #
-        def encircle(x, y, ax, **kw):
-            p = np.c_[x, y]
-            hull = ConvexHull(p, qhull_options="QJ")
-            poly = pyplot.Polygon(p[hull.vertices, :], **kw)
-            ax.add_patch(poly)
-
-        #
-        # 1.-- Creates the plot in memory
-        #
-        matplotlib.rc("font", size=11)
-        fig = pyplot.Figure(figsize=(self.width, self.height))
-        ax = fig.subplots()
-
-        #
-        # 2.-- Data clustering
-        #
-        self.fit()
-
-        #
-        # 3.-- Cluster colors (max 100 clusters)
-        # º
-        colors = [
-            "tab:blue",
-            "tab:orange",
-            "tab:green",
-            "tab:red",
-            "tab:purple",
-            "tab:brown",
-            "tab:pink",
-            "tab:gray",
-            "tab:olive",
-            "tab:cyan",
-            "cornflowerblue",
-            "lightsalmon",
-            "limegreen",
-            "tomato",
-            "mediumvioletred",
-            "darkgoldenrod",
-            "lightcoral",
-            "silver",
-            "darkkhaki",
-            "skyblue",
-            "dodgerblue",
-            "orangered",
-            "turquoise",
-            "crimson",
-            "violet",
-            "goldenrod",
-            "thistle",
-            "grey",
-            "yellowgreen",
-            "lightcyan",
-        ]
-
-        colors += colors + colors
-
-        #
-        # 3.-- Plot the points of each cluster
-        #
-        R = self.coordinates_
-        for i_cluster in range(self.n_clusters):
-            X = R[R.Cluster == i_cluster]
-            X = cmn.sort_axis(
-                data=X,
-                num_documents=(self.top_by == "Num Documents"),
-                axis=0,
-                ascending=False,
-            )
-            X.pop("Cluster")
-            X = X.head(self.top_n)
-            x = X[X.columns[self.x_axis]]
-            y = X[X.columns[self.y_axis]]
-            ax.scatter(
-                x, y, marker="o", s=12, alpha=0.8, c=colors[i_cluster],
-            )
-
-            if len(X) > 2:
-                encircle(x, y, ax=ax, ec="k", fc=colors[i_cluster], alpha=0.1)
-
-            xlim = ax.get_xlim()
-            ylim = ax.get_ylim()
-
-            for x_, y_, t in zip(x.tolist(), y.tolist(), X.index):
-                ax.text(
-                    x=x_ + 0.01 * (xlim[1] - xlim[0]),
-                    y=y_ - 0.01 * (ylim[1] - ylim[0]),
-                    s=t,
-                    fontsize=9,
-                    color=colors[i_cluster],
-                    horizontalalignment="left",
-                    verticalalignment="top",
-                )
-
-        # ------------------------------------------------------------------------------------
-        #  cmap = pyplot.cm.get_cmap("Greys")
-        #  x = self.centers_["Dim-{:>02d}".format(self.x_axis)]
-        #  y = self.centers_["Dim-{:>02d}".format(self.y_axis)]
-        #  names = self.centers_["Name"]
-        # for i_cluster in range(self.n_clusters):
-        #     ax.text(
-        #         x=x[i_cluster],
-        #         y=y[i_cluster],
-        #         s=names[i_cluster],
-        #         fontsize=10,
-        #         bbox=dict(
-        #             facecolor="w",
-        #             alpha=1.0,
-        #             edgecolor="gray",
-        #             boxstyle="round,pad=0.5",
-        #         ),
-        #         horizontalalignment="left",
-        #         verticalalignment="top",
-        #     )
-        # ------------------------------------------------------------------------------------
-
-        ax.axhline(
-            y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1,
+    def conceptual_structure(self):
+        self.apply()
+        X = self.X_
+        cluster_labels = X.Cluster
+        X.pop("Cluster")
+        return conceptual_structure_map(
+            coordinates=X,
+            cluster_labels=cluster_labels,
+            top_n=self.top_n,
+            figsize=(self.width, self.height),
         )
-        ax.axvline(
-            x=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1,
-        )
-        ax.axis("off")
-        ax.set_aspect("equal")
-        cmn.set_ax_splines_invisible(ax)
-        ax.grid(axis="both", color="lightgray", linestyle="--", linewidth=0.5)
-
-        xlim = ax.get_xlim()
-        ylim = ax.get_ylim()
-        ax.text(
-            x=xlim[1],
-            y=0.01 * (ylim[1] - ylim[0]),
-            s="Dim-0",
-            fontsize=9,
-            color="dimgray",
-            horizontalalignment="right",
-            verticalalignment="bottom",
-        )
-        ax.text(
-            x=0.01 * (xlim[1] - xlim[0]),
-            y=ylim[1],
-            s="Dim-1",
-            fontsize=9,
-            color="dimgray",
-            horizontalalignment="left",
-            verticalalignment="top",
-        )
-
-        fig.set_tight_layout(True)
-        return fig
 
     def cluster_plot(self):
-        ##
         self.apply()
-        ##
-
-        fig = pyplot.Figure(figsize=(self.width, self.height))
-        ax = fig.subplots()
-        x = self.centers_["Dim-{:>02d}".format(self.x_axis)]
-        y = self.centers_["Dim-{:>02d}".format(self.y_axis)]
-        names = self.centers_["Name"]
-        node_sizes = cmn.counters_to_node_sizes(names)
-        #  node_colors = cmn.counters_to_node_colors(names, cmap)
-
-        colors = [
-            "tab:blue",
-            "tab:orange",
-            "tab:green",
-            "tab:red",
-            "tab:purple",
-            "tab:brown",
-            "tab:pink",
-            "tab:gray",
-            "tab:olive",
-            "tab:cyan",
-            "cornflowerblue",
-            "lightsalmon",
-            "limegreen",
-            "tomato",
-            "mediumvioletred",
-            "darkgoldenrod",
-            "lightcoral",
-            "silver",
-            "darkkhaki",
-            "skyblue",
-            "dodgerblue",
-            "orangered",
-            "turquoise",
-            "crimson",
-            "violet",
-            "goldenrod",
-            "thistle",
-            "grey",
-            "yellowgreen",
-            "lightcyan",
-        ]
-
-        colors += colors + colors
-
-        ax.scatter(
-            x,
-            y,
-            marker="o",
-            s=node_sizes,
-            c=colors[: len(x)],
-            #  c=node_colors,
-            alpha=0.5,
-            linewidths=2,
-            #  edgecolors=node_colors),
+        return xy_clusters_plot(
+            x=self.cluster_centers_["Dim-{}".format(self.x_axis)],
+            y=self.cluster_centers_["Dim-{}".format(self.y_axis)],
+            x_axis_at=0,
+            y_axis_at=0,
+            labels=self.cluster_names_,
+            node_sizes=cmn.counters_to_node_sizes(self.cluster_names_),
+            color_scheme=self.color_scheme,
+            xlabel="Dim-{}".format(self.x_axis),
+            ylabel="Dim-{}".format(self.y_axis),
+            figsize=(self.width, self.height),
         )
-
-        pos = {term: (x[idx], y[idx]) for idx, term in enumerate(self.centers_.Name)}
-        cmn.ax_text_node_labels(
-            ax=ax, labels=self.centers_.Name, dict_pos=pos, node_sizes=node_sizes
-        )
-
-        cmn.ax_expand_limits(ax)
-
-        xlim = ax.get_xlim()
-        ylim = ax.get_ylim()
-        ax.text(
-            x=xlim[1],
-            y=0.01 * (ylim[1] - ylim[0]),
-            s="Dim-0",
-            fontsize=9,
-            color="dimgray",
-            horizontalalignment="right",
-            verticalalignment="bottom",
-        )
-        ax.text(
-            x=0.01 * (xlim[1] - xlim[0]),
-            y=ylim[1],
-            s="Dim-1",
-            fontsize=9,
-            color="dimgray",
-            horizontalalignment="left",
-            verticalalignment="top",
-        )
-
-        cmn.set_ax_splines_invisible(ax)
-        ax.axhline(y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
-        ax.axvline(x=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
-        ax.set_axis_off()
-        fig.set_tight_layout(True)
-
-        return fig
 
 
 ###############################################################################
@@ -452,15 +230,11 @@ class DASHapp(DASH, Model):
         )
         DASH.__init__(self)
 
-        self.n_components = 2
-        self.x_axis = 0
-        self.y_axis = 1
-
         self.app_title = "Factor Analysis"
         self.menu_options = [
             "Cluster members",
             "Cluster plot",
-            "MDS map",
+            "Conceptual Structure",
         ]
         #
         self.panel_widgets = [
@@ -469,37 +243,19 @@ class DASHapp(DASH, Model):
             ),
             dash.min_occurrence(),
             dash.max_items(),
-            dash.dropdown(
-                desc="Normalization:",
-                options=[
-                    "Association",
-                    "Jaccard",
-                    "Dice",
-                    "Salton",
-                    "Equivalence",
-                    "Inclusion",
-                    "Cosine",
-                    "Mutual Information",
-                ],
-            ),
-            dash.separator(text="Decomposition"),
-            dash.dropdown(
-                desc="Method:",
-                options=["MDS", "Factor Analysis", "PCA", "Fast ICA", "SVD"],
-            ),
-            ## dash.n_components(),
+            dash.normalization(include_none=False),
             dash.random_state(),
             dash.separator(text="Clustering"),
+            dash.decomposition_method(),
             dash.clustering_method(),
-            dash.n_clusters(m=3, n=50, i=1),
+            dash.n_clusters(m=3, n=10, i=1),
             dash.affinity(),
             dash.linkage(),
-            dash.random_state(),
             dash.separator(text="Visualization"),
-            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited"],),
             dash.top_n(),
-            #  dash.x_axis(),
-            #  dash.y_axis(),
+            dash.color_scheme(),
+            dash.x_axis(),
+            dash.y_axis(),
             dash.fig_width(),
             dash.fig_height(),
         ]
@@ -509,62 +265,37 @@ class DASHapp(DASH, Model):
 
         DASH.interactive_output(self, **kwargs)
 
-        if self.menu == "Memberships":
+        if self.menu == "Cluster members":
+            #
+            self.n_components = 10
+            #
             self.set_disabled("X-axis:")
             self.set_disabled("Y-axis:")
             self.set_disabled("Width:")
             self.set_disabled("Height:")
+            self.set_disabled("Color Scheme:")
 
         if self.menu == "Cluster plot":
+            #
+            self.n_components = 10
+            #
             self.set_enabled("X-axis:")
             self.set_enabled("Y-axis:")
             self.set_enabled("Width:")
             self.set_enabled("Height:")
+            self.set_enabled("Color Scheme:")
 
-        self.set_options(name="X-axis:", options=list(range(self.n_components)))
-        self.set_options(name="Y-axis:", options=list(range(self.n_components)))
+        if self.menu == "Conceptual Structure":
+            #
+            self.n_components = 2
+            #
+            self.set_disabled("X-axis:")
+            self.set_disabled("Y-axis:")
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
+            self.set_disabled("Color Scheme:")
 
-        if self.clustering_method in ["Affinity Propagation"]:
-            self.set_disabled("N Clusters:")
-            self.set_disabled("Affinity:")
-            self.set_disabled("Linkage:")
-            self.set_enabled("Random State:")
-
-        if self.clustering_method in ["Agglomerative Clustering"]:
-            self.set_enabled("N Clusters:")
-            self.set_enabled("Affinity:")
-            self.set_enabled("Linkage:")
-            self.set_disabled("Random State:")
-
-        if self.clustering_method in ["Birch"]:
-            self.set_enabled("N Clusters:")
-            self.set_disabled("Affinity:")
-            self.set_disabled("Linkage:")
-            self.set_disabled("Random State:")
-
-        if self.clustering_method in ["DBSCAN"]:
-            self.set_disabled("N Clusters:")
-            self.set_disabled("Affinity:")
-            self.set_disabled("Linkage:")
-            self.set_disabled("Random State:")
-
-        if self.clustering_method in ["Feature Agglomeration"]:
-            self.set_enabled("N Clusters:")
-            self.set_enabled("Affinity:")
-            self.set_enabled("Linkage:")
-            self.set_disabled("Random State:")
-
-        if self.clustering_method in ["KMeans"]:
-            self.set_enabled("N Clusters:")
-            self.set_disabled("Affinity:")
-            self.set_disabled("Linkage:")
-            self.set_disabled("Random State:")
-
-        if self.clustering_method in ["Mean Shift"]:
-            self.set_disabled("N Clusters:")
-            self.set_disabled("Affinity:")
-            self.set_disabled("Linkage:")
-            self.set_disabled("Random State:")
+        self.enable_disable_clustering_options()
 
 
 ###############################################################################
