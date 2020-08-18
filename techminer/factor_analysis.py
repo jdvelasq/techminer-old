@@ -169,7 +169,7 @@ class Model:
         self.apply()
         return self.cluster_members_
 
-    def conceptual_structure(self):
+    def conceptual_structure_map(self):
         self.apply()
         X = self.X_
         cluster_labels = X.Cluster
@@ -180,6 +180,10 @@ class Model:
             top_n=self.top_n,
             figsize=(self.width, self.height),
         )
+
+    def conceptual_structure_members(self):
+        self.apply()
+        return self.cluster_members_
 
     def cluster_plot(self):
         self.apply()
@@ -234,7 +238,8 @@ class DASHapp(DASH, Model):
         self.menu_options = [
             "Cluster members",
             "Cluster plot",
-            "Conceptual Structure",
+            "Conceptual Structure Map",
+            "Conceptual Structure Members",
         ]
         #
         self.panel_widgets = [
@@ -285,7 +290,7 @@ class DASHapp(DASH, Model):
             self.set_enabled("Height:")
             self.set_enabled("Color Scheme:")
 
-        if self.menu == "Conceptual Structure":
+        if self.menu in ["Conceptual Structure Map", "Conceptual Structure Members"]:
             #
             self.n_components = 2
             #
