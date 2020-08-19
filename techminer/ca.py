@@ -49,11 +49,11 @@ class CA:
         u, d, v = np.linalg.svd(Z, full_matrices=False)
         K = min(len(X.columns), len(X.index))
         u = pd.DataFrame(
-            u, columns=["dim-{}".format(i) for i in range(K)], index=X.index,
+            u, columns=["Dim-{}".format(i) for i in range(K)], index=X.index,
         )
-        d = pd.Series(d, index=["dim-{}".format(i) for i in range(K)])
+        d = pd.Series(d, index=["Dim-{}".format(i) for i in range(K)])
         v = pd.DataFrame(
-            v.T, columns=["dim-{}".format(i) for i in range(K)], index=X.columns,
+            v.T, columns=["Dim-{}".format(i) for i in range(K)], index=X.columns,
         )
 
         #

@@ -9,11 +9,15 @@ import techminer.dashboard as dash
 
 from techminer.ca import CA
 from techminer.dashboard import DASH
-from techminer.diagram_plot import diagram_plot
+
 from techminer.tfidf import TF_matrix, TFIDF_matrix
 from techminer.params import EXCLUDE_COLS
 from techminer.clustering import clustering
 from techminer.limit_to_exclude import limit_to_exclude
+from techminer.xy_clusters_plot import xy_clusters_plot
+
+from collections import Counter
+
 
 ###############################################################################
 ##
@@ -33,7 +37,7 @@ class Model:
         self.limit_to = limit_to
         self.exclude = exclude
 
-    def apply(self):
+    def correspondence_analysis(self):
 
         ##
         ## Comparative analysis
@@ -46,7 +50,7 @@ class Model:
         TF_matrix_ = TF_matrix(
             data=self.data,
             column=self.column,
-            scheme=None,
+            scheme="binary",
             min_occurrence=self.min_occurrence,
         )
 
@@ -84,30 +88,49 @@ class Model:
 
         #
         # 5.-- Correspondence Analysis
+        #      10 first factors for ploting
         #
         ca = CA()
 
         ca.fit(TFIDF_matrix_)
 
-        self.eigenvalues_ = ca.eigenvalues_
-        self.explained_variance_ = ca.explained_variance_
-        self.principal_coordinates_rows_ = ca.principal_coordinates_rows_
-        self.principal_coordinates_cols_ = ca.principal_coordinates_cols_
+        self.eigenvalues_ = ca.eigenvalues_[0:10]
+        self.explained_variance_ = ca.explained_variance_[0:10]
+
+        z = ca.principal_coordinates_rows_
+        z = z[z.columns[:10]]
+        self.principal_coordinates_rows_ = z
+
+        z = ca.principal_coordinates_cols_
+        z = z[z.columns[:10]]
+        self.principal_coordinates_cols_ = z
 
         #
-        # 6.-- Selects the first n_factors to cluster
+        # 6.-- Correspondence analysis plot
+        #
+        self.correspondence_analysis_plot_coordinates_ = (
+            self.principal_coordinates_cols_
+        )
+        self.correspondence_analysis_plot_labels_ = TFIDF_matrix_.columns
+
+        self.TFIDF_matrix_ = TFIDF_matrix_
+
+    def make_clustering(self):
+
+        #
+        # 1.-- Selects the first n_factors to cluster
         #
         X = self.principal_coordinates_cols_[
             self.principal_coordinates_cols_.columns[0 : self.n_factors]
         ]
         X = pd.DataFrame(
             X,
-            columns=["dim-{}".format(i) for i in range(self.n_factors)],
-            index=TFIDF_matrix_.columns,
+            columns=["Dim-{}".format(i) for i in range(self.n_factors)],
+            index=self.TFIDF_matrix_.columns,
         )
 
         #
-        # 7.-- Cluster analysis of first n_factors of CA matrix
+        # 2.-- Cluster analysis of first n_factors of CA matrix
         #
         (
             self.n_clusters,
@@ -128,117 +151,62 @@ class Model:
 
         X["CLUSTER"] = self.labels_
 
-    def cluster_names(self):
-        self.apply()
-        return self.cluster_names_
+    def correspondence_analysis_plot(self):
+        #
+        self.correspondence_analysis()
+        #
+        coordinates = self.correspondence_analysis_plot_coordinates_.head(self.top_n)
 
-    def cluster_centers(self):
-        self.apply()
-        return self.cluster_centers_
+        return xy_clusters_plot(
+            x=coordinates["Dim-{}".format(self.x_axis)],
+            y=coordinates["Dim-{}".format(self.y_axis)],
+            x_axis_at=0,
+            y_axis_at=0,
+            labels=self.correspondence_analysis_plot_labels_[: self.top_n],
+            node_sizes=cmn.counters_to_node_sizes(coordinates.index),
+            color_scheme=self.color_scheme,
+            xlabel="Dim-{}".format(self.x_axis),
+            ylabel="Dim-{}".format(self.y_axis),
+            figsize=(self.width, self.height),
+        )
 
     def cluster_members(self):
-        self.apply()
+        #
+        self.correspondence_analysis()
+        self.make_clustering()
+        #
         return self.cluster_members_
 
-    def plot_singular_values(self):
-        self.apply()
-        return plt.barh(width=self.eigenvalues_[:20])
-
-    def plot_clusters(self):
-
-        self.apply()
-
-        fig = pyplot.Figure(figsize=(self.width, self.height))
-        ax = fig.subplots()
-
-        x = self.cluster_centers_["dim-{}".format(self.x_axis)]
-        y = self.cluster_centers_["dim-{}".format(self.y_axis)]
-        names = self.cluster_names_
-        node_sizes = cmn.counters_to_node_sizes(names)
-        #  node_colors = cmn.counters_to_node_colors(names, cmap)
-
-        colors = [
-            "tab:blue",
-            "tab:orange",
-            "tab:green",
-            "tab:red",
-            "tab:purple",
-            "tab:brown",
-            "tab:pink",
-            "tab:gray",
-            "tab:olive",
-            "tab:cyan",
-            "cornflowerblue",
-            "lightsalmon",
-            "limegreen",
-            "tomato",
-            "mediumvioletred",
-            "darkgoldenrod",
-            "lightcoral",
-            "silver",
-            "darkkhaki",
-            "skyblue",
-            "dodgerblue",
-            "orangered",
-            "turquoise",
-            "crimson",
-            "violet",
-            "goldenrod",
-            "thistle",
-            "grey",
-            "yellowgreen",
-            "lightcyan",
+    def cluster_plot(self):
+        #
+        self.correspondence_analysis()
+        self.make_clustering()
+        #
+        labels = self.cluster_members_.loc[0, :].tolist()
+        labels = [
+            "CLUST_{} {}".format(index, label) for index, label in enumerate(labels)
         ]
-
-        colors += colors + colors
-
-        ax.scatter(
-            x,
-            y,
-            marker="o",
-            s=node_sizes,
-            c=colors[: len(x)],
-            #  c=node_colors,
-            alpha=0.5,
-            linewidths=2,
-            #  edgecolors=node_colors),
+        #
+        node_sizes = Counter(self.labels_)
+        node_sizes = [node_sizes[i] for i in range(len(node_sizes.keys()))]
+        max_size = max(node_sizes)
+        min_size = min(node_sizes)
+        node_sizes = [
+            500 + int(2500 * (w - min_size) / (max_size - min_size)) for w in node_sizes
+        ]
+        #
+        return xy_clusters_plot(
+            x=self.cluster_centers_["Dim-{}".format(self.x_axis)],
+            y=self.cluster_centers_["Dim-{}".format(self.y_axis)],
+            x_axis_at=0,
+            y_axis_at=0,
+            labels=labels,
+            node_sizes=node_sizes,
+            color_scheme=self.color_scheme,
+            xlabel="Dim-{}".format(self.x_axis),
+            ylabel="Dim-{}".format(self.y_axis),
+            figsize=(self.width, self.height),
         )
-
-        pos = {term: (x[idx], y[idx]) for idx, term in enumerate(self.cluster_names_)}
-        cmn.ax_text_node_labels(
-            ax=ax, labels=self.cluster_names_, dict_pos=pos, node_sizes=node_sizes
-        )
-
-        cmn.ax_expand_limits(ax)
-
-        xlim = ax.get_xlim()
-        ylim = ax.get_ylim()
-        ax.text(
-            x=xlim[1],
-            y=0.01 * (ylim[1] - ylim[0]),
-            s="Dim-{}".format(self.x_axis),
-            fontsize=9,
-            color="dimgray",
-            horizontalalignment="right",
-            verticalalignment="bottom",
-        )
-        ax.text(
-            x=0.01 * (xlim[1] - xlim[0]),
-            y=ylim[1],
-            s="Dim-{}".format(self.y_axis),
-            fontsize=9,
-            color="dimgray",
-            horizontalalignment="left",
-            verticalalignment="top",
-        )
-
-        cmn.set_ax_splines_invisible(ax)
-        ax.axhline(y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
-        ax.axvline(x=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
-        ax.set_axis_off()
-        fig.set_tight_layout(True)
-
-        return fig
 
 
 ###############################################################################
@@ -271,11 +239,9 @@ class DASHapp(DASH, Model):
 
         self.app_title = "Comparative analysis"
         self.menu_options = [
+            "Correspondence analysis plot",
             "Cluster members",
-            "Cluster names",
-            "Cluster centers",
-            "Plot singular values",
-            "Plot clusters",
+            "Cluster plot",
         ]
 
         COLUMNS = sorted(
@@ -295,7 +261,7 @@ class DASHapp(DASH, Model):
             dash.random_state(),
             dash.separator(text="Visualization"),
             dash.top_n(m=10, n=51, i=5),
-            dash.cmap(),
+            dash.color_scheme(),
             dash.x_axis(),
             dash.y_axis(),
             dash.fig_width(),
@@ -307,64 +273,56 @@ class DASHapp(DASH, Model):
 
         DASH.interactive_output(self, **kwargs)
 
-        self.panel_widgets[-3]["widget"].options = [i for i in range(self.n_factors)]
-        self.panel_widgets[-4]["widget"].options = [i for i in range(self.n_factors)]
+        def visualization_disabled():
 
-        #
+            self.set_disabled("Color Scheme:")
+            self.set_disabled("X-axis:")
+            self.set_disabled("Y-axis:")
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
 
-        for i in [-1, -2, -3, -4, -5]:
-            self.panel_widgets[i]["widget"].disabled = (
-                True
-                if self.menu in ["Cluster names", "Cluster centers", "Memberships"]
-                else False
-            )
+        def visualization_enabled():
 
-        for i in [-6]:
-            self.panel_widgets[i]["widget"].disabled = (
-                False if self.menu in ["Memberships"] else True
-            )
+            self.set_enabled("Color Scheme:")
+            self.set_enabled("X-axis:")
+            self.set_enabled("Y-axis:")
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
 
-        if self.clustering_method in ["Affinity Propagation"]:
+        def clustering_disabled():
+
+            self.set_disabled("N Factors:")
+            self.set_disabled("Clustering Method:")
             self.set_disabled("N Clusters:")
             self.set_disabled("Affinity:")
             self.set_disabled("Linkage:")
+            self.set_disabled("Random State:")
+
+        def clustering_enabled():
+
+            self.set_enabled("N Factors:")
+            self.set_enabled("Clustering Method:")
+            self.set_enabled("N Clusters:")
+            self.set_enabled("Affinity:")
+            self.set_enabled("Linkage:")
             self.set_enabled("Random State:")
 
-        if self.clustering_method in ["Agglomerative Clustering"]:
-            self.set_enabled("N Clusters:")
-            self.set_enabled("Affinity:")
-            self.set_enabled("Linkage:")
-            self.set_disabled("Random State:")
+            self.enable_disable_clustering_options(include_random_state=True)
 
-        if self.clustering_method in ["Birch"]:
-            self.set_enabled("N Clusters:")
-            self.set_disabled("Affinity:")
-            self.set_disabled("Linkage:")
-            self.set_disabled("Random State:")
+        if self.menu == "Correspondence analysis plot":
 
-        if self.clustering_method in ["DBSCAN"]:
-            self.set_disabled("N Clusters:")
-            self.set_disabled("Affinity:")
-            self.set_disabled("Linkage:")
-            self.set_disabled("Random State:")
+            clustering_disabled()
+            visualization_enabled()
 
-        if self.clustering_method in ["Feature Agglomeration"]:
-            self.set_enabled("N Clusters:")
-            self.set_enabled("Affinity:")
-            self.set_enabled("Linkage:")
-            self.set_disabled("Random State:")
+        if self.menu == "Cluster members":
 
-        if self.clustering_method in ["KMeans"]:
-            self.set_enabled("N Clusters:")
-            self.set_disabled("Affinity:")
-            self.set_disabled("Linkage:")
-            self.set_disabled("Random State:")
+            clustering_enabled()
+            visualization_disabled()
 
-        if self.clustering_method in ["Mean Shift"]:
-            self.set_disabled("N Clusters:")
-            self.set_disabled("Affinity:")
-            self.set_disabled("Linkage:")
-            self.set_disabled("Random State:")
+        if self.menu == "Cluster plot":
+
+            clustering_enabled()
+            visualization_enabled()
 
 
 ###############################################################################

@@ -106,7 +106,7 @@ class Model:
         #
         # 5.-- Results
         #
-        axis_names = ["dim-{:>02d}".format(i) for i in range(self.n_components)]
+        axis_names = ["Dim-{:>02d}".format(i) for i in range(self.n_components)]
         self.components_ = pd.DataFrame(
             np.transpose(TruncatedSVD_.components_),
             columns=axis_names,

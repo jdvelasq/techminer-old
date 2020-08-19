@@ -545,40 +545,54 @@ class DASH:
                 self.panel_widgets[index]["widget"].options = options
                 return
 
-    def enable_disable_clustering_options(self):
+    def enable_disable_clustering_options(self, include_random_state=False):
 
         if self.clustering_method in ["Affinity Propagation"]:
             self.set_disabled("N Clusters:")
             self.set_disabled("Affinity:")
             self.set_disabled("Linkage:")
+            if include_random_state is True:
+                self.set_enabled("Random State:")
 
         if self.clustering_method in ["Agglomerative Clustering"]:
             self.set_enabled("N Clusters:")
             self.set_enabled("Affinity:")
             self.set_enabled("Linkage:")
+            if include_random_state is True:
+                self.set_disabled("Random State:")
 
         if self.clustering_method in ["Birch"]:
             self.set_enabled("N Clusters:")
             self.set_disabled("Affinity:")
             self.set_disabled("Linkage:")
+            if include_random_state is True:
+                self.set_disabled("Random State:")
 
         if self.clustering_method in ["DBSCAN"]:
             self.set_disabled("N Clusters:")
             self.set_disabled("Affinity:")
             self.set_disabled("Linkage:")
+            if include_random_state is True:
+                self.set_disabled("Random State:")
 
         if self.clustering_method in ["Feature Agglomeration"]:
             self.set_enabled("N Clusters:")
             self.set_enabled("Affinity:")
             self.set_enabled("Linkage:")
+            if include_random_state is True:
+                self.set_disabled("Random State:")
 
         if self.clustering_method in ["KMeans"]:
             self.set_enabled("N Clusters:")
             self.set_disabled("Affinity:")
             self.set_disabled("Linkage:")
+            if include_random_state is True:
+                self.set_disabled("Random State:")
 
         if self.clustering_method in ["Mean Shift"]:
             self.set_disabled("N Clusters:")
             self.set_disabled("Affinity:")
             self.set_disabled("Linkage:")
+            if include_random_state is True:
+                self.set_disabled("Random State:")
 

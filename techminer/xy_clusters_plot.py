@@ -1,3 +1,4 @@
+import math
 import matplotlib.pyplot as pyplot
 
 from techminer.expand_ax_limits import expand_ax_limits
@@ -102,7 +103,7 @@ def xy_clusters_plot(
     xlim = ax.get_xlim()
     ylim = ax.get_ylim()
 
-    factor = 0.05
+    factor = 0.1
 
     for x_, y_, label, quadrant in zip(x, y, labels, quadrants):
 
@@ -110,24 +111,16 @@ def xy_clusters_plot(
 
         va = {0: "center", 1: "center", 2: "center", 3: "center",}[quadrant]
 
-        delta_x = {
-            0: +factor * (xlim[1] - xlim[0]),
-            1: -factor * (xlim[1] - xlim[0]),
-            2: -factor * (xlim[1] - xlim[0]),
-            3: +factor * (xlim[1] - xlim[0]),
-        }[quadrant]
-
-        delta_y = {
-            0: +factor * (ylim[1] - ylim[0]),
-            1: +factor * (ylim[1] - ylim[0]),
-            2: -factor * (ylim[1] - ylim[0]),
-            3: -factor * (ylim[1] - ylim[0]),
-        }[quadrant]
+        delta = factor * (xlim[1] - xlim[0])
+        angle = math.atan(math.fabs(y_ / x_))
+        radious = math.sqrt(x_ ** 2 + y_ ** 2) + delta
+        x_label = math.copysign(radious * math.cos(angle), x_)
+        y_label = math.copysign(radious * math.sin(angle), y_)
 
         ax.text(
-            x_ + delta_x,
-            y_ + delta_x * y_ / x_,
-            s=label,
+            x_label,
+            y_label,
+            s=" ".join(label.split(" ")[:-1]),
             fontsize=9,
             bbox=dict(
                 facecolor="w",
@@ -140,16 +133,11 @@ def xy_clusters_plot(
         )
 
         ax.plot(
-            [x_, x_ + delta_x],
-            [y_, y_ + delta_x * y_ / x_],
-            lw=1,
-            ls="-",
-            c="k",
-            zorder=-1,
+            [x_, x_label], [y_, y_label], lw=1, ls="-", c="k", zorder=-1,
         )
 
     ## limits
-    expand_ax_limits(ax)
+    ax.axis("equal")
 
     ## labels
     ax.text(
@@ -162,7 +150,7 @@ def xy_clusters_plot(
     )
 
     ax.text(
-        0.01 + y_axis_at,
+        0.02 + y_axis_at,
         ax.get_ylim()[1],
         s=ylabel,
         fontsize=9,
@@ -171,7 +159,6 @@ def xy_clusters_plot(
     )
 
     ## generic
-    fig.set_tight_layout(True)
 
     ax.axhline(
         y=y_axis_at, color="gray", linestyle="--", linewidth=1, zorder=-1,
@@ -186,6 +173,8 @@ def xy_clusters_plot(
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)
     ax.spines["bottom"].set_visible(False)
+
+    fig.set_tight_layout(True)
 
     return fig
 

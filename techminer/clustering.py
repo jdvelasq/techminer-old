@@ -32,9 +32,7 @@ def clustering(
 
     if method == "Affinity Propagation":
         try:
-            labels = AffinityPropagation(random_state=int(random_state)).fit_predict(
-                1 - X
-            )
+            labels = AffinityPropagation(random_state=int(random_state)).fit_predict(X)
             n_clusters = len(set(labels))
         except:
             raise Exception("Affinity Propagation did not converge")
@@ -42,13 +40,13 @@ def clustering(
     if method == "Agglomerative Clustering":
         labels = AgglomerativeClustering(
             n_clusters=n_clusters, affinity=affinity, linkage=linkage
-        ).fit_predict(1 - X)
+        ).fit_predict(X)
 
     if method == "Birch":
-        labels = Birch(n_clusters=n_clusters).fit_predict(1 - X)
+        labels = Birch(n_clusters=n_clusters).fit_predict(X)
 
     if method == "DBSCAN":
-        labels = DBSCAN().fit_predict(1 - X)
+        labels = DBSCAN().fit_predict(X)
         n_clusters = len(set(labels))
 
     #  if self.clustering_method == "Feature Agglomeration":
@@ -60,10 +58,10 @@ def clustering(
     if method == "KMeans":
         labels = KMeans(
             n_clusters=n_clusters, random_state=int(random_state)
-        ).fit_predict(1 - X)
+        ).fit_predict(X)
 
     if method == "Mean Shift":
-        labels = MeanShift().fit_predict(1 - X)
+        labels = MeanShift().fit_predict(X)
         n_clusters = len(set(labels))
 
     #
