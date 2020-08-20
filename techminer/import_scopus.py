@@ -462,11 +462,18 @@ def import_scopus(input_file="scopus.csv", output_file="techminer.csv"):
             lambda w: w.replace(".", "") if isinstance(w, str) else w
         )
 
+    #
+    # Record ID
+    #
+    #  x['Record_ID'] = [x
+    #
+    #
+    #      for i in range(len(x))
+    #  ]
+
     x["ID"] = range(len(x))
 
     x = x.applymap(lambda w: pd.NA if isinstance(w, str) and w == "" else w)
-
-    logging.getLogger().disabled = True
 
     if output_file is None:
         return x
