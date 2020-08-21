@@ -334,6 +334,7 @@ def import_scopus(input_file="scopus.csv", output_file="techminer.csv"):
         "Publication Stage": "Publication_Stage",
         "Publisher": "Publisher",
         "PubMed ID": "PubMed_ID",
+        "References": "Global_References",
         "Source title": "Source_title",
         "Source": "Source",
         "Title": "Title",
@@ -446,21 +447,45 @@ def import_scopus(input_file="scopus.csv", output_file="techminer.csv"):
         )
 
     #
-    # Short title
+    # Historiograph ID and Internal cited references
     #
-    x["Document"] = x.Authors
-    x["Document"] = x.Document.map(
-        lambda w: w.split(" ")[0] + ". "
-        if len(w.split(";")) == 1
-        else w.split(";")[0].split(" ")[0] + " et al. ",
-        na_action="ignore",
-    )
-    x["Document"] = (
-        x.Document
-        + x.Year.map(str)
-        + ". "
-        + x.Title.map(lambda w: textwrap.shorten(text=w, width=40), na_action="ignore")
-    )
+    if "Global_References" in x.columns:
+
+        ##
+        logging_info("Generating historiograph ID ...")
+        x = x.assign(
+            Historiograph_ID=x.Year.map(str)
+            + "-"
+            + x.groupby(["Year"], as_index=False)["Authors"].cumcount().map(str)
+        )
+
+        ##
+        logging_info("Extracting local references ...")
+        x["Local_References"] = [[] for _ in range(len(x))]
+        for i_index, _ in enumerate(x.Title):
+
+            title = x.Title[i_index].lower()
+            year = x.Year[i_index]
+
+            for j_index, references in enumerate(x.Global_References.tolist()):
+
+                if pd.isna(references) is False and title in references.lower():
+
+                    for reference in references.split(";"):
+
+                        if title in reference.lower() and str(year) in reference:
+
+                            x.at[j_index, "Local_References"] += [
+                                x.Historiograph_ID[i_index]
+                            ]
+                            continue
+
+        x["Local_References"] = x.Local_References.map(
+            lambda w: pd.NA if len(w) == 0 else w
+        )
+        x["Local_References"] = x.Local_References.map(
+            lambda w: ";".join(w), na_action="ignore"
+        )
 
     #
     # Record ID

@@ -13,7 +13,7 @@ def extract_citations(input_file="techminer.csv", output_file="techminer.csv"):
 
             if pd.isna(references) is False:
                 if title in references.lower():
-                    data.at[i_index, "Cited_References"] += [data.Document[j_index]]
+                    data.at[j_index, "Cited_References"] += [data.Document[i_index]]
 
     data["Cited_References"] = data.Cited_References.map(
         lambda w: pd.NA if len(w) == 0 else w
