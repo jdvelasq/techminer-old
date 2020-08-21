@@ -15,9 +15,9 @@ def create_thesaurus_from_keywords(
     # 1.-- Loads keywords
     #
     data = pd.read_csv(input_file)
-    keywords_list = data.Author_Keywords.tolist()
+    words_list = data.Author_Keywords.tolist()
     if include_index_keywords is True:
-        keywords_list += data.Index_Keywords.tolist()
+        words_list += data.Index_Keywords.tolist()
 
     if os.path.isfile(thesaurus_file):
 
@@ -30,8 +30,8 @@ def create_thesaurus_from_keywords(
         # 3.-- Selects words to cluster
         #
         clustered_words = [word for key in dict_.keys() for word in dict_[key]]
-        keywords_list = [word for word in keywords_list if word not in clustered_words]
-        th = text_clustering(pd.Series(keywords_list))
+        words_list = [word for word in words_list if word not in clustered_words]
+        th = text_clustering(pd.Series(words_list))
         th = Thesaurus(
             x={**th._thesaurus, **dict_},
             ignore_case=True,
@@ -44,7 +44,7 @@ def create_thesaurus_from_keywords(
         #
         # Creates a new thesaurus
         #
-        text_clustering(pd.Series(keywords_list)).to_textfile(thesaurus_file)
+        text_clustering(pd.Series(words_list)).to_textfile(thesaurus_file)
 
     #
 
