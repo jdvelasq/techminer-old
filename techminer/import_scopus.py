@@ -413,7 +413,7 @@ def import_scopus(input_file="scopus.csv", output_file="techminer.csv"):
             lambda w: w.lower() if not pd.isna(w) else w
         )
         x["Author_Keywords"] = x.Author_Keywords.map(
-            lambda w: ";".join([z.strip() for z in w.split(";")])
+            lambda w: ";".join(sorted([z.strip() for z in w.split(";")]))
             if not pd.isna(w)
             else w
         )
@@ -424,7 +424,7 @@ def import_scopus(input_file="scopus.csv", output_file="techminer.csv"):
             lambda w: w.lower() if not pd.isna(w) else w
         )
         x["Index_Keywords"] = x.Index_Keywords.map(
-            lambda w: ";".join([z.strip() for z in w.split(";")])
+            lambda w: ";".join(sorted([z.strip() for z in w.split(";")]))
             if not pd.isna(w)
             else w
         )
@@ -442,15 +442,6 @@ def import_scopus(input_file="scopus.csv", output_file="techminer.csv"):
         #  logging_info("Cleaning Abstract Keywords ...")
         #  thesaurus = thesaurus.compile()
         # x["Abstract_CL"] = map_(x, "Abstract_CL", thesaurus.apply)
-
-    if "Title" in x.columns:
-        logging_info("Extracting Title words ...")
-        x["Title_words"] = map_(x, "Title", __NLP)
-        # logging_info("Clustering Title Keywords ...")
-        #  thesaurus = text_clustering(x.Title_CL, transformer=lambda u: u.lower())
-        #  logging_info("Cleaning Title Keywords ...")
-        #  thesaurus = thesaurus.compile()
-        #  x["Title_CL"] = map_(x, "Title_CL", thesaurus.apply)
 
     if "Times_Cited" in x.columns:
         logging_info("Removing <NA> from Times_Cited field ...")

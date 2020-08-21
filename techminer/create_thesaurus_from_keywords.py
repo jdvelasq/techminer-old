@@ -5,7 +5,7 @@ from techminer.core.thesaurus import text_clustering
 
 def create_thesaurus_from_keywords(
     input_file="techminer.csv",
-    thesaurus_file="thesaurus-raw.txt",
+    thesaurus_file="thesaurus-keywords-raw.txt",
     include_index_keywords=False,
 ):
 

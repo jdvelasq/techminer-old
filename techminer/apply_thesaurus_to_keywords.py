@@ -7,7 +7,7 @@ from techminer.core.map import map_
 
 def apply_thesaurus_to_keywords(
     input_file="techminer.csv",
-    thesaurus_file="thesaurus-cleaned.txt",
+    thesaurus_file="thesaurus-keywords-cleaned.txt",
     output_file="techminer.csv",
     include_index_keywords=False,
 ):

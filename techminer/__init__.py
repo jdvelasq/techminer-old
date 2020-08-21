@@ -4,3 +4,7 @@ from .import_scopus import import_scopus
 from .top_documents import top_documents
 from .create_thesaurus_from_keywords import create_thesaurus_from_keywords
 from .apply_thesaurus_to_keywords import apply_thesaurus_to_keywords
+from .extract_title_words import extract_title_words
+from .create_thesaurus_from_title_words import create_thesaurus_from_title_words
+from .extract_abstract_words import extract_abstract_words
+from .create_thesaurus_from_abstract_words import create_thesaurus_from_abstract_words
