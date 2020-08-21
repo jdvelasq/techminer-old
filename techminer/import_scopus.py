@@ -3,7 +3,7 @@
 """
 
 import json
-import logging
+import textwrap
 import re
 import string
 from os.path import dirname, join
@@ -435,14 +435,6 @@ def import_scopus(input_file="scopus.csv", output_file="techminer.csv"):
             lambda w: w[0 : w.find("\u00a9")] if not pd.isna(w) else w
         )
 
-        logging_info("Extracting Abstract words ...")
-        x["Abstract_words"] = map_(x, "Abstract", __NLP)
-        # logging_info("Clustering Abstract Keywords ...")
-        #  thesaurus = text_clustering(x.Abstract_CL, transformer=lambda u: u.lower())
-        #  logging_info("Cleaning Abstract Keywords ...")
-        #  thesaurus = thesaurus.compile()
-        # x["Abstract_CL"] = map_(x, "Abstract_CL", thesaurus.apply)
-
     if "Times_Cited" in x.columns:
         logging_info("Removing <NA> from Times_Cited field ...")
         x["Times_Cited"] = x["Times_Cited"].map(lambda w: 0 if pd.isna(w) else w)
@@ -452,6 +444,23 @@ def import_scopus(input_file="scopus.csv", output_file="techminer.csv"):
         x["Abb_Source_Title"] = x["Abb_Source_Title"].map(
             lambda w: w.replace(".", "") if isinstance(w, str) else w
         )
+
+    #
+    # Short title
+    #
+    x["Document"] = x.Authors
+    x["Document"] = x.Document.map(
+        lambda w: w.split(" ")[0] + ". "
+        if len(w.split(";")) == 1
+        else w.split(";")[0].split(" ")[0] + " et al. ",
+        na_action="ignore",
+    )
+    x["Document"] = (
+        x.Document
+        + x.Year.map(str)
+        + ". "
+        + x.Title.map(lambda w: textwrap.shorten(text=w, width=40), na_action="ignore")
+    )
 
     #
     # Record ID
