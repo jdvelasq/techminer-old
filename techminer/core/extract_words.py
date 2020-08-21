@@ -168,27 +168,6 @@ def extract_words(data, text):
             for m in t:
                 result[index] += m
 
-    print(len(result))
     result = [";".join(w) for w in result]
-    return result
-
-    #
-    # 12.-- join words
-    #
-    result = []
-    print(len(text))
-    print(len(original))
-    for index in set(text.index.tolist()):
-        n = []
-        for m in text.loc[index]:
-
-            print(len(m), type(m))
-            n.append(m)
-
-        result.append(n)
-
-    result = [";".join(w) for w in result]
-
-    logging_info("Words extrated from document")
     return result
 

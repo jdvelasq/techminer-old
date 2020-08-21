@@ -13,6 +13,8 @@ import pandas as pd
 from nltk import WordNetLemmatizer
 import datetime
 
+
+from techminer.core.extract_words import extract_words
 from techminer.core.text import remove_accents
 from techminer.core.map import map_
 
@@ -486,6 +488,17 @@ def import_scopus(input_file="scopus.csv", output_file="techminer.csv"):
         x["Local_References"] = x.Local_References.map(
             lambda w: ";".join(w), na_action="ignore"
         )
+
+    #
+    # Extract title and abstract words
+    #
+    if "Title" in x.columns:
+        logging_info("Extracting title words ...")
+        x["Title_words"] = extract_words(data=x, text=x.Title)
+
+    if "Abstract" in x.columns:
+        logging_info("Extracting abstract words ...")
+        x["Abstract_words"] = extract_words(data=x, text=x.Abstract)
 
     #
     # Record ID

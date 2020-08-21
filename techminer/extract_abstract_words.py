@@ -13,7 +13,7 @@ def extract_abstract_words(
 ):
 
     data = pd.read_csv(input_file)
-    data["Abstract_words"] = extract_words(data=data, text=data.Title)
+    data["Abstract_words"] = extract_words(data=data, text=data.Abstract)
     th = read_textfile(thesaurus_file)
     th = th.compile_as_dict()
     data["Abstract_words"] = map_(data, "Abstract_words", th.apply_as_dict)

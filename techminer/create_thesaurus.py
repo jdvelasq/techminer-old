@@ -5,15 +5,26 @@ import os.path
 from techminer.core.thesaurus import load_file_as_dict, Thesaurus
 
 
-def create_thesaurus_from_abstract_words(
-    input_file="techminer.csv", thesaurus_file="thesaurus.txt"
-):
+def create_thesaurus(input_file="techminer.csv", thesaurus_file="thesaurus.txt"):
 
     #
     # 1.-- Loads keywords
     #
     data = pd.read_csv(input_file)
-    words_list = data.Abstract_words.tolist()
+
+    words_list = []
+
+    if "Author_Keywords" in data.columns:
+        words_list += data.Author_Keywords.tolist()
+
+    if "Index_Keywords" in data.columns:
+        words_list += data.Index_Keywords.tolist()
+
+    if "Title_words" in data.columns:
+        words_list += data.Title_words.tolist()
+
+    if "Abstract_words" in data.columns:
+        words_list += data.Abstract_words.tolist()
 
     if os.path.isfile(thesaurus_file):
 
