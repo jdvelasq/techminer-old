@@ -8,3 +8,4 @@ from .extract_title_words import extract_title_words
 from .create_thesaurus_from_title_words import create_thesaurus_from_title_words
 from .extract_abstract_words import extract_abstract_words
 from .create_thesaurus_from_abstract_words import create_thesaurus_from_abstract_words
+from .extract_citations import extract_citations
