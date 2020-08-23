@@ -11,9 +11,9 @@ import pandas as pd
 from IPython.display import display
 from ipywidgets import GridspecLayout, Layout
 
-from techminer.core.explode import explode
+from techminer.core import explode
 from techminer.core.params import MULTIVALUED_COLS
-from techminer.record_to_html import record_to_HTML
+from techminer.core import record_to_HTML
 
 
 def matrix_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):

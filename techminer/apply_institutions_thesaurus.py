@@ -40,3 +40,4 @@ def apply_institutions_thesaurus(
     ## Finish!
     ##
     data.to_csv(output_file, index=False)
+    logging_info("Finished!!!")

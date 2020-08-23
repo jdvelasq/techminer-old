@@ -1,5 +1,6 @@
 import pandas as pd
 from techminer.core import sort_by_axis
+import ipywidgets as widgets
 
 from techminer.core import TF_matrix
 from techminer.core import TFIDF_matrix
@@ -32,7 +33,19 @@ class Model:
 
     def apply(self):
 
-        matrix = TF_matrix(data=self.data, column=self.column, scheme="raw")
+        ##
+        ## Builds TF matrix
+        ##
+        matrix = TF_matrix(
+            data=self.data,
+            column=self.column,
+            scheme="raw",
+            min_occurrence=self.min_occurrence,
+        )
+
+        ##
+        ## Limit to / Exclude
+        ##
         matrix = limit_to_exclude(
             data=matrix,
             axis=1,
@@ -40,9 +53,14 @@ class Model:
             limit_to=self.limit_to,
             exclude=self.exclude,
         )
+
+        ##
+        ## TF*IDF matrix
+        ##
         TF_matrix_ = add_counters_to_axis(
             X=matrix, axis=1, data=self.data, column=self.column
         )
+
         if self.norm is not None:
             self.norm = self.norm.lower()
 
@@ -53,7 +71,13 @@ class Model:
             smooth_idf=self.smooth_idf,
             sublinear_tf=self.sublinear_tf,
         )
-        vector = TFIDF_matrix_.sum(axis=0).sort_values(ascending=False).head(self.top_n)
+
+        ##
+        ## Selects max_items
+        ##
+        vector = (
+            TFIDF_matrix_.sum(axis=0).sort_values(ascending=False).head(self.max_items)
+        )
         TFIDF_matrix_ = vector.to_frame()
         TFIDF_matrix_.columns = ["TF*IDF"]
 
@@ -79,6 +103,18 @@ class Model:
     def table(self):
         self.apply()
         return self.X_.style.set_precision(2).background_gradient(cmap=self.cmap)
+
+    def limit_to_python_code(self):
+        self.apply()
+        items = self.X_.index.tolist()
+        items = [" ".join(item.split(" ")[:-1]) for item in items]
+        HTML = "LIMIT_TO = {<br>"
+        HTML += '    "' + self.column + '": [<br>'
+        for item in items:
+            HTML += '        "' + item + '",<br>'
+        HTML += "    ]<br>"
+        HTML += "}<br>"
+        return widgets.HTML("<pre>" + HTML + "</pre>")
 
     def bar_plot(self):
         self.apply()
@@ -107,16 +143,16 @@ class Model:
 ##
 ###############################################################################
 
-COLUMNS = {
-    "Author_Keywords",
-    "Index_Keywords",
-    "Author_Keywords_CL",
-    "Index_Keywords_CL",
-    "Abstract_words",
-    "Title_words",
+COLUMNS = [
     "Abstract_words_CL",
+    "Abstract_words",
+    "Author_Keywords_CL",
+    "Author_Keywords",
+    "Index_Keywords_CL",
+    "Index_Keywords",
     "Title_words_CL",
-}
+    "Title_words",
+]
 
 
 class DASHapp(DASH, Model):
@@ -131,7 +167,12 @@ class DASHapp(DASH, Model):
         self.pandas_max_rows = 300
 
         self.app_title = "TF*IDF Analysis"
-        self.menu_options = ["Table", "Bar plot", "Horizontal bar plot"]
+        self.menu_options = [
+            "Table",
+            "Bar plot",
+            "Horizontal bar plot",
+            "LIMIT TO python code",
+        ]
 
         self.panel_widgets = [
             dash.dropdown(desc="Column:", options=[t for t in data if t in COLUMNS],),
@@ -139,8 +180,9 @@ class DASHapp(DASH, Model):
             dash.dropdown(desc="Use IDF:", options=[True, False,],),
             dash.dropdown(desc="Smooth IDF:", options=[True, False,],),
             dash.dropdown(desc="Sublinear TF:", options=[True, False,],),
+            dash.min_occurrence(),
+            dash.max_items(),
             dash.separator(text="Visualization"),
-            dash.top_n(m=10, n=301, i=10),
             dash.dropdown(
                 desc="Sort by:",
                 options=["Alphabetic", "Num Documents", "Times Cited", "TF*IDF",],

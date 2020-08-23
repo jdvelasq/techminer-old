@@ -8,9 +8,9 @@ def record_to_HTML(x, only_abstract=False):
     HTML = ""
 
     column_list = [
-        "Title",
+        "Title_HL",
         "Authors",
-        "Abstract",
+        "Abstract_HL",
         "Author_Keywords",
         "Index_Keywords",
         "Source_title",
@@ -56,7 +56,7 @@ def record_to_HTML(x, only_abstract=False):
             for m in v[1:]:
                 HTML += " " * 20 + "{}<br>".format(m)
         else:
-            if f == "Title" or f == "Abstract":
+            if f == "Title" or f == "Abstract" or f == "Title_HL" or f == "Abstract_HL":
                 s = textwrap.wrap(z, 80)
                 HTML += "{:>18}: {}<br>".format(f, s[0])
                 for t in s[1:]:

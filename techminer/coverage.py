@@ -46,14 +46,15 @@ def coverage(input_file="techminer.csv"):
     """
 
     x = pd.read_csv(input_file)
+    columns = sorted(x.columns)
 
     return pd.DataFrame(
         {
-            "Column": x.columns,
-            "Number of items": [len(x) - x[col].isnull().sum() for col in x.columns],
+            "Column": columns,
+            "Number of items": [len(x) - x[col].isnull().sum() for col in columns],
             "Coverage (%)": [
                 "{:5.2%}".format((len(x) - x[col].isnull().sum()) / len(x))
-                for col in x.columns
+                for col in columns
             ],
         }
     )

@@ -97,7 +97,7 @@ def create_institutions_thesaurus(
     x = x.map(lambda w: w.split(";"))
     x = x.explode()
     x = x.map(lambda w: w.strip())
-    x = x.unique()
+    x = x.unique().tolist()
 
     ##
     ## Loads existent thesaurus
@@ -115,7 +115,7 @@ def create_institutions_thesaurus(
     ##
     ## Creates a dataframe for words and keys
     ##
-    x = pd.DataFrame({"word": x.tolist(), "key": x.tolist()})
+    x = pd.DataFrame({"word": x, "key": x})
 
     ##
     ## Searches a possible name for the institution
