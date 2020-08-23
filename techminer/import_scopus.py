@@ -3,7 +3,6 @@
 """
 
 import json
-import textwrap
 import re
 import string
 from os.path import dirname, join
@@ -176,59 +175,6 @@ def __extract_country(x):
     return pd.NA
 
 
-def __extract_institution(x):
-    """
-    """
-
-    def search_name(affiliation):
-        if len(affiliation.split(",")) == 1:
-            return x.strip()
-        affiliation = affiliation.lower()
-        for elem in affiliation.split(","):
-            for name in names:
-                if name in elem:
-                    return elem.strip()
-        return pd.NA
-
-    #
-    names = [
-        "univ",
-        "institut",
-        "centre",
-        "center",
-        "centro",
-        "agency",
-        "council",
-        "commission",
-        "college",
-        "politec",
-        "inc.",
-        "ltd.",
-        "office",
-        "department",
-        "direction" "laboratory",
-        "laboratoire",
-        "colegio",
-        "school",
-        "scuola",
-        "ecole",
-        "hospital",
-        "association",
-        "asociacion",
-        "company",
-        "organization",
-        "academy",
-    ]
-
-    if pd.isna(x) is True or x is None:
-        return pd.NA
-    institution = search_name(x)
-    if pd.isna(institution):
-        if len(x.split(",")) == 2:
-            return x.split(",")[0].strip()
-    return institution
-
-
 def __NLP(text):
     """Extracts words  and 2-grams from phrases.
     """
@@ -397,14 +343,6 @@ def import_scopus(input_file="scopus.csv", output_file="techminer.csv"):
             lambda w: w.split(";")[0] if isinstance(w, str) else w
         )
 
-        logging_info("Extracting institutions from affiliations ...")
-        x["Institutions"] = map_(x, "Affiliations", __extract_institution)
-
-        logging_info("Extracting institution of first author ...")
-        x["Institution_1st_Author"] = x.Institutions.map(
-            lambda w: w.split(";")[0] if isinstance(w, str) else w
-        )
-
         logging_info("Reducing list of countries ...")
         x["Countries"] = x.Countries.map(
             lambda w: ";".join(set(w.split(";"))) if isinstance(w, str) else w
@@ -433,7 +371,7 @@ def import_scopus(input_file="scopus.csv", output_file="techminer.csv"):
         )
 
     if "Abstract" in x.columns:
-
+        logging_info("Removing copyright mark from abstract ...")
         x.Abstract = x.Abstract.map(
             lambda w: w[0 : w.find("\u00a9")] if not pd.isna(w) else w
         )

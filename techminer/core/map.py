@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-from techminer.explode import MULTIVALUED_COLS
+from techminer.core.params import MULTIVALUED_COLS
 
 
 def map_(x, column, f):

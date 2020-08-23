@@ -2,6 +2,8 @@
 
 from .import_scopus import import_scopus
 from .top_documents import top_documents
-from .create_thesaurus import create_thesaurus
-from .apply_thesaurus import apply_thesaurus
-from .extract_citations import extract_citations
+from .create_keywords_thesaurus import create_keywords_thesaurus
+from .apply_keywords_thesaurus import apply_keywords_thesaurus
+from .create_institutions_thesaurus import create_institutions_thesaurus
+from .apply_institutions_thesaurus import apply_institutions_thesaurus
+

@@ -11,7 +11,8 @@ import pandas as pd
 from IPython.display import display
 from ipywidgets import GridspecLayout, Layout
 
-from techminer.explode import MULTIVALUED_COLS, explode
+from techminer.core.explode import explode
+from techminer.core.params import MULTIVALUED_COLS
 from techminer.record_to_html import record_to_HTML
 
 

@@ -4,32 +4,36 @@ import pandas as pd
 from IPython.display import display
 from ipywidgets import GridspecLayout, Layout
 
-from techminer.explode import MULTIVALUED_COLS, explode
+from techminer.core.explode import explode
+from techminer.core.params import MULTIVALUED_COLS
 from techminer.record_to_html import record_to_HTML
 
 
 def app(df, top_n=50, only_abstract=False):
     """Jupyter Lab dashboard.
     """
-    COLUMNS = [
-        "Author_Keywords",
-        "Author_Keywords_CL",
-        "Authors",
-        "Countries",
-        "Country_1st_Author",
-        "Index_Keywords",
-        "Index_Keywords_CL",
-        "Institution_1st_Author",
-        "Institutions",
-        "Keywords",
-        "Source_title",
-        "Title",
-        "Year",
-        "Abstract_words",
-        "Abstract_words_CL",
-        "Title_words",
-        "Title_words_CL",
-    ]
+    COLUMNS = sorted(
+        [
+            "Author_Keywords",
+            "Author_Keywords_CL",
+            "Authors",
+            "Countries",
+            "Country_1st_Author",
+            "Index_Keywords",
+            "Index_Keywords_CL",
+            "Institution_1st_Author",
+            "Institutions",
+            "Keywords",
+            "Source_title",
+            "Title",
+            "Year",
+            "Abstract_words",
+            "Abstract_words_CL",
+            "Title_words",
+            "Title_words_CL",
+        ]
+    )
+
     # -------------------------------------------------------------------------
     #
     # UI

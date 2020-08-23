@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-from techminer.params import EXCLUDE_COLS, MULTIVALUED_COLS
+from techminer.core.params import EXCLUDE_COLS, MULTIVALUED_COLS
 
 
 ##

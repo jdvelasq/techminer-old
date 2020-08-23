@@ -5,7 +5,9 @@ import os.path
 from techminer.core.thesaurus import load_file_as_dict, Thesaurus
 
 
-def create_thesaurus(input_file="techminer.csv", thesaurus_file="thesaurus.txt"):
+def create_keywords_thesaurus(
+    input_file="techminer.csv", thesaurus_file="keywords_thesaurus.txt"
+):
 
     #
     # 1.-- Loads keywords

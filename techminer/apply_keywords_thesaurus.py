@@ -5,9 +5,9 @@ from techminer.core.thesaurus import read_textfile
 from techminer.core.map import map_
 
 
-def apply_thesaurus(
+def apply_keywords_thesaurus(
     input_file="techminer.csv",
-    thesaurus_file="thesaurus.txt",
+    thesaurus_file="keywords_thesaurus.txt",
     output_file="techminer.csv",
 ):
 
