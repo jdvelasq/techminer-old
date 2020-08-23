@@ -16,28 +16,33 @@ from techminer.core.params import MULTIVALUED_COLS
 from techminer.record_to_html import record_to_HTML
 
 
-def app(df, top_n=50, only_abstract=False):
+def matrix_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
     """Jupyter Lab dashboard to matrix data.
     """
-    COLUMNS = [
-        "Author_Keywords",
-        "Author_Keywords_CL",
-        "Authors",
-        "Countries",
-        "Country_1st_Author",
-        "Index_Keywords",
-        "Index_Keywords_CL",
-        "Institution_1st_Author",
-        "Institutions",
-        "Keywords",
-        "Source_title",
-        "Title",
-        "Year",
-        "Abstract_words",
-        "Abstract_words_CL",
-        "Title_words",
-        "Title_words_CL",
-    ]
+
+    df = pd.read_csv(input_file)
+
+    COLUMNS = sorted(
+        [
+            "Author_Keywords",
+            "Author_Keywords_CL",
+            "Authors",
+            "Countries",
+            "Country_1st_Author",
+            "Index_Keywords",
+            "Index_Keywords_CL",
+            "Institution_1st_Author",
+            "Institutions",
+            "Keywords",
+            "Source_title",
+            "Title",
+            "Year",
+            "Abstract_words",
+            "Abstract_words_CL",
+            "Title_words",
+            "Title_words_CL",
+        ]
+    )
     #
     # -------------------------------------------------------------------------
     #

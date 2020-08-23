@@ -1,7 +1,12 @@
 import matplotlib
 import matplotlib.pyplot as pyplot
 
-import techminer.common as cmn
+
+from techminer.plots import expand_axis_limits
+from techminer.plots import counters_to_node_colors
+from techminer.plots import counters_to_node_sizes
+from techminer.plots import ax_text_node_labels
+from techminer.plots import set_spines_invisible
 
 
 def diagram_plot(x, y, labels, x_axis_at=0, y_axis_at=0, cmap=None, width=5, height=5):
@@ -11,16 +16,16 @@ def diagram_plot(x, y, labels, x_axis_at=0, y_axis_at=0, cmap=None, width=5, hei
     ax = fig.subplots()
     cmap = pyplot.cm.get_cmap(cmap)
 
-    node_sizes = cmn.counters_to_node_sizes(labels)
-    node_colors = cmn.counters_to_node_colors(x=labels, cmap=cmap)
+    node_sizes = counters_to_node_sizes(labels)
+    node_colors = counters_to_node_colors(x=labels, cmap=cmap)
 
     ax.scatter(
         x, y, s=node_sizes, linewidths=1, edgecolors="k", c=node_colors,
     )
 
-    cmn.ax_expand_limits(ax)
+    expand_axis_limits(ax)
 
-    cmn.ax_text_node_labels(
+    ax_text_node_labels(
         ax,
         labels=labels,
         dict_pos={key: (c, d) for key, c, d in zip(labels, x, y,)},
@@ -36,7 +41,7 @@ def diagram_plot(x, y, labels, x_axis_at=0, y_axis_at=0, cmap=None, width=5, hei
 
     ax.axis("off")
 
-    cmn.set_ax_splines_invisible(ax)
+    set_spines_invisible(ax)
 
     fig.set_tight_layout(True)
 

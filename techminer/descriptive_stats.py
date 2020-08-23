@@ -79,7 +79,7 @@ def _count_terms(x, column):
     return len(_extract_terms(x, column))
 
 
-def descriptive_stats(x):
+def descriptive_stats(input_file="techminer.csv"):
     """
     Descriptive statistics of current dataframe.
 
@@ -122,10 +122,13 @@ def descriptive_stats(x):
     Num_Authors                                   2
     
     """
+
+    x = pd.read_csv(input_file)
+
     y = {}
     y["Documents"] = str(len(x))
     #
-    for column in x.columns:
+    for column in sorted(x.columns):
         if column in EXCLUDE_COLS:
             continue
         if column != "Year":
@@ -153,7 +156,7 @@ def descriptive_stats(x):
                 len(x) / _count_terms(x, "Source_title")
             )
     #
-    d = [key for key in y.keys()]
-    v = [y[key] for key in y.keys()]
+    d = [key for key in sorted(y.keys())]
+    v = [y[key] for key in sorted(y.keys())]
     return pd.DataFrame(v, columns=["value"], index=d)
 

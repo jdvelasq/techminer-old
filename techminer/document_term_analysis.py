@@ -1,11 +1,16 @@
-from techminer.tfidf import TF_matrix, TFIDF_matrix
+import pandas as pd
+from techminer.core import sort_by_axis
 
-import techminer.common as cmn
-import techminer.dashboard as dash
-from techminer.bar_plot import bar_plot
-from techminer.barh_plot import barh_plot
-from techminer.dashboard import DASH
-from techminer.limit_to_exclude import limit_to_exclude
+from techminer.core import TF_matrix
+from techminer.core import TFIDF_matrix
+
+import techminer.core.dashboard as dash
+from techminer.plots import bar_plot
+from techminer.plots import barh_plot
+from techminer.core import DASH
+from techminer.core import limit_to_exclude
+from techminer.core import add_counters_to_axis
+
 
 ###############################################################################
 ##
@@ -35,7 +40,7 @@ class Model:
             limit_to=self.limit_to,
             exclude=self.exclude,
         )
-        TF_matrix_ = cmn.add_counters_to_axis(
+        TF_matrix_ = add_counters_to_axis(
             X=matrix, axis=1, data=self.data, column=self.column
         )
         if self.norm is not None:
@@ -59,7 +64,7 @@ class Model:
             )
             TFIDF_matrix_.pop("TEXT")
         else:
-            TFIDF_matrix_ = cmn.sort_by_axis(
+            TFIDF_matrix_ = sort_by_axis(
                 data=TFIDF_matrix_,
                 sort_by=self.sort_by,
                 ascending=self.ascending,
@@ -166,7 +171,10 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, years_range=None):
+def document_term_analysis(
+    input_file="techminer.csv", limit_to=None, exclude=None, years_range=None
+):
+    data = pd.read_csv(input_file)
     return DASHapp(
         data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()

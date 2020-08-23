@@ -5,7 +5,7 @@ import pandas as pd
 ##  Data coverage
 ##
 ##
-def coverage(x):
+def coverage(input_file="techminer.csv"):
     """Reports the number of not `None` elements for column in a dataframe.
 
     Returns:
@@ -44,6 +44,8 @@ def coverage(x):
 
 
     """
+
+    x = pd.read_csv(input_file)
 
     return pd.DataFrame(
         {

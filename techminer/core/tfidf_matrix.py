@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 
-from techminer.explode import explode
 from sklearn.feature_extraction.text import TfidfTransformer
 
 

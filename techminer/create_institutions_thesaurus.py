@@ -1,6 +1,7 @@
 import pandas as pd
+import os.path
 
-from techminer.core.thesaurus import Thesaurus
+from techminer.core.thesaurus import load_file_as_dict, Thesaurus
 
 #
 # The algorithm searches in order until
@@ -99,6 +100,19 @@ def create_institutions_thesaurus(
     x = x.unique()
 
     ##
+    ## Loads existent thesaurus
+    ##
+    if os.path.isfile(thesaurus_file):
+
+        dict_ = load_file_as_dict(thesaurus_file)
+        clustered_text = [word for key in dict_.keys() for word in dict_[key]]
+        x = [word for word in x if word not in clustered_text]
+
+    else:
+
+        dict_ = {}
+
+    ##
     ## Creates a dataframe for words and keys
     ##
     x = pd.DataFrame({"word": x.tolist(), "key": x.tolist()})
@@ -109,12 +123,15 @@ def create_institutions_thesaurus(
     x["key"] = x.key.map(search_name)
 
     ##
-    ## groupsby key
+    ## groups by key
     ##
     grp = x.groupby(by="key").agg({"word": list})
     result = {
         key: value for key, value in zip(grp.index.tolist(), grp["word"].tolist())
     }
+
+    if os.path.isfile(thesaurus_file):
+        result = {**result, **dict_}
 
     Thesaurus(result, ignore_case=False, full_match=True, use_re=False).to_textfile(
         thesaurus_file

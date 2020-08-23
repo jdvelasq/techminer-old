@@ -9,9 +9,12 @@ from techminer.core.params import MULTIVALUED_COLS
 from techminer.record_to_html import record_to_HTML
 
 
-def app(df, top_n=50, only_abstract=False):
+def column_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
     """Jupyter Lab dashboard.
     """
+
+    df = pd.read_csv(input_file)
+
     COLUMNS = sorted(
         [
             "Author_Keywords",
