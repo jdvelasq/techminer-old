@@ -14,5 +14,5 @@ def top_documents(input_file="techminer.csv", top_n=10):
             + ". "
             + df.Title[i]
             + "\t"
-            + str(df.Times_Cited[i])
+            + str(int(df.Times_Cited[i]))
         )

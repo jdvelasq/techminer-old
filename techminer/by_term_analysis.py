@@ -3,26 +3,32 @@ Analysis by Term
 ==========================================================================
 
 """
+from techminer.core import sort_axis
+from techminer.core import sort_by_axis
 import numpy as np
 import pandas as pd
 import ipywidgets as widgets
+from techminer.core.dashboard import max_items, min_occurrence
 
 
-from techminer.bar_plot import bar_plot
-from techminer.barh_plot import barh_plot
-from techminer.wordcloud_ import wordcloud_
-from techminer.treemap import treemap
-from techminer.pie_plot import pie_plot
+from techminer.plots import bar_plot
+from techminer.plots import barh_plot
+from techminer.plots import wordcloud_
+from techminer.plots import treemap
+from techminer.plots import pie_plot
+from techminer.plots import worldmap
+from techminer.plots import stacked_bar
+from techminer.plots import stacked_barh
 
-import techminer.common as cmn
-import techminer.dashboard as dash
-from techminer.dashboard import DASH
-from techminer.explode import explode
-from techminer.params import EXCLUDE_COLS
-from techminer.worldmap import worldmap
-from techminer.stacked_bar import stacked_bar
-from techminer.stacked_barh import stacked_barh
-from techminer.limit_to_exclude import limit_to_exclude
+import techminer.core.dashboard as dash
+from techminer.core import add_counters_to_axis
+from techminer.core import DASH
+
+from techminer.core import explode
+from techminer.core.params import EXCLUDE_COLS
+
+
+from techminer.core import limit_to_exclude
 
 ###############################################################################
 ##
@@ -44,7 +50,6 @@ class Model:
 
         self.column = None
         self.top_by = None
-        self.top_n = None
         self.sort_by = None
         self.ascending = None
         self.cmap = None
@@ -109,9 +114,9 @@ class Model:
 
         x = self.data.copy()
 
-        #
-        # 1.-- Num_Documents per Author
-        #
+        ##
+        ##  Num_Documents per Author
+        ##
         x["Num_Documents"] = 1
         x = explode(x[["Authors", "Num_Documents", "ID",]], "Authors",)
         result = x.groupby("Authors", as_index=True).agg({"Num_Documents": np.sum,})
@@ -122,9 +127,9 @@ class Model:
             if not pd.isna(author)
         }
 
-        #
-        # 2.-- Num Authors x Documents written per Author
-        #
+        ##
+        ##  Num Authors x Documents written per Author
+        ##
         z = z[["Num_Documents"]]
         z = z.groupby(["Num_Documents"]).size()
         w = [str(round(100 * a / sum(z), 2)) + " %" for a in z]
@@ -228,21 +233,19 @@ class Model:
         )
 
         ## counters in axis names
-        result = cmn.add_counters_to_axis(
+        result = add_counters_to_axis(
             X=result, axis=0, data=self.data, column=self.column
         )
 
         ## Top by / Top N
-        result = cmn.sort_by_axis(
-            data=result, sort_by=self.top_by, ascending=False, axis=0
-        )
-        result = result.head(self.top_n)
+        result = sort_by_axis(data=result, sort_by=self.top_by, ascending=False, axis=0)
+        result = result.head(self.max_items)
 
         ## Sort by
         if self.sort_by in result.columns:
             result = result.sort_values(self.sort_by, ascending=self.ascending)
         else:
-            result = cmn.sort_by_axis(
+            result = sort_by_axis(
                 data=result, sort_by=self.sort_by, ascending=self.ascending, axis=0
             )
 
@@ -366,14 +369,14 @@ class Model:
             exclude=self.exclude,
         )
 
-        result = cmn.add_counters_to_axis(
+        result = add_counters_to_axis(
             X=result, axis=0, data=self.data, column=self.column
         )
 
         ## Top by / Top N
         top_by = self.top_by.replace(" ", "_").replace("-", "_").replace("/", "_")
         if top_by in ["Num_Documents", "Times_Cited"]:
-            result = cmn.sort_axis(
+            result = sort_axis(
                 data=result,
                 num_documents=(top_by == "Num_Documents"),
                 axis=0,
@@ -381,12 +384,12 @@ class Model:
             )
         else:
             result = result.sort_values(top_by, ascending=False)
-        result = result.head(self.top_n)
+        result = result.head(self.max_items)
 
         ## Sort by
         sort_by = self.sort_by.replace(" ", "_").replace("-", "_").replace("/", "_")
         if sort_by in ["Alphabetic", "Num_Documents", "Times_Cited"]:
-            result = cmn.sort_by_axis(
+            result = sort_by_axis(
                 data=result, sort_by=self.sort_by, ascending=self.ascending, axis=0
             )
         else:
@@ -419,7 +422,7 @@ class Model:
                 figsize=(self.width, self.height),
             )
 
-    def general(self):
+    def compute_general_table(self):
 
         x = self.data.copy()
 
@@ -441,26 +444,31 @@ class Model:
 
         result["Times_Cited"] = result["Times_Cited"].map(lambda w: int(w))
 
-        result = cmn.add_counters_to_axis(
+        result = add_counters_to_axis(
             X=result, axis=0, data=self.data, column=self.column
         )
         top_by = self.top_by.replace(" ", "_").replace("-", "_").replace("/", "_")
-        result = cmn.sort_axis(
+        result = sort_axis(
             data=result,
             num_documents=(top_by == "Num_Documents"),
             axis=0,
             ascending=False,
         )
-        result = result.head(self.top_n)
+        result = result[result.Num_Documents >= self.min_occurrence]
+        result = result.head(self.max_items)
 
-        result = cmn.sort_axis(
+        result = sort_axis(
             data=result,
             num_documents=(self.sort_by == "Num Documents"),
             axis=0,
             ascending=self.ascending,
         )
 
-        #  result = result.reset_index(drop=True)
+        return result
+
+    def general(self):
+
+        result = self.compute_general_table()
 
         if self.view == "Table":
             return result
@@ -538,6 +546,19 @@ class Model:
             HTML += "<br><br>"
         return widgets.HTML("<pre>" + HTML + "</pre>")
 
+    def limit_to_python_code(self):
+
+        result = self.compute_general_table()
+        items = result.index.tolist()
+        items = [" ".join(item.split(" ")[:-1]) for item in items]
+        HTML = "LIMIT_TO = {<br>"
+        HTML += '    "' + self.column + '": [<br>'
+        for item in items:
+            HTML += '        "' + item + '",<br>'
+        HTML += "    ]<br>"
+        HTML += "}<br>"
+        return widgets.HTML("<pre>" + HTML + "</pre>")
+
 
 ###############################################################################
 ##
@@ -569,11 +590,14 @@ class DASHapp(DASH, Model):
             "Core source titles",
             "Top documents",
             "List of core source titles",
+            "LIMIT TO python code",
         ]
         self.panel_widgets = [
             dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
+            dash.min_occurrence(),
+            dash.max_items(),
             dash.separator(text="Visualization"),
             dash.dropdown(
                 desc="View:",
@@ -602,7 +626,6 @@ class DASHapp(DASH, Model):
                     "G index",
                 ],
             ),
-            dash.top_n(),
             dash.dropdown(
                 desc="Sort by:",
                 options=[
@@ -663,8 +686,9 @@ class DASHapp(DASH, Model):
             if self.view == "Table":
 
                 self.set_enabled("Column:")
+                self.set_enabled("Min occurrence:")
+                self.set_enabled("Max items:")
                 self.set_enabled("Top by:")
-                self.set_enabled("Top N:")
                 self.set_enabled("Sort by:")
                 self.set_enabled("Ascending:")
                 self.set_disabled("Colormap:")
@@ -676,8 +700,9 @@ class DASHapp(DASH, Model):
                 if self.view in ["Bar plot", "Horizontal bar plot"]:
 
                     self.set_enabled("Column:")
+                    self.set_enabled("Min occurrence:")
+                    self.set_enabled("Max items:")
                     self.set_enabled("Top by:")
-                    self.set_enabled("Top N:")
                     self.set_enabled("Sort by:")
                     self.set_enabled("Ascending:")
                     self.set_enabled("Colormap:")
@@ -687,8 +712,9 @@ class DASHapp(DASH, Model):
                 else:
 
                     self.set_enabled("Column:")
+                    self.set_enabled("Min occurrence:")
+                    self.set_enabled("Max items:")
                     self.set_enabled("Top by:")
-                    self.set_enabled("Top N:")
                     self.set_disabled("Sort by:")
                     self.set_disabled("Ascending:")
                     self.set_enabled("Colormap:")
@@ -740,9 +766,10 @@ class DASHapp(DASH, Model):
             if self.view == "Table":
 
                 self.set_enabled("Column:")
+                self.set_enabled("Min occurrence:")
+                self.set_enabled("Max items:")
                 self.set_enabled("View:")
                 self.set_enabled("Top by:")
-                self.set_enabled("Top N:")
                 self.set_enabled("Sort by:")
                 self.set_enabled("Ascending:")
                 self.set_disabled("Colormap:")
@@ -751,8 +778,9 @@ class DASHapp(DASH, Model):
 
             else:
 
+                self.set_enabled("Min occurrence:")
+                self.set_enabled("Max items:")
                 self.set_enabled("Top by:")
-                self.set_enabled("Top N:")
                 self.set_enabled("Sort by:")
                 self.set_enabled("Ascending:")
                 self.set_enabled("Colormap:")
@@ -794,8 +822,9 @@ class DASHapp(DASH, Model):
             if self.panel_widgets[1]["widget"].value == "Table":
 
                 self.set_enabled("Column:")
+                self.set_enabled("Min occurrence:")
+                self.set_enabled("Max items:")
                 self.set_enabled("Top by:")
-                self.set_enabled("Top N:")
                 self.set_enabled("Sort by:")
                 self.set_enabled("Ascending:")
                 self.set_disabled("Colormap:")
@@ -805,8 +834,9 @@ class DASHapp(DASH, Model):
             else:
 
                 self.set_enabled("Column:")
+                self.set_enabled("Min occurrence:")
+                self.set_enabled("Max items:")
                 self.set_enabled("Top by:")
-                self.set_enabled("Top N:")
                 self.set_enabled("Sort by:")
                 self.set_enabled("Ascending:")
                 self.set_enabled("Colormap:")
@@ -821,8 +851,9 @@ class DASHapp(DASH, Model):
             self.set_options("Top by:", options=["Num Documents", "Times Cited",])
 
             self.set_enabled("Column:")
+            self.set_disabled("Min occurrence:")
+            self.set_disabled("Max items:")
             self.set_disabled("View:")
-            self.set_disabled("Top N:")
             self.set_disabled("Sort by:")
             self.set_disabled("Ascending:")
             self.set_enabled("Colormap:")
@@ -834,6 +865,35 @@ class DASHapp(DASH, Model):
             for i, _ in enumerate(self.panel_widgets):
                 self.panel_widgets[i]["widget"].disabled = True
 
+        # ----------------------------------------------------------------------
+        if self.menu == "LIMIT TO python code":
+
+            self.set_options(
+                name="Column:",
+                options=sorted(
+                    [
+                        column
+                        for column in self.data.columns
+                        if column not in EXCLUDE_COLS
+                    ]
+                ),
+            )
+
+            self.set_options(name="Top by:", options=["Num Documents", "Times Cited",])
+
+            self.set_options(
+                name="Sort by:", options=["Alphabetic", "Num Documents", "Times Cited",]
+            )
+
+            self.set_enabled("Column:")
+            self.set_enabled("Min occurrence:")
+            self.set_enabled("Max items:")
+            self.set_enabled("Sort by:")
+            self.set_enabled("Ascending:")
+            self.set_disabled("Colormap:")
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+
 
 ###############################################################################
 ##
@@ -842,7 +902,11 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, years_range=None):
+def by_term_analysis(
+    input_file="techminer.csv", limit_to=None, exclude=None, years_range=None
+):
+
+    data = pd.read_csv(input_file)
     return DASHapp(
         data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()

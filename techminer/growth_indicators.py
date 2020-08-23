@@ -10,7 +10,7 @@ from techminer.bar_plot import bar_plot
 from techminer.barh_plot import barh_plot
 from techminer.stacked_bar import stacked_bar
 from techminer.stacked_barh import stacked_barh
-from techminer.limit_to_exclude import limit_to_exclude
+from techminer.core import limit_to_exclude
 
 
 ###############################################################################

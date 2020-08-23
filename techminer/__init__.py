@@ -11,3 +11,5 @@ from .descriptive_stats import descriptive_stats
 from .column_explorer import column_explorer
 from .matrix_explorer import matrix_explorer
 from .document_term_analysis import document_term_analysis
+from .by_year_analysis import by_year_analysis
+from .by_term_analysis import by_term_analysis

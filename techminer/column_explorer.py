@@ -34,6 +34,7 @@ def column_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
             "Abstract_words_CL",
             "Title_words",
             "Title_words_CL",
+            "Bradford_Law_Zone",
         ]
     )
 

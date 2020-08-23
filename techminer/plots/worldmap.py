@@ -50,7 +50,7 @@ def worldmap(
     df["color"] = x.map(lambda w: 0.1 + 0.9 * (w - x.min()) / (x.max() - x.min()))
 
     module_path = dirname(__file__)
-    with open(join(module_path, "data/worldmap.data"), "r") as f:
+    with open(join(module_path, "../data/worldmap.data"), "r") as f:
         countries = json.load(f)
     for country in countries.keys():
         data = countries[country]

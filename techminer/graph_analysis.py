@@ -16,7 +16,7 @@ from techminer.normalize_network import normalize_network
 from techminer.heatmap import heatmap as heatmap_
 from techminer.bubble_plot import bubble_plot as bubble_plot_
 from techminer.network import Network
-from techminer.limit_to_exclude import limit_to_exclude
+from techminer.core import limit_to_exclude
 
 ###############################################################################
 ##

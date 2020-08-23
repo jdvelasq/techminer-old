@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
 
-import techminer.dashboard as dash
-from techminer.dashboard import DASH
-from techminer.bar_plot import bar_plot
-from techminer.barh_plot import barh_plot
+import techminer.core.dashboard as dash
+from techminer.core import DASH
+from techminer.plots import bar_plot
+from techminer.plots import barh_plot
 
 
 ###############################################################################
@@ -206,5 +206,7 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def app(data, years_range=None):
+def by_year_analysis(input_file="techminer.csv", years_range=None):
+
+    data = pd.read_csv(input_file)
     return DASHapp(data=data, years_range=years_range).run()

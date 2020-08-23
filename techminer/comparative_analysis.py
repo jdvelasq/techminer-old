@@ -13,7 +13,7 @@ from techminer.dashboard import DASH
 from techminer.tfidf import TF_matrix, TFIDF_matrix
 from techminer.params import EXCLUDE_COLS
 from techminer.clustering import clustering
-from techminer.limit_to_exclude import limit_to_exclude
+from techminer.core import limit_to_exclude
 from techminer.xy_clusters_plot import xy_clusters_plot
 
 from collections import Counter

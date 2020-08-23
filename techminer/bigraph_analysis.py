@@ -23,7 +23,7 @@ from pyvis.network import Network
 
 from techminer.heatmap import heatmap as heatmap_
 from techminer.bubble_plot import bubble_plot
-from techminer.limit_to_exclude import limit_to_exclude
+from techminer.core import limit_to_exclude
 
 
 warnings.filterwarnings("ignore", category=UserWarning)

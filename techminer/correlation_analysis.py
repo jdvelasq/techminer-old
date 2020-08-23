@@ -19,7 +19,7 @@ from techminer.chord_diagram import ChordDiagram
 from techminer.dashboard import DASH
 from techminer.tfidf import TF_matrix
 from techminer.network import Network
-from techminer.limit_to_exclude import limit_to_exclude
+from techminer.core import limit_to_exclude
 
 ###############################################################################
 ##

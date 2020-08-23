@@ -1,15 +1,15 @@
 """
 
 """
-
+import numpy as np
 import json
 import re
-import string
+from techminer.core import explode
 from os.path import dirname, join
 
-import nltk
+
 import pandas as pd
-from nltk import WordNetLemmatizer
+
 import datetime
 
 
@@ -30,6 +30,11 @@ class ScopusImporter:
         ## Load data
         ##
         self.data = pd.read_csv(self.input_file)
+
+        ##
+        ## Document ID
+        ##
+        self.data["ID"] = range(len(self.data))
 
         ##
         ## Steps
@@ -57,11 +62,7 @@ class ScopusImporter:
         self.extract_abstract_words()
         self.highlight_author_keywords_in_titles()
         self.highlight_author_keywords_in_abstracts()
-
-        ##
-        ## Document ID
-        ##
-        self.data["ID"] = range(len(self.data))
+        self.compute_bradford_law_zones()
 
         ##
         ## Replace blanks by pd.NA
@@ -544,6 +545,66 @@ class ScopusImporter:
         ##
         self.data["Abstract_HL"] = self.data.Abstract
         self.data["Abstract_HL"] = self.data.Abstract_HL.map(replace_keywords)
+
+    def compute_bradford_law_zones(self):
+
+        ##
+        x = self.data.copy()
+
+        self.logging_info("Computing Bradford Law Zones ...")
+
+        ##
+        ## Counts number of documents per Source_title
+        ##
+        x["Num_Documents"] = 1
+        x = explode(x[["Source_title", "Num_Documents", "ID",]], "Source_title",)
+        m = x.groupby("Source_title", as_index=False).agg({"Num_Documents": np.sum,})
+        m = m[["Source_title", "Num_Documents"]]
+        m = m.sort_values(["Num_Documents"], ascending=False)
+        m["Cum_Num_Documents"] = m.Num_Documents.cumsum()
+        dict_ = {
+            source_title: num_documents
+            for source_title, num_documents in zip(m.Source_title, m.Num_Documents)
+        }
+
+        ##
+        ## Number of source titles by number of documents
+        ##
+        g = m[["Num_Documents"]]
+        g.loc[:, "Num_Source_titles"] = 1
+        g = g.groupby(["Num_Documents"], as_index=False).agg(
+            {"Num_Source_titles": np.sum,}
+        )
+        g["Total_Num_Documents"] = g["Num_Documents"] * g["Num_Source_titles"]
+        g = g.sort_values(["Num_Documents"], ascending=False)
+        g["Cum_Num_Documents"] = g["Total_Num_Documents"].cumsum()
+
+        ##
+        ## Bradford law zones
+        ##
+        bradford_core_sources = int(len(self.data) / 3)
+        g["Bradford_Law_Zone"] = g["Cum_Num_Documents"]
+        g["Bradford_Law_Zone"] = g.Bradford_Law_Zone.map(
+            lambda w: 3
+            if w > 2 * bradford_core_sources
+            else (2 if w > bradford_core_sources else 1)
+        )
+
+        bradford_dict = {
+            num_documents: zone
+            for num_documents, zone in zip(g.Num_Documents, g.Bradford_Law_Zone)
+        }
+
+        ##
+        ## Computes bradford zone for each document
+        ##
+        self.data["Bradford_Law_Zone"] = self.data.Source_title
+        self.data["Bradford_Law_Zone"] = self.data.Bradford_Law_Zone.map(
+            lambda w: dict_[w]
+        )
+        self.data["Bradford_Law_Zone"] = self.data.Bradford_Law_Zone.map(
+            lambda w: bradford_dict[w]
+        )
 
 
 def import_scopus(input_file="scopus.csv", output_file="techminer.csv"):
