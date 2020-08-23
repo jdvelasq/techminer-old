@@ -13,17 +13,27 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 
-
-import techminer.common as cmn
-import techminer.dashboard as dash
-from techminer.dashboard import DASH
-from techminer.tfidf import TF_matrix
-from techminer.params import EXCLUDE_COLS
 from pyvis.network import Network
+from techminer.plots import ax_text_node_labels
+from techminer.plots import set_spines_invisible
+from techminer.plots import expand_axis_limits
+from techminer.plots import counters_to_node_colors
+from techminer.plots import counters_to_node_sizes
+from techminer.core import sort_by_axis
+from techminer.core import add_counters_to_axis
 
-from techminer.heatmap import heatmap as heatmap_
-from techminer.bubble_plot import bubble_plot
 from techminer.core import limit_to_exclude
+
+import techminer.core.dashboard as dash
+from techminer.core import DASH
+
+
+from techminer.core import TF_matrix
+from techminer.core.params import EXCLUDE_COLS
+
+
+from techminer.plots import heatmap as heatmap_
+from techminer.plots import bubble_plot
 
 
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -53,8 +63,8 @@ class Model:
             return
 
         W = self.data[[self.column, self.by, "ID"]].dropna()
-        A = TF_matrix(W, self.column)
-        B = TF_matrix(W, self.by)
+        A = TF_matrix(data=W, column=self.column)
+        B = TF_matrix(data=W, column=self.by)
 
         if self.top_by == "Data":
 
@@ -78,23 +88,37 @@ class Model:
             # sort max values per column
             max_columns = matrix.sum(axis=0)
             max_columns = max_columns.sort_values(ascending=False)
-            max_columns = max_columns.head(self.top_n).index
+            max_columns = max_columns.head(self.max_items_column).index
 
             max_index = matrix.sum(axis=1)
             max_index = max_index.sort_values(ascending=False)
-            max_index = max_index.head(self.top_n).index
+            max_index = max_index.head(self.max_items_by).index
 
             matrix = matrix.loc[
                 [t for t in matrix.index if t in max_index],
                 [t for t in matrix.columns if t in max_columns],
             ]
 
-            matrix = cmn.add_counters_to_axis(
+            matrix = add_counters_to_axis(
                 X=matrix, axis=1, data=self.data, column=self.column
             )
-            matrix = cmn.add_counters_to_axis(
+            matrix = add_counters_to_axis(
                 X=matrix, axis=0, data=self.data, column=self.by
             )
+
+            columns = [
+                column
+                for column in matrix.columns
+                if int(column.split(" ")[-1].split(":")[0])
+                >= self.min_occurrence_column
+            ]
+            index = [
+                index
+                for index in matrix.index
+                if int(index.split(" ")[-1].split(":")[0]) >= self.min_occurrence_by
+            ]
+            matrix = matrix.loc[index, columns]
+
             self.X_ = matrix
 
         if self.top_by in ["Num Documents", "Times Cited"]:
@@ -107,14 +131,6 @@ class Model:
                 exclude=self.exclude,
             )
 
-            A = cmn.add_counters_to_axis(
-                X=A, axis=1, data=self.data, column=self.column
-            )
-
-            A = cmn.sort_by_axis(data=A, sort_by=self.top_by, ascending=False, axis=1)
-
-            A = A[A.columns[: self.top_n]]
-
             B = limit_to_exclude(
                 data=B,
                 axis=1,
@@ -123,27 +139,55 @@ class Model:
                 exclude=self.exclude,
             )
 
-            B = cmn.add_counters_to_axis(X=B, axis=1, data=self.data, column=self.by)
-
-            B = cmn.sort_by_axis(data=B, sort_by=self.top_by, ascending=False, axis=1)
-            B = B[B.columns[: self.top_n]]
-
             matrix = np.matmul(B.transpose().values, A.values)
             matrix = pd.DataFrame(matrix, columns=A.columns, index=B.columns)
+
+            matrix = add_counters_to_axis(
+                X=matrix, axis=1, data=self.data, column=self.column
+            )
+            matrix = add_counters_to_axis(
+                X=matrix, axis=0, data=self.data, column=self.by
+            )
+
+            matrix = sort_by_axis(
+                data=matrix, sort_by=self.top_by, ascending=False, axis=1
+            )
+            matrix = sort_by_axis(
+                data=matrix, sort_by=self.top_by, ascending=False, axis=0
+            )
+
+            columns = matrix.columns[: self.max_items_column]
+            index = matrix.index[: self.max_items_by]
+
+            matrix = matrix.loc[index, columns]
+
+            columns = [
+                column
+                for column in matrix.columns
+                if int(column.split(" ")[-1].split(":")[0])
+                >= self.min_occurrence_column
+            ]
+            index = [
+                index
+                for index in matrix.index
+                if int(index.split(" ")[-1].split(":")[0]) >= self.min_occurrence_by
+            ]
+            matrix = matrix.loc[index, columns]
+
             self.X_ = matrix
 
         self.sort()
 
     def sort(self):
 
-        self.X_ = cmn.sort_by_axis(
+        self.X_ = sort_by_axis(
             data=self.X_,
             sort_by=self.sort_r_axis_by,
             ascending=self.r_axis_ascending,
             axis=0,
         )
 
-        self.X_ = cmn.sort_by_axis(
+        self.X_ = sort_by_axis(
             data=self.X_,
             sort_by=self.sort_c_axis_by,
             ascending=self.c_axis_ascending,
@@ -180,11 +224,11 @@ class Model:
         ## Data preparation
         terms = X.columns.tolist() + X.index.tolist()
 
-        node_sizes = cmn.counters_to_node_sizes(x=terms)
+        node_sizes = counters_to_node_sizes(x=terms)
         column_node_sizes = node_sizes[: len(X.index)]
         index_node_sizes = node_sizes[len(X.index) :]
 
-        node_colors = cmn.counters_to_node_colors(x=terms, cmap=lambda w: w)
+        node_colors = counters_to_node_colors(x=terms, cmap=lambda w: w)
         column_node_colors = node_colors[: len(X.index)]
         index_node_colors = node_colors[len(X.index) :]
 
@@ -218,6 +262,7 @@ class Model:
         m = m.reset_index(drop=True)
 
         max_width = m.link_.max()
+
         for idx in range(len(m)):
 
             edge = [(m.from_[idx], m.to_[idx])]
@@ -266,13 +311,11 @@ class Model:
         )
 
         node_sizes = column_node_sizes + index_node_sizes
-        cmn.ax_text_node_labels(
-            ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes
-        )
-        cmn.ax_expand_limits(ax)
+        ax_text_node_labels(ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes)
+        expand_axis_limits(ax)
         ax.set_aspect("equal")
         ax.axis("off")
-        cmn.set_ax_splines_invisible(ax)
+        set_spines_invisible(ax)
         return fig
 
     ##
@@ -290,11 +333,11 @@ class Model:
         ## Data preparation
         terms = X.columns.tolist() + X.index.tolist()
 
-        node_sizes = cmn.counters_to_node_sizes(x=terms)
+        node_sizes = counters_to_node_sizes(x=terms)
         column_node_sizes = node_sizes[: len(X.index)]
         index_node_sizes = node_sizes[len(X.index) :]
 
-        node_colors = cmn.counters_to_node_colors(x=terms, cmap=lambda w: w)
+        node_colors = counters_to_node_colors(x=terms, cmap=lambda w: w)
         column_node_colors = node_colors[: len(X.index)]
         index_node_colors = node_colors[len(X.index) :]
 
@@ -503,7 +546,7 @@ class Model:
         #
         # Figure size
         #
-        cmn.ax_expand_limits(ax)
+        expand_axis_limits(ax)
         ax.invert_yaxis()
         ax.axis("off")
 
@@ -541,27 +584,32 @@ class DASHapp(DASH, Model):
         )
 
         self.panel_widgets = [
+            dash.separator(text="Column"),
             dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
-            dash.dropdown(
-                desc="By:", options=[z for z in COLUMNS if z in data.columns],
-            ),
-            dash.separator(text="Visualization"),
-            dash.dropdown(
-                desc="Top by:", options=["Num Documents", "Times Cited", "Data",],
-            ),
-            dash.top_n(),
+            dash.min_occurrence(arg="min_occurrence_column"),
+            dash.max_items(arg="max_items_column"),
             dash.dropdown(
                 desc="Sort C-axis by:",
                 options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
             ),
             dash.c_axis_ascending(),
+            dash.separator(text="Index"),
+            dash.dropdown(
+                desc="By:", options=[z for z in COLUMNS if z in data.columns],
+            ),
+            dash.min_occurrence(arg="min_occurrence_by"),
+            dash.max_items(arg="max_items_by"),
             dash.dropdown(
                 desc="Sort R-axis by:",
                 options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
             ),
             dash.r_axis_ascending(),
+            dash.separator(text="Visualization"),
+            dash.dropdown(
+                desc="Top by:", options=["Num Documents", "Times Cited", "Data",],
+            ),
             dash.cmap(arg="cmap", desc="Colormap Col:"),
             dash.cmap(arg="cmap_by", desc="Colormap By:"),
             dash.nx_layout(),
@@ -613,7 +661,10 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, years_range=None):
+def bigraph_analysis(
+    input_file="techminer.csv", limit_to=None, exclude=None, years_range=None
+):
+    data = pd.read_csv(input_file)
     return DASHapp(
         data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()

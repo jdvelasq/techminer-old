@@ -36,6 +36,7 @@ EXCLUDE_COLS = [
     "Art_No",
     "Authors_ID",
     "Authors_with_affiliations",
+    "Bradford_Law_Zone",
     "CODEN",
     "Correspondence_Address",
     "DOI",

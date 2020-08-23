@@ -1,3 +1,4 @@
+from .ax_text_node_labels import ax_text_node_labels
 from .bar_plot import bar_plot
 from .barh_plot import barh_plot
 from .bubble_plot import bubble_plot
