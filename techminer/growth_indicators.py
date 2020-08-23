@@ -4,7 +4,10 @@ import pandas as pd
 import techminer.common as cmn
 import techminer.dashboard as dash
 import techminer.by_term_per_year_analysis
-from techminer.dashboard import DASH
+
+import techminer.core.dashboard as dash
+from techminer.core import DASH
+
 from techminer.explode import explode
 from techminer.bar_plot import bar_plot
 from techminer.barh_plot import barh_plot

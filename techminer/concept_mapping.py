@@ -5,11 +5,12 @@ import pandas as pd
 
 from sklearn.manifold import MDS
 
+import techminer.core.dashboard as dash
+from techminer.core import DASH
 
-import techminer.common as cmn
-import techminer.dashboard as dash
+
 from techminer.ca import CA
-from techminer.dashboard import DASH
+
 from techminer.tfidf import TF_matrix, TFIDF_matrix
 from techminer.normalize_network import normalize_network
 from techminer.clustering import clustering

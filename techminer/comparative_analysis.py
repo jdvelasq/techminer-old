@@ -4,11 +4,9 @@ import pandas as pd
 
 import matplotlib.pyplot as pyplot
 
-import techminer.common as cmn
-import techminer.dashboard as dash
 
 from techminer.ca import CA
-from techminer.dashboard import DASH
+
 
 from techminer.tfidf import TF_matrix, TFIDF_matrix
 from techminer.params import EXCLUDE_COLS
@@ -17,6 +15,9 @@ from techminer.core import limit_to_exclude
 from techminer.xy_clusters_plot import xy_clusters_plot
 
 from collections import Counter
+
+import techminer.core.dashboard as dash
+from techminer.core import DASH
 
 
 ###############################################################################

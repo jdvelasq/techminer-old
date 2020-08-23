@@ -1,11 +1,3 @@
-"""
-Correlation Analysis
-==================================================================================================
-
-
-"""
-
-
 import matplotlib.pyplot as pyplot
 import networkx as nx
 import numpy as np
@@ -13,10 +5,13 @@ import pandas as pd
 from matplotlib.lines import Line2D
 import matplotlib
 import techminer.common as cmn
-import techminer.dashboard as dash
-import techminer.plots as plt
+
+import techminer.core.dashboard as dash
+from techminer.core import DASH
+
+
 from techminer.chord_diagram import ChordDiagram
-from techminer.dashboard import DASH
+
 from techminer.tfidf import TF_matrix
 from techminer.network import Network
 from techminer.core import limit_to_exclude

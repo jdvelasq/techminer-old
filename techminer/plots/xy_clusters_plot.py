@@ -1,7 +1,7 @@
 import math
 import matplotlib.pyplot as pyplot
 
-from techminer.expand_ax_limits import expand_ax_limits
+from techminer.plots import expand_ax_limits
 
 COLORS = [
     "tab:blue",

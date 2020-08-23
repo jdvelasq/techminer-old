@@ -8,7 +8,9 @@ from pyvis.network import Network
 import techminer.common as cmn
 import techminer.dashboard as dash
 
-from techminer.dashboard import DASH
+import techminer.core.dashboard as dash
+from techminer.core import DASH
+
 from techminer.tfidf import TF_matrix
 from techminer.params import EXCLUDE_COLS
 

@@ -13,3 +13,4 @@ from .matrix_explorer import matrix_explorer
 from .document_term_analysis import document_term_analysis
 from .by_year_analysis import by_year_analysis
 from .by_term_analysis import by_term_analysis
+from .by_term_per_year_analysis import by_term_per_year_analysis

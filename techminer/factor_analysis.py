@@ -19,8 +19,10 @@ from sklearn.manifold import MDS
 import matplotlib.pyplot as pyplot
 
 import techminer.common as cmn
-import techminer.dashboard as dash
-from techminer.dashboard import DASH
+
+import techminer.core.dashboard as dash
+from techminer.core import DASH
+
 from techminer.tfidf import TF_matrix, TFIDF_matrix
 from techminer.normalize_network import normalize_network
 from techminer.core import limit_to_exclude

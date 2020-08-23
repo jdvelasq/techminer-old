@@ -8,7 +8,6 @@ from techminer.core import sort_by_axis
 import numpy as np
 import pandas as pd
 import ipywidgets as widgets
-from techminer.core.dashboard import max_items, min_occurrence
 
 
 from techminer.plots import bar_plot
@@ -21,12 +20,13 @@ from techminer.plots import stacked_bar
 from techminer.plots import stacked_barh
 
 import techminer.core.dashboard as dash
-from techminer.core import add_counters_to_axis
 from techminer.core import DASH
 
+from techminer.core import add_counters_to_axis
 from techminer.core import explode
 from techminer.core.params import EXCLUDE_COLS
 
+#  from techminer.core.dashboard import max_items, min_occurrence
 
 from techminer.core import limit_to_exclude
 

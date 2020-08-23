@@ -3,10 +3,12 @@ import matplotlib.pyplot as pyplot
 import pandas as pd
 
 import techminer.common as cmn
-import techminer.dashboard as dash
+import techminer.core.dashboard as dash
+from techminer.core import DASH
+
 import techminer.plots as plt
 from techminer.ca import CA
-from techminer.dashboard import DASH
+
 from techminer.tfidf import TF_matrix, TFIDF_matrix
 
 from techminer.clustering import clustering

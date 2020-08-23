@@ -5,19 +5,25 @@ Analysis by Term per Year
 
 """
 
+from techminer.core import sort_by_axis
+from techminer.core import sort_axis
 import numpy as np
 import pandas as pd
+from techminer.core.dashboard import max_items, min_occurrence
 
-from techminer.gant_plot import gant_plot
-from techminer.gant0_plot import gant0_plot
-from techminer.bubble_plot import bubble_plot
-from techminer.heatmap import heatmap
-import techminer.by_year_analysis as by_year_analysis
-import techminer.common as cmn
-import techminer.dashboard as dash
-from techminer.dashboard import DASH
-from techminer.explode import explode
-from techminer.params import EXCLUDE_COLS
+from techminer.plots import gant_plot
+from techminer.plots import gant0_plot
+from techminer.plots import bubble_plot
+from techminer.plots import heatmap
+
+from techminer.core import explode
+from techminer.core import add_counters_to_axis
+from techminer.core.params import EXCLUDE_COLS
+
+
+from techminer.by_year_analysis import by_year_analysis
+import techminer.core.dashboard as dash
+from techminer.core import DASH
 
 TEXTLEN = 40
 
@@ -37,9 +43,9 @@ class BaseModel:
 
         x = self.data.copy()
 
-        #
-        # 1.-- Number of documents and times cited by term per year
-        #
+        ##
+        ##  Number of documents and times cited by term per year
+        ##
         x = explode(x[["Year", self.column, "Times_Cited", "ID"]], self.column)
         x["Num_Documents"] = 1
         result = x.groupby([self.column, "Year"], as_index=False).agg(
@@ -50,18 +56,18 @@ class BaseModel:
         )
         result["Times_Cited"] = result["Times_Cited"].map(lambda x: int(x))
 
-        #
-        # 2.-- Summary per year
-        #
+        ##
+        ##  Summary per year
+        ##
         summ = explode(x[["Year", "Times_Cited", "ID"]], "Year")
         summ.loc[:, "Num_Documents"] = 1
         summ = summ.groupby("Year", as_index=True).agg(
             {"Times_Cited": np.sum, "Num_Documents": np.size}
         )
 
-        #
-        # 3.-- dictionaries using the year as a key
-        #
+        ##
+        ##  Dictionaries using the year as a key
+        ##
         num_documents_by_year = {
             key: value for key, value in zip(summ.index, summ.Num_Documents)
         }
@@ -69,9 +75,9 @@ class BaseModel:
             key: value for key, value in zip(summ.index, summ.Times_Cited)
         }
 
-        #
-        # 4.-- indicators from ScientoPy
-        #
+        ##
+        ##  Indicators from ScientoPy
+        ##
         result["summary_documents_by_year"] = result.Year.apply(
             lambda w: num_documents_by_year[w]
         )
@@ -167,7 +173,6 @@ class MatrixModel(BaseModel):
         )
 
         self.top_by = None
-        self.top_n = None
         self.sort_by = None
         self.ascending = None
         self.column = None
@@ -209,9 +214,9 @@ class MatrixModel(BaseModel):
             if col != selected_col:
                 result.pop(col)
 
-        #
-        # Table pivot
-        #
+        ##
+        ## Table pivot
+        ##
         result = pd.pivot_table(
             result,
             values=selected_col,
@@ -220,31 +225,44 @@ class MatrixModel(BaseModel):
             fill_value=0,
         )
 
-        result = cmn.add_counters_to_axis(
+        ##
+        ## Min occurrence
+        ##
+        result = add_counters_to_axis(
             X=result, axis=1, data=self.data, column=self.column
         )
+        result = sort_axis(data=result, num_documents=True, axis=1, ascending=False)
+        columns = [
+            column
+            for column in result.columns
+            if int(column.split(" ")[-1].split(":")[0]) >= self.min_occurrence
+        ]
+        result = result.loc[:, columns]
 
         if top_by == 4:
+            ##
             ## top_by num documents
-            result = cmn.sort_axis(
-                data=result, num_documents=True, axis=1, ascending=False
-            )
-            selected_columns = result.columns[: self.top_n]
+            ##
+            result = sort_axis(data=result, num_documents=True, axis=1, ascending=False)
+            selected_columns = result.columns[: self.max_items]
             result = result[selected_columns]
 
         elif top_by == 5:
+            ##
             ## top_by times cited
-            result = cmn.sort_axis(
+            ##
+            result = sort_axis(
                 data=result, num_documents=False, axis=1, ascending=False
             )
-            selected_columns = result.columns[: self.top_n]
+            selected_columns = result.columns[: self.max_items]
             result = result[selected_columns]
 
         else:
+
             max = result.max(axis=0)
             max = max.sort_values(ascending=False)
             if self.top_n is not None:
-                max = max.head(self.top_n)
+                max = max.head(self.max_items)
             result = result[max.index]
 
         sum_years = result.sum(axis=1)
@@ -263,7 +281,7 @@ class MatrixModel(BaseModel):
             columns = columns.index.tolist()
             result = result[columns]
         else:
-            result = cmn.sort_by_axis(
+            result = sort_by_axis(
                 data=result, sort_by=self.sort_by, ascending=self.ascending, axis=1
             )
 
@@ -337,6 +355,8 @@ class MatrixDASHapp(DASH, MatrixModel):
             dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in data.columns],
             ),
+            dash.min_occurrence(),
+            dash.max_items(),
             dash.separator(text="Visualization"),
             dash.dropdown(
                 desc="Top by:",
@@ -349,7 +369,6 @@ class MatrixDASHapp(DASH, MatrixModel):
                     "Times Cited",
                 ],
             ),
-            dash.top_n(),
             dash.dropdown(
                 desc="Sort by:",
                 options=["Alphabetic", "Values", "Num Documents", "Times Cited"],
@@ -463,7 +482,7 @@ class MatrixListModel(BaseModel):
 
         ###
         result.index = result[self.column]
-        result = cmn.add_counters_to_axis(
+        result = add_counters_to_axis(
             X=result, axis=0, data=self.data, column=self.column
         )
         result[self.column] = result.index
@@ -552,8 +571,11 @@ class MatrixListDASHapp(DASH, MatrixListModel):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, tab=None, years_range=None):
+def by_term_per_year_analysis(
+    input_file="techminer.csv", limit_to=None, exclude=None, tab=None, years_range=None
+):
 
+    data = pd.read_csv(input_file)
     if tab == 1:
         return MatrixListDASHapp(
             data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
