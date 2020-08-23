@@ -1,19 +1,23 @@
+from techminer.core import sort_axis
+from techminer.core import add_counters_to_axis
+from techminer.core import sort_by_axis
 import numpy as np
 import pandas as pd
 
-import techminer.common as cmn
-import techminer.dashboard as dash
-import techminer.by_term_per_year_analysis
+
+from techminer.by_term_per_year_analysis import by_year_analysis
 
 import techminer.core.dashboard as dash
 from techminer.core import DASH
 
-from techminer.explode import explode
-from techminer.bar_plot import bar_plot
-from techminer.barh_plot import barh_plot
-from techminer.stacked_bar import stacked_bar
-from techminer.stacked_barh import stacked_barh
+from techminer.core import explode
 from techminer.core import limit_to_exclude
+from techminer.core.dashboard import max_items, min_occurrence
+
+from techminer.plots import bar_plot
+from techminer.plots import barh_plot
+from techminer.plots import stacked_bar
+from techminer.plots import stacked_barh
 
 
 ###############################################################################
@@ -139,12 +143,19 @@ class Model:
             exclude=self.exclude,
         )
 
-        result = cmn.add_counters_to_axis(
+        result = add_counters_to_axis(
             X=result, axis=0, data=self.data, column=self.column
         )
+        result = sort_axis(data=result, num_documents=True, axis=0, ascending=False)
+        index = [
+            index
+            for index in result.index
+            if int(index.split(" ")[-1].split(":")[0]) >= self.min_occurrence
+        ]
+        result = result.loc[index, :]
 
         if self.top_by in ["Alphabetic", "Num Documents", "Times Cited"]:
-            result = cmn.sort_by_axis(
+            result = sort_by_axis(
                 data=result, sort_by=self.top_by, ascending=False, axis=0
             )
         elif self.top_by == "Average Growth Rate":
@@ -164,10 +175,10 @@ class Model:
         else:
             pass
 
-        result = result.head(self.top_n)
+        result = result.head(self.max_items)
 
         if self.sort_by in ["Alphabetic", "Num Documents", "Times Cited"]:
-            result = cmn.sort_by_axis(
+            result = sort_by_axis(
                 data=result, sort_by=self.sort_by, ascending=self.ascending, axis=0
             )
         else:
@@ -268,20 +279,22 @@ class Model:
 ##
 ###############################################################################
 
-COLUMNS = [
-    "Authors",
-    "Countries",
-    "Institutions",
-    "Author_Keywords",
-    "Index_Keywords",
-    "Abstract_words_CL",
-    "Abstract_words",
-    "Title_words_CL",
-    "Title_words",
-    "Affiliations",
-    "Author_Keywords_CL",
-    "Index_Keywords_CL",
-]
+COLUMNS = sorted(
+    [
+        "Authors",
+        "Countries",
+        "Institutions",
+        "Author_Keywords",
+        "Index_Keywords",
+        "Abstract_words_CL",
+        "Abstract_words",
+        "Title_words_CL",
+        "Title_words",
+        "Affiliations",
+        "Author_Keywords_CL",
+        "Index_Keywords_CL",
+    ]
+)
 
 
 class DASHapp(DASH, Model):
@@ -306,6 +319,8 @@ class DASHapp(DASH, Model):
             dash.dropdown(
                 desc="Column:", options=[z for z in COLUMNS if z in self.data.columns],
             ),
+            dash.min_occurrence(),
+            dash.max_items(),
             dash.dropdown(desc="Time window:", options=[2, 3, 4, 5],),
             dash.separator(text="Visualization"),
             dash.dropdown(
@@ -321,7 +336,6 @@ class DASHapp(DASH, Model):
                     "Between",
                 ],
             ),
-            dash.top_n(),
             dash.dropdown(
                 desc="Sort by:",
                 options=[
@@ -366,7 +380,10 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, years_range=None):
+def growth_indicators(
+    input_file="techminer.csv", limit_to=None, exclude=None, years_range=None
+):
+    data = pd.read_csv(input_file)
     return DASHapp(
         data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()
