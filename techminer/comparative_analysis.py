@@ -238,11 +238,14 @@ class DASHapp(DASH, Model):
         ]
 
         COLUMNS = sorted(
-            [column for column in data.columns if column not in EXCLUDE_COLS]
+            [column for column in sorted(data.columns) if column not in EXCLUDE_COLS]
         )
 
         self.panel_widgets = [
-            dash.dropdown(desc="Column:", options=[t for t in data if t in COLUMNS],),
+            dash.dropdown(
+                desc="Column:",
+                options=[t for t in sorted(data.columns) if t in COLUMNS],
+            ),
             dash.min_occurrence(),
             dash.max_items(),
             dash.separator(text="Clustering"),
