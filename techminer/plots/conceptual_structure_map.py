@@ -3,9 +3,10 @@ import numpy as np
 import matplotlib.pyplot as pyplot
 from scipy.spatial import ConvexHull
 import pandas as pd
+from techminer.plots import set_spines_invisible
+from techminer.core.sort_axis import sort_axis
 
-from techminer.expand_ax_limits import expand_ax_limits
-import techminer.common as cmn
+from techminer.plots import expand_ax_limits
 
 COLORS = [
     "tab:blue",
@@ -61,24 +62,22 @@ def conceptual_structure_map(coordinates, cluster_labels, top_n, figsize):
         poly = pyplot.Polygon(p[hull.vertices, :], **kw)
         ax.add_patch(poly)
 
-    #
-    # 1.-- Creates the plot in memory
-    #
+    ##
+    ##  Creates the plot in memory
+    ##
     matplotlib.rc("font", size=11)
     fig = pyplot.Figure(figsize=figsize)
     ax = fig.subplots()
 
-    #
-    # 2.-- Plot the points of each cluster
-    #
-
+    ##
+    ##  Plot the points of each cluster
+    ##
     factor = 0.005
-
     n_clusters = len(set(cluster_labels))
     for i_cluster in range(n_clusters):
 
         X = coordinates[cluster_labels == i_cluster]
-        X = cmn.sort_axis(data=X, num_documents=True, axis=0, ascending=False,)
+        X = sort_axis(data=X, num_documents=True, axis=0, ascending=False,)
         X = X.head(top_n)
         x = X[X.columns[0]]
         y = X[X.columns[1]]
@@ -135,7 +134,7 @@ def conceptual_structure_map(coordinates, cluster_labels, top_n, figsize):
     )
     ax.axis("off")
     ax.set_aspect("equal")
-    cmn.set_ax_splines_invisible(ax)
+    set_spines_invisible(ax)
     ax.grid(axis="both", color="lightgray", linestyle="--", linewidth=0.5)
 
     xlim = ax.get_xlim()

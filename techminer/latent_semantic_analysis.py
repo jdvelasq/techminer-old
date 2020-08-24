@@ -1,29 +1,14 @@
-"""
-Factor analysis
-==================================================================================================
-
-
-
-"""
-
-import networkx as nx
-from numpy.lib.index_tricks import RClass
-import pandas as pd
-from matplotlib.lines import Line2D
 from sklearn.decomposition import PCA, FactorAnalysis, FastICA, TruncatedSVD
-from techminer.clustering import clustering
 from sklearn.manifold import MDS
-from scipy.spatial import ConvexHull
-import matplotlib.pyplot as pyplot
-
-
-import techminer.core.dashboard as dash
+from techminer.plots import counters_to_node_sizes
+from techminer.core import add_counters_to_axis
+from techminer.core import clustering
 from techminer.core import DASH
-
-from techminer.tfidf import TF_matrix, TFIDF_matrix
 from techminer.core import limit_to_exclude
-
-from techminer.xy_clusters_plot import xy_clusters_plot
+from techminer.core import TF_matrix, TFIDF_matrix
+from techminer.plots import xy_clusters_plot
+import pandas as pd
+import techminer.core.dashboard as dash
 
 ###############################################################################
 ##
@@ -95,7 +80,7 @@ class Model:
         #
         # 4.-- Add counters to axes
         #
-        M = cmn.add_counters_to_axis(X=M, axis=1, data=self.data, column=self.column)
+        M = add_counters_to_axis(X=M, axis=1, data=self.data, column=self.column)
 
         #
         # 5.-- Transpose
@@ -173,7 +158,7 @@ class Model:
             x_axis_at=0,
             y_axis_at=0,
             labels=self.cluster_names_,
-            node_sizes=cmn.counters_to_node_sizes(self.cluster_names_),
+            node_sizes=counters_to_node_sizes(self.cluster_names_),
             color_scheme="4 Quadrants",
             xlabel="Dim-{}".format(self.x_axis),
             ylabel="Dim-{}".format(self.y_axis),
@@ -280,8 +265,13 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, years_range=None):
+def latent_semantic_analysis(
+    input_file="techminer.csv", limit_to=None, exclude=None, years_range=None
+):
     return DASHapp(
-        data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        data=pd.read_csv(input_file),
+        limit_to=limit_to,
+        exclude=exclude,
+        years_range=years_range,
     ).run()
 

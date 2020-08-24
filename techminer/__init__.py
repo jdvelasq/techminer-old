@@ -18,3 +18,7 @@ from .growth_indicators import growth_indicators
 from .import_scopus import import_scopus
 from .matrix_explorer import matrix_explorer
 from .top_documents import top_documents
+from .factor_analysis import factor_analysis
+from .latent_semantic_analysis import latent_semantic_analysis
+from .comparative_analysis import comparative_analysis
+from .thematic_analysis import thematic_analysis

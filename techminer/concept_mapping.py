@@ -1,27 +1,22 @@
+from sklearn.manifold import MDS
+from techminer.core import add_counters_to_axis
+from techminer.core import CA
+from techminer.core import clustering
+from techminer.core import DASH
+from techminer.core import limit_to_exclude
+from techminer.core import normalize_network
+from techminer.core import sort_by_axis
+from techminer.core import TF_matrix, TFIDF_matrix
+from techminer.plots import ax_text_node_labels
+from techminer.plots import counters_to_node_sizes
+from techminer.plots import expand_ax_limits
 from techminer.plots import expand_ax_limits
 from techminer.plots import set_spines_invisible
-from techminer.plots import ax_text_node_labels
-from techminer.plots import expand_ax_limits
-from techminer.plots import counters_to_node_sizes
-from techminer.core import sort_by_axis
-from techminer.core import add_counters_to_axis
 import matplotlib
 import matplotlib.pyplot as pyplot
 import numpy as np
 import pandas as pd
-
-from sklearn.manifold import MDS
-
 import techminer.core.dashboard as dash
-from techminer.core import DASH
-
-
-from techminer.ca import CA
-
-from techminer.core import TF_matrix, TFIDF_matrix
-from techminer.core import normalize_network
-from techminer.core import clustering
-from techminer.core import limit_to_exclude
 
 ###############################################################################
 ##
@@ -511,8 +506,10 @@ class DASHapp(DASH, Model):
 def concept_mapping(
     input_file="techminer.csv", limit_to=None, exclude=None, years_range=None
 ):
-    data = pd.read_csv(input_file)
     return DASHapp(
-        data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        data=pd.read_csv(input_file),
+        limit_to=limit_to,
+        exclude=exclude,
+        years_range=years_range,
     ).run()
 

@@ -1,33 +1,18 @@
-"""
-Factor analysis
-==================================================================================================
-
-
-
-"""
-import ipywidgets as widgets
-import matplotlib.pyplot as pyplot
-import networkx as nx
+from sklearn.decomposition import PCA, FactorAnalysis, FastICA, TruncatedSVD
+from sklearn.manifold import MDS
+from techminer.plots import counters_to_node_sizes
+from techminer.core import sort_axis
+from techminer.core import add_counters_to_axis
+from techminer.core import clustering
+from techminer.core import DASH
+from techminer.core import limit_to_exclude
+from techminer.core import normalize_network
+from techminer.core import TF_matrix, TFIDF_matrix
+from techminer.plots import conceptual_structure_map
+from techminer.plots import xy_clusters_plot
 import numpy as np
 import pandas as pd
-import matplotlib
-from matplotlib.lines import Line2D
-from sklearn.decomposition import PCA, FactorAnalysis, FastICA, TruncatedSVD
-from techminer.clustering import clustering
-from sklearn.manifold import MDS
-
-import matplotlib.pyplot as pyplot
-
-import techminer.common as cmn
-
 import techminer.core.dashboard as dash
-from techminer.core import DASH
-
-from techminer.tfidf import TF_matrix, TFIDF_matrix
-from techminer.normalize_network import normalize_network
-from techminer.core import limit_to_exclude
-from techminer.conceptual_structure_map import conceptual_structure_map
-from techminer.xy_clusters_plot import xy_clusters_plot
 
 
 ###############################################################################
@@ -73,14 +58,14 @@ class Model:
         #
         # 3.-- Add counters to axes
         #
-        TF_matrix_ = cmn.add_counters_to_axis(
+        TF_matrix_ = add_counters_to_axis(
             X=TF_matrix_, axis=1, data=self.data, column=self.column
         )
 
         #
         # 4.-- Select top terms
         #
-        TF_matrix_ = cmn.sort_axis(
+        TF_matrix_ = sort_axis(
             data=TF_matrix_, num_documents=True, axis=1, ascending=False
         )
         if len(TF_matrix_.columns) > self.max_items:
@@ -195,7 +180,7 @@ class Model:
             x_axis_at=0,
             y_axis_at=0,
             labels=self.cluster_names_,
-            node_sizes=cmn.counters_to_node_sizes(self.cluster_names_),
+            node_sizes=counters_to_node_sizes(self.cluster_names_),
             color_scheme=self.color_scheme,
             xlabel="Dim-{}".format(self.x_axis),
             ylabel="Dim-{}".format(self.y_axis),
@@ -312,7 +297,12 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, years_range=None):
+def factor_analysis(
+    input_file="techminer.csv", limit_to=None, exclude=None, years_range=None
+):
     return DASHapp(
-        data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        data=pd.read_csv(input_file),
+        limit_to=limit_to,
+        exclude=exclude,
+        years_range=years_range,
     ).run()

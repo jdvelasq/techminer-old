@@ -1,17 +1,18 @@
+from techminer.core import add_counters_to_axis
+from techminer.core import CA
+from techminer.core import clustering
+from techminer.core import DASH
+from techminer.core import sort_by_axis
+from techminer.core import TF_matrix, TFIDF_matrix
+from techminer.plots import ax_text_node_labels
+from techminer.plots import counters_to_node_colors
+from techminer.plots import counters_to_node_sizes
+from techminer.plots import expand_ax_limits
+from techminer.plots import set_spines_invisible
 import matplotlib
 import matplotlib.pyplot as pyplot
 import pandas as pd
-
-import techminer.common as cmn
 import techminer.core.dashboard as dash
-from techminer.core import DASH
-
-import techminer.plots as plt
-from techminer.ca import CA
-
-from techminer.tfidf import TF_matrix, TFIDF_matrix
-
-from techminer.clustering import clustering
 
 ###############################################################################
 ##
@@ -37,14 +38,15 @@ class Model:
         ## Fuente:
         ##   https://tlab.it/en/allegati/help_en_online/mrepert.htm
         ##
-        #
-        # 1.-- Construye TF_matrix binaria
-        #
+
+        ##
+        ## Construye TF_matrix binaria
+        ##
         TF_matrix_ = TF_matrix(
             self.data, self.column, scheme="binary", min_occurrence=self.min_occurrence,
         )
 
-        TF_matrix_ = cmn.add_counters_to_axis(
+        TF_matrix_ = add_counters_to_axis(
             X=TF_matrix_, axis=1, data=self.data, column=self.column
         )
 
@@ -97,7 +99,7 @@ class Model:
         #
         # 6.-- Top n for contingency table
         #
-        self.contingency_table_ = cmn.sort_by_axis(
+        self.contingency_table_ = sort_by_axis(
             data=self.contingency_table_, sort_by=self.top_by, ascending=False, axis=0
         )
         self.contingency_table_ = self.contingency_table_.head(self.top_n)
@@ -183,12 +185,12 @@ class Model:
         dict_pos = {
             key: (x_, y_) for key, x_, y_ in zip(self.cluster_names_.keys(), x, y)
         }
-        cmn.ax_text_node_labels(
+        ax_text_node_labels(
             ax=ax, labels=self.cluster_names_, dict_pos=dict_pos, node_sizes=node_sizes
         )
 
-        cmn.set_ax_splines_invisible(ax)
-        cmn.ax_expand_limits(ax)
+        set_spines_invisible(ax)
+        expand_ax_limits(ax)
         ax.axis("off")
 
         fig.set_tight_layout(True)
@@ -209,10 +211,8 @@ class Model:
         ax = fig.subplots()
         cmap = pyplot.cm.get_cmap(self.cmap)
 
-        node_sizes = cmn.counters_to_node_sizes(self.term_ppal_coordinates_.index)
-        node_colors = cmn.counters_to_node_colors(
-            self.term_ppal_coordinates_.index, cmap
-        )
+        node_sizes = counters_to_node_sizes(self.term_ppal_coordinates_.index)
+        node_colors = counters_to_node_colors(self.term_ppal_coordinates_.index, cmap)
 
         ax.scatter(
             x,
@@ -236,15 +236,15 @@ class Model:
             key: (x_, y_)
             for key, x_, y_ in zip(self.term_ppal_coordinates_.index, x, y)
         }
-        cmn.ax_text_node_labels(
+        ax_text_node_labels(
             ax=ax,
             labels=self.term_ppal_coordinates_.index,
             dict_pos=dict_pos,
             node_sizes=node_sizes,
         )
 
-        cmn.set_ax_splines_invisible(ax)
-        cmn.ax_expand_limits(ax)
+        set_spines_invisible(ax)
+        expand_ax_limits(ax)
         ax.axis("off")
 
         fig.set_tight_layout(True)
@@ -340,8 +340,13 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, years_range=None):
+def thematic_analysis(
+    input_file="techminer.csv", limit_to=None, exclude=None, years_range=None
+):
     return DASHapp(
-        data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        data=pd.read_csv(input_file),
+        limit_to=limit_to,
+        exclude=exclude,
+        years_range=years_range,
     ).run()
 

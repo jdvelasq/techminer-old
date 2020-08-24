@@ -1,23 +1,15 @@
-import json
-import ipywidgets as widgets
-import pandas as pd
-
-import matplotlib.pyplot as pyplot
-
-
-from techminer.ca import CA
-
-
-from techminer.tfidf import TF_matrix, TFIDF_matrix
-from techminer.params import EXCLUDE_COLS
-from techminer.clustering import clustering
-from techminer.core import limit_to_exclude
-from techminer.xy_clusters_plot import xy_clusters_plot
-
 from collections import Counter
-
-import techminer.core.dashboard as dash
+from techminer.core import CA
+from techminer.core import add_counters_to_axis
+from techminer.core import clustering
 from techminer.core import DASH
+from techminer.core import limit_to_exclude
+from techminer.core import TF_matrix, TFIDF_matrix
+from techminer.core.params import EXCLUDE_COLS
+from techminer.plots import counters_to_node_sizes
+from techminer.plots import xy_clusters_plot
+import pandas as pd
+import techminer.core.dashboard as dash
 
 
 ###############################################################################
@@ -83,7 +75,7 @@ class Model:
         #
         # 4.-- Adds counter to axies
         #
-        TFIDF_matrix_ = cmn.add_counters_to_axis(
+        TFIDF_matrix_ = add_counters_to_axis(
             X=TFIDF_matrix_, axis=1, data=self.data, column=self.column
         )
 
@@ -164,7 +156,7 @@ class Model:
             x_axis_at=0,
             y_axis_at=0,
             labels=self.correspondence_analysis_plot_labels_[: self.top_n],
-            node_sizes=cmn.counters_to_node_sizes(coordinates.index),
+            node_sizes=counters_to_node_sizes(coordinates.index),
             color_scheme=self.color_scheme,
             xlabel="Dim-{}".format(self.x_axis),
             ylabel="Dim-{}".format(self.y_axis),
@@ -333,10 +325,13 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def app(
-    data, limit_to=None, exclude=None, years_range=None,
+def comparative_analysis(
+    input_file="techminer.csv", limit_to=None, exclude=None, years_range=None,
 ):
     return DASHapp(
-        data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        data=pd.read_csv(input_file),
+        limit_to=limit_to,
+        exclude=exclude,
+        years_range=years_range,
     ).run()
 

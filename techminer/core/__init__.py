@@ -1,4 +1,5 @@
 from .add_counters_to_axis import add_counters_to_axis
+from .ca import CA
 from .clustering import clustering
 from .dashboard import DASH
 from .explode import explode

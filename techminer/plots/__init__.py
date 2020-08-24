@@ -19,3 +19,4 @@ from .treemap import treemap
 from .wordcloud_ import wordcloud_
 from .worldmap import worldmap
 from .xy_clusters_plot import xy_clusters_plot
+from .conceptual_structure_map import conceptual_structure_map
