@@ -106,7 +106,9 @@ def column_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
         # Populate titles
         #
         s = x[x[column] == left_panel[1]["widget"].value]
-        left_panel[2]["widget"].options = sorted(s["Title"].tolist())
+        s = s.sort_values(["Times_Cited", "Title"], ascending=[False, True])
+        left_panel[2]["widget"].options = s["Title"].tolist()
+
         #
         # Print info from selected title
         #

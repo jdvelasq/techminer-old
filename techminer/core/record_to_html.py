@@ -8,14 +8,15 @@ def record_to_HTML(x, only_abstract=False):
     HTML = ""
 
     column_list = ["Title_HL" if "Title_HL" in x.index else "Title"]
-    column_list += ["Authors"]
-    column_list = ["Abstract_HL" if "Abstract_HL" in x.index else "Abstract"]
+    column_list += [
+        "Year",
+        "Authors",
+        "Times_Cited",
+    ]
+    column_list += ["Abstract_HL" if "Abstract_HL" in x.index else "Abstract"]
     column_list += [
         "Author_Keywords",
-        "Index_Keywords",
         "Source_title",
-        "Year",
-        "Times_Cited",
     ]
 
     if only_abstract is False:
