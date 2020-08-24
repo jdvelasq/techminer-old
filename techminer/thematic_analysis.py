@@ -40,7 +40,7 @@ class Model:
         ##
 
         ##
-        ## Construye TF_matrix binaria
+        ##  Construye TF_matrix binaria
         ##
         TF_matrix_ = TF_matrix(
             self.data, self.column, scheme="binary", min_occurrence=self.min_occurrence,
@@ -50,12 +50,12 @@ class Model:
             X=TF_matrix_, axis=1, data=self.data, column=self.column
         )
 
-        #
-        # 2.-- Construye TF-IDF y escala filas to longitud unitaria (norma euclidiana).
-        #      En sklearn: norm='l2'
-        #
-        #      tf-idf = tf * (log(N / df) + 1)
-        #
+        ##
+        ##  Construye TF-IDF y escala filas to longitud unitaria (norma euclidiana).
+        ##      En sklearn: norm='l2'
+        ##
+        ##      tf-idf = tf * (log(N / df) + 1)
+        ##
         TF_IDF_matrix_ = TFIDF_matrix(
             TF_matrix=TF_matrix_,
             norm="l2",
@@ -65,11 +65,11 @@ class Model:
             max_items=self.max_items,
         )
 
-        #
-        # 3.-- Clustering de las filas de TF_IDF_matrix_.
-        #      En TLAB se usa bisecting k-means.
-        #      Se implementa sklearn.cluster.KMeans
-        #
+        ##
+        ##  Clustering de las filas de TF_IDF_matrix_.
+        ##      En TLAB se usa bisecting k-means.
+        ##      Se implementa sklearn.cluster.KMeans
+        ##
         (
             self.n_clusters,
             self.labels_,
@@ -87,33 +87,35 @@ class Model:
             name_prefix="Theme {}",
         )
 
-        #
-        # 4.-- Matriz de contingencia.
-        #
+        ##
+        ##  Matriz de contingencia.
+        ##
         matrix = TF_IDF_matrix_.copy()
         matrix["*cluster*"] = self.labels_
         matrix = matrix.groupby(by="*cluster*").sum()
         matrix.index = ["Theme {:>2d}".format(i) for i in range(self.n_clusters)]
         self.contingency_table_ = matrix.transpose()
 
-        #
-        # 6.-- Top n for contingency table
-        #
+        ##
+        ##  Top n for contingency table
+        ##
         self.contingency_table_ = sort_by_axis(
             data=self.contingency_table_, sort_by=self.top_by, ascending=False, axis=0
         )
         self.contingency_table_ = self.contingency_table_.head(self.top_n)
 
-        #
-        # 8.-- Tamaño de los clusters.
-        #
+        ##
+        ## Tamaño de los clusters
+        ##
         W = TF_IDF_matrix_.copy()
         W["*cluster*"] = self.labels_
-        W = W.groupby("*cluster*").count()
+        W = W.groupby("*cluster*").count()[W.columns[0]].tolist()
 
-        #
-        # 9.-- Correspondence Analysis
-        #
+        self.num_documents_ = W
+
+        ##
+        ##  Correspondence Analysis
+        ##
         ca = CA()
         ca.fit(X=self.contingency_table_)
         self.cluster_ppal_coordinates_ = ca.principal_coordinates_cols_
@@ -149,7 +151,7 @@ class Model:
         ax = fig.subplots()
         cmap = pyplot.cm.get_cmap(self.cmap)
 
-        node_sizes = self.num_documents_.values()
+        node_sizes = self.num_documents_
         max_size = max(node_sizes)
         min_size = min(node_sizes)
         node_sizes = [
@@ -296,7 +298,8 @@ class DASHapp(DASH, Model):
 
         self.panel_widgets = [
             dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+                desc="Column:",
+                options=[z for z in sorted(COLUMNS) if z in data.columns],
             ),
             dash.min_occurrence(),
             dash.max_items(),
