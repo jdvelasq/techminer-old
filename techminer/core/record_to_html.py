@@ -7,10 +7,10 @@ def record_to_HTML(x, only_abstract=False):
     """
     HTML = ""
 
-    column_list = [
-        "Title_HL",
-        "Authors",
-        "Abstract_HL",
+    column_list = ["Title_HL" if "Title_HL" in x.index else "Title"]
+    column_list += ["Authors"]
+    column_list = ["Abstract_HL" if "Abstract_HL" in x.index else "Abstract"]
+    column_list += [
         "Author_Keywords",
         "Index_Keywords",
         "Source_title",

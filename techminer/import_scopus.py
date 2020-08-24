@@ -478,7 +478,7 @@ class ScopusImporter:
             #
             for keyword in keywords_list:
                 x = re.sub(
-                    pattern=keyword,
+                    pattern=re.escape(keyword),
                     repl=keyword.upper().replace(" ", "_"),
                     string=x,
                     flags=re.I,
@@ -489,6 +489,9 @@ class ScopusImporter:
             return
 
         if "Author_Keywords" not in self.data.columns:
+            return
+
+        if len(self.data) >= 200:
             return
 
         self.logging_info("Marking Author Keywords in Titles ...")
@@ -515,7 +518,7 @@ class ScopusImporter:
             #
             for keyword in keywords_list:
                 x = re.sub(
-                    pattern=keyword,
+                    pattern=re.escape(keyword),
                     repl=keyword.upper().replace(" ", "_"),
                     string=x,
                     flags=re.I,
@@ -526,6 +529,9 @@ class ScopusImporter:
             return
 
         if "Author_Keywords" not in self.data.columns:
+            return
+
+        if len(self.data) >= 200:
             return
 
         self.logging_info("Marking Author Keywords in Abstracts ...")
