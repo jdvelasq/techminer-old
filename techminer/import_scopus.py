@@ -606,10 +606,10 @@ class ScopusImporter:
         ##
         self.data["Bradford_Law_Zone"] = self.data.Source_title
         self.data["Bradford_Law_Zone"] = self.data.Bradford_Law_Zone.map(
-            lambda w: dict_[w]
+            lambda w: dict_[w], na_action="ignore"
         )
         self.data["Bradford_Law_Zone"] = self.data.Bradford_Law_Zone.map(
-            lambda w: bradford_dict[w]
+            lambda w: bradford_dict[w], na_action="ignore"
         )
 
 
