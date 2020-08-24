@@ -6,7 +6,7 @@ from .chord_diagram import ChordDiagram
 from .counters_to_node_colors import counters_to_node_colors
 from .counters_to_node_sizes import counters_to_node_sizes
 from .diagram_plot import diagram_plot
-from .expand_axis_limits import expand_axis_limits
+from .expand_ax_limits import expand_ax_limits
 from .gant_plot import gant_plot
 from .gant0_plot import gant0_plot
 from .heatmap import heatmap

@@ -5,20 +5,23 @@ import numpy as np
 import pandas as pd
 from cdlib import algorithms
 from pyvis.network import Network
-import techminer.common as cmn
-import techminer.dashboard as dash
+from techminer.core import add_counters_to_axis
+from techminer.core import sort_by_axis
+
+
+from techminer.core.params import EXCLUDE_COLS
 
 import techminer.core.dashboard as dash
+
 from techminer.core import DASH
-
-from techminer.tfidf import TF_matrix
-from techminer.params import EXCLUDE_COLS
-
-from techminer.normalize_network import normalize_network
-from techminer.heatmap import heatmap as heatmap_
-from techminer.bubble_plot import bubble_plot as bubble_plot_
-from techminer.network import Network
+from techminer.core import TF_matrix
+from techminer.core import normalize_network
 from techminer.core import limit_to_exclude
+from techminer.core import Network
+
+from techminer.plots import heatmap as heatmap_
+from techminer.plots import bubble_plot as bubble_plot_
+
 
 ###############################################################################
 ##
@@ -56,9 +59,9 @@ class Model:
 
     def apply(self):
 
-        #
-        # 1.-- Computes TF_matrix with occurrence >= min_occurrence
-        #
+        ##
+        ##  Computes TF_matrix with occurrence >= min_occurrence
+        ##
         TF_matrix_ = TF_matrix(
             data=self.data,
             column=self.column,
@@ -66,9 +69,9 @@ class Model:
             min_occurrence=self.min_occurrence,
         )
 
-        #
-        # 2.-- Limit to/Exclude
-        #
+        ##
+        ##  Limit to/Exclude
+        ##
         TF_matrix_ = limit_to_exclude(
             data=TF_matrix_,
             axis=1,
@@ -77,20 +80,20 @@ class Model:
             exclude=self.exclude,
         )
 
-        #
-        # 3.-- Adds counters to axis
-        #
-        TF_matrix_ = cmn.add_counters_to_axis(
+        ##
+        ##  Adds counters to axis
+        ##
+        TF_matrix_ = add_counters_to_axis(
             X=TF_matrix_, axis=1, data=self.data, column=self.column
         )
 
-        TF_matrix_ = cmn.sort_by_axis(
+        TF_matrix_ = sort_by_axis(
             data=TF_matrix_, sort_by=self.top_by, ascending=False, axis=1
         )
 
-        #
-        # 3.-- Select max_items
-        #
+        ##
+        ##  Select max_items
+        ##
         TF_matrix_ = TF_matrix_[TF_matrix_.columns[: self.max_items]]
         if len(TF_matrix_.columns) > self.max_items:
             top_items = TF_matrix_.sum(axis=0)
@@ -101,9 +104,9 @@ class Model:
             rows = rows[rows > 0]
             TF_matrix_ = TF_matrix_.loc[rows.index, :]
 
-        #
-        # 4.-- Co-occurrence matrix and association index
-        #
+        ##
+        ##  Co-occurrence matrix and association index
+        ##
         X = np.matmul(TF_matrix_.transpose().values, TF_matrix_.values)
         X = pd.DataFrame(X, columns=TF_matrix_.columns, index=TF_matrix_.columns)
         X = normalize_network(X, self.normalization)
@@ -280,5 +283,6 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None):
+def graph_analysis(input_file="techminer.csv", limit_to=None, exclude=None):
+    data = pd.read_csv(input_file)
     return DASHapp(data=data, limit_to=limit_to, exclude=exclude).run()

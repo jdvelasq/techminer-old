@@ -1,5 +1,4 @@
 import pandas as pd
-import techminer.common as cmn
 
 from sklearn.cluster import (
     AgglomerativeClustering,
@@ -10,6 +9,8 @@ from sklearn.cluster import (
     KMeans,
     MeanShift,
 )
+from techminer.core.sort_axis import sort_axis
+from techminer.plots import expand_ax_limits
 
 
 def clustering(
@@ -75,7 +76,7 @@ def clustering(
     for i_cluster in range(n_clusters):
         members = M[M.Cluster == i_cluster]
         if top_n is not None:
-            members = cmn.sort_axis(
+            members = sort_axis(
                 data=members, num_documents=True, axis=0, ascending=False
             )
             members = members.head(top_n)

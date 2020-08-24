@@ -4,8 +4,10 @@ import matplotlib
 import matplotlib.pyplot as pyplot
 import networkx as nx
 import pandas as pd
-
-import techminer.common as cmn
+from techminer.plots import set_spines_invisible
+from techminer.plots import expand_ax_limits
+from techminer.plots import counters_to_node_sizes
+from techminer.core.sort_axis import sort_axis
 
 
 cluster_colors = [
@@ -49,35 +51,35 @@ class Network:
 
         X = X.copy()
 
-        #
-        # 1.-- Network generation
-        #
+        ##
+        ##  Network generation
+        ##
         G = nx.Graph()
 
-        #
-        # 2.-- Top terms for labels
-        #
-        X = cmn.sort_axis(
+        ##
+        ##  Top terms for labels
+        ##
+        X = sort_axis(
             data=X, num_documents=(top_by == "Num Documents"), axis=1, ascending=False,
         )
         self.top_terms_ = X.columns.tolist()[:n_labels]
 
-        #
-        # 3.-- Add nodes to the network
-        #
+        ##
+        ##  Add nodes to the network
+        ##
         terms = X.columns.tolist()
         G.add_nodes_from(terms)
 
-        #
-        # 4.-- Adds size property to nodes
-        #
-        node_sizes = cmn.counters_to_node_sizes(terms)
+        ##
+        ##  Adds size property to nodes
+        ##
+        node_sizes = counters_to_node_sizes(terms)
         for term, size in zip(terms, node_sizes):
             G.nodes[term]["size"] = size
 
-        #
-        # 5.-- Add edges to the network
-        #
+        ##
+        ##  Add edges to the network
+        ##
         m = X.stack().to_frame().reset_index()
         m = m[m.level_0 < m.level_1]
         m.columns = ["from_", "to_", "link_"]
@@ -92,9 +94,9 @@ class Network:
                 physics=False,
             )
 
-        #
-        # 5.-- Network clustering
-        #
+        ##
+        ##  Network clustering
+        ##
         R = {
             "Label propagation": algorithms.label_propagation,
             "Leiden": algorithms.leiden,
@@ -106,9 +108,9 @@ class Network:
             for item in community:
                 G.nodes[item]["group"] = i_community
 
-        #
-        # 6.-- Cluster members
-        #
+        ##
+        ##  Cluster members
+        ##
         n_communities = len(R)
         max_len = max([len(r) for r in R])
         communities = pd.DataFrame(
@@ -125,9 +127,9 @@ class Network:
 
         self.cluster_members_ = communities
 
-        #
-        # 7.-- Saves the graph
-        #
+        ##
+        ##  Saves the graph
+        ##
         self.G_ = G
 
     def networkx_plot(self, layout, iterations, figsize):
@@ -203,8 +205,8 @@ class Network:
             )
 
         fig.set_tight_layout(True)
-        cmn.ax_expand_limits(ax)
-        cmn.set_ax_splines_invisible(ax)
+        expand_ax_limits(ax)
+        set_spines_invisible(ax)
         ax.set_aspect("equal")
         ax.axis("off")
 

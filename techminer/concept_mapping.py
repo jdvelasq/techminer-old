@@ -1,3 +1,10 @@
+from techminer.plots import expand_ax_limits
+from techminer.plots import set_spines_invisible
+from techminer.plots import ax_text_node_labels
+from techminer.plots import expand_ax_limits
+from techminer.plots import counters_to_node_sizes
+from techminer.core import sort_by_axis
+from techminer.core import add_counters_to_axis
 import matplotlib
 import matplotlib.pyplot as pyplot
 import numpy as np
@@ -11,9 +18,9 @@ from techminer.core import DASH
 
 from techminer.ca import CA
 
-from techminer.tfidf import TF_matrix, TFIDF_matrix
-from techminer.normalize_network import normalize_network
-from techminer.clustering import clustering
+from techminer.core import TF_matrix, TFIDF_matrix
+from techminer.core import normalize_network
+from techminer.core import clustering
 from techminer.core import limit_to_exclude
 
 ###############################################################################
@@ -41,10 +48,9 @@ class Model:
         ## https://tlab.it/en/allegati/help_en_online/mmappe2.htm
         ##
 
-        #
-        # 1.-- Co-occurrence matrix
-        #
-        #
+        ##
+        ##  Co-occurrence matrix
+        ##
         TF_matrix_ = TF_matrix(
             data=self.data,
             column=self.column,
@@ -52,9 +58,9 @@ class Model:
             min_occurrence=self.min_occurrence,
         )
 
-        #
-        # 2.-- Limit to/Exclude
-        #
+        ##
+        ##  Limit to/Exclude
+        ##
         TF_matrix_ = limit_to_exclude(
             data=TF_matrix_,
             axis=1,
@@ -63,13 +69,13 @@ class Model:
             exclude=self.exclude,
         )
 
-        #
-        # 3.-- Select max items
-        #
-        TF_matrix_ = cmn.add_counters_to_axis(
+        ##
+        ##  Select max items
+        ##
+        TF_matrix_ = add_counters_to_axis(
             X=TF_matrix_, axis=1, data=self.data, column=self.column
         )
-        TF_matrix_ = cmn.sort_by_axis(
+        TF_matrix_ = sort_by_axis(
             data=TF_matrix_, sort_by="Num Documents", ascending=False, axis=1
         )
         TF_matrix_ = TF_matrix_[TF_matrix_.columns[: self.max_items]]
@@ -82,16 +88,16 @@ class Model:
             rows = rows[rows > 0]
             TF_matrix_ = TF_matrix_.loc[rows.index, :]
 
-        #
-        # 4.-- Co-occurrence matrix and association index
-        #
+        ##
+        ##  Co-occurrence matrix and association index
+        ##
         X = np.matmul(TF_matrix_.transpose().values, TF_matrix_.values)
         X = pd.DataFrame(X, columns=TF_matrix_.columns, index=TF_matrix_.columns)
         X = normalize_network(X=X, normalization=self.normalization)
 
-        #
-        # 5.-- Clustering of the dissimilarity matrix
-        #
+        ##
+        ##  Clustering of the dissimilarity matrix
+        ##
         (
             self.n_clusters,
             self.labels_,
@@ -109,9 +115,9 @@ class Model:
             name_prefix="Cluster {}",
         )
 
-        #
-        # 5.-- Cluster co-occurrence
-        #
+        ##
+        ## Cluster co-occurrence
+        ##
         M = X.copy()
         M["CLUSTER"] = self.labels_
         M = M.groupby("CLUSTER").sum()
@@ -125,9 +131,9 @@ class Model:
         #
         self.cluster_co_occurrence_ = M
 
-        #
-        # 6.-- Strategic Map
-        #
+        ##
+        ##  Strategic Map
+        ##
 
         ## clusters name
         strategic_map = pd.DataFrame(
@@ -171,9 +177,9 @@ class Model:
         fig = pyplot.Figure(figsize=(self.width, self.height))
         ax = fig.subplots()
 
-        #
-        # Both methods use the dissimilitud matrix
-        #
+        ##
+        ## Both methods use the dissimilitud matrix
+        ##
         if method == "MDS":
             embedding = MDS(n_components=self.n_components)
             X_transformed = embedding.fit_transform(1 - X,)
@@ -191,7 +197,7 @@ class Model:
             cmap = pyplot.cm.get_cmap(cmap_name)
             colors += [cmap(0.025 + 0.05 * i) for i in range(20)]
 
-        node_sizes = cmn.counters_to_node_sizes(X.columns)
+        node_sizes = counters_to_node_sizes(X.columns)
 
         node_colors = [
             cmap(0.2 + 0.80 * t / (self.n_clusters - 1)) for t in range(self.n_clusters)
@@ -199,10 +205,10 @@ class Model:
 
         ax.scatter(x_axis, y_axis, s=node_sizes, c=node_colors, alpha=0.5)
 
-        cmn.ax_expand_limits(ax)
+        expand_ax_limits(ax)
 
         pos = {term: (x_axis[idx], y_axis[idx]) for idx, term in enumerate(X.columns)}
-        cmn.ax_text_node_labels(
+        ax_text_node_labels(
             ax=ax, labels=X.columns, dict_pos=pos, node_sizes=node_sizes
         )
         ax.axhline(y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1)
@@ -210,7 +216,7 @@ class Model:
 
         ax.set_aspect("equal")
         ax.axis("off")
-        cmn.set_ax_splines_invisible(ax)
+        set_spines_invisible(ax)
 
         fig.set_tight_layout(True)
 
@@ -314,8 +320,8 @@ class Model:
             alpha=0.4,
         )
 
-        cmn.ax_expand_limits(ax)
-        cmn.ax_text_node_labels(
+        expand_ax_limits(ax)
+        ax_text_node_labels(
             ax,
             labels=self.strategic_map_["Cluster name"],
             dict_pos={
@@ -338,7 +344,7 @@ class Model:
 
         #  ax.set_aspect("equal")
         ax.axis("off")
-        cmn.set_ax_splines_invisible(ax)
+        set_spines_invisible(ax)
         fig.set_tight_layout(True)
 
         return fig
@@ -502,7 +508,10 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, years_range=None):
+def concept_mapping(
+    input_file="techminer.csv", limit_to=None, exclude=None, years_range=None
+):
+    data = pd.read_csv(input_file)
     return DASHapp(
         data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()

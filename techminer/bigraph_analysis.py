@@ -16,7 +16,7 @@ import pandas as pd
 from pyvis.network import Network
 from techminer.plots import ax_text_node_labels
 from techminer.plots import set_spines_invisible
-from techminer.plots import expand_axis_limits
+from techminer.plots import expand_ax_limits
 from techminer.plots import counters_to_node_colors
 from techminer.plots import counters_to_node_sizes
 from techminer.core import sort_by_axis
@@ -312,7 +312,7 @@ class Model:
 
         node_sizes = column_node_sizes + index_node_sizes
         ax_text_node_labels(ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes)
-        expand_axis_limits(ax)
+        expand_ax_limits(ax)
         ax.set_aspect("equal")
         ax.axis("off")
         set_spines_invisible(ax)
@@ -546,7 +546,7 @@ class Model:
         #
         # Figure size
         #
-        expand_axis_limits(ax)
+        expand_ax_limits(ax)
         ax.invert_yaxis()
         ax.axis("off")
 

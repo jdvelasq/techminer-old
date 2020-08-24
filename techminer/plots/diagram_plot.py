@@ -2,7 +2,7 @@ import matplotlib
 import matplotlib.pyplot as pyplot
 
 
-from techminer.plots import expand_axis_limits
+from techminer.plots import expand_ax_limits
 from techminer.plots import counters_to_node_colors
 from techminer.plots import counters_to_node_sizes
 from techminer.plots import ax_text_node_labels
@@ -23,7 +23,7 @@ def diagram_plot(x, y, labels, x_axis_at=0, y_axis_at=0, cmap=None, width=5, hei
         x, y, s=node_sizes, linewidths=1, edgecolors="k", c=node_colors,
     )
 
-    expand_axis_limits(ax)
+    expand_ax_limits(ax)
 
     ax_text_node_labels(
         ax,

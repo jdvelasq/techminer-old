@@ -1,19 +1,24 @@
+from techminer.core.dashboard import min_occurrence
+from techminer.plots import heatmap
+from techminer.plots import counters_to_node_sizes
+from techminer.plots import counters_to_node_colors
+from techminer.core import sort_by_axis
+from techminer.core import add_counters_to_axis
 import matplotlib.pyplot as pyplot
-import networkx as nx
+
 import numpy as np
 import pandas as pd
-from matplotlib.lines import Line2D
-import matplotlib
-import techminer.common as cmn
+
 
 import techminer.core.dashboard as dash
 from techminer.core import DASH
 
 
-from techminer.chord_diagram import ChordDiagram
+from techminer.plots import ChordDiagram
+from techminer.plots import bubble_plot
 
-from techminer.tfidf import TF_matrix
-from techminer.network import Network
+from techminer.core import TF_matrix
+from techminer.core import Network
 from techminer.core import limit_to_exclude
 
 ###############################################################################
@@ -40,14 +45,14 @@ class Model:
 
         if self.column == self.by:
 
-            #
-            # 1.-- Drop NA from column
-            #
+            ##
+            ##  Drop NA from column
+            ##
             w = x[[self.column, "ID"]].dropna()
 
-            #
-            # 2.-- Computes TF_matrix with occurrence >= min_occurrence
-            #
+            ##
+            ##  Computes TF_matrix with occurrence >= min_occurrence
+            ##
             A = TF_matrix(
                 data=w,
                 column=self.column,
@@ -55,9 +60,9 @@ class Model:
                 min_occurrence=self.min_occurrence,
             )
 
-            #
-            # 3.-- Limit to/Exclude
-            #
+            ##
+            ##  Limit to/Exclude
+            ##
             A = limit_to_exclude(
                 data=A,
                 axis=1,
@@ -66,17 +71,12 @@ class Model:
                 exclude=self.exclude,
             )
 
-            #
-            # 4.-- Select max_items
-            #
-            A = cmn.add_counters_to_axis(
-                X=A, axis=1, data=self.data, column=self.column
-            )
-
-            A = cmn.sort_by_axis(data=A, sort_by=self.top_by, ascending=False, axis=1)
-
+            ##
+            ##   Select max_items
+            ##
+            A = add_counters_to_axis(X=A, axis=1, data=self.data, column=self.column)
+            A = sort_by_axis(data=A, sort_by=self.top_by, ascending=False, axis=1)
             A = A[A.columns[: self.max_items]]
-
             if len(A.columns) > self.max_items:
                 top_items = A.sum(axis=0)
                 top_items = top_items.sort_values(ascending=False)
@@ -86,26 +86,26 @@ class Model:
                 rows = rows[rows > 0]
                 A = A.loc[rows.index, :]
 
-            #
-            # 5.-- Computes correlation
-            #
+            ##
+            ##  Computes correlation
+            ##
             matrix = A.corr(method=self.method)
 
         else:
 
-            #
-            # 1.-- Drop NA from column
-            #
+            ##
+            ##  Drop NA from column
+            ##
             w = x[[self.column, self.by, "ID"]].dropna()
 
-            #
-            # 2.-- Computes TF_matrix with occurrence >= min_occurrence
-            #
-            A = TF_matrix(data=w, column=self.column, scheme=None, min_occurrence=None,)
+            ##
+            ##  Computes TF_matrix with occurrence >= min_occurrence
+            ##
+            A = TF_matrix(data=w, column=self.column, scheme=None)
 
-            #
-            # 3.-- Limit to/Exclude
-            #
+            ##
+            ##  Limit to/Exclude
+            ##
             A = limit_to_exclude(
                 data=A,
                 axis=1,
@@ -114,42 +114,38 @@ class Model:
                 exclude=self.exclude,
             )
 
-            #
-            # 4.-- Minimal occurrence
-            #
+            ##
+            ##  Minimal occurrence
+            ##
             terms = A.sum(axis=0)
             terms = terms.sort_values(ascending=False)
             terms = terms[terms >= self.min_occurrence]
             A = A.loc[:, terms.index]
 
-            #
-            # 5.-- Select max_items
-            #
-            A = cmn.add_counters_to_axis(
-                X=A, axis=1, data=self.data, column=self.column
-            )
-
-            A = cmn.sort_by_axis(data=A, sort_by=self.top_by, ascending=False, axis=1)
-
+            ##
+            ##  Select max_items
+            ##
+            A = add_counters_to_axis(X=A, axis=1, data=self.data, column=self.column)
+            A = sort_by_axis(data=A, sort_by=self.top_by, ascending=False, axis=1)
             if len(A.columns) > self.max_items:
                 A = A[A.columns[: self.max_items]]
 
-            #
-            # 6.-- Computes correlation
-            #
-            B = TF_matrix(w, column=self.by)
+            ##
+            ##  Computes correlation
+            ##
+            B = TF_matrix(w, column=self.by, scheme=None)
             matrix = np.matmul(B.transpose().values, A.values)
             matrix = pd.DataFrame(matrix, columns=A.columns, index=B.columns)
             matrix = matrix.corr(method=self.method)
 
-        matrix = cmn.sort_by_axis(
+        matrix = sort_by_axis(
             data=matrix,
             sort_by=self.sort_r_axis_by,
             ascending=self.r_axis_ascending,
             axis=0,
         )
 
-        matrix = cmn.sort_by_axis(
+        matrix = sort_by_axis(
             data=matrix,
             sort_by=self.sort_c_axis_by,
             ascending=self.c_axis_ascending,
@@ -165,11 +161,11 @@ class Model:
 
     def heatmap(self):
         self.apply()
-        return plt.heatmap(self.X_, cmap=self.cmap, figsize=(self.width, self.height))
+        return heatmap(self.X_, cmap=self.cmap, figsize=(self.width, self.height))
 
     def bubble_plot(self):
         self.apply()
-        return plt.bubble(
+        return bubble_plot(
             self.X_, axis=0, cmap=self.cmap, figsize=(self.width, self.height),
         )
 
@@ -177,8 +173,8 @@ class Model:
         self.apply()
         x = self.X_.copy()
         terms = self.X_.columns.tolist()
-        node_sizes = cmn.counters_to_node_sizes(x=terms)
-        node_colors = cmn.counters_to_node_colors(x, cmap=pyplot.cm.get_cmap(self.cmap))
+        node_sizes = counters_to_node_sizes(x=terms)
+        node_colors = counters_to_node_colors(x, cmap=pyplot.cm.get_cmap(self.cmap))
 
         cd = ChordDiagram()
 
@@ -367,7 +363,10 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def app(data, limit_to=None, exclude=None, years_range=None):
+def correlation_analysis(
+    input_file="techminer.csv", limit_to=None, exclude=None, years_range=None
+):
+    data = pd.read_csv(input_file)
     return DASHapp(
         data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()
