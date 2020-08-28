@@ -14,3 +14,4 @@ from .sort_by_axis import sort_by_axis
 from .text import remove_accents
 from .tf_matrix import TF_matrix
 from .tfidf_matrix import TFIDF_matrix
+from .extract_country_name import extract_country_name

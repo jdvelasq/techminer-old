@@ -203,24 +203,26 @@ def load_file_as_dict(filename):
     #
     file = open(filename, "r")
     for word in file:
-        if len(word.strip()) == 0 or word.strip() == "\n":
+        word = word.replace("\n", "")
+        if len(word.strip()) == 0:
             continue
-        word = word[:-1] if word[-1] == "\n" else word
-        if word[0] != " ":
-            if key is not None:
-                if values == []:
-                    raise Exception(
-                        "Key '"
-                        + key
-                        + "' in file '"
-                        + filename
-                        + "' without values associated"
-                    )
-                dic[key] = values
-            key = word.strip()
-            values = []
-        else:
-            values.append(word.strip())
+        if len(word) > 0:
+            if word[0] != " ":
+                if key is not None:
+                    if values == []:
+                        raise Exception(
+                            "Key '"
+                            + key
+                            + "' in file '"
+                            + filename
+                            + "' without values associated"
+                        )
+                    dic[key] = values
+                key = word.strip()
+                values = []
+            else:
+                if values is not None and len(word.strip()) > 0:
+                    values.append(word.strip())
     if key not in dic.keys():
         if values == []:
             raise Exception(
@@ -486,9 +488,11 @@ class Thesaurus:
                 result[value] = key
         return result
 
-    def apply_as_dict(self, x):
+    def apply_as_dict(self, x, strict=False):
 
         if x is pd.NA:
+            return pd.NA
+        if strict is True and x not in self._dict.keys():
             return pd.NA
         return self._dict[x] if x in self._dict.keys() else x
 

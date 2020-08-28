@@ -112,8 +112,8 @@ def descriptive_stats(input_file="techminer.csv"):
             y["Authors per document"] = round(_count_terms(x, "Authors") / len(x), 2)
 
         if "Num_Authors" in x.columns:
-            y["Authors of single-authored documents"] = len(x[x["Num_Authors"] == 1])
-            y["Authors of multi-authored documents"] = len(x[x["Num_Authors"] > 1])
+            y["Single-authored documents"] = len(x[x["Num_Authors"] == 1])
+            y["Multi-authored documents"] = len(x[x["Num_Authors"] > 1])
             y["Co-authors per document"] = round(x["Num_Authors"].mean(), 2)
 
         if "Source_Title" in x.columns:

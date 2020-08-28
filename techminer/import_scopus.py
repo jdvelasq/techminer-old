@@ -2,10 +2,8 @@
 
 """
 import numpy as np
-import json
 import re
 from techminer.core import explode
-from os.path import dirname, join
 
 
 import pandas as pd
@@ -16,6 +14,7 @@ import datetime
 from techminer.core.extract_words import extract_words
 from techminer.core.text import remove_accents
 from techminer.core.map import map_
+from techminer.core.extract_country_name import extract_country_name
 
 
 class ScopusImporter:
@@ -69,6 +68,10 @@ class ScopusImporter:
         ##
         self.data = self.data.applymap(
             lambda w: pd.NA if isinstance(w, str) and w == "" else w
+        )
+
+        self.data = self.data.applymap(
+            lambda w: w.replace(chr(8211), "-") if isinstance(w, str) else w
         )
 
         ##
@@ -253,80 +256,12 @@ class ScopusImporter:
         )
 
     def extract_country_names(self):
-        #
-        def extract_country(x):
-            #
-            if pd.isna(x) or x is None:
-                return pd.NA
-            ##
-            ## List of standardized country names
-            ##
-            module_path = dirname(__file__)
-            with open(join(module_path, "data/worldmap.data"), "r") as f:
-                countries = json.load(f)
-            country_names = list(countries.keys())
-
-            ##
-            ## Adds missing countries to list of
-            ## standardized countries
-            ##
-            for name in ["Singapore", "Malta", "United States"]:
-                country_names.append(name)
-
-            ##
-            ## Country names to lower case
-            ##
-            country_names = {country.lower(): country for country in country_names}
-
-            ##
-            ## Replace administrative regions by country names
-            ## for the current string
-            ##
-            x = x.lower()
-            x = x.strip()
-            for a, b in [
-                ("united states of america", "united states"),
-                ("usa", "united states"),
-                ("bosnia and herzegovina", "bosnia and herz."),
-                ("czech republic", "czechia"),
-                ("russian federation", "russia"),
-                ("peoples r china", "china"),
-                ("hong kong", "china"),
-                ("macau", "china"),
-                ("macao", "china"),
-            ]:
-                x = re.sub(a, b, x)
-
-            ##
-            ## Name search in the affiliation (x)
-            ##
-            for z in reversed(x.split(",")):
-
-                z = z.strip()
-
-                ##
-                ## Exact match in list of stadardized country names
-                ##
-                if z.lower() in country_names.keys():
-                    return country_names[z.lower()]
-
-                ##
-                ## Discard problems of multiple blank spaces
-                ##
-                z = " ".join([w.strip() for w in z.lower().split(" ")])
-                if z in country_names.keys():
-                    return country_names[z]
-
-            ##
-            ## Country not found
-            ##
-            return pd.NA
 
         if "Affiliations" not in self.data.columns:
             return
 
         self.logging_info("Extracting country names ...")
-        self.data["Countries"] = map_(self.data, "Affiliations", extract_country)
+        self.data["Countries"] = map_(self.data, "Affiliations", extract_country_name)
 
     def extract_country_first_author(self):
 

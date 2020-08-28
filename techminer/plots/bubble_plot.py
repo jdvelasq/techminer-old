@@ -2,9 +2,17 @@ import textwrap
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 
-TEXTLEN = 40
+
+TEXTLEN = 35
+
+
+def collapse_text(w, width=TEXTLEN):
+    if not isinstance(w, str):
+        return w
+    text_begining = " ".join(w.split(" ")[:-1])
+    text_ending = w.split(" ")[-1]
+    return textwrap.shorten(text=text_begining, width=TEXTLEN) + " " + text_ending
 
 
 def bubble_plot(
@@ -67,6 +75,12 @@ def bubble_plot(
     cmap = plt.cm.get_cmap(cmap)
 
     x = X.copy()
+
+    ##
+    ## Text wrap
+    ##
+    x.columns = [collapse_text(w) for w in x.columns.tolist()]
+    x.index = [collapse_text(w) for w in x.index.tolist()]
 
     size_max = x.max().max()
     size_min = x.min().min()

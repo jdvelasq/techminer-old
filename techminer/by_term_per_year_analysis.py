@@ -261,8 +261,7 @@ class MatrixModel(BaseModel):
 
             max = result.max(axis=0)
             max = max.sort_values(ascending=False)
-            if self.top_n is not None:
-                max = max.head(self.max_items)
+            max = max.head(self.max_items)
             result = result[max.index]
 
         sum_years = result.sum(axis=1)

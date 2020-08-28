@@ -23,13 +23,17 @@ def apply_institutions_thesaurus(
     ##
     ## Copy affiliations to institutions
     ##
-    data["Institutions"] = data.Affiliations
+    data["Institutions"] = data.Affiliations.map(
+        lambda w: w.lower().strip(), na_action="ignore"
+    )
 
     ##
     ## Cleaning
     ##
     logging_info("Extract and cleaning institutions.")
-    data["Institutions"] = map_(data, "Institutions", th.apply_as_dict)
+    data["Institutions"] = map_(
+        data, "Institutions", lambda w: th.apply_as_dict(w, strict=True)
+    )
 
     logging_info("Extracting institution of first author ...")
     data["Institution_1st_Author"] = data.Institutions.map(

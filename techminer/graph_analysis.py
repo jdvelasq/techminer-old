@@ -7,7 +7,10 @@ from cdlib import algorithms
 from pyvis.network import Network
 from techminer.core import add_counters_to_axis
 from techminer.core import sort_by_axis
+from techminer.plots import counters_to_node_sizes
+from techminer.plots import counters_to_node_colors
 
+from techminer.plots import ChordDiagram
 
 from techminer.core.params import EXCLUDE_COLS
 
@@ -164,6 +167,41 @@ class Model:
             clustering=self.clustering,
         ).pyvis_plot()
 
+    def chord_diagram(self):
+        self.apply()
+        x = self.X_.copy()
+        terms = self.X_.columns.tolist()
+        node_sizes = counters_to_node_sizes(x=terms)
+        node_colors = counters_to_node_colors(x, cmap=pyplot.cm.get_cmap(self.cmap))
+
+        cd = ChordDiagram()
+
+        ## add nodes
+        for idx, term in enumerate(x.columns):
+            cd.add_node(term, color=node_colors[idx], s=node_sizes[idx])
+
+        ## add links
+        m = x.stack().to_frame().reset_index()
+        m = m[m.level_0 < m.level_1]
+        m.columns = ["from_", "to_", "link_"]
+        m = m.reset_index(drop=True)
+
+        for idx in range(len(m)):
+
+            if m.link_[idx] > 0.001:
+                d = {
+                    "linestyle": "-",
+                    "linewidth": 0.0
+                    + 2
+                    * (m.link_[idx] - m.link_.min())
+                    / (m.link_.max() - m.link_.min()),
+                    "color": "gray",
+                }
+
+                cd.add_edge(m.from_[idx], m.to_[idx], **d)
+
+        return cd.plot(figsize=(self.width, self.height))
+
 
 ###############################################################################
 ##
@@ -188,6 +226,7 @@ class DASHapp(DASH, Model):
             "Bubble plot",
             "Network (nx)",
             "Network (interactive)",
+            "Chord diagram",
             "Communities",
         ]
 
@@ -241,7 +280,7 @@ class DASHapp(DASH, Model):
             self.set_disabled("Width:")
             self.set_disabled("Height:")
 
-        if self.menu in ["Heatmap", "Bubble plot"]:
+        if self.menu in ["Heatmap", "Bubble plot", "Chord diagram"]:
 
             self.set_disabled("Clustering:")
             self.set_enabled("Colormap:")

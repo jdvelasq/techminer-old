@@ -18,7 +18,7 @@ def map_(x, column, f):
     x = x.copy()
     if column in MULTIVALUED_COLS:
         z = x[column].map(lambda w: w.split(";") if not pd.isna(w) else w)
-        z = z.map(lambda w: [f(z) for z in w] if isinstance(w, list) else w)
+        z = z.map(lambda w: [f(z.strip()) for z in w] if isinstance(w, list) else w)
         z = z.map(
             lambda w: [z for z in w if not pd.isna(z)] if isinstance(w, list) else w
         )
