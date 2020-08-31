@@ -3,6 +3,8 @@ import json
 import pandas as pd
 from os.path import dirname, join
 
+from techminer.core.thesaurus import load_file_as_dict
+
 NAMES = [
     ("universidad del norte", "colombia"),
     ("universidad nacional de colombia", "colombia"),
@@ -22,21 +24,10 @@ def extract_country_name(x):
     ## List of standardized country names
     ##
     module_path = dirname(__file__)
-    with open(join(module_path, "../data/worldmap.data"), "r") as f:
-        countries = json.load(f)
-    country_names = list(countries.keys())
-
-    ##
-    ## Adds missing countries to list of
-    ## standardized countries
-    ##
-    for name in ["Singapore", "Malta", "United States"]:
-        country_names.append(name)
-
-    ##
-    ## Country names to lower case
-    ##
-    country_names = {country.lower(): country for country in country_names}
+    filename = join(module_path, "../data/country_codes.data")
+    country_codes = load_file_as_dict(filename)
+    country_names = list(country_codes.values())
+    country_names = [name.lower() for w in country_names for name in w]
 
     ##
     ## Replace administrative regions by country names
@@ -70,15 +61,15 @@ def extract_country_name(x):
         ##
         ## Exact match in list of stadardized country names
         ##
-        if z.lower() in country_names.keys():
-            return country_names[z.lower()]
+        if z.lower() in country_names:
+            return z.lower()
 
         ##
         ## Discard problems of multiple blank spaces
         ##
         z = " ".join([w.strip() for w in z.lower().split(" ")])
-        if z in country_names.keys():
-            return country_names[z]
+        if z in country_names:
+            return z.lower()
 
     ##
     ## Repair country name from institution name
@@ -86,6 +77,10 @@ def extract_country_name(x):
     for institution, country in NAMES:
         if institution in x:
             return country
+
+    for country_name in country_names:
+        if country_name in x:
+            return country_name
 
     ##
     ## Country not found

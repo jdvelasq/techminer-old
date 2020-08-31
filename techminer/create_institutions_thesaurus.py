@@ -5,13 +5,21 @@ import json
 from techminer.core.thesaurus import load_file_as_dict, Thesaurus
 import re
 from techminer.core.extract_country_name import extract_country_name
+from techminer.core import logging_info
 
 #
 # The algorithm searches in order until
 # detect a match
 #
 NAMES = [
+    "ministry",
+    "national",
+    "univ ",
+    "unisversidade",
+    "univerza",
+    "univerrsity",
     "universidad",
+    "universidade",
     "universita",
     "universitas",
     "universitat",
@@ -19,9 +27,9 @@ NAMES = [
     "universiteit",
     "university",
     "univesity",
+    "univesrity",
     "unversitat",
-    "unisversidade",
-    "univerrsity",
+    "universiti",
     "institut",
     "instituto",
     "college",
@@ -73,23 +81,30 @@ NAMES = [
     "autoridad",
     "compania",
     "sociedad",
+    "servicio",
+    "government",
+    "institute",
+    "sociedad",
+    "society",
 ]
 
 SPANISH = [
-    "argentina",
-    "colombia",
-    "cuba",
-    "ecuador",
-    "guatemala",
-    "honduras",
-    "mexico",
-    "panama",
-    "peru",
-    "spain",
-    "venezuela",
+    "ARG",
+    "CHL",
+    "COL",
+    "CUB",
+    "ECU",
+    "ESP",
+    "GTM",
+    "HND",
+    "MEX",
+    "NIC",
+    "PAN",
+    "PER",
+    "VEN",
 ]
 
-PORTUGUES = ["brazil", "portugal"]
+PORTUGUES = ["BRA", "PRT"]
 
 
 def create_institutions_thesaurus(
@@ -98,12 +113,22 @@ def create_institutions_thesaurus(
     #
     def clean_name(w):
         w = w.replace(".", "").lower().strip()
+        w = w.replace("&", " and ")
+        w = w.replace(" aandm ", " a and m ")
+        w = w.replace("the university of ", "university of ")
+        w = w.replace(" univ. nacional de ", " universidad nacional de ")
+        w = w.replace(" univ. de la ", " universidad de la ")
+        w = w.replace(" univ. del ", " universidad del ")
+        w = w.replace(" univ. do ", " universidade do ")
+        w = w.replace(" univ. of ", " university of ")
+
         w = (
             w.replace("'", "")
             .replace('"', "")
             .replace("“", "")
             .replace("”", "")
             .replace(".", "")
+            .replace("’", "")
             .strip()
         )
 
@@ -160,21 +185,13 @@ def create_institutions_thesaurus(
     ## List of standardized country names
     ##
     module_path = dirname(__file__)
-    with open(join(module_path, "data/worldmap.data"), "r") as f:
-        countries = json.load(f)
-    country_names = list(countries.keys())
-
-    ##
-    ## Adds missing countries to list of
-    ## standardized countries
-    ##
-    for name in ["Singapore", "Malta", "United States"]:
-        country_names.append(name)
-
-    ##
-    ## Country names to lower case
-    ##
-    country_names = {country.lower(): country for country in country_names}
+    filename = join(module_path, "data/country_codes.data")
+    country_codes = load_file_as_dict(filename)
+    country_names = list(country_codes.values())
+    country_names = [w[0].lower() for w in country_names]
+    country_names_to_codes = {
+        item: code for code in country_codes.keys() for item in country_codes[code]
+    }
 
     ##
     ## Loads techminer.csv
@@ -182,8 +199,7 @@ def create_institutions_thesaurus(
     data = pd.read_csv(input_file)
 
     ##
-    ## Replace administrative regions and foreing
-    ## names by country names in affiliations
+    ## Transform affiliations to lower case
     ##
     x = data.Affiliations
     x = x.map(lambda w: w.lower().strip(), na_action="ignore")
@@ -221,6 +237,17 @@ def create_institutions_thesaurus(
     ## without country
     ##
     x["country"] = x.affiliation.map(extract_country_name, na_action="ignore")
+    if any(x.country.isna()):
+        logging_info(
+            'Affiliations without country detected - check "ignored_affiliations.txt"!'
+        )
+
+    ##
+    ## Converts country name to code
+    ##
+    x["country"] = x.country.map(
+        lambda w: country_names_to_codes[w], na_action="ignore"
+    )
 
     ##
     ## Ignore institutions without country
@@ -232,6 +259,10 @@ def create_institutions_thesaurus(
     ## Searches a possible name for the institution
     ##
     x["key"] = x.affiliation.map(search_name)
+    if any(x.key.isna()):
+        logging_info(
+            'Affiliations without institution detected - check "ignored_affiliations.txt"!'
+        )
     ignored_affiliations += x[x.key.isna()]["affiliation"].tolist()
 
     ##
@@ -253,30 +284,33 @@ def create_institutions_thesaurus(
         if pd.isna(key) or pd.isna(country):
             continue
 
-        aff = key.split()
-
-        if country.lower() in SPANISH:
+        aff = key.split(" ")
+        if country in SPANISH:
 
             ##
             ## Rule: XXX university ---> universidad XXX
             ##
 
-            for foreign, spanish in [
+            for foreign, local in [
                 ("university", "universidad de "),
                 ("university", "universidad de la "),
                 ("university", "universidad "),
+                ("institute of technology", "instituto de tecnologia de "),
+                ("institute of technology", "instituto tecnologico de "),
             ]:
+                if len(aff) > len(foreign.split(" ")):
 
-                if aff[-1] == foreign:
+                    proper_name = " ".join(aff[: len(aff) - len(foreign.split())])
+                    local_name = local + proper_name
 
-                    new_name = spanish + " ".join(aff[:-1])
-                    if new_name in institutions + VALID_NAMES:
+                    if local_name in institutions + VALID_NAMES:
                         x["key"] = x.key.map(
-                            lambda w: new_name if w == key else w, na_action="ignore"
+                            lambda w: local_name if w == key else w, na_action="ignore"
                         )
 
             ##
-            ## Rule: national university of XXX ---> universidad nacional de XXX
+            ## Rule: YYY university of XXX ---> universidad YYY de XXX
+            ##       YYY school of XXX ---> escuela YYY de XXX
             ##
             for foreign, spanish in [
                 ("national university of", "universidad nacional de "),
@@ -286,9 +320,12 @@ def create_institutions_thesaurus(
                 ("technological university of", "universidad tecnologica de "),
                 ("autonomous university of", "universidad autonoma de "),
                 ("polytechnic university of", "universidad politecnica de "),
+                ("politechnic university of", "universidad politecnica de "),
                 ("universitat politecnica de", "universidad politecnica de "),
                 ("metropolitan university of", "universidad metropolitana de "),
                 ("politechnic school of", "escuela politecnica de "),
+                ("polytechnic school of", "escuela politecnica de "),
+                ("industrial university of", "universidad industrial de "),
                 (
                     "pontifical catholic university of",
                     "pontificia universidad catolica de ",
@@ -297,7 +334,6 @@ def create_institutions_thesaurus(
 
                 foreign_len = len(foreign.split())
                 if " ".join(aff[:foreign_len]) == foreign:
-
                     new_name = spanish + " ".join(aff[foreign_len:])
                     if new_name in institutions + VALID_NAMES:
                         x["key"] = x.key.map(
@@ -305,12 +341,13 @@ def create_institutions_thesaurus(
                         )
 
             ##
-            ## Rule:
+            ## Rule: university of XXX ----> universidad de
             ##
             for foreign, spanish in [
                 ("universitat de", "universidad de "),
                 ("university of", "universidad de "),
                 ("university of", "universidad del "),
+                ("university of", "universidad de el "),
                 ("university of", "universidad de la "),
             ]:
 
@@ -322,10 +359,10 @@ def create_institutions_thesaurus(
                             lambda w: new_name if w == key else w, na_action="ignore"
                         )
 
-        if country.lower() in PORTUGUES:
+        if country in PORTUGUES:
 
             ##
-            ## Rule
+            ##
             ##
             for foreign, portugues in [
                 ("state university of", "universidade estadual do "),
@@ -343,6 +380,12 @@ def create_institutions_thesaurus(
                 ("universidad estatal de", "universidade federal do "),
                 ("universidad estatal de", "universidade federal de "),
                 ("universidad estatal de", "universidade federal da "),
+                ("federal institute of", "instituto federal do "),
+                ("federal institute of", "instituto federal de "),
+                ("federal institute of", "instituto federal da "),
+                ("polytechnic institute of", "instituto politecnido do "),
+                ("polytechnic institute of", "instituto politecnido de "),
+                ("polytechnic institute of", "instituto politecnido da "),
                 (
                     "pontifical catholic university of",
                     "pontificia universidade catolica do ",
@@ -380,21 +423,51 @@ def create_institutions_thesaurus(
                 ("university of", "universidade do "),
                 ("university of", "universidade de "),
                 ("university of", "universidade da "),
+                ("universidad de", "universidade do "),
+                ("universidad de", "universidade de "),
+                ("universidad de", "universidade da "),
             ]:
 
                 if " ".join(aff[:2]) == foreign:
-                    new_name = portugues + " ".join(aff[-2:])
+
+                    new_name = portugues + " ".join(aff[2:])
+                    if new_name in institutions + VALID_NAMES:
+                        x["key"] = x.key.map(
+                            lambda w: new_name if w == key else w, na_action="ignore"
+                        )
+
+            for foreign, portugues in [
+                ("university", "universidade do "),
+                ("university", "universidade de "),
+                ("university", "universidade da "),
+            ]:
+
+                if aff[-1] == foreign:
+                    new_name = portugues + " ".join(aff[:-1])
                     if new_name in institutions + VALID_NAMES:
                         x["key"] = x.key.map(
                             lambda w: new_name if w == key else w, na_action="ignore"
                         )
 
     ##
+    ## Format key string
+    ##
+    x["key"] = x.key.map(lambda w: w.title(), na_action="ignore")
+    x["key"] = x.key.map(lambda w: w.replace(" Of ", " of "), na_action="ignore")
+    x["key"] = x.key.map(lambda w: w.replace(" And ", " and "), na_action="ignore")
+    x["key"] = x.key.map(lambda w: w.replace(" For ", " for "), na_action="ignore")
+    x["key"] = x.key.map(lambda w: w.replace(" At ", " at "), na_action="ignore")
+    x["key"] = x.key.map(lambda w: w.replace(" De ", " de "), na_action="ignore")
+    x["key"] = x.key.map(lambda w: w.replace(" La ", " la "), na_action="ignore")
+    x["key"] = x.key.map(lambda w: w.replace(" Del ", " del "), na_action="ignore")
+    x["key"] = x.key.map(lambda w: w.replace(" Do ", " do "), na_action="ignore")
+    x["key"] = x.key.map(lambda w: w.replace(" Y ", " y "), na_action="ignore")
+    x["key"] = x.key.map(lambda w: w.replace(" Em ", " em "), na_action="ignore")
+
+    ##
     ## Adds the country to the key
     ##
-    x["key"] = (
-        x.key + " (" + x.country.map(lambda w: w.lower(), na_action="ignore") + ")"
-    )
+    x["key"] = x.key + " " + x.country
 
     ##
     ## groups by key

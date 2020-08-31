@@ -52,12 +52,23 @@ def worldmap(
     module_path = dirname(__file__)
     with open(join(module_path, "../data/worldmap.data"), "r") as f:
         countries = json.load(f)
+
+    #
+    #  country_names_in_table = df.index.tolist()
+    # country_names_in_map = [c.lower() for c in countries.keys()]
+
+    #  for country in country_names_in_table:
+    #      if country not in country_names_in_map:
+    #          print(country)
+    # print(sorted(country_names))
+    #
+
     for country in countries.keys():
         data = countries[country]
         for item in data:
             ax.plot(item[0], item[1], "-k", linewidth=0.5)
-            if country in x.index.tolist():
-                ax.fill(item[0], item[1], color=cmap(df.color[country]))
+            if country.lower() in df.index.tolist():
+                ax.fill(item[0], item[1], color=cmap(df.color[country.lower()]))
     #
     xmin, xmax = ax.get_xlim()
     ymin, ymax = ax.get_ylim()

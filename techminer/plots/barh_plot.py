@@ -3,6 +3,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
+from techminer.plots.shorten_ticklabels import shorten_ticklabels
+
 TEXTLEN = 40
 
 
@@ -85,9 +87,8 @@ def barh_plot(
 
     yticklabels = width.index
     if yticklabels.dtype != "int64":
-        yticklabels = [
-            textwrap.shorten(text=text, width=TEXTLEN) for text in yticklabels
-        ]
+
+        yticklabels = shorten_ticklabels(yticklabels)
 
     ax.invert_yaxis()
     ax.set_yticks(np.arange(len(width)))

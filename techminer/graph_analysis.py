@@ -1,9 +1,8 @@
-import matplotlib
 import matplotlib.pyplot as pyplot
 
 import numpy as np
 import pandas as pd
-from cdlib import algorithms
+
 from pyvis.network import Network
 from techminer.core import add_counters_to_axis
 from techminer.core import sort_by_axis
@@ -148,7 +147,7 @@ class Model:
             figsize=(self.width, self.height),
         )
 
-    def communities(self):
+    def communities_table(self):
         self.apply()
         return Network(
             X=self.X_,
@@ -156,6 +155,23 @@ class Model:
             n_labels=self.n_labels,
             clustering=self.clustering,
         ).cluster_members_
+
+    def communities_list(self):
+        self.apply()
+        members = Network(
+            X=self.X_,
+            top_by=self.top_by,
+            n_labels=self.n_labels,
+            clustering=self.clustering,
+        ).cluster_members_
+
+        community = []
+        for cluster in members.columns:
+            x = members[cluster].tolist()
+            x = [m for m in x if m.strip() != ""]
+            x = [" ".join(m.split(" ")[:-1]) for m in x]
+            community.append("; ".join(x))
+        return community
 
     def network_interactive(self):
 
@@ -227,7 +243,8 @@ class DASHapp(DASH, Model):
             "Network (nx)",
             "Network (interactive)",
             "Chord diagram",
-            "Communities",
+            "Communities (table)",
+            "Communities (list)",
         ]
 
         COLUMNS = sorted(
@@ -290,7 +307,7 @@ class DASHapp(DASH, Model):
             self.set_enabled("Width:")
             self.set_enabled("Height:")
 
-        if self.menu == "Network (nx)" or self.menu == "Communities":
+        if self.menu in ["Network (nx)", "Communities (list)", "Communities (table)"]:
 
             self.set_enabled("Clustering:")
             self.set_enabled("Colormap:")

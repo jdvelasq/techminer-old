@@ -1,3 +1,4 @@
+import re
 import pandas as pd
 import datetime
 
@@ -6,71 +7,64 @@ from nltk.corpus import stopwords
 
 
 def extract_words(data, text):
-    #
-    def logging_info(msg):
-        print(
-            "{} - INFO - {}".format(
-                datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), msg
-            )
-        )
+
+    ## ======================
+    ##
+    ## Keywords preparation
+    ##
+    ## ======================
 
     ##
+    ##  Prepare keyword list
     ##
-    ##  Keywords preparation
-    ##
-    ##
-
-    #
-    # 1.-- Prepare keyword list
-    #
     keywords = pd.Series(data.Author_Keywords.tolist() + data.Index_Keywords.tolist())
 
-    #
-    # 2.-- Selects not NA records
-    #
+    ##
+    ##  Selects not NA records
+    ##
     keywords = keywords[keywords.map(lambda w: not pd.isna(w))]
 
-    #
-    # 3.-- create a set of unique words
-    #
+    ##
+    ##  Create a set of unique words
+    ##
     keywords = keywords.tolist()
     keywords = [w for k in keywords for w in k.split(";")]
     keywords = sorted(list(set(keywords)))
 
-    ##
+    ## ======================
     ##
     ## Keywords extraction
     ##
-    ##
+    ## ======================
 
-    #
-    # 4.-- working column
-    #
+    ##
+    ##  Working column
+    ##
 
     text = text.map(lambda w: w.lower(), na_action="ignore")
 
-    #
-    # 5.-- replace multiple blank spaces
-    #
+    ##
+    ##  Replace multiple blank spaces
+    ##
     text = text.map(lambda w: " ".join(w.split()), na_action="ignore")
 
-    #
-    # 6.-- replace keywords in current text
-    #
+    ##
+    ##  Replace keywords in current text
+    ##
     for keyword in keywords:
         if " " in keyword or "_" in keyword:
             keyword_ = keyword.replace(" ", "_").replace("-", "_")
             text = text.map(lambda w: w.replace(keyword, keyword_), na_action="ignore")
 
-    #
-    # 7.-- Phrases spliting
-    #
+    ##
+    ##  Phrases spliting
+    ##
     for character in ["\n", ".", ";", ",", ":"]:
         text = text.map(lambda w: w.split(character)).explode()
 
-    #
-    # 8.-- remove punctuation
-    #
+    ##
+    ##  Remove punctuation
+    ##
     text = text.map(lambda w: w.replace(" - ", ""), na_action="ignore")
 
     text = text.map(
@@ -82,14 +76,14 @@ def extract_words(data, text):
         lambda w: w.translate(str.maketrans("", "", "!\"#$%&'()*+,./:;<=>?@[\\]^`{|}~"))
     )
 
-    #
-    # 9.-- split in words
-    #
+    ##
+    ##  Split in words
+    ##
     text = text.map(lambda w: w.split())
 
-    #
-    # 10.-- bigram construction
-    #
+    ##
+    ##  Bigram construction
+    ##
     bigrams = []
     for phrase in text:
         for i_word, _ in enumerate(phrase):
@@ -111,9 +105,9 @@ def extract_words(data, text):
             bigram = phrase[i_word] + " " + phrase[i_word + 1]
             bigrams.append(bigram)
 
-    #
-    # 11.-- bigrams selection
-    #
+    ##
+    ##  Bigrams selection
+    ##
     bigrams = [
         b
         for b in bigrams
@@ -121,26 +115,55 @@ def extract_words(data, text):
         in ["NN", "JJ NN", "NN NN", "NNS", "NN NNS", "JJ NNS", "NN NNS",]
     ]
 
-    #
-    # 12.-- bigrams processing
-    #
+    ##
+    ##  Bigrams processing
+    ##
     text = text.map(lambda w: " ".join(w))
     for bigram in bigrams:
         bigram_ = bigram.replace(" ", "_").replace("-", "_")
         text = text.map(lambda w: w.replace(bigram, bigram_), na_action="ignore")
     text = text.map(lambda w: w.split())
 
-    #
-    # 13.-- remove stopwords
-    #
+    ##
+    ##  Remove stopwords
+    ##
     text = text.map(
         lambda w: [z for z in w if z not in stopwords.words("english")],
         na_action="ignore",
     )
 
-    #
-    # 10.-- word tagging and selection
-    #
+    ##
+    ##  Remove isolated numbers and other symbols
+    ##
+    text = text.map(
+        lambda w: [z for z in w if not z.replace("-", "").isdigit()],
+        na_action="ignore",
+    )
+
+    text = text.map(
+        lambda w: [z[1:] if z[0] == "-" and len(z) > 1 else z for z in w],
+        na_action="ignore",
+    )
+
+    text = text.map(lambda w: [z.replace("#", "") for z in w], na_action="ignore",)
+    text = text.map(lambda w: [z.replace("”", "") for z in w], na_action="ignore",)
+    text = text.map(lambda w: [z.replace("“", "") for z in w], na_action="ignore",)
+    text = text.map(
+        lambda w: [z.replace(chr(8212), "") for z in w], na_action="ignore",
+    )
+    #  text = text.map(
+    #      lambda w: [a[1:] if a[0] == chr(8212) and len(a) > 2 else a for a in w],
+    #      na_action="ignore",
+    #  )
+    text = text.map(
+        lambda w: [a for a in w if not a.replace("-", "").isdigit()], na_action="ignore"
+    )
+    text = text.map(lambda w: [a.replace('"', "") for a in w])
+    text = text.map(lambda w: [a for a in w if len(a.strip()) > 1])
+
+    ##
+    ##  Word tagging and selection
+    ##
     text = text.map(lambda w: nltk.pos_tag(w), na_action="ignore")
     text = text.map(
         lambda w: [
@@ -152,9 +175,10 @@ def extract_words(data, text):
         ]
     )
 
-    #
-    # 11.-- replace '_' by ' '
-    #
+    ##
+    ##  Checks:
+    ##     Replace '_' by ' '
+    ##
     text = text.map(lambda w: [a.replace("_", " ") for a in w])
 
     result = pd.Series([[] for i in range(len(set(text.index.tolist())))])
@@ -168,6 +192,9 @@ def extract_words(data, text):
             for m in t:
                 result[index] += m
 
+    ##
+    ##  Verification
+    ##
+
     result = [";".join(w) for w in result]
     return result
-

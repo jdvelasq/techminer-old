@@ -18,6 +18,7 @@ from techminer.plots import pie_plot
 from techminer.plots import worldmap
 from techminer.plots import stacked_bar
 from techminer.plots import stacked_barh
+from techminer.plots import shorten_ticklabels
 
 import techminer.core.dashboard as dash
 from techminer.core import DASH

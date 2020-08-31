@@ -3,6 +3,7 @@ from .ca import CA
 from .clustering import clustering
 from .dashboard import DASH
 from .explode import explode
+from .extract_country_name import extract_country_name
 from .extract_words import extract_words
 from .limit_to_exclude import limit_to_exclude
 from .map import map_
@@ -14,4 +15,4 @@ from .sort_by_axis import sort_by_axis
 from .text import remove_accents
 from .tf_matrix import TF_matrix
 from .tfidf_matrix import TFIDF_matrix
-from .extract_country_name import extract_country_name
+from .logging_info import logging_info
