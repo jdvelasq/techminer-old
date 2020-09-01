@@ -75,7 +75,7 @@ class Model:
         def average_documents_per_year():
             #
             #         sum_{i=Y_start}^Y_end  Num_Documents[i]
-            #  AGR = -----------------------------------------
+            #  ADY = -----------------------------------------
             #                  Y_end - Y_start + 1
             #
             result = self.data.copy()

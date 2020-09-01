@@ -472,12 +472,30 @@ class Model:
 
         x["Num_Documents"] = 1
         x = explode(
-            x[[self.column, "Num_Documents", "Global_Citations", "ID",]], self.column,
+            x[
+                [
+                    self.column,
+                    "Num_Documents",
+                    "Global_Citations",
+                    "Local_Citations",
+                    "ID",
+                ]
+            ],
+            self.column,
         )
         result = x.groupby(self.column, as_index=True).agg(
-            {"Num_Documents": np.sum, "Global_Citations": np.sum,}
+            {
+                "Num_Documents": np.sum,
+                "Global_Citations": np.sum,
+                "Local_Citations": np.sum,
+            }
         )
+        result["Global_Citations"] = result["Global_Citations"].map(lambda w: int(w))
+        result["Local_Citations"] = result["Local_Citations"].map(lambda w: int(w))
 
+        ##
+        ## Limit To / Exclude items
+        ##
         result = limit_to_exclude(
             data=result,
             axis=0,
@@ -486,27 +504,52 @@ class Model:
             exclude=self.exclude,
         )
 
-        result["Global_Citations"] = result["Global_Citations"].map(lambda w: int(w))
+        ##
+        ## Minimal occurrence
+        ##
+        result = result[result.Num_Documents >= self.min_occurrence]
 
+        ##
+        ## Counters
+        ##
         result = add_counters_to_axis(
             X=result, axis=0, data=self.data, column=self.column
         )
-        top_by = self.top_by.replace(" ", "_").replace("-", "_").replace("/", "_")
-        result = sort_axis(
-            data=result,
-            num_documents=(top_by == "Num_Documents"),
-            axis=0,
-            ascending=False,
-        )
-        result = result[result.Num_Documents >= self.min_occurrence]
+
+        ##
+        ## Top by
+        ##
+        columns = {
+            "Num Documents": ["Num_Documents", "Global_Citations", "Local_Citations"],
+            "Global Citations": [
+                "Global_Citations",
+                "Num_Documents",
+                "Local_Citations",
+            ],
+            "Local Citations": ["Local_Citations", "Global_Citations", "Num_Documents"],
+        }[self.top_by]
+        result = result.sort_values(by=columns, ascending=False)
+
+        # top_by = self.top_by.replace(" ", "_").replace("-", "_").replace("/", "_")
+        # result = sort_axis(
+        #     data=result,
+        #     num_documents=(top_by == "Num_Documents"),
+        #     axis=0,
+        #     ascending=False,
+        # )
+
         result = result.head(self.max_items)
 
-        result = sort_axis(
-            data=result,
-            num_documents=(self.sort_by == "Num Documents"),
-            axis=0,
-            ascending=self.ascending,
-        )
+        ##
+        ## Sort by
+        ##
+        # result = sort_axis(
+        #      data=result,
+        #      num_documents=(self.sort_by == "Num Documents"),
+        #      axis=0,
+        #      ascending=self.ascending,
+        #  )
+        result = result.sort_values(by=columns, ascending=self.ascending)
 
         return result
 
@@ -520,9 +563,16 @@ class Model:
         if self.top_by == "Num Documents":
             values = result.Num_Documents
             darkness = result.Global_Citations
-        else:
+        elif self.top_by == "Global Citations":
             values = result.Global_Citations
             darkness = result.Num_Documents
+
+        elif self.top_by == "Local Citations":
+            values = result.Local_Citations
+            darkness = result.Num_Documents
+        else:
+            values = None
+            darkness = None
 
         if self.view == "Bar plot":
             return bar_plot(
@@ -710,7 +760,8 @@ class DASHapp(DASH, Model):
                     "Wordcloud",
                     "Treemap",
                 ],
-                "Top by:": ["Num Documents", "Global Citations",],
+                "Top by:": ["Num Documents", "Global Citations", "Local Citations"],
+                "Sort by:": ["Num Documents", "Global Citations", "Local Citations"],
             },
             "Impact": {
                 "Column:": [
@@ -751,6 +802,7 @@ class DASHapp(DASH, Model):
                     "Country_1st_Author",
                 ],
                 "View:": ["Table", "Bar plot", "Horizontal bar plot",],
+                "Top by:": ["Num Documents"],
                 "Sort by:": [
                     "Alphabetic",
                     "Num Documents",
