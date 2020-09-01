@@ -54,8 +54,8 @@ class ScopusImporter:
         self.format_abb_source_title()
         self.create_historiograph_id()
         self.create_local_references()
-        self.extract_title_words()
-        self.extract_abstract_words()
+        #  self.extract_title_words()
+        #  self.extract_abstract_words()
         self.highlight_author_keywords_in_titles()
         self.highlight_author_keywords_in_abstracts()
         self.compute_bradford_law_zones()
@@ -385,6 +385,24 @@ class ScopusImporter:
         self.data["Local_References"] = self.data.Local_References.map(
             lambda w: ";".join(w), na_action="ignore"
         )
+
+        local_references = self.data[["Local_References"]]
+        local_references = local_references.rename(
+            columns={"Local_References": "Local_Citations"}
+        )
+        local_references = local_references.dropna()
+
+        local_references["Local_Citations"] = local_references.Local_Citations.map(
+            lambda w: w.split(";")
+        )
+        local_references = local_references.explode("Local_Citations")
+        local_references = local_references.groupby(
+            ["Local_Citations"], as_index=False
+        ).size()
+        self.data["Local_Citations"] = 0
+        self.data.index = self.data.Historiograph_ID
+        self.data.loc[local_references.index, "Local_Citations"] = local_references
+        self.data.index = list(range(len(self.data)))
 
     def extract_title_words(self):
 
