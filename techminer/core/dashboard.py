@@ -234,12 +234,14 @@ def max_iter():
     }
 
 
-def max_items(arg='max_items'):
+def max_items(arg="max_items"):
     return {
         "arg": arg,
         "desc": "Max items:",
         "widget": widgets.Dropdown(
-            options=list(range(5, 100, 5)) + list(range(100, 3001, 100)),
+            options=list(range(5, 40, 1))
+            + list(range(40, 100, 5))
+            + list(range(100, 3001, 100)),
             layout=Layout(width="55%"),
         ),
     }
@@ -255,7 +257,7 @@ def n_labels():
     }
 
 
-def min_occurrence(arg='min_occurrence'):
+def min_occurrence(arg="min_occurrence"):
     return {
         "arg": arg,
         "desc": "Min occurrence:",
