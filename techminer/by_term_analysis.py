@@ -177,16 +177,44 @@ class Model:
         z = z.reset_index(drop=True)
         return z
 
-    def top_documents(self):
+    def most_global_cited_documents(self):
 
         data = self.data
         data = data.sort_values(["Global_Citations", "Year"], ascending=[False, True])
         data = data.head(50)
         data["Global_Citations"] = data.Global_Citations.map(lambda w: int(w))
+        data["Local_Citations"] = data.Local_Citations.map(lambda w: int(w))
+        data = data[
+            [
+                "Authors",
+                "Year",
+                "Title",
+                "Source_title",
+                "Global_Citations",
+                "Local_Citations",
+            ]
+        ]
         data = data.reset_index(drop=True)
-        data = data.sort_values(["Global_Citations", "Title"], ascending=[False, True])
-        data = data[["Authors", "Year", "Title", "Source_title", "Global_Citations"]]
+        return data
+
+    def most_local_cited_documents(self):
+
+        data = self.data
+        data = data.sort_values(["Local_Citations", "Year"], ascending=[False, True])
         data["Global_Citations"] = data.Global_Citations.map(lambda w: int(w))
+        data["Local_Citations"] = data.Local_Citations.map(lambda w: int(w))
+        data = data.head(50)
+        data = data[data.Local_Citations > 0]
+        data = data[
+            [
+                "Authors",
+                "Year",
+                "Title",
+                "Source_title",
+                "Global_Citations",
+                "Local_Citations",
+            ]
+        ]
         data = data.reset_index(drop=True)
         return data
 
@@ -604,7 +632,8 @@ class DASHapp(DASH, Model):
             "Single/Multiple publication",
             "Core authors",
             "Core source titles",
-            "Top documents",
+            "Most global cited documents",
+            "Most local cited documents",
             "List of core source titles",
             "LIMIT TO python code",
         ]
@@ -739,7 +768,8 @@ class DASHapp(DASH, Model):
             },
             "Core authors": {},
             "Core source titles": {},
-            "Top documents": {},
+            "Most global cited documents": {},
+            "Most local cited documents": {},
             "List of core source titles": {},
             "LIMIT TO python code": {
                 "Column:": sorted(
@@ -918,7 +948,8 @@ class DASHapp(DASH, Model):
             },
             "Core authors": None,
             "Core source titles": None,
-            "Top documents": None,
+            "Most global cited documents": None,
+            "Most local cited documents": None,
             "List of core source titles": None,
             "LIMIT TO python code": [
                 True,
