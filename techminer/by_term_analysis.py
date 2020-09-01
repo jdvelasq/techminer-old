@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 import ipywidgets as widgets
 
+from IPython.display import display
 
 from techminer.plots import bar_plot
 from techminer.plots import barh_plot
@@ -18,7 +19,6 @@ from techminer.plots import pie_plot
 from techminer.plots import worldmap
 from techminer.plots import stacked_bar
 from techminer.plots import stacked_barh
-from techminer.plots import shorten_ticklabels
 
 import techminer.core.dashboard as dash
 from techminer.core import DASH
@@ -40,7 +40,7 @@ from techminer.core import limit_to_exclude
 
 class Model:
     def __init__(self, data, limit_to, exclude, years_range):
-        ##
+
         if years_range is not None:
             initial_year, final_year = years_range
             data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
@@ -59,7 +59,6 @@ class Model:
         self.view = None
 
     def core_source_titles(self):
-        """Compute source title statistics """
 
         x = self.data.copy()
         x["Num_Documents"] = 1
@@ -110,8 +109,6 @@ class Model:
         return m
 
     def core_authors(self):
-        """
-        """
 
         x = self.data.copy()
 
@@ -181,7 +178,7 @@ class Model:
         return z
 
     def top_documents(self):
-        """Returns the top 50 documents by Times Cited."""
+
         data = self.data
         data = data.sort_values(["Times_Cited", "Year"], ascending=[False, True])
         data = data.head(50)
@@ -194,6 +191,7 @@ class Model:
         return data
 
     def worldmap(self):
+
         x = self.data.copy()
         x["Num_Documents"] = 1
         x = explode(
@@ -208,6 +206,7 @@ class Model:
         )
 
     def single_multiple_publication(self):
+
         x = self.data.copy()
         x["SD"] = x[self.column].map(
             lambda w: 1 if isinstance(w, str) and len(w.split(";")) == 1 else 0
@@ -648,27 +647,18 @@ class DASHapp(DASH, Model):
         ]
         super().create_grid()
 
-    def interactive_output(self, **kwargs):
+    def set_menu_options(self):
 
-        DASH.interactive_output(self, **kwargs)
-
-        # ----------------------------------------------------------------------
-        if self.menu == "General":
-
-            self.set_options(
-                name="Column:",
-                options=sorted(
+        config = {
+            "General": {
+                "Column:": sorted(
                     [
                         column
                         for column in self.data.columns
                         if column not in EXCLUDE_COLS
                     ]
                 ),
-            )
-
-            self.set_options(
-                name="View:",
-                options=[
+                "View:": [
                     "Table",
                     "Bar plot",
                     "Horizontal bar plot",
@@ -676,70 +666,19 @@ class DASHapp(DASH, Model):
                     "Wordcloud",
                     "Treemap",
                 ],
-            )
-
-            self.set_options(name="Top by:", options=["Num Documents", "Times Cited",])
-
-            self.set_options(
-                name="Sort by:", options=["Alphabetic", "Num Documents", "Times Cited",]
-            )
-
-            if self.view == "Table":
-
-                self.set_enabled("Column:")
-                self.set_enabled("Min occurrence:")
-                self.set_enabled("Max items:")
-                self.set_enabled("Top by:")
-                self.set_enabled("Sort by:")
-                self.set_enabled("Ascending:")
-                self.set_disabled("Colormap:")
-                self.set_disabled("Width:")
-                self.set_disabled("Height:")
-
-            else:
-
-                if self.view in ["Bar plot", "Horizontal bar plot"]:
-
-                    self.set_enabled("Column:")
-                    self.set_enabled("Min occurrence:")
-                    self.set_enabled("Max items:")
-                    self.set_enabled("Top by:")
-                    self.set_enabled("Sort by:")
-                    self.set_enabled("Ascending:")
-                    self.set_enabled("Colormap:")
-                    self.set_enabled("Width:")
-                    self.set_enabled("Height:")
-
-                else:
-
-                    self.set_enabled("Column:")
-                    self.set_enabled("Min occurrence:")
-                    self.set_enabled("Max items:")
-                    self.set_enabled("Top by:")
-                    self.set_disabled("Sort by:")
-                    self.set_disabled("Ascending:")
-                    self.set_enabled("Colormap:")
-                    self.set_enabled("Width:")
-                    self.set_enabled("Height:")
-
-        # ----------------------------------------------------------------------
-        if self.menu == "Impact":
-
-            COLUMNS = sorted(
-                [column for column in self.data.columns if column not in EXCLUDE_COLS]
-            )
-
-            self.set_options(
-                "Column:", options=[z for z in COLUMNS if z in self.data.columns]
-            )
-
-            self.set_options(
-                "View:", options=["Table", "Bar plot", "Horizontal bar plot",]
-            )
-
-            self.set_options(
-                "Top by:",
-                options=[
+                "Top by:": ["Num Documents", "Times Cited",],
+            },
+            "Impact": {
+                "Column:": [
+                    "Authors",
+                    "Institutions",
+                    "Institution_1st_Author",
+                    "Countries",
+                    "Country_1st_Author",
+                    "Source_title",
+                ],
+                "View:": ["Table", "Bar plot", "Horizontal bar plot",],
+                "Top by:": [
                     "Num Documents",
                     "Times Cited",
                     "Times Cited per Year",
@@ -748,11 +687,7 @@ class DASHapp(DASH, Model):
                     "M index",
                     "G index",
                 ],
-            )
-
-            self.set_options(
-                "Sort by:",
-                options=[
+                "Sort by:": [
                     "Alphabetic",
                     "Num Documents",
                     "Times Cited",
@@ -762,55 +697,17 @@ class DASHapp(DASH, Model):
                     "M index",
                     "G index",
                 ],
-            )
-
-            if self.view == "Table":
-
-                self.set_enabled("Column:")
-                self.set_enabled("Min occurrence:")
-                self.set_enabled("Max items:")
-                self.set_enabled("View:")
-                self.set_enabled("Top by:")
-                self.set_enabled("Sort by:")
-                self.set_enabled("Ascending:")
-                self.set_disabled("Colormap:")
-                self.set_disabled("Width:")
-                self.set_disabled("Height:")
-
-            else:
-
-                self.set_enabled("Min occurrence:")
-                self.set_enabled("Max items:")
-                self.set_enabled("Top by:")
-                self.set_enabled("Sort by:")
-                self.set_enabled("Ascending:")
-                self.set_enabled("Colormap:")
-                self.set_enabled("Width:")
-                self.set_enabled("Height:")
-
-        # ----------------------------------------------------------------------
-        if self.menu == "Single/Multiple publication":
-
-            self.set_options(
-                "Column:",
-                options=[
+            },
+            "Single/Multiple publication": {
+                "Column:": [
                     "Authors",
                     "Institutions",
                     "Institution_1st_Author",
                     "Countries",
                     "Country_1st_Author",
                 ],
-            )
-
-            self.set_options(
-                "View:", options=["Table", "Bar plot", "Horizontal bar plot",]
-            )
-
-            self.set_options("Top by:", options=["Num Documents", "Times Cited",])
-
-            self.set_options(
-                "Sort by:",
-                options=[
+                "View:": ["Table", "Bar plot", "Horizontal bar plot",],
+                "Sort by:": [
                     "Alphabetic",
                     "Num Documents",
                     "Times Cited",
@@ -818,82 +715,233 @@ class DASHapp(DASH, Model):
                     "MD",
                     "SMR",
                 ],
-            )
-
-            if self.panel_widgets[1]["widget"].value == "Table":
-
-                self.set_enabled("Column:")
-                self.set_enabled("Min occurrence:")
-                self.set_enabled("Max items:")
-                self.set_enabled("Top by:")
-                self.set_enabled("Sort by:")
-                self.set_enabled("Ascending:")
-                self.set_disabled("Colormap:")
-                self.set_disabled("Width:")
-                self.set_disabled("Height:")
-
-            else:
-
-                self.set_enabled("Column:")
-                self.set_enabled("Min occurrence:")
-                self.set_enabled("Max items:")
-                self.set_enabled("Top by:")
-                self.set_enabled("Sort by:")
-                self.set_enabled("Ascending:")
-                self.set_enabled("Colormap:")
-                self.set_enabled("Width:")
-                self.set_enabled("Height:")
-
-        # ----------------------------------------------------------------------
-        if self.menu == "Worldmap":
-
-            self.set_options("Column:", options=["Countries", "Country_1st_Author",])
-
-            self.set_options("Top by:", options=["Num Documents", "Times Cited",])
-
-            self.set_enabled("Column:")
-            self.set_disabled("Min occurrence:")
-            self.set_disabled("Max items:")
-            self.set_disabled("View:")
-            self.set_disabled("Sort by:")
-            self.set_disabled("Ascending:")
-            self.set_enabled("Colormap:")
-            self.set_enabled("Width:")
-            self.set_enabled("Height:")
-
-        # ----------------------------------------------------------------------
-        if self.menu in ["Core authors", "Core source titles", "Top documents"]:
-            for i, _ in enumerate(self.panel_widgets):
-                self.panel_widgets[i]["widget"].disabled = True
-
-        # ----------------------------------------------------------------------
-        if self.menu == "LIMIT TO python code":
-
-            self.set_options(
-                name="Column:",
-                options=sorted(
+            },
+            "Worldmap": {
+                "Column:": ["Countries", "Country_1st_Author",],
+                "Top by:": ["Num Documents", "Times Cited"],
+                "View": ["Worldmap"],
+            },
+            "Core authors": {},
+            "Core source titles": {},
+            "Top documents": {},
+            "List of core source titles": {},
+            "LIMIT TO python code": {
+                "Column:": sorted(
                     [
                         column
                         for column in self.data.columns
                         if column not in EXCLUDE_COLS
                     ]
-                ),
-            )
+                )
+            },
+        }
 
-            self.set_options(name="Top by:", options=["Num Documents", "Times Cited",])
+        options = config[self.menu]
+        for key in options.keys():
+            self.set_options(key, options[key])
+            if key == "View:":
+                self.view = options[key][0]
 
-            self.set_options(
-                name="Sort by:", options=["Alphabetic", "Num Documents", "Times Cited",]
-            )
+    def set_menu_interactive(self):
 
-            self.set_enabled("Column:")
-            self.set_enabled("Min occurrence:")
-            self.set_enabled("Max items:")
-            self.set_enabled("Sort by:")
-            self.set_enabled("Ascending:")
-            self.set_disabled("Colormap:")
-            self.set_disabled("Width:")
-            self.set_disabled("Height:")
+        menu_names = {
+            0: "Column:",
+            1: "Min occurrence:",
+            2: "Max items:",
+            3: "View:",
+            4: "Top by:",
+            5: "Sort by:",
+            6: "Ascending:",
+            7: "Colormap:",
+            8: "Width:",
+            9: "Height:",
+        }
+
+        config = {
+            "General": {
+                "Table": [
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    False,
+                    False,
+                    False,
+                ],
+                "Bar plot": [True] * 10,
+                "Horizontal bar plot": [True] * 10,
+                "Pie plot": [
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    False,
+                    False,
+                    True,
+                    True,
+                    True,
+                ],
+                "Wordcloud": [
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    False,
+                    False,
+                    True,
+                    True,
+                    True,
+                ],
+                "Treemap": [
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    False,
+                    False,
+                    True,
+                    True,
+                    True,
+                ],
+            },
+            "Impact": {
+                "Table": [
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    False,
+                    False,
+                    False,
+                ],
+                "Bar plot": [
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                ],
+                "Horizontal bar plot": [
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                ],
+            },
+            "Single/Multiple publication": {
+                "Table": [
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    False,
+                    False,
+                    False,
+                ],
+                "Bar plot": [
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                ],
+                "Horizontal bar plot": [
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                    True,
+                ],
+            },
+            "Worldmap": {
+                "Worldmap": [
+                    False,
+                    False,
+                    False,
+                    True,
+                    False,
+                    False,
+                    False,
+                    True,
+                    True,
+                    True,
+                ]
+            },
+            "Core authors": None,
+            "Core source titles": None,
+            "Top documents": None,
+            "List of core source titles": None,
+            "LIMIT TO python code": [
+                True,
+                True,
+                True,
+                False,
+                False,
+                False,
+                False,
+                False,
+                False,
+                False,
+            ],
+        }
+
+        options = config[self.menu]
+
+        if options is not None:
+
+            if isinstance(options, dict):
+                options = options[self.panel_widgets[4]["widget"].value]
+
+            for i_option, option_value in enumerate(options):
+
+                if option_value is True:
+                    self.set_enabled(menu_names[i_option])
+                else:
+                    self.set_disabled(menu_names[i_option])
+
+        else:
+
+            for name in menu_names.values():
+                self.set_disabled(name)
+
+    def interactive_output(self, **kwargs):
+
+        DASH.interactive_output(self, **kwargs)
+        self.set_menu_options()
+        self.set_menu_interactive()
 
 
 ###############################################################################
