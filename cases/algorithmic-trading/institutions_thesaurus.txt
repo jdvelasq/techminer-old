@@ -1,0 +1,2583 @@
+1 University Circle USA
+    naval postgraduate school, 1 university circle, monterey, ca  93943, united states
+200 University Avenue West CAN
+    electrical and computer engineering department, 200 university avenue west, canada
+25 Rue de Luniversite FRA
+    capital fund management, 23-25 rue de l’universite, paris, 75007, france
+4World Trade Center USA
+    iex group, inc., 4world trade center, 44th floor, new york, ny  10007, united states
+Aarhus University DNK
+    department of electrical and computer engineering, aarhus university, aarhus, 8000, denmark
+    department of engineering, electrical and computer engineering, aarhus university, aarhus, denmark
+Advanced School of Economics of Venice ITA
+    advanced school of economics of venice, sestiere cannaregio n. 873, 30121 venice, italy
+Ajou University KOR
+    department of financial engineering, ajou university, worldcupro 206, yeongtong-gu, suwon, 16499, south korea
+    department of data science, ajou university, worldcupro 206, yeongtong-gu, suwon, 16499, south korea
+Al Imam University SAU
+    school of information systems, al imam university, riyadh, saudi arabia
+Alan Turing Institute GBR
+    alan turing institute, london, united kingdom
+Allegheny College USA
+    allegheny college, department of computer science, 520 north main street, meadville, pa  16335, united states
+American University of Sharjah ARE
+    department of mathematics and statistics, american university of sharjah, united arab emirates
+Amity University IND
+    amity university, noida, uttar pradesh, india
+Amrita University IND
+    amrita school of business, amrita university, coimbatore, india
+    department of computer science and engineering, amrita university, coimbatore, india
+Anglia Ruskin University GBR
+    department of computing and technology, anglia ruskin university, east road, cambridge, united kingdom
+Anhui Agricultural University CHN
+    college of economics & management, anhui agricultural university, hefei anhui, china
+Antonio Ruberti University of Rome la Sapienza ITA
+    cyber intelligence and information security research center, department of computer, control, and management engineering, antonio ruberti university of rome la sapienza, via ariosto 25, 00185, rome, italy
+Arabian Gulf University BHR
+    department of innovation and technology management, arabian gulf university, bahrain
+Arizona State University USA
+    wp carey school of business, arizona state university, tempe, az  85287, united states
+Audencia Business School Bp 31222 FRA
+    audencia business school b.p. 31222, 8 route de la joneliere, nantes cedex 3, 44312, france
+Audencia Business School FRA
+    audencia business school, france
+    audencia business school, 8 route de la joneliere, bp 31222, nantes cedex 3, 44312, france
+    audencia business school, 8 route de la joneliere, nantes, france
+Australian Catholic University AUS
+    australian catholic university, department of business and informatics, 7 mount st., sydney, australia
+Aveiro University PRT
+    department of economics, aveiro university (degeit), portugal
+Aviv University ISR
+    school of physics and astronomy, raymond and beverly sackler faculty of exact sciences, tel-aviv university, tel-aviv 69978, israel
+Babson College USA
+    babson college, united states
+Bangladesh University of Engineering and Technology BGD
+    department of computer science and engineering, bangladesh university of engineering and technology, dhaka, bangladesh
+Bank of Canada CAN
+    financial markets department, bank of canada, canada
+    bank of canada, financial markets department, canada
+Bank of England GBR
+    bank of england, threadneedle street, london, ec2r 8ah, united kingdom
+Bank of Greece GRC
+    bank of greece, athens 10250, greece
+Bank of Montreal Financial Group CAN
+    model validation, bank of montreal (bmo) financial group, toronto, canada
+Barnard College USA
+    department of sociology, barnard college, 3009 broadway, new york, ny 10027, united states
+Baruch College USA
+    baruch college, cuny, united states
+Basque Center for Applied Mathematics ESP
+    bcam, basque center for applied mathematics, 48160 derio, spain
+Beihang University CHN
+    school of economics and management, beihang university, beijing, 100191, china
+    beijing advanced innovation center for big data and brain computing, beihang university, beijing, 100191, china
+    beihang university, school of electronic and information engineering, beijing, china
+    school of economics and management, beihang university, beijing 100191, china
+Beijing Normal University CHN
+    school of systems science, beijing normal university, beijing, china
+    business school, beijing normal university, houzhulou building, 19 xinjiekouwai street, beijing, 100875, china
+    beijing normal university, china
+    school of government, beijing normal university, no. 19 xinjiekouwai street, 100875 beijing, china
+Beijing Technology and Business University CHN
+    beijing key laboratory of big data technology for food safety, school of computer and information engineering, beijing technology and business university, beijing, 100048, china
+Beijing University of Chemical Technology CHN
+    school of economics and management, beijing university of chemical technology, beijing 100029, china
+Bi Norwegian Business School NOR
+    bi norwegian business school, norway
+Bilkent University TUR
+    bilkent university, faculty of business administration, ankara, 06800, turkey
+    bilkent university, faculty of business administration, cankaya, ankara, 06800, turkey
+    faculty of business administration, bilkent university, ankara, 06800, turkey
+    faculty of business administration, bilkent university, ankara, turkey
+Bocconi University ITA
+    bocconi university, milan, italy
+Bolyai University ROU
+    business informatics research center, babes-bolyai university, 58-60 teodor mihali street, cluj-napoca, 40059, romania
+    business information systems department, babes-bolyai university, cluj-napoca, romania
+    babes-bolyai university, cluj-napoca, romania
+Bond University AUS
+    bond university, gold coast, qld, australia
+Boston University USA
+    questrom school of business, boston university, boston, ma  02215, united states
+    boston university, department of electrical and computer engineering, boston, ma  02215, united states
+    center for polymer studies, department of physics, boston university, boston, ma 02215, united states
+    center for polymer studies and department of physics, boston university, boston, ma 02215, united states
+Bournemouth University GBR
+    data science institute, bournemouth university, bournemouth, bh12 5bb, united kingdom
+Brock University CAN
+    goodman school of business, brock university, 1812 sir isaac brock way, st. catharines, on  l2s 3a1, canada
+Brooklyn College USA
+    brooklyn college, school of business, brooklyn, ny, united states
+Brown University USA
+    department of computer science, brown university, box 1910, providence, ri 02912, united states
+    brown university, providence, ri, united states
+Brunel University GBR
+    department of information systems and computing, brunel university, london, united kingdom
+Brunel University London GBR
+    brunel university london, kingston lane, uxbridge, ub8 2px, united kingdom
+Bucharest University of Economics ROU
+    department of economic cybernetics, bucharest university of economics, romania
+Business Studies at The Open University GBR
+    business studies at the open university, united kingdom
+Ca Cheuvreux Credit Agricole Investment Bank FRA
+    ca cheuvreux credit agricole investment bank, france
+Ca Foscari University of Venice ITA
+    department of management, ca’ foscari university of venice, cannaregio 873, venice, 30121, italy
+    department of economics, ca’ foscari university of venice, cannaregio 873, venice, 30121, italy
+    department of economics, ca' foscari university of venice, italy
+Cafoscari University ITA
+    dept. of economics, ca’foscari university, venice, italy
+California Institute of Technology USA
+    california institute of technology, 1200 east california blvd., pasadena, ca 91125, united states
+California Polytechnic State University USA
+    finance area, orfalea college of business, california polytechnic state university, san luis obispo, ca, united states
+California State University Dominguez Hills USA
+    department of finance, cbapp, california state university dominguez hills, carson, ca, united states
+California State University USA
+    jack h. brown college of business and public administration, california state university, san bernardino, 92407, united states
+    california state university, fullerton, united states
+    california state university, long beach, 1250 bellflower boulevard, long beach, ca  90840, united states
+Cambridge University GBR
+    trinity college, cambridge university, united kingdom
+    signal processing and communications laboratory, engineering department, cambridge university, cb2 1pz, united kingdom
+Campus Universitaire FRA
+    laboratoire irmape, groupe esc pau, campus universitaire, 3 rue saint-john perse, pau, 64000, france
+Cardiff University Cardiffcf24 4Ag GBR
+    school of mathematics, cardiff university cardiffcf24 4ag, united kingdom
+Carleton University CAN
+    carleton university, canada
+Carnegie Mellon University USA
+    carnegie mellon university, united states
+    department of statistics, carnegie mellon university, pittsburgh, pa  15213, united states
+    tepper school of business, carnegie mellon university, united states
+    dept. of electrical and computer engineering, carnegie mellon university, united states
+    pittsburgh supercomputing center, carnegie mellon university, pittsburgh, pa 15213, united states
+    pittsburgh supercomputer center, carnegie mellon university, pittsburgh, pa 15213, united states
+    school of computer science, carnegie mellon university, united states
+Cass Business School GBR
+    cass business school, united kingdom
+Center for Computational Engineering and Networking IND
+    center for computational engineering and networking, amrita school of engineering, amrita vishwa vidyapeetham, coimbatore, india
+Central Bank of The Republic of Turkey TUR
+    central bank of the republic of turkey, statistics department, ankara, 06050, turkey
+    central bank of the republic of turkey, markets department, fx markets division, ulus, ankara, 06050, turkey
+Central University of Finance and Economics CHN
+    school of accountancy, central university of finance and economics, 39 south college road, haidian district, beijing, china
+Centre National de la Recherche Scientifique FRA
+    laboratoire sciences pour l-environnement, centre national de la recherche scientifique, universite de corse, corte, 20250, france
+Centre de Mathematiques Appliquees FRA
+    centre de mathematiques appliquees, ecole polytechnique, palaiseau, 91128, france
+Centre for Corporate Governance AUS
+    centre for corporate governance, uts sydney, australia
+Centre for Economic Policy FRA
+    centre for economic policy (cepr), france
+Centre for Economic Policy Research USA
+    centre for economic policy research, united states
+Centro Brasileiro de Pesquisas Fisicas BRA
+    centro brasileiro de pesquisas fisicas, rua dr xavier sigaud 150, urca, rio de janeiro-rj, 22290-180, brazil
+Centro de Investigacao Operacional PRT
+    centro de investigacao operacional, lisboa, portugal
+Ceremade and College de France FRA
+    ceremade and college de france, paris, france
+Chapman University USA
+    argyros school of business and economics, economic science institute, chapman university, orange, ca, united states
+Charles University CZE
+    faculty of mathematics and physics, charles university, prague, czech republic
+    department of probability and statistics, mff, charles university, prague-8, 18675, czech republic
+China Academy of Financial Research CHN
+    china academy of financial research (cafr), china
+China Center for Social Computing and Analytics CHN
+    china center for social computing and analytics, tianjin, 300072, china
+China International Fund Management Ltd CHN
+    china international fund management ltd, shanghai, 200120, china
+Chinese Academy of Sciences CHN
+    shenzhen institutes of advanced technology, university of the chinese academy of sciences, china
+    school of economics and management, university of chinese academy of sciences, beijing, 100190, china
+    research center on fictitious economy and data science, chinese academy of sciences, beijing, 100190, china
+    key laboratory of big data mining and knowledge management, chinese academy of sciences, beijing, 100190, china
+    shanghai advanced research institute, chinese academy of sciences, beijing, china
+Chinese Culture University TWN
+    dept. of information management, chinese culture university, taipei, taiwan
+    dept. of computer science, chinese culture university, taipei, taiwan
+Chinese University of Hong Kong CHN
+    department of systems engineering and engineering management, chinese university of hong kong, hong kong, hong kong
+Christ University IND
+    department of economics, christ university, bengaluru, india
+    institute of management, christ university, bangalore, india
+Chung Yuan Christian University TWN
+    department of industrial engineering, chung yuan christian university, chungli 320, taiwan
+Cimru/Deri National University of Ireland IRL
+    cimru/deri national university of ireland, galway, ireland
+Citibank GBR
+    citibank, london, e14 5lb, united kingdom
+City College of Newyork USA
+    center for algorithms and interactive scientific software, department of computer science, city college of newyork, newyork, united states
+City University London GBR
+    faculty of finance, cass business school, city university london, london, ec1y 8tz, united kingdom
+City University of Hong Kong CHN
+    department of information systems, city university of hong kong, tat chee avenue, kowloon, hong kong
+    dba, college of business, city university of hong kong, hong kong, hong kong
+    department of management sciences, city university of hong kong, hong kong, hong kong
+    department of computer science, city university of hong kong, hong kong, hong kong
+    department of computer science, city university of hong kong, kowloon, hong kong
+    department of information system, city university of hong kong, hong kong
+City University of Hong Kong and Director CHN
+    city university of hong kong and director, hong kong centre for commercial & maritime law, hong kong
+Cmd Laboratory Inc JPN
+    cmd laboratory inc., tokyo estate bldg. 2f, 1-3-2, sendagaya, shibuya-ku, tokyo, 151-0051, japan
+Cmr College of Engineering  and  Technology IND
+    department of master of business administration, cmr college of engineering & technology, medchal road, hyderabad, telangana, india
+College of Engineering IND
+    college of engineering, department of computer and it, pune, india
+    college of engineering, computer engineering department, pune, india
+Columbia Business School USA
+    columbia business school, 801 uris hall, 3022 broadway, new york, ny  10027, united states
+    columbia business school, united states
+Columbia University USA
+    university of california, berkeley columbia university, nber, united states
+    statistics department, columbia university, new york, ny  10027, united states
+    graduate school of business, columbia university, new york, ny 10027, united states
+    statistics depatrment, columbia university, new york, ny 10027, united states
+Commodity Futures Trading Commission USA
+    commodity futures trading commission, united states
+Comsats University Islamabad PAK
+    department of management sciences, comsats university islamabad, wah campus, pakistan
+Concordia University CAN
+    department of supply chain and business technology management, john molson school of business, concordia university, montreal, canada
+    department of finance, john molson school of business, concordia university, 1450 guy st., montreal, qc  h1h 1l8, canada
+Connecticut College USA
+    connecticut college, new london, united states
+Copenhagen Business School DNK
+    copenhagen business school, denmark
+    copenhagen business school, porcelaenshaven, frederiksberg, denmark
+Copenhagen University DNK
+    department of political science, copenhagen university, copenhagen, denmark
+Cornell University Johnson Graduate School of Management USA
+    cornell university johnson graduate school of management, united states
+Cornell University USA
+    samuel curtis johnson graduate school of management, cornell university, 431 sage hall, ithaca, ny  14853-6201, united states
+    school of operations research and information engineering (orie), cornell university, ithaca, ny  14853, united states
+    samuel curtis johnson graduate school of management, cornell university, kamakura corporation, ithaca, ny  14853, united states
+    department of finance, johnson graduate school of management, cornell university, ithaca, ny, united states
+    johnson graduate school of management, cornell university, 455 sage hall, ithaca, ny 14853, united states
+    samuel curtis johnson graduate school of management, cornell university, ithaca, ny  14853, united states
+    johnson graduate school of management, cornell university, ithaca, ny 14853, united states
+    dept. of computer science, cornell university, united states
+Cote Dazur University FRA
+    cote d'azur university - srm - gredeg - cnrs, 250 rue albert einstein, valbonne, 06560, france
+Cracow University of Economics POL
+    cracow university of economics, rakowicka 27, 31-510 krakow, poland
+    department of econometrics, cracow university of economics, rakowicka 27, 31-510 krakow, poland
+Crm and Fbf Idei Chair On Investment Banking and Financial Markets FRA
+    toulouse school of economics, cnrs-crm and fbf idei chair on investment banking and financial markets, manufacture des tabacs, 21 allees de brienne, toulouse, 31000, france
+Czech Technical University CZE
+    czech technical university, faculty of information technology, department of software engineering, thakurova 9, 160 00 praha 6, czech republic
+Dalian Neusoft University of Information CHN
+    school of computer and software, dalian neusoft university of information, dalian, 116626, china
+Danmarks Nationalbank DNK
+    danmarks nationalbank, copenhagen, 1093, denmark
+Dbmind Technologies Inc USA
+    dbmind technologies inc., united states
+De Montfort Universityle1 9Bh GBR
+    department of accounting and finance, leicester castle business school, de montfort universityle1 9bh, united kingdom
+Deep Learning Institute CHN
+    nvidia co., ltd, deep learning institute, beijing, 100020, china
+Deep Learning Institute USA
+    nvidia co., ltd, deep learning institute, new york, ny  10003, united states
+Democritus University of Thrace GRC
+    department of electrical and computer engineering, democritus university of thrace, xanthi, 67100, greece
+Democritus University of Trace GRC
+    department of electrical and computer engineering, democritus university of trace, xanthi, greece
+Department for Information Systems Research DEU
+    department for information systems research, kollegiengebaude ii, albert-ludwigs-universitat freiburg, latz der alten synagoge, 79085 freiburg, germany
+Department of Accounting GBR
+    department of accounting, london school of economics and political science, london, united kingdom
+Department of Applied Mathematics and Lawtech ITA
+    giurimatica lab, department of applied mathematics and lawtech, ragusa, 97100, italy
+Department of Banking and Finance AUS
+    department of banking and finance, faculty of business and economics, 900 dandenong road, caulfield east, 3145, australia
+Department of Business and Politics DNK
+    department of business and politics, copenhagen business school, copenhagen, denmark
+Department of Computer Science DEU
+    department of computer science, christian-albrechts-university of kiel, kiel, 24098, germany
+Department of Ece IND
+    department of ece, rvce, bengaluru, 560059, india
+Department of Economic Research ISR
+    department of economic research, israel securities authority, jerusalem 95464, israel
+Department of Economics ITA
+    department of economics, villa la fonte, via delle fontanelle, 18, florence, i-50014, italy
+Department of Electrical Engineering BEL
+    kuleuven, department of electrical engineering-esat, scd-sista, ibbt future health department, kasteelpark arenberg 10, leuven, b-3001, belgium
+Department of Electronics and Communications Engineering IND
+    department of electronics and communications engineering, amrita school of engineering, amrita vishwa vidyapeetham, coimbatore, india
+Department of Finance NOR
+    department of finance, norges handelshoyskole, bergen, norway
+Department of Finance USA
+    department of finance, stern school of business, nyu, united states
+Department of Hewlett Packard Labs GBR
+    department of hewlett packard labs., bristol, united kingdom
+Department of Industrial and Management Engineering KOR
+    department of industrial and management engineering, postech, san 31, hyoja-dong, nam-gu, pohang 790-784, south korea
+Department of International Business TWN
+    department of international business, national taiwan university, taiwan
+Department of International Finance TUR
+    ozyegin university faculty of business, department of international finance, cekmekoy, istanbul, turkey
+    department of international finance, yeditepe university, faculty of commerce, inonu mah. kayisdagi cad. 26 agustos yerlesimi, atasehir, istanbul, 34755, turkey
+Department of Law USA
+    department of law, vanderbilt law school, united states
+Department of Management CHE
+    department of management, eth zurich technology and economics, scheuchzerstrasse 7, ch-8092 zurich, switzerland
+Department of Management DNK
+    department of management, politics and philosophy, copenhagen business school, copenhagen, denmark
+    copenhagen business school, department of management, politics and philosophy, porcelænshaven 18b, frederiksberg, 2000, denmark
+    department of management, politics and philosophy, copenhagen business school, porcelænshaven 18b, 2. floor, frederiksberg, 2000, denmark
+Department of Management Politics and Philosophy DNK
+    department of management politics and philosophy, copenhagen business school, frederiksberg, denmark
+Department of Mathematics USA
+    department of mathematics, uc, davis, ca 95616, united states
+Department of Mathematics and Physics MEX
+    research laboratory on optimal design, devices and advanced materials, optima, department of mathematics and physics, iteso, periferico sur manuel gomez morin 8585 c.p. 45604, tlaquepaque, jalisco, mexico
+Department of Networked Systems and Services HUN
+    department of networked systems and services, bme, magyar tudosok korutja 2., h-1117 budapest, hungary
+Department of Networked Systems and Sevices HUN
+    department of networked systems and sevices, bme, magyar tudosok korutja 2, h-1117 budapest, hungary
+Department of Politics and International Studies GBR
+    department of politics and international studies, open university, milton keynes, united kingdom
+Department of Sociology GBR
+    department of sociology, london school of economics, houghton street, london, wc2a 2ae, united kingdom
+    department of sociology, london school of economics and political science, london, united kingdom
+Department of Statistics GBR
+    department of statistics, london school of economics and political science, london, united kingdom
+Department of Statistics USA
+    department of statistics, uc davis, one shields ave, davis, ca 95616, united states
+Department of Systems Automation BRA
+    department of systems automation, ufsc, florianopolis, brazil
+Department of The Laboratory for Financial Engineering USA
+    department of the laboratory for financial engineering, sloan school of management, united states
+Deutsche Bank Ag GBR
+    fx complex risk group, deutsche bank ag, london ec2n 2db, united kingdom
+Deutsche Bank GBR
+    foreign exchange complex risk group, deutsche bank, 1 great winchester street, london ec2n 2db, united kingdom
+Deutsche Bank and Citadel Securities Developing Trading Algorithms GBR
+    deutsche bank and citadel securities developing trading algorithms, united kingdom
+Devry University USA
+    devry university, chicago, united states
+Digital Human Research Center JPN
+    digital human research center, aist, 2-41-6 aomi, koto-ku, tokyo, 135-0064, japan
+Division of International Finance USA
+    division of international finance, federal reserve board, united states
+Donghua University CHN
+    college of information sciences and technology, donghua university, shanghai, china
+Doshisha University JPN
+    department of mathematical sciences, doshisha university, kyoto, japan
+    graduate school, doshisha university, japan
+    graduate school of engineering, doshisha university, 1-3 tataramiyakodani, kyotanabe, kyoto, 610-0321, japan
+    faculty of science and engineering, doshisha university, 1-3 tataramiyakodani, kyotanabe, kyoto, 610-0321, japan
+Dublin City University IRL
+    dcu business school, dublin city university, dublin 9, ireland
+    adapt centre, school of computing, dublin city university, glasnevin, dublin, ireland
+    business school, dublin city university, dublin 9, ireland
+Duke University USA
+    duke university, 213 social sciences building, box 90097, durham, nc  27708, united states
+Durham University Business School GBR
+    durham university business school, durham, united kingdom
+Durham University GBR
+    durham university, mill hill lane, durham, england  dh1 3lb, united kingdom
+East China Normal University CHN
+    school of statistics, east china normal university, dongchuan road, shanghai, 200241, china
+    school of data science and engineering, east china normal university, shanghai, china
+Ecole Centrale Paris and Bnp Paribas FRA
+    ecole centrale paris and bnp paribas, paris, france
+Ecole Centrale Paris and University of New Caledonia FRA
+    ecole centrale paris and university of new caledonia, france
+Ecole Polytechnique FRA
+    ecole polytechnique, cmap and autorite des marches financiers, paris, france
+    cmap - ecole polytechnique, route de saclay, palaiseau cedex, 91128, france
+    cmap, ecole polytechnique, palaiseau cedex, 91128, france
+Ecole Polytechnique Fede Rale de Lausanne CHE
+    ecole polytechnique fede rale de lausanne, switzerland
+Ecole Polytechnique Federale de Lausanne CHE
+    swiss finance institute, ecole polytechnique federale de lausanne (epfl), lausanne, switzerland
+Edhec Business School FRA
+    edhec business school, nice, france
+Edinburgh Futures Institute GBR
+    edinburgh futures institute, united kingdom
+Edith Cowan University AUS
+    school of business, edith cowan university, joondalup, wa, australia
+Ef International Academy USA
+    ef international academy, united states
+Eindhoven University of Technology NLD
+    information systems department, school of industrial engineering, eindhoven university of technology, netherlands
+Electrical Engineering Department MAR
+    electrical engineering department, hassania school of public labors, casablanca, 8108, morocco
+Embedded System Solution Business Center JPN
+    embedded system solution business center, nec corp., 1753 shimonumabe, nakahara-ku, kawasaki, 211-8666, japan
+Emc Corporation BEL
+    emc corporation, belgium
+Emory University USA
+    goizueta business school, emory university, united states
+Endrun Technologies USA
+    endrun technologies, 2270 northpoint parkway, santa rosa, ca 95407, united states
+Engineering University of Karlsruhe DEU
+    institute of information systems and management, engineering university of karlsruhe, germany
+Eotvos Lorand University HUN
+    computer science, eotvos lorand university, budapest, hungary
+Erasmus University NLD
+    econometric institute, erasmus school of economics, erasmus university, rotterdam, netherlands
+Erasmus University Rotterdam NLD
+    econometric institute and tinbergen institute, erasmus university rotterdam, rotterdam, netherlands
+    econometric institute and tinbergen institute, erasmus university rotterdam, p.o. box 1738, 3000 dr rotterdam, netherlands
+    econometric institute, erasmus school of economics, erasmus university rotterdam, p.o. box 1738, 3000 dr rotterdam, netherlands
+    erasmus university rotterdam, p.o. box 1738, rotterdam nl-3000 dr, netherlands
+    econometric institute, erasmus school of economics, erasmus university rotterdam, 3000 dr rotterdam, netherlands
+Europa Universitat Viadrina DEU
+    europa universitat viadrina, große scharrnstr. 59, frankfurt (oder), 15230, germany
+    robert seyfert, faculty of social and cultural sciences, europa universitat viadrina, frankfurt (oder), 15230, germany
+European Capital Markets Cooperative Research Centre ITA
+    european capital markets cooperative research centre, pescara, italy
+European Central Bank DEU
+    european central bank, financial research division, kaiserstrasse 29, d-60311 frankfurt am main, germany
+European Financial Data Institute FRA
+    cnrs, european financial data institute (eurofidai), france
+    european financial data institute (eurofidai), france
+Evergreen Valley High School USA
+    evergreen valley high school, san jose, ca  95135, united states
+Ewha Womans University KOR
+    department of business administration, school of business, ewha womans university, 52 ewhayeodae-gil, seodaemun-gu, seoul, south korea
+Federal Center for Tech BRA
+    federal center for tech., education of mg, belo horizonte, brazil
+Federal Center for Tech Education of Minas Gerais BRA
+    federal center for tech. education of minas gerais, belo horizonte, minas gerais, brazil
+Federal Institute of Minas Gerais BRA
+    federal institute of minas gerais, belo horizonte, minas gerais, brazil
+Federal Technological Education Centre of Minas Gerais BRA
+    federal technological education centre of minas gerais (cefet-mg), brazil
+Federal University of Alfenas BRA
+    federal university of alfenas (unifal-mg), alfenas, brazil
+    research and development laboratory, federal university of alfenas (unifal-mg), alfenas, brazil
+Federal University of Minas Gerais (Ufmg) BRA
+    departament of computer science (dcc), federal university of minas gerais (ufmg), belo horizonte, brazil
+Federal University of Piaui BRA
+    department of electrical engineering, federal university of piaui, teresina, 64049-550, brazil
+Federal University of Rio Grande do Sul BRA
+    department of computer science, federal university of rio grande do sul (ufrgs), brazil
+Federal University of Rio de Janeiro BRA
+    department of computer science, federal university of rio de janeiro, rio de janeiro, brazil
+    tercio pacitti institute, federal university of rio de janeiro, rio de janeiro, brazil
+Fernuniversitat In Hagen DEU
+    fakultat fur mathematik und informatik, fernuniversitat in hagen, hagen, 58084, germany
+Financial University RUS
+    financial university, government of the russian federation, moscow, russian federation
+Fine Art Department GBR
+    fine art department, central saint martins, london, united kingdom
+Florida State University USA
+    department of mathematics, florida state university, tallahassee, fl 32306-4510, united states
+Fondazione European Capital Markets Cooperative Research Centre ITA
+    fondazione european capital markets cooperative research centre (ecmcrc), pescara, italy
+Fordham University USA
+    fordham university, bronx, ny, united states
+Frankfurt School of Finance  and  Management DEU
+    frankfurt school of finance & management, germany
+Fraunhofer Iais and University Bonn DEU
+    fraunhofer iais and university bonn, germany
+Friedrich Schiller University Jena DEU
+    friedrich schiller university jena, ernst-abbe-platz 1, jena, d-07743, germany
+Fudan University CHN
+    school of information science and technology, shanghai institute of intelligent electronics and systems, fudan university, shanghai, china
+    shanghai key lab of intelligent information processing, fudan university, shanghai, 200433, china
+    school of computer science, fudan university, shanghai, 200433, china
+G Pulla Reddy Engineering College IND
+    cse department, g. pulla reddy engineering college (autonomous), kurnool, andra pradesh, india
+Gandhinagar Institute of Technology IND
+    information technology department, gandhinagar institute of technology, khatraj-kalol road, gandhinagar, india
+George Mason University AFG
+    department of systems engineering and operations research, george mason university, fairfax, va, afghanistan
+George Mason University USA
+    department of computational and data sciences, college of science, krasnow institute for advanced study, george mason university, fairfax, va, united states
+    finance area, school of business, george mason university, fairfax, va  22030, united states
+    c4i center of excellence, volgenau school of engineering, george mason university, united states
+Georgetown University USA
+    mcdonough school of business, georgetown university, hariri building, washington, dc  20057, united states
+    mcdonough school of business, georgetown university, united states
+    georgetown university, united states
+Georgia College and State University USA
+    department of government and sociology, georgia college and state university, milledgeville, ga  31061, united states
+Georgia State University TUR
+    georgia state university (adj.), cankaya university, ankara, turkey
+Georgia State University USA
+    georgia state university, united states
+Goethe University DEU
+    department of finance and research center safe, goethe university, frankfurt am main, germany
+Goethe University Frankfurt DEU
+    goethe university frankfurt, frankfurt am main, germany
+    goethe university frankfurt, germany
+    goethe university frankfurt, gruneburgplatz 1, 60323 frankfurt, germany
+Goethe University Frankfurt and E DEU
+    goethe university frankfurt and e-finance lab, gruneburgplatz 1, 60323 frankfurt am main, germany
+Goeuniversity of Frankfurt Am Main DEU
+    e-finance lab, faculty of economics and business administration, goethe university of frankfurt am main, gruneburgplatz 1, 60323 frankfurt am main, germany
+Government of Japan Adbi Institute JPN
+    financial services agency, government of japan. adbi institute, tokyo, japan
+Graduate School of Business Administration Tokyo Metropolitan University JPN
+    graduate school of business administration tokyo metropolitan university, tokyo, japan
+Grctc University College Cork IRL
+    grctc university college cork, ireland
+Griffith University AUS
+    school of information and communication technology, gold coast campus, griffith university, gold coast, qld, australia
+Guangdong University of Foreign Studies CHN
+    school of business, guangdong university of foreign studies, higher education mega center, guangzhou, 510006, china
+Guangzhou University CHN
+    school of computer science, guangzhou university, guangzhou, 510006, china
+Gwangju Institute of Science and Technology KOR
+    dept. of information and communications, gwangju institute of science and technology, gwangju, 500-712, south korea
+Haifa University ISR
+    haifa university, israel
+Hanyang University KOR
+    department of business administration, hanyang university, ansan, south korea
+Harbin Institute of Technology CHN
+    harbin institute of technology, school of management, harbin, 150001, china
+Harvard University USA
+    extension school, harvard university, cambridgema, united states
+    harvard university, 51 brattle street, cambridge, ma  02138, united states
+    harvard university, cambridge, ma, united states
+    harvard university, united states
+Hassan Ii University of Casablanca MAR
+    limsad labs, faculty of sciences, hassan ii university of casablanca, km 8 route d'el jadida, casablanca, morocco
+Hassania School of Public Labors MAR
+    hassania school of public labors, casablanca, morocco
+Hec Lausanne University CHE
+    hec lausanne university, switzerland
+Hiroshima University JPN
+    hiroshima university, higashihiroshima, japan
+Hohai University CHN
+    college of computer and information, hohai university, nanjing, china
+Hokkaido University JPN
+    graduate school of information science and technology, hokkaido university, kita 14 nishi 9, kita-ku, sapporo 060-0814, japan
+Hong Kong Baptist University CHN
+    department of computer science, hong kong baptist university, hong kong, china
+Hong Kong Polytechnic University CHN
+    department of applied mathematics, the hong kong polytechnic university, hung hom, hong kong
+    department of management and marketing, hong kong polytechnic university, kowloon, hong kong
+    department of applied mathematics, hong kong polytechnic university, hong kong, hong kong
+Hong Kong Univ of Science And CHN
+    hong kong univ of science and, technology, clear water bay, hong kong
+Hong Kong University of Science and Technology CHN
+    department of electronic and computer engineering, hong kong university of science and technology (hkust), kowloon, hong kong
+    department of electronic and computer engineering, hong kong university of science and technology, hong kong, hong kong
+    department of electronic and computer engineering, hong kong university of science and technology, clear water bay, kowloon, hong kong
+    department of electronic and computer engineering, hong kong university of science and technology, hong kong
+    dept. of electronic and computer engineering, hong kong university of science and technology, hong kong
+Hsg University of St Gallen CHE
+    clvs-hsg university of st. gallen, st. gallen, switzerland
+Huazhong University of Science and Technology CHN
+    department of business administration, huazhong university of science and technology, wuhan, china
+    huazhong university of science and technology, china
+    huazhong university of science and technology, wuhan, hubei,430074, china
+Hull University Business School GBR
+    hull university business school, university of hull, hull, united kingdom
+    hull university business school, university of hull, university of southampton, hu6 7rx, hull, united kingdom
+Hult International Business School USA
+    hult international business school, 1 education street, cambridge, ma  02141, united states
+    department of finance, hult international business school, cambridge, ma  02141, united states
+    department of finance, hult international business school, 1 education street, cambridge, ma  02141, united states
+    department of finance, hult international business school, cambridge, ma, united states
+Humboldt University Berlin DEU
+    lobster team, humboldt university berlin, germany
+    humboldt university berlin, germany
+Hunan University CHN
+    business school, hunan university, changsha, 410082, china
+Ibm T J Watson Research Center USA
+    ibm t. j. watson research center, united states
+Ibm Thomas J Watson Research Center USA
+    ibm thomas j. watson research center, yorktown heights, ny 10598, united states
+    ibm thomas j. watson research center, hawthorne, ny 10532, united states
+    ibm thomas j. watson research center, yorktown heights, ny 10598-0218, united states
+Ibm Tj Watson Research Center USA
+    ibm t.j. watson research center, new york, 10598, united states
+    ibm t.j. watson research center, yorktown heights, ny, united states
+    ibm tj watson research center, yorktown heights, ny 10598, united states
+    ibm t.j. watson research center, p.o. box 704, hawthorne, ny 10532, united states
+    ibm t.j. watson research center, 19 skyline drive, hawthorne, ny 10532, united states
+Ibm Watson Research Center USA
+    ibm watson research center, ibm software group, united states
+Ibn Zohr University MAR
+    department of mathematics, ibn zohr university, agadir, morocco
+    laboratory of engineering sciences and energies, polydisciplinary faculty of ouarzazate, ibn zohr university, agadir, morocco
+Icn Business School FRA
+    cerefige - icn business school (nancy-metz), 13, rue michel ney, nancy, 54000, france
+    cerefige - icn business school, 13 rue michel ney, nancy, 54000, france
+Ie Business School ESP
+    ie business school, madrid, spain
+Ieseg School of Management FRA
+    ieseg school of management, lille, france
+Ifhe University IND
+    ibs hyderabad, ifhe university, hyderabad, india
+Iits Stuart School of Business USA
+    iit's stuart school of business, chicago, united states
+Ilan University ISR
+    computer science department, bar-ilan university, ramat gan, israel
+Illinois Institute of Technology AFG
+    stuart school of business, illinois institute of technology, chicago, il, afghanistan
+Illinois Institute of Technology USA
+    illinois institute of technology, united states
+    stuart school of business, illinois institute of technology, 10 west 35th street, chicago, il  60616, united states
+    center for strategic finance, stuart school of business, illinois institute of technology, 565 w. adams, chicago, il  60661, united states
+    stuart school of business, illinois institute of technology, 565 w. adams, chicago, il  60661, united states
+    department of finance, stuart school of business, illinois institute of technology, united states
+    department of philosophy, illinois institute of technology, chicago, united states
+    stuart school of business, illinois institute of technology, 565w. adams, chicago, il  60661, united states
+    illinois institute of technology, center for the study of ethics in the professions, 3241 s federal street, 204 hh, chicago, il, 60616, united states
+    illinois institute of technology, 565 w, adams, chicago, il, 60661, united states
+    illinois institute of technology-stuart school of business, 565 w. adams, chicago, il 60661, united states
+Illinois State University USA
+    illinois state university, normal, il, united states
+Imar International Markets and Risk GRC
+    imar international markets and risk, attika, greece
+Imperial College Business School GBR
+    imperial college business school, brevan howard centre for financial analysis, united kingdom
+    department of finance, imperial college business school, united kingdom
+Imperial College GBR
+    department of mathematics, imperial college, london, united kingdom
+    department of computing, imperial college, united kingdom
+    imperial college, london, united kingdom
+Imperial College London GBR
+    department of mathematics, imperial college london, london, sw7 1ne, united kingdom
+    imperial college london, exhibition road, london, sw7 2az, united kingdom
+    department of computing, imperial college london, 180 queen’s gate, london, sw7 2az, united kingdom
+    imperial college london, united kingdom
+    department of computing, imperial college london, london, sw7 2az, united kingdom
+    department of computing, imperial college london, london, united kingdom
+    department of electrical and electronic engineering, imperial college london, sw7 2az, united kingdom
+    department of mathematics, statistics section, imperial college london, london, sw7 2az, united kingdom
+    department of mathematics statistics section, imperial college london, london sw7 2az, united kingdom
+    department of mathematics, imperial college london, united kingdom
+Imperial Institute of Quantitative Finance GBR
+    department of mathematics, imperial college, cfm-imperial institute of quantitative finance, london, united kingdom
+    cfm-imperial institute of quantitative finance, department of mathematics, imperial college, 180 queen’s gate, london, sw7 2rh, united kingdom
+Indian Institute of Foreign Trade IND
+    indian institute of foreign trade (iift), india
+Indian Institute of Information Technology IND
+    department of computer science and engineering, indian institute of information technology, nagpur, india
+Indian Institute of Management Calcutta IND
+    finance and control group, indian institute of management calcutta, kolkata, india
+Indian Institute of Management Kozhikode IND
+    finance, accounting and control group, indian institute of management kozhikode, kozhikode, india
+Indian Institute of Management Raipur IND
+    department of finance and accounting, indian institute of management raipur, gec campus, raipur, 492015, india
+Indian Institute of Management Visakhapatnam IND
+    indian institute of management visakhapatnam, a. u. campus, visakhapatnam, india
+Indian Institute of Science IND
+    indian institute of science, department of computer science and automation, robert bosch centre for cyber physical systems, bangalore, india
+Indian Institute of Technology IND
+    indian institute of technology, department of computer science and engineering, tirupati, india
+    department of computer science and engineering, indian institute of technology, new delhi, india
+Indian Institute of Technology Kanpur IND
+    department of economics, indian institute of technology kanpur, kanpur-208016, india
+Indian Institute of Technology Kharagpur IND
+    vinod gupta school of management, indian institute of technology kharagpur, kharagpur, india
+Indiana University USA
+    kelley school of business, indiana university, 1309 e. tenth street, bloomington, in 47405-1701m, room 660b, united states
+    department of political science, indiana university, 210 woodburn hall, 1100 e. seventh street, bloomington, in 47405-7110, united states
+Ing Bank Slaski POL
+    ing bank slaski, katowice, poland
+Institut Africain de Risk Management FRA
+    institut africain de risk management, 35 rue de la bienfaisance, paris, 75008, france
+Institut Europlace de Finance FRA
+    institut europlace de finance (ief), france
+Institut F Mathematik DEU
+    institut f. mathematik, universitt ulm, helmholtzstr. 18, 89069 ulm, germany
+Institut Universitaire de France FRA
+    laboratoire de probabilites et modeles aleatoires, universite paris 7 diderot, crest-ensae, institut universitaire de france, cnrs, umr 7599, france
+Institute of Cognitive Sciences and Technologies ITA
+    labss istc cnr., institute of cognitive sciences and technologies, rome, italy
+Institute of Economics ITA
+    institute of economics, scuola superiore sant'anna, piazza martiri della liberta 33, pisa, 56127, italy
+    institute of economics, scuola superiore sant'anna, pisa, italy
+Institute of Economics and International Trade KOR
+    institute of economics and international trade, pusan national university, busan, south korea
+Institute of International Economics TWN
+    institute of international economics, national dong hwa university, taiwan
+Institute of Management Technology Ghaziabad IND
+    institute of management technology ghaziabad, ghaziabad, delhi, india
+Institute of Management Technology IND
+    institute of management technology, ghaziabad, india
+Institute of Risk and Financial Markets POL
+    warsaw school of economics, institute of risk and financial markets, poland
+Institute of Statistical Mathematics JPN
+    institute of statistical mathematics, 10-3 midori-cho, tachikawa, tokyo, 190-8562, japan
+Instituto Federal do Sul de Minas Gerais BRA
+    laboratorio de tecnologia da informacao, instituto federal do sul de minas gerais - campus passos, passos, brazil
+Instituto Universitario de Lisboa PRT
+    engenharia de telecomunicacoes e informatica, instituto universitario de lisboa-iscte-iul, lisboa, portugal
+    instituto universitario de lisboa-iscte-iul, instituto de telecomunicacoes, lisboa, portugal
+Instituto de Telecomunicacoes PRT
+    instituto de telecomunicacoes, lisbon, 1049-001, portugal
+Instituto de Telecomunicacoes/Instituto Superior Tecnico PRT
+    instituto de telecomunicacoes/instituto superior tecnico, av. rovisco pais 1, lisbon, 1049-001, portugal
+International Business School CHN
+    international business school, shanxi normal university, xi'an, china
+International Business School USA
+    international business school, cambridge, ma, united states
+International Christian University JPN
+    international christian university, osawa 3-10-2, mitaka, tokyo  181-8585, japan
+International Economics USA
+    international economics, council on foreign relations, 58 east 68th street, new york, ny 10021, united states
+Investment Banking Division CHN
+    investment banking division, guosen securities co. ltd, shenzhen, china
+Investment Company Institute USA
+    investment company institute, united states
+Iona College USA
+    iona college, united states
+Iowa State University USA
+    department of computer sciences, iowa state university, united states
+    ivy college of business, iowa state university, 2167 union drive, ames, ia  50011, united states
+Isem Pole Universitaire St Jean Dangely FRA
+    isem pole universitaire st jean d'angely, 24, avenue des diables bleus, nice cedex 4, 06357, france
+Islamic Azad University IRN
+    department of electrical, computer and it engineering, islamic azad university, qazvin branch, iran
+Israel Institute of Technology ISR
+    technion, israel institute of technology, israel
+Istanbul Bilgi University TUR
+    istanbul bilgi university, department of economics, eski silahtaraga elektrik santrali, kazim karabekir cad. eyup istanbul, turkey
+Istanbul Technical University TUR
+    mechatronics engineering, istanbul technical university, istanbul, turkey
+    control and automation engineering, istanbul technical university, istanbul, turkey
+    istanbul technical university (itu), department of management engineering, itu isletme fakultesi, macka, istanbul, 34367, turkey
+    department of management engineering, istanbul technical university (itu), faculty of management, macka, istanbul, 34367, turkey
+Istituto Di Economia Scuola Superiore Santanna ITA
+    istituto di economia scuola superiore sant’anna, piazza martiri della liberta 33, pisa, 56127, italy
+Jacobs University Bremen DEU
+    school of humanities and social sciences, jacobs university bremen, 28759 bremen, germany
+Jagellonian University POL
+    m. smoluchowski institute of physics, jagellonian university, reymonta 4, 30-059 krakow, poland
+Japanese Institute of Information Technology POL
+    polish-japanese institute of information technology, ul. koszykowa 86, warsaw 02-008, poland
+Jiangsu Normal University CHN
+    computer science department, jiangsu normal university, xuzhou, 221116, china
+Jiaying University CHN
+    department of mathematics, jiaying university, meizhou, 514015, china
+Jinan University CHN
+    department of mathematics, college of information science and technology, jinan university, guangzhou, 510632, china
+    big data decision institute, jinan university, guangzhou, china
+John Carroll University USA
+    boler school of business, john carroll university, 1 john carroll boulevard university, heights, oh  44118, united states
+    boler school of business, john carroll university, university heights, 1 john carroll boulevardoh  44118-4581, united states
+Johns Hopkins University USA
+    johns hopkins university, united states
+Jvn Institute VNM
+    jvn institute, ho chi minh city, viet nam
+K L University IND
+    k l university, guntur, ap, india
+    klu business school, k l university, guntur, ap, india
+Kamakura Corporation USA
+    kamakura corporation, united states
+Karlsruhe Institute of Technology DEU
+    karlsruhe institute of technology, kaiserstr. 12, bldg. 01.80, 76131 karlsruhe, germany
+    karlsruhe institute of technology, school of economics and business engineering, englerstr. 14, 76131 karlsruhe, germany
+    institute of information systems and management, information and market engineering, karlsruhe institute of technology, germany
+Kazimieras Simonavicius University LTU
+    r and d center, kazimieras simonavicius university, j. basanaviciaus str. 29a, lt-03109, vilnius, lithuania
+Kedge Business School  and  Bem Management School Bordeaux FRA
+    kedge business school & bem management school bordeaux, 680 cours de la liberation, talance cedex, 33405, france
+Kedge Business School FRA
+    kedge business school, 680 cours de la liberation, talance cedex, 33405, france
+Keio University JPN
+    keio university, kioi tower, tokyo garden terrace kioicho, 1-3, kioicho, chiyoda, tokyo  102-8282, japan
+    department of economics, keio university, tokyo, japan
+    graduate school of business administration, keio university, hiyoshi 4-1-1, kohoku-ku, yokohama-shi, kanagawa-ken, japan
+    graduate school of science and technology, keio university, japan
+    department of information and computer science, keio university, keio, japan
+Khalifa University ARE
+    emirates ict innovation center, ebtic, khalifa university, abu dhabi, united arab emirates
+    etisalat, bt innovation centre (ebtic), khalifa university, abu dhabi, united arab emirates
+Kharazmi University IRN
+    school financial engineering, faculty of financial science, kharazmi university, tehran, 1477893855, iran
+Kharkevich Institute of Information Transmission Problems RUS
+    kharkevich institute of information transmission problems, moscow, russian federation
+Kharkiv Institute of Banking of University of Banking of The National Bank of Ukraine UKR
+    kharkiv institute of banking of the university of banking of the national bank of ukraine, ukraine
+King Mongkuts Institute of Technology Ladkrabang THA
+    faculty of engineering, king mongkut's institute of technology ladkrabang, bangkok, thailand
+King Saud University SAU
+    department of management information systems, college of business administration, king saud university, riyadh, saudi arabia
+    department of management information systems, college of business administration, king saud university, riyadh, 12372, saudi arabia
+    department of management information systems, college of business administration, king saud university, saudi arabia
+Kings College London GBR
+    department of mathematics, king's college london, london, united kingdom
+    department of informatics, king's college london, london, united kingdom
+    department of informatics, king’s college london, london, wc2r 2ls, united kingdom
+    department of mathematics, king's college london, london, wc2r 2ls, united kingdom
+    department of informatics, king’s college london, strand, london, united kingdom
+Kobe University JPN
+    kobe university, hyogo, japan
+Korea Advanced Institute of Science and Technology KOR
+    graduate school of finance and accounting, college of business, korea advanced institute of science and technology, seoul, south korea
+    college of business, korea advanced institute of science and technology, seoul, south korea
+Kth Royal Institute of Technology SWE
+    school of ict, kth royal institute of technology, kista, sweden
+Kyushu University JPN
+    kyushu university, fukuoka, japan
+La Trobe University AUS
+    la trobe business school, la trobe university, australia
+Laboratoire Dinformatique Fondamentale de Lille FRA
+    universite lille 1 - sciences et technologies, laboratoire d'informatique fondamentale de lille, f-59655 villeneuve d'ascq, france
+Laboratoire Lirsa FRA
+    maitre de conferences, laboratoire lirsa -cnam, france
+Laboratoire de Probabilites FRA
+    laboratoire de probabilites, statistique et modelisation (lpsm), paris, france
+Lakehead University CAN
+    faculty of business administration, lakehead university, thunder bay, on, canada
+Laki Reddy Bali Reddy Engineering College IND
+    information technology, laki reddy bali reddy engineering college (autonomous), mylavaram, andra pradesh, india
+Lancaster University GBR
+    school of computing and communications, lancaster university, lancaster, la1 4wa, united kingdom
+    school of computing and communications infolab21, lancaster university, lancaster, la1 4wa, united kingdom
+Lancaster University Management School GBR
+    lancaster university management school, lancaster university, bailrigg, lancaster, la1 4yx, united kingdom
+Lanzhou University CHN
+    department of computer science, lanzhou university, lanzhou, gansu, china
+    department of mathematics, lanzhou university, lanzhou, gansu, china
+Lee and Company CAN
+    lee and company, canada
+Leeds Metropolitan University GBR
+    leeds metropolitan university, leeds, united kingdom
+Leeds University Business School GBR
+    leeds university business school, leeds, ls2 9jt, united kingdom
+Lehigh University USA
+    college of business, lehigh university, bethlehem, pa  18015, united states
+    department of finance, lehigh university, bethlehem, pa, united states
+    department of economics, lehigh university, bethlehem, pa, united states
+    lehigh university, perella department of finance, 621 taylor street, bethlehem, pa 18015, united states
+Leibniz Universitat Hannover DEU
+    leibniz universitat hannover, germany
+Leipzig Graduate School of Management DEU
+    hhl-leipzig graduate school of management, leipzig, 04109, germany
+Leonard de Vinci Pole Universitaire FRA
+    leonard de vinci pole universitaire, research center, france
+Lille Catholic University FRA
+    lille catholic university, ieseg school of management, lille, france
+Lincoln International Business School GBR
+    lincoln international business school, united kingdom
+Lindenwood University USA
+    school of business and entrepreneurship, lindenwood university, st charles, mo, united states
+Linkoping University SWE
+    department of computer and information science, linkoping university, sweden
+Liverpool University CHN
+    xi'an jiaotong-liverpool university, china
+    xi'an jiaotong-liverpool university, department of mathematical sciences, china
+Lobachevsky State University RUS
+    advanced school of general & applied physics, lobachevsky state university, n. novgorod, russian federation
+Lomonosov Moscow State University RUS
+    lomonosov moscow state university, moscow, 119991, russian federation
+London Business School GBR
+    information management, london business school, united kingdom
+London School of Economics GBR
+    london school of economics, united kingdom
+    london school of economics, london business school, united kingdom
+London School of Economics and Political Science GBR
+    london school of economics and political science, united kingdom
+Loughborough University GBR
+    school of business and economics, loughborough university, loughborough, united kingdom
+Louvain School of Management BEL
+    louvain school of management, mons, belgium
+    louvain school of management, place des doyens 1, louvain-la-neuve, 1348, belgium
+Lund University SWE
+    department of economics, lund university, sweden
+Luther College Decorah Iowa USA
+    department of computer sciences, luther college decorah iowa, united states
+Luxembourg Institute of Science and Technology LUX
+    luxembourg institute of science and technology, luxembourg
+Lykke Corporation CHE
+    lykke corporation, zug, switzerland
+Macquarie Graduate School of Management AUS
+    macquarie graduate school of management, sydney, 2113, australia and cmcrc, level 3 55 harrington street, sydney, nsw  2000, australia
+Macquarie University AUS
+    department of applied finance, macquarie business school, macquarie university, sydney, nsw, australia
+    macquarie university, sydney, australia
+    macquarie university, 99 talavera rd, macquarie park, north ryde, nsw  2113, australia
+    macquarie university, australia
+    department of applied finance and actuarial studies, faculty of business and economics, macquarie university, sydney, nsw  2109, australia
+    department of applied finance and actuarial studies, center for financial risk, macquarie university, sydney, nsw 2109, australia
+Macquarie Universitynsw  2109 AUS
+    macquarie graduate school of management, macquarie universitynsw  2109, australia
+Madrid Complutense University ESP
+    madrid complutense university, spain
+Mae Fah Luang University THA
+    school of information technology, mae fah luang university, thailand
+Man Institute of Quantitative Finance GBR
+    oxford-man institute of quantitative finance, oxford, united kingdom
+    oxford-man institute of quantitative finance, oxford, ox2 6ed, united kingdom
+    oxford-man institute of quantitative finance, oxford, ox2 6gg, united kingdom
+Management  and  Strategy Department GBR
+    european business school paris, management & strategy department, united kingdom
+Mannheim University DEU
+    mannheim university, a 5, 6, mannheim 68159, germany
+Marmara University Faculty of Engineering TUR
+    marmara university faculty of engineering, department of industrial engineering, kadikoy, istanbul, turkey
+Masaryk University In Brno CZE
+    department of finance, faculty of economics and administration, masaryk university in brno, lipova 41a, brno, 602 00, czech republic
+Massachusetts Institute of Technology USA
+    massachusetts institute of technology, 100 main street, cambridge, ma  02142, united states
+    massachusetts institute of technology, nber and cftc, united states
+    department of media arts and sciences, massachusetts institute of technology, united states
+    department of the practice of finance, sloan school of management, massachusetts institute of technology, cambridge, ma, united states
+    computer science and artificial intelligence laboratory, massachusetts institute of technology, cambridge, ma, united states
+    sloan school of management, massachusetts institute of technology, cambridge, ma  02142-1347, united states
+Max Planck Institute for The Study of Societies DEU
+    max planck institute for the study of societies, cologne, germany
+Maxeler Technologies GBR
+    maxeler technologies, 3-4 albion pl, london, w6 0qt, united kingdom
+Mcdonough School of Business USA
+    mcdonough school of business, washington, dc, 20057, united states
+Mcgill University CAN
+    school of computer science, mcgill university, montreal, canada
+Mcmaster University CAN
+    department of political science, mcmaster university, hamilton, canada
+Mediterranean University Fes MAR
+    faculty of engineering, euro-mediterranean university fes, morocco
+Mediterranean University MAR
+    euromed research center, engineering unit, euro-mediterranean university, fes, 51, morocco
+Melbourne Law School AUS
+    melbourne law school, parkville, melbourne, vic, australia
+Mellon University USA
+    research, technology, and system solutions program, software engineering institute, carnegie-mellon university, pittsburgh, pa 15213, united states
+Mercer University USA
+    department of electrical and computer engineering, mercer university, macon, ga  31207, united states
+Mgimo University RUS
+    european law department, mgimo university, 76 vernadskogo av., moscow, 119454, russian federation
+    mgimo university, 76 vernadskogo av., moscow, 119454, russian federation
+Michigan Technological University USA
+    college of business, michigan technological university, houghton, mi, united states
+Michoacan State University of Saint Nicholas and Hidalgo Umsnh MEX
+    michoacan state university of saint nicholas and hidalgo umsnh, mexico
+Microsoft Corporation USA
+    microsoft corporation, united states
+Mics Laboratory at Centralesupelec FRA
+    mics laboratory at centralesupelec, gif-sur-yvette, france
+Middlebury Institute for International Studies USA
+    middlebury institute for international studies, monterey, ca, united states
+Ministry of Education CHN
+    key laboratory of complex system analysis, management and decision, ministry of education, beihang university, beijing, 100191, china
+    engineering research center of digitized textile & fashion technology, ministry of education, donghua university, shanghai, china
+    key lab of data engineering and knowledge engineering (ruc), ministry of education, beijing, 100872, china
+Minnesota State University Moorhead USA
+    department of finance, paseka school of business, minnesota state university moorhead, moorhead, mn, united states
+Minzu University of China CHN
+    school of economic, minzu university of china, beijing, 100081, china
+Missouri University of Science and Technology USA
+    department of engineering management and systems engineering, missouri university of science and technology, 205 engineering management, 600 w. 14th street, rolla, mo  65409-0370, united states
+    department of engineering management and systems engineering, missouri university of science and technology, 221 engineering management, 600 w. 14th street, rolla, mo  65409-0370, united states
+Mit Sloan School of Management USA
+    mit sloan school of management, 100 main street, cambridge, ma  02142, united states
+    mit sloan school of management, 50 memorial drive, cambridge, ma  02142, united states
+    mit sloan school of management, cambridge, ma, united states
+Monash University AUS
+    department of banking and finance, monash business school, monash university, clayton, vic, australia
+    department of econometrics and business statistics, monash business school, monash university, wellington rd & blackburn road, clayton, vic  3800, australia
+    department of banking and finance, monash business school, monash university, 900 dandenong road, caulfield east, vic  3145, australia
+    department of banking and finance, monash business school, monash university, 900 dandenong road, caulfield east, victoria  3145, australia
+    department of econometrics and business statistics, monash business school, monash university, wellington road, clayton, victoria  3800, australia
+Monash University Wellington Rd AUS
+    monash university wellington rd, clayton, vic  3800, australia
+Monmouth University USA
+    department of mathematics, monmouth university, west long branch, nj  07764, united states
+Montana State University USA
+    montana state university-billings, united states
+Montclair State University USA
+    feliciano school of business, montclair state university, montclair, nj, united states
+    department of computer science, montclair state university, montclair, nj 07043, united states
+Moscow Institute of Physics and Technology RUS
+    laboratory of structural methods of data analysis in predictive modeling, moscow institute of physics and technology, russian federation
+Moscow State University RUS
+    moscow school of economics, moscow state university, russian federation
+    department of mechanics and mathematics, moscow state university, moscow, russian federation
+    faculty of computational mathematics and cybernetics, moscow state university, moscow, russian federation
+Multimedia University MYS
+    faculty of management, multimedia university, selangor, malaysia
+Nagasaki University JPN
+    faculty of economics, nagasaki university, 4-2-1, katafuchi, nagasaki, 850-8506, japan
+    faculty of economics, nagasaki university, japan
+    nagasaki university, japan
+    nagasaki university, nagasaki, japan
+    nagasaki university, 4-2-1 katafuchi, nagasaki, 850-8506, japan
+Nagoya University JPN
+    graduate school of information science, nagoya university, furo-cho, chikusa-ku, nagoya, aichi, 464-8601, japan
+Nan University TWN
+    department of computer science and information engineering, national chi-nan university, puli, 54561, taiwan
+Nanchang Hangkong University CHN
+    nanchang hangkong university, nanchang, china
+Nanjing Audit University CHN
+    school of government audit, nanjing audit university, nanjing, china
+Nanjing University CHN
+    school of management and engineering, nanjing university, nanjing, 210093, china
+    school of electronic science and engineering, nanjing university, nanjing, 210093, china
+Nanyang Technological University SGP
+    school of computer science and engineering, nanyang technological university, 50 nanyang ave, singapore
+    centre for computational intelligence, school of computer engineering, nanyang technological university, nanyang avenue, singapore 639798, singapore
+    centre for computational intelligence, school of computer engineering, nanyang technological university, blk n4 #2a-32, nanyang avenue, singapore 639798, singapore
+National Astronomical Observatory of Japan JPN
+    national astronomical observatory of japan, 2-21-1 osawa, mitaka, tokyo, 181-8588, japan
+National Bureau of Economic Research USA
+    national bureau of economic research, united states
+    national bureau of economic research (nber), united states
+National Changhua University of Education TWN
+    department of business administration, national changhua university of education, taiwan
+National Chengchi University TWN
+    department of economics, national chengchi university, taipei, taiwan
+    ai-econ research center, national chengchi university, taipei, taiwan
+    department of management information systems, national chengchi university, taipei, taiwan
+National Chi Nan University TWN
+    department of information management, national chi nan university, nantao, taiwan
+National Chiao Tung University TWN
+    department of information management and finance, national chiao tung university, taiwan
+    college of computer science, national chiao tung university, hsinchu, taiwan
+    national chiao tung university, institute of information management, hsinchu, taiwan
+    national chiao tung university, department of information management and finance, hsinchu, taiwan
+    school of computer science, national chiao tung university, hsinchu, taiwan
+    department of information management and finance, national chiao tung university, hsinchu, taiwan
+    institute of information management, national chiao tung university, hsinchu, taiwan
+    institute of finance, national chiao tung university, hsinchu, taiwan
+    institute of finance, national chiao tung university, hsinchu, 30010, taiwan
+National Chung Cheng University TWN
+    department of business administration, national chung cheng university, taiwan
+    department of finance, national chung cheng university, taiwan
+National Electronics and Computer Technology Center THA
+    national electronics and computer technology center, thailand
+National Inst of Informatics JPN
+    national inst. of informatics, tokyo, japan
+National Institute of Information and Communications Technology JPN
+    national institute of information and communications technology, koganei, japan
+National Institute of Science and Technology for Complex Systems BRA
+    national institute of science and technology for complex systems, brazil
+National Research Centre DEU
+    german national research centre for computer science (gmd), st. augustin 1, schloß birlinghoven, 5205, germany
+National Research University Higher School of Economics RUS
+    national research university higher school of economics, moscow, russian federation
+    national research university higher school of economics, ferm lab, moscow, russian federation
+National Taipei College of Business TWN
+    graduate institute of finance, national taipei college of business, taiwan
+National Taipei University TWN
+    department of finance and cooperative management, national taipei university, taiwan
+National Taiwan University TWN
+    department of economics, national taiwan university, taipei, taiwan
+    department of computer science & information engineering, national taiwan university, taipei, taiwan
+    department of finance, national taiwan university, taipei, taiwan
+    department of computer science and information engineering, national taiwan university, no. 1 roosevelt rd., taipei, 10617, taiwan
+National Tsing Hua University TWN
+    department of quantitative finance, college of technology management, national tsing hua university, hsinchu, taiwan
+National University of Ireland Galway IRL
+    industrial engineering department, national university of ireland galway, co., galway, ireland
+National University of Ireland IRL
+    deri, national university of ireland, galway, ireland
+    department of economics, national university of ireland, galway, ireland
+National University of Kaohsiung TWN
+    dept. of computer science and information engineering, national university of kaohsiung, kaohsiung, taiwan
+National University of Life and Environmental Science UKR
+    national university of life and environmental science, 27 heroiv oborony st., kyiv, 03041, ukraine
+National University of Singapore SGP
+    lee kuan yew school of public policy, national university of singapore, singapore
+    department of analytics and operations, national university of singapore, singapore
+    business analytics centre, national university of singapore, singapore
+    risk management institute, national university of singapore, singapore, singapore
+Naval Research Laboratory USA
+    naval research laboratory, united states
+Nec Corporation JPN
+    nec corporation, kawasaki, japan
+Nelson Mandela Metropolitan University ZAF
+    department of economics, faculty of business and economic studies, nelson mandela metropolitan university, south africa
+Nelson Mandela University ZAF
+    department of economics, faulty of business and economics studies, embizweni building, south campus, nelson mandela university, university way, summerstrand, port elizabeth, 6019, south africa
+Neoma Business School FRA
+    neoma business school, france
+    neoma business school, 1 rue du marechal juin - bp 215, mont-saint-aignan cedex, 76825, france
+New Jersey City University USA
+    department of finance, new jersey city university, united states
+New Jersey Institute of Technology USA
+    new jersey institute of technology, newark, nj, united states
+New Mexico Institute of Mining and Technology USA
+    department of management, new mexico institute of mining and technology, socorro, nm, united states
+Newcastle University Business School GBR
+    newcastle university business school, newcastle upon tyne, united kingdom
+    viktor manahov, newcastle university business school, 5 barrack road, ne1 4se, united kingdom
+Newcastle University GBR
+    newcastle university, tyne and wear, united kingdom
+    school of computing science, newcastle university, united kingdom
+Nguyen Tat Thanh University VNM
+    nguyen tat thanh university, ho chi minh city, viet nam
+Nihon University JPN
+    department of computer science, college of engineering, nihon university, koriyama, japan
+    department of computer science, college of engineering, nihon university, 1 nakagawara, tokusada, tamura-machi, koriyama, 963-8642, japan
+Nizhni Novgorod State University RUS
+    department of mathematics, nizhni novgorod state university, russian federation
+Nord University Business School NOR
+    nord university business school, bodo, norway
+Norges Bank NOR
+    norges bank (central bank of norway), norway
+Normandie University FRA
+    department of mathematics, normandie university, normandie, 76620, france
+North Carolina State University USA
+    department of philosophy and religious studies, north carolina state university, 340 withers hall, campus box 8103, raleigh, nc  27695, united states
+    north carolina state university, raleigh, nc, united states
+Northeastern University USA
+    college of arts, media and design, northeastern university, united states
+Northwestern Polytechnical University CHN
+    school of mechanical engineering, center for optical imagery analysis and learning, northwestern polytechnical university, xi'an, china
+    school of computer science, center for optical imagery analysis and learning, northwestern polytechnical university, xi'an, china
+Northwestern University USA
+    kellogg school of management, northwestern university, 2001 sheridan road, evanston, il 60208, united states
+    department of electrical engineering and computer science, northwestern university, evanston, il  60208, united states
+Okanagan College CAN
+    computer science, okanagan college, kelowna, bc  v1y4x8, canada
+    computer science department, okanagan college, kelowna, bc, canada
+Oklahoma City University USA
+    oklahoma city university, oklahoma city, ok, united states
+Old Dominion University USA
+    old dominion university, norfolk, va, united states
+Ono Academic College ISR
+    faculty of business administration, ono academic college, kiryat-ono 55000, israel
+Open University of Hong Kong CHN
+    math statistics team, open university of hong kong, hong kong
+Osaka University JPN
+    graduate school of engineering science, osaka university, toyonaka, osaka, japan
+Oslo University NOR
+    faculty of law, oslo university, norway
+Paris Diderot University FRA
+    mathematics department, paris diderot university, paris, france
+    paris diderot university, paris, france
+Pazmany Peter Catholic University HUN
+    faculty of information technology and bionics, pazmany peter catholic university, prater u. 50/a, budapest, 1088, hungary
+Pcl Research Center of Networks and Communications CHN
+    pcl research center of networks and communications, peng cheng laboratory, shenzhen, china
+Peking University CHN
+    shenzhen key lab for information centric networking & blockchain technology (icnlab), school of electronics and computer engineering (sece), peking university, shenzhen, 518055, china
+Perelman Center for Legal Philosophy BEL
+    perelman center for legal philosophy (ulb), belgium
+Perm State National Research University RUS
+    perm state national research university, russian federation
+Petersburg State University RUS
+    saint-petersburg state university, saint-petersburg, russian federation
+Plymouth University GBR
+    interdisciplinary centre for computer music research, school of humanities, music and performing arts, plymouth university, drake circus, plymouth, united kingdom
+Pohang University of Science and Technology/Pirl KOR
+    department of computer science and engineering, pohang university of science and technology/pirl, kyungbuk, south korea
+Polish Academy of Sciences POL
+    systems research institute, polish academy of sciences, warsaw, poland
+    institute of computer science polish academy of sciences, jana kazimierza 5, 01-248 warsaw, poland
+    institute of computer science, polish academy of sciences, ordona 21, 01-237 warsaw, poland
+    institute of computer science, polish academy of sciences, ul. ordona 21, warsaw 01-237, poland
+Politecnico Di Torino ITA
+    faculty of control, computer engineering department, politecnico di torino, italy
+Pontifical Catholic University of Rio de Janeiro BRA
+    department of electrical engineering, pontifical catholic university of rio de janeiro, rio de janeiro, brazil
+Pontificia Universidad Catolica de Valparaiso Chile CHL
+    pontificia universidad catolica de valparaiso chile, avenida brasil 2241, valparaiso, 2362807, chile
+    pontificia universidad catolica de valparaiso chile, avenida brasil 2830, valparaiso, 2340031, chile
+Pontificia Universidad Catolica del Peru PER
+    centrum catolica, pontificia universidad catolica del peru, peru
+Portland State University USA
+    portland state university, 1825 sw broadway, portland, or  97201, united states
+    department of electrical and computer engineering, portland state university, portland, or  97201, united states
+Princeton University USA
+    bendheim center for finance, princeton university, princeton, nj 08540, united states
+Princeton University and Nber USA
+    department of economics, bendheim center for finance, princeton university and nber, united states
+Providence University TWN
+    department of computer science and information engineering, providence university, taichung city, taiwan
+Purdue University USA
+    department of computer science, purdue university, 305 n. university st., west lafayette, in 47907, united states
+    department of computer science, purdue university, west lafayette, in 47907, united states
+    purdue university, west lafayette, in, united states
+    purdue university, united states
+    department of computer science, purdue university, united states
+Pusan National University KOR
+    department of economics, pusan national university, 2, busandaehak-ro 63beon-gil, geumjeong-gu, busan, 46241, south korea
+Queens University CAN
+    smith school of business, queen's university, goodes hall, 143 union st. westkingston onk7l 3n6, canada
+Queens Universityk7L 3N6 CAN
+    smith school of business, queen's universityk7l 3n6, canada
+Qufu Normal University CHN
+    school of statistics, qufu normal university, jining, shandong, 273165, china
+Renmin University of China CHN
+    school of information, renmin university of china, beijing, china
+    moe key laboratory of deke, renmin university of china, beijing, china
+    information school, renmin university of china, beijing, china
+    school of information, renmin university of china, beijing, 100872, china
+    school of information, renmin university of china, beijing 100872, china
+Research Department CHL
+    banque de france, research department, chile
+Research Institute of Comprehensive Economics USA
+    research institute of comprehensive economics, quincy, ma, united states
+    research institute of comprehensive economics, quincy, ma  02171, united states
+    research institute of comprehensive economics, 435 hancock street, quincy, ma  02171, united states
+Rey Juan Carlos University ESP
+    rey juan carlos university, spain
+Riga Technical University LVA
+    department of information technology, riga technical university, riga, latvia
+Rmit University AUS
+    school of electrical and computer engineering, rmit university, melbourne, vic, australia
+Rochester Institute of Technology USA
+    saunders college of business, rochester institute of technology, 107 lomb memorial drive, rochester, ny  14623, united states
+Roskilde University DNK
+    dept. of people and technology, roskilde university, denmark
+    roskilde university, geography and planning, department of environmental, social and spatial change, university road 1, building 02, roskilde, 4000, denmark
+Royal Institute of Technology SWE
+    school of ict, royal institute of technology (kth), stockholm, sweden
+Royal Military College of Canada CAN
+    royal military college of canada, canada
+Russian Academy of Science RUS
+    marchuk institute of numerical mathematics, russian academy of sciences, moscow, russian federation
+    kharkevich institute for information transmission problems, russian academy of sciences, bol’shoi karetnyi per. 19 stroenie 1, moscow, 127994, russian federation
+    kharkevich institute for information transmission problems, russian academy of sciences, moscow, russian federation
+    institute for information transmission problems, russian academy of sciences, bol'shoi karetnyi per. 19, moscow gsp-4, 127994, russian federation
+Rutgers Business School USA
+    rutgers business school, 1 washington park, newark, nj  07102, united states
+Rutgers School of Business USA
+    rutgers school of business, camden, 227 penn street, camden, nj 08102, united states
+Rutgers University USA
+    rutgers business school, rutgers university, 100 rockafeller road, piscataway, nj  08854, united states
+    rutgers university, rutgers-new brunswick, 7 college avenj  08901, united states
+    rutgers university, new brunswick, united states
+    department of economics, rutgers university, united states
+Saarland University DEU
+    saarland university, operations research and business informatics, p.o. box 151150, d-66041 saarbrucken, germany
+    iwi at dfki, saarland university, 66123 saarbrucken, germany
+Sage Hall Cornell University USA
+    johnson graduate school of management, sage hall cornell university, ithaca, ny  14853, united states
+Saint Louis University USA
+    richard a. chaifetz school of business, saint louis university, 3674 lindell blvd., st. louis, mo  63108, united states
+Saint Marys College of California USA
+    saint mary’s college of california, 1928 st marys road, moraga, ca  94575, united states
+Saint Nicholas and Hidalgo Michoacan State University MEX
+    faculty of accounting and management, saint nicholas and hidalgo michoacan state university (umsnh), morelia, 58030, mexico
+Saint Petersburg Electrotechnical University Leti RUS
+    saint petersburg electrotechnical university 'leti', saint petersburg, russian federation
+    saint petersburg electrotechnical university leti, saint petersburg, russian federation
+San Diego State University USA
+    department of computer science, san diego state university, 5500 campanile drive, san diego, ca 92182, united states
+    san diego state university, 5500 campanile drive, san diego, ca 92182, united states
+San Francisco State University USA
+    san francisco state university, san francisco, ca, united states
+Sangmyung University KOR
+    protocol engineering lab., sangmyung university, cheonan, south korea
+    department of business administration, college of business, sangmyung university, 7 hongji-dong, jongno-gu, seoul, south korea
+Santa Clara University USA
+    santa clara university, united states
+Sapienza University of Rome ITA
+    dipartimento di ingegneria informatica, automatica e gestionale (diag), sapienza university of rome, via ariosto 25, rome, 00185, italy
+    dipartimento di ingegneria dell'informazione, elettronica e telecomunicazioni (diet), sapienza university of rome, via eudossiana 18, rome, 00184, italy
+Saratov State University RUS
+    saratov state university, saratov, russian federation
+Saveetha Institute of Medical and Technical Sciences IND
+    dept of computer science and engineering, saveetha school of engineering, saveetha institute of medical and technical sciences, chennai, india
+School Accounting and Finance GBR
+    strathclyde business, school accounting and finance, 199 cathedral street, glasgow, g4 0qu, united kingdom
+School of Computer Science and Engineering AUS
+    school of computer science and engineering, unsw, sydney 2052, australia
+School of Economics AUS
+    school of economics, finance and marketing, rmit, melbourne, australia
+    school of economics, finance and marketing, rmit, melbourne, vic, australia
+    school of economics, finance and marketing, rmit, 445 swanston street, melbourne, vic  3000, australia
+School of Economics ZAF
+    school of economics, uct, rondebosch, cape town, south africa
+School of Informatics GBR
+    school of informatics, uwb, dean street, bangor, united kingdom
+School of Management USA
+    school of management, suny at buffalo, buffalo, ny, united states
+School of Management at The Federal University of Rio Grande do Sul BRA
+    school of management at the federal university of rio grande do sul, porto alegre, rio grande do sul, cep: 90010-460, brazil
+Scuola Superiore Santanna ITA
+    retis lab, scuola superiore sant’anna, pisa, italy
+Seoul National University KOR
+    school of computer science and engineering, seoul national university, 1 gwanak-ro, gwanak-gu, seoul, 151-744, south korea
+    department of industrial engineering, seoul national university, 1 gwanak-ro, gwanak-gu, seoul 151-744, south korea
+Shandong University CHN
+    school of computer science and technology, shandong university, jinan, 250014, china
+Shandong University of Finance and Economics CHN
+    school of computer science and technology, shandong university of finance and economics, jinan, 250014, china
+Shandong University of Science and Technology CHN
+    department of information engineering, shandong university of science and technology, taian, 271019, china
+Shanghai Jiao Tong University CHN
+    china academy of financial research, shanghai jiao tong university, 211 huaihai w rd, shanghai, 200000, china
+    koguan law school, shanghai jiao tong university, china
+    antai college of economics and management, shanghai jiao tong university, china
+Shanghai Jiaotong University CHN
+    aims lab, department of computer science and engineering, shanghai jiaotong university, shanghai, 200240, china
+Shanghai University CHN
+    department of computer science, shanghai university, shanghai, china
+Sharif University of Technology IRN
+    department of industrial engineering, sharif university of technology, tehran, 1458889694, iran
+    graduate school of management and economic, sharif university of technology, 8639-11155, tehran, iran
+    department of computer engineering, sharif university of technology, 11155-9517, tehran, iran
+Shenzhen Institute of Information Technology CHN
+    shenzhen institute of information technology, guangdong, china
+Shiga University JPN
+    shiga university, hikone, japan
+    shiga university, 1-1-1 banba, hikone, shiga, 522-8522, japan
+Siam University THA
+    department of electrical engineering, siam university, thailand
+Siers Research Laboratory IND
+    siers research laboratory, amrita school of engineering, amrita vishwa vidyapeetham, coimbatore, india
+Simon Fraser University CAN
+    department of economics, simon fraser university, burnaby, bc  v51s6, canada
+    simon fraser university, canada
+    simon fraser university, burnaby, bc, canada
+Singapore Management University SGP
+    school of business, singapore management university, singapore, singapore
+    lee kong chian school of business, singapore management university, singapore
+    school of information systems, singapore management university, 80 stamford road198702, singapore
+    school of information systems, singapore management university, singapore
+    school of information systems, singapore management university, singapore, singapore
+Skema Business School FRA
+    ofce, skema business school, 60 rue dostoievski, sophia antipolis cedex, 06902, france
+Skema Business School and Universite Cote Dazur FRA
+    skema business school and universite cote d'azur, france
+Skolkovo Institute of Science and Technology RUS
+    skolkovo institute of science and technology, moscow, russian federation
+Souissi University MAR
+    sime lab, ensias, mohammed v-souissi university, rabat, 713, morocco
+South China Normal University CHN
+    school of computer science, south china normal university, guangzhou, 510631, china
+Southampton University GBR
+    intelligence, agents, multimedia group, department of electronics and computer science, southampton university, southampton, so17 1bj, united kingdom
+Southeast University CHN
+    school of computer science and engineering, southeast university, nanjing, 210000, china
+Southern Cross University AUS
+    school of business and tourism, southern cross university, gold coast, qld, australia
+Southern Methodist University USA
+    cox school of business, southern methodist university, dallas, united states
+    southern methodist university, united states
+Southwestern University of Finance and Economics CHN
+    school of finance, southwestern university of finance and economics, chengdu, 611130, china
+Sri Lanka Institute of Information Technology LKA
+    dept. of information technology, sri lanka institute of information technology, malabe, sri lanka
+St Edwards University USA
+    department of economics, st. edward's university, united states
+St Petersburg State University RUS
+    st. petersburg state university, university embankment 7-9, st. petersburg, 199034, russian federation
+Stanford Management Company USA
+    stanford management company, united states
+Stanford University USA
+    department of mathematics, stanford university, stanford, ca, united states
+    management science and engineering department, stanford university, huang engineering center, stanford, ca, united states
+    stanford graduate school of business, stanford university, 655 knight way, stanford, ca, united states
+State Grid Corporation of China CHN
+    beijingsmartchip microelectronics technology co., ltd., key lab of power grid design and analysis, state grid corporation of china, beijing, 100192, china
+State University of New York USA
+    department of computer science, state university of new york, new platz, ny  12561, united states
+    state university of new york, plattsburgh, ny, united states
+State University of New York at Buffalo USA
+    department of finance, school of management, state university of new york (suny) at buffalo, school of business, sungkyunkwan university, buffalo, ny  14260, united states
+Stern School of Business USA
+    stern school of business, 44 west 4th street, new york, ny 10012, united states
+Stevens Institute of Technology USA
+    financial engineering program, stevens institute of technology, 1 castle point on hudson, hoboken, nj  03070, united states
+    financial engineering program, school of systems and enterprises, stevens institute of technology, united states
+    financial engineering program, stevens institute of technology, united states
+    stevens institute of technology, castle point on hudson, hoboken, nj, 07302, united states
+Stirling University Stirlingfk9 4La GBR
+    division of accounting and finance, stirling university stirlingfk9 4la, united kingdom
+Stockholm School of Economics In Riga LVA
+    stockholm school of economics in riga, strelnieku street 4a, riga, lv  1010, latvia
+Stockholm University Business School SWE
+    stockholm university business school, sweden
+Stockholm University SWE
+    stockholm business school, stockholm university, stockholm, 106 91, sweden
+    school of business, stockholm university, stockholm, sweden
+Stockholm University School of Business SWE
+    stockholm university school of business, sweden
+    stockholm university school of business, s-106 91 stockholm, sweden
+Stony Brook University USA
+    stony brook university, stony brook, ny  11794, united states
+Strategy Department RUS
+    strategy department, moscow exchange, 13, bol'shoy kislovskiy per., moscow, 125009, russian federation
+Strategy and Entrepreneurship Department FRA
+    strategy and entrepreneurship department, neoma business school, mont-saint-aignan, france
+Stuart School of Business USA
+    stuart school of business, michael k. ong risk advisory, chicago, il, united states
+Sultan Qaboos University OMN
+    department of economics and finance, sultan qaboos university, muscat, oman
+Sun Yat-Sen University CHN
+    business school, sun yat-sen university, guangzhou, 510275, china
+    school of data and computer science, sun yat-sen university, guangzhou, 510275, china
+    guangdong key laboratory for big data analysis and simulation of public opinion, sun yat-sen university, guangzhou, china
+    national engineering research center of digital life, sun yat-sen university, guangzhou, china
+    intelligent data center, school of mathematics, sun yat-sen university, guangzhou, 510275, china
+    school of business, sun yat-sen university, china
+Suny Polytechnic Institute USA
+    suny polytechnic institute, utica, ny, united states
+Swiss Federal Institute of Technology CHE
+    laboratoire d’intelligence artificielle, department informatique, swiss federal institute of technology, in (ecublens), lausanne, ch-1015, switzerland
+Swiss Finance Institute CHE
+    swiss finance institute, eole polytechnique federale de lausanne (epfl), lausanne, switzerland
+    swiss finance institute, 40, boulevard du pont-d' arve, 1211 geneva 4, switzerland
+Swiss Finance Institute and Epfl CHE
+    swiss finance institute and epfl, extranef 248, lausanne, 1015, switzerland
+Systems Department FRA
+    european business school paris, management, strategy, systems department, 10, rue sextius michel, paris, 75015, france
+    management, strategy, systems department, european business school paris, paris, france
+Systems Research Institute Pas POL
+    systems research institute pas, newelska 6, warsaw, 01-447, poland
+T J Watson Research Center USA
+    ibm research, t. j. watson research center, united states
+Taras Shevchenko National University of Kyiv UKR
+    faculty of economics, department of economic cybernetics, taras shevchenko national university of kyiv, kyiv, ukraine
+Tatung University TWN
+    department of computer science and engineering, tatung university, taipei, 104, taiwan
+Td Bank CAN
+    treasury and balance sheet management department, td bank, toronto, canada
+Technical University BGR
+    technical university, sofia, 1000, bulgaria
+Technical University Berlin DEU
+    school of electrical engineering and computer science, technical university berlin, germany
+Technical University Munich DEU
+    msrg, technical university munich, germany
+Technical University of Cartagena ESP
+    department of information and communications technologies, technical university of cartagena (upct), cartagena, spain
+Technische Universitat Darmstadt DEU
+    technische universitat darmstadt, hochschulstr. 1, darmstadt, germany
+    technische universitat darmstadt, hochschulstraße 1, darmstadt, 64289, germany
+Technische Universitat Dresden DEU
+    systems engineering group, technische universitat dresden, dresden, germany
+Technische Universitat Munchen DEU
+    technische universitat munchen, munich, germany
+Technische Universiteit Eindhoven NLD
+    technische universiteit eindhoven, de zaale, eindhoven, 5600 mb, netherlands
+Technological Institute of Aeronautics BRA
+    technological institute of aeronautics-ita, sao jose dos campos sp, brazil
+    technological institute of aeronautics - ita, sao jose dos campos, sp, brazil
+    technological institute of aeronautics, sao jose dos campos, sao paulo, brazil
+Tecnologico de Monterrey MEX
+    school of engineering and science, tecnologico de monterrey, av. garza sada 2501, col. tecnologico, monterrey, nl  64849, mexico
+Telecommunications Research Laboratory GBR
+    telecommunications research laboratory, toshiba research europe ltd., united kingdom
+Texas A and M University USA
+    college of business, texas a&m university-corpus christi, corpus christi, tx, united states
+Thammasat University THA
+    faculty of economics, thammasat university, bangkok, thailand
+The Australian National University AUS
+    anu college of business and economics, the australian national university, australia
+The Bucharest University of Economic Studies ROU
+    economic informatics doctoral school, the bucharest university of economic studies, romania
+The Chinese University of Hong Kong CHN
+    department of systems engineering and engineering management, the chinese university of hong kong, hong kong, hong kong
+The Fields Institute for Mathematical Sciences CAN
+    the fields institute for mathematical sciences, toronto, on, canada
+    the fields institute for mathematical sciences, toronto, canada
+The Fletcher School FRA
+    the fletcher school (tufts university), hec school of management, france
+The Open University of Israel ISR
+    department of mathematics and computer science, the open university of israel, ra’anana, israel
+The School of Business and Economics at Uit NOR
+    the school of business and economics at uit - the arctic university of norway, norway
+The State University of New York USA
+    applied and computational mathematics program, the state university of new york, buffalo, ny, united states
+Ti Duisenberg School of Finance NLD
+    ti duisenberg school of finance, netherlands
+Tianjin University CHN
+    college of management and economics, tianjin university, tianjin, 300072, china
+    college of management and economics, tianjin university, no.92 weijin road, nankai district, tianjin  300072, china
+    school of management, tianjin university, tianjin, 300072, china
+Tianjin Universitytianjin CHN
+    china center for social computing and analytics, tianjin universitytianjin, china
+Tilburg University NLD
+    tilburg university, 5000le tilburg, netherlands
+Tinbergen Institute Amsterdam NLD
+    tinbergen institute amsterdam, amsterdam, 1082 ms, netherlands
+Tinbergen Institute NLD
+    centre for economic policy research, tinbergen institute, amsterdam, netherlands
+Tobb University of Economics and Technology TUR
+    department of computer engineering, tobb university of economics and technology, ankara, turkey
+    tobb university of economics and technology, department of computer engineering, ankara, turkey
+    tobb university of economics and technology, ankara, 06560, turkey
+    tobb university of economics and technology, ankara, turkey
+Tokyo Institute of Technology JPN
+    tokyo institute of technology, tokyo, japan
+    tokyo institute of technology, tokyo, 152-8552, japan
+Tomsk Polytechnic University RUS
+    the department of higher mathematics and mathematical physics, tomsk polytechnic university, russian federation
+Tongji University CHN
+    school of economics and management, tongji university, shanghai, china
+    department of computer science, tongji university, shanghai, china
+Towson University USA
+    department of mathematics, towson university, towson, md 21252-0001, united states
+Trade Science Corporation JPN
+    trade science corporation, japan
+Trinity College Dublin IRL
+    trinity business school, trinity college dublin, dublin 2, ireland
+Trinity College IRL
+    trinity business school, trinity college, dublin, ireland
+Truman State University USA
+    department of economics, truman state university, kirksville, mo, united states
+Tsinghua University CHN
+    automation department, tsinghua university, beijing, 100084, china
+    department of automation, tsinghua university, beijing,100084, china
+Tulane University USA
+    tulane university, united states
+Ucsi University MYS
+    faculty of business and information science, ucsi university, jalan menara gading, cheras, kuala lumpur, 56000, malaysia
+Ulm University DEU
+    ulm university, ulm, germany
+Univ of Orleans FRA
+    lifo, univ. of orleans, france
+Univ of Pennsylvania USA
+    dept. of computer science, univ. of pennsylvania, 507 levine hall, 3330 walnut st., philadelphia, pa 19104, united states
+    dept. of computer science, univ. of pennsylvania, levine hall, 3330 walnut st., philadelphia, pa 19104-6389, united states
+Universidad Adolfo Ibanez CHL
+    universidad adolfo ibanez, facultad de ingenieria y ciencias, balmaceda 1625, vina del mar, 3132386, chile
+    facultad de ingenieria y ciencias, universidad adolfo ibanez, vina del mar, chile
+    facultad de sicologia, universidad adolfo ibanez, vina del mar, chile
+Universidad Carlos Iii ESP
+    department of business administration, universidad carlos iii, spain
+Universidad Carlos Iii de Madrid ESP
+    department of statistics, universidad carlos iii de madrid, spain
+    universidad carlos iii de madrid, department of computer science, avda. universidad 30, leganes, madrid, spain
+    department de informatica, universidad carlos iii de madrid, leganes, madrid, spain
+Universidad Catolica Sedes Sapientiae PER
+    facultad de ciencias economicas y comerciales, universidad catolica sedes sapientiae, nueva cajamarca, peru
+    universidad catolica sedes sapientiae, nueva cajamarca, peru
+    facultad de ciencias economicas y comerciales, universidad catolica sedes sapientiae, jr. constelacion, sol de oro, los olivos-lima, peru
+Universidad Complutense de Madrid ESP
+    departamento sistemas informaticos y computacion, universidad complutense de madrid, madrid, spain
+    adaptive and bioinspired systems research group, universidad complutense de madrid, madrid, spain
+    adaptive and bioinspired systems research group, universidad complutense de madrid, spain
+Universidad Diego Portales Chile CHL
+    universidad diego portales chile, av. ejercito 441, santiago, 8370109, chile
+Universidad Externado COL
+    universidad externado, bogota, colombia
+    algocodex research institute, universidad externado, bogota, colombia
+Universidad Externado de Colombia COL
+    universidad externado de colombia, bogota, colombia
+Universidad Nacional de Colombia COL
+    universidad nacional de colombia, bogota, colombia
+    school of systems and computer engineering, universidad nacional de colombia, bogota, colombia
+Universidad Pablo de Olavide ESP
+    universidad pablo de olavide, de sevilla, ctra. de utrera, km 1, sevilla 41013, spain
+Universidad Politecnica Madrid ESP
+    dep. senales, sistemas y radiocomunicaciones, e.t.s.i. telecomunicacion, universidad politecnica madrid, madrid, spain
+Universidad Politecnica de Valencia ESP
+    i.u. de matematica pura i aplicada, universitat politecnica de valencia, cami de vera s/n, valencia, 46022, spain
+Universidad Rey Juan Carlos de Madrid ESP
+    universidad rey juan carlos de madrid, spain
+Universidad Tecnica Federico Santa Maria CHL
+    universidad tecnica federico santa maria, departamento de informatica, avda. espana 1680, valparaiso, 2390123, chile
+    departamento de informatica, universidad tecnica federico santa maria, valparaiso, chile
+Universidad Tecnica Federico Santa Maria Chile CHL
+    universidad tecnica federico santa maria chile, avenida espana 1680, valparaiso, 2390123, chile
+Universidad de Alicante ESP
+    universidad de alicante, dpto. economia financiera y contabilidad, facultad de ciencias economicas y empresariales, ctra. san vicente s/n, 03690 san vicente del raspeig (alicante), spain
+Universidad de Chile CHL
+    universidad de chile, center of applied economics and center of finance, dii, chile
+    departmento de administracion, universidad de chile, santiago, chile
+Universidad de Malaga ESP
+    department de lenguajes y ciencias de la computacion, universidad de malaga, malaga, spain
+    malaga university, university it services, spain
+Universidad de Murcia ESP
+    universidad de murcia, dpto. organizacion de empresas y finanzas, facultad de economia y empresa, campus de espinardo, s/n, 30100 murcia, spain
+Universidad de Oviedo ESP
+    business management dept., university of oviedo, gijon, asturias, spain
+    computer science department, university of oviedo, campus de viesques, gijon 33203, spain
+    cuantitative economy department, university of oviedo, campus del cristo, oviedo 33002, spain
+Universidad de Valencia ESP
+    universidad de valencia, spain
+Universidade Federal de Alfenas (Unifal BRA
+    financial computing centre (fcc), icex, universidade federal de alfenas (unifal-mg), alfenas, brazil
+Universidade Federal de Minas Gerais BRA
+    federal university of minas gerais (ufmg), brazil
+    federal university of minas gerais, belo horizonte, minas gerais, brazil
+    department of computer science, federal university of minas gerais (ufmg), brazil
+    programa de pos-graduacao em ciencia da computacao, universidade federal de minas gerais (ufmg), belo horizonte, brazil
+    departamento de ciencia da computacao, universidade federal de minas gerais (ufmg), belo horizonte, brazil
+    federal university of minas gerais (ufmg), belo horizonte, brazil
+Universidade Federal de Pernambuco BRA
+    universidade federal de pernambuco, centro de informatica, av. jornalista anibal fernandes, s/n, recife, pe  50740-560, brazil
+    informatics center, federal university of pernambuco, recife, brazil
+Universidade Federal do Espirito Santo BRA
+    departamento de informatica, universidade federal do espirito santo, vitoria e.s., brazil
+    departamento de informatica, universidade federal do espirito santo, vitoria, espirito santo, brazil
+Universidade Nova de Lisboa PRT
+    faculdade de economia, universidade nova de lisboa, 1099-032 lisboa, portugal
+Universidade de Lisboa PRT
+    faculdade de ciencias, universidade de lisboa, 1749-016 lisboa, portugal
+Universidade de Lisboa and Cemapre Iseg PRT
+    school of economics and management (iseg), universidade de lisboa and cemapre iseg, rua do quelhas 6, lisbon, 1200-781, portugal
+Universidade de Minho PRT
+    department of informatics, university of minho, braga, portugal
+Universidade de Sao Paulo BRA
+    escola politecnica, universidade de sao paulo, sao paulo, brazil
+    universidade de sao paulo rua girassol, 554, apto. 183, sao paulo, brazil
+    intelligent techniques laboratory, university of sao paulo, sao paulo sp, brazil
+    intelligent techniques laboratory, university of sao paulo, sao paulo, brazil
+Universidade do Porto PRT
+    department of electrical and computer engineering, school of engineering, porto university (feup), portugal
+    department of informatics engineering, school of engineering, porto university (feup), portugal
+    department of electrical and computer engineering, school of engineering, porto university (feup), rua dr. roberto frias s/n, 4200-465 porto, portugal
+    department of informatics engineering, school of engineering, porto university (feup), rua dr. roberto frias s/n, 4200-465 porto, portugal
+Universita Cattolica del Sacro Cuore ITA
+    department of economic policy, universita cattolica del sacro cuore, via necchi 5, milano, 20123, italy
+Universita Degli Studi Di Genova ITA
+    universita degli studi di genova, dipartimento di matematica, via dodecaneso 35, genova, 16146, italy
+Universita Degli Studi Di Milano ITA
+    universita degli studi di milano-bicocca, milan, italy
+Universita Di Firenze ITA
+    dipartimento di statistica g. parenti, universita di firenze, italy
+Universitaetsstrasse 15/F2 AUT
+    institute of banking and finance, university of graz, universitaetsstrasse 15/f2, graz, 8010, austria
+Universitat Basel CHE
+    universitat basel, ch-4002 basel, switzerland
+    universitat basel, basel ch-4002, switzerland
+Universitat DEU
+    institut fur mathematik, humboldt-universitat, 10099 berlin, germany
+Universitat Duisburg DEU
+    universitat duisburg-essen, germany
+Universitat Karlsruhe DEU
+    institute of information systems and management, universitat karlsruhe (th), englerstr. 14, 76131 karlsruhe, germany
+Universitat Konstanz DEU
+    universitat konstanz, center of excellence, cultural foundations of integratio, konstanz, 78457, germany
+Universitat Mannheim DEU
+    institut fur mathematik, universitat mannheim, 68131 mannheim, germany
+Universitat Siegen DEU
+    universitat siegen, germany
+Universitat Zu Berlin DEU
+    school of business and economics, humboldt-universitat zu berlin, berlin, germany
+    humboldt-universitat zu berlin, department of mathematics, germany
+Universitat de Barcelona ESP
+    departament de fisica fonamental, universitat de barcelona, diagonal 647, e-08028 barcelona, spain
+Universitat de Girona ESP
+    institut d’informatica i aplicacions, universitat de girona, girona, spain
+    universitat de girona, spain
+Universite Cote Dazur FRA
+    observatoire francais des conjonctures economiques (ofce), universite cote d'azur, skema, cnrs, gredeg, 60, rue dostoievski bp 85, sophia antipolis cedex, 06902, france
+    universite cote d'azur, cnrs, gredeg, france
+Universite Internationale de Rabat MAR
+    bear lab, universite internationale de rabat, rabat business school, technopolis - rocade de rabat-sale, sale el jadida, 11100, morocco
+Universite Nice Sophia FRA
+    gredeg-universite nice sophia-antipolis, france
+    gredeg-universite nice sophia-antipolis, nice, france
+    maitre de conferences, laboratoire gredeg-universite nice sophia-antipolis, france
+Universite Paris 1 Pantheon FRA
+    centre d'economie de la sorbonne, universite paris 1 pantheon-sorbonne, 106 boulevard de l'hopital, paris cedex 13, 75642, france
+    universite paris 1 pantheon-sorbonne (centre d'economie de la sorbonne), labex refi (financial regulation lab), paris school of business, paris, france
+Universite Paris 7 Diderot FRA
+    laboratoire de probabilites et modeles aleatoires, cnrs, umr 7599, universite paris 7 diderot, paris, france
+    universite paris 7 diderot, france
+    universite paris 7 diderot, crest-ensae, jvn institute, france
+    exqim and laboratoire de probabilites et modeles aleatoires, universite paris 7 diderot, cnrs, umr 7599, france
+Universite Paris FRA
+    universite paris-dauphine, psl, cnrs, drm, pl. du ml de lattre de tassigny, paris, 75775, france
+    universite paris-est, cermics, projet mathrisk enpc-inria-umlv, 6 et 8 avenue blaise pascal, marne la vallee, 77455, france
+    projet mathrisk enpc-inria-umlv, universite paris-est, cermics, 6 et 8 avenue blaise pascal, marne la vallee, cedex 2, 77455, france
+    lacl, universite paris-est creteil, paris, france
+    lab. d'algorithmique, complexite et logique, universite paris-est creteil, france
+    ufr de mathematiques, laboratoire jacques-louis lions, universite paris-diderot, 75013 paris, france
+Universite Pierre  and  Marie Curie FRA
+    laboratoire de probabilites et modeles aleatoires, cnrs - universite pierre & marie curie, paris, france
+Universite Pierre Et Marie Curie FRA
+    laboratoire de probabilites et modeles aleatoires, universite pierre et marie curie, 4 place jussieu, paris, 75005, france
+    universite pierre et marie curie, 75005 paris, france
+Universite de Montreal CAN
+    departement d'informatique et de recherche operationnelle, universite de montreal, canada
+Universite de Tunis El Manar TUN
+    universite de tunis el manar, fsegt, tunis, 2092, tunisia
+Universite de Tunis TUN
+    universite de tunis, isgt, lr99es04 bestmod, tunis, 2000, tunisia
+Universitetsplatsen 1 SWE
+    linnaeus university, department of social studies, universitetsplatsen 1, vaxjo, 35195, sweden
+Universiti Teknologi Mara MYS
+    department of financial services and risk management, universiti teknologi mara, malaysia
+Universiti Tunku Abdul Rahman MYS
+    department of mathematical and actuarial science, universiti tunku abdul rahman, malaysia
+University Ca Foscari of Venice ITA
+    department of applied mathematics, university ca' foscari of venice, dorsoduro n. 3825/e, 30125 venice, italy
+University College Dublin IRL
+    natural computing research and applications group, complex and adaptive systems lab, university college dublin, dublin, ireland
+    management information systems, lochlann quinn school of business, university college dublin, dublin, ireland
+    accountancy, lochlann quinn school of business, university college dublin, dublin, ireland
+    university college dublin, ireland
+    natural computing research and applications group, university college dublin, ireland
+University College London GBR
+    school of management, university college london, gower street, london, wc1e 6bt, united kingdom
+    department of mathematics, university college london, london, united kingdom
+    university college london, united kingdom
+    university college london - computer science, gower street, london, wc1e 6bt, united kingdom
+    department of computer science, university college london, london, united kingdom
+    department of mathematics, university college london, gower street, london, wc1e 6bt, united kingdom
+    computer science, university college london, london, united kingdom
+    centre for financial computing, university college london, london, united kingdom
+    department of computer science, university college london, united kingdom
+    university college london, dept of computer science, gower street, london, wc1e 6bt -, united kingdom
+    university college london, dept of computer science, gower street, london wc1e 6bt, united kingdom
+University Distinguished USA
+    university distinguished, zicklin school of business, baruch college, cuny, new york, ny, united states
+University Frankfurt DEU
+    goethe-university frankfurt, gruneburgplatz 1, 60323 frankfurt am main, germany
+    department of e-finance, goethe-university frankfurt, gruneburgplatz 1, d-60629 frankfurt, germany
+    goethe-university frankfurt, gruneburgplatz 1, d-60629 frankfurt am main, germany
+    e-finance lab, goethe-university frankfurt, ruw box 69, d-60629 frankfurt am main, germany
+University Gdannunzio of Chieti and Pescara ITA
+    department of management and business administration, university 'g.d'annunzio' of chieti and pescara, pescara, italy
+University Jena DEU
+    university jena, school of economics, carl-zeiss-str. 3, jena, 07737, germany
+University Paris 1 Pantheon FRA
+    university paris 1 pantheon-sorbonne (centre d'economie de la sorbone), labex refi (financial regulation lab) & paris school of business, 106-112 bd de l'hopital, paris, 75013, france
+University Paris 1 Pantheon Sorbonne FRA
+    university paris 1 pantheon sorbonne, paris, france
+University Politehnica ROU
+    university politehnica, bucharest, romania
+University of Aarhus DNK
+    university of aarhus, denmark
+University of Aberdeen GBR
+    business school, university of aberdeen, aberdeen, ab24 3qy, united kingdom
+University of Adelaide AUS
+    school of computer science, university of adelaide, adelaide, sa 5005, australia
+    business school, university of adelaide, adelaide, sa 5005, australia
+University of Aegean GRC
+    management and decision engineering laboratory, department of financial and management engineering, university of aegean, greece
+University of Alabama USA
+    university of alabama at birmingham, united states
+University of Alberta CAN
+    department of mathematical and statistical sciences, university of alberta, edmonton, ab  t6g 2g1, canada
+University of Almeria ESP
+    university of granada, university of almeria, spain
+University of Applied Sciences Fh Joanneum AUT
+    institute of banking and insurance, university of applied sciences fh joanneum, eggenberger allee 11, graz, 8020, austria
+University of Applied Sciences In Geneva CHE
+    haute ecole de gestion, university of applied sciences in geneva, switzerland
+University of Applied Sciences and Arts Northwestern Switzerland CHE
+    school of business, institute for information systems, university of applied sciences and arts northwestern switzerland (fhnw), bahnhofstrasse 6, windisch, 5210, switzerland
+University of Arkansas USA
+    university of arkansas, united states
+University of Basel CHE
+    wirtschaftswissenschaftliche fakultat, university of basel, peter-merian-weg 6, basel, 4002, switzerland
+    faculty of economics and business administration, university of basel, peter merian-weg 6, basel, switzerland
+    faculty of business and economics, university of basel, peter merian-weg 6ch-4002, switzerland
+    wwz, university of basel, peter merian-weg 6, 4002 basel, switzerland
+University of Bath Electronic and Electrical Engineering GBR
+    university of bath electronic and electrical engineering, united kingdom
+University of Bath GBR
+    school of management, university of bath, claverton down, bath, ba2 7ay, united kingdom
+University of Bejaia DZA
+    lamos laboratory, department of operational research, university of bejaia, bejaia 06000, algeria
+University of Belgrade SRB
+    university of belgrade, faculty of organizational sciences, jove ilica 154, belgrade, 11000, serbia
+University of Birmingham GBR
+    department of accounting and finance, birmingham business school, university of birmingham, birmingham, united kingdom
+University of Bonn DEU
+    research institute for discrete mathematics, university of bonn, germany
+University of Boras SWE
+    department of information technology, university of boras, sweden
+    school of business and information technology, university of boras, boras, sweden
+    school of business and it, university of boras, sweden
+University of Brasilia BRA
+    department of economics, university of brasilia, federal district, brazil
+    department of management, university of brasilia, federal district, brazil
+University of Bristol GBR
+    department of computer science, university of bristol, merchant venturers building, woodland road, bristol, united kingdom
+    department of computer science, university of bristol, bristol, united kingdom
+    department of computer science, university of bristol, bristol, bs8 1ub, united kingdom
+    department of computer science, university of bristol, bristol, bs81ub, united kingdom
+    department of computer science, university of bristol, merchant venturers building, woodland road, bristol, bs8 1ub, united kingdom
+    department of accounting and finance, university of bristol, bristol, bs8 1tn, united kingdom
+    department of computer science, university of bristol, united kingdom
+    industrial doctorate centre in systems, university of bristol, united kingdom
+    university of bristol, bristol bs8 1ub, united kingdom
+    department of computer science, university of bristol, merchant venturers building, woodland road, bristol bs8 1ub, united kingdom
+    uk large scale complex it system initiative, department of computer science, university of bristol, bristol bs8 1ub, united kingdom
+    department of computer science, university of bristol, merchant venturers building, woodland road, bs8 1ub, bristol, united kingdom
+    department of computer science, university of bristol, bristol bs8 1ub, united kingdom
+    department of economics, university of bristol, 8 woodland road, bristol bs8 1tn, united kingdom
+University of Bristol Merchant Venturers Building GBR
+    department of computer science, university of bristol merchant venturers building, woodland road, bristol, bs8 1ub, united kingdom
+University of Calgary CAN
+    haskayne school of business, university of calgary, canada
+    department of mathematics and statistics, university of calgary, calgary, ab t2n4c2, canada
+University of California USA
+    department of economics, university of california, santa cruz, united states
+    communication, computational social science, university of california, davis, ca  95616, united states
+    university of california, berkeley, united states
+    university of california, riverside department of electrical and computer engineering, riverside, ca  92521, united states
+    university of california at davis, 1 shields avenue, davis, ca  95616, united states
+    university of california, davis, united states
+    university of california-davis, united states
+    haas school of business, university of california, berkeley, ca  94720, united states
+    english department, university of california, davis, united states
+    department of physics, university of california, santa cruz, united states
+    physics department, university of california, davis, ca 95616, united states
+    san diego supercomputer center, university of california, san diego, san diego, ca 92093, united states
+    haas school of business, university of california berkeley, united states
+    university of california at berkeley, united states
+    university of california, united states
+    san diego supercomputer center, university of california, san diego, ca 92093, united states
+    graduate school of international relations and pacific studies, university of california at san diego, united states
+    haas school of business, university of california at berkeley, 545 student services bldg #1900, berkeley, ca 94720, united states
+    department of computer science, university of california, san diego, san diego, ca 92093, united states
+    department of computer science and engineering, university of california, la jolla, ca 92093-0404, united states
+    purdue university, university of california, san diego, united states
+University of Cambridge GBR
+    faculty of economics, university of cambridge, cambridge, cb3 9dd, united kingdom
+    faculty of economics, university of cambridge, sidgwick avenue, cambridge, cb3 9dd, united kingdom
+    statistical laboratory, centre for mathematical sciences, university of cambridge, cambridge, cb3 0wa, united kingdom
+    computer laboratory, university of cambridge, cambridge, united kingdom
+    statistical laboratory, university of cambridge, cambridge cb3 0wb, united kingdom
+    judge business school, university of cambridge, cambridge cb2 1ag, united kingdom
+    centre for financial research, university of cambridge, cambridge systems associates limited, cambridge, united kingdom
+    centre for financial research, judge business school, university of cambridge, cambridge, united kingdom
+University of Canterbury NZL
+    department of economics and finance, university of canterbury, christchurch, new zealand
+University of Cape Town ZAF
+    university of cape town, statistical sciences, rondebosch 7701, cape town, south africa
+    department of statistical sciences, university of cape town, south africa
+University of Catania ITA
+    iplab, department of mathematics and computer science, university of catania, catania, 95121, italy
+University of Central Florida USA
+    university of central florida, 4000 central florida blvd., orlando, fl  32816, united states
+University of Central Lancashire GBR
+    university of central lancashire, fylde rd., preston, pr1 2he, united kingdom
+University of Chicago AFG
+    booth school of business, university of chicago, chicago, il, afghanistan
+University of Chicago Booth School of Business USA
+    university of chicago booth school of business, united states
+University of Chicago USA
+    university of chicago, booth school of business, united states
+    university of chicago, law school, united states
+    university of chicago, chicago, 60637, united states
+University of Chicagoil USA
+    university of chicagoil, united states
+University of Chieti ITA
+    university of chieti-pescara, viale pindaro, 42, pescara, 65127, italy
+    university of chieti-pescara, via luigi polacchi, 11, chieti, 66100, italy
+University of Cincinnati USA
+    lindner college of business, university of cincinnati, cincinnati, oh, united states
+University of Coimbra PRT
+    cisuc, university of coimbra, dep. eng. informatica - polo ii, 3030-290, coimbra, portugal
+University of Colorado USA
+    university of colorado, united states
+University of Denver USA
+    university of denver, denver, colorado  80208, united states
+University of East Anglia GBR
+    environmental and energy finance group, norwich business school, university of east anglia, norwich, nr4 7tj, united kingdom
+University of East Piedmont ITA
+    department of science and advanced technology, university of east piedmont, 15121 alessandria, italy
+University of Eastern Finland FIN
+    institute of mathematics, university of eastern finland, box 111, joensuu, 80101, finland
+University of Economics CZE
+    faculty of finance and accounting, university of economics, prague, czech republic
+    faculty of finance and accounting, university of economics, w. churchill sq. 4, prague, 130 67, czech republic
+University of Economics Ho Chi Minh City VNM
+    distinguished research fellow, institute of business research, university of economics ho chi minh city, 59c nguyen dinh chieu, ward 6, district 3, ho chi minh city, viet nam
+University of Edinburgh GBR
+    school of social & political science, university of edinburgh, edinburgh, united kingdom
+    university of edinburgh, united kingdom
+    school of social and political science, university of edinburgh, 15a george square, edinburgh, eh8 9ld, united kingdom
+    school of social and political science, university of edinburgh, chrystal macmillan building, edinburgh, eh8 9ld, united kingdom
+    business school, university of edinburgh, edinburgh, eh8 9js, united kingdom
+    school of social and political science, the university of edinburgh, edinburgh, united kingdom
+    school of social and political science, university of edinburgh, chrystal macmillan building, 15a george square, edinburgh, eh8 9lz, united kingdom
+    school of social and political science, university of edinburgh, edinburgh, eh8 9ld, united kingdom
+    school of informatics, university of edinburgh, edinburgh eh8 9ab, united kingdom
+    department of sociology, the university of edinburgh, edinburgh, united kingdom
+University of Electro JPN
+    graduate school of information systems, university of electro-communications, tokyo, japan
+University of Electronic Science and Technology CHN
+    school of management and economics, university of electronic science and technology, chengdu, china
+University of Electronic Science and Technology of China CHN
+    school of information and software engineering, university of electronic science and technology of china, chengdu, china
+    school of management and economics, university of electronic science and technology of china, chengdu, 611731, china
+University of Erlangen DEU
+    department of statistics and econometrics, university of erlangen-nurnberg, nurnberg, d-90403, germany
+University of Essex GBR
+    ccfea, university of essex, colchester, united kingdom
+    centre for computational finance and economic agents, university of essex, colchester, co4 3sq, united kingdom
+    centre for computational finance and economic agents, university of essex, colchester, united kingdom
+    centre for computational finance and economic agents (ccfea), university of essex, colchester, co4 3sq, united kingdom
+    centre for computational finance and economic agents (ccfea), university of essex, wivenhoe park, colchester, co4 3sq, united kingdom
+    centre for computational finance and economic agents (ccfea), university of essex, colchester, united kingdom
+    centre for computational finance and economic agents (ccfea), university of essex, wivenhoe park, colchester co4 3sq, united kingdom
+    centre for computational finance and economic agents (ccfea), university of essex, united kingdom
+    centre for computational finance and economic agents, university of essex, wivenhoe park, essex, c04 3sq, united kingdom
+    center for computational finance and economic agents, university of essex, c04 3sq, united kingdom
+    centre for computational finance and economic agents (ccfea), university of essex, essex, united kingdom
+    centre for computational finance and economic agents, university of essex, wivenhoe park, essex, co4 3sq, united kingdom
+    centre for computational finance and economic agents, university of essex, united kingdom
+    centre of computational finance and economic agents, university of essex, wivenhoe park, essex, co4 3sq, united kingdom
+University of Exeter GBR
+    department of finance, university of exeter, united kingdom
+University of Extremadura ESP
+    financial economy and accounting department, faculty of business, finance and tourism, university of extremadura, caceres, 10071, spain
+    university of extremadura, spain
+University of Florida USA
+    warrington college of business administration, university of florida, p.o. box 117168, gainesville, fl 32611-7168, united states
+University of Frankfurt DEU
+    faculty of economics and business administration, university of frankfurt, frankfurt am main, germany
+    faculty of economics and business administration, department of information systems, university of frankfurt, gruneburgplatz 1, frankfurt am main, 60323, germany
+University of Geneva CHE
+    computer science department, university of geneva, rte de drize, carouge, switzerland
+University of Genoa ITA
+    research center on organization, economics, and management (doge.i-cinef), university of genoa, 16145 genova, italy
+University of Genova ITA
+    dibris, university of genova, via opera pia 11a, genova, i-16145, italy
+University of Giessen DEU
+    university of giessen, licher str. 64, giessen, 35394, germany
+University of Glasgow GBR
+    adam smith business school, university of glasgow, glasgow, united kingdom
+University of Gothenburg SWE
+    university of gothenburg, sweden
+University of Greenwich GBR
+    business school, university of greenwich, london, se10 9ls, united kingdom
+    department of accounting and finance, university of greenwich, london, se10 9ls, united kingdom
+    dept. accounting and finance, university of greenwich, greenwich, united kingdom
+University of Guelph CAN
+    school of computer science, university of guelph, guelph, on, canada
+University of Hamburg DEU
+    department of informatics, university of hamburg, vogt-kolln-str. 30, 22527 hamburg, germany
+University of Heidelberg DEU
+    university of heidelberg, b6, 26, 68131 mannheim, germany
+    university of heidelberg, 68131 mannheim, germany
+University of Hertfordshire GBR
+    social sciences, arts and humanities research institute, university of hertfordshire, hatfield, al10 9ab, united kingdom
+University of Hong Kong CHN
+    university of hong kong, hong kong
+    chow yei ching building, university of hong kong, hong kong
+    faculty of business and economics, university of hong kong, hong kong
+    school of economics and finance, university of hong kong, 818 kk leung building, hong kong
+    advanced modeling and applied computing laboratory, department of mathematics, the university of hong kong, pokfulam road, hong kong
+    advanced modeling and applied computing laboratory, department of mathematics, university of hong kong, hong kong, hong kong
+University of Hradec Kralove CZE
+    department of information technologies, university of hradec kralove, rokitanskeho 62, hradec kralove, czech republic
+    department of information technologies, faculty of informatics and management, university of hradec kralove, rokitanskeho 62, hradec kralove 500 03, czech republic
+    department of information technologies, university of hradec kralove, rokitanskeho 62, 500 02 hradec kralove, czech republic
+University of Hull GBR
+    university of hull, yorkshire, united kingdom
+University of Illinois USA
+    department of agricultural and consumer economics, university of illinois at urbana-champaign, urbana, il, united states
+    industrial and enterprise systems engineering (ise), university of illinois, urbana, il  61801, united states
+    college of business, university of illinois, urbana-champaign, il 15213, united states
+    department of finance (mc 168), university of illinois, 601 s. morgan st., chicago, il 60607, united states
+    department of finance (mc 168), university of illinois at chicago, 601 s. morgan st., chicago, il 60607, united states
+    department of computer science, university of illinois, urbana-champaign, il 15213, united states
+    illinois institute of technology (iit), university of illinois in chicago, chicago, united states
+    department of industrial and enterprise systems engineering and department of mathematics, university of illinois at urbana - champaign, urbana, il  61801, united states
+    department of computer science, university of illinois, chicago, il 60607, united states
+    department of electrical and computer engineering, university of illinois, urbana-champaign, il, united states
+    dept. of computer science, university of illinois, chicago, united states
+    college of engineering, university of illinois, 851 s. morgan st., chicago, il 60607-7043, united states
+University of International Business and Economics CHN
+    school of information technology and management, university of international business and economics, beijing, 100029, china
+University of Iowa USA
+    university of iowa, tippie college of business, iowa city, ia 52242-1000, united states
+University of Istocno Sarajevo BIH
+    university of istocno sarajevo, faculty of education in bijeljina, semberskih ratara bb, bijeljina, 76300, bosnia and herzegovina
+University of Kansas USA
+    department of internal medicine, division of medical informatics, university of kansas medical center, kansas city, ks  66160, united states
+University of Karlsruhe DEU
+    institute of information systems and management, university of karlsruhe, germany
+    institute of information systems and management (iism), university of karlsruhe, englerstr. 14, 76131 karlsruhe, germany
+    institute of information systems and management engineering, university of karlsruhe, germany
+University of Kent GBR
+    school of computing, university of kent, united kingdom
+    school of computing, university of kent, medway, united kingdom
+    school of computing, university of kent, canterbury, united kingdom
+    school of computing, university of kent, chatham maritime, united kingdom
+University of Kent USA
+    university of kentucky, united states
+    department of geography, university of kentucky, united states
+University of Konstanz DEU
+    university of konstanz, germany
+University of Lausanne CHE
+    swiss finance institute, university of lausanne, switzerland
+University of Leicester GBR
+    university of leicester, school of business university of leicester, le17rh, united kingdom
+University of Liverpool GBR
+    department of computer science, university of liverpool, united kingdom
+    university of liverpool, united kingdom
+University of Ljubljana SVN
+    faculty of economics, university of ljubljana, 1000 ljubljana, slovenia
+University of London GBR
+    department of economics, city, university of london, northampton square, london, ec1v 0hb, united kingdom
+    centre for cultural studies, goldsmiths, university of london, london, united kingdom
+    queen mary, university of london, united kingdom
+University of Macau CHN
+    department of computer and information science, university of macau, macau
+    department of computer and information science, university of macau, taipa, macau
+University of Macedonia GRC
+    university of macedonia, department of applied informatics, 156 egnatia st., thessaloniki, 54006, greece
+    department of applied informatics, university of macedonia, 7.5 km thessaloniki asvestohoriou, thessaloniki, greece
+University of Malaya MYS
+    department of finance and banking, faculty of business and accountancy, university of malaya, lembah pantai, kuala lumpur, 49500, malaysia
+    faculty of economics and administration, university of malaya malaysia, kuala lumpur, malaysia
+University of Malta MLT
+    department of banking and finance, faculty of economics, management, and accounting, university of malta, malta
+    department of banking and finance, faculty of economics management and accountancy, university of malta, malta
+University of Manchester GBR
+    school of mathematics, university of manchester, manchester, united kingdom
+    department of mathematics, university of manchester, manchester, m13 9pl, united kingdom
+    alliance manchester business school, university of manchester, manchester, united kingdom
+    department of economics, university of manchester, manchester, united kingdom
+    manchester business school, university of manchester, manchester, united kingdom
+University of Manitoba CAN
+    university of manitoba, department of computer science, winnipeg, canada
+    university of manitoba, department of supply chain management, winnipeg, canada
+University of Mannheim DEU
+    department of mathematics, university of mannheim, mannheim, 68131, germany
+    finance area, university of mannheim, l9 1-2, mannheim, 68161, germany
+    school of business informatics and mathematics, university of mannheim, mannheim, germany
+University of Marburg DEU
+    department of mathematics and computer science, university of marburg, marburg, germany
+University of Maribor SVN
+    faculty of economics and business, university of maribor, razlagova 14, maribor, si-2000, slovenia
+University of Maryland USA
+    robert h. smith school of business, university of maryland, united states
+    university of maryland, united states
+    university of maryland, college park, united states
+    computer science and electrical engineering, university of maryland, baltimore county, md, united states
+University of Marylandmd USA
+    university of marylandmd, united states
+University of Melbourne AUS
+    department of computing and information systems, university of melbourne, parkville, victoria, nsw, australia
+    department of finance, university of melbourne, level 12, 198 berkeley street, parkville, vic  3010, australia
+    department of management & marketing, university of melbourne, melbourne, vic, australia
+University of Memphis USA
+    department of finance, insurance, and real estate, university of memphis, memphis, tn, united states
+    fogelman college of business and economics, university of memphis, memphis, tn  38152, united states
+    fogelman college of business and economics, university of memphis, memphis, tn, united states
+    fogelman college of business and economics, university of memphis, 3675 central ave., memphis, tn  38152, united states
+    fogelman college of business & economics, the university of memphis, memphis, tn  38152, united states
+University of Michigan USA
+    university of michigan, ann arbor, mi, united states
+    university of michigan, 2260 hayward st, ann arbor, mi  48109, united states
+    computer science and engineering, university of michigan, ann arbor, mi, united states
+    computer science and engineering, university of michigan, 2260 hayward st, ann arbor, mi  48109-2121, united states
+    computer science and engineering, university of michigan, united states
+    department of computer science and engineering, university of michigan, 2260 hayward street, ann arbor, mi 48109-2121, united states
+    center for the study of ethics, university of michigan, ann arbor, united states
+    department of statistics, university of michigan, michigan, united states
+    university of michigan, united states
+    university of michigan, al laboratory, 1101 beal av, ann arbor, mi 48109-2110, united states
+University of Milan ITA
+    university of milan, information technology department, crema, italy
+    university of milan, department of information technology, via bramante, 65, 26013, crema, italy
+University of Minnesota USA
+    department of industrial and systems engineering, university of minnesota twin cities, minneapolis, mn, united states
+    department of mathematics, university of minnesota, minneapolis, mn  55455, united states
+    university of minnesota, twin cities, minneapolis, mn, united states
+    university of minnesota, twin cities, united states
+University of Mississippi USA
+    university of mississippi, united states
+    university of mississippi, school of business, university, ms, united states
+University of Missouri USA
+    mathematics department, university of missouri, columbia, mo 65211, united states
+University of Munich DEU
+    technical university of munich, germany
+University of Nebraska USA
+    university of nebraska at omaha, department of computer science, 6001 dodge street, omaha, ne  68182, united states
+University of Neuchatel CHE
+    institut d'informatique, university of neuchatel, neuchatel, switzerland
+University of New Brunswick CAN
+    faculty of computer science, university of new brunswick, fredericton, nb, canada
+University of New Mexico USA
+    department of mathematics and statistics, university of new mexico, albuquerque, nm, united states
+University of New South Wales AUS
+    australian school of business, university of new south wales, sydney, nsw  2052, australia
+    school of banking and finance, australian school of business, university of new south wales, sydney nsw 2052, australia
+    school of computer science and engineering, the university of new south wales, smart services crc, sirca unsw, sydney, nsw 2052, australia
+University of Newcastle AUS
+    department of accounting and finance, newcastle business school, university of newcastle, australia
+University of Nijmegen NLD
+    institute for financial law (ifl), university of nijmegen, netherlands
+University of North Carolina USA
+    kenan-flagler business school, university of north carolina at chapel hill, mccoll 4205nc  27599, united states
+    belk college of business, university of north carolina at charlotte, 9201 university city blvd, charlotte, nc  28223, united states
+    kenan flagler business school, university of north carolina at chapel hill, united states
+University of Northumbria at Newcastle GBR
+    university of northumbria at newcastle, newcastle upon tyne, united kingdom
+University of Notre USA
+    department of computer science and engineering, interdisciplinary center for network science and applications (icensa), university of notre, dame, in  46556, united states
+University of Novi Sad SRB
+    department of mathematics and informatics, university of novi sad, trg dositeja obradovica 4, novi sad, 21000, serbia
+    faculty of natural science, department of mathematics and informatics, university of novi sad, serbia
+    university of novi sad, faculty of technical sciences, trg dositeja obradovica 6, 21000 novi sad, serbia
+    university of novi sad, faculty of medicine, hajduk veljkova 1, 21000 novi sad, serbia
+University of Nsw AUS
+    department of mathematics and statistics, university of nsw, sydney, australia
+University of Ontario Institute of Technology CAN
+    faculty of business and information technology, university of ontario institute of technology, 2000 simcoe st n, oshawa, on l1h 7k4, canada
+University of Ontario USA
+    university of ontario, institute of technology, united states
+University of Ostrava CZE
+    department of computer science, university of ostrava, czech republic
+    department of informatics and computers, university of ostrava, dvorakova 7, ostrava, 702 00, czech republic
+    university of ostrava, 30. dubna 22, ostrava, 70103, czech republic
+University of Otago NZL
+    school of business, department of accountancy and finance, university of otago, dunedin, new zealand
+    department of accountancy and finance, school of business, university of otago, dunedin, new zealand
+    department of accountancy and finance, school of business, university of otago, p.o. box 56, dunedin, 9054, new zealand
+University of Ottawa CAN
+    university of ottawa, canada
+University of Oxford GBR
+    mathematical institute, university of oxford, oxford, united kingdom
+    oxford-man institute of quantitative finance, university of oxford, oxford, united kingdom
+    university of oxford, oxford, united kingdom
+    mathematical institute, university of oxford, oxford, ox2 6gg, united kingdom
+    mathematical institute, university of oxford, alan turing institute, london, united kingdom
+    mathematical institute, university of oxford, j.p. morgan (london), united kingdom
+    mathematical institute, university of oxford, andrew wiles building, radcliffe observatory quarter, woodstock road, oxford, ox2 6gg, united kingdom
+    university of oxford, wellington square, oxford, ox1 2jd, united kingdom
+    department of computer science, university of oxford, oxford, ox1 3qd, united kingdom
+    university of oxford, united kingdom
+    mathematics, university of oxford, oxford, ox2 9hb, united kingdom
+    department of mathematics, university of oxford, oxford, united kingdom
+    department of mathematics, university of oxford, radcliffe observatory quater, woodstock rd, oxford, ox26gg, united kingdom
+    department of physics, university of oxford, oxford, united kingdom
+    cabdyn complexity centre, said business school, university of oxford, oxford, united kingdom
+    department of computer science, university of oxford, oxford, united kingdom
+    department of computer science, university of oxford, united kingdom
+    mathematical institute, university of oxford, 24-29 st giles, oxford ox1 3lb, united kingdom
+    sad business school, university of oxford, united kingdom
+University of Padova ITA
+    department of mathematics 'tullio levi-civita', university of padova, italy
+University of Parma ITA
+    department of economics, university of parma, parma, italy
+University of Pennsylvania USA
+    university of pennsylvania, northwestern university pritzker school of law, united states
+    department of finance, wharton school, university of pennsylvania, philadelphia, pa, united states
+    university of pennsylvania, united states
+    finance department, wharton school, university of pennsylvania, philadelphia, pa 19104, united states
+University of Pernambuco BRA
+    department of computing systems, university of pernambuco, recife, brazil
+University of Perugia ITA
+    department of mathematics and computer science, university of perugia, perugia, italy
+University of Petroleum Energy Studies IND
+    university of petroleum energy studies, dehradun, uttarakhand, india
+University of Pisa ITA
+    department of computer science, university of pisa, largo b. pontecorvo 3, pisa, i-56127, italy
+University of Portland USA
+    pamplin school of business, university of portland, portland, or, united states
+University of Portsmouth GBR
+    faculty of business and law, university of portsmouth, richmond building, portland street, portsmouth, po1 3de, united kingdom
+    university of portsmouth, united kingdom
+    school of computing, university of portsmouth, portsmouth po1 3he, united kingdom
+University of Queensland AUS
+    school of information technology and electrical engineering, university of queensland, australia
+University of Redlands USA
+    school of business, university of redlands, redlands, ca, united states
+University of Rhode Island USA
+    department of computer science and statistics, university of rhode island, kingston, ri, united states
+    college of business administration, university of rhode island, united states
+    nkd group, inc., computer science and statistics, university of rhode island, united states
+University of Richmond USA
+    university of richmond, united states
+University of Rijeka HRV
+    university of rijeka, faculty of engineering, department of computer engineering, rijeka, croatia
+    faculty of civil engineering, university of rijeka, 51000 rijeka, croatia
+University of Rzeszow POL
+    institute of computer science, university of rzeszow, dekerta 2, 35 - 030 rzeszow, poland
+    university of rzeszow, dekerta 2, 35 - 030 rzeszow, poland
+University of Saarland DEU
+    department of information and technology management, university of saarland, saarbrucken, germany
+University of Salford GBR
+    university of salford, united kingdom
+University of Salzburg AUT
+    paris lodron university of salzburg, austria
+University of Science and Technology of China CHN
+    department of statistics and finance, school of management, university of science and technology of china, hefei, 230026, china
+    department of statistics and finance, university of science and technology of china, hefei 230026, china
+University of Seville ESP
+    ets ingenieria informatica, university of seville, spain
+University of Sheffield GBR
+    university of sheffield, united kingdom
+    school of mathematics and statistics, university of sheffield, sheffield, s3 7rh, united kingdom
+    automatic systems and control engineering, university of sheffield, sheffield, s1 3jd, united kingdom
+    department of probability and statistics, university of sheffield, sheffield, s3 7rh, united kingdom
+    department of probability and statistics, university of sheffield, sheffield s3 7rh, united kingdom
+University of Sindh PAK
+    institute of commerce, university of sindh, jamshoro, pakistan
+University of South Australia AUS
+    unisa business school, university of south australia, australia
+    school of commerce, division of business, university of south australia, city west campus, gpo box 2471, adelaide, sa  5001, australia
+    school of business, university of south australia, australia
+University of Southampton GBR
+    southampton business school, university of southampton, southampton, so17 1bj, united kingdom
+    electronics and computer science, university of southampton, southampton, so17 1bj, united kingdom
+    southampton business school, university of southampton, southampton, united kingdom
+    centre for risk research, southampton business school, university of southampton, southampton, united kingdom
+    centre for computational finance and business analytics, southampton business school, university of southampton, southampton, united kingdom
+    centre of computational finance and business analytics, southampton business school, university of southampton, so17 1bj, southampton, united kingdom
+    university of southampton, united kingdom
+    electronics and computer science, university of southampton, so17 1bj, united kingdom
+    southampton management school, university of southampton, so17 1bj, united kingdom
+    southampton management school, university of southampton, highfield, southampton, so17 1bj, united kingdom
+    optoelectronics research centre, university of southampton, highfield campus, sa so17 1bj, united kingdom
+    school of electronics and computer science, university of southampton, southampton so17 1bj, united kingdom
+University of Southern California USA
+    marshall school of business, university of southern california, united states
+University of St Andrews GBR
+    university of st andrews, st-andrews ky16 9sx, united kingdom
+University of Stavanger NOR
+    uis business school, university of stavanger(uis), stavanger, no-4036, norway
+University of Strathclyde GBR
+    department of accounting and finance, strathclyde business school, university of strathclyde, glasgow, united kingdom
+University of Sydney AUS
+    university of sydney business school, university of sydney, sydney, new south wales, australia
+    university of sydney business school, h70, abercrombie st & codrington st, darlington, nsw  2006, australia
+    school of business, discipline of finance, university of sydney, sydney, australia
+    the university of sydney business school, sydney, nsw, australia
+    school of mathematics and statistics, university of sydney, australia
+    university of sydney, australia
+    discipline of finance, university of sydney, australia
+University of Technology AUS
+    university of technology sydney, po box 123 broadwaynsw  2007, australia
+    school of mathematical and physical sciences, finance discipline group, university of technology sydney, broadway sydney, nsw  2007, australia
+    finance discipline group, university of technology, sydney, australia
+    university of technology sydney, po box 123 broadway, nsw, 2007, australia
+    school of software and electrical engineering, swinburne university of technology, melbourne, australia
+    qcis, feit, university of technology, sydney, nsw, australia
+    qcis, feit, university of technology, sydney, australia
+    centre for quantum computation and intelligent systems, university of technology, sydney, nsw 2007, australia
+    faculty of information technology, university of technology, sydney, po box 123, broadway, nsw 2007, australia
+    university of technology, sydney, nsw, australia
+    faculty of it, university of technology, sydney, po box 123 broadway, sydney, nsw, australia
+    faculty of it, university of technology, sydney, po box 123, broadway, nsw 2007, australia
+    university of technology, sydney, australia
+    faculty of it, university of technology, sydney, australia
+University of Technology AUT
+    tu wien vienna university of technology, vienna, austria
+University of Technology CHN
+    school of electronic and information engineering, south china university of technology, guangzhou, china
+    school of management, wuhan university of technology, wuhan, china
+    school of computer science and technology, dalian university of technology, dalian, china
+    research center of information and control, dalian university of technology, dalian, 116024, china
+    dongguan university of technology, dongguan, china
+    school of electronica information engineering, south china university of technology, guangzhou, china
+    department of financial engineering, ningbo university of technology, ningbo, 315211, china
+    college of information engineering, zhejiang university of technology hangzhou, hangzhou 310032, china
+University of Technology CYP
+    department of electrical engineering, computer engineering and informatics, cyprus university of technology, limassol 3036, cyprus
+University of Technology CZE
+    faculty of informatica technology, brno university of technology, bozetechova 2, brno, 612 66, czech republic
+University of Technology DEU
+    chemnitz university of technology, strasse der nationen 62, 09111 chemnitz, germany
+University of Technology FIN
+    faculty of information technology and communication sciences, tampere university of technology, tampere, fi-33720, finland
+    laboratory of signal processing, tampere university of technology, tampere, finland
+    laboratory of industrial and information management, tampere university of technology, tampere, finland
+University of Technology HUN
+    department of networked systems and services, budapest university of technology, magyar tudosok krt. 2, budapest, 1118, hungary
+    department of networked systems and services, budapest university of technology and economics, budapest, hungary
+    department of networked systems and services, budapest university of technology and economics, p.o.b. 91, budapest, h-1521, hungary
+    budapest university of technology and economics, hungary
+    department of telecommunications, budapest university of technology and economics, magyar tudosok krt. 2, budapest, hungary
+    budapest university of technology and economics (bute), hungary
+University of Technology IRN
+    faculty of industrial engineering, amirkabir university of technology, 424 hafez ave, tehran, iran
+    department of electrical engineering, amirkabir university of technology, tehran, iran
+University of Technology LTU
+    department of automation, faculty of electrical and electronics engineering, kaunas university of technology, lithuania
+University of Technology NZL
+    auckland university of technology, auckland, new zealand
+    auckland university of technology, department of finance, auckland, new zealand
+University of Technology POL
+    institute of telecommunications, warsaw university of technology, poland
+    institute of computer science, warsaw university of technology, nowowiejska 15/19, 00-665 warsaw, poland
+    department of computer science, bialystok university of technology, wiejska 45a, 15-351 bialystok, poland
+    bialystok university of technology, wiejska 45a, 15-351 bialystok, poland
+    warsaw university of technology, nowowiejska 15/19, 00-665 warsaw, poland
+University of Technology THA
+    college of innovation management, rajamangala university of technology rattanakosin, nakhonpathom, thailand
+    applied computer science program, department of mathematics, faculty of science, king mongkut's university of technology thonburi, thailand
+University of Technology TWN
+    dept. of computer science and information engineering, national taipei university of technology, taipei, taiwan
+    department of finance, china university of technology, taipei, taiwan
+    department of information and finance management, national taipei university of technology, taipei, taiwan
+    department of management information systems, hwa hsia university of technology, new taipei city, taiwan
+    department of business administration, china university of technology, taipei, taiwan
+University of Tehran IRN
+    faculty of management, university of tehran, hasan abad-e-baqerof, jalal ale ahmad highway, chamran, tehran, iran
+University of Teramo ITA
+    department of communication science, university of teramo, teramo, italy
+    department of theories and policies for social development, university of teramo, teramo, italy
+University of Texas USA
+    mccombs school of business, university of texas at austin, austin, tx, united states
+    college of business administration, university of texas at el paso, 500 west university avenue, el paso, tx  79968, united states
+    university of texas at san antonio, united states
+    department of economics, university of texas at dallas, richardson, tx, united states
+    university of texas at el paso, united states
+    department of economics, university of texas at san antonio, san antonio, tx, united states
+    school of law, university of texas at austin, austin, tx 78705, united states
+    artificial intelligence laboratory, department of computer sciences, university of texas at austin, austin, tx 78712, united states
+    university of texas at austin, department of computer sciences, austin, tx 78712, united states
+    department of computer sciences, the university of texas at austin, 1 university station c0500, austin, tx 78712-0233, united states
+    department of computer sciences, the university of texas at austin, united states
+    department of computer sciences, university of texas, austin, tx, united states
+    department of computer sciences, university of texas, austin, united states
+University of The Aegean GRC
+    management and decision engineering laboratory, department of financial and management engineering, university of the aegean, 41 kountouriotou str., gr-82100, greece
+University of The Basque Country ESP
+    dept. of computer languages and systems, university of the basque country - upv/ehu, 01006, vitoria-gasteiz, spain
+    dept. of automatic control and systems engineering, university of the basque country - upv/ehu, c/ nieves cano, 12, 01006, vitoria-gasteiz, spain
+University of Thessaly GRC
+    department of economics, university of thessaly, 7.5 km thessaloniki asvestohoriou, thessaloniki, greece
+University of Tokyo JPN
+    graduate school of economics, the university of tokyo, 7-3-1 hongo, bunkyo, tokyo  113-8654, japan
+    graduate school of economics, university of tokyo, tokyo, japan
+    the university of tokyo, tokyo, japan
+    school of engineering, the university of tokyo, japan
+    school of engineering, the university of tokyo/crest, jst, japan
+University of Toronto CAN
+    department of statistical sciences, university of toronto, toronto, on, canada
+    department of statistical sciences, university of toronto, toronto, canada
+    department of statistical sciences, university of toronto, toronto, on  m5t 1p5, canada
+    department of electrical and computer engineering, university of toronto, canada
+    department of statistics, university of toronto, toronto, m5s3g3, canada
+    department of mechanical and industrial engineering, university of toronto, toronto, on  m5s 3g8, canada
+    university of toronto, toronto, canada
+    department of statistical sciences, university of toronto, toronto, on  m5s 3g3, canada
+    university of toronto, faculty of law, toronto, on, canada
+    university of toronto, canada
+    department of statistical sciences, university of toronto, 27 king’s college circle, toronto, on  m5s, canada
+    department of statistics, university of toronto, toronto, on, canada
+    middleware systems research group, department of computer science, university of toronto, canada
+    middleware systems research group (msrg.org), university of toronto, canada
+    middleware systems research group, department of electrical and computer engineering, university of toronto, toronto, on, canada
+    department of electrical and computer engineering, middleware systems research group, university of toronto, canada
+University of Toronto Mississauga CAN
+    university of toronto mississauga, rotman school of management, canada
+University of Toronto Scarborough CAN
+    university of toronto scarborough, rotman school of management, canada
+University of Toulouse 1 Capitole FRA
+    toulouse school of economics, university of toulouse 1 capitole, fbf idei, investment banking and financial markets, manufacture des tabacs, 21 allees de brienne, toulouse, 31000, france
+University of Toyama JPN
+    university of toyama, toyama, japan
+University of Trento ITA
+    university of trento, trento, italy
+University of Tsukuba JPN
+    graduate school of business science, university of tsukuba, japan
+University of Tunis El Manar TUN
+    department of finance and accounting, university of tunis el manar, tunis, tunisia
+University of Turin ITA
+    department of economics and finance g. prato, university of turin, turin, italy
+University of Tuzla BIH
+    faculty of economics, university of tuzla, bosnia and herzegovina
+University of Utah Eccles School of Business USA
+    university of utah eccles school of business, united states
+University of Utah Eccles USA
+    university of utah eccles, school of business, united states
+University of Utah USA
+    david eccles school of business, university of utah, 1655 east campus center dr., salt lake city, ut  84112, united states
+University of Vaasa FIN
+    university of vaasa, wolffintie 34, vaasa, 65200, finland
+University of Vic ESP
+    dept. of digital information technologies, university of vic (uvic), 08500 vic (barcelona), spain
+    grup de tecnologies digitals, university of vic, c/de la laura, 13, vic 08500, spain
+University of Vienna AUT
+    department of philosophy, university of vienna, universitatsstrasse 7 (nig), vienna, 1010, austria
+    department of statistics and operations research, university of vienna, oskar-morgenstern-platz 1, vienna, 1090, austria
+    university of vienna, faculty of business, economics and statistics, austria
+University of Virginia USA
+    university of virginia, united states
+    department of systems and information engineering, the university of virginia, charlottesville, va  22904, united states
+    department of systems and information engineering, university of virginia, united states
+    department of systems and information engineering, university of virginia, charlottesville, va, 22903, united states
+University of Waikato NZL
+    school of computing and mathematical sciences, university of waikato, hamilton, new zealand
+    department of computer science, university of waikato, hamilton, new zealand
+University of Warsaw POL
+    institute of mathematics, university of warsaw, banacha 2, warsaw, 02-097, poland
+    institute of mathematics, university of warsaw, banacha 2, 02-097 warsaw, poland
+University of Warwick GBR
+    financial econometric research centre, warwick business school, university of warwick, coventry, united kingdom
+    warwick business school, university of warwick, coventry cv4 7al, united kingdom
+    warwick business school, university of warwick, scarman road, coventry, cv4 7al, united kingdom
+University of Washington USA
+    department of applied mathematics, university of washington, seattle, wa, united states
+    foster school of business, university of washington, box: 353226, seattle, wa  98195, united states
+    foster school of business, university of washingtonwa  98195, united states
+    foster school of business, university of washington, united states
+    university of washington, united states
+University of Waterloo CAN
+    department of statistics and actuarial science, university of waterloo, waterloo, on  n2l 3g1, canada
+    university of waterloo, canada
+    department of systems design engineering, university of waterloo, waterloo, canada
+    department of systems design engineering, university of waterloo, canada
+    university of waterloo, waterloo, on  n2l 3g1, canada
+    electrical and computer eng. dep., university of waterloo, 200 university avenue, west waterloo, on n2l 3g1, canada
+University of West Bohemia CZE
+    university of west bohemia, faculty of economics, department of economics and quantitative methods, czech republic
+University of West Florida USA
+    college of business, university of west florida, pensacola, fl, united states
+University of Western Australia AUS
+    uwa business school, the university of western australia, perth, wa, australia
+    uwa business school, the university of western australia, australia
+University of Western Ontario CAN
+    department of statistical and actuarial sciences, university of western ontario, 1151 richmond street, london, on  n6a5b7, canada
+    department of applied mathematics, university of western ontario, 1151 richmond street, london, on  n6a5b7, canada
+    university of western ontario, london, on, n6g 2a5, canada
+University of Western Sydney AUS
+    school of computing and mathematics, university of western sydney, australia
+    school of computing and mathematics, university of western sydney, sydney, australia
+University of Wisconsin USA
+    university of wisconsin, department of electrical and computer engineering, madison, wi  53706, united states
+    department of electrical and computer engineering, university of wisconsin, madison, wi  53706, united states
+University of Wisconsin-Madison USA
+    electrical and computer engineering department, university of wisconsin-madison, 318 island dr., madison, wi 53705, united states
+University of Wollongong AUS
+    university of wollongong, australia
+    sydney business school, university of wollongong, sydney, nsw, australia
+    school of accounting, economics and finance, faculty of business, university of wollongong, keiraville, nsw, australia
+    university of wollongongnsw, australia
+    university of wollongong, northfields ave, wollongong, nsw  2522, australia
+    school of computer science and software engineering, university of wollongong, wollongong, nsw 2522, australia
+University of Wolverhampton GBR
+    university of wolverhampton, wolverhampton, united kingdom
+University of Wyoming USA
+    department of economics and finance, college of business, university of wyoming, laramie, wy  82071, united states
+University of York GBR
+    university of york, york, united kingdom
+    the york management school, university of york, york, united kingdom
+    the university of york, york, yo10 5gd, united kingdom
+    the university of york, heslington east, york, yo10 5gd, united kingdom
+    the university of york, united kingdom
+University of Zurich CHE
+    department of banking and finance, university of zurich, zurich, switzerland
+    university of zurich, switzerland
+University of Zurich and Swiss Finance Institute CHE
+    department of banking and finance, university of zurich and swiss finance institute, plattenstrasse 22, zurich, 8032, switzerland
+Uppsala University SWE
+    department of mathematics, uppsala university, s-751 06 uppsala, sweden
+Us Securities and Exchange Commission USA
+    division of economic and risk analysis, u.s. securities and exchange commission, united states
+    division of market regulation, u.s. securities and exchange commission, united states
+Utrecht University NLD
+    department of information and computing sciences, utrecht university, princetonplein 5, utrecht, 3584 cc, netherlands
+Va Trapeznikov Institute of Control Sciences of Russian RUS
+    v.a. trapeznikov institute of control sciences of russian, academy of sciences, moscow, russian federation
+Vanderbilt University USA
+    electrical eng. and comp. science, vanderbilt university, nashville, tn, united states
+Vienna University of Economics and Business Administration AUT
+    investment banking and catallactics group, vienna university of economics and business administration, vienna, austria
+    investment banking and catallactics group, vienna university of economics and business administration, althanstrasse 39-45, 1090 vienna, austria
+Vietnam National University VNM
+    john von neumann institute, vietnam national university, ho chi minh, viet nam
+Vilnius Gediminas Technical University LTU
+    department of business technologies, vilnius gediminas technical university, sauletekio al. 11, vilnius, lt  10223, lithuania
+Vilnius University LTU
+    faculty of mathematics and informatics, institute of informatics, vilnius university, naugarduko st. 24, vilnius, lt-03225, lithuania
+    vilnius university, kaunas faculty, muitines street. 8, kaunas, lt-44280, lithuania
+    vilnius university, kaunas faculty, muitines street 8, kaunas, lt-44280, lithuania
+    vilnius university, kaunas faculty, muitines 8, kaunas, 44280, lithuania
+    faculty of mathematics and informatics, vilnius university, didlaukio 47, vilnius, 08303, lithuania
+    faculty of humanities, vilnius university, muitines 8, kaunas, 44280, lithuania
+    vilnius university, muitines 8, kaunas, 44280, lithuania
+    department of informatics, kaunas faculty of humanities, vilnius university, muitines str. 8, kaunas, lt-44280, lithuania
+    kaunas faculty of humanities, vilnius university, muitines str. 8, lt-44280, kaunas, lithuania
+    vilnius university, naugarduko g. 24, 03225 vilnius, lithuania
+    vilnius university, faculty of mathematics and informatics, naugarduko st. 24, lt-03225 vilnius, lithuania
+    department of informatics, vilnius university, vilnius lt-03225, lithuania
+    faculty of mathematics and informatics, vilnius university, naugarduko st. 24, lt-03225 vilnius, lithuania
+Virginia Commonwealth University USA
+    department of english, virginia commonwealth university, richmond, va, united states
+Visvesvaraya National Institute of Technology IND
+    department of computer science and engineering, visvesvaraya national institute of technology, nagpur, india
+Vrije Universiteit Amsterdam NLD
+    school of business and economics, vrije universiteit amsterdam, amsterdam, netherlands
+    department of finance, vrije universiteit amsterdam, amsterdam, 1081 hv, netherlands
+    vrije universiteit amsterdam, department of communication science, amsterdam, netherlands
+Vrije Universiteit Brussel BEL
+    vrije universiteit brussel, pleinlaan 2, elsene, 1050, belgium
+Vu University Amsterdam NLD
+    vu university amsterdam, feweb, de boelelaan 1105, 1081 hv, amsterdam, netherlands
+    vu university amsterdam, netherlands
+Wake Forest University USA
+    school of business, wake forest university, winston-salem, united states
+Warsaw School of Economics POL
+    warsaw school of economics, al. niepodleglosci 162, 02-554 warsaw, poland
+Warsaw University of Life Sciences POL
+    warsaw university of life sciences, ul. nowoursynowska 159, 02-787 warsaw, poland
+Waseda University JPN
+    department of computer science and engineering, waseda university, tokyo, japan
+Washington University USA
+    olin school of business, washington university in st. louis, 1 brookings drive, st. louis, mo  63130, united states
+    olin business school, washington university, united states
+    department of mathematics, washington university in st. louismo  63130, united states
+    olin business school, washington university, st. louis, mo, united states
+    washington university, st. louis, united states
+    olin business school, washington university in st. louis, st. louis, mo, united states
+Wayne State University USA
+    wayne state university, department of computer science, detroit, mi 48202, united states
+West University of Timisoara ROU
+    computer science department, west university of timisoara, timisoara, romania
+West Virginia University USA
+    department of public administration, west virginia university, p. o. box 6322, morgantown, wv  26505-6322, united states
+    college of law, west virginia university, p. o. box 6130, morgantown, wv  26505-6130, united states
+Western Galilee Academic College ISR
+    department of management,western galilee academic college, p.o.box, 2125, acre, 2412101, israel
+    western galilee academic college, acre, israel
+Western Sydney University AUS
+    western sydney university, sydney, australia
+Whitestein Technologies Ag CHE
+    whitestein technologies ag, ghotthardstrasse 50, zurich, 8002, switzerland
+Wilfrid Laurier University CAN
+    rcea, lh3079, wilfrid laurier university, 75 university ave w., waterloo, on  n2l3c5, canada
+    lazaridis school of business and economics, wilfrid laurier university, 75 university ave. west, waterloo, on  n2l 3c5, canada
+Worcester Polytechnic Institute USA
+    worcester polytechnic institute, 100 institute road, worcester, ma  01609, united states
+Wroclaw University of Economics POL
+    wroclaw university of economics, wroclaw, poland
+Wroclaw University of Science and Technology POL
+    faculty of computer science and management, wroclaw university of science and technology, wroclaw, poland
+Wuhan University CHN
+    state key lab of software engineering, school of computer science, wuhan university, wuhan, 430072, china
+    state key lab. of software engineering, wuhan university, wuhan 430072, china
+    state key lab of software engineering, wuhan university, wuhan 430072, china
+    college of management, wuhan university of science and engineering, wuhan, 430073, china
+Xiamen University CHN
+    management department, xiamen university, china
+Xian Aeronautical University CHN
+    college of economics and management, xi'an aeronautical university, xi'an, shaanxi, china
+Xian Institute of Optics and Precisionmechanics of Cas CHN
+    optical direction and pointing technique research deparment, xi'an institute of optics and precisionmechanics of cas, xi'an, 710119, china
+Xian Jiaotong Liverpool University GBR
+    dept. of mathematical sciences, xian jiaotong liverpool university, suzhou, united kingdom
+Xian Jiaotong University CHN
+    state key laboratory for strength and vibration of mechanical structures, shaanxikey laboratory of environment and control for flight vehicle, school of aerospace, xi'an jiaotong university, xi'an, 710049, china
+    state key laboratory for strength and vibration of mechanical structures, shaanxi key laboratory of environment and control for flight vehicle, school of aerospace, xi'an jiaotong university, xi'an, 710049, china
+    school of management, xi'an jiaotong university, xi'an, shaanxi, china
+    department of computer science, xi'an jiaotong university, shaanxi, china
+Xian Medical University CHN
+    xi'an medical university, xi'an, 710021, china
+Xian University of Posts and Telecommunications CHN
+    college of economics and management, xi'an university of posts and telecommunications, xi'an, 710121, china
+    computational finance and risk management research center, xi'an university of posts and telecommunications, xi'an, 710121, china
+    school of computer, xi'an university of posts and telecommunications, xi'an, 710121, china
+Xin Xiang University CHN
+    department of computer and information, xin xiang university, xin xiang, china
+Xinxiang University CHN
+    department of computer and information, xinxiang university, xinxiang, china
+Yale University USA
+    department of astronomy, yale university, united states
+    henry koerner center for emeritus faculty, yale university, 149 elm st., new haven, ct 06520-8368, united states
+    yale school of management, yale university, new haven, ct 06520, united states
+Yango University CHN
+    institute of intellectual finance, yango university, fuzhou, 350015, china
+Yarsi University IDN
+    faculty of economics and business, yarsi university, indonesia
+York St John University GBR
+    york st. john university, lord mayor's walk, york, yo31 7ex, united kingdom
+York University CAN
+    schulich school of business, york university, 4700 keele street, toronto, on  m3j 1p3, canada
+    york university-schulich school of business, 4700 keele street, toronto, on  m3j 1p3, canada
+York University USA
+    department of finance, new york university stern school of business, united states
+    stern school of business, tandon school of engineering, new york university, new york, ny  10012, united states
+    courant institute of mathematical sciences, new york university, united states
+    new york university, 251 mercer street, new york, ny 10012, united states
+York and Ryerson Universities USA
+    york and ryerson universities, toronto, ca, united states
+Yuan Ze University TWN
+    department of information management, yuan ze university, chungli, taoyuan, taiwan
+Yuri Gagarin State Technical University of Saratov RUS
+    yuri gagarin state technical university of saratov, saratov, russian federation
+Zagreb School of Economics HRV
+    zagreb school of economics, 10000 zagreb, croatia
+Zhejiang University CHN
+    college of computer science and technology, zhejiang university, 310027, hangzhou, china
+Zhongnan University of Economics and Law CHN
+    school of information and safety engineering, zhongnan university of economics and law, wuhan, 430073, china

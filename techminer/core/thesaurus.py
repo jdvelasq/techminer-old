@@ -201,7 +201,7 @@ def load_file_as_dict(filename):
     key = None
     values = None
     #
-    file = open(filename, "r")
+    file = open(filename, "r", encoding="utf-8")
     for word in file:
         word = word.replace("\n", "")
         if len(word.strip()) == 0:
