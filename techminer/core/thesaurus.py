@@ -253,7 +253,7 @@ class Thesaurus:
         return self._thesaurus
 
     def to_textfile(self, filename):
-        with open(filename, "w") as file:
+        with open(filename, "w", encoding="utf-8") as file:
             for key in sorted(self._thesaurus.keys()):
                 file.write(key + "\n")
                 for item in self._thesaurus[key]:
