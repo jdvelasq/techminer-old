@@ -517,7 +517,6 @@ class Model:
         if self.view == "Table":
             return result
 
-        #  result = result.set_index(self.column)
         if self.top_by == "Num Documents":
             values = result.Num_Documents
             darkness = result.Global_Citations
@@ -785,8 +784,8 @@ class DASHapp(DASH, Model):
         options = config[self.menu]
         for key in options.keys():
             self.set_options(key, options[key])
-            if key == "View:":
-                self.view = options[key][0]
+            #  if key == "View:":
+            #      self.view = options[key][0]
 
     def set_menu_interactive(self):
 
@@ -970,7 +969,8 @@ class DASHapp(DASH, Model):
         if options is not None:
 
             if isinstance(options, dict):
-                options = options[self.panel_widgets[4]["widget"].value]
+                #  options = options[self.panel_widgets[4]["widget"].value]
+                options = options[self.menu]
 
             for i_option, option_value in enumerate(options):
 
