@@ -42,7 +42,7 @@ def descriptive_stats(input_file="techminer.csv"):
         general["Years:"] = str(min(x.Year)) + "-" + str(max(x.Year))
         n = max(x.Year) - min(x.Year) + 1
         Po = len(x.Year[x.Year == min(x.Year)])
-        Pn = len(x.Year[x.Year == max(x.Year)])
+        Pn = len(x)
         cagr = str(round(100 * (np.power(Pn / Po, 1 / n) - 1), 2)) + " %"
         general["Compound annual growth rate:"] = cagr
 
@@ -62,12 +62,12 @@ def descriptive_stats(input_file="techminer.csv"):
             _count_terms(x, "Global_References") / len(x)
         )
 
-    if "Source_Title" in x.columns:
+    if "Source_title" in x.columns:
         general["Source titles:"] = round(_count_terms(x, "Source_title"))
         general["Average documents per Source title:"] = round(
             len(x) / _count_terms(x, "Source_title")
         )
-        x.pop("Source_Title")
+        x.pop("Source_title")
 
     ##
     ##  Document types
@@ -108,6 +108,12 @@ def descriptive_stats(input_file="techminer.csv"):
     if "Institutions" in x.columns:
         authors["Institutions:"] = _count_terms(x, "Institutions")
         x.pop("Institutions")
+
+    if "Institution_1st_Author" in x.columns:
+        authors["Institutions (1st author):"] = _count_terms(
+            x, "Institution_1st_Author"
+        )
+        x.pop("Institution_1st_Author")
 
     if "Countries" in x.columns:
         authors["Countries:"] = _count_terms(x, "Countries")
