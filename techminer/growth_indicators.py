@@ -154,7 +154,7 @@ class Model:
         ]
         result = result.loc[index, :]
 
-        if self.top_by in ["Alphabetic", "Num Documents", "Times Cited"]:
+        if self.top_by in ["Alphabetic", "Num Documents", "Global Citations"]:
             result = sort_by_axis(
                 data=result, sort_by=self.top_by, ascending=False, axis=0
             )
@@ -177,7 +177,7 @@ class Model:
 
         result = result.head(self.max_items)
 
-        if self.sort_by in ["Alphabetic", "Num Documents", "Times Cited"]:
+        if self.sort_by in ["Alphabetic", "Num Documents", "Global Citations"]:
             result = sort_by_axis(
                 data=result, sort_by=self.sort_by, ascending=self.ascending, axis=0
             )
@@ -327,7 +327,7 @@ class DASHapp(DASH, Model):
                 desc="Top by:",
                 options=[
                     "Num Documents",
-                    "Times Cited",
+                    "Global Citations",
                     "Average Growth Rate",
                     "Average Documents per Year",
                     "Percentage of Documents in Last Years",
@@ -341,7 +341,7 @@ class DASHapp(DASH, Model):
                 options=[
                     "Alphabetic",
                     "Num Documents",
-                    "Times Cited",
+                    "Global Citations",
                     "Average Growth Rate",
                     "Average Documents per Year",
                     "Percentage of Documents in Last Years",

@@ -46,23 +46,23 @@ class BaseModel:
         ##
         ##  Number of documents and times cited by term per year
         ##
-        x = explode(x[["Year", self.column, "Times_Cited", "ID"]], self.column)
+        x = explode(x[["Year", self.column, "Global_Citations", "ID"]], self.column)
         x["Num_Documents"] = 1
         result = x.groupby([self.column, "Year"], as_index=False).agg(
-            {"Times_Cited": np.sum, "Num_Documents": np.size}
+            {"Global_Citations": np.sum, "Num_Documents": np.size}
         )
         result = result.assign(
             ID=x.groupby([self.column, "Year"]).agg({"ID": list}).reset_index()["ID"]
         )
-        result["Times_Cited"] = result["Times_Cited"].map(lambda x: int(x))
+        result["Global_Citations"] = result["Global_Citations"].map(lambda x: int(x))
 
         ##
         ##  Summary per year
         ##
-        summ = explode(x[["Year", "Times_Cited", "ID"]], "Year")
+        summ = explode(x[["Year", "Global_Citations", "ID"]], "Year")
         summ.loc[:, "Num_Documents"] = 1
         summ = summ.groupby("Year", as_index=True).agg(
-            {"Times_Cited": np.sum, "Num_Documents": np.size}
+            {"Global_Citations": np.sum, "Num_Documents": np.size}
         )
 
         ##
@@ -71,8 +71,8 @@ class BaseModel:
         num_documents_by_year = {
             key: value for key, value in zip(summ.index, summ.Num_Documents)
         }
-        times_cited_by_year = {
-            key: value for key, value in zip(summ.index, summ.Times_Cited)
+        global_citations_by_year = {
+            key: value for key, value in zip(summ.index, summ.Global_Citations)
         }
 
         ##
@@ -84,12 +84,12 @@ class BaseModel:
         result["summary_documents_by_year"] = result.summary_documents_by_year.map(
             lambda w: 1 if w == 0 else w
         )
-        result["summary_times_cited_by_year"] = result.Year.apply(
-            lambda w: times_cited_by_year[w]
+        result["summary_global_citations_by_year"] = result.Year.apply(
+            lambda w: global_citations_by_year[w]
         )
-        result["summary_times_cited_by_year"] = result.summary_times_cited_by_year.map(
-            lambda w: 1 if w == 0 else w
-        )
+        result[
+            "summary_global_citations_by_year"
+        ] = result.summary_global_citations_by_year.map(lambda w: 1 if w == 0 else w)
 
         result["Perc_Num_Documents"] = 0.0
         result = result.assign(
@@ -98,22 +98,23 @@ class BaseModel:
             )
         )
 
-        result["Perc_Times_Cited"] = 0.0
+        result["Perc_Global_Citations"] = 0.0
         result = result.assign(
-            Perc_Times_Cited=round(
-                result.Times_Cited / result.summary_times_cited_by_year * 100, 2
+            Perc_Global_Citations=round(
+                result.Global_Citations / result.summary_global_citations_by_year * 100,
+                2,
             )
         )
 
         result.pop("summary_documents_by_year")
-        result.pop("summary_times_cited_by_year")
+        result.pop("summary_global_citations_by_year")
 
         result = result.rename(
             columns={
                 "Num_Documents": "Num_Documents_per_Year",
-                "Times_Cited": "Times_Cited_per_Year",
+                "Global_Citations": "Global_Citations_per_Year",
                 "Perc_Num_Documents": "%_Num_Documents_per_Year",
-                "Perc_Times_Cited": "%_Times_Cited_per_Year",
+                "Perc_Global_Citations": "%_Global_Citations_per_Year",
             }
         )
 
@@ -186,29 +187,29 @@ class MatrixModel(BaseModel):
             top_by = self.top_by.replace(" ", "_")
             top_by = {
                 "Num_Documents_per_Year": 0,
-                "Times_Cited_per_Year": 1,
+                "Global_Citations_per_Year": 1,
                 "%_Num_Documents_per_Year": 2,
-                "%_Times_Cited_per_Year": 3,
+                "%_Global_Citations_per_Year": 3,
                 "Num_Documents": 4,
-                "Times_Cited": 5,
+                "Global_Citations": 5,
             }[top_by]
         else:
             top_by = self.top_by
 
         selected_col = {
             0: "Num_Documents_per_Year",
-            1: "Times_Cited_per_Year",
+            1: "Global_Citations_per_Year",
             2: "%_Num_Documents_per_Year",
-            3: "%_Times_Cited_per_Year",
+            3: "%_Global_Citations_per_Year",
             4: "Num_Documents_per_Year",
-            5: "Times_Cited_per_Year",
+            5: "Global_Citations_per_Year",
         }[top_by]
 
         for col in [
             "Num_Documents_per_Year",
-            "Times_Cited_per_Year",
+            "Global_Citations_per_Year",
             "%_Num_Documents_per_Year",
-            "%_Times_Cited_per_Year",
+            "%_Global_Citations_per_Year",
         ]:
 
             if col != selected_col:
@@ -361,16 +362,16 @@ class MatrixDASHapp(DASH, MatrixModel):
                 desc="Top by:",
                 options=[
                     "Num Documents per Year",
-                    "Times Cited per Year",
+                    "Global Citations per Year",
                     "% Num Documents per Year",
-                    "% Times Cited per Year",
+                    "% Global Citations per Year",
                     "Num Documents",
-                    "Times Cited",
+                    "Global Citations",
                 ],
             ),
             dash.dropdown(
                 desc="Sort by:",
-                options=["Alphabetic", "Values", "Num Documents", "Times Cited"],
+                options=["Alphabetic", "Values", "Num Documents", "Global Citations"],
             ),
             dash.ascending(),
             dash.cmap(),
@@ -422,22 +423,22 @@ class MatrixListModel(BaseModel):
             top_by = self.top_by.replace(" ", "_")
             top_by = {
                 "Num_Documents_per_Year": 0,
-                "Times_Cited_per_Year": 1,
+                "Global_Citations_per_Year": 1,
                 "%_Num_Documents_per_Year": 2,
-                "%_Times_Cited_per_Year": 3,
+                "%_Global_Citations_per_Year": 3,
                 "Num_Documents": 4,
-                "Times_Cited": 5,
+                "Global_Citations": 5,
             }[top_by]
         else:
             top_by = self.top_by
 
         columns = {
-            0: ["Num_Documents_per_Year", "Times_Cited_per_Year"],
-            1: ["Times_Cited_per_Year", "Num_Documents_per_Year"],
-            2: ["%_Num_Documents_per_Year", "%_Times_Cited_per_Year"],
-            3: ["%_Times_Cited_per_Year", "%_Num_Documents_per_Year"],
-            4: ["Num_Documents", "Times_Cited"],
-            5: ["Times_Cited", "Num_Documents"],
+            0: ["Num_Documents_per_Year", "Global_Citations_per_Year"],
+            1: ["Global_Citations_per_Year", "Num_Documents_per_Year"],
+            2: ["%_Num_Documents_per_Year", "%_Global_Citations_per_Year"],
+            3: ["%_Global_Citations_per_Year", "%_Num_Documents_per_Year"],
+            4: ["Num_Documents", "Global_Citations"],
+            5: ["Global_Citations", "Num_Documents"],
         }[top_by]
 
         result.sort_values(
@@ -455,9 +456,9 @@ class MatrixListModel(BaseModel):
                 "Alphabetic": 0,
                 "Year": 1,
                 "Num_Documents_per_Year": 2,
-                "Times_Cited_per_Year": 3,
+                "Global_Citations_per_Year": 3,
                 "%_Num_Documents_per_Year": 4,
-                "%_Times_Cited_per_Year": 5,
+                "%_Global_Citations_per_Year": 5,
             }[sort_by]
         else:
             sort_by = self.sort_by
@@ -470,11 +471,19 @@ class MatrixListModel(BaseModel):
         else:
             result = result.sort_values(
                 {
-                    1: ["Year", "Num_Documents_per_Year", "Times_Cited_per_Year"],
-                    2: ["Num_Documents_per_Year", "Times_Cited_per_Year", "Year"],
-                    3: ["Times_Cited_per_Year", "Num_Documents_per_Year", "Year"],
-                    4: ["%_Num_Documents_per_Year", "%_Times_Cited_per_Year", "Year"],
-                    5: ["%_Times_Cited_per_Year", "%_Num_Documents_per_Year", "Year"],
+                    1: ["Year", "Num_Documents_per_Year", "Global_Citations_per_Year"],
+                    2: ["Num_Documents_per_Year", "Global_Citations_per_Year", "Year"],
+                    3: ["Global_Citations_per_Year", "Num_Documents_per_Year", "Year"],
+                    4: [
+                        "%_Num_Documents_per_Year",
+                        "%_Global_Citations_per_Year",
+                        "Year",
+                    ],
+                    5: [
+                        "%_Global_Citations_per_Year",
+                        "%_Num_Documents_per_Year",
+                        "Year",
+                    ],
                 }[sort_by],
                 ascending=self.ascending,
             )
@@ -493,9 +502,9 @@ class MatrixListModel(BaseModel):
                 self.column,
                 "Year",
                 "Num_Documents_per_Year",
-                "Times_Cited_per_Year",
+                "Global_Citations_per_Year",
                 "%_Num_Documents_per_Year",
-                "%_Times_Cited_per_Year",
+                "%_Global_Citations_per_Year",
             ]
         ]
         ###
@@ -536,9 +545,9 @@ class MatrixListDASHapp(DASH, MatrixListModel):
                 desc="Top by:",
                 options=[
                     "Num Documents per Year",
-                    "Times Cited per Year",
+                    "Global Citations per Year",
                     "% Num Documents per Year",
-                    "% Times Cited per Year",
+                    "% Global Citations per Year",
                 ],
             ),
             dash.top_n(),
@@ -548,9 +557,9 @@ class MatrixListDASHapp(DASH, MatrixListModel):
                     "Alphabetic",
                     "Year",
                     "Num Documents per Year",
-                    "Times Cited per Year",
+                    "Global Citations per Year",
                     "% Num Documents per Year",
-                    "% Times Cited per Year",
+                    "% Global Citations per Year",
                 ],
             ),
             dash.ascending(),

@@ -11,7 +11,7 @@ def record_to_HTML(x, only_abstract=False):
     column_list += [
         "Year",
         "Authors",
-        "Times_Cited",
+        "Global_Citations",
     ]
     column_list += ["Abstract_HL" if "Abstract_HL" in x.index else "Abstract"]
     column_list += [
@@ -62,7 +62,7 @@ def record_to_HTML(x, only_abstract=False):
                 HTML += "{:>18}: {}<br>".format(f, s[0])
                 for t in s[1:]:
                     HTML += "{}<br>".format(textwrap.indent(t, " " * 20))
-            elif f == "Times_Cited":
+            elif f == "Global_Citations":
                 HTML += "{:>18}: {}<br>".format(f, int(z))
             else:
                 HTML += "{:>18}: {}<br>".format(f, z)

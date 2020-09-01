@@ -297,15 +297,17 @@ class DASHapp(DASH, Model):
                 options=["Label propagation", "Leiden", "Louvain", "Walktrap",],
             ),
             dash.separator(text="Visualization"),
-            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+            dash.dropdown(
+                desc="Top by:", options=["Num Documents", "Global Citations",],
+            ),
             dash.dropdown(
                 desc="Sort C-axis by:",
-                options=["Alphabetic", "Num Documents", "Times Cited",],
+                options=["Alphabetic", "Num Documents", "Global Citations",],
             ),
             dash.c_axis_ascending(),
             dash.dropdown(
                 desc="Sort R-axis by:",
-                options=["Alphabetic", "Num Documents", "Times Cited",],
+                options=["Alphabetic", "Num Documents", "Global Citations",],
             ),
             dash.r_axis_ascending(),
             dash.cmap(),

@@ -71,7 +71,7 @@ The column names in the dataframe follows the convetion used in WoS.
 * `SO`: Publication Name.
 * `SP`: Conference Sponsors.
 * `SU`: Supplement.
-* `TC`: Web of Science Core Collection Times Cited Count.
+* `TC`: Web of Science Core Collection Global Citations Count.
 * `TI`: Document Title.
 * `U1`: Usage Count (Last 180 Days).
 * `U2`: Usage Count (Since 2013).
@@ -79,7 +79,7 @@ The column names in the dataframe follows the convetion used in WoS.
 * `VL`: Volume.
 * `VR`: Version Number.
 * `WC`: Web of Science Categories.
-* `Z9`: Total Times Cited Count.
+* `Z9`: Total Global Citations Count.
 
 
 """
@@ -120,12 +120,12 @@ The column names in the dataframe follows the convetion used in WoS.
 #     ...     {
 #     ...         "c0": ["D"] * 4 + ["B"] * 3 + ["C"] * 2 + ["A"],
 #     ...         "c1": ["a"] * 4 + ["c"] * 3 + ["b"] * 2 + ["d"],
-#     ...         "Times_Cited": list(range(10)),
+#     ...         "Global_Citations": list(range(10)),
 #     ...         "ID": list(range(10)),
 #     ...     },
 #     ... )
 #     >>> df
-#       c0 c1  Times_Cited   ID
+#       c0 c1  Global_Citations   ID
 #     0  D  a         0   0
 #     1  D  a         1   1
 #     2  D  a         2   2
@@ -211,12 +211,12 @@ The column names in the dataframe follows the convetion used in WoS.
 #     ...     {
 #     ...         "c0": ["D"] * 4 + ["B"] * 3 + ["C"] * 2 + ["A"],
 #     ...         "c1": ["a"] * 4 + ["c"] * 3 + ["b"] * 2 + ["d"],
-#     ...         "Times_Cited": list(range(10)),
+#     ...         "Global_Citations": list(range(10)),
 #     ...         "ID": list(range(10)),
 #     ...     },
 #     ... )
 #     >>> df
-#       c0 c1  Times_Cited   ID
+#       c0 c1  Global_Citations   ID
 #     0  D  a         0   0
 #     1  D  a         1   1
 #     2  D  a         2   2

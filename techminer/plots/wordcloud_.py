@@ -46,17 +46,17 @@ def wordcloud_(
     >>> df = pd.DataFrame(
     ...     {
     ...         "Num_Documents": [10, 5, 2, 1],
-    ...         "Times_Cited": [4, 3, 2, 0],
+    ...         "Global_Citations": [4, 3, 2, 0],
     ...     },
     ...     index = "author 3,author 1,author 0,author 2".split(","),
     ... )
     >>> df
-              Num_Documents  Times_Cited
+              Num_Documents  Global_Citations
     author 3             10            4
     author 1              5            3
     author 0              2            2
     author 2              1            0
-    >>> fig = wordcloud(x=df['Num_Documents'], darkness=df['Times_Cited'])
+    >>> fig = wordcloud(x=df['Num_Documents'], darkness=df['Global_Citations'])
     >>> fig.savefig('/workspaces/techminer/sphinx/images/wordcloud.png')
 
     .. image:: images/wordcloud.png

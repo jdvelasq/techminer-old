@@ -31,17 +31,17 @@ def pie_plot(
     >>> df = pd.DataFrame(
     ...     {
     ...         "Num_Documents": [3, 2, 2, 1],
-    ...         "Times_Cited": [1, 2, 3, 4],
+    ...         "Global_Citations": [1, 2, 3, 4],
     ...     },
     ...     index="author 3,author 1,author 0,author 2".split(","),
     ... )
     >>> df
-              Num_Documents  Times_Cited
+              Num_Documents  Global_Citations
     author 3              3            1
     author 1              2            2
     author 0              2            3
     author 2              1            4
-    >>> fig = pie(x=df['Num_Documents'], darkness=df['Times_Cited'], cmap="Blues")
+    >>> fig = pie(x=df['Num_Documents'], darkness=df['Global_Citations'], cmap="Blues")
     >>> fig.savefig('/workspaces/techminer/sphinx/images/pieplot.png')
 
     .. image:: images/pieplot.png

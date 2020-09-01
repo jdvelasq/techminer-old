@@ -158,7 +158,7 @@ class Model:
             500 + int(2500 * (w - min_size) / (max_size - min_size)) for w in node_sizes
         ]
 
-        node_colors = self.times_cited_.values()
+        node_colors = self.global_citations_.values()
         max_colors = max(node_colors)
         min_colors = min(node_colors)
         node_colors = [
@@ -310,7 +310,9 @@ class DASHapp(DASH, Model):
             dash.linkage(),
             dash.random_state(),
             dash.separator(text="Visualization"),
-            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+            dash.dropdown(
+                desc="Top by:", options=["Num Documents", "Global Citations",],
+            ),
             dash.top_n(n=101,),
             dash.cmap(),
             dash.x_axis(),

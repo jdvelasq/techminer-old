@@ -32,15 +32,15 @@ class Model:
 
     def apply(self):
         ##
-        data = self.data[["Year", "Times_Cited", "ID"]].explode("Year")
+        data = self.data[["Year", "Global_Citations", "ID"]].explode("Year")
         data["Num_Documents"] = 1
         result = data.groupby("Year", as_index=False).agg(
-            {"Times_Cited": np.sum, "Num_Documents": np.size}
+            {"Global_Citations": np.sum, "Num_Documents": np.size}
         )
         result = result.assign(
             ID=data.groupby("Year").agg({"ID": list}).reset_index()["ID"]
         )
-        result["Times_Cited"] = result["Times_Cited"].map(lambda w: int(w))
+        result["Global_Citations"] = result["Global_Citations"].map(lambda w: int(w))
         years = [year for year in range(result.Year.min(), result.Year.max() + 1)]
         result = result.set_index("Year")
         result = result.reindex(years, fill_value=0)
@@ -49,9 +49,11 @@ class Model:
             "Year", ascending=True, inplace=True,
         )
         result["Cum_Num_Documents"] = result["Num_Documents"].cumsum()
-        result["Cum_Times_Cited"] = result["Times_Cited"].cumsum()
-        result["Avg_Times_Cited"] = result["Times_Cited"] / result["Num_Documents"]
-        result["Avg_Times_Cited"] = result["Avg_Times_Cited"].map(
+        result["Cum_Global_Citations"] = result["Global_Citations"].cumsum()
+        result["Avg_Global_Citations"] = (
+            result["Global_Citations"] / result["Num_Documents"]
+        )
+        result["Avg_Global_Citations"] = result["Avg_Global_Citations"].map(
             lambda x: 0 if pd.isna(x) else round(x, 2)
         )
         result.pop("ID")
@@ -87,17 +89,17 @@ class Model:
         self.apply()
         return self.plot_(
             values=self.X_["Num_Documents"],
-            darkness=self.X_["Times_Cited"],
+            darkness=self.X_["Global_Citations"],
             label="Num Documents by Year",
             figsize=(self.width, self.height),
         )
 
-    def times_cited_by_year(self):
+    def global_citations_by_year(self):
         self.apply()
         return self.plot_(
-            values=self.X_["Times_Cited"],
+            values=self.X_["Global_Citations"],
             darkness=self.X_["Num_Documents"],
-            label="Times Cited by Year",
+            label="Global Citations by Year",
             figsize=(self.width, self.height),
         )
 
@@ -105,26 +107,26 @@ class Model:
         self.apply()
         return self.plot_(
             values=self.X_["Cum_Num_Documents"],
-            darkness=self.X_["Cum_Times_Cited"],
+            darkness=self.X_["Cum_Global_Citations"],
             label="Cum Num Documents by Year",
             figsize=(self.width, self.height),
         )
 
-    def cum_times_cited_by_year(self):
+    def cum_global_citations_by_year(self):
         self.apply()
         return self.plot_(
-            values=self.X_["Cum_Times_Cited"],
+            values=self.X_["Cum_Global_Citations"],
             darkness=self.X_["Cum_Num_Documents"],
-            label="Cum Times Cited by Year",
+            label="Cum Global Citations by Year",
             figsize=(self.width, self.height),
         )
 
-    def avg_times_cited_by_year(self):
+    def avg_global_citations_by_year(self):
         self.apply()
         return self.plot_(
-            values=self.X_["Avg_Times_Cited"],
+            values=self.X_["Avg_Global_Citations"],
             darkness=None,
-            label="Avg Times Cited by Year",
+            label="Avg Global Citations by Year",
             figsize=(self.width, self.height),
         )
 
@@ -149,10 +151,10 @@ class DASHapp(DASH, Model):
         self.menu_options = [
             "Table",
             "Num Documents by Year",
-            "Times Cited by Year",
+            "Global Citations by Year",
             "Cum Num Documents by Year",
-            "Cum Times Cited by Year",
-            "Avg Times Cited by Year",
+            "Cum Global Citations by Year",
+            "Avg Global Citations by Year",
         ]
 
         self.panel_widgets = [
@@ -161,11 +163,11 @@ class DASHapp(DASH, Model):
                 desc="Sort by:",
                 options=[
                     "Year",
-                    "Times_Cited",
+                    "Global_Citations",
                     "Num_Documents",
                     "Cum_Num_Documents",
-                    "Cum_Times_Cited",
-                    "Avg_Times_Cited",
+                    "Cum_Global_Citations",
+                    "Avg_Global_Citations",
                 ],
             ),
             dash.ascending(),

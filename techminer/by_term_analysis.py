@@ -180,13 +180,13 @@ class Model:
     def top_documents(self):
 
         data = self.data
-        data = data.sort_values(["Times_Cited", "Year"], ascending=[False, True])
+        data = data.sort_values(["Global_Citations", "Year"], ascending=[False, True])
         data = data.head(50)
-        data["Times_Cited"] = data.Times_Cited.map(lambda w: int(w))
+        data["Global_Citations"] = data.Global_Citations.map(lambda w: int(w))
         data = data.reset_index(drop=True)
-        data = data.sort_values(["Times_Cited", "Title"], ascending=[False, True])
-        data = data[["Authors", "Year", "Title", "Source_title", "Times_Cited"]]
-        data["Times_Cited"] = data.Times_Cited.map(lambda w: int(w))
+        data = data.sort_values(["Global_Citations", "Title"], ascending=[False, True])
+        data = data[["Authors", "Year", "Title", "Source_title", "Global_Citations"]]
+        data["Global_Citations"] = data.Global_Citations.map(lambda w: int(w))
         data = data.reset_index(drop=True)
         return data
 
@@ -195,10 +195,10 @@ class Model:
         x = self.data.copy()
         x["Num_Documents"] = 1
         x = explode(
-            x[[self.column, "Num_Documents", "Times_Cited", "ID",]], self.column,
+            x[[self.column, "Num_Documents", "Global_Citations", "ID",]], self.column,
         )
         result = x.groupby(self.column, as_index=True).agg(
-            {"Num_Documents": np.sum, "Times_Cited": np.sum,}
+            {"Num_Documents": np.sum, "Global_Citations": np.sum,}
         )
         top_by = self.top_by.replace(" ", "_")
         return worldmap(
@@ -280,7 +280,7 @@ class Model:
                         self.column,
                         "Frac_Num_Documents",
                         "Num_Documents",
-                        "Times_Cited",
+                        "Global_Citations",
                         "First_Year",
                         "ID",
                     ]
@@ -291,49 +291,65 @@ class Model:
                 {
                     "Frac_Num_Documents": np.sum,
                     "Num_Documents": np.sum,
-                    "Times_Cited": np.sum,
+                    "Global_Citations": np.sum,
                     "First_Year": np.min,
                 }
             )
         else:
             x = explode(
-                x[[self.column, "Num_Documents", "Times_Cited", "First_Year", "ID"]],
+                x[
+                    [
+                        self.column,
+                        "Num_Documents",
+                        "Global_Citations",
+                        "First_Year",
+                        "ID",
+                    ]
+                ],
                 self.column,
             )
             result = x.groupby(self.column, as_index=False).agg(
-                {"Num_Documents": np.sum, "Times_Cited": np.sum, "First_Year": np.min,}
+                {
+                    "Num_Documents": np.sum,
+                    "Global_Citations": np.sum,
+                    "First_Year": np.min,
+                }
             )
 
         result["Last_Year"] = last_year
         result = result.assign(Years=result.Last_Year - result.First_Year + 1)
-        result = result.assign(Times_Cited_per_Year=result.Times_Cited / result.Years)
-        result["Times_Cited_per_Year"] = result["Times_Cited_per_Year"].map(
+        result = result.assign(
+            Global_Citations_per_Year=result.Global_Citations / result.Years
+        )
+        result["Global_Citations_per_Year"] = result["Global_Citations_per_Year"].map(
             lambda w: round(w, 2)
         )
         result = result.assign(
-            Avg_Times_Cited=result.Times_Cited / result.Num_Documents
+            Avg_Global_Citations=result.Global_Citations / result.Num_Documents
         )
-        result["Avg_Times_Cited"] = result["Avg_Times_Cited"].map(lambda w: round(w, 2))
+        result["Avg_Global_Citations"] = result["Avg_Global_Citations"].map(
+            lambda w: round(w, 2)
+        )
 
-        result["Times_Cited"] = result["Times_Cited"].map(lambda x: int(x))
+        result["Global_Citations"] = result["Global_Citations"].map(lambda x: int(x))
 
         #
         # Indice H
         #
-        z = x[[self.column, "Times_Cited", "ID"]].copy()
+        z = x[[self.column, "Global_Citations", "ID"]].copy()
         z = (
             x.assign(
-                rn=x.sort_values("Times_Cited", ascending=False)
+                rn=x.sort_values("Global_Citations", ascending=False)
                 .groupby(self.column)
                 .cumcount()
                 + 1
             )
         ).sort_values(
-            [self.column, "Times_Cited", "rn"], ascending=[False, False, True]
+            [self.column, "Global_Citations", "rn"], ascending=[False, False, True]
         )
         z["rn2"] = z.rn.map(lambda w: w * w)
 
-        q = z.query("Times_Cited >= rn")
+        q = z.query("Global_Citations >= rn")
         q = q.groupby(self.column, as_index=False).agg({"rn": np.max})
         h_dict = {key: value for key, value in zip(q[self.column], q.rn)}
 
@@ -350,7 +366,7 @@ class Model:
         #
         # indice G
         #
-        q = z.query("Times_Cited >= rn2")
+        q = z.query("Global_Citations >= rn2")
         q = q.groupby(self.column, as_index=False).agg({"rn": np.max})
         h_dict = {key: value for key, value in zip(q[self.column], q.rn)}
         result["G_index"] = result[self.column].map(
@@ -375,7 +391,7 @@ class Model:
 
         ## Top by / Top N
         top_by = self.top_by.replace(" ", "_").replace("-", "_").replace("/", "_")
-        if top_by in ["Num_Documents", "Times_Cited"]:
+        if top_by in ["Num_Documents", "Global_Citations"]:
             result = sort_axis(
                 data=result,
                 num_documents=(top_by == "Num_Documents"),
@@ -388,7 +404,7 @@ class Model:
 
         ## Sort by
         sort_by = self.sort_by.replace(" ", "_").replace("-", "_").replace("/", "_")
-        if sort_by in ["Alphabetic", "Num_Documents", "Times_Cited"]:
+        if sort_by in ["Alphabetic", "Num_Documents", "Global_Citations"]:
             result = sort_by_axis(
                 data=result, sort_by=self.sort_by, ascending=self.ascending, axis=0
             )
@@ -398,7 +414,7 @@ class Model:
         if self.view == "Table":
             result.pop(self.column)
             result.pop("Num_Documents")
-            result.pop("Times_Cited")
+            result.pop("Global_Citations")
             result.pop("First_Year")
             result.pop("Last_Year")
             result.pop("Years")
@@ -428,10 +444,10 @@ class Model:
 
         x["Num_Documents"] = 1
         x = explode(
-            x[[self.column, "Num_Documents", "Times_Cited", "ID",]], self.column,
+            x[[self.column, "Num_Documents", "Global_Citations", "ID",]], self.column,
         )
         result = x.groupby(self.column, as_index=True).agg(
-            {"Num_Documents": np.sum, "Times_Cited": np.sum,}
+            {"Num_Documents": np.sum, "Global_Citations": np.sum,}
         )
 
         result = limit_to_exclude(
@@ -442,7 +458,7 @@ class Model:
             exclude=self.exclude,
         )
 
-        result["Times_Cited"] = result["Times_Cited"].map(lambda w: int(w))
+        result["Global_Citations"] = result["Global_Citations"].map(lambda w: int(w))
 
         result = add_counters_to_axis(
             X=result, axis=0, data=self.data, column=self.column
@@ -476,9 +492,9 @@ class Model:
         #  result = result.set_index(self.column)
         if self.top_by == "Num Documents":
             values = result.Num_Documents
-            darkness = result.Times_Cited
+            darkness = result.Global_Citations
         else:
-            values = result.Times_Cited
+            values = result.Global_Citations
             darkness = result.Num_Documents
 
         if self.view == "Bar plot":
@@ -507,7 +523,7 @@ class Model:
             )
 
         if self.view == "Wordcloud":
-            ## remueve num_documents:times_cited from terms
+            ## remueve num_documents:global_citations from terms
             values.index = [" ".join(term.split(" ")[:-1]) for term in values.index]
             darkness.index = [" ".join(term.split(" ")[:-1]) for term in darkness.index]
             return wordcloud_(
@@ -617,10 +633,10 @@ class DASHapp(DASH, Model):
                 desc="Top by:",
                 options=[
                     "Num Documents",
-                    "Times Cited",
+                    "Global Citations",
                     "Frac Num Documents",
-                    "Times Cited per Year",
-                    "Avg Times Cited",
+                    "Global Citations per Year",
+                    "Avg Global Citations",
                     "H index",
                     "M index",
                     "G index",
@@ -631,9 +647,9 @@ class DASHapp(DASH, Model):
                 options=[
                     "Num Documents",
                     "Frac Num Documents",
-                    "Times Cited",
-                    "Times Cited per Year",
-                    "Avg Times Cited",
+                    "Global Citations",
+                    "Global Citations per Year",
+                    "Avg Global Citations",
                     "H index",
                     "M index",
                     "G index",
@@ -666,7 +682,7 @@ class DASHapp(DASH, Model):
                     "Wordcloud",
                     "Treemap",
                 ],
-                "Top by:": ["Num Documents", "Times Cited",],
+                "Top by:": ["Num Documents", "Global Citations",],
             },
             "Impact": {
                 "Column:": [
@@ -680,9 +696,9 @@ class DASHapp(DASH, Model):
                 "View:": ["Table", "Bar plot", "Horizontal bar plot",],
                 "Top by:": [
                     "Num Documents",
-                    "Times Cited",
-                    "Times Cited per Year",
-                    "Avg Times Cited",
+                    "Global Citations",
+                    "Global Citations per Year",
+                    "Avg Global Citations",
                     "H index",
                     "M index",
                     "G index",
@@ -690,9 +706,9 @@ class DASHapp(DASH, Model):
                 "Sort by:": [
                     "Alphabetic",
                     "Num Documents",
-                    "Times Cited",
-                    "Times Cited per Year",
-                    "Avg Times Cited",
+                    "Global Citations",
+                    "Global Citations per Year",
+                    "Avg Global Citations",
                     "H index",
                     "M index",
                     "G index",
@@ -710,7 +726,7 @@ class DASHapp(DASH, Model):
                 "Sort by:": [
                     "Alphabetic",
                     "Num Documents",
-                    "Times Cited",
+                    "Global Citations",
                     "SD",
                     "MD",
                     "SMR",
@@ -718,7 +734,7 @@ class DASHapp(DASH, Model):
             },
             "Worldmap": {
                 "Column:": ["Countries", "Country_1st_Author",],
-                "Top by:": ["Num Documents", "Times Cited"],
+                "Top by:": ["Num Documents", "Global Citations"],
                 "View": ["Worldmap"],
             },
             "Core authors": {},

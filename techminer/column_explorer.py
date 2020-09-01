@@ -84,16 +84,18 @@ def column_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
 
             y = df.copy()
             y["Num_Documents"] = 1
-            y = explode(y[[column, "Num_Documents", "Times_Cited", "ID",]], column,)
-            y = y.groupby(column, as_index=True).agg(
-                {"Num_Documents": np.sum, "Times_Cited": np.sum,}
+            y = explode(
+                y[[column, "Num_Documents", "Global_Citations", "ID",]], column,
             )
-            y["Times_Cited"] = y["Times_Cited"].map(lambda w: int(w))
+            y = y.groupby(column, as_index=True).agg(
+                {"Num_Documents": np.sum, "Global_Citations": np.sum,}
+            )
+            y["Global_Citations"] = y["Global_Citations"].map(lambda w: int(w))
             top_terms_freq = set(
                 y.sort_values("Num_Documents", ascending=False).head(top_n).index
             )
             top_terms_cited_by = set(
-                y.sort_values("Times_Cited", ascending=False).head(top_n).index
+                y.sort_values("Global_Citations", ascending=False).head(top_n).index
             )
             top_terms = sorted(top_terms_freq | top_terms_cited_by)
             left_panel[1]["widget"].options = top_terms
@@ -106,7 +108,7 @@ def column_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
         # Populate titles
         #
         s = x[x[column] == left_panel[1]["widget"].value]
-        s = s.sort_values(["Times_Cited", "Title"], ascending=[False, True])
+        s = s.sort_values(["Global_Citations", "Title"], ascending=[False, True])
         left_panel[2]["widget"].options = s["Title"].tolist()
 
         #

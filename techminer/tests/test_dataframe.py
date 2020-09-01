@@ -13,7 +13,7 @@
 # #             ),
 # #             "Author (s) ID": "id0;id1,id2,id2;id3,id3,id4;id5,id6;id7".split(","),
 # #             "ID": list(range(6)),
-# #             "Times_Cited": list(range(6)),
+# #             "Global_Citations": list(range(6)),
 # #         }
 # #     )
 

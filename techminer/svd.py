@@ -224,11 +224,13 @@ class DASHapp(DASH, Model):
             dash.random_state(),
             dash.n_iter(),
             dash.separator(text="Visualization"),
-            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+            dash.dropdown(
+                desc="Top by:", options=["Num Documents", "Global Citations",],
+            ),
             dash.top_n(),
             dash.dropdown(
                 desc="Sort by:",
-                options=["Alphabetic", "Num Documents", "Times Cited",],
+                options=["Alphabetic", "Num Documents", "Global Citations",],
             ),
             dash.ascending(),
             dash.cmap(),

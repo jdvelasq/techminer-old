@@ -17,9 +17,9 @@ def sort_by_axis(data, sort_by, ascending, axis):
 
     elif (
         sort_by == "Num Documents"
-        or sort_by == "Times Cited"
+        or sort_by == "Global Citations"
         or sort_by == "Num_Documents"
-        or sort_by == "Times_Cited"
+        or sort_by == "Global_Citations"
     ):
 
         for m in axis_to_sort:

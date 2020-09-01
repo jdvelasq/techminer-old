@@ -58,7 +58,7 @@ EXCLUDE_COLS = [
     "Publisher",
     "PubMed_ID",
     "Source",
-    "Times_Cited",
+    "Global_Citations",
     "Title_HL",
     "Title",
     "Volume",

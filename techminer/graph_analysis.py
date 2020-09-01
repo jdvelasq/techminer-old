@@ -113,6 +113,16 @@ class Model:
         X = pd.DataFrame(X, columns=TF_matrix_.columns, index=TF_matrix_.columns)
         X = normalize_network(X, self.normalization)
 
+        ##
+        ##  Sort by
+        ##
+        X = sort_by_axis(
+            data=X, sort_by=self.sort_r_axis_by, ascending=self.r_axis_ascending, axis=0
+        )
+        X = sort_by_axis(
+            data=X, sort_by=self.sort_c_axis_by, ascending=self.c_axis_ascending, axis=1
+        )
+
         self.X_ = X
 
     def matrix(self):
@@ -263,15 +273,17 @@ class DASHapp(DASH, Model):
                 options=["Label propagation", "Leiden", "Louvain", "Walktrap",],
             ),
             dash.separator(text="Visualization"),
-            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited",],),
+            dash.dropdown(
+                desc="Top by:", options=["Num Documents", "Global Citations",],
+            ),
             dash.dropdown(
                 desc="Sort C-axis by:",
-                options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
+                options=["Alphabetic", "Num Documents", "Global Citations", "Data",],
             ),
             dash.c_axis_ascending(),
             dash.dropdown(
                 desc="Sort R-axis by:",
-                options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
+                options=["Alphabetic", "Num Documents", "Global Citations", "Data",],
             ),
             dash.r_axis_ascending(),
             dash.cmap(),

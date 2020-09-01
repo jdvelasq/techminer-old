@@ -121,7 +121,7 @@ class Model:
 
             self.X_ = matrix
 
-        if self.top_by in ["Num Documents", "Times Cited"]:
+        if self.top_by in ["Num Documents", "Global Citations"]:
 
             A = limit_to_exclude(
                 data=A,
@@ -592,7 +592,7 @@ class DASHapp(DASH, Model):
             dash.max_items(arg="max_items_column"),
             dash.dropdown(
                 desc="Sort C-axis by:",
-                options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
+                options=["Alphabetic", "Num Documents", "Global Citations", "Data",],
             ),
             dash.c_axis_ascending(),
             dash.separator(text="Index"),
@@ -603,12 +603,12 @@ class DASHapp(DASH, Model):
             dash.max_items(arg="max_items_by"),
             dash.dropdown(
                 desc="Sort R-axis by:",
-                options=["Alphabetic", "Num Documents", "Times Cited", "Data",],
+                options=["Alphabetic", "Num Documents", "Global Citations", "Data",],
             ),
             dash.r_axis_ascending(),
             dash.separator(text="Visualization"),
             dash.dropdown(
-                desc="Top by:", options=["Num Documents", "Times Cited", "Data",],
+                desc="Top by:", options=["Num Documents", "Global Citations", "Data",],
             ),
             dash.cmap(arg="cmap", desc="Colormap Col:"),
             dash.cmap(arg="cmap_by", desc="Colormap By:"),

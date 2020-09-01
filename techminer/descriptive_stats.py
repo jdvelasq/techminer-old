@@ -46,14 +46,14 @@ def descriptive_stats(input_file="techminer.csv"):
         cagr = str(round(100 * (np.power(Pn / Po, 1 / n) - 1), 2)) + " %"
         general["Compound annual growth rate:"] = cagr
 
-    if "Times_Cited" in x.columns:
+    if "Global_Citations" in x.columns:
         general["Average citations per document:"] = "{:4.2f}".format(
-            x["Times_Cited"].mean()
+            x["Global_Citations"].mean()
         )
 
-    if "Times_Cited" in x.columns and "Year" in x.columns:
+    if "Global_Citations" in x.columns and "Year" in x.columns:
         general["Average citations per document per year:"] = "{:4.2f}".format(
-            x["Times_Cited"].sum() / (len(x) * (x.Year.max() - x.Year.min() + 1))
+            x["Global_Citations"].sum() / (len(x) * (x.Year.max() - x.Year.min() + 1))
         )
 
     if "Global_References" in x.columns:
@@ -119,6 +119,10 @@ def descriptive_stats(input_file="techminer.csv"):
         authors["Countries:"] = _count_terms(x, "Countries")
         x.pop("Countries")
 
+    if "Country_1st_Author" in x.columns:
+        authors["Countries (1st author):"] = _count_terms(x, "Country_1st_Author")
+        x.pop("Countries")
+
     ##
     ##  Keywords
     ##
@@ -135,7 +139,7 @@ def descriptive_stats(input_file="techminer.csv"):
         x.pop("Author_Keywords_CL")
 
     if "Index_Keywords" in x.columns:
-        keywords["Author Keywords (raw):"] = round(_count_terms(x, "Index_Keywords"))
+        keywords["Index Keywords (raw):"] = round(_count_terms(x, "Index_Keywords"))
         x.pop("Index_Keywords")
 
     if "Index_Keywords_CL" in x.columns:

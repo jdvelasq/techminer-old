@@ -50,7 +50,7 @@ class ScopusImporter:
         self.transform_author_keywords_to_lower_case()
         self.transform_index_keywords_to_lower_case()
         self.remove_copyright_mark_from_abstracts()
-        self.transform_times_cited_NA_to_zero()
+        self.transform_global_citations_NA_to_zero()
         self.format_abb_source_title()
         self.create_historiograph_id()
         self.create_local_references()
@@ -99,7 +99,7 @@ class ScopusImporter:
             "Author(s) ID": "Authors_ID",
             "Authors with affiliations": "Authors_with_affiliations",
             "Authors": "Authors",
-            "Cited by": "Times_Cited",
+            "Cited by": "Global_Citations",
             "CODEN": "CODEN",
             "Correspondence Address": "Correspondence_Address",
             "Document Type": "Document_Type",
@@ -320,13 +320,13 @@ class ScopusImporter:
             lambda w: w[0 : w.find("\u00a9")] if not pd.isna(w) else w
         )
 
-    def transform_times_cited_NA_to_zero(self):
+    def transform_global_citations_NA_to_zero(self):
 
-        if "Times_Cited" not in self.data.columns:
+        if "Global_Citations" not in self.data.columns:
             return
 
-        self.logging_info("Removing <NA> from Times_Cited field ...")
-        self.data["Times_Cited"] = self.data["Times_Cited"].map(
+        self.logging_info("Removing <NA> from Global_Citations field ...")
+        self.data["Global_Citations"] = self.data["Global_Citations"].map(
             lambda w: 0 if pd.isna(w) else w
         )
 

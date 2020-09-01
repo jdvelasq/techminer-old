@@ -185,7 +185,7 @@ class DASHapp(DASH, Model):
             dash.separator(text="Visualization"),
             dash.dropdown(
                 desc="Sort by:",
-                options=["Alphabetic", "Num Documents", "Times Cited", "TF*IDF",],
+                options=["Alphabetic", "Num Documents", "Global Citations", "TF*IDF",],
             ),
             dash.ascending(),
             dash.cmap(),

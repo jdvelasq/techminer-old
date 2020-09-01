@@ -227,7 +227,9 @@ class DASHapp(DASH, Model):
             dash.affinity(),
             dash.linkage(),
             dash.separator(text="Visualization"),
-            dash.dropdown(desc="Top by:", options=["Num Documents", "Times Cited"],),
+            dash.dropdown(
+                desc="Top by:", options=["Num Documents", "Global Citations"],
+            ),
             dash.top_n(),
             dash.x_axis(),
             dash.y_axis(),

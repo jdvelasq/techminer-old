@@ -1,7 +1,3 @@
-
-
-
-
 #     def summarize_by_term_per_term_per_year(
 #         self, column_IDX, column_COL, sep_IDX=None, sep_COL=None, keywords=None
 #     ):
@@ -31,7 +27,7 @@
 #         ...     }
 #         ... )
 #         >>> df
-#            Year                     Authors Author Keywords  Times_Cited   ID
+#            Year                     Authors Author Keywords  Global_Citations   ID
 #         0  2010  author 0;author 1;author 2           w0;w1        10   0
 #         1  2010                    author 0              w0        11   1
 #         2  2011                    author 1              w1        12   2
@@ -40,7 +36,7 @@
 #         5  2014                    author 4              w3        15   5
 
 #         >>> DataFrame(df).summarize_by_term_per_term_per_year('Authors', 'Author Keywords')
-#              Authors Author Keywords  Year  Times_Cited   Num Documents      ID
+#              Authors Author Keywords  Year  Global_Citations   Num Documents      ID
 #         0   author 0              w0  2010        21              2  [0, 1]
 #         1   author 0              w1  2010        10              1     [0]
 #         2   author 1              w0  2010        10              1     [0]
@@ -57,7 +53,7 @@
 #         >>> keywords = Keywords(['author 1', 'author 2', 'author 3', 'w1', 'w3'])
 #         >>> keywords = keywords.compile()
 #         >>> DataFrame(df).summarize_by_term_per_term_per_year('Authors', 'Author Keywords', keywords=keywords)
-#             Authors Author Keywords  Year  Times_Cited   Num Documents   ID
+#             Authors Author Keywords  Year  Global_Citations   Num Documents   ID
 #         0  author 1              w1  2010        10              1  [0]
 #         1  author 2              w1  2010        10              1  [0]
 #         2  author 1              w1  2011        12              1  [2]
@@ -118,7 +114,7 @@
 #         ...     }
 #         ... )
 #         >>> df
-#            Year                     Authors Author Keywords  Times_Cited   ID
+#            Year                     Authors Author Keywords  Global_Citations   ID
 #         0  2010  author 0;author 1;author 2           w0;w1        10   0
 #         1  2010                    author 0              w0        11   1
 #         2  2011                    author 1              w1        12   2
@@ -192,7 +188,7 @@
 #         ...     }
 #         ... )
 #         >>> df
-#            Year                     Authors Author Keywords  Times_Cited   ID
+#            Year                     Authors Author Keywords  Global_Citations   ID
 #         0  2010  author 0;author 1;author 2           w0;w1        10   0
 #         1  2010                    author 0              w0        11   1
 #         2  2011                    author 1              w1        12   2
@@ -201,7 +197,7 @@
 #         5  2014                    author 4              w3        15   5
 
 #         >>> DataFrame(df).citations_by_terms_per_terms_per_year('Authors', 'Author Keywords')
-#              Authors Author Keywords  Year  Times_Cited       ID
+#              Authors Author Keywords  Year  Global_Citations       ID
 #         0   author 0              w0  2010        21  [0, 1]
 #         1   author 0              w1  2010        10     [0]
 #         2   author 1              w0  2010        10     [0]
@@ -218,7 +214,7 @@
 #         >>> keywords = Keywords(['author 1', 'author 2', 'author 3', 'w1', 'w3'])
 #         >>> keywords = keywords.compile()
 #         >>> DataFrame(df).citations_by_terms_per_terms_per_year('Authors', 'Author Keywords', keywords=keywords)
-#             Authors Author Keywords  Year  Times_Cited    ID
+#             Authors Author Keywords  Year  Global_Citations    ID
 #         0  author 1              w1  2010        10  [0]
 #         1  author 2              w1  2010        10  [0]
 #         2  author 1              w1  2011        12  [2]

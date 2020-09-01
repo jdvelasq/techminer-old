@@ -192,7 +192,8 @@ def __TAB1__(data, limit_to, exclude):
             "arg": "top_by",
             "desc": "Top by:",
             "widget": widgets.Dropdown(
-                options=["Num Documents", "Times Cited",], layout=Layout(width="55%"),
+                options=["Num Documents", "Global Citations",],
+                layout=Layout(width="55%"),
             ),
         },
         # 2
