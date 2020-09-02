@@ -3,6 +3,7 @@ Analysis by Term
 ==========================================================================
 
 """
+from nltk.corpus.reader.ieer import documents
 from techminer.core import sort_axis
 from techminer.core import sort_by_axis
 import numpy as np
@@ -730,6 +731,60 @@ class Model:
 
         return fig
 
+    def lotka_law(self):
+
+        data = self.core_authors()
+        percentage_authors = data["%"].map(lambda w: float(w[:-2])).tolist()
+        documents_written = data["Documents written per Author"].tolist()
+
+        matplotlib.rc("font", size=11)
+        fig = plt.Figure(figsize=(self.width, self.height))
+        ax = fig.subplots()
+        cmap = plt.cm.get_cmap(self.cmap)
+        color = cmap(0.6)
+
+        percentage_authors.reverse()
+        documents_written.reverse()
+
+        ax.plot(
+            documents_written,
+            percentage_authors,
+            linestyle="-",
+            linewidth=2,
+            color="k",
+        )
+        ax.fill_between(
+            documents_written, percentage_authors, color=color, alpha=0.6,
+        )
+
+        ##
+        ## Theoretical
+        ##
+        total_authors = data["Num Authors"].max()
+        theoretical = [total_authors / float(x * x) for x in documents_written]
+        total_theoretical = sum(theoretical)
+        perc_theoretical_authors = [w / total_theoretical * 100 for w in theoretical]
+
+        ax.plot(
+            documents_written,
+            perc_theoretical_authors,
+            linestyle=":",
+            linewidth=4,
+            color="K",
+        )
+
+        for x in ["top", "right", "left", "bottom"]:
+            ax.spines[x].set_visible(False)
+
+        ax.grid(axis="y", color="gray", linestyle=":")
+        ax.grid(axis="x", color="gray", linestyle=":")
+        ax.set_ylabel("% of Authors")
+        ax.set_xlabel("Docuemts written per Author")
+
+        fig.set_tight_layout(True)
+
+        return fig
+
 
 ###############################################################################
 ##
@@ -763,6 +818,7 @@ class DASHapp(DASH, Model):
             "Most local cited documents",
             "List of core source titles",
             "Bradford law",
+            "Lotka law",
             "LIMIT TO python code",
         ]
         self.panel_widgets = [
@@ -902,6 +958,7 @@ class DASHapp(DASH, Model):
             "Most local cited documents": {},
             "List of core source titles": {},
             "Bradford law": {},
+            "Lotka law": {},
             "LIMIT TO python code": {
                 "Column:": sorted(
                     [
@@ -1095,6 +1152,18 @@ class DASHapp(DASH, Model):
                 False,
             ],
             "Bradford law": [
+                False,
+                False,
+                True,
+                False,
+                False,
+                False,
+                False,
+                True,
+                True,
+                True,
+            ],
+            "Lotka law": [
                 False,
                 False,
                 True,
