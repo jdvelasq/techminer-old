@@ -38,9 +38,8 @@ def extract_words(data, text):
     ## ======================
 
     ##
-    ##  Working column
+    ##  Reduce text to lower case
     ##
-
     text = text.map(lambda w: w.lower(), na_action="ignore")
 
     ##
@@ -49,12 +48,18 @@ def extract_words(data, text):
     text = text.map(lambda w: " ".join(w.split()), na_action="ignore")
 
     ##
-    ##  Replace keywords in current text
+    ##  Replace compound keywords in current text
     ##
-    for keyword in keywords:
-        if " " in keyword or "_" in keyword:
-            keyword_ = keyword.replace(" ", "_").replace("-", "_")
-            text = text.map(lambda w: w.replace(keyword, keyword_), na_action="ignore")
+    compound_keywords = [keyword for keyword in keywords if len(keyword.split()) > 1]
+    compount_keywords_ = [
+        keyword.replace(" ", "_").replace("-", "_") for keyword in compound_keywords
+    ]
+    text = text.replace(to_replace=compound_keywords, value=compount_keywords_)
+
+    # for keyword in keywords:
+    #     if " " in keyword or "_" in keyword:
+    #         keyword_ = keyword.replace(" ", "_").replace("-", "_")
+    #         text = text.map(lambda w: w.replace(keyword, keyword_), na_action="ignore")
 
     ##
     ##  Phrases spliting
@@ -136,29 +141,41 @@ def extract_words(data, text):
     ##  Remove isolated numbers and other symbols
     ##
     text = text.map(
-        lambda w: [z for z in w if not z.replace("-", "").isdigit()],
+        lambda w: [re.sub(r"[^a-zA-z_\-\s]", "", z) for z in w if z != ""],
         na_action="ignore",
     )
 
+    #  text = text.map(
+    #      lambda w: [z for z in w if not z.replace("-", "").isdigit()],
+    #     na_action="ignore",
+    # )
+
+    # text = text.map(
+    #     lambda w: [z[1:] if z[0] == "-" and len(z) > 1 else z for z in w],
+    #     na_action="ignore",
+    # )
+
+    # text = text.map(lambda w: [z.replace("#", "") for z in w], na_action="ignore",)
     text = text.map(
-        lambda w: [z[1:] if z[0] == "-" and len(z) > 1 else z for z in w],
-        na_action="ignore",
+        lambda w: [z.replace(chr(8220), "") for z in w], na_action="ignore",
     )
-
-    text = text.map(lambda w: [z.replace("#", "") for z in w], na_action="ignore",)
-    text = text.map(lambda w: [z.replace("”", "") for z in w], na_action="ignore",)
-    text = text.map(lambda w: [z.replace("“", "") for z in w], na_action="ignore",)
+    text = text.map(
+        lambda w: [z.replace(chr(8221), "") for z in w], na_action="ignore",
+    )
     text = text.map(
         lambda w: [z.replace(chr(8212), "") for z in w], na_action="ignore",
     )
+    # text = text.map(
+    #     lambda w: [z.replace(chr(8212), "") for z in w], na_action="ignore",
+    # )
     #  text = text.map(
     #      lambda w: [a[1:] if a[0] == chr(8212) and len(a) > 2 else a for a in w],
     #      na_action="ignore",
     #  )
-    text = text.map(
-        lambda w: [a for a in w if not a.replace("-", "").isdigit()], na_action="ignore"
-    )
-    text = text.map(lambda w: [a.replace('"', "") for a in w])
+    # text = text.map(
+    #     lambda w: [a for a in w if not a.replace("-", "").isdigit()], na_action="ignore"
+    # )
+    # text = text.map(lambda w: [a.replace('"', "") for a in w])
     text = text.map(lambda w: [a for a in w if len(a.strip()) > 1])
 
     ##

@@ -26,7 +26,7 @@ setup(
     keywords="bibliograpy",
     platforms="any",
     provides=["techminer"],
-    install_requires=["squarify", "nltk", "cdlib", "pyvis", "networkx"],
+    install_requires=["squarify", "nltk", "cdlib", "pyvis", "networkx", "ipywidgets"],
     packages=["techminer", "techminer.plots", "techminer.core"],
     package_dir={"techminer": "techminer"},
     include_package_data=True,

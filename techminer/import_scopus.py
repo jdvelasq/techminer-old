@@ -13,6 +13,10 @@ from techminer.core.text import remove_accents
 from techminer.core.map import map_
 from techminer.core.extract_country_name import extract_country_name
 
+import warnings
+
+warnings.filterwarnings("ignore")
+
 
 class ScopusImporter:
     def __init__(self, input_file="scopus.csv", output_file="techminer.csv"):
@@ -54,8 +58,8 @@ class ScopusImporter:
         self.format_abb_source_title()
         self.create_historiograph_id()
         self.create_local_references()
-        #  self.extract_title_words()
-        #  self.extract_abstract_words()
+        self.extract_title_words()
+        self.extract_abstract_words()
         self.highlight_author_keywords_in_titles()
         self.highlight_author_keywords_in_abstracts()
         self.compute_bradford_law_zones()
