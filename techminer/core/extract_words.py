@@ -1,12 +1,103 @@
 import re
 import pandas as pd
-import datetime
 
 import nltk
 from nltk.corpus import stopwords
 
+PHRASES = [
+    "according to the results",
+    "as a result",
+    "for this purpose",
+    "in this article",
+    "in this paper",
+    "in this research",
+    "in this study",
+    "in this work",
+    "the aim of this article",
+    "the aim of this paper",
+    "the aim of this research",
+    "the aim of this study",
+    "the aim of this work",
+    "the objective of this article is",
+    "the objective of this article was",
+    "the objective of this paper is",
+    "the objective of this paper was",
+    "the objective of this research is",
+    "the objective of this research was",
+    "the objective of this study is",
+    "the objective of this study was",
+    "the objective of this work is",
+    "the objective of this work was",
+    "the objective of this review is",
+    "the objective of this revew was",
+    "the present article",
+    "the present paper",
+    "the present research",
+    "the present review",
+    "the present study",
+    "the present work",
+    "the proposed method",
+    "the results indicate",
+    "the results obtained indicate",
+    "the results obtained show",
+    "the results obtained showed",
+    "the results show",
+    "the results showed",
+    "this article aiming",
+    "this article aims",
+    "this article describes",
+    "this article evaluates",
+    "this article explored",
+    "this article explores",
+    "this article presents",
+    "this article proposes",
+    "this article starts",
+    "this paper aiming",
+    "this paper aims",
+    "this paper describes",
+    "this paper evaluates",
+    "this paper evaluates",
+    "this paper explored",
+    "this paper explores",
+    "this paper presents",
+    "this paper proposes",
+    "this paper starts",
+    "this research aiming",
+    "this research aims",
+    "this research describes",
+    "this research evaluates",
+    "this research explored",
+    "this research explores",
+    "this research presents",
+    "this research proposes",
+    "this research starts",
+    "this research starts",
+    "this review aiming",
+    "this review aims",
+    "this review article starts",
+    "this review describes",
+    "this review evaluates",
+    "this review explores",
+    "this review paper starts",
+    "this review presents",
+    "this review proposes",
+    "this review starts",
+    "this review study starts",
+    "this review work starts",
+    "this study aiming",
+    "this study aims",
+    "this study describes",
+    "this study evaluates",
+    "this study explores",
+    "this study presents",
+    "this study proposes",
+    "this study starts",
+]
+
 
 def extract_words(data, text):
+
+    STOPWORDS = stopwords.words("english")
 
     ## ======================
     ##
@@ -22,7 +113,7 @@ def extract_words(data, text):
     ##
     ##  Selects not NA records
     ##
-    keywords = keywords[keywords.map(lambda w: not pd.isna(w))]
+    keywords = keywords.dropna()
 
     ##
     ##  Create a set of unique words
@@ -43,9 +134,19 @@ def extract_words(data, text):
     text = text.map(lambda w: w.lower(), na_action="ignore")
 
     ##
+    ## Remove typical phrases
+    ##
+    for phrase in PHRASES:
+        text = text.map(lambda w: w.replace(phrase, ""), na_action="ignore")
+
+    ##
     ##  Replace multiple blank spaces
     ##
-    text = text.map(lambda w: " ".join(w.split()), na_action="ignore")
+    for index in [8216, 8217, 8218, 8219, 8220, 8221, 8222, 8223]:
+        text = text.map(lambda w: w.replace(chr(index), ""), na_action="ignore")
+
+    text = text.map(lambda w: w.replace(" - ", ""), na_action="ignore")
+    text = text.map(lambda w: re.sub(r"[\s+]", " ", w), na_action="ignore",)
 
     ##
     ##  Replace compound keywords in current text
@@ -56,11 +157,6 @@ def extract_words(data, text):
     ]
     text = text.replace(to_replace=compound_keywords, value=compount_keywords_)
 
-    # for keyword in keywords:
-    #     if " " in keyword or "_" in keyword:
-    #         keyword_ = keyword.replace(" ", "_").replace("-", "_")
-    #         text = text.map(lambda w: w.replace(keyword, keyword_), na_action="ignore")
-
     ##
     ##  Phrases spliting
     ##
@@ -70,8 +166,6 @@ def extract_words(data, text):
     ##
     ##  Remove punctuation
     ##
-    text = text.map(lambda w: w.replace(" - ", ""), na_action="ignore")
-
     text = text.map(
         lambda w: w.replace("-", "") if len(w) > 1 and w[-1] == "_" else w,
         na_action="ignore",
@@ -96,9 +190,7 @@ def extract_words(data, text):
             if i_word == len(phrase) - 1:
                 continue
 
-            if phrase[i_word] in stopwords.words("english") or phrase[
-                i_word + 1
-            ] in stopwords.words("english"):
+            if phrase[i_word] in STOPWORDS or phrase[i_word + 1] in STOPWORDS:
                 continue
 
             if "_" in phrase[i_word] or "_" in phrase[i_word + 1]:
@@ -117,7 +209,7 @@ def extract_words(data, text):
         b
         for b in bigrams
         if nltk.pos_tag(b.split(" "))[0][1] + " " + nltk.pos_tag(b.split(" "))[1][1]
-        in ["NN", "JJ NN", "NN NN", "NNS", "NN NNS", "JJ NNS", "NN NNS",]
+        in ["JJ NN", "NN NN", "NNS", "NN NNS", "JJ NNS", "NN NNS",]
     ]
 
     ##
@@ -132,10 +224,7 @@ def extract_words(data, text):
     ##
     ##  Remove stopwords
     ##
-    text = text.map(
-        lambda w: [z for z in w if z not in stopwords.words("english")],
-        na_action="ignore",
-    )
+    text = text.map(lambda w: [z for z in w if z not in STOPWORDS], na_action="ignore",)
 
     ##
     ##  Remove isolated numbers and other symbols
@@ -145,38 +234,7 @@ def extract_words(data, text):
         na_action="ignore",
     )
 
-    #  text = text.map(
-    #      lambda w: [z for z in w if not z.replace("-", "").isdigit()],
-    #     na_action="ignore",
-    # )
-
-    # text = text.map(
-    #     lambda w: [z[1:] if z[0] == "-" and len(z) > 1 else z for z in w],
-    #     na_action="ignore",
-    # )
-
-    # text = text.map(lambda w: [z.replace("#", "") for z in w], na_action="ignore",)
-    text = text.map(
-        lambda w: [z.replace(chr(8220), "") for z in w], na_action="ignore",
-    )
-    text = text.map(
-        lambda w: [z.replace(chr(8221), "") for z in w], na_action="ignore",
-    )
-    text = text.map(
-        lambda w: [z.replace(chr(8212), "") for z in w], na_action="ignore",
-    )
-    # text = text.map(
-    #     lambda w: [z.replace(chr(8212), "") for z in w], na_action="ignore",
-    # )
-    #  text = text.map(
-    #      lambda w: [a[1:] if a[0] == chr(8212) and len(a) > 2 else a for a in w],
-    #      na_action="ignore",
-    #  )
-    # text = text.map(
-    #     lambda w: [a for a in w if not a.replace("-", "").isdigit()], na_action="ignore"
-    # )
-    # text = text.map(lambda w: [a.replace('"', "") for a in w])
-    text = text.map(lambda w: [a for a in w if len(a.strip()) > 1])
+    text = text.map(lambda w: [a.strip() for a in w if len(a.strip()) > 1])
 
     ##
     ##  Word tagging and selection
@@ -213,5 +271,7 @@ def extract_words(data, text):
     ##  Verification
     ##
 
-    result = [";".join(w) for w in result]
+    result = [";".join(sorted([a.strip() for a in w])) for w in result]
+    result = [w.replace(";the ", ";") for w in result]
+    result = [w for w in result if len(w) > 2]
     return result
