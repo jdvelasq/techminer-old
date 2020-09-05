@@ -5,6 +5,8 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
+from techminer.core.thesaurus import load_file_as_dict
+
 
 def bigram_finder(text):
     bigrams = nltk.Text(word_tokenize(text)).collocation_list()
@@ -16,6 +18,14 @@ def bigram_finder(text):
 
 
 def extract_words(data, text):
+    #
+    def translate_bg2am(x):
+        z = [bg2am_[z] if z in bg2am_.keys() else z for z in x.split()]
+        return " ".join(z)
+
+    def translate_am2bg(x):
+        z = [am2bg_[z] if z in am2bg_.keys() else z for z in x.split()]
+        return " ".join(z)
 
     STOPWORDS = stopwords.words("english")
 
@@ -29,6 +39,39 @@ def extract_words(data, text):
     keywords = sorted(list(set(keywords)))
 
     ##
+    ##  Select compound keywords
+    ##
+    candidates = [word.split() for word in keywords]
+    candidates = [word for word in candidates if len(word) > 1]
+
+    ##
+    ##  Load dictionaries
+    ##
+    module_path = dirname(__file__)
+    filename = join(module_path, "../data/bg2am.data")
+    bg2am_ = load_file_as_dict(filename)
+    bg2am_ = {key: bg2am_[key][0] for key in bg2am_}
+    am2bg_ = {value: key for key in bg2am_.keys() for value in bg2am_[key]}
+
+    ##
+    ##  British to American spelling
+    ##
+    candidates_bg2am = [[translate_bg2am(w) for w in word] for word in candidates]
+    candidates_bg2am = [" ".join(word) for word in candidates_bg2am]
+    candidates_bg2am = [word for word in candidates_bg2am if word not in keywords]
+    if len(candidates_bg2am) > 0:
+        keywords += candidates_bg2am
+
+    ##
+    ## American to British spelling
+    ##
+    candidates_am2bg = [[translate_am2bg(w) for w in word] for word in candidates]
+    candidates_am2bg = [" ".join(word) for word in candidates_am2bg]
+    candidates_am2bg = [word for word in candidates_am2bg if word not in keywords]
+    if len(candidates_am2bg) > 0:
+        keywords += candidates_am2bg
+
+    ##
     ##  Text normalization -- lower case
     ##
     text = text.map(lambda w: w.lower(), na_action="ignore")
@@ -38,7 +81,8 @@ def extract_words(data, text):
     compound_keywords_ = [
         keyword.replace(" ", "_").replace("-", "_") for keyword in compound_keywords
     ]
-    text = text.replace(to_replace=compound_keywords, value=compound_keywords_)
+    for a, b in zip(compound_keywords, compound_keywords_):
+        text = text.map(lambda w: w.replace(a, b))
 
     ##
     ## Collocations
@@ -76,17 +120,41 @@ def extract_words(data, text):
     ##
     ##  Word tagging and selection
     ##
+    ##     import nltk
+    ##     nltk.download('tagsets')
+    ##     #nltk.help.upenn_tagset()
+    ##
+    ##  nouns:
+    ##      NN:  noun, common, singular or mass
+    ##      NNS: noun, common, plural
+    ##  verbs:
+    ##      VB:  verb, base form
+    ##      VBG: verb, present participle or gerund
+    ##  adjectives:
+    ##      JJ:  adjective or numeral, ordinal
+    ##      JJR: adjective, comparative
+    ##      JJS: adjective, superlative
+    ##  adverbs
+    ##      RB:  adverb
+    ##      RBR: adverb, comparative
+    ##      RBS: adverb, superlative
+    ##
     text = text.map(lambda w: [word for word in w if word != ""], na_action="ignore")
     text = text.map(lambda w: nltk.pos_tag(w), na_action="ignore")
     text = text.map(
         lambda w: [
             z[0]
             for z in w
-            if z[1] in ["DT", "JJ", "NN", "NNS", "RB", "VBD", "VBG", "VBP", "VBZ",]
+            if z[1] in ["NN", "NNS", "VB", "VBG", "JJ", "JJR", "JJS", "RBR", "RBS"]
             or "_" in z[0]
             or z[0] in keywords
         ]
     )
+
+    ##
+    ## Drop duplicates
+    ##
+    text = text.map(lambda w: list(set(w)))
 
     ##
     ##  Checks:

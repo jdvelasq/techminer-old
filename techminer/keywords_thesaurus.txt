@@ -8,8 +8,7 @@ academic
     academic
 accelerate
     accelerate
-accept
-    accept
+acceptability
     acceptability
     acceptance
 access
@@ -17,36 +16,26 @@ access
     accessibility
 accidents
     accidents
-accommodate
-    accommodate
 accompanying
     accompanying
-accomplish
-    accomplish
 according
     according
-accordingly
-    accordingly
 account
     account
-accrue
-    accrue
+accruing
     accruing
 accuracy
     accuracy
 accurate
     accurate
-    accurately
 achieve
     achieve
-    achieved
     achieving
 acknowledgment
     acknowledgment
 acquisition
     acquisition
-act
-    act
+acting
     acting
 action spaces
     action spaces
@@ -61,7 +50,6 @@ actor
     actors
 actual
     actual
-    actually
 adapt
     adapt
     adaptation
@@ -72,8 +60,6 @@ adaptive dynamic programming
     adaptive dynamic programming
 adaptive management
     adaptive management
-add
-    add
 added
     added
 added-value
@@ -84,7 +70,6 @@ addedvalue
 addition
     addition
     additional
-    additionally
 additional costs
     additional costs
 address
@@ -94,18 +79,14 @@ address
     addressing
 adequate
     adequate
-    adequately
 adjusted
     adjusted
-administration
-    administration
+administrations
     administrations
     administrative
 administrative measures
     administrative measures
-adopt
-    adopt
-    adopted
+adopting
     adopting
     adoption
 adoption factors
@@ -129,8 +110,6 @@ affect
     affects
 affordable
     affordable
-afore
-    afore
 afterwards
     afterwards
 agency
@@ -143,14 +122,10 @@ agent
 agent based simulation
     agent based simulation
     agent-based simulation
-agent-based
-    agent-based
 agent-based modelling
     agent-based modelling
 aggregate
     aggregate
-agreed
-    agreed
 agreement
     agreement
     agreements
@@ -160,24 +135,22 @@ agricultural products
     agricultural products
 agricultural products based
     agricultural products based
-ahead
-    ahead
 ahp
     ahp
 aid
     aid
 aim
     aim
-    aimed
     aiming
     aims
-air
-    air
 air pollutants
     air pollutants
     air pollution
+    air pollutions
 air quality
     air quality
+air quality problems
+    air quality problems
 airport
     airport
 algorithm
@@ -185,36 +158,28 @@ algorithm
     algorithms
 algorithm-based
     algorithm-based
+alleviate
+    alleviate
 alliances
     alliances
-allocate
-    allocate
+allocating
     allocating
     allocation
     allocations
-allocated urban
-    allocated urban
 allocation model
     allocation model
     allocation models
+allocation problems
+    allocation problems
 allof
     allof
 allow
     allow
-    allowed
     allowing
-    allows
-alone
-    alone
-already
-    already
 already-known
     already-known
-also
-    also
 alternative
     alternative
-    alternatively
     alternatives
 alternative clc locations
     alternative clc locations
@@ -224,10 +189,6 @@ alternative solutions
     alternative solutions
 alternativesone using
     alternativesone using
-always
-    always
-american
-    american
 amongst
     amongst
 amount
@@ -238,12 +199,9 @@ an integration platform
     an integration platform
 analyse
     analyse
-    analysed
     analyses
     analysing
     analyze
-    analyzed
-    analyzes
     analyzing
 analysis
     analysis
@@ -262,9 +220,6 @@ andor
     andor
 annual
     annual
-    annually
-another
-    another
 answer
     answer
     answers
@@ -272,13 +227,12 @@ antecedent
     antecedent
 anticipate
     anticipate
+    anticipated
 antwerp
     antwerp
-anymore
-    anymore
-appearance
+appear
+    appear
     appearance
-    appears
 applicability
     applicability
     applicable
@@ -292,11 +246,6 @@ applied
     applies
     apply
     applying
-appraised
-    appraised
-    appraises
-appreciated
-    appreciated
 approach
     approach
     approaches
@@ -304,11 +253,8 @@ appropriate
     appropriate
 appropriate conditions
     appropriate conditions
-approximate
-    approximate
-    approximates
-    approximation
-    approximations
+appropriate location
+    appropriate location
 approximate dynamic programming
     approximate dynamic programming
 approximation algorithms
@@ -350,11 +296,9 @@ assigning
     assigning
     assignment
     assignments
-associated
-    associated
+associations
     associations
-assumed
-    assumed
+assuming
     assuming
 assumptions
     assumptions
@@ -362,10 +306,6 @@ asymptotic stable state
     asymptotic stable state
 atmospheric
     atmospheric
-attached
-    attached
-attained
-    attained
 attempts
     attempts
 attention
@@ -407,43 +347,29 @@ availability
     available
 average
     average
-    averaging
 average numbers
     average numbers
-avoided
-    avoided
-back
-    back
 back-load
     back-load
-badly
-    badly
 balance
     balance
 banking
     banking
-barcelona
-    barcelona
 barge
     barge
-barriers
+barrier
+    barrier
     barriers
-based
-    based
 basis
     basis
 basis functions
     basis functions
-batches
-    batches
 bath
     bath
-battery
-    battery
 battery electric vehicles
     battery electric vehicles
-baumol-wolfe
-    baumol-wolfe
+baumol-wolfe method
+    baumol-wolfe method
 bay
     bay
 bbfcc
@@ -461,21 +387,16 @@ behavior
     behavioural
 behavioral research
     behavioral research
-beijing
-    beijing
 beijing city
     beijing city
+beijing city logistics
+    beijing city logistics
 belgian
     belgian
 belgium
     belgium
-belgrade
-    belgrade
 beliefs
     beliefs
-believe
-    believe
-    believed
 belongs
     belongs
 benchmark
@@ -492,10 +413,12 @@ benefit
     benefits
 berbah
     berbah
+best
+    best
 best alternative
     best alternative
-bestworst
-    bestworst
+better
+    better
 bi-objective
     bi-objective
 bi-objective programming
@@ -514,10 +437,6 @@ big
     big
 big data applications
     big data applications
-bikes
-    bikes
-bikesnetherlands
-    bikesnetherlands
 binary
     binary
 binary particle swarm optimization (bpso)
@@ -539,17 +458,11 @@ bottom-up
     bottom-up
 bottom-up model
     bottom-up model
-bound
-    bound
 boundary
     boundary
 box
     box
     boxes
-bpso
-    bpso
-branch
-    branch
 branch and bound method
     branch and bound method
 brazil
@@ -560,8 +473,7 @@ brazilian historical cities
     brazilian historical cities
 break-even
     break-even
-bridge
-    bridge
+bridging
     bridging
 bring
     bring
@@ -598,16 +510,12 @@ brussels-capital region
     brussels-capital region
 bss
     bss
-budget
-    budget
 budget control
     budget control
 buffer
     buffer
-build
-    build
+building
     building
-    buildings
 bulk
     bulk
 bundle
@@ -629,8 +537,6 @@ business model designs
     business model designs
 buyer-supplier
     buyer-supplier
-buys
-    buys
 bwm
     bwm
 bwmedas
@@ -646,13 +552,8 @@ calculate
     calculation
 calibration
     calibration
-call
-    call
-    called
 camden
     camden
-cameras
-    cameras
 campaigns
     campaigns
 candidate
@@ -667,15 +568,11 @@ cap and trade
     cap and trade
 capable
     capable
-capacitated
-    capacitated
 capacities
     capacities
     capacity
 capital
     capital
-car
-    car
 car accidents
     car accidents
 carbon
@@ -689,12 +586,12 @@ carbon emission
     carbon emissions
 carbon footprint
     carbon footprint
-carefully
-    carefully
 cargo
     cargo
 cargo bikes
     cargo bikes
+cargo bikesnetherlands
+    cargo bikesnetherlands
 cargo consolidation
     cargo consolidation
 cargo handling
@@ -710,8 +607,6 @@ carrier
     carriers
 carrier-led
     carrier-led
-carriershipper
-    carriershipper
 case
     case
     cases
@@ -733,7 +628,6 @@ catering
 cause
     cause
     caused
-    causes
     causing
 cba
     cba
@@ -741,19 +635,17 @@ cbd
     cbd
 ccps
     ccps
-cdu
-    cdu
+cdus
     cdus
 cedt
     cedt
 center
     center
-    centered
     centers
     centre
     centres
-center-of-gravity
-    center-of-gravity
+center of gravity model
+    center of gravity model
 central
     central
     centralized
@@ -761,8 +653,6 @@ centre located
     centre located
 centre using
     centre using
-centremudc
-    centremudc
 centrethe
     centrethe
 centros de distribuicao urbana
@@ -796,7 +686,6 @@ chapter
 characterise
     characterise
     characterize
-    characterized
 characteristic
     characteristic
     characteristics
@@ -808,20 +697,15 @@ china
 choice
     choice
     choices
-choose
-    choose
+choosing
     choosing
-chose
-    chose
 circle
     circle
-circulate
-    circulate
+circulation
     circulation
 cities
     cities
     city
-    citys
 citizens
     citizens
 city center
@@ -834,15 +718,21 @@ city distribution
 city distribution center
     city distribution center
     city distribution centers
+    city distribution centre
+    city distribution centres
+city distribution of goods
+    city distribution of goods
 city logistic
     city logistic
     city logistics
-city logistics business
-    city logistics business
 city logistics center
     city logistics center
     city logistics centers
     city logistics centre
+city logistics distribution
+    city logistics distribution
+city logistics distribution center
+    city logistics distribution center
 city logistics distribution network
     city logistics distribution network
 city logistics initiatives
@@ -851,8 +741,11 @@ city logistics measures
     city logistics measures
 city logistics platform
     city logistics platform
+city logistics services
+    city logistics services
 city logistics system
     city logistics system
+    city logistics systems
 city planning
     city planning
 city-freighters
@@ -872,8 +765,6 @@ classic
 classification
     classification
     classification (of information)
-classified
-    classified
 clc
     clc
 clean
@@ -883,13 +774,10 @@ clearance
 client
     client
     clients
-climate
-    climate
 climate change
     climate change
 close
     close
-    closely
 closer
     closer
 clt
@@ -906,6 +794,8 @@ cluster computing
     cluster computing
 clustering algorithms
     clustering algorithms
+co emissions
+    co emissions
 co-creation
     co-creation
 co2 emissions
@@ -915,19 +805,20 @@ coefficient
     coefficients
 coeq emissions per parcel delivered
     coeq emissions per parcel delivered
-collaborate
-    collaborate
-    collaborated
+collaboration
     collaboration
     collaborative
 collaborative information portals
     collaborative information portals
 collaborative integration
     collaborative integration
+collaborative integration platform
+    collaborative integration platform
 collaborative logistics
     collaborative logistics
 collaborative network
     collaborative network
+    collaborative networks
 collaborative urban logistics
     collaborative urban logistics
 collect
@@ -935,7 +826,6 @@ collect
     collected
     collecting
     collection
-    collective
 columns
     columns
 combination
@@ -945,8 +835,6 @@ combination
     combined
     combines
     combining
-combinatorial
-    combinatorial
 combinatorial optimization
     combinatorial optimization
 combinatorial search
@@ -976,8 +864,7 @@ commodities
     commodities
 common
     common
-communicated
-    communicated
+communications
     communications
     community
 compact
@@ -985,19 +872,16 @@ compact
 companies
     companies
     company
-comparative
-    comparative
-    compare
-    compares
-    comparing
 comparative analysis
     comparative analysis
+compare
+    compare
+    comparing
 comparison
     comparison
 compatibility
     compatibility
-compete
-    compete
+competence
     competence
     competing
 competition
@@ -1022,11 +906,8 @@ component-wise core
     component-wise cores
 components
     components
-composed
-    composed
+composing
     composing
-compounded
-    compounded
 comprehensive
     comprehensive
 comprises
@@ -1066,18 +947,15 @@ concern
     concern
     concerning
     concerns
-concluded
-    concluded
+concludes
     concludes
-conclusion
-    conclusion
+conclusions
     conclusions
 condition
     condition
     conditions
 conduct
     conduct
-    conducted
     conducting
     conducts
 conference proceeding
@@ -1086,9 +964,6 @@ confidentiality
     confidentiality
 configurations
     configurations
-confirmed
-    confirmed
-    confirms
 conflicting
     conflicting
 conflicting objectives
@@ -1104,36 +979,26 @@ conjunction
     conjunction
 connect
     connect
-    connected
     connecting
     connection
     connectivity
-    connects
 consensus
     consensus
-consequently
-    consequently
 conservation
     conservation
 consider
     consider
-    considered
     considering
     considers
 considerable
     considerable
-    considerably
     consideration
     considerations
-consignees
-    consignees
 consignments
     consignments
 consistent
     consistent
-    consistently
     consisting
-    consists
 consolidate
     consolidate
     consolidated
@@ -1148,7 +1013,7 @@ consolidated freight terminal
     consolidated freight terminal
 consolidation center
     consolidation center
-    consolidation centre
+    consolidation centers
     consolidation centres
 consolidation facility
     consolidation facility
@@ -1158,14 +1023,11 @@ consolidation scenarios
     consolidation scenarios
 consolidation strategies
     consolidation strategies
-constituted
-    constituted
 constraint
     constraint
     constraints
 construct
     construct
-    constructed
     construction
 construction development
     construction development
@@ -1188,8 +1050,7 @@ container ship
     container ship
 container terminal
     container terminal
-content
-    content
+    container terminals
 content analysis
     content analysis
 context
@@ -1199,21 +1060,17 @@ contiguous
     contiguous
 continue
     continue
-    continued
     continuous
-    continuously
-continuous approximation (ca)
+continuous approximation
+    continuous approximation
     continuous approximation (ca)
     continuous approximations
 continuous approximation methods
     continuous approximation methods
 contracts
     contracts
-contradict
-    contradict
 contribute
     contribute
-    contributed
     contributes
     contributing
     contribution
@@ -1266,10 +1123,7 @@ corporate
     corporate
 corporate social responsibility
     corporate social responsibility
-correctly
-    correctly
-correlated
-    correlated
+correlation
     correlation
 correspond
     correspond
@@ -1282,6 +1136,8 @@ cost accounting
     cost accounting
 cost allocation
     cost allocation
+cost allocation model
+    cost allocation model
 cost analysis
     cost analysis
 cost and benefit analysis
@@ -1289,19 +1145,17 @@ cost and benefit analysis
 cost benefit analysis
     cost benefit analysis
     cost-benefit analysis
+cost effective distance of transport
+    cost effective distance of transport
+    cost-effective distance of transport
 cost effectiveness
     cost effectiveness
-    cost-effective
 cost reduction
     cost reduction
 cost savings
     cost savings
 cost-attractiveness
     cost-attractiveness
-cost-benefit
-    cost-benefit
-cost-effective distance of transport
-    cost-effective distance of transport
 cost-efficient
     cost-efficient
 cost-minimizing
@@ -1310,12 +1164,8 @@ cost-relationships
     cost-relationships
 costdue
     costdue
-counterbalanced
-    counterbalanced
 countries
     countries
-coupled
-    coupled
 cover
     cover
     covered
@@ -1324,17 +1174,14 @@ cplex
     cplex
 crashworthiness
     crashworthiness
-create
-    create
-    created
+creates
     creates
     creating
 creation
     creation
 credible
     credible
-credit
-    credit
+credits
     credits
 criteria
     criteria
@@ -1363,7 +1210,6 @@ cultural
     cultural
 current
     current
-    currently
 current barriers
     current barriers
 current status
@@ -1391,8 +1237,6 @@ customer-specific
     customer-specific
 cycles
     cycles
-czech
-    czech
 czech republic
     czech republic
 daily
@@ -1426,12 +1270,12 @@ deal
 decade
     decade
     decades
-decided
-    decided
+deciding
     deciding
 decision
     decision
     decisions
+    decisive
 decision criterions
     decision criterions
 decision hierarchy structure
@@ -1456,10 +1300,6 @@ decision-making systems
     decision-making systems
 decompose
     decompose
-    decomposed
-    decomposes
-decomposition
-    decomposition
 decomposition strategy
     decomposition strategy
 decoupling
@@ -1470,22 +1310,16 @@ decrease
 define
     define
     defined
-    defines
 definition
     definition
-degraded
-    degraded
 degree
     degree
     degrees
 delay
     delay
     delays
-deliberation
-    deliberation
 deliver
     deliver
-    delivered
     delivering
 deliveries
     deliveries
@@ -1502,13 +1336,12 @@ delivery platform
     delivery platform
 delivery service
     delivery service
+    delivery services
 delivery systems
     delivery systems
 delivery vehicle
     delivery vehicle
     delivery vehicles
-delphi
-    delphi
 delphi method
     delphi method
 demand
@@ -1527,8 +1360,6 @@ demerits
     demerits
 demonstrate
     demonstrate
-    demonstrated
-    demonstrates
     demonstrating
     demonstration
 denmark
@@ -1543,7 +1374,6 @@ depend
     depend
     dependent
     depending
-    depends
 deploy
     deploy
     deployment
@@ -1558,8 +1388,6 @@ deriving
     deriving
 describe
     describe
-    described
-    describes
     describing
 description
     description
@@ -1567,16 +1395,12 @@ description
 design
     design
     designing
-    designs
-designmethodologyapproach
-    designmethodologyapproach
 desirable
     desirable
     desired
 destination
     destination
     destinations
-    destined
 destinationorigin
     destinationorigin
 detail
@@ -1589,16 +1413,15 @@ deterioration
 determination
     determination
     determine
-    determined
     determining
 devastation
     devastation
-developed
+develop
+    develop
     developed
     developing
     development
     developments
-    develops
 developing countries
     developing countries
 dialogue
@@ -1613,8 +1436,7 @@ diesel truck
     diesel truck
 diesel vehicles
     diesel vehicles
-differ
-    differ
+difference
     difference
     differences
     different
@@ -1641,20 +1463,13 @@ dijkstra algorithms
 dimensioning
     dimensioning
     dimensions
-dioxide
-    dioxide
 direct
     direct
-    directed
     direction
 directed towards
     directed towards
-directly
-    directly
 disaggregate
     disaggregate
-disagreed
-    disagreed
 disappear
     disappear
 discharge
@@ -1674,7 +1489,6 @@ discrete-event
 discuss
     discuss
     discussed
-    discusses
     discussion
 diseases
     diseases
@@ -1682,17 +1496,11 @@ disparities
     disparities
 dispatch
     dispatch
-    dispatched
     dispatches
-    dispatching
 dispatching problem
     dispatching problem
 disruption
     disruption
-dissatisfaction
-    dissatisfaction
-dissatisfied
-    dissatisfied
 distance
     distance
     distances
@@ -1733,22 +1541,19 @@ distribution plan
     distribution plan
 distribution system
     distribution system
+distributionmore
+    distributionmore
 distributor
     distributor
 district
     district
 disturbance
     disturbance
-disused
-    disused
 divergences
     divergences
     divergent
-diversify
-    diversify
 divide
     divide
-    divided
 documents
     documents
 doi
@@ -1760,39 +1565,23 @@ domestic
     domestic
 dominant
     dominant
-    dominate
-doomed
-    doomed
-double
-    double
 double auction
     double auction
 downstream
     downstream
 downtown
     downtown
-downtownperspectives
-    downtownperspectives
 drawing
     drawing
     draws
-drawn
-    drawn
-drive
-    drive
-    driving
-driven
-    driven
 drivers
     drivers
+driving
+    driving
 driving distance
     driving distance
 dropouts
     dropouts
-dropped
-    dropped
-drosophila
-    drosophila
 drosophila melanogaster
     drosophila melanogaster
 dual
@@ -1803,8 +1592,6 @@ due
     due
 dutch
     dutch
-dvs
-    dvs
 dynamic
     dynamic
     dynamics
@@ -1826,14 +1613,11 @@ eco-friendly
     eco-friendly
 eco-friendly delivery vans
     eco-friendly delivery vans
-ecofriendly
-    ecofriendly
 ecological
     ecological
 economic
     economic
     economical
-    economically
     economics
 economic activities
     economic activities
@@ -1867,7 +1651,6 @@ edas
 effect
     effect
     effective
-    effectively
     effectiveness
     effects
 effectual
@@ -1876,16 +1659,12 @@ efficiencies
     efficiencies
     efficiency
     efficient
-    efficiently
 efficient managements
     efficient managements
 efforts
     efforts
-either
-    either
 elaborate
     elaborate
-    elaborated
 elastic
     elastic
 electric
@@ -1903,8 +1682,6 @@ electrical engineering
     electrical engineering
 electrically-assisted
     electrically-assisted
-electricallyassisted
-    electricallyassisted
 electron transitions
     electron transitions
 electronic
@@ -1918,17 +1695,9 @@ eliciting
     eliciting
 eliminate
     eliminate
-elucidate
-    elucidate
-embed
-    embed
-embedded
-    embedded
 embedded systems
     embedded systems
-emerge
-    emerge
-    emerged
+emergence
     emergence
 emission
     emission
@@ -1938,26 +1707,18 @@ emission control
 emissions reduction
     emissions reduction
     emissions reductions
-emitted
-    emitted
 emphasis
     emphasis
-emphasised
-    emphasised
 empirical
     empirical
 employees
     employees
-employs
-    employs
 empty
     empty
 enable
     enable
-    enabled
     enabler
     enablers
-    enables
     enabling
 encompasses
     encompasses
@@ -1965,7 +1726,6 @@ encourage
     encourage
 end
     end
-    ends
 end consumer movements
     end consumer movements
 energies
@@ -1981,10 +1741,8 @@ energy usage
     energy usage
 energy utilization
     energy utilization
-enfield
-    enfield
-engineering
-    engineering
+engage
+    engage
 engineering method
     engineering method
     engineering methods
@@ -1992,16 +1750,14 @@ enhance
     enhance
 enlarge
     enlarge
-enough
-    enough
 enrichment
     enrichment
-ensures
+ensure
+    ensure
     ensures
     ensuring
 entail
     entail
-    entails
 enter
     enter
 enter-of-gravity model
@@ -2009,8 +1765,6 @@ enter-of-gravity model
 enterprise
     enterprise
     enterprises
-enthusiasm
-    enthusiasm
 entire
     entire
 entirety
@@ -2027,12 +1781,10 @@ envelope
     envelope
 environment
     environment
-    environments
 environment friendliness
     environment friendliness
 environmental
     environmental
-    environmentally
 environmental and social sustainability
     environmental and social sustainability
 environmental aspects
@@ -2058,6 +1810,7 @@ environmental protection agency
     environmental protection agency
 environmental standpoint
     environmental standpoint
+    environmental standpoints
 environmental sustainability
     environmental sustainability
 environmentally friendly
@@ -2080,17 +1833,12 @@ equity-efficiency
 equivalence
     equivalence
     equivalent
-error
-    error
 escalation
     escalation
-especially
-    especially
 essential
     essential
-    essentially
-established
-    established
+establish
+    establish
     establishes
     establishing
     establishment
@@ -2098,7 +1846,6 @@ estate
     estate
 estimate
     estimate
-    estimated
     estimates
     estimating
     estimation
@@ -2119,8 +1866,6 @@ european union
     european union
 evaluate
     evaluate
-    evaluated
-    evaluates
     evaluating
     evaluation
     evaluations
@@ -2130,18 +1875,13 @@ evaluation framework
     evaluation framework
 evaluation values
     evaluation values
-even
-    even
 event
     event
 eventual
     eventual
-    eventually
 evidence
     evidence
     evident
-evidenced
-    evidenced
 evolution
     evolution
 evolutionary game
@@ -2157,19 +1897,14 @@ ex-ante
     ex-ante
 ex-ante assessment
     ex-ante assessment
-ex-post
-    ex-post
-exacerbated
-    exacerbated
+ex-post evaluations
+    ex-post evaluations
 exact
     exact
 exact method
     exact method
-examination
-    examination
+examine
     examine
-    examined
-    examines
     examining
 example
     example
@@ -2178,8 +1913,6 @@ exceed
     exceed
 excellent
     excellent
-exceptionally
-    exceptionally
 excessive
     excessive
 exchange
@@ -2189,29 +1922,21 @@ executing
     executing
 exemplary
     exemplary
-exemplified
-    exemplified
 exhaust gas
     exhaust gas
 exhaustive
     exhaustive
-exhibit
-    exhibit
+exhibitions
     exhibitions
     exhibits
-exist
-    exist
+existing
     existing
-expanded
-    expanded
+expanding
     expanding
 expansion
     expansion
 expectations
     expectations
-    expected
-expend
-    expend
 expensive
     expensive
 experience
@@ -2226,8 +1951,6 @@ experimental economics
 expert
     expert
     experts
-explain
-    explain
 explanation
     explanation
 explicit
@@ -2236,18 +1959,12 @@ exploratory
     exploratory
 explore
     explore
-    explores
 exports
     exports
-expressed
-    expressed
-extend
-    extend
-    extended
+extending
     extending
 extensive
     extensive
-    extensively
 extent
     extent
 external
@@ -2263,8 +1980,6 @@ extra-regional
     extra-regional
 extra-urban
     extra-urban
-extrapolate
-    extrapolate
 f-ahp
     f-ahp
 f-statistics
@@ -2273,11 +1988,9 @@ fabric
     fabric
 face
     face
-    faces
     facing
 facilitate
     facilitate
-    facilitated
 facilities
     facilities
     facility
@@ -2286,12 +1999,13 @@ facility layout
 facility location
     facility location
     facility locations
-    facility-location
 facility location model
     facility location model
     facility location models
 facility location problem
     facility location problem
+facility-location decisions
+    facility-location decisions
 fact
     fact
 factor
@@ -2303,27 +2017,21 @@ factorial analysis
     factorial analysis
 fail
     fail
-    failed
     failing
-    fails
 failure
     failure
-fairly
-    fairly
 fairness
     fairness
 fall
     fall
-fanally
-    fanally
 fano
     fano
-far
-    far
 fashion
     fashion
 fast
     fast
+faster
+    faster
 fatores localizacao
     fatores localizacao
 favorable
@@ -2344,18 +2052,17 @@ feasibility study
     feasibility study
 feature
     feature
-    featured
     features
 feature-the
     feature-the
 feeder
     feeder
-fell
-    fell
 fes
     fes
 fevs
     fevs
+fewer
+    fewer
 fez
     fez
 field
@@ -2363,17 +2070,12 @@ field
     fields
 field-tested
     field-tested
-figures
-    figures
 fill
     fill
-filtering
-    filtering
 filtering method
     filtering method
 final
     final
-    finally
 final decision
     final decision
 final evaluation value
@@ -2383,7 +2085,6 @@ finance
     financing
 financial
     financial
-    financially
 financial balance
     financial balance
 financial incentives
@@ -2394,18 +2095,13 @@ find
     find
     finding
     findings
-finite
-    finite
 first
     first
 first-time
     first-time
-firstly
-    firstly
 fish
     fish
-fit
-    fit
+fitting
     fitting
 five grades
     five grades
@@ -2419,9 +2115,6 @@ fleet operations
 flexibility
     flexibility
     flexible
-flies
-    flies
-    fly
 floor
     floor
 flow
@@ -2442,14 +2135,11 @@ fmagdm
     fmagdm
 focus
     focus
-focused
-    focused
-    focuses
+focusing
     focusing
 fold
     fold
-followed
-    followed
+following
     following
 food
     food
@@ -2459,8 +2149,6 @@ forecast
     forecast
     forecasting
     forecasts
-foreseen
-    foreseen
 form
     form
     forms
@@ -2480,8 +2168,6 @@ fossil
     fossil
 foster
     foster
-found
-    found
 foundation
     foundation
 four-element
@@ -2494,7 +2180,6 @@ frame
     frame
 framework
     framework
-    frameworks
 france
     france
 franchises
@@ -2516,7 +2201,8 @@ freight consolidation
 freight consolidation center
     freight consolidation center
     freight consolidation centers
-    freight consolidation centre
+freight consolidation facility
+    freight consolidation facility
 freight consolidation policy
     freight consolidation policy
 freight deliveries
@@ -2526,8 +2212,6 @@ freight delivering
     freight delivering
 freight demand
     freight demand
-freight distribution
-    freight distribution
 freight distribution network
     freight distribution network
 freight facilities
@@ -2544,8 +2228,6 @@ freight modeling
     freight modeling
 freight scheme evaluation
     freight scheme evaluation
-freight terminal location
-    freight terminal location
 freight terminals
     freight terminals
 freight traffic
@@ -2553,6 +2235,7 @@ freight traffic
 freight transport
     freight transport
     freight transportation
+    freight transports
     transporting freight
 freight transport externalities
     freight transport externalities
@@ -2567,22 +2250,20 @@ frequent
     frequent
 fresh
     fresh
-friendliness
-    friendliness
+friendly
     friendly
 frisian islands
     frisian islands
 frontier
     frontier
-fruit
-    fruit
-    fruits
 fruit and vegetable distribution
     fruit and vegetable distribution
 fruit flies
     fruit flies
 fruit fly optimization algorithm
     fruit fly optimization algorithm
+fruits
+    fruits
 fruits and vegetables
     fruits and vegetables
 fruits and vegetables hall
@@ -2591,17 +2272,12 @@ fruits and vegetables market halls
     fruits and vegetables market halls
 fuel
     fuel
-    fuels
 fuelled-electric vehicles
     fuelled-electric vehicles
-fukuoka
-    fukuoka
 fulfills
     fulfills
 full
     full
-fully
-    fully
 fully electric vehicles
     fully electric vehicles
 fully operational
@@ -2620,6 +2296,7 @@ functional organization
     functional organization
 functional requirement
     functional requirement
+    functional requirements
 fundamental
     fundamental
 funders
@@ -2674,7 +2351,6 @@ gaia
     gaia
 gain
     gain
-    gained
     gaining
     gains
 gain-sharing
@@ -2688,26 +2364,19 @@ game theory
 gap
     gap
     gaps
-gas
-    gas
 gas emissions
     gas emissions
 gas-powered
     gas-powered
-gases
-    gases
 gates
     gates
 general
     general
     generality
-    generally
     generate
     generated
     generates
     generation
-genetic
-    genetic
 genetic algorithm
     genetic algorithm
     genetic algorithms
@@ -2726,7 +2395,6 @@ germany
     germany
 get
     get
-    gets
     getting
 ghg
     ghg
@@ -2736,7 +2404,6 @@ gis
     gis
 give
     give
-    gives
 global
     global
     globalization
@@ -2756,6 +2423,7 @@ good
     goods
 goods movement
     goods movement
+    goods movements
 goods transportation
     goods transportation
 goods vehicles
@@ -2765,10 +2433,10 @@ governance
     governing
     government
     governments
-governmental
-    governmental
 governmental intervention
     governmental intervention
+governmental intervention mechanism
+    governmental intervention mechanism
 gra
     gra
 grading
@@ -2779,10 +2447,8 @@ gravity method
     gravity method
 great
     great
-greatly
-    greatly
-greedy
-    greedy
+greater
+    greater
 greedy algorithm
     greedy algorithm
 greedy approximation algorithm
@@ -2798,6 +2464,7 @@ green logistics
     green logistics
 green logistics center
     green logistics center
+    green logistics centers
 green preferences
     green preferences
 green products
@@ -2807,8 +2474,6 @@ green vehicle
     green vehicles
 greenbelt
     greenbelt
-greenhouse
-    greenhouse
 greenhouse gas
     greenhouse gas
 greenhouse gas emissions
@@ -2843,24 +2508,17 @@ hague
 hall
     hall
     halls
-hampered
-    hampered
 hand
     hand
 handle
     handle
-    handled
     handling
-handoko
-    handoko
 hands-on
     hands-on
 happening
     happening
 harbour
     harbour
-hard
-    hard
 harmful
     harmful
 haul
@@ -2869,18 +2527,13 @@ health
     health
 heart
     heart
-heavily
-    heavily
 heavy
     heavy
 heavy-and
     heavy-and
-help
-    help
+helpful
     helpful
     helping
-hence
-    hence
 heritage
     heritage
 heterogeneity
@@ -2903,14 +2556,14 @@ high costs
     high costs
 high-load
     high-load
+higher
+    higher
 higher-value
     higher-value
 highlight
     highlight
     highlighting
     highlights
-highly
-    highly
 historic
     historic
     historical
@@ -2943,16 +2596,13 @@ hotel industry
     hotel industry
 hovedstaden
     hovedstaden
-however
-    however
 huaian
     huaian
 hub
     hub
     hubs
-hub-and-spoke
-    hub-and-spoke
-hub-and-spoke system
+hub and spoke systems
+    hub and spoke systems
     hub-and-spoke system
 huge
     huge
@@ -2961,12 +2611,11 @@ human
     humans
 hybrid
     hybrid
-hybrid spatial-fuzzy multi-criteria decision-making
+hybrid spatial fuzzy multi criteria decision making
+    hybrid spatial fuzzy multi criteria decision making
     hybrid spatial-fuzzy multi-criteria decision-making
 hybrid vehicle
     hybrid vehicle
-hypercube
-    hypercube
 hypercube model
     hypercube model
 hypothetical
@@ -2988,14 +2637,11 @@ identified
     identifies
     identify
     identifying
-iems
-    iems
 ignoring
     ignoring
 illustrate
     illustrate
     illustrated
-    illustrates
     illustrating
     illustration
     illustrative
@@ -3026,8 +2672,6 @@ import
     importance
     important
     imports
-importantly
-    importantly
 imposing
     imposing
 impressive
@@ -3057,10 +2701,7 @@ incentives
     incentives
 inclination
     inclination
-include
-    include
-    included
-    includes
+including
     including
 inclusive
     inclusive
@@ -3070,9 +2711,7 @@ inconsistent
     inconsistent
 inconvenience
     inconvenience
-incorporate
-    incorporate
-    incorporates
+incorporating
     incorporating
 increase
     increase
@@ -3081,25 +2720,18 @@ increase
     increasing
 increasing costs
     increasing costs
-increasingly
-    increasingly
 increment
     increment
 incur
     incur
     incurs
-indeed
-    indeed
-independent decision model
-    independent decision model
-    independent decision models
+independent decision
+    independent decision
 index
     index
 index figures
     index figures
-indicate
-    indicate
-    indicated
+indicates
     indicates
     indications
     indicator
@@ -3107,32 +2739,23 @@ indicate
     indicators (instruments)
 indicator system
     indicator system
-indirect
-    indirect
 individual
     individual
 indonesia
     indonesia
-induce
-    induce
 industrial
     industrial
     industries
     industry
 industrially-zoned
     industrially-zoned
-inefficiencies
-    inefficiencies
 inf
     inf
 infections
     infections
 influence
     influence
-    influenced
     influences
-influential
-    influential
 influential factors
     influential factors
 information
@@ -3144,7 +2767,6 @@ information systems
 infrastructural
     infrastructural
     infrastructure
-    infrastructures
 initial
     initial
     initiative
@@ -3162,17 +2784,17 @@ inner city area
     inner-city area
 inner-city
     inner-city
-innovate
-    innovate
+innovates
     innovates
     innovation
     innovations
     innovative
-innovation method
-    innovation method
+innovative method
     innovative method
+    innovative methods
 innovative solution
     innovative solution
+    innovative solutions
 input
     input
     inputs
@@ -3183,15 +2805,11 @@ inside
 insight
     insight
     insights
-inspired
-    inspired
 installation
     installation
 instance
     instance
     instances
-instead
-    instead
 institutional
     institutional
 instrument
@@ -3217,22 +2835,19 @@ intelligence
     intelligence
 intelligent agents
     intelligent agents
-intends
-    intends
 intensification
     intensification
 intensity
     intensity
+inter organisational innovation
+    inter organisational innovation
+inter organizational interaction
+    inter organizational interaction
+    inter-organizational interaction
 inter-establishment
     inter-establishment
-inter-organisational
-    inter-organisational
 inter-organisational innovation
     inter-organisational innovation
-inter-organizational
-    inter-organizational
-inter-organizational interaction
-    inter-organizational interaction
 inter-udc
     inter-udc
 inter-zone
@@ -3263,8 +2878,11 @@ intermodal freight
     intermodal freight
 intermodal freight terminal
     intermodal freight terminal
+    intermodal freight terminals
 intermodal freight transport
     intermodal freight transport
+intermodal freight transport terminals
+    intermodal freight transport terminals
 intermodal terminals
     intermodal terminals
 intermodal transport
@@ -3287,24 +2905,18 @@ interoperability
     interoperability
 interorganizational interaction
     interorganizational interaction
-interreg
-    interreg
 interurban
     interurban
 interval-valued
     interval-valued
 intervene
     intervene
-intervention
-    intervention
 intervention mechanism
     intervention mechanism
 interviews
     interviews
 intra-city
     intra-city
-intractably
-    intractably
 introduce
     introduce
     introduced
@@ -3329,8 +2941,7 @@ investment
     investments
 investment decisions
     investment decisions
-involve
-    involve
+involved
     involved
     involves
     involving
@@ -3340,10 +2951,6 @@ involved stakeholders
     involved stakeholders
 ioi
     ioi
-ireland
-    ireland
-isnt
-    isnt
 isolation
     isolation
 issue
@@ -3355,8 +2962,6 @@ italian
     italian
 italy
     italy
-iterative
-    iterative
 iterative method
     iterative method
 ivb
@@ -3373,7 +2978,6 @@ jogja inland port
     jogja inland port
 join
     join
-    joined
 joint
     joint
 joint decision
@@ -3390,10 +2994,6 @@ junction
     junction
 justify
     justify
-kayseris
-    kayseris
-keep
-    keep
 key
     key
 key performance indicators
@@ -3406,8 +3006,6 @@ kilometers
 kind
     kind
     kinds
-kingdom
-    kingdom
 kmeans
     kmeans
 knowledge
@@ -3438,10 +3036,6 @@ lagrangian relaxation techniques
     lagrangian relaxation techniques
 lagrangian slack operator
     lagrangian slack operator
-laid
-    laid
-lamilo
-    lamilo
 lamilo project
     lamilo project
 land
@@ -3452,12 +3046,18 @@ large number
     large number
 large-size
     large-size
+larger
+    larger
+largest
+    largest
 last
     last
 last mile
     last mile
+    last miles
     last-mile
-last mile delivery
+last mile deliveries
+    last mile deliveries
     last mile delivery
     last-mile deliveries
 last mile distribution
@@ -3465,20 +3065,16 @@ last mile distribution
 last mile logistics
     last mile logistics
     last-mile logistics
+last mile network design
+    last mile network design
 last-mile network
     last-mile network
 last-minute
     last-minute
-lastly
-    lastly
-lately
-    lately
-latin
-    latin
 latin america
     latin america
-launched
-    launched
+latin american
+    latin american
 laws and legislation
     laws and legislation
 layout
@@ -3490,29 +3086,28 @@ layout optimization model
     layout optimization model
 layout planning
     layout planning
+layout planning methodology
+    layout planning methodology
 lbl freight consolidation
     lbl freight consolidation
 lbl urban freight boxes
     lbl urban freight boxes
-lead
-    lead
-    leaded
+leading
     leading
-    leads
 learning
     learning
 learning algorithms
     learning algorithms
 learning-based
     learning-based
-learnt
-    learnt
-led
-    led
+least
+    least
 leg
     leg
 legal
     legal
+less
+    less
 less-than-truckload
     less-than-truckload
 lessons
@@ -3526,8 +3121,6 @@ level-1
     level-1
 lexicographical order
     lexicographical order
-lies
-    lies
 life
     life
 lifestyle
@@ -3559,9 +3152,9 @@ linguistic
     linguistics
 linguistic variable
     linguistic variable
+    linguistic variables
 link
     link
-    linked
     links
 lisboa
     lisboa
@@ -3576,9 +3169,6 @@ literature review
     literature reviews
 little
     little
-live
-    live
-    lives
 livelihood
     livelihood
 load
@@ -3591,13 +3181,15 @@ loading sequence
 local
     local
     localization
+local government
+    local government
 local impact
     local impact
+    local impacts
 local optimum solution
     local optimum solution
 locate
     locate
-    located
     locating
     location
     locations
@@ -3626,8 +3218,6 @@ location-allocation model
     location-allocation model
 location-routing
     location-routing
-logic
-    logic
 logistic
     logistic
     logistical
@@ -3641,6 +3231,7 @@ logistic system
     logistic system
     logistic systems
     logistics system
+    logistics systems
 logistica urbana
     logistica urbana
 logistical activities
@@ -3649,8 +3240,6 @@ logistical infrastructure
     logistical infrastructure
 logistics and supply chain management
     logistics and supply chain management
-logistics business
-    logistics business
 logistics center
     logistics center
     logistics centers
@@ -3664,9 +3253,10 @@ logistics distribution
 logistics distribution center
     logistics distribution center
     logistics distribution centers
-logistics distribution network
-    logistics distribution network
+logistics distribution networks
     logistics distribution networks
+logistics distribution system
+    logistics distribution system
 logistics engineering
     logistics engineering
 logistics industry
@@ -3675,8 +3265,11 @@ logistics information
     logistics information
 logistics information platform
     logistics information platform
+logistics information systems
+    logistics information systems
 logistics network
     logistics network
+    logistics networks
     network logistics
 logistics pooling
     logistics pooling
@@ -3684,6 +3277,7 @@ logistics process
     logistics process
 logistics service provider
     logistics service provider
+    logistics service providers
 logistics services
     logistics services
 logistics simulations
@@ -3692,8 +3286,6 @@ logistics sprawl
     logistics sprawl
 logistics-related
     logistics-related
-logisticstransport
-    logisticstransport
 logit
     logit
 logit analysis
@@ -3711,6 +3303,8 @@ long-haul
     long-haul
 long-term
     long-term
+longer
+    longer
 looking
     looking
 lorries
@@ -3726,18 +3320,21 @@ low carbon
     low-carbon
 low emission zones
     low emission zones
+low-carbon emission
+    low-carbon emission
 low-cooperative
     low-cooperative
 low-cost
     low-cost
 low-pollution
     low-pollution
+lower
+    lower
 lowers rent
     lowers rent
 lrp
     lrp
-lsp
-    lsp
+lsps
     lsps
 ltz
     ltz
@@ -3745,18 +3342,11 @@ lucca
     lucca
 maastricht
     maastricht
-made
-    made
-mail
-    mail
 main
     main
 main stakeholders
     main stakeholders
-mainly
-    mainly
-maintained
-    maintained
+maintaining
     maintaining
 maintenance
     maintenance
@@ -3767,10 +3357,7 @@ major cost
     major cost
 make
     make
-    makes
     making
-makers
-    makers
 mall
     mall
 mamca
@@ -3778,7 +3365,6 @@ mamca
 manage
     manage
     manageable
-    managed
     management
     manager
     managers
@@ -3797,8 +3383,6 @@ many
     many
 map
     map
-margin
-    margin
 maritime transportation
     maritime transportation
 market
@@ -3819,18 +3403,18 @@ mass-gt
     mass-gt
 massive
     massive
-match
-    match
-    matching
 material
     material
-    materialised
     materials
 mathematical
     mathematical
 mathematical model
     mathematical model
+    mathematical modeling
+    mathematical modelling
     mathematical models
+mathematical model-based
+    mathematical model-based
 mathematical techniques
     mathematical techniques
 matheuristic
@@ -3842,8 +3426,6 @@ matrix
     matrix
 matters
     matters
-mature
-    mature
 maximisation
     maximisation
     maximising
@@ -3857,11 +3439,8 @@ mcdm
     mcdm
 means
     means
-meanwhile
-    meanwhile
 measure
     measure
-    measured
     measurements
     measures
     measuring
@@ -3880,19 +3459,18 @@ mediterranean cities
     mediterranean cities
 medium
     medium
+medium sized cities
+    medium sized cities
+    medium-sized cities
 medium-size
     medium-size
     medium-sized
-medium-sized cities
-    medium-sized cities
 meet
     meet
     meets
 megacities
     megacities
     megacity
-melanogaster
-    melanogaster
 melbourne
     melbourne
 melbourne , australia
@@ -3901,10 +3479,8 @@ member
     member
 membership
     membership
-mentioned
-    mentioned
-merits
-    merits
+met
+    met
 meta-analysis
     meta-analysis
 meta-heuristic
@@ -3930,15 +3506,16 @@ metrics
     metrics
 metropolitan
     metropolitan
-micro
-    micro
 micro-consolidation
     micro-consolidation
 micro-simulation
     micro-simulation
-microsimulation
-    microsimulation
-microsimulation models
+micro-simulation approach
+    micro-simulation approach
+micro-simulation model
+    micro-simulation model
+microsimulation model
+    microsimulation model
     microsimulation models
 migration
     migration
@@ -3948,16 +3525,13 @@ mild
     mild
 mile
     mile
-    miles
 minas gerais
     minas gerais
 minimal
     minimal
-    minimally
     minimise
     minimization
     minimize
-    minimizes
     minimizing
 minimization problems
     minimization problems
@@ -3986,10 +3560,9 @@ mixed integer programming
     mixed-integer programs
 mixed-integer
     mixed-integer
-mmp
-    mmp
 mobility
     mobility
+    mobilize
     mobilizing
 modal
     modal
@@ -4003,16 +3576,12 @@ mode-service
     mode-service
 model
     model
-    modeled
     modeling
     modelization
-    modelled
     modelling
     models
 model test
     model test
-model-based
-    model-based
 modeling urban distribution center
     modeling urban distribution center
 models, theoretical
@@ -4022,8 +3591,6 @@ modern
     modern
 modern logistics
     modern logistics
-modified
-    modified
 modified customer satisfaction index
     modified customer satisfaction index
 monetary
@@ -4032,6 +3599,8 @@ mono-actor
     mono-actor
 months
     months
+moreless
+    moreless
 moreover
     moreover
 morphologies
@@ -4039,16 +3608,12 @@ morphologies
     morphology
 mostif
     mostif
-mostly
-    mostly
 motion
     motion
-motivated
-    motivated
+motivate
+    motivate
     motivating
     motivations
-motor
-    motor
 motor trucks
     motor trucks
 motor vehicle
@@ -4073,9 +3638,19 @@ mudc scheme
     mudc scheme
 multi
     multi
+multi actor multi criteria analysis
+    multi actor multi criteria analysis
+    multi-actor multi-criteria analysis
+    multi-actor multi-criteria analysis (mamca)
+multi agent model
+    multi agent model
+    multi-agent model
+    multi-agent models
 multi agent simulation
     multi agent simulation
     multi-agent simulation
+multi agent simulation-adaptive dynamic programming
+    multi agent simulation-adaptive dynamic programming
 multi agent systems
     multi agent systems
     multi-agent system
@@ -4087,16 +3662,22 @@ multi criteria decision making
     multi-criteria decision making
     multi-criteria decision making (mcdm)
     multi-criteria decision-making (mcdm)
-multi-actor
-    multi-actor
-multi-actor multi-criteria analysis
-    multi-actor multi-criteria analysis
-    multi-actor multi-criteria analysis (mamca)
+multi criteria evaluation framework
+    multi criteria evaluation framework
+    multi-criteria evaluation framework
+multi criteria method
+    multi criteria method
+    multi-criteria method
+multi level logistics distribution center
+    multi level logistics distribution center
+multi objective formulation
+    multi objective formulation
+    multi-objective formulation
+multi tenant buildings
+    multi tenant buildings
+    multi-tenant buildings
 multi-agent
     multi-agent
-multi-agent model
-    multi-agent model
-    multi-agent models
 multi-attribute
     multi-attribute
 multi-beneficial
@@ -4111,10 +3692,6 @@ multi-criteria decision analysis (mcda)
     multi-criteria decision analysis (mcda)
 multi-criteria evaluation
     multi-criteria evaluation
-multi-criteria evaluation framework
-    multi-criteria evaluation framework
-multi-criteria method
-    multi-criteria method
 multi-criteria objective
     multi-criteria objective
 multi-depot
@@ -4125,8 +3702,6 @@ multi-level
     multi-level
 multi-level logistics
     multi-level logistics
-multi-level logistics distribution center
-    multi-level logistics distribution center
 multi-modal
     multi-modal
 multi-modal urban distribution centre
@@ -4135,8 +3710,6 @@ multi-mode
     multi-mode
 multi-objective
     multi-objective
-multi-objective formulation
-    multi-objective formulation
 multi-objective mixed-integer linear programming
     multi-objective mixed-integer linear programming
 multi-objective optimization
@@ -4145,12 +3718,10 @@ multi-provider
     multi-provider
 multi-stakeholder
     multi-stakeholder
+multi-stakeholder analysis
+    multi-stakeholder analysis
 multi-supplier
     multi-supplier
-multi-tenant
-    multi-tenant
-multi-tenant buildings
-    multi-tenant buildings
 multi-user
     multi-user
 multi-variety
@@ -4159,8 +3730,6 @@ multiagent
     multiagent
 multicommodity-ring
     multicommodity-ring
-multicriteria
-    multicriteria
 multicriteria analysis
     multicriteria analysis
 multicriteria optimization
@@ -4175,8 +3744,8 @@ multiple location decision
     multiple location decision
 multiple stakeholders
     multiple stakeholders
-multiple-case
-    multiple-case
+multiple-case study
+    multiple-case study
 multistage
     multistage
 multivariant analysis
@@ -4193,32 +3762,23 @@ municipal
     municipality
 municipal administration
     municipal administration
+    municipal administrations
 municipal managements
     municipal managements
 mutual
     mutual
 nagel
     nagel
-named
-    named
-    namely
 national
     national
-nature
-    nature
 navigation
     navigation
-nearly
-    nearly
-necessarily
-    necessarily
 necessary
     necessary
 necessity
     necessity
 need
     need
-    needed
     needs
 negative
     negative
@@ -4301,8 +3861,6 @@ nonlinear
     nonlinear
 nonprofit
     nonprofit
-normally
-    normally
 north
     north
 north frisian islands
@@ -4315,16 +3873,10 @@ norwegian
     norwegian
 nostram
     nostram
-notably
-    notably
 notion
     notion
 novel
     novel
-novelty
-    novelty
-novi
-    novi
 novi sad
     novi sad
 nox
@@ -4340,7 +3892,6 @@ number of vehicles
     number of vehicles
 numerical
     numerical
-    numerically
     numerous
 numerical algorithms
     numerical algorithms
@@ -4364,22 +3915,17 @@ observation
 obstacle
     obstacle
     obstacles
-obtainable
+obtain
+    obtain
     obtainable
-    obtained
 obvious
     obvious
 offer
     offer
-    offered
     offering
     offerings
 office
     office
-officially
-    officially
-often
-    often
 ology
     ology
 on-going
@@ -4401,7 +3947,6 @@ open
 operate
     operate
     operated
-    operates
     operating
     operation
     operational
@@ -4421,6 +3966,7 @@ operational research
     operational research
 operational scenario
     operational scenario
+    operational scenarios
 operationalise
     operationalise
 opinion
@@ -4436,15 +3982,11 @@ optimal
     optimising
     optimization
     optimize
-    optimized
 optimal locating
     optimal locating
-    optimal location
     optimal locations
 optimal locating method
     optimal locating method
-optimal location planning
-    optimal location planning
 optimization algorithm
     optimization algorithm
     optimization algorithms
@@ -4461,7 +4003,6 @@ option
     option
 order
     order
-    ordered
     orders
 order sharing
     order sharing
@@ -4471,6 +4012,7 @@ organisation
     organisation
     organization
     organizations
+    organize
     organizing
 organization and administration
     organization and administration
@@ -4480,11 +4022,9 @@ organizational
     organizational
 orient
     orient
-    oriented
 origin
     origin
     original
-    originates
     origins
 originalityvalue
     originalityvalue
@@ -4501,20 +4041,22 @@ oslo [norway]
     oslo [norway]
 others
     others
-ouro
-    ouro
+otherwise
+    otherwise
 ouro preto
     ouro preto
 outcome-
     outcome-
     outcomes
+outer
+    outer
 outlets
     outlets
-outperforms
+outperform
+    outperform
     outperforms
 output
     output
-    outputs
 outside
     outside
 outskirtusing
@@ -4523,15 +4065,12 @@ overall
     overall
 overall factor
     overall factor
-overcome
-    overcome
+overcoming
     overcoming
 overnight
     overnight
 overview
     overview
-owns
-    owns
 p-median
     p-median
 p-median problem
@@ -4545,8 +4084,6 @@ package
     packaging
 pair
     pair
-pairwise
-    pairwise
 pairwise comparison
     pairwise comparison
 panuccio
@@ -4558,15 +4095,14 @@ paper herein
     paper herein
 parameters
     parameters
-parcel
-    parcel
-    parcels
 parcel delivery
     parcel delivery
 parcel distribution
     parcel distribution
 parcel distribution network
     parcel distribution network
+parcels
+    parcels
 pareto
     pareto
 paris
@@ -4578,7 +4114,6 @@ part
     parts
 participants
     participants
-    participate
     participating
     participation
 participating carriers
@@ -4587,19 +4122,13 @@ participating retailers
     participating retailers
 particle
     particle
-    particles
 particular
     particular
-particularly
-    particularly
 parties
     parties
 partner
     partner
     partners
-partnership
-    partnership
-    partnerships
 passenger
     passenger
 path
@@ -4609,6 +4138,8 @@ pathway
 pattern
     pattern
     patterns
+pay
+    pay
 payload
     payload
 penalty
@@ -4621,19 +4152,15 @@ per parcel
     per parcel
 perceive
     perceive
-    perceived
 percent
     percent
 perception
     perception
     perceptions
-perfectly
-    perfectly
 perform
     perform
     performance
     performances
-    performed
     performing
     performs
 performance evaluation
@@ -4659,8 +4186,6 @@ permit
     permit
 personal
     personal
-personnel
-    personnel
 personnel training
     personnel training
 perspective
@@ -4686,8 +4211,6 @@ pilot
     pilots
 pilot projects
     pilot projects
-pinpointed
-    pinpointed
 piraeus
     piraeus
 place
@@ -4718,7 +4241,6 @@ plausible
     plausible
 play
     play
-    played
     plays
 players
     players
@@ -4732,10 +4254,7 @@ pm2.5
     pm2.5
 point
     point
-    pointed
     points
-poland
-    poland
 policies
     policies
     policy
@@ -4753,27 +4272,23 @@ policymakers
     policymakers
 political
     political
-pollutant emissions
-    pollutant emissions
-    polluting emissions
-pollutants
-    pollutants
+pollutant
+    pollutant
     polluted
-    polluting
     pollution
-    pollutions
+polluting emissions
+    polluting emissions
+polluting emissions reduction
+    polluting emissions reduction
 pooling
     pooling
 poor
     poor
-poorly
-    poorly
 popular
     popular
 populated
     populated
     population
-    populations
 population statistics
     population statistics
 port
@@ -4789,39 +4304,32 @@ portfolio
     portfolio
 ports and harbors
     ports and harbors
-pose
-    pose
+poses
     poses
 position
     position
     positions
     positive
-    positively
 possibilictic linear programming
     possibilictic linear programming
-possibilistic
-    possibilistic
 possibilistic programming
     possibilistic programming
 possibilities
     possibilities
     possibility
     possible
-    possibly
 possible scenarios
     possible scenarios
+post evaluation deliberation
+    post evaluation deliberation
+    post-evaluation deliberation
 post evaluations
     post evaluations
-    post-evaluation
 post-decision
     post-decision
-post-evaluation deliberation
-    post-evaluation deliberation
 potential
     potential
-    potentialities
     potentiality
-    potentially
     potentials
 potential benefits
     potential benefits
@@ -4835,7 +4343,6 @@ powergovernment
 practical
     practical
     practicality
-    practically
     practice
     practices
 practitioners
@@ -4844,16 +4351,11 @@ pre-feasibility
     pre-feasibility
 pre-retailing
     pre-retailing
-preannounced
-    preannounced
 precision
     precision
-predetermined
-    predetermined
 predict
     predict
     prediction
-    predicts
 preference
     preference
     preferences
@@ -4867,19 +4369,14 @@ presence
     presence
 present
     present
-    presented
     presenting
     presents
 preservation
     preservation
-    preserve
     preserving
 pressure
     pressure
-preto
-    preto
-prevent
-    prevent
+preventive
     preventive
 preventive maintenance actions
     preventive maintenance actions
@@ -4889,8 +4386,6 @@ price
     price
     prices
     pricing
-primarily
-    primarily
 principal
     principal
 principle
@@ -4928,12 +4423,9 @@ process
     processing
 procrustes
     procrustes
-produce
-    produce
-    produced
+producer
     producer
     producers
-    produces
     producing
 product
     product
@@ -4958,7 +4450,6 @@ program
     program
     programme
     programming
-    programs
 project
     project
     projects
@@ -4968,12 +4459,9 @@ prominent
     prominent
 promising
     promising
-promote
-    promote
-    promoted
+promoters
     promoters
     promoting
-    promotion
 prone
     prone
 proper
@@ -4983,8 +4471,6 @@ properly
 properties
     properties
     property
-proportionally
-    proportionally
 propose
     propose
     proposed
@@ -5006,21 +4492,15 @@ protection of the environments
     protection of the environments
 prototype
     prototype
-prove
-    prove
-    proved
-    proving
-proven
-    proven
 provide
     provide
-    provided
     provider
     providers
-    provides
     providing
 province
     province
+proving
+    proving
 provision
     provision
     provisioning
@@ -5032,33 +4512,28 @@ public
     public
 public administration
     public administration
+    public administrations
 public authorities
     public authorities
 public policies
     public policies
     public policy
-public private partnerships
+public private partnership
+    public private partnership
     public private partnerships
     public-private partnership
 public-led
     public-led
-public-private
-    public-private
-publicly
-    publicly
 published
     published
 purchase
     purchase
-purely
-    purely
 purpose
     purpose
     purposes
 pursue
     pursue
-put
-    put
+putting
     putting
 q-analysis
     q-analysis
@@ -5066,8 +4541,6 @@ q-learning
     q-learning
 q-methodology
     q-methodology
-quadricycles
-    quadricycles
 qualitative
     qualitative
 qualitative analysis
@@ -5085,6 +4558,7 @@ quantitative calculation method
     quantitative calculation method
 quantitative tool
     quantitative tool
+    quantitative tools
 queensland
     queensland
 question
@@ -5100,8 +4574,8 @@ queuing location problem
     queuing location problem
 queuing theory
     queuing theory
-quite
-    quite
+queuing theory-based
+    queuing theory-based
 r and shiny
     r and shiny
 rail
@@ -5118,39 +4592,31 @@ railway
     railway
 raise
     raise
-    raises
 random
     random
     randomness
 range
     range
-    ranged
 rank
     rank
     ranked
     ranking
 rapid
     rapid
-rapidly
-    rapidly
-rarely
-    rarely
 rate
     rate
     rates
     ratings
-rather
-    rather
 rational
     rational
     rationalise
+    rationalize
 re-examining
     re-examining
 re-routing
     re-routing
 reach
     reach
-    reached
     reaching
 real
     real
@@ -5167,6 +4633,9 @@ realities
     reality
 realize
     realize
+    realized
+reap
+    reap
 reason
     reason
     reasonable
@@ -5179,29 +4648,27 @@ rebalancing
     rebalancing
 receive
     receive
-    received
     receivers
     receives
     receiving
 recent
     recent
-    recently
 recipients
     recipients
-recognised
-    recognised
 recommendations
     recommendations
 reconfigurable hardware
     reconfigurable hardware
 record
     record
+recur
+    recur
 recycling
     recycling
-redesigned
-    redesigned
+redesigning
     redesigning
-reduced
+reduce
+    reduce
     reduced
     reducing
 reduction
@@ -5209,22 +4676,16 @@ reduction
     reductions
 reference
     reference
-    referred
     referring
     refers
-refine
-    refine
+refinement
     refinement
 reflect
     reflect
     reflecting
-    reflects
-regarded
-    regarded
+regarding
     regarding
     regards
-regardless
-    regardless
 regeneration
     regeneration
 regent
@@ -5243,16 +4704,14 @@ regional planning
     regional planning
 regional resources
     regional resources
-registered
-    registered
 regression model
     regression model
 regular
     regular
-regulate
-    regulate
+regulation
     regulation
     regulations
+    regulators
 regulatory
     regulatory
 regulatory support
@@ -5260,20 +4719,16 @@ regulatory support
 reinforced learning
     reinforced learning
     reinforcement learning
-reinforcement
-    reinforcement
+reinforced learning algorithms
+    reinforced learning algorithms
 related
     related
-    relates
     relating
     relation
     relational
     relations
 relative
     relative
-    relatively
-relaxation
-    relaxation
 relevant
     relevant
 reliability
@@ -5283,20 +4738,16 @@ reliant
 relies
     relies
     rely
-relieve
-    relieve
-remain
-    remain
+remaining
     remaining
-    remains
 renaissance
     renaissance
 renewable
     renewable
 rent
     rent
-replaced
-    replaced
+replace
+    replace
     replacing
 replenishment
     replenishment
@@ -5309,20 +4760,16 @@ represent
     represent
     representative
     representing
-    represents
 representation
     representation
 reproduce
     reproduce
-republic
-    republic
 requests
     requests
 require
     require
     requirement
     requirements
-    requires
     requiring
 research
     research
@@ -5349,10 +4796,8 @@ resource
     resources
 resourcesconstraints
     resourcesconstraints
-respect
-    respect
+respective
     respective
-    respectively
 respiratory
     respiratory
 respondents
@@ -5361,7 +4806,6 @@ respondents
 response
     response
     responses
-    responsibility
     responsible
     responsive
 restart
@@ -5373,10 +4817,8 @@ restricting
     restriction
     restrictions
     restrictive
-    restricts
 result
     result
-    resulted
     resulting
     results
 retail
@@ -5401,25 +4843,22 @@ reverse
     reverse
 reverse flow
     reverse flow
+    reverse flows
 reverse logistics
     reverse logistics
+reverse logistics system
+    reverse logistics system
 review
     review
-    reviewed
     reviewing
     reviews
-revises
-    revises
 revival
     revival
-rhine-main
-    rhine-main
-rhine-main area
+rhine main area
+    rhine main area
     rhine-main area
 ribe
     ribe
-right
-    right
 rijeka
     rijeka
 ring
@@ -5448,27 +4887,18 @@ robust optimization
 role
     role
     roles
-rolling
-    rolling
 rolling horizon
     rolling horizon
 rollout
     rollout
 rome
     rome
-rose
-    rose
 rotation
     rotation
-rotterdam
-    rotterdam
 route
     route
     routes
     routing
-routing problem
-    routing problem
-    routing problems
 rule
     rule
 run
@@ -5478,8 +4908,6 @@ rural
     rural
 sabara
     sabara
-sad
-    sad
 safety
     safety
 saint-etienne
@@ -5496,13 +4924,13 @@ satellites
     satellites
 satisfaction
     satisfaction
-satisfy
+satisfied
+    satisfied
     satisfy
     satisfying
 saturation
     saturation
-save
-    save
+saving
     saving
     savings
 scale
@@ -5523,7 +4951,8 @@ scenario building
     scenario-building
 scenario planning
     scenario planning
-    scenario-planning
+scenario-planning methodology
+    scenario-planning methodology
 schedules
     schedules
     scheduling
@@ -5534,8 +4963,6 @@ scheme evaluation
     scheme evaluation
 scheme selection
     scheme selection
-scholarly
-    scholarly
 scholars
     scholars
 science
@@ -5549,8 +4976,6 @@ scope
     scope
 scotland
     scotland
-sea
-    sea
 seamless
     seamless
 search
@@ -5562,8 +4987,6 @@ seasonal
     seasonal
 second
     second
-secondly
-    secondly
 sections
     sections
 sector
@@ -5575,17 +4998,10 @@ security
     security
 seeking
     seeking
-    seeks
-seem
-    seem
-    seemed
-    seems
 segment
     segment
 seize
     seize
-seldom
-    seldom
 select
     select
     selecting
@@ -5615,8 +5031,6 @@ sensitivy analysis
     sensitivy analysis
 sent
     sent
-separately
-    separately
 sequence
     sequence
 sequential
@@ -5629,8 +5043,6 @@ serious
     serious
 serve
     serve
-    served
-    serves
     serving
 service
     service
@@ -5661,20 +5073,15 @@ shape
     shape
 share
     share
-    shared
     sharing
 shareable
     shareable
 shared-resource
     shared-resource
     sharing resources
-sheds
-    sheds
 shift
     shift
     shifting
-shiny
-    shiny
 ship
     ship
     shipping
@@ -5697,28 +5104,19 @@ short
     short
 show
     show
-    showed
     shows
 shuttle
     shuttle
-signal
-    signal
 significance
     significance
     significant
-significantly
-    significantly
 significantly reduce
     significantly reduce
 similar
     similar
     similarity
-simply
-    simply
 simulate
     simulate
-    simulated
-    simulates
     simulating
     simulation
     simulations
@@ -5729,22 +5127,17 @@ simulation approach
     simulation approach
 simulation model
     simulation model
+    simulation models
 simulation platform
     simulation platform
-simulation-adaptive
-    simulation-adaptive
 simulation-based
     simulation-based
-simultaneously
-    simultaneously
 singapore
     singapore
 single
     single
 single location selection
     single location selection
-sinks
-    sinks
 site
     site
     sites
@@ -5767,14 +5160,14 @@ skills
     skills
 sleman
     sleman
-slightly
-    slightly
 slr
     slr
 small
     small
 small-size
     small-size
+smaller
+    smaller
 smart
     smart
 smart cities
@@ -5782,6 +5175,8 @@ smart cities
     smart city
 smart city logistics
     smart city logistics
+smartest
+    smartest
 sme
     sme
 smile project
@@ -5794,6 +5189,8 @@ social
     social
 social and environmental
     social and environmental
+social and environmental problems
+    social and environmental problems
 social cost benefit analysis
     social cost benefit analysis
     social cost-benefit analysis
@@ -5823,19 +5220,12 @@ solution concepts
 solve
     solve
     solved
-    solves
     solving
 solver
     solver
     solvers
-sometimes
-    sometimes
-soon
-    soon
 sorting
     sorting
-sought
-    sought
 sound
     sound
 source
@@ -5846,8 +5236,6 @@ south
     south
 southampton
     southampton
-southern
-    southern
 southern italy
     southern italy
 space
@@ -5863,8 +5251,6 @@ spatial data
     spatial data
 spatial decision support
     spatial decision support
-spatial-fuzzy multi-criteria decision-making
-    spatial-fuzzy multi-criteria decision-making
 spatial-related
     spatial-related
 special
@@ -5875,14 +5261,13 @@ specialist technology
     specialist technology
 specific
     specific
-    specifically
     specificity
 specific distribution
     specific distribution
 specific location
     specific location
-specify
-    specify
+specific location planning
+    specific location planning
 spent
     spent
 spite
@@ -5922,17 +5307,9 @@ stakeholders perception
     stakeholders perception
 stakeholders’ commitment
     stakeholders’ commitment
-standardization
-    standardization
-standpoints
-    standpoints
-stands
-    stands
 start
     start
-    started
     starting
-    starts
 start-up
     start-up
 state
@@ -5953,8 +5330,6 @@ stationery
 statistical
     statistical
     statistics
-status
-    status
 steering
     steering
 step
@@ -5962,8 +5337,6 @@ step
     steps
 stifling
     stifling
-still
-    still
 stochastic
     stochastic
 stochastic systems
@@ -5972,13 +5345,11 @@ stockholding
     stockholding
 stop
     stop
-    stopped
     stops
 storage
     storage
 store
     store
-    stored
     stores
 stowage
     stowage
@@ -5991,8 +5362,6 @@ strategic
     strategic
 strategic planning
     strategic planning
-strategic transport
-    strategic transport
 strategic transport modelling
     strategic transport modelling
 strategies
@@ -6000,7 +5369,6 @@ strategies
     strategy
 stream
     stream
-    streams
 streamline
     streamline
 street
@@ -6008,16 +5376,12 @@ street
 strength
     strength
     strengths
-strongly
-    strongly
 structural
     structural
     structure
     structures
 structural literature review
     structural literature review
-struggled
-    struggled
 studied
     studied
     studies
@@ -6044,7 +5408,6 @@ subsector
     subsectors
 subsequent
     subsequent
-    subsequently
 subsidiary
     subsidiary
 subsidies
@@ -6052,16 +5415,12 @@ subsidies
     subsidy
 substantial
     substantial
-    substantially
 suburbs
     suburbs
-succeeded
-    succeeded
 success
     success
     successes
     successful
-    successfully
     successive
 suffer
     suffer
@@ -6072,9 +5431,7 @@ sugar commodity
     sugar commodity
 suggest
     suggest
-    suggested
     suggestions
-    suggests
 suitability
     suitability
     suitable
@@ -6082,8 +5439,6 @@ suitability analysis
     suitability analysis
 suitable locations
     suitable locations
-suited
-    suited
 sum
     sum
 superior
@@ -6108,12 +5463,9 @@ supply-oriented
     supply-oriented
 support
     support
-    supported
     supporting
     supportive
     supports
-surely
-    surely
 surrounding
     surrounding
 survey
@@ -6121,8 +5473,6 @@ survey
     surveys
 survey carried
     survey carried
-survive
-    survive
 sustainabilities
     sustainabilities
     sustainability
@@ -6135,6 +5485,7 @@ sustainable business
     sustainable business
 sustainable business model
     sustainable business model
+    sustainable business models
 sustainable city logistics
     sustainable city logistics
 sustainable collaborative network
@@ -6177,19 +5528,14 @@ systemises
     systemises
 systems engineering
     systems engineering
-tabu
-    tabu
 tabu search
     tabu search
 tactical
     tactical
 taian
     taian
-tailored
-    tailored
 take
     take
-    takes
     taking
 take-up
     take-up
@@ -6205,8 +5551,6 @@ tax
     tax
 taxation
     taxation
-tchebycheff
-    tchebycheff
 tchebycheff approach
     tchebycheff approach
 tco
@@ -6246,7 +5590,6 @@ territorial
     territorial
 test
     test
-    tested
     testing
 texas
     texas
@@ -6264,28 +5607,18 @@ theoretical study
     theoretical study
 theory
     theory
-theory-based
-    theory-based
-thereby
-    thereby
 therefore
     therefore
-therein
-    therein
 thereto
     thereto
 thessaloniki
     thessaloniki
 theworld
     theworld
-things
-    things
 thinning
     thinning
 third
     third
-thoroughly
-    thoroughly
 thoughtful
     thoughtful
 thowa
@@ -6298,10 +5631,8 @@ three-stage
     three-stage
 throughput
     throughput
-thus
-    thus
-tighten
-    tighten
+tighter
+    tighter
 time
     time
     times
@@ -6318,12 +5649,8 @@ timeslondon
     timeslondon
 timewindow
     timewindow
-tip
-    tip
 today
     today
-together
-    together
 tokyo
     tokyo
 tool
@@ -6338,20 +5665,14 @@ topsis
     topsis
 total
     total
-    totally
-tour
-    tour
 tour formation
     tour formation
-touristic
-    touristic
 touristic cities
     touristic cities
 towards
     towards
 town
     town
-    towns
 toy-sized
     toy-sized
 trade-off
@@ -6361,7 +5682,6 @@ tradeoff
     tradeoff
 traditional
     traditional
-    traditionally
 traditional approaches
     traditional approaches
 traffic
@@ -6376,8 +5696,7 @@ traffic volumes
     traffic volumes
 traffic wardens
     traffic wardens
-training
-    training
+trains
     trains
 tramways
     tramways
@@ -6393,14 +5712,11 @@ transform
     transforming
 transhipment
     transhipment
-transit
-    transit
 transnational
     transnational
 transport
     transport
     transportation
-    transported
     transports
 transport demand analysis
     transport demand analysis
@@ -6429,7 +5745,7 @@ transportation companies
     transportation companies
 transportation cost
     transportation cost
-    transportation-cost
+    transportation costs
 transportation development
     transportation development
 transportation economics
@@ -6444,6 +5760,7 @@ transportation simulations
     transportation simulations
 transportation system
     transportation system
+    transportation systems
 transshipment
     transshipment
 transshipment distribution center
@@ -6452,8 +5769,6 @@ trapezoidal
     trapezoidal
 travel
     travel
-    traveled
-    travelled
     travels
 travel behavior
     travel behavior
@@ -6472,15 +5787,10 @@ trialability
     trialability
 triangular
     triangular
-triangulated
-    triangulated
 tricycles
     tricycles
 tried
     tried
-    tries
-trigger
-    trigger
 trip
     trip
     trips
@@ -6495,6 +5805,8 @@ truck cargo
     truck cargo
 truck load
     truck load
+truck load matching
+    truck load matching
 truck transportation
     truck transportation
 trust
@@ -6504,16 +5816,10 @@ tsdsm
 tuple
     tuple
     tuples
-turin
-    turin
-turn
-    turn
-    turns
 turnover
     turnover
-two-echelon
-    two-echelon
-two-echelon vehicle routing problem
+two echelon vehicle routing problem
+    two echelon vehicle routing problem
     two-echelon vehicle routing problem
 two-step
     two-step
@@ -6525,7 +5831,6 @@ type
     types
 typical
     typical
-    typically
 typology
     typology
 u.s. environmental protection agency
@@ -6552,8 +5857,8 @@ ucc study
     ucc study
 ucc-environment
     ucc-environment
-uccs-location
-    uccs-location
+uccs-location decisions
+    uccs-location decisions
 udc
     udc
     udcs
@@ -6568,11 +5873,8 @@ uft policy
     uft policy
 uft policy setting
     uft policy setting
-ugms
-    ugms
 ultimate
     ultimate
-    ultimately
 unattractive
     unattractive
 unavailability
@@ -6596,8 +5898,6 @@ undergone
     undergone
 underlying
     underlying
-underscore
-    underscore
 understand
     understand
     understanding
@@ -6611,17 +5911,13 @@ unexpected
     unexpected
 unfriendly
     unfriendly
-union
-    union
 unique
     unique
-    uniquely
     uniqueness
-united
-    united
-    units
 united kingdom
     united kingdom
+units
+    units
 univariate
     univariate
 unload
@@ -6675,8 +5971,17 @@ urban distribution center
     urban distribution centers
     urban distribution centers (udc)
     urban distribution centre
+    urban distribution centres
+urban distribution center location
+    urban distribution center location
+urban distribution center location problem
+    urban distribution center location problem
 urban distribution centersthe
     urban distribution centersthe
+urban distribution centremudc
+    urban distribution centremudc
+urban distribution of goods
+    urban distribution of goods
 urban distribution systems
     urban distribution systems
 urban freight
@@ -6685,6 +5990,7 @@ urban freight consolidation
     urban freight consolidation
 urban freight consolidation center
     urban freight consolidation center
+    urban freight consolidation centers
     urban freight consolidation centre
     urban freight consolidation centre (ufcc)
     urban freight consolidation centres
@@ -6693,25 +5999,33 @@ urban freight consolidation curve
     urban freight consolidation curve
 urban freight consolidation options
     urban freight consolidation options
-urban freight delivery
+urban freight deliveries
+    urban freight deliveries
     urban freight delivery
+urban freight demand
+    urban freight demand
 urban freight demand models
     urban freight demand models
 urban freight distribution
     urban freight distribution
 urban freight flows
     urban freight flows
-urban freight terminal location
-    urban freight terminal location
+urban freight terminals
+    urban freight terminals
 urban freight transport
     urban freight transport
+    urban freight transportation
     urban freight transports
 urban freight transport agents
     urban freight transport agents
 urban freight transportation demand
     urban freight transportation demand
-urban goods
-    urban goods
+urban freight transportation systems
+    urban freight transportation systems
+urban freight transportation-cost allocation models
+    urban freight transportation-cost allocation models
+urban freight vehicles
+    urban freight vehicles
 urban goods distribution
     urban goods distribution
 urban goods movement
@@ -6724,16 +6038,29 @@ urban growth
 urban logistic
     urban logistic
     urban logistics
+urban logistics centers
+    urban logistics centers
+urban logistics development
+    urban logistics development
+urban logistics distribution center
+    urban logistics distribution center
+urban logistics information
+    urban logistics information
 urban logistics information platform
     urban logistics information platform
+urban logistics system
+    urban logistics system
 urban planning
     urban planning
 urban pollution
     urban pollution
 urban population
     urban population
+    urban populations
 urban regeneration
     urban regeneration
+urban rural distribution centers
+    urban rural distribution centers
 urban traffic
     urban traffic
 urban traffic control
@@ -6762,11 +6089,12 @@ use
     use
     used
     useful
-    uses
     using
 user
     user
     users
+using weighted geographical information system data
+    using weighted geographical information system data
 utilised
     utilised
     utilization
@@ -6777,9 +6105,9 @@ uvar
     uvars
 valencia
     valencia
-validate
+valid
+    valid
     validate
-    validated
     validation
 valuable
     valuable
@@ -6863,7 +6191,6 @@ viewpoint
     viewpoints
 virtual
     virtual
-    virtually
 virtual addresses
     virtual addresses
 virtual pricing
@@ -6872,8 +6199,7 @@ virtual reality
     virtual reality
 vision
     vision
-visited
-    visited
+visits
     visits
 visual
     visual
@@ -6886,7 +6212,8 @@ visum modelling
 vital
     vital
     vitality
-vmhs
+vmh
+    vmh
     vmhs
 volos
     volos
@@ -6905,10 +6232,6 @@ walking
     walking
 walthambrussels
     walthambrussels
-want
-    want
-wardens
-    wardens
 warehouse
     warehouse
     warehouses
@@ -6916,8 +6239,6 @@ warehouse design
     warehouse design
 warehousing
     warehousing
-warming
-    warming
 waste
     waste
 waterway
@@ -6925,13 +6246,10 @@ waterway
 way
     way
     ways
-weaknesses
-    weaknesses
 weeks
     weeks
 weight
     weight
-    weighted
     weighting
     weights
 weighted geographical information system data
@@ -6940,18 +6258,14 @@ weighted linear combinations
     weighted linear combinations
 welfare
     welfare
-well
-    well
 well-structured
     well-structured
 well-to-wheel
     well-to-wheel
 well-to-wheel analysis
     well-to-wheel analysis
-wellbalanced
-    wellbalanced
-westpomeranian
-    westpomeranian
+west
+    west
 westpomeranian region of poland
     westpomeranian region of poland
 wet
@@ -6966,8 +6280,6 @@ whole
     whole
 whole process
     whole process
-widely
-    widely
 wider
     wider
 widespread
@@ -6983,8 +6295,6 @@ win-win
 window
     window
     windows
-winner
-    winner
 winner determination problem
     winner determination problem
 wireless telecommunication systems
@@ -7002,6 +6312,10 @@ world
     world
 worldwide
     worldwide
+worse
+    worse
+worst
+    worst
 writing
     writing
 yard
@@ -7009,18 +6323,12 @@ yard
 year
     year
     years
-yearly
-    yearly
-yet
-    yet
 yield
     yield
 yogyakarta
     yogyakarta
 yogyakarta special region province
     yogyakarta special region province
-yokohama
-    yokohama
 york
     york
 zaragoza
