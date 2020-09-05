@@ -1,0 +1,7032 @@
+ability
+    ability
+able
+    able
+abstract
+    abstract
+academic
+    academic
+accelerate
+    accelerate
+accept
+    accept
+    acceptability
+    acceptance
+access
+    access
+    accessibility
+accidents
+    accidents
+accommodate
+    accommodate
+accompanying
+    accompanying
+accomplish
+    accomplish
+according
+    according
+accordingly
+    accordingly
+account
+    account
+accrue
+    accrue
+    accruing
+accuracy
+    accuracy
+accurate
+    accurate
+    accurately
+achieve
+    achieve
+    achieved
+    achieving
+acknowledgment
+    acknowledgment
+acquisition
+    acquisition
+act
+    act
+    acting
+action spaces
+    action spaces
+actions
+    actions
+active
+    active
+    activities
+    activity
+actor
+    actor
+    actors
+actual
+    actual
+    actually
+adapt
+    adapt
+    adaptation
+    adaptations
+    adapting
+    adaptive
+adaptive dynamic programming
+    adaptive dynamic programming
+adaptive management
+    adaptive management
+add
+    add
+added
+    added
+added-value
+    added-value
+    value-adding
+addedvalue
+    addedvalue
+addition
+    addition
+    additional
+    additionally
+additional costs
+    additional costs
+address
+    address
+    addressed
+    addresses
+    addressing
+adequate
+    adequate
+    adequately
+adjusted
+    adjusted
+administration
+    administration
+    administrations
+    administrative
+administrative measures
+    administrative measures
+adopt
+    adopt
+    adopted
+    adopting
+    adoption
+adoption factors
+    adoption factors
+adp
+    adp
+advance
+    advance
+    advanced
+advanced informations
+    advanced informations
+advantage
+    advantage
+    advantages
+advice
+    advice
+affect
+    affect
+    affected
+    affecting
+    affects
+affordable
+    affordable
+afore
+    afore
+afterwards
+    afterwards
+agency
+    agency
+agenda
+    agenda
+agent
+    agent
+    agents
+agent based simulation
+    agent based simulation
+    agent-based simulation
+agent-based
+    agent-based
+agent-based modelling
+    agent-based modelling
+aggregate
+    aggregate
+agreed
+    agreed
+agreement
+    agreement
+    agreements
+agricultural
+    agricultural
+agricultural products
+    agricultural products
+agricultural products based
+    agricultural products based
+ahead
+    ahead
+ahp
+    ahp
+aid
+    aid
+aim
+    aim
+    aimed
+    aiming
+    aims
+air
+    air
+air pollutants
+    air pollutants
+    air pollution
+air quality
+    air quality
+airport
+    airport
+algorithm
+    algorithm
+    algorithms
+algorithm-based
+    algorithm-based
+alliances
+    alliances
+allocate
+    allocate
+    allocating
+    allocation
+    allocations
+allocated urban
+    allocated urban
+allocation model
+    allocation model
+    allocation models
+allof
+    allof
+allow
+    allow
+    allowed
+    allowing
+    allows
+alone
+    alone
+already
+    already
+already-known
+    already-known
+also
+    also
+alternative
+    alternative
+    alternatively
+    alternatives
+alternative clc locations
+    alternative clc locations
+alternative fuels
+    alternative fuels
+alternative solutions
+    alternative solutions
+alternativesone using
+    alternativesone using
+always
+    always
+american
+    american
+amongst
+    amongst
+amount
+    amount
+amphibious vehicles
+    amphibious vehicles
+an integration platform
+    an integration platform
+analyse
+    analyse
+    analysed
+    analyses
+    analysing
+    analyze
+    analyzed
+    analyzes
+    analyzing
+analysis
+    analysis
+analysis frameworks
+    analysis frameworks
+analytic
+    analytic
+    analytical
+analytic mathematical model
+    analytic mathematical model
+analytical approach
+    analytical approach
+analytical framework
+    analytical framework
+andor
+    andor
+annual
+    annual
+    annually
+another
+    another
+answer
+    answer
+    answers
+antecedent
+    antecedent
+anticipate
+    anticipate
+antwerp
+    antwerp
+anymore
+    anymore
+appearance
+    appearance
+    appears
+applicability
+    applicability
+    applicable
+    application
+application examples
+    application examples
+application programs
+    application programs
+applied
+    applied
+    applies
+    apply
+    applying
+appraised
+    appraised
+    appraises
+appreciated
+    appreciated
+approach
+    approach
+    approaches
+appropriate
+    appropriate
+appropriate conditions
+    appropriate conditions
+approximate
+    approximate
+    approximates
+    approximation
+    approximations
+approximate dynamic programming
+    approximate dynamic programming
+approximation algorithms
+    approximation algorithms
+april
+    april
+arc-flow
+    arc-flow
+area
+    area
+    areas
+argument
+    argument
+    arguments
+arising
+    arising
+arrangements
+    arrangements
+arrival
+    arrival
+    arrivals
+    arriving
+art
+    art
+article
+    article
+    articles
+artificial neural network
+    artificial neural network
+aspect
+    aspect
+    aspects
+assess
+    assess
+    assesses
+    assessing
+    assessment
+assigning
+    assigning
+    assignment
+    assignments
+associated
+    associated
+    associations
+assumed
+    assumed
+    assuming
+assumptions
+    assumptions
+asymptotic stable state
+    asymptotic stable state
+atmospheric
+    atmospheric
+attached
+    attached
+attained
+    attained
+attempts
+    attempts
+attention
+    attention
+attract
+    attract
+    attracting
+    attractive
+    attractiveness
+attributes
+    attributes
+auction
+    auction
+    auctions
+auction mechanisms
+    auction mechanisms
+augmented
+    augmented
+austin
+    austin
+australia
+    australia
+authorities
+    authorities
+    authority
+    authors
+automated
+    automated
+automated assignments
+    automated assignments
+automobiles
+    automobiles
+autonomy
+    autonomy
+auxiliary
+    auxiliary
+availability
+    availability
+    available
+average
+    average
+    averaging
+average numbers
+    average numbers
+avoided
+    avoided
+back
+    back
+back-load
+    back-load
+badly
+    badly
+balance
+    balance
+banking
+    banking
+barcelona
+    barcelona
+barge
+    barge
+barriers
+    barriers
+based
+    based
+basis
+    basis
+basis functions
+    basis functions
+batches
+    batches
+bath
+    bath
+battery
+    battery
+battery electric vehicles
+    battery electric vehicles
+baumol-wolfe
+    baumol-wolfe
+bay
+    bay
+bbfcc
+    bbfcc
+bcr
+    bcr
+become
+    become
+    becomes
+beforehand
+    beforehand
+behavior
+    behavior
+    behaviour
+    behavioural
+behavioral research
+    behavioral research
+beijing
+    beijing
+beijing city
+    beijing city
+belgian
+    belgian
+belgium
+    belgium
+belgrade
+    belgrade
+beliefs
+    beliefs
+believe
+    believe
+    believed
+belongs
+    belongs
+benchmark
+    benchmark
+    benchmarking
+benchmark policies
+    benchmark policies
+beneficial
+    beneficial
+beneficiaries
+    beneficiaries
+benefit
+    benefit
+    benefits
+berbah
+    berbah
+best alternative
+    best alternative
+bestworst
+    bestworst
+bi-objective
+    bi-objective
+bi-objective programming
+    bi-objective programming
+biased randomization
+    biased randomization
+bicriteria
+    bicriteria
+bicriteria auction
+    bicriteria auction
+bid
+    bid
+bidders
+    bidders
+big
+    big
+big data applications
+    big data applications
+bikes
+    bikes
+bikesnetherlands
+    bikesnetherlands
+binary
+    binary
+binary particle swarm optimization (bpso)
+    binary particle swarm optimization (bpso)
+binnenstadservice
+    binnenstadservice
+binnenstadservicenl
+    binnenstadservicenl
+biobjective
+    biobjective
+bologna
+    bologna
+border
+    border
+    borders
+boroughs
+    boroughs
+bottom-up
+    bottom-up
+bottom-up model
+    bottom-up model
+bound
+    bound
+boundary
+    boundary
+box
+    box
+    boxes
+bpso
+    bpso
+branch
+    branch
+branch and bound method
+    branch and bound method
+brazil
+    brazil
+brazilian
+    brazilian
+brazilian historical cities
+    brazilian historical cities
+break-even
+    break-even
+bridge
+    bridge
+    bridging
+bring
+    bring
+    bringing
+    brings
+bristol
+    bristol
+bristol city centre
+    bristol city centre
+bristol-bath
+    bristol-bath
+bristolbath
+    bristolbath
+broad
+    broad
+broaden
+    broaden
+broken
+    broken
+brokers
+    brokers
+bronchitis
+    bronchitis
+brought
+    brought
+brussels
+    brussels
+    brussels [brussels (rga)]
+brussels [belgium]
+    brussels [belgium]
+brussels-capital
+    brussels-capital
+brussels-capital region
+    brussels-capital region
+bss
+    bss
+budget
+    budget
+budget control
+    budget control
+buffer
+    buffer
+build
+    build
+    building
+    buildings
+bulk
+    bulk
+bundle
+    bundle
+bus
+    bus
+business
+    business
+    businesses
+    busy
+business development
+    business development
+business model
+    business model
+    business modeling
+    business modelling
+    business models
+business model designs
+    business model designs
+buyer-supplier
+    buyer-supplier
+buys
+    buys
+bwm
+    bwm
+bwmedas
+    bwmedas
+cagliari
+    cagliari
+calabria
+    calabria
+calculate
+    calculate
+    calculated
+    calculating
+    calculation
+calibration
+    calibration
+call
+    call
+    called
+camden
+    camden
+cameras
+    cameras
+campaigns
+    campaigns
+candidate
+    candidate
+candidate locations
+    candidate locations
+canvas
+    canvas
+cap
+    cap
+cap and trade
+    cap and trade
+capable
+    capable
+capacitated
+    capacitated
+capacities
+    capacities
+    capacity
+capital
+    capital
+car
+    car
+car accidents
+    car accidents
+carbon
+    carbon
+carbon credit points
+    carbon credit points
+carbon dioxide
+    carbon dioxide
+carbon emission
+    carbon emission
+    carbon emissions
+carbon footprint
+    carbon footprint
+carefully
+    carefully
+cargo
+    cargo
+cargo bikes
+    cargo bikes
+cargo consolidation
+    cargo consolidation
+cargo handling
+    cargo handling
+cargobikes
+    cargobikes
+carried
+    carried
+    carry
+    carrying
+carrier
+    carrier
+    carriers
+carrier-led
+    carrier-led
+carriershipper
+    carriershipper
+case
+    case
+    cases
+case studies
+    case studies
+    case study
+    case-study
+catchment
+    catchment
+categories
+    categories
+    category
+categorisation
+    categorisation
+categorise
+    categorise
+catering
+    catering
+cause
+    cause
+    caused
+    causes
+    causing
+cba
+    cba
+cbd
+    cbd
+ccps
+    ccps
+cdu
+    cdu
+    cdus
+cedt
+    cedt
+center
+    center
+    centered
+    centers
+    centre
+    centres
+center-of-gravity
+    center-of-gravity
+central
+    central
+    centralized
+centre located
+    centre located
+centre using
+    centre using
+centremudc
+    centremudc
+centrethe
+    centrethe
+centros de distribuicao urbana
+    centros de distribuicao urbana
+certain
+    certain
+certain environment
+    certain environment
+cflp
+    cflp
+chain
+    chain
+    chains
+challenge
+    challenge
+    challenges
+chance
+    chance
+    chances
+change
+    change
+    changes
+    changing
+channel
+    channel
+chaotic system
+    chaotic system
+    chaotic systems
+chapter
+    chapter
+characterise
+    characterise
+    characterize
+    characterized
+characteristic
+    characteristic
+    characteristics
+charge
+    charge
+    charges
+china
+    china
+choice
+    choice
+    choices
+choose
+    choose
+    choosing
+chose
+    chose
+circle
+    circle
+circulate
+    circulate
+    circulation
+cities
+    cities
+    city
+    citys
+citizens
+    citizens
+city center
+    city center
+    city centers
+    city centre
+    city centres
+city distribution
+    city distribution
+city distribution center
+    city distribution center
+    city distribution centers
+city logistic
+    city logistic
+    city logistics
+city logistics business
+    city logistics business
+city logistics center
+    city logistics center
+    city logistics centers
+    city logistics centre
+city logistics distribution network
+    city logistics distribution network
+city logistics initiatives
+    city logistics initiatives
+city logistics measures
+    city logistics measures
+city logistics platform
+    city logistics platform
+city logistics system
+    city logistics system
+city planning
+    city planning
+city-freighters
+    city-freighters
+civil engineering
+    civil engineering
+civilians
+    civilians
+civitas
+    civitas
+clashing
+    clashing
+class
+    class
+classic
+    classic
+classification
+    classification
+    classification (of information)
+classified
+    classified
+clc
+    clc
+clean
+    clean
+clearance
+    clearance
+client
+    client
+    clients
+climate
+    climate
+climate change
+    climate change
+close
+    close
+    closely
+closer
+    closer
+clt
+    clt
+clues
+    clues
+cluster
+    cluster
+    clustering
+    clusters
+cluster analysis
+    cluster analysis
+cluster computing
+    cluster computing
+clustering algorithms
+    clustering algorithms
+co-creation
+    co-creation
+co2 emissions
+    co2 emissions
+coefficient
+    coefficient
+    coefficients
+coeq emissions per parcel delivered
+    coeq emissions per parcel delivered
+collaborate
+    collaborate
+    collaborated
+    collaboration
+    collaborative
+collaborative information portals
+    collaborative information portals
+collaborative integration
+    collaborative integration
+collaborative logistics
+    collaborative logistics
+collaborative network
+    collaborative network
+collaborative urban logistics
+    collaborative urban logistics
+collect
+    collect
+    collected
+    collecting
+    collection
+    collective
+columns
+    columns
+combination
+    combination
+    combinations
+    combine
+    combined
+    combines
+    combining
+combinatorial
+    combinatorial
+combinatorial optimization
+    combinatorial optimization
+combinatorial search
+    combinatorial search
+combined approach
+    combined approach
+come
+    come
+    coming
+commentators
+    commentators
+commerce
+    commerce
+commercial
+    commercial
+    commercialization
+commercial example
+    commercial example
+commercial vehicles
+    commercial vehicles
+commission
+    commission
+commitment
+    commitment
+    committing
+commodities
+    commodities
+common
+    common
+communicated
+    communicated
+    communications
+    community
+compact
+    compact
+companies
+    companies
+    company
+comparative
+    comparative
+    compare
+    compares
+    comparing
+comparative analysis
+    comparative analysis
+comparison
+    comparison
+compatibility
+    compatibility
+compete
+    compete
+    competence
+    competing
+competition
+    competition
+    competitive
+    competitiveness
+competitive services
+    competitive services
+complementary
+    complementary
+complete
+    complete
+complex
+    complex
+    complexity
+complex networks
+    complex networks
+complicated
+    complicated
+component-wise core
+    component-wise core
+    component-wise cores
+components
+    components
+composed
+    composed
+    composing
+compounded
+    compounded
+comprehensive
+    comprehensive
+comprises
+    comprises
+    comprising
+compromise
+    compromise
+compulsory
+    compulsory
+computation
+    computation
+    computational
+    computer
+computation theory
+    computation theory
+computational budget
+    computational budget
+computational linguistics
+    computational linguistics
+computer simulation
+    computer simulation
+computer software
+    computer software
+computer systems programming
+    computer systems programming
+concentrating
+    concentrating
+    concentrations
+concept
+    concept
+    concepts
+conceptual
+    conceptual
+conceptual framework
+    conceptual framework
+concern
+    concern
+    concerning
+    concerns
+concluded
+    concluded
+    concludes
+conclusion
+    conclusion
+    conclusions
+condition
+    condition
+    conditions
+conduct
+    conduct
+    conducted
+    conducting
+    conducts
+conference proceeding
+    conference proceeding
+confidentiality
+    confidentiality
+configurations
+    configurations
+confirmed
+    confirmed
+    confirms
+conflicting
+    conflicting
+conflicting objectives
+    conflicting objectives
+confronting
+    confronting
+congestion
+    congestion
+    congestions
+congestion charging
+    congestion charging
+conjunction
+    conjunction
+connect
+    connect
+    connected
+    connecting
+    connection
+    connectivity
+    connects
+consensus
+    consensus
+consequently
+    consequently
+conservation
+    conservation
+consider
+    consider
+    considered
+    considering
+    considers
+considerable
+    considerable
+    considerably
+    consideration
+    considerations
+consignees
+    consignees
+consignments
+    consignments
+consistent
+    consistent
+    consistently
+    consisting
+    consists
+consolidate
+    consolidate
+    consolidated
+    consolidating
+    consolidation
+    consolidations
+consolidated delivery
+    consolidated delivery
+consolidated delivery fleet
+    consolidated delivery fleet
+consolidated freight terminal
+    consolidated freight terminal
+consolidation center
+    consolidation center
+    consolidation centre
+    consolidation centres
+consolidation facility
+    consolidation facility
+consolidation options
+    consolidation options
+consolidation scenarios
+    consolidation scenarios
+consolidation strategies
+    consolidation strategies
+constituted
+    constituted
+constraint
+    constraint
+    constraints
+construct
+    construct
+    constructed
+    construction
+construction development
+    construction development
+construction innovation
+    construction innovation
+construction innovation method
+    construction innovation method
+consultation process
+    consultation process
+consumer
+    consumer
+    consumers
+consumption
+    consumption
+container
+    container
+    containers
+    contains
+container ship
+    container ship
+container terminal
+    container terminal
+content
+    content
+content analysis
+    content analysis
+context
+    context
+    contexts
+contiguous
+    contiguous
+continue
+    continue
+    continued
+    continuous
+    continuously
+continuous approximation (ca)
+    continuous approximation (ca)
+    continuous approximations
+continuous approximation methods
+    continuous approximation methods
+contracts
+    contracts
+contradict
+    contradict
+contribute
+    contribute
+    contributed
+    contributes
+    contributing
+    contribution
+    contributions
+contributor
+    contributor
+control
+    control
+    controlling
+convenient
+    convenient
+conventional
+    conventional
+conventional truck
+    conventional truck
+convergence
+    convergence
+convergence rate
+    convergence rate
+cooperate
+    cooperate
+    cooperation
+    cooperations
+    cooperative
+cooperation strategies
+    cooperation strategies
+cooperative freight transport systems
+    cooperative freight transport systems
+cooperative game theory
+    cooperative game theory
+coordinate
+    coordinate
+    coordinates
+    coordinating
+    coordination
+coordination mechanism
+    coordination mechanism
+    coordination mechanisms
+cope
+    cope
+copenhagen
+    copenhagen
+copenhagen [(cty) hovedstaden]
+    copenhagen [(cty) hovedstaden]
+copyright
+    copyright
+core
+    core
+corporate
+    corporate
+corporate social responsibility
+    corporate social responsibility
+correctly
+    correctly
+correlated
+    correlated
+    correlation
+correspond
+    correspond
+    corresponding
+    corresponds
+cost
+    cost
+    costs
+cost accounting
+    cost accounting
+cost allocation
+    cost allocation
+cost analysis
+    cost analysis
+cost and benefit analysis
+    cost and benefit analysis
+cost benefit analysis
+    cost benefit analysis
+    cost-benefit analysis
+cost effectiveness
+    cost effectiveness
+    cost-effective
+cost reduction
+    cost reduction
+cost savings
+    cost savings
+cost-attractiveness
+    cost-attractiveness
+cost-benefit
+    cost-benefit
+cost-effective distance of transport
+    cost-effective distance of transport
+cost-efficient
+    cost-efficient
+cost-minimizing
+    cost-minimizing
+cost-relationships
+    cost-relationships
+costdue
+    costdue
+counterbalanced
+    counterbalanced
+countries
+    countries
+coupled
+    coupled
+cover
+    cover
+    covered
+    covering
+cplex
+    cplex
+crashworthiness
+    crashworthiness
+create
+    create
+    created
+    creates
+    creating
+creation
+    creation
+credible
+    credible
+credit
+    credit
+    credits
+criteria
+    criteria
+criterion
+    criterion
+critical
+    critical
+critical factors
+    critical factors
+cross-case
+    cross-case
+cross-dock
+    cross-dock
+    cross-docking
+crowdsourcing
+    crowdsourcing
+crucial
+    crucial
+csi
+    csi
+csimod
+    csimod
+csr
+    csr
+cultural
+    cultural
+current
+    current
+    currently
+current barriers
+    current barriers
+current status
+    current status
+customer
+    customer
+    customers
+    customized
+    customs
+customer care
+    customer care
+customer demands
+    customer demands
+customer dissatisfaction
+    customer dissatisfaction
+customer satisfaction
+    customer satisfaction
+customer satisfaction index
+    customer satisfaction index
+customer satisfaction indices
+    customer satisfaction indices
+customer service
+    customer service
+customer-specific
+    customer-specific
+cycles
+    cycles
+czech
+    czech
+czech republic
+    czech republic
+daily
+    daily
+daily demand
+    daily demand
+data
+    data
+data collection
+    data collection
+data handling
+    data handling
+data processing
+    data processing
+data standardization
+    data standardization
+database
+    database
+dataset
+    dataset
+day
+    day
+dcap
+    dcap
+dcs
+    dcs
+deal
+    deal
+    dealing
+    deals
+decade
+    decade
+    decades
+decided
+    decided
+    deciding
+decision
+    decision
+    decisions
+decision criterions
+    decision criterions
+decision hierarchy structure
+    decision hierarchy structure
+decision levels
+    decision levels
+decision makers
+    decision makers
+    decision-makers
+decision making
+    decision making
+    decision-making
+decision making process
+    decision making process
+    decision-making process
+decision support models
+    decision support models
+decision support system
+    decision support system
+    decision support systems
+decision-making systems
+    decision-making systems
+decompose
+    decompose
+    decomposed
+    decomposes
+decomposition
+    decomposition
+decomposition strategy
+    decomposition strategy
+decoupling
+    decoupling
+decrease
+    decrease
+    decreasing
+define
+    define
+    defined
+    defines
+definition
+    definition
+degraded
+    degraded
+degree
+    degree
+    degrees
+delay
+    delay
+    delays
+deliberation
+    deliberation
+deliver
+    deliver
+    delivered
+    delivering
+deliveries
+    deliveries
+    delivery
+deliveries made
+    deliveries made
+delivery area
+    delivery area
+delivery fleet
+    delivery fleet
+delivery operations
+    delivery operations
+delivery platform
+    delivery platform
+delivery service
+    delivery service
+delivery systems
+    delivery systems
+delivery vehicle
+    delivery vehicle
+    delivery vehicles
+delphi
+    delphi
+delphi method
+    delphi method
+demand
+    demand
+    demanding
+    demands
+demand analysis
+    demand analysis
+demand quantity
+    demand quantity
+demand uncertainty
+    demand uncertainty
+demand-driven
+    demand-driven
+demerits
+    demerits
+demonstrate
+    demonstrate
+    demonstrated
+    demonstrates
+    demonstrating
+    demonstration
+denmark
+    denmark
+dense
+    dense
+density
+    density
+department
+    department
+depend
+    depend
+    dependent
+    depending
+    depends
+deploy
+    deploy
+    deployment
+depot
+    depot
+    depots
+depth
+    depth
+depth of discharges
+    depth of discharges
+deriving
+    deriving
+describe
+    describe
+    described
+    describes
+    describing
+description
+    description
+    descriptive
+design
+    design
+    designing
+    designs
+designmethodologyapproach
+    designmethodologyapproach
+desirable
+    desirable
+    desired
+destination
+    destination
+    destinations
+    destined
+destinationorigin
+    destinationorigin
+detail
+    detail
+    detailed
+detect
+    detect
+deterioration
+    deterioration
+determination
+    determination
+    determine
+    determined
+    determining
+devastation
+    devastation
+developed
+    developed
+    developing
+    development
+    developments
+    develops
+developing countries
+    developing countries
+dialogue
+    dialogue
+diaries
+    diaries
+didactic
+    didactic
+diesel
+    diesel
+diesel truck
+    diesel truck
+diesel vehicles
+    diesel vehicles
+differ
+    differ
+    difference
+    differences
+    different
+    differs
+difference method
+    difference method
+different distance measures
+    different distance measures
+difficult
+    difficult
+difficulties
+    difficulties
+    difficulty
+diffusion
+    diffusion
+diffusion of innovation theory
+    diffusion of innovation theory
+digital storage
+    digital storage
+dijkstra
+    dijkstra
+dijkstra algorithms
+    dijkstra algorithms
+dimensioning
+    dimensioning
+    dimensions
+dioxide
+    dioxide
+direct
+    direct
+    directed
+    direction
+directed towards
+    directed towards
+directly
+    directly
+disaggregate
+    disaggregate
+disagreed
+    disagreed
+disappear
+    disappear
+discharge
+    discharge
+discipline
+    discipline
+discrete
+    discrete
+discrete choice analysis
+    discrete choice analysis
+discrete event simulation
+    discrete event simulation
+discrete networks
+    discrete networks
+discrete-event
+    discrete-event
+discuss
+    discuss
+    discussed
+    discusses
+    discussion
+diseases
+    diseases
+disparities
+    disparities
+dispatch
+    dispatch
+    dispatched
+    dispatches
+    dispatching
+dispatching problem
+    dispatching problem
+disruption
+    disruption
+dissatisfaction
+    dissatisfaction
+dissatisfied
+    dissatisfied
+distance
+    distance
+    distances
+distance measure
+    distance measure
+    distance measures
+distance traveled
+    distance traveled
+    distance travelled
+distinguishing
+    distinguishing
+distribution
+    distribution
+    distributions
+distribution area
+    distribution area
+distribution center
+    distribution center
+    distribution centers
+    distribution centre
+    distribution centres
+distribution center location
+    distribution center location
+distribution costs
+    distribution costs
+distribution enterprises
+    distribution enterprises
+distribution models
+    distribution models
+distribution network
+    distribution network
+    distribution networks
+distribution of goods
+    distribution of goods
+distribution operations
+    distribution operations
+distribution plan
+    distribution plan
+distribution system
+    distribution system
+distributor
+    distributor
+district
+    district
+disturbance
+    disturbance
+disused
+    disused
+divergences
+    divergences
+    divergent
+diversify
+    diversify
+divide
+    divide
+    divided
+documents
+    documents
+doi
+    doi
+domain
+    domain
+    domains
+domestic
+    domestic
+dominant
+    dominant
+    dominate
+doomed
+    doomed
+double
+    double
+double auction
+    double auction
+downstream
+    downstream
+downtown
+    downtown
+downtownperspectives
+    downtownperspectives
+drawing
+    drawing
+    draws
+drawn
+    drawn
+drive
+    drive
+    driving
+driven
+    driven
+drivers
+    drivers
+driving distance
+    driving distance
+dropouts
+    dropouts
+dropped
+    dropped
+drosophila
+    drosophila
+drosophila melanogaster
+    drosophila melanogaster
+dual
+    dual
+dublin
+    dublin
+due
+    due
+dutch
+    dutch
+dvs
+    dvs
+dynamic
+    dynamic
+    dynamics
+dynamic programming
+    dynamic programming
+e-bikes
+    e-bikes
+e-commerce
+    e-commerce
+e-vrp
+    e-vrp
+early
+    early
+east
+    east
+ecms
+    ecms
+eco-friendly
+    eco-friendly
+eco-friendly delivery vans
+    eco-friendly delivery vans
+ecofriendly
+    ecofriendly
+ecological
+    ecological
+economic
+    economic
+    economical
+    economically
+    economics
+economic activities
+    economic activities
+economic analysis
+    economic analysis
+economic and social effects
+    economic and social effects
+economic assessment
+    economic assessment
+economic benefits
+    economic benefits
+economic costs
+    economic costs
+economic efficiency
+    economic efficiency
+economic feasibilities
+    economic feasibilities
+economic sustainability
+    economic sustainability
+economic viability
+    economic viability
+economies
+    economies
+    economy
+economies of scale
+    economies of scale
+ecosystems
+    ecosystems
+edas
+    edas
+effect
+    effect
+    effective
+    effectively
+    effectiveness
+    effects
+effectual
+    effectual
+efficiencies
+    efficiencies
+    efficiency
+    efficient
+    efficiently
+efficient managements
+    efficient managements
+efforts
+    efforts
+either
+    either
+elaborate
+    elaborate
+    elaborated
+elastic
+    elastic
+electric
+    electric
+electric discharges
+    electric discharges
+electric tricycles
+    electric tricycles
+electric truck
+    electric truck
+electric vehicle
+    electric vehicle
+    electric vehicles
+electrical engineering
+    electrical engineering
+electrically-assisted
+    electrically-assisted
+electricallyassisted
+    electricallyassisted
+electron transitions
+    electron transitions
+electronic
+    electronic
+electronic commerce
+    electronic commerce
+element
+    element
+    elements
+eliciting
+    eliciting
+eliminate
+    eliminate
+elucidate
+    elucidate
+embed
+    embed
+embedded
+    embedded
+embedded systems
+    embedded systems
+emerge
+    emerge
+    emerged
+    emergence
+emission
+    emission
+    emissions
+emission control
+    emission control
+emissions reduction
+    emissions reduction
+    emissions reductions
+emitted
+    emitted
+emphasis
+    emphasis
+emphasised
+    emphasised
+empirical
+    empirical
+employees
+    employees
+employs
+    employs
+empty
+    empty
+enable
+    enable
+    enabled
+    enabler
+    enablers
+    enables
+    enabling
+encompasses
+    encompasses
+encourage
+    encourage
+end
+    end
+    ends
+end consumer movements
+    end consumer movements
+energies
+    energies
+    energy
+energy consumption
+    energy consumption
+energy efficiency
+    energy efficiency
+energy policy
+    energy policy
+energy usage
+    energy usage
+energy utilization
+    energy utilization
+enfield
+    enfield
+engineering
+    engineering
+engineering method
+    engineering method
+    engineering methods
+enhance
+    enhance
+enlarge
+    enlarge
+enough
+    enough
+enrichment
+    enrichment
+ensures
+    ensures
+    ensuring
+entail
+    entail
+    entails
+enter
+    enter
+enter-of-gravity model
+    enter-of-gravity model
+enterprise
+    enterprise
+    enterprises
+enthusiasm
+    enthusiasm
+entire
+    entire
+entirety
+    entirety
+entities
+    entities
+entrepreneurial
+    entrepreneurial
+entropy
+    entropy
+entropy methods
+    entropy methods
+envelope
+    envelope
+environment
+    environment
+    environments
+environment friendliness
+    environment friendliness
+environmental
+    environmental
+    environmentally
+environmental and social sustainability
+    environmental and social sustainability
+environmental aspects
+    environmental aspects
+environmental benefits
+    environmental benefits
+environmental economics
+    environmental economics
+environmental effectiveness
+    environmental effectiveness
+environmental impact
+    environmental impact
+    environmental impacts
+environmental impact analysis
+    environmental impact analysis
+environmental monitoring
+    environmental monitoring
+environmental problems
+    environmental problems
+environmental protection
+    environmental protection
+environmental protection agency
+    environmental protection agency
+environmental standpoint
+    environmental standpoint
+environmental sustainability
+    environmental sustainability
+environmentally friendly
+    environmentally friendly
+envy
+    envy
+epsilon
+    epsilon
+equal
+    equal
+    equality
+equilibrate
+    equilibrate
+equipment
+    equipment
+equity
+    equity
+equity-efficiency
+    equity-efficiency
+equivalence
+    equivalence
+    equivalent
+error
+    error
+escalation
+    escalation
+especially
+    especially
+essential
+    essential
+    essentially
+established
+    established
+    establishes
+    establishing
+    establishment
+estate
+    estate
+estimate
+    estimate
+    estimated
+    estimates
+    estimating
+    estimation
+    estimations
+etc
+    etc
+eur
+    eur
+eurasia
+    eurasia
+europe
+    europe
+european
+    european
+european cities
+    european cities
+european union
+    european union
+evaluate
+    evaluate
+    evaluated
+    evaluates
+    evaluating
+    evaluation
+    evaluations
+evaluation criteria
+    evaluation criteria
+evaluation framework
+    evaluation framework
+evaluation values
+    evaluation values
+even
+    even
+event
+    event
+eventual
+    eventual
+    eventually
+evidence
+    evidence
+    evident
+evidenced
+    evidenced
+evolution
+    evolution
+evolutionary game
+    evolutionary game
+evolutionary game model
+    evolutionary game model
+    evolutionary game models
+evolutionary game theory
+    evolutionary game theory
+evolvement
+    evolvement
+ex-ante
+    ex-ante
+ex-ante assessment
+    ex-ante assessment
+ex-post
+    ex-post
+exacerbated
+    exacerbated
+exact
+    exact
+exact method
+    exact method
+examination
+    examination
+    examine
+    examined
+    examines
+    examining
+example
+    example
+    examples
+exceed
+    exceed
+excellent
+    excellent
+exceptionally
+    exceptionally
+excessive
+    excessive
+exchange
+    exchange
+    exchanges
+executing
+    executing
+exemplary
+    exemplary
+exemplified
+    exemplified
+exhaust gas
+    exhaust gas
+exhaustive
+    exhaustive
+exhibit
+    exhibit
+    exhibitions
+    exhibits
+exist
+    exist
+    existing
+expanded
+    expanded
+    expanding
+expansion
+    expansion
+expectations
+    expectations
+    expected
+expend
+    expend
+expensive
+    expensive
+experience
+    experience
+    experiences
+    experiment
+    experiments
+experimental
+    experimental
+experimental economics
+    experimental economics
+expert
+    expert
+    experts
+explain
+    explain
+explanation
+    explanation
+explicit
+    explicit
+exploratory
+    exploratory
+explore
+    explore
+    explores
+exports
+    exports
+expressed
+    expressed
+extend
+    extend
+    extended
+    extending
+extensive
+    extensive
+    extensively
+extent
+    extent
+external
+    external
+    externalities
+external costs
+    external costs
+external effects
+    external effects
+extra
+    extra
+extra-regional
+    extra-regional
+extra-urban
+    extra-urban
+extrapolate
+    extrapolate
+f-ahp
+    f-ahp
+f-statistics
+    f-statistics
+fabric
+    fabric
+face
+    face
+    faces
+    facing
+facilitate
+    facilitate
+    facilitated
+facilities
+    facilities
+    facility
+facility layout
+    facility layout
+facility location
+    facility location
+    facility locations
+    facility-location
+facility location model
+    facility location model
+    facility location models
+facility location problem
+    facility location problem
+fact
+    fact
+factor
+    factor
+    factors
+factor weight
+    factor weight
+factorial analysis
+    factorial analysis
+fail
+    fail
+    failed
+    failing
+    fails
+failure
+    failure
+fairly
+    fairly
+fairness
+    fairness
+fall
+    fall
+fanally
+    fanally
+fano
+    fano
+far
+    far
+fashion
+    fashion
+fast
+    fast
+fatores localizacao
+    fatores localizacao
+favorable
+    favorable
+favorable conditions
+    favorable conditions
+favourability
+    favourability
+fcc
+    fcc
+    fccs
+fcc development
+    fcc development
+feasibility
+    feasibility
+    feasible
+feasibility study
+    feasibility study
+feature
+    feature
+    featured
+    features
+feature-the
+    feature-the
+feeder
+    feeder
+fell
+    fell
+fes
+    fes
+fevs
+    fevs
+fez
+    fez
+field
+    field
+    fields
+field-tested
+    field-tested
+figures
+    figures
+fill
+    fill
+filtering
+    filtering
+filtering method
+    filtering method
+final
+    final
+    finally
+final decision
+    final decision
+final evaluation value
+    final evaluation value
+finance
+    finance
+    financing
+financial
+    financial
+    financially
+financial balance
+    financial balance
+financial incentives
+    financial incentives
+financial viability
+    financial viability
+find
+    find
+    finding
+    findings
+finite
+    finite
+first
+    first
+first-time
+    first-time
+firstly
+    firstly
+fish
+    fish
+fit
+    fit
+    fitting
+five grades
+    five grades
+fixed-rate
+    fixed-rate
+fleet
+    fleet
+    fleets
+fleet operations
+    fleet operations
+flexibility
+    flexibility
+    flexible
+flies
+    flies
+    fly
+floor
+    floor
+flow
+    flow
+    flows
+flow consolidation
+    flow consolidation
+flow consolidation schemes
+    flow consolidation schemes
+flow efficiency
+    flow efficiency
+flow modeling
+    flow modeling
+fluctuating
+    fluctuating
+    fluctuation
+fmagdm
+    fmagdm
+focus
+    focus
+focused
+    focused
+    focuses
+    focusing
+fold
+    fold
+followed
+    followed
+    following
+food
+    food
+footprints
+    footprints
+forecast
+    forecast
+    forecasting
+    forecasts
+foreseen
+    foreseen
+form
+    form
+    forms
+formation
+    formation
+formulas
+    formulas
+formulate
+    formulate
+    formulation
+forth
+    forth
+forward
+    forward
+    forwarders
+fossil
+    fossil
+foster
+    foster
+found
+    found
+foundation
+    foundation
+four-element
+    four-element
+fragile
+    fragile
+fragmented
+    fragmented
+frame
+    frame
+framework
+    framework
+    frameworks
+france
+    france
+franchises
+    franchises
+frankfurt
+    frankfurt
+free
+    free
+freight
+    freight
+    freights
+freight cars
+    freight cars
+freight centers
+    freight centers
+freight consolidation
+    freight consolidation
+    freight consolidations
+freight consolidation center
+    freight consolidation center
+    freight consolidation centers
+    freight consolidation centre
+freight consolidation policy
+    freight consolidation policy
+freight deliveries
+    freight deliveries
+    freight delivery
+freight delivering
+    freight delivering
+freight demand
+    freight demand
+freight distribution
+    freight distribution
+freight distribution network
+    freight distribution network
+freight facilities
+    freight facilities
+freight flows
+    freight flows
+freight forwarders
+    freight forwarders
+freight handling
+    freight handling
+freight interchange warehouse
+    freight interchange warehouse
+freight modeling
+    freight modeling
+freight scheme evaluation
+    freight scheme evaluation
+freight terminal location
+    freight terminal location
+freight terminals
+    freight terminals
+freight traffic
+    freight traffic
+freight transport
+    freight transport
+    freight transportation
+    transporting freight
+freight transport externalities
+    freight transport externalities
+freight trip generation
+    freight trip generation
+freight vehicle
+    freight vehicle
+    freight vehicles
+freight vehicle routing
+    freight vehicle routing
+frequent
+    frequent
+fresh
+    fresh
+friendliness
+    friendliness
+    friendly
+frisian islands
+    frisian islands
+frontier
+    frontier
+fruit
+    fruit
+    fruits
+fruit and vegetable distribution
+    fruit and vegetable distribution
+fruit flies
+    fruit flies
+fruit fly optimization algorithm
+    fruit fly optimization algorithm
+fruits and vegetables
+    fruits and vegetables
+fruits and vegetables hall
+    fruits and vegetables hall
+fruits and vegetables market halls
+    fruits and vegetables market halls
+fuel
+    fuel
+    fuels
+fuelled-electric vehicles
+    fuelled-electric vehicles
+fukuoka
+    fukuoka
+fulfills
+    fulfills
+full
+    full
+fully
+    fully
+fully electric vehicles
+    fully electric vehicles
+fully operational
+    fully operational
+function
+    function
+    functional
+    functioning
+    functions
+function evaluation
+    function evaluation
+function optimization problem
+    function optimization problem
+    function optimization problems
+functional organization
+    functional organization
+functional requirement
+    functional requirement
+fundamental
+    fundamental
+funders
+    funders
+funds
+    funds
+furbot
+    furbot
+furthermore
+    furthermore
+future
+    future
+future research agenda
+    future research agenda
+fuzzy
+    fuzzy
+fuzzy cluster analysis
+    fuzzy cluster analysis
+    fuzzy clustering analysis
+fuzzy clustering
+    fuzzy clustering
+fuzzy clustering analysis method
+    fuzzy clustering analysis method
+fuzzy k-means
+    fuzzy k-means
+fuzzy logic
+    fuzzy logic
+fuzzy mathematics
+    fuzzy mathematics
+fuzzy multi attribute group decision makings (fmagdm)
+    fuzzy multi attribute group decision makings (fmagdm)
+fuzzy multi-criteria
+    fuzzy multi-criteria
+fuzzy multi-criteria decision-making
+    fuzzy multi-criteria decision-making
+fuzzy preferences
+    fuzzy preferences
+fuzzy relations
+    fuzzy relations
+fuzzy sets
+    fuzzy sets
+fuzzy technique
+    fuzzy technique
+fuzzy theories
+    fuzzy theories
+    fuzzy theory
+fuzzy topsis
+    fuzzy topsis
+fuzzy-grey relational analysis
+    fuzzy-grey relational analysis
+gaia
+    gaia
+gain
+    gain
+    gained
+    gaining
+    gains
+gain-sharing
+    gain-sharing
+game
+    game
+    games
+game theory
+    game theory
+    games theory
+gap
+    gap
+    gaps
+gas
+    gas
+gas emissions
+    gas emissions
+gas-powered
+    gas-powered
+gases
+    gases
+gates
+    gates
+general
+    general
+    generality
+    generally
+    generate
+    generated
+    generates
+    generation
+genetic
+    genetic
+genetic algorithm
+    genetic algorithm
+    genetic algorithms
+genetic method
+    genetic method
+geographic
+    geographic
+    geographical
+geographic information system
+    geographic information system
+    geographic information systems
+    geographic information systems (gis)
+geographical distribution
+    geographical distribution
+germany
+    germany
+get
+    get
+    gets
+    getting
+ghg
+    ghg
+gini
+    gini
+gis
+    gis
+give
+    give
+    gives
+global
+    global
+    globalization
+global sustainability
+    global sustainability
+global warming
+    global warming
+gmm
+    gmm
+gmp
+    gmp
+goal
+    goal
+    goals
+good
+    good
+    goods
+goods movement
+    goods movement
+goods transportation
+    goods transportation
+goods vehicles
+    goods vehicles
+governance
+    governance
+    governing
+    government
+    governments
+governmental
+    governmental
+governmental intervention
+    governmental intervention
+gra
+    gra
+grading
+    grading
+gravity
+    gravity
+gravity method
+    gravity method
+great
+    great
+greatly
+    greatly
+greedy
+    greedy
+greedy algorithm
+    greedy algorithm
+greedy approximation algorithm
+    greedy approximation algorithm
+    greedy approximation algorithms
+greek
+    greek
+green
+    green
+green function
+    green function
+green logistics
+    green logistics
+green logistics center
+    green logistics center
+green preferences
+    green preferences
+green products
+    green products
+green vehicle
+    green vehicle
+    green vehicles
+greenbelt
+    greenbelt
+greenhouse
+    greenhouse
+greenhouse gas
+    greenhouse gas
+greenhouse gas emissions
+    greenhouse gas emissions
+greenhouse gases
+    greenhouse gases
+grey
+    grey
+grid
+    grid
+grocery
+    grocery
+group
+    group
+    grouping
+    groups
+grow
+    grow
+    growing
+growth
+    growth
+guarantee
+    guarantee
+guide
+    guide
+guidelines
+    guidelines
+habitability
+    habitability
+hague
+    hague
+hall
+    hall
+    halls
+hampered
+    hampered
+hand
+    hand
+handle
+    handle
+    handled
+    handling
+handoko
+    handoko
+hands-on
+    hands-on
+happening
+    happening
+harbour
+    harbour
+hard
+    hard
+harmful
+    harmful
+haul
+    haul
+health
+    health
+heart
+    heart
+heavily
+    heavily
+heavy
+    heavy
+heavy-and
+    heavy-and
+help
+    help
+    helpful
+    helping
+hence
+    hence
+heritage
+    heritage
+heterogeneity
+    heterogeneity
+    heterogeneous
+heterogeneous fleet
+    heterogeneous fleet
+heterogeneous vehicles
+    heterogeneous vehicles
+heuristic
+    heuristic
+hgv
+    hgv
+    hgvs
+hierarchy
+    hierarchy
+high
+    high
+high costs
+    high costs
+high-load
+    high-load
+higher-value
+    higher-value
+highlight
+    highlight
+    highlighting
+    highlights
+highly
+    highly
+historic
+    historic
+    historical
+historical cities
+    historical cities
+historical heritages
+    historical heritages
+holding
+    holding
+holiday
+    holiday
+holistic
+    holistic
+home
+    home
+horeca
+    horeca
+horizon
+    horizon
+horizontal
+    horizontal
+horizontal cooperation
+    horizontal cooperation
+host
+    host
+hotel
+    hotel
+    hotels
+hotel industry
+    hotel industry
+hovedstaden
+    hovedstaden
+however
+    however
+huaian
+    huaian
+hub
+    hub
+    hubs
+hub-and-spoke
+    hub-and-spoke
+hub-and-spoke system
+    hub-and-spoke system
+huge
+    huge
+human
+    human
+    humans
+hybrid
+    hybrid
+hybrid spatial-fuzzy multi-criteria decision-making
+    hybrid spatial-fuzzy multi-criteria decision-making
+hybrid vehicle
+    hybrid vehicle
+hypercube
+    hypercube
+hypercube model
+    hypercube model
+hypothetical
+    hypothetical
+ibm
+    ibm
+ict
+    ict
+idea
+    idea
+ideal
+    ideal
+ideal solution
+    ideal solution
+identification
+    identification
+identified
+    identified
+    identifies
+    identify
+    identifying
+iems
+    iems
+ignoring
+    ignoring
+illustrate
+    illustrate
+    illustrated
+    illustrates
+    illustrating
+    illustration
+    illustrative
+ilog
+    ilog
+impact
+    impact
+    impacting
+    impacts
+impact assessment
+    impact assessment
+implement
+    implement
+    implementation
+    implementations
+    implemented
+    implementing
+implementation theory
+    implementation theory
+implications
+    implications
+implicit
+    implicit
+implies
+    implies
+import
+    import
+    importance
+    important
+    imports
+importantly
+    importantly
+imposing
+    imposing
+impressive
+    impressive
+improve
+    improve
+    improved
+    improvement
+    improvements
+    improving
+improved fruit fly optimization algorithm
+    improved fruit fly optimization algorithm
+imt
+    imt
+    imts
+imt location
+    imt location
+in-depth
+    in-depth
+inability
+    inability
+inadequate
+    inadequate
+inbound
+    inbound
+incentives
+    incentives
+inclination
+    inclination
+include
+    include
+    included
+    includes
+    including
+inclusive
+    inclusive
+incomplete
+    incomplete
+inconsistent
+    inconsistent
+inconvenience
+    inconvenience
+incorporate
+    incorporate
+    incorporates
+    incorporating
+increase
+    increase
+    increased
+    increases
+    increasing
+increasing costs
+    increasing costs
+increasingly
+    increasingly
+increment
+    increment
+incur
+    incur
+    incurs
+indeed
+    indeed
+independent decision model
+    independent decision model
+    independent decision models
+index
+    index
+index figures
+    index figures
+indicate
+    indicate
+    indicated
+    indicates
+    indications
+    indicator
+    indicators
+    indicators (instruments)
+indicator system
+    indicator system
+indirect
+    indirect
+individual
+    individual
+indonesia
+    indonesia
+induce
+    induce
+industrial
+    industrial
+    industries
+    industry
+industrially-zoned
+    industrially-zoned
+inefficiencies
+    inefficiencies
+inf
+    inf
+infections
+    infections
+influence
+    influence
+    influenced
+    influences
+influential
+    influential
+influential factors
+    influential factors
+information
+    information
+information analysis
+    information analysis
+information systems
+    information systems
+infrastructural
+    infrastructural
+    infrastructure
+    infrastructures
+initial
+    initial
+    initiative
+    initiatives
+    initiator
+    initiators
+inland
+    inland
+inland waterways
+    inland waterways
+inner
+    inner
+inner city area
+    inner city area
+    inner-city area
+inner-city
+    inner-city
+innovate
+    innovate
+    innovates
+    innovation
+    innovations
+    innovative
+innovation method
+    innovation method
+    innovative method
+innovative solution
+    innovative solution
+input
+    input
+    inputs
+insecurity
+    insecurity
+inside
+    inside
+insight
+    insight
+    insights
+inspired
+    inspired
+installation
+    installation
+instance
+    instance
+    instances
+instead
+    instead
+institutional
+    institutional
+instrument
+    instrument
+insurance
+    insurance
+integer
+    integer
+integer programming
+    integer programming
+integer programming models
+    integer programming models
+integrated
+    integrated
+    integrates
+    integrating
+    integration
+integrated maintenance
+    integrated maintenance
+integration platform
+    integration platform
+intelligence
+    intelligence
+intelligent agents
+    intelligent agents
+intends
+    intends
+intensification
+    intensification
+intensity
+    intensity
+inter-establishment
+    inter-establishment
+inter-organisational
+    inter-organisational
+inter-organisational innovation
+    inter-organisational innovation
+inter-organizational
+    inter-organizational
+inter-organizational interaction
+    inter-organizational interaction
+inter-udc
+    inter-udc
+inter-zone
+    inter-zone
+interaction
+    interaction
+interaction mechanisms
+    interaction mechanisms
+interchange
+    interchange
+    interchanges
+interconnection
+    interconnection
+interest
+    interest
+    interested
+    interesting
+    interests
+interface
+    interface
+intermediate
+    intermediate
+intermodal
+    intermodal
+intermodal container terminals
+    intermodal container terminals
+intermodal freight
+    intermodal freight
+intermodal freight terminal
+    intermodal freight terminal
+intermodal freight transport
+    intermodal freight transport
+intermodal terminals
+    intermodal terminals
+intermodal transport
+    intermodal transport
+    intermodal transportation
+internal
+    internal
+    internalize
+    international
+international policies
+    international policies
+international trade
+    international trade
+internet
+    internet
+internet of things
+    internet of things
+    internet of things (iot)
+interoperability
+    interoperability
+interorganizational interaction
+    interorganizational interaction
+interreg
+    interreg
+interurban
+    interurban
+interval-valued
+    interval-valued
+intervene
+    intervene
+intervention
+    intervention
+intervention mechanism
+    intervention mechanism
+interviews
+    interviews
+intra-city
+    intra-city
+intractably
+    intractably
+introduce
+    introduce
+    introduced
+    introduces
+    introducing
+introduction
+    introduction
+intrusion
+    intrusion
+intuitionistic
+    intuitionistic
+inventory
+    inventory
+investigate
+    investigate
+    investigated
+    investigates
+    investigating
+    investigation
+investment
+    investment
+    investments
+investment decisions
+    investment decisions
+involve
+    involve
+    involved
+    involves
+    involving
+involved actors
+    involved actors
+involved stakeholders
+    involved stakeholders
+ioi
+    ioi
+ireland
+    ireland
+isnt
+    isnt
+isolation
+    isolation
+issue
+    issue
+    issues
+istanbul
+    istanbul
+italian
+    italian
+italy
+    italy
+iterative
+    iterative
+iterative method
+    iterative method
+ivb
+    ivb
+japan
+    japan
+jds
+    jds
+jiangxi
+    jiangxi
+jiujiang
+    jiujiang
+jogja inland port
+    jogja inland port
+join
+    join
+    joined
+joint
+    joint
+joint decision
+    joint decision
+    joint decisions
+joint decision model
+    joint decision model
+joint delivery systems
+    joint delivery systems
+journal
+    journal
+    journals
+junction
+    junction
+justify
+    justify
+kayseris
+    kayseris
+keep
+    keep
+key
+    key
+key performance indicators
+    key performance indicators
+key-resource
+    key-resource
+kilometers
+    kilometers
+    kilometres
+kind
+    kind
+    kinds
+kingdom
+    kingdom
+kmeans
+    kmeans
+knowledge
+    knowledge
+kpi
+    kpi
+    kpis
+kpi-based
+    kpi-based
+kuehn-hamburger
+    kuehn-hamburger
+kuehne
+    kuehne
+laboratory
+    laboratory
+lack
+    lack
+    lacking
+lagrange multipliers
+    lagrange multipliers
+lagrangian
+    lagrangian
+lagrangian analysis
+    lagrangian analysis
+lagrangian relaxation
+    lagrangian relaxation
+lagrangian relaxation techniques
+    lagrangian relaxation techniques
+lagrangian slack operator
+    lagrangian slack operator
+laid
+    laid
+lamilo
+    lamilo
+lamilo project
+    lamilo project
+land
+    land
+large
+    large
+large number
+    large number
+large-size
+    large-size
+last
+    last
+last mile
+    last mile
+    last-mile
+last mile delivery
+    last mile delivery
+    last-mile deliveries
+last mile distribution
+    last mile distribution
+last mile logistics
+    last mile logistics
+    last-mile logistics
+last-mile network
+    last-mile network
+last-minute
+    last-minute
+lastly
+    lastly
+lately
+    lately
+latin
+    latin
+latin america
+    latin america
+launched
+    launched
+laws and legislation
+    laws and legislation
+layout
+    layout
+    layouts
+layout design
+    layout design
+layout optimization model
+    layout optimization model
+layout planning
+    layout planning
+lbl freight consolidation
+    lbl freight consolidation
+lbl urban freight boxes
+    lbl urban freight boxes
+lead
+    lead
+    leaded
+    leading
+    leads
+learning
+    learning
+learning algorithms
+    learning algorithms
+learning-based
+    learning-based
+learnt
+    learnt
+led
+    led
+leg
+    leg
+legal
+    legal
+less-than-truckload
+    less-than-truckload
+lessons
+    lessons
+level
+    level
+    levels
+level 2
+    level 2
+level-1
+    level-1
+lexicographical order
+    lexicographical order
+lies
+    lies
+life
+    life
+lifestyle
+    lifestyle
+light
+    light
+light-duty
+    light-duty
+likely
+    likely
+limit
+    limit
+    limitations
+    limited
+    limits
+limitationsimplications
+    limitationsimplications
+line
+    line
+linear
+    linear
+linear programming
+    linear programming
+linear regression model
+    linear regression model
+    linear regression models
+linguistic
+    linguistic
+    linguistics
+linguistic variable
+    linguistic variable
+link
+    link
+    linked
+    links
+lisboa
+    lisboa
+lisbon
+    lisbon
+list
+    list
+literature
+    literature
+literature review
+    literature review
+    literature reviews
+little
+    little
+live
+    live
+    lives
+livelihood
+    livelihood
+load
+    load
+    loading
+load matching
+    load matching
+loading sequence
+    loading sequence
+local
+    local
+    localization
+local impact
+    local impact
+local optimum solution
+    local optimum solution
+locate
+    locate
+    located
+    locating
+    location
+    locations
+location allocation
+    location allocation
+    location-allocation
+location allocation problem
+    location allocation problem
+location decisions
+    location decisions
+location factors
+    location factors
+location models
+    location models
+location plan
+    location plan
+    location planning
+    location plans
+location problems
+    location problems
+location routing problem
+    location routing problem
+location selection
+    location selection
+location-allocation model
+    location-allocation model
+location-routing
+    location-routing
+logic
+    logic
+logistic
+    logistic
+    logistical
+    logistics
+logistic platform
+    logistic platform
+    logistic platforms
+    logistics platform
+    logistics platforms
+logistic system
+    logistic system
+    logistic systems
+    logistics system
+logistica urbana
+    logistica urbana
+logistical activities
+    logistical activities
+logistical infrastructure
+    logistical infrastructure
+logistics and supply chain management
+    logistics and supply chain management
+logistics business
+    logistics business
+logistics center
+    logistics center
+    logistics centers
+logistics cost
+    logistics cost
+    logistics costs
+logistics development
+    logistics development
+logistics distribution
+    logistics distribution
+logistics distribution center
+    logistics distribution center
+    logistics distribution centers
+logistics distribution network
+    logistics distribution network
+    logistics distribution networks
+logistics engineering
+    logistics engineering
+logistics industry
+    logistics industry
+logistics information
+    logistics information
+logistics information platform
+    logistics information platform
+logistics network
+    logistics network
+    network logistics
+logistics pooling
+    logistics pooling
+logistics process
+    logistics process
+logistics service provider
+    logistics service provider
+logistics services
+    logistics services
+logistics simulations
+    logistics simulations
+logistics sprawl
+    logistics sprawl
+logistics-related
+    logistics-related
+logisticstransport
+    logisticstransport
+logit
+    logit
+logit analysis
+    logit analysis
+london
+    london
+long
+    long
+long distance
+    long distance
+    long-distance
+long distance transport
+    long distance transport
+long-haul
+    long-haul
+long-term
+    long-term
+looking
+    looking
+lorries
+    lorries
+loss
+    loss
+lot
+    lot
+low
+    low
+low carbon
+    low carbon
+    low-carbon
+low emission zones
+    low emission zones
+low-cooperative
+    low-cooperative
+low-cost
+    low-cost
+low-pollution
+    low-pollution
+lowers rent
+    lowers rent
+lrp
+    lrp
+lsp
+    lsp
+    lsps
+ltz
+    ltz
+lucca
+    lucca
+maastricht
+    maastricht
+made
+    made
+mail
+    mail
+main
+    main
+main stakeholders
+    main stakeholders
+mainly
+    mainly
+maintained
+    maintained
+    maintaining
+maintenance
+    maintenance
+major
+    major
+    majority
+major cost
+    major cost
+make
+    make
+    makes
+    making
+makers
+    makers
+mall
+    mall
+mamca
+    mamca
+manage
+    manage
+    manageable
+    managed
+    management
+    manager
+    managers
+    managing
+management structure
+    management structure
+manner
+    manner
+manual
+    manual
+manufacturing
+    manufacturing
+manuscript
+    manuscript
+many
+    many
+map
+    map
+margin
+    margin
+maritime transportation
+    maritime transportation
+market
+    market
+    marketing
+    markets
+market shares
+    market shares
+markov
+    markov
+mas-adp
+    mas-adp
+mas-adp based
+    mas-adp based
+mas-q-learning
+    mas-q-learning
+mass-gt
+    mass-gt
+massive
+    massive
+match
+    match
+    matching
+material
+    material
+    materialised
+    materials
+mathematical
+    mathematical
+mathematical model
+    mathematical model
+    mathematical models
+mathematical techniques
+    mathematical techniques
+matheuristic
+    matheuristic
+    matheuristics
+matlab
+    matlab
+matrix
+    matrix
+matters
+    matters
+mature
+    mature
+maximisation
+    maximisation
+    maximising
+    maximize
+    maximizing
+maximizing auctions
+    maximizing auctions
+maximum
+    maximum
+mcdm
+    mcdm
+means
+    means
+meanwhile
+    meanwhile
+measure
+    measure
+    measured
+    measurements
+    measures
+    measuring
+mechanical engineering
+    mechanical engineering
+mechanism
+    mechanism
+    mechanisms
+mechanismsoutside
+    mechanismsoutside
+med
+    med
+median
+    median
+mediterranean cities
+    mediterranean cities
+medium
+    medium
+medium-size
+    medium-size
+    medium-sized
+medium-sized cities
+    medium-sized cities
+meet
+    meet
+    meets
+megacities
+    megacities
+    megacity
+melanogaster
+    melanogaster
+melbourne
+    melbourne
+melbourne , australia
+    melbourne , australia
+member
+    member
+membership
+    membership
+mentioned
+    mentioned
+merits
+    merits
+meta-analysis
+    meta-analysis
+meta-heuristic
+    meta-heuristic
+meta-heuristic approach
+    meta-heuristic approach
+    meta-heuristic approaches
+metaheuristic
+    metaheuristic
+    metaheuristics
+method
+    method
+    methods
+methodological
+    methodological
+    methodologies
+    methodology
+methodological approach
+    methodological approach
+methodological frameworks
+    methodological frameworks
+metrics
+    metrics
+metropolitan
+    metropolitan
+micro
+    micro
+micro-consolidation
+    micro-consolidation
+micro-simulation
+    micro-simulation
+microsimulation
+    microsimulation
+microsimulation models
+    microsimulation models
+migration
+    migration
+milan
+    milan
+mild
+    mild
+mile
+    mile
+    miles
+minas gerais
+    minas gerais
+minimal
+    minimal
+    minimally
+    minimise
+    minimization
+    minimize
+    minimizes
+    minimizing
+minimization problems
+    minimization problems
+minimum
+    minimum
+minute
+    minute
+mip
+    mip
+mistakes
+    mistakes
+mitigate
+    mitigate
+    mitigation
+mix
+    mix
+    mixed
+    mixes
+mixed integer linear programming
+    mixed integer linear programming
+mixed integer linear programming model
+    mixed integer linear programming model
+mixed integer programming
+    mixed integer programming
+    mixed-integer programming
+    mixed-integer programs
+mixed-integer
+    mixed-integer
+mmp
+    mmp
+mobility
+    mobility
+    mobilizing
+modal
+    modal
+    modality
+mode
+    mode
+    modes
+mode choice
+    mode choice
+mode-service
+    mode-service
+model
+    model
+    modeled
+    modeling
+    modelization
+    modelled
+    modelling
+    models
+model test
+    model test
+model-based
+    model-based
+modeling urban distribution center
+    modeling urban distribution center
+models, theoretical
+    models, theoretical
+    theoretical model
+modern
+    modern
+modern logistics
+    modern logistics
+modified
+    modified
+modified customer satisfaction index
+    modified customer satisfaction index
+monetary
+    monetary
+mono-actor
+    mono-actor
+months
+    months
+moreover
+    moreover
+morphologies
+    morphologies
+    morphology
+mostif
+    mostif
+mostly
+    mostly
+motion
+    motion
+motivated
+    motivated
+    motivating
+    motivations
+motor
+    motor
+motor trucks
+    motor trucks
+motor vehicle
+    motor vehicle
+motor vehicle emissions
+    motor vehicle emissions
+movement
+    movement
+    movements
+movers
+    movers
+moves
+    moves
+    moving
+mrlrp
+    mrlrp
+much
+    much
+mudc
+    mudc
+mudc scheme
+    mudc scheme
+multi
+    multi
+multi agent simulation
+    multi agent simulation
+    multi-agent simulation
+multi agent systems
+    multi agent systems
+    multi-agent system
+    multi-agent systems
+multi criteria analysis
+    multi criteria analysis
+multi criteria decision making
+    multi criteria decision making
+    multi-criteria decision making
+    multi-criteria decision making (mcdm)
+    multi-criteria decision-making (mcdm)
+multi-actor
+    multi-actor
+multi-actor multi-criteria analysis
+    multi-actor multi-criteria analysis
+    multi-actor multi-criteria analysis (mamca)
+multi-agent
+    multi-agent
+multi-agent model
+    multi-agent model
+    multi-agent models
+multi-attribute
+    multi-attribute
+multi-beneficial
+    multi-beneficial
+multi-client
+    multi-client
+multi-commodity
+    multi-commodity
+multi-criteria
+    multi-criteria
+multi-criteria decision analysis (mcda)
+    multi-criteria decision analysis (mcda)
+multi-criteria evaluation
+    multi-criteria evaluation
+multi-criteria evaluation framework
+    multi-criteria evaluation framework
+multi-criteria method
+    multi-criteria method
+multi-criteria objective
+    multi-criteria objective
+multi-depot
+    multi-depot
+multi-dimensional
+    multi-dimensional
+multi-level
+    multi-level
+multi-level logistics
+    multi-level logistics
+multi-level logistics distribution center
+    multi-level logistics distribution center
+multi-modal
+    multi-modal
+multi-modal urban distribution centre
+    multi-modal urban distribution centre
+multi-mode
+    multi-mode
+multi-objective
+    multi-objective
+multi-objective formulation
+    multi-objective formulation
+multi-objective mixed-integer linear programming
+    multi-objective mixed-integer linear programming
+multi-objective optimization
+    multi-objective optimization
+multi-provider
+    multi-provider
+multi-stakeholder
+    multi-stakeholder
+multi-supplier
+    multi-supplier
+multi-tenant
+    multi-tenant
+multi-tenant buildings
+    multi-tenant buildings
+multi-user
+    multi-user
+multi-variety
+    multi-variety
+multiagent
+    multiagent
+multicommodity-ring
+    multicommodity-ring
+multicriteria
+    multicriteria
+multicriteria analysis
+    multicriteria analysis
+multicriteria optimization
+    multicriteria optimization
+multifarious
+    multifarious
+multiobjective optimization
+    multiobjective optimization
+multiple
+    multiple
+multiple location decision
+    multiple location decision
+multiple stakeholders
+    multiple stakeholders
+multiple-case
+    multiple-case
+multistage
+    multistage
+multivariant analysis
+    multivariant analysis
+multivariate
+    multivariate
+multivariate factorial analysis
+    multivariate factorial analysis
+multivariate statistical analysis
+    multivariate statistical analysis
+municipal
+    municipal
+    municipalities
+    municipality
+municipal administration
+    municipal administration
+municipal managements
+    municipal managements
+mutual
+    mutual
+nagel
+    nagel
+named
+    named
+    namely
+national
+    national
+nature
+    nature
+navigation
+    navigation
+nearly
+    nearly
+necessarily
+    necessarily
+necessary
+    necessary
+necessity
+    necessity
+need
+    need
+    needed
+    needs
+negative
+    negative
+    negatively
+negative correlation
+    negative correlation
+negative effects
+    negative effects
+negative externalities
+    negative externalities
+neighbours
+    neighbours
+net
+    net
+netherlands
+    netherlands
+network
+    network
+    networks
+network design
+    network design
+network flow problem
+    network flow problem
+neural
+    neural
+neural networks
+    neural networks
+    neural networks (computer)
+neuro-fuzzy network
+    neuro-fuzzy network
+neurofuzzy
+    neurofuzzy
+neutral
+    neutral
+nevertheless
+    nevertheless
+new
+    new
+new solution
+    new solution
+new south wales
+    new south wales
+next
+    next
+night
+    night
+nijmegen
+    nijmegen
+nocv1
+    nocv1
+nodal
+    nodal
+nodes
+    nodes
+noise
+    noise
+noise emissions
+    noise emissions
+noise nuisance
+    noise nuisance
+non-
+    non-
+non-cooperative
+    non-cooperative
+non-emptiness
+    non-emptiness
+non-equal
+    non-equal
+non-linear
+    non-linear
+non-linear mixed integer programming
+    non-linear mixed integer programming
+non-motorized
+    non-motorized
+non-motorized modes
+    non-motorized modes
+noncentral
+    noncentral
+nonlinear
+    nonlinear
+nonprofit
+    nonprofit
+normally
+    normally
+north
+    north
+north frisian islands
+    north frisian islands
+northern europe
+    northern europe
+norway
+    norway
+norwegian
+    norwegian
+nostram
+    nostram
+notably
+    notably
+notion
+    notion
+novel
+    novel
+novelty
+    novelty
+novi
+    novi
+novi sad
+    novi sad
+nox
+    nox
+np-hard
+    np-hard
+nsw
+    nsw
+number
+    number
+    numbers
+number of vehicles
+    number of vehicles
+numerical
+    numerical
+    numerically
+    numerous
+numerical algorithms
+    numerical algorithms
+numerical applications
+    numerical applications
+numerical computations
+    numerical computations
+numerical experiments
+    numerical experiments
+numerical model
+    numerical model
+nwe
+    nwe
+objective
+    objective
+    objectives
+    objects
+observation
+    observation
+    observed
+obstacle
+    obstacle
+    obstacles
+obtainable
+    obtainable
+    obtained
+obvious
+    obvious
+offer
+    offer
+    offered
+    offering
+    offerings
+office
+    office
+officially
+    officially
+often
+    often
+ology
+    ology
+on-going
+    on-going
+on-site testing
+    on-site testing
+on-street
+    on-street
+one using
+    one using
+one year
+    one year
+ones
+    ones
+onset
+    onset
+open
+    open
+operate
+    operate
+    operated
+    operates
+    operating
+    operation
+    operational
+    operations
+    operativity
+    operator
+    operators
+operating costs
+    operating costs
+operating modes
+    operating modes
+operational characteristics
+    operational characteristics
+operational requirements
+    operational requirements
+operational research
+    operational research
+operational scenario
+    operational scenario
+operationalise
+    operationalise
+opinion
+    opinion
+    opinions
+opportunities
+    opportunities
+    opportunity
+optimal
+    optimal
+    optimality
+    optimise
+    optimising
+    optimization
+    optimize
+    optimized
+optimal locating
+    optimal locating
+    optimal location
+    optimal locations
+optimal locating method
+    optimal locating method
+optimal location planning
+    optimal location planning
+optimization algorithm
+    optimization algorithm
+    optimization algorithms
+optimization methodology
+    optimization methodology
+optimization of freight transport
+    optimization of freight transport
+optimization problems
+    optimization problems
+optimum
+    optimum
+    optimums
+option
+    option
+order
+    order
+    ordered
+    orders
+order sharing
+    order sharing
+ordered weighted averaging
+    ordered weighted averaging
+organisation
+    organisation
+    organization
+    organizations
+    organizing
+organization and administration
+    organization and administration
+organization and management
+    organization and management
+organizational
+    organizational
+orient
+    orient
+    oriented
+origin
+    origin
+    original
+    originates
+    origins
+originalityvalue
+    originalityvalue
+origindestination
+    origindestination
+orkb-framework
+    orkb-framework
+orthogonal
+    orthogonal
+oslo
+    oslo
+    oslo [oslo (cnt)]
+oslo [norway]
+    oslo [norway]
+others
+    others
+ouro
+    ouro
+ouro preto
+    ouro preto
+outcome-
+    outcome-
+    outcomes
+outlets
+    outlets
+outperforms
+    outperforms
+output
+    output
+    outputs
+outside
+    outside
+outskirtusing
+    outskirtusing
+overall
+    overall
+overall factor
+    overall factor
+overcome
+    overcome
+    overcoming
+overnight
+    overnight
+overview
+    overview
+owns
+    owns
+p-median
+    p-median
+p-median problem
+    p-median problem
+    p-median problems
+p-values
+    p-values
+package
+    package
+    packages
+    packaging
+pair
+    pair
+pairwise
+    pairwise
+pairwise comparison
+    pairwise comparison
+panuccio
+    panuccio
+paper
+    paper
+    papers
+paper herein
+    paper herein
+parameters
+    parameters
+parcel
+    parcel
+    parcels
+parcel delivery
+    parcel delivery
+parcel distribution
+    parcel distribution
+parcel distribution network
+    parcel distribution network
+pareto
+    pareto
+paris
+    paris
+parking
+    parking
+part
+    part
+    parts
+participants
+    participants
+    participate
+    participating
+    participation
+participating carriers
+    participating carriers
+participating retailers
+    participating retailers
+particle
+    particle
+    particles
+particular
+    particular
+particularly
+    particularly
+parties
+    parties
+partner
+    partner
+    partners
+partnership
+    partnership
+    partnerships
+passenger
+    passenger
+path
+    path
+pathway
+    pathway
+pattern
+    pattern
+    patterns
+payload
+    payload
+penalty
+    penalty
+penetration
+    penetration
+people
+    people
+per parcel
+    per parcel
+perceive
+    perceive
+    perceived
+percent
+    percent
+perception
+    perception
+    perceptions
+perfectly
+    perfectly
+perform
+    perform
+    performance
+    performances
+    performed
+    performing
+    performs
+performance evaluation
+    performance evaluation
+performance indicators
+    performance indicators
+    performance indices
+performance measurement
+    performance measurement
+    performance measurements
+performed using
+    performed using
+period
+    period
+    periods
+peripheral
+    peripheral
+periphery
+    periphery
+perishable
+    perishable
+permit
+    permit
+personal
+    personal
+personnel
+    personnel
+personnel training
+    personnel training
+perspective
+    perspective
+    perspectives
+pertaining
+    pertaining
+petrol
+    petrol
+pharmaceutical
+    pharmaceutical
+phase
+    phase
+physical
+    physical
+pickup
+    pickup
+    pickups
+picture
+    picture
+pilot
+    pilot
+    pilots
+pilot projects
+    pilot projects
+pinpointed
+    pinpointed
+piraeus
+    piraeus
+place
+    place
+    places
+plan
+    plan
+    planned
+    planning
+    plans
+planners
+    planners
+planning and evaluation methods
+    planning and evaluation methods
+planning and layout
+    planning and layout
+    planning and layouts
+planning method
+    planning method
+planning models
+    planning models
+plant
+    plant
+platform
+    platform
+    platforms
+plausible
+    plausible
+play
+    play
+    played
+    plays
+players
+    players
+players-carriers
+    players-carriers
+plenty
+    plenty
+pm emissions
+    pm emissions
+pm2.5
+    pm2.5
+point
+    point
+    pointed
+    points
+poland
+    poland
+policies
+    policies
+    policy
+policy evaluation
+    policy evaluation
+policy implementation
+    policy implementation
+policy making
+    policy making
+policy support
+    policy support
+policya
+    policya
+policymakers
+    policymakers
+political
+    political
+pollutant emissions
+    pollutant emissions
+    polluting emissions
+pollutants
+    pollutants
+    polluted
+    polluting
+    pollution
+    pollutions
+pooling
+    pooling
+poor
+    poor
+poorly
+    poorly
+popular
+    popular
+populated
+    populated
+    population
+    populations
+population statistics
+    population statistics
+port
+    port
+    ports
+port operation
+    port operation
+port terminals
+    port terminals
+portal
+    portal
+portfolio
+    portfolio
+ports and harbors
+    ports and harbors
+pose
+    pose
+    poses
+position
+    position
+    positions
+    positive
+    positively
+possibilictic linear programming
+    possibilictic linear programming
+possibilistic
+    possibilistic
+possibilistic programming
+    possibilistic programming
+possibilities
+    possibilities
+    possibility
+    possible
+    possibly
+possible scenarios
+    possible scenarios
+post evaluations
+    post evaluations
+    post-evaluation
+post-decision
+    post-decision
+post-evaluation deliberation
+    post-evaluation deliberation
+potential
+    potential
+    potentialities
+    potentiality
+    potentially
+    potentials
+potential benefits
+    potential benefits
+potential demand
+    potential demand
+    potential demands
+power
+    power
+powergovernment
+    powergovernment
+practical
+    practical
+    practicality
+    practically
+    practice
+    practices
+practitioners
+    practitioners
+pre-feasibility
+    pre-feasibility
+pre-retailing
+    pre-retailing
+preannounced
+    preannounced
+precision
+    precision
+predetermined
+    predetermined
+predict
+    predict
+    prediction
+    predicts
+preference
+    preference
+    preferences
+preliminary
+    preliminary
+premises
+    premises
+preparations
+    preparations
+presence
+    presence
+present
+    present
+    presented
+    presenting
+    presents
+preservation
+    preservation
+    preserve
+    preserving
+pressure
+    pressure
+preto
+    preto
+prevent
+    prevent
+    preventive
+preventive maintenance actions
+    preventive maintenance actions
+previous
+    previous
+price
+    price
+    prices
+    pricing
+primarily
+    primarily
+principal
+    principal
+principle
+    principle
+    principles
+prior
+    prior
+priorities
+    priorities
+    priority
+privacy preservation
+    privacy preservation
+private
+    private
+privately-initiated
+    privately-initiated
+probabilistic
+    probabilistic
+probability
+    probability
+probability function
+    probability function
+    probability functions
+problem
+    problem
+    problems
+problematic
+    problematic
+procedure
+    procedure
+    procedures
+process
+    process
+    processes
+    processing
+procrustes
+    procrustes
+produce
+    produce
+    produced
+    producer
+    producers
+    produces
+    producing
+product
+    product
+    production
+    productive
+    productivity
+    products
+product design
+    product design
+profit
+    profit
+    profitability
+    profitable
+    profits
+profit functions
+    profit functions
+profit margin
+    profit margin
+profit-maximizing
+    profit-maximizing
+program
+    program
+    programme
+    programming
+    programs
+project
+    project
+    projects
+promethee
+    promethee
+prominent
+    prominent
+promising
+    promising
+promote
+    promote
+    promoted
+    promoters
+    promoting
+    promotion
+prone
+    prone
+proper
+    proper
+properly
+    properly
+properties
+    properties
+    property
+proportionally
+    proportionally
+propose
+    propose
+    proposed
+    proposes
+    proposing
+proposed approach
+    proposed approach
+proposed framework
+    proposed framework
+proposed model
+    proposed model
+    proposed modelling
+proposition
+    proposition
+    propositions
+protection
+    protection
+protection of the environments
+    protection of the environments
+prototype
+    prototype
+prove
+    prove
+    proved
+    proving
+proven
+    proven
+provide
+    provide
+    provided
+    provider
+    providers
+    provides
+    providing
+province
+    province
+provision
+    provision
+    provisioning
+proximity
+    proximity
+psychology
+    psychology
+public
+    public
+public administration
+    public administration
+public authorities
+    public authorities
+public policies
+    public policies
+    public policy
+public private partnerships
+    public private partnerships
+    public-private partnership
+public-led
+    public-led
+public-private
+    public-private
+publicly
+    publicly
+published
+    published
+purchase
+    purchase
+purely
+    purely
+purpose
+    purpose
+    purposes
+pursue
+    pursue
+put
+    put
+    putting
+q-analysis
+    q-analysis
+q-learning
+    q-learning
+q-methodology
+    q-methodology
+quadricycles
+    quadricycles
+qualitative
+    qualitative
+qualitative analysis
+    qualitative analysis
+quality
+    quality
+quality problems
+    quality problems
+quantify
+    quantify
+    quantifying
+quantitative
+    quantitative
+quantitative calculation method
+    quantitative calculation method
+quantitative tool
+    quantitative tool
+queensland
+    queensland
+question
+    question
+    questions
+questionnaire
+    questionnaire
+queueing theory
+    queueing theory
+queuing
+    queuing
+queuing location problem
+    queuing location problem
+queuing theory
+    queuing theory
+quite
+    quite
+r and shiny
+    r and shiny
+rail
+    rail
+rail transport
+    rail transport
+rail-based
+    rail-based
+railroad yards and terminals
+    railroad yards and terminals
+railroads
+    railroads
+railway
+    railway
+raise
+    raise
+    raises
+random
+    random
+    randomness
+range
+    range
+    ranged
+rank
+    rank
+    ranked
+    ranking
+rapid
+    rapid
+rapidly
+    rapidly
+rarely
+    rarely
+rate
+    rate
+    rates
+    ratings
+rather
+    rather
+rational
+    rational
+    rationalise
+re-examining
+    re-examining
+re-routing
+    re-routing
+reach
+    reach
+    reached
+    reaching
+real
+    real
+real-data
+    real-data
+real-life
+    real-life
+real-time traffic datum
+    real-time traffic datum
+real-world
+    real-world
+realities
+    realities
+    reality
+realize
+    realize
+reason
+    reason
+    reasonable
+    reasons
+reasonable location
+    reasonable location
+reasonable scale
+    reasonable scale
+rebalancing
+    rebalancing
+receive
+    receive
+    received
+    receivers
+    receives
+    receiving
+recent
+    recent
+    recently
+recipients
+    recipients
+recognised
+    recognised
+recommendations
+    recommendations
+reconfigurable hardware
+    reconfigurable hardware
+record
+    record
+recycling
+    recycling
+redesigned
+    redesigned
+    redesigning
+reduced
+    reduced
+    reducing
+reduction
+    reduction
+    reductions
+reference
+    reference
+    referred
+    referring
+    refers
+refine
+    refine
+    refinement
+reflect
+    reflect
+    reflecting
+    reflects
+regarded
+    regarded
+    regarding
+    regards
+regardless
+    regardless
+regeneration
+    regeneration
+regent
+    regent
+reggio
+    reggio
+reggio di calabria
+    reggio di calabria
+region
+    region
+    regional
+    regions
+region multi-level logistics distribution
+    region multi-level logistics distribution
+regional planning
+    regional planning
+regional resources
+    regional resources
+registered
+    registered
+regression model
+    regression model
+regular
+    regular
+regulate
+    regulate
+    regulation
+    regulations
+regulatory
+    regulatory
+regulatory support
+    regulatory support
+reinforced learning
+    reinforced learning
+    reinforcement learning
+reinforcement
+    reinforcement
+related
+    related
+    relates
+    relating
+    relation
+    relational
+    relations
+relative
+    relative
+    relatively
+relaxation
+    relaxation
+relevant
+    relevant
+reliability
+    reliability
+reliant
+    reliant
+relies
+    relies
+    rely
+relieve
+    relieve
+remain
+    remain
+    remaining
+    remains
+renaissance
+    renaissance
+renewable
+    renewable
+rent
+    rent
+replaced
+    replaced
+    replacing
+replenishment
+    replenishment
+replicability
+    replicability
+    replicating
+reports
+    reports
+represent
+    represent
+    representative
+    representing
+    represents
+representation
+    representation
+reproduce
+    reproduce
+republic
+    republic
+requests
+    requests
+require
+    require
+    requirement
+    requirements
+    requires
+    requiring
+research
+    research
+    researchers
+research agenda
+    research agenda
+research communities
+    research communities
+research framework
+    research framework
+research programs
+    research programs
+resident
+    resident
+    residents
+residential
+    residential
+residents-bid
+    residents-bid
+resolution
+    resolution
+resource
+    resource
+    resources
+resourcesconstraints
+    resourcesconstraints
+respect
+    respect
+    respective
+    respectively
+respiratory
+    respiratory
+respondents
+    respondents
+    responds
+response
+    response
+    responses
+    responsibility
+    responsible
+    responsive
+restart
+    restart
+restocking
+    restocking
+restricting
+    restricting
+    restriction
+    restrictions
+    restrictive
+    restricts
+result
+    result
+    resulted
+    resulting
+    results
+retail
+    retail
+    retailer
+    retailers
+    retailing
+retail stores
+    retail stores
+retailers' point of view
+    retailers' point of view
+retain
+    retain
+reveal
+    reveal
+    revealed
+    reveals
+revenue
+    revenue
+    revenues
+reverse
+    reverse
+reverse flow
+    reverse flow
+reverse logistics
+    reverse logistics
+review
+    review
+    reviewed
+    reviewing
+    reviews
+revises
+    revises
+revival
+    revival
+rhine-main
+    rhine-main
+rhine-main area
+    rhine-main area
+ribe
+    ribe
+right
+    right
+rijeka
+    rijeka
+ring
+    ring
+rising
+    rising
+risk
+    risk
+    risks
+road
+    road
+    roads
+road congestion
+    road congestion
+road transport
+    road transport
+road-only scheme
+    road-only scheme
+roadside
+    roadside
+robust
+    robust
+    robustness
+robust optimization
+    robust optimization
+role
+    role
+    roles
+rolling
+    rolling
+rolling horizon
+    rolling horizon
+rollout
+    rollout
+rome
+    rome
+rose
+    rose
+rotation
+    rotation
+rotterdam
+    rotterdam
+route
+    route
+    routes
+    routing
+routing problem
+    routing problem
+    routing problems
+rule
+    rule
+run
+    run
+    running
+rural
+    rural
+sabara
+    sabara
+sad
+    sad
+safety
+    safety
+saint-etienne
+    saint-etienne
+saintetienne
+    saintetienne
+sales
+    sales
+sales-oriented
+    sales-oriented
+sample
+    sample
+satellites
+    satellites
+satisfaction
+    satisfaction
+satisfy
+    satisfy
+    satisfying
+saturation
+    saturation
+save
+    save
+    saving
+    savings
+scale
+    scale
+scale economies
+    scale economies
+scandinavia
+    scandinavia
+scarce
+    scarce
+scba
+    scba
+scenario
+    scenario
+    scenarios
+scenario building
+    scenario building
+    scenario-building
+scenario planning
+    scenario planning
+    scenario-planning
+schedules
+    schedules
+    scheduling
+scheme
+    scheme
+    schemes
+scheme evaluation
+    scheme evaluation
+scheme selection
+    scheme selection
+scholarly
+    scholarly
+scholars
+    scholars
+science
+    science
+    sciences
+scientific
+    scientific
+scientific method
+    scientific method
+scope
+    scope
+scotland
+    scotland
+sea
+    sea
+seamless
+    seamless
+search
+    search
+    searching
+search engines
+    search engines
+seasonal
+    seasonal
+second
+    second
+secondly
+    secondly
+sections
+    sections
+sector
+    sector
+    sectors
+sector-related
+    sector-related
+security
+    security
+seeking
+    seeking
+    seeks
+seem
+    seem
+    seemed
+    seems
+segment
+    segment
+seize
+    seize
+seldom
+    seldom
+select
+    select
+    selecting
+    selection
+self-financing
+    self-financing
+self-service
+    self-service
+self-sustaining
+    self-sustaining
+sellers
+    sellers
+semi structured interviews
+    semi structured interviews
+semi-cooperative
+    semi-cooperative
+semi-structured
+    semi-structured
+semistructured
+    semistructured
+sensitive
+    sensitive
+    sensitivity
+sensitivity analysis
+    sensitivity analysis
+sensitivy analysis
+    sensitivy analysis
+sent
+    sent
+separately
+    separately
+sequence
+    sequence
+sequential
+    sequential
+serbia
+    serbia
+series
+    series
+serious
+    serious
+serve
+    serve
+    served
+    serves
+    serving
+service
+    service
+    services
+    servicing
+service prices
+    service prices
+service providers
+    service providers
+sessions
+    sessions
+set
+    set
+    sets
+    setting
+    settings
+set-partitioning-like
+    set-partitioning-like
+setup
+    setup
+several
+    several
+    severe
+    severs
+shanghai
+    shanghai
+shape
+    shape
+share
+    share
+    shared
+    sharing
+shareable
+    shareable
+shared-resource
+    shared-resource
+    sharing resources
+sheds
+    sheds
+shift
+    shift
+    shifting
+shiny
+    shiny
+ship
+    ship
+    shipping
+    ships
+shipment
+    shipment
+    shipments
+shipper
+    shipper
+    shippers
+shipperscarriers
+    shipperscarriers
+shop
+    shop
+    shopping
+    shops
+shopkeepers
+    shopkeepers
+short
+    short
+show
+    show
+    showed
+    shows
+shuttle
+    shuttle
+signal
+    signal
+significance
+    significance
+    significant
+significantly
+    significantly
+significantly reduce
+    significantly reduce
+similar
+    similar
+    similarity
+simply
+    simply
+simulate
+    simulate
+    simulated
+    simulates
+    simulating
+    simulation
+    simulations
+    simulator
+simulation analysis
+    simulation analysis
+simulation approach
+    simulation approach
+simulation model
+    simulation model
+simulation platform
+    simulation platform
+simulation-adaptive
+    simulation-adaptive
+simulation-based
+    simulation-based
+simultaneously
+    simultaneously
+singapore
+    singapore
+single
+    single
+single location selection
+    single location selection
+sinks
+    sinks
+site
+    site
+    sites
+    siting
+site selection
+    site selection
+site testing
+    site testing
+    site-testing
+site-related
+    site-related
+situation
+    situation
+    situations
+size
+    size
+    sizes
+    sizing
+skills
+    skills
+sleman
+    sleman
+slightly
+    slightly
+slr
+    slr
+small
+    small
+small-size
+    small-size
+smart
+    smart
+smart cities
+    smart cities
+    smart city
+smart city logistics
+    smart city logistics
+sme
+    sme
+smile project
+    smile project
+snowball
+    snowball
+so-called
+    so-called
+social
+    social
+social and environmental
+    social and environmental
+social cost benefit analysis
+    social cost benefit analysis
+    social cost-benefit analysis
+societal
+    societal
+society
+    society
+socio-economic
+    socio-economic
+sociological
+    sociological
+soft computing
+    soft computing
+software
+    software
+software testing
+    software testing
+sole
+    sole
+solid
+    solid
+solution
+    solution
+    solutions
+solution concepts
+    solution concepts
+solve
+    solve
+    solved
+    solves
+    solving
+solver
+    solver
+    solvers
+sometimes
+    sometimes
+soon
+    soon
+sorting
+    sorting
+sought
+    sought
+sound
+    sound
+source
+    source
+    sources
+    sourcing
+south
+    south
+southampton
+    southampton
+southern
+    southern
+southern italy
+    southern italy
+space
+    space
+    spaces
+spanish
+    spanish
+spatial
+    spatial
+spatial analysis
+    spatial analysis
+spatial data
+    spatial data
+spatial decision support
+    spatial decision support
+spatial-fuzzy multi-criteria decision-making
+    spatial-fuzzy multi-criteria decision-making
+spatial-related
+    spatial-related
+special
+    special
+specialist
+    specialist
+specialist technology
+    specialist technology
+specific
+    specific
+    specifically
+    specificity
+specific distribution
+    specific distribution
+specific location
+    specific location
+specify
+    specify
+spent
+    spent
+spite
+    spite
+spl
+    spl
+sprawl
+    sprawl
+square
+    square
+stability
+    stability
+stability requirements
+    stability requirements
+stable
+    stable
+stable collaboration
+    stable collaboration
+staff
+    staff
+stage includes
+    stage includes
+stages
+    stages
+stakeholder
+    stakeholder
+    stakeholders
+stakeholder analysis
+    stakeholder analysis
+stakeholder engagement
+    stakeholder engagement
+stakeholder-based
+    stakeholder-based
+stakeholder-driven
+    stakeholder-driven
+stakeholders perception
+    stakeholders perception
+stakeholders’ commitment
+    stakeholders’ commitment
+standardization
+    standardization
+standpoints
+    standpoints
+stands
+    stands
+start
+    start
+    started
+    starting
+    starts
+start-up
+    start-up
+state
+    state
+    state-
+    states
+stated preference
+    stated preference
+    stated-preference
+stated-choice
+    stated-choice
+static
+    static
+static simulations
+    static simulations
+stationery
+    stationery
+statistical
+    statistical
+    statistics
+status
+    status
+steering
+    steering
+step
+    step
+    steps
+stifling
+    stifling
+still
+    still
+stochastic
+    stochastic
+stochastic systems
+    stochastic systems
+stockholding
+    stockholding
+stop
+    stop
+    stopped
+    stops
+storage
+    storage
+store
+    store
+    stored
+    stores
+stowage
+    stowage
+    stowage (mines)
+strain measurement
+    strain measurement
+straining
+    straining
+strategic
+    strategic
+strategic planning
+    strategic planning
+strategic transport
+    strategic transport
+strategic transport modelling
+    strategic transport modelling
+strategies
+    strategies
+    strategy
+stream
+    stream
+    streams
+streamline
+    streamline
+street
+    street
+strength
+    strength
+    strengths
+strongly
+    strongly
+structural
+    structural
+    structure
+    structures
+structural literature review
+    structural literature review
+struggled
+    struggled
+studied
+    studied
+    studies
+    study
+study analyzed
+    study analyzed
+study provides
+    study provides
+sub-gradient
+    sub-gradient
+sub-problem
+    sub-problem
+subcontracting
+    subcontracting
+subcontracting strategy
+    subcontracting strategy
+subcontractor
+    subcontractor
+subject
+    subject
+    subjective
+subsector
+    subsector
+    subsectors
+subsequent
+    subsequent
+    subsequently
+subsidiary
+    subsidiary
+subsidies
+    subsidies
+    subsidy
+substantial
+    substantial
+    substantially
+suburbs
+    suburbs
+succeeded
+    succeeded
+success
+    success
+    successes
+    successful
+    successfully
+    successive
+suffer
+    suffer
+    suffering
+sufficient
+    sufficient
+sugar commodity
+    sugar commodity
+suggest
+    suggest
+    suggested
+    suggestions
+    suggests
+suitability
+    suitability
+    suitable
+suitability analysis
+    suitability analysis
+suitable locations
+    suitable locations
+suited
+    suited
+sum
+    sum
+superior
+    superior
+supplement
+    supplement
+supplementary
+    supplementary
+supplier
+    supplier
+    suppliers
+supplies
+    supplies
+    supply
+    supplying
+supply chain
+    supply chain
+    supply chains
+supply chain management
+    supply chain management
+supply-oriented
+    supply-oriented
+support
+    support
+    supported
+    supporting
+    supportive
+    supports
+surely
+    surely
+surrounding
+    surrounding
+survey
+    survey
+    surveys
+survey carried
+    survey carried
+survive
+    survive
+sustainabilities
+    sustainabilities
+    sustainability
+    sustainable
+sustainability disciplines
+    sustainability disciplines
+sustainability enablers
+    sustainability enablers
+sustainable business
+    sustainable business
+sustainable business model
+    sustainable business model
+sustainable city logistics
+    sustainable city logistics
+sustainable collaborative network
+    sustainable collaborative network
+sustainable development
+    sustainable development
+sustainable freight distribution
+    sustainable freight distribution
+sustainable freight transport
+    sustainable freight transport
+sustainable implementation
+    sustainable implementation
+sustainable services
+    sustainable services
+sustainable transport
+    sustainable transport
+sustainable urban freight transport
+    sustainable urban freight transport
+swarm
+    swarm
+sweden
+    sweden
+swinoujscie
+    swinoujscie
+synthetic
+    synthetic
+syracuse
+    syracuse
+system
+    system
+    systems
+system dynamics
+    system dynamics
+systematic
+    systematic
+    systematical
+systematic review
+    systematic review
+systemises
+    systemises
+systems engineering
+    systems engineering
+tabu
+    tabu
+tabu search
+    tabu search
+tactical
+    tactical
+taian
+    taian
+tailored
+    tailored
+take
+    take
+    takes
+    taking
+take-up
+    take-up
+tank-to-wheel
+    tank-to-wheel
+target
+    target
+    targeting
+    targets
+target-oriented
+    target-oriented
+tax
+    tax
+taxation
+    taxation
+tchebycheff
+    tchebycheff
+tchebycheff approach
+    tchebycheff approach
+tco
+    tco
+tdvrptw
+    tdvrptw
+team
+    team
+technical
+    technical
+technical solutions
+    technical solutions
+technique
+    technique
+    techniques
+technological
+    technological
+    technologies
+    technology
+technology-based
+    technology-based
+tehran
+    tehran
+temporary
+    temporary
+tend
+    tend
+tenjin
+    tenjin
+term
+    term
+    terms
+terminal
+    terminal
+    terminals
+territorial
+    territorial
+test
+    test
+    tested
+    testing
+texas
+    texas
+thanks
+    thanks
+the netherlands
+    the netherlands
+themes
+    themes
+theoretical
+    theoretical
+theoretical foundations
+    theoretical foundations
+theoretical study
+    theoretical study
+theory
+    theory
+theory-based
+    theory-based
+thereby
+    thereby
+therefore
+    therefore
+therein
+    therein
+thereto
+    thereto
+thessaloniki
+    thessaloniki
+theworld
+    theworld
+things
+    things
+thinning
+    thinning
+third
+    third
+thoroughly
+    thoroughly
+thoughtful
+    thoughtful
+thowa
+    thowa
+thowa operator
+    thowa operator
+thpa
+    thpa
+three-stage
+    three-stage
+throughput
+    throughput
+thus
+    thus
+tighten
+    tighten
+time
+    time
+    times
+time windows
+    time windows
+    time-window
+time-dependent
+    time-dependent
+time-related
+    time-related
+timeliness
+    timeliness
+timeslondon
+    timeslondon
+timewindow
+    timewindow
+tip
+    tip
+today
+    today
+together
+    together
+tokyo
+    tokyo
+tool
+    tool
+    tools
+topic
+    topic
+    topics
+topographical
+    topographical
+topsis
+    topsis
+total
+    total
+    totally
+tour
+    tour
+tour formation
+    tour formation
+touristic
+    touristic
+touristic cities
+    touristic cities
+towards
+    towards
+town
+    town
+    towns
+toy-sized
+    toy-sized
+trade-off
+    trade-off
+    trade-offs
+tradeoff
+    tradeoff
+traditional
+    traditional
+    traditionally
+traditional approaches
+    traditional approaches
+traffic
+    traffic
+traffic and transport
+    traffic and transport
+traffic congestion
+    traffic congestion
+traffic emission
+    traffic emission
+traffic volumes
+    traffic volumes
+traffic wardens
+    traffic wardens
+training
+    training
+    trains
+tramways
+    tramways
+transdisciplinary
+    transdisciplinary
+transfer
+    transfer
+    transferability
+    transferable
+    transferred
+transform
+    transform
+    transforming
+transhipment
+    transhipment
+transit
+    transit
+transnational
+    transnational
+transport
+    transport
+    transportation
+    transported
+    transports
+transport demand analysis
+    transport demand analysis
+transport externalities
+    transport externalities
+transport infrastructure
+    transport infrastructure
+transport modeling
+    transport modeling
+    transport modelling
+transport planning
+    transport planning
+    transportation planning
+transport policy
+    transport policy
+    transportation policy
+transport resources
+    transport resources
+transport services
+    transport services
+transport vehicle
+    transport vehicle
+transport-related
+    transport-related
+transportation companies
+    transportation companies
+transportation cost
+    transportation cost
+    transportation-cost
+transportation development
+    transportation development
+transportation economics
+    transportation economics
+transportation impacts
+    transportation impacts
+transportation requirements
+    transportation requirements
+transportation routes
+    transportation routes
+transportation simulations
+    transportation simulations
+transportation system
+    transportation system
+transshipment
+    transshipment
+transshipment distribution center
+    transshipment distribution center
+trapezoidal
+    trapezoidal
+travel
+    travel
+    traveled
+    travelled
+    travels
+travel behavior
+    travel behavior
+travel demand
+    travel demand
+treatmenthandling
+    treatmenthandling
+trends
+    trends
+trial
+    trial
+    trials
+trial systems
+    trial systems
+trialability
+    trialability
+triangular
+    triangular
+triangulated
+    triangulated
+tricycles
+    tricycles
+tried
+    tried
+    tries
+trigger
+    trigger
+trip
+    trip
+    trips
+trip generations
+    trip generations
+triple
+    triple
+truck
+    truck
+    trucks
+truck cargo
+    truck cargo
+truck load
+    truck load
+truck transportation
+    truck transportation
+trust
+    trust
+tsdsm
+    tsdsm
+tuple
+    tuple
+    tuples
+turin
+    turin
+turn
+    turn
+    turns
+turnover
+    turnover
+two-echelon
+    two-echelon
+two-echelon vehicle routing problem
+    two-echelon vehicle routing problem
+two-step
+    two-step
+two-tier
+    two-tier
+type
+    type
+    type-
+    types
+typical
+    typical
+    typically
+typology
+    typology
+u.s. environmental protection agency
+    u.s. environmental protection agency
+ucc
+    ucc
+    uccs
+ucc adoption
+    ucc adoption
+ucc concepts
+    ucc concepts
+ucc could
+    ucc could
+ucc could provide
+    ucc could provide
+ucc schemes
+    ucc schemes
+ucc services
+    ucc services
+    ucc-services
+ucc solutions
+    ucc solutions
+ucc study
+    ucc study
+ucc-environment
+    ucc-environment
+uccs-location
+    uccs-location
+udc
+    udc
+    udcs
+udc location
+    udc location
+ufcc
+    ufcc
+    ufccs
+uft
+    uft
+uft policy
+    uft policy
+uft policy setting
+    uft policy setting
+ugms
+    ugms
+ultimate
+    ultimate
+    ultimately
+unattractive
+    unattractive
+unavailability
+    unavailability
+    unavailable
+unaware
+    unaware
+uncertain
+    uncertain
+uncertain environment
+    uncertain environment
+    uncertain environments
+uncertain informations
+    uncertain informations
+uncertainties
+    uncertainties
+    uncertainty
+uncertainty analysis
+    uncertainty analysis
+undergone
+    undergone
+underlying
+    underlying
+underscore
+    underscore
+understand
+    understand
+    understanding
+understood
+    understood
+undertaken
+    undertaken
+undesirable
+    undesirable
+unexpected
+    unexpected
+unfriendly
+    unfriendly
+union
+    union
+unique
+    unique
+    uniquely
+    uniqueness
+united
+    united
+    units
+united kingdom
+    united kingdom
+univariate
+    univariate
+unload
+    unload
+    unloading
+unsuccessful
+    unsuccessful
+unsustainability
+    unsustainability
+    unsustainable
+unwanted
+    unwanted
+updated
+    updated
+upgrading
+    upgrading
+urban
+    urban
+    urban-
+    urbanization
+urban access
+    urban access
+urban area
+    urban area
+    urban areas
+urban congestion
+    urban congestion
+urban consolidation
+    urban consolidation
+urban consolidation center
+    urban consolidation center
+    urban consolidation center (ucc)
+    urban consolidation centers
+    urban consolidation centre
+    urban consolidation centre (ucc)
+    urban consolidation centres
+    urban consolidation centres (uccs)
+urban consolidation centres smart cities
+    urban consolidation centres smart cities
+urban consolodation center
+    urban consolodation center
+urban delivery
+    urban delivery
+urban delivery consolidation
+    urban delivery consolidation
+urban distribution
+    urban distribution
+urban distribution center
+    urban distribution center
+    urban distribution center (udc)
+    urban distribution centers
+    urban distribution centers (udc)
+    urban distribution centre
+urban distribution centersthe
+    urban distribution centersthe
+urban distribution systems
+    urban distribution systems
+urban freight
+    urban freight
+urban freight consolidation
+    urban freight consolidation
+urban freight consolidation center
+    urban freight consolidation center
+    urban freight consolidation centre
+    urban freight consolidation centre (ufcc)
+    urban freight consolidation centres
+    urban freight consolidation centres (ufccs)
+urban freight consolidation curve
+    urban freight consolidation curve
+urban freight consolidation options
+    urban freight consolidation options
+urban freight delivery
+    urban freight delivery
+urban freight demand models
+    urban freight demand models
+urban freight distribution
+    urban freight distribution
+urban freight flows
+    urban freight flows
+urban freight terminal location
+    urban freight terminal location
+urban freight transport
+    urban freight transport
+    urban freight transports
+urban freight transport agents
+    urban freight transport agents
+urban freight transportation demand
+    urban freight transportation demand
+urban goods
+    urban goods
+urban goods distribution
+    urban goods distribution
+urban goods movement
+    urban goods movement
+    urban goods movements
+urban green logistics centers
+    urban green logistics centers
+urban growth
+    urban growth
+urban logistic
+    urban logistic
+    urban logistics
+urban logistics information platform
+    urban logistics information platform
+urban planning
+    urban planning
+urban pollution
+    urban pollution
+urban population
+    urban population
+urban regeneration
+    urban regeneration
+urban traffic
+    urban traffic
+urban traffic control
+    urban traffic control
+urban transport
+    urban transport
+    urban transportation
+urban transport systems
+    urban transport systems
+    urban transportation systems
+urban transportation simulation
+    urban transportation simulation
+urban-rural
+    urban-rural
+urban-rural distribution
+    urban-rural distribution
+urbelog
+    urbelog
+urge
+    urge
+urgent
+    urgent
+usage
+    usage
+use
+    use
+    used
+    useful
+    uses
+    using
+user
+    user
+    users
+utilised
+    utilised
+    utilization
+    utilized
+    utilizing
+uvar
+    uvar
+    uvars
+valencia
+    valencia
+validate
+    validate
+    validated
+    validation
+valuable
+    valuable
+valuate
+    valuate
+value
+    value
+    values
+value function approximation
+    value function approximation
+value-decisions
+    value-decisions
+van
+    van
+    vans
+variable
+    variable
+    variables
+variant
+    variant
+    variants
+variation
+    variation
+variety
+    variety
+various
+    various
+various delivery
+    various delivery
+various delivery fleet
+    various delivery fleet
+varying
+    varying
+vast
+    vast
+vegetable
+    vegetable
+    vegetables
+vehicle
+    vehicle
+    vehicles
+vehicle emissions
+    vehicle emissions
+vehicle routing
+    vehicle routing
+vehicle routing problem
+    vehicle routing problem
+    vehicle routing problems
+vehicle routing problem with time windows
+    vehicle routing problem with time windows
+vehicle-kilometres
+    vehicle-kilometres
+vehicle-related
+    vehicle-related
+vehicle-type
+    vehicle-type
+verifies
+    verifies
+    verify
+versa
+    versa
+version
+    version
+versus
+    versus
+viability
+    viability
+viable
+    viable
+vice
+    vice
+vicinity
+    vicinity
+victoria [australia]
+    victoria [australia]
+view
+    view
+    views
+viewpoint
+    viewpoint
+    viewpoints
+virtual
+    virtual
+    virtually
+virtual addresses
+    virtual addresses
+virtual pricing
+    virtual pricing
+virtual reality
+    virtual reality
+vision
+    vision
+visited
+    visited
+    visits
+visual
+    visual
+    visualisation
+    visualization
+visualization platforms
+    visualization platforms
+visum modelling
+    visum modelling
+vital
+    vital
+    vitality
+vmhs
+    vmhs
+volos
+    volos
+volume
+    volume
+    volumes
+volume-based
+    volume-based
+vrptw
+    vrptw
+wages
+    wages
+waiting
+    waiting
+walking
+    walking
+walthambrussels
+    walthambrussels
+want
+    want
+wardens
+    wardens
+warehouse
+    warehouse
+    warehouses
+warehouse design
+    warehouse design
+warehousing
+    warehousing
+warming
+    warming
+waste
+    waste
+waterway
+    waterway
+way
+    way
+    ways
+weaknesses
+    weaknesses
+weeks
+    weeks
+weight
+    weight
+    weighted
+    weighting
+    weights
+weighted geographical information system data
+    weighted geographical information system data
+weighted linear combinations
+    weighted linear combinations
+welfare
+    welfare
+well
+    well
+well-structured
+    well-structured
+well-to-wheel
+    well-to-wheel
+well-to-wheel analysis
+    well-to-wheel analysis
+wellbalanced
+    wellbalanced
+westpomeranian
+    westpomeranian
+westpomeranian region of poland
+    westpomeranian region of poland
+wet
+    wet
+whereas
+    whereas
+wherein
+    wherein
+whilst
+    whilst
+whole
+    whole
+whole process
+    whole process
+widely
+    widely
+wider
+    wider
+widespread
+    widespread
+widgets
+    widgets
+willing
+    willing
+willingness
+    willingness
+win-win
+    win-win
+window
+    window
+    windows
+winner
+    winner
+winner determination problem
+    winner determination problem
+wireless telecommunication systems
+    wireless telecommunication systems
+wlc
+    wlc
+wolfe method
+    wolfe method
+work
+    work
+    works
+workshop
+    workshop
+world
+    world
+worldwide
+    worldwide
+writing
+    writing
+yard
+    yard
+year
+    year
+    years
+yearly
+    yearly
+yet
+    yet
+yield
+    yield
+yogyakarta
+    yogyakarta
+yogyakarta special region province
+    yogyakarta special region province
+yokohama
+    yokohama
+york
+    york
+zaragoza
+    zaragoza
+zero-emission zones
+    zero-emission zones
+zone
+    zone
+    zones

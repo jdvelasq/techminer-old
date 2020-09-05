@@ -1,12 +1,9 @@
-"""
-Thesaurus
-==================================================================================================
-
-"""
 import json
 import re
+from os.path import dirname, join
 
 import pandas as pd
+
 
 from techminer.core.text import (
     find_string,
@@ -19,100 +16,7 @@ from techminer.core.text import (
 
 
 def text_clustering(x, name_strategy="mostfrequent", key="porter", transformer=None):
-    """Builds a thesaurus by clustering a list of strings.
-
-    Args:
-        x (list): list  of string to create thesaurus.
-
-        name_strategy (string): method for assigning keys in thesaurus.
-
-            * 'mostfrequent': Most frequent string in the cluster.
-
-            * 'longest': Longest string in the cluster.
-
-            * 'shortest': Shortest string in the cluster.
-
-        key (str): 'fingerprint', '1-gram', '2-gram', 'snowball', 'porter'
-
-        transformer (function): function applyed to each group name.
-
-    Returns:
-        A Thesaurus object.
-
-    Examples
-    ----------------------------------------------------------------------------------------------
-
-    >>> import pandas as pd
-    >>> x = pd.Series(
-    ...   [
-    ...     'a b c a b a',
-    ...     'a b c a b',
-    ...     'a b c a b',
-    ...     'A C b',
-    ...     'a b',
-    ...     'a, b, c, a',
-    ...     'a B',
-    ...   ]
-    ... )
-    >>> x
-    0    a b c a b a
-    1      a b c a b
-    2      a b c a b
-    3          A C b
-    4            a b
-    5     a, b, c, a
-    6            a B
-    dtype: object
-
-    >>> text_clustering(x) # doctest: +NORMALIZE_WHITESPACE
-    {
-      "A C b": [
-        "A C b",
-        "a b c a b",
-        "a b c a b a",
-        "a, b, c, a"
-      ],
-      "a B": [
-        "a B",
-        "a b"
-      ]
-    }
-    ignore_case=False, full_match=True, use_re=False, compiled=False
-
-
-    >>> text_clustering(x, name_strategy='shortest') # doctest: +NORMALIZE_WHITESPACE
-    {
-      "A C b": [
-        "A C b",
-        "a b c a b",
-        "a b c a b a",
-        "a, b, c, a"
-        ],
-      "a b": [
-        "a B",
-        "a b"
-        ]
-    }
-    ignore_case=False, full_match=True, use_re=False, compiled=False
-
-    >>> text_clustering(x, name_strategy='longest') # doctest: +NORMALIZE_WHITESPACE
-    {
-      "a b": [
-        "a B",
-        "a b"
-      ],
-      "a b c a b a": [
-        "A C b",
-        "a b c a b",
-        "a b c a b a",
-        "a, b, c, a"
-      ]
-    }
-    ignore_case=False, full_match=True, use_re=False, compiled=False
-
-
-    """
-
+    #
     def remove_parenthesis(x):
         if "(" in x:
             text_to_remove = x[x.find("(") : x.find(")") + 1]
@@ -120,31 +24,43 @@ def text_clustering(x, name_strategy="mostfrequent", key="porter", transformer=N
             x = " ".join([w.strip() for w in x.split()])
         return x
 
-    #
-    # Preprocessing
-    #
+    def translate(x):
+        z = [bg2am_[z][0] if z in bg2am_.keys() else z for z in x.split()]
+        return " ".join(z)
+
+    ##
+    ## Preprocessing
+    ##
     x = x.dropna()
     x = x.map(lambda w: w.split(";"))
     x = x.explode()
     x = x.map(lambda w: w.strip())
     x = x.unique()
 
-    #
-    # Creates a dataframe
-    #
+    ##
+    ## Creates a dataframe
+    ##
     x = pd.DataFrame({"word": x.tolist()})
 
-    #
-    # Delete terms between '(' and ')'
-    #  Repace & by and
-    #
+    ##
+    ## Delete terms between '(' and ')'
+    ## Repace & by and
+    ##
     x["word_alt"] = x["word"].copy()
     x["word_alt"] = x["word_alt"].map(lambda w: remove_parenthesis(w))
     x["word_alt"] = x["word_alt"].map(lambda w: w.replace("&", "and"))
 
-    #
-    # key computation
-    #
+    ##
+    ## British to american english
+    ##
+    module_path = dirname(__file__)
+    filename = join(module_path, "../data/bg2am.data")
+    bg2am_ = load_file_as_dict(filename)
+    x["word_alt"] = x["word_alt"].map(lambda w: translate(w))
+
+    ##
+    ## key computation
+    ##
     if key == "fingerprint":
         f = fingerprint
     elif key == "1-gram":
@@ -157,14 +73,14 @@ def text_clustering(x, name_strategy="mostfrequent", key="porter", transformer=N
         f = stemmer_snowball
     x["key"] = x.word_alt.map(f)
 
-    #
-    # groupsby key
-    #
+    ##
+    ## groupsby key
+    ##
     grp = x.groupby(by="key").agg({"word": list})
 
-    #
-    # group name selection
-    #
+    ##
+    ## group name selection
+    ##
     grp["listlen"] = grp.word.map(len)
     grp_isolated = grp[grp.listlen.map(lambda w: w == 1)]
     grp = grp[grp.listlen.map(lambda w: w > 1)]
