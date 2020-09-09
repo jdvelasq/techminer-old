@@ -178,7 +178,6 @@ def extract_words(data, text):
     # Drop duplicates
     #
     text = text.map(lambda w: list(set(w)))
-
     #
     # Checks:
     #   Replace '_' by ' '
@@ -199,7 +198,7 @@ def extract_words(data, text):
     #
     # Verification
     #
-
+    #  print(result)
     result = [";".join(sorted([a.strip() for a in w])) for w in result]
-    result = [w for w in result if len(w) > 2]
+    result = [w for w in result if len(w) > 0]
     return result

@@ -1,0 +1,169 @@
+accessibility
+    accessibility
+adaptive dynamic programming
+    adaptive dynamic programming
+australia
+    australia
+big data applications
+    big data applications
+binary particle swarm optimization (bpso)
+    binary particle swarm optimization (bpso)
+brazil
+    brazil
+building
+    building
+business model
+    business model
+carriers
+    carriers
+city logistics
+    city logistics
+collaboration
+    collaboration
+collaborative logistics
+    collaborative logistics
+commercialization
+    commercialization
+consolidation
+    consolidation
+criteria
+    criteria
+database
+    database
+decision criterions
+    decision criterions
+decision hierarchy structure
+    decision hierarchy structure
+decision making
+    decision making
+decision support models
+    decision support models
+decision support systems
+    decision support systems
+distribution system
+    distribution system
+europe
+    europe
+facility location
+    facility location
+flow consolidation schemes
+    flow consolidation schemes
+flow modeling
+    flow modeling
+freight consolidations
+    freight consolidations
+freight distribution network
+    freight distribution network
+freight transport
+    freight transport
+geographic information systems (gis)
+    geographic information systems (gis)
+impact assessment
+    impact assessment
+inner city area
+    inner city area
+inner-city
+    inner-city
+joint delivery systems
+    joint delivery systems
+last mile delivery
+    last mile delivery
+latin america
+    latin america
+linear programming
+    linear programming
+location
+    location
+location selection
+    location selection
+logistics
+    logistics
+melbourne
+    melbourne
+melbourne , australia
+    melbourne , australia
+methodology
+    methodology
+minas gerais
+    minas gerais
+multi criteria analysis
+    multi criteria analysis
+multi-agent models
+    multi-agent models
+multi-agent system
+    multi-agent system
+multi-criteria decision-making (mcdm)
+    multi-criteria decision-making (mcdm)
+multi-tenant buildings
+    multi-tenant buildings
+multicriteria analysis
+    multicriteria analysis
+multiple location decision
+    multiple location decision
+network flow problem
+    network flow problem
+numerical computations
+    numerical computations
+operational requirements
+    operational requirements
+optimization
+    optimization
+ouro preto
+    ouro preto
+p-median problem
+    p-median problem
+planning method
+    planning method
+policy
+    policy
+retailers
+    retailers
+sensitivity analysis
+    sensitivity analysis
+social cost benefit analysis
+    social cost benefit analysis
+spatial analysis
+    spatial analysis
+spatial data
+    spatial data
+stakeholder
+    stakeholder
+stakeholder engagement
+    stakeholder engagement
+suitability analysis
+    suitability analysis
+sustainability
+    sustainability
+sustainability disciplines
+    sustainability disciplines
+sustainability enablers
+    sustainability enablers
+the netherlands
+    the netherlands
+tokyo
+    tokyo
+tour formation
+    tour formation
+traffic congestion
+    traffic congestion
+traffic wardens
+    traffic wardens
+transportation planning
+    transportation planning
+urban area
+    urban area
+urban consolidation center
+    urban consolidation center
+    urban consolidation centers
+    urban consolidation centre
+    urban consolidation centre (ucc)
+urban distribution centers
+    urban distribution centers
+urban freight transport
+    urban freight transport
+urban freight transportation demand
+    urban freight transportation demand
+victoria [australia]
+    victoria [australia]
+zero-emission zones
+    zero-emission zones

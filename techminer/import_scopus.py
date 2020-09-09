@@ -423,20 +423,41 @@ class ScopusImporter:
             text = [unit for w in text for unit in w.split(":")]
             text = [unit for w in text for unit in w.split("?")]
             text = [unit for w in text for unit in w.split("!")]
-            return text
+            return "//".join(text)
 
         if "Abstract" not in self.data.columns:
             return
 
         self.logging_info("Extracting abstract phrases and words ...")
 
-        self.data["Abstract_phrases"] = self.data.Abstract.copy()
-        self.data["Abstract_phrases"] = self.data.Abstract_phrases.map(
-            extract_elementary_context, na_action="ignore"
+        self.data["Abstract_phrases"] = self.data.Abstract.map(
+            lambda w: extract_elementary_context(w), na_action="ignore"
         )
+
         self.data["Abstract_phrase_words"] = self.data.Abstract_phrases.map(
-            lambda w: extract_words(data=self.data, text=pd.Series(w)),
+            lambda w: "//".join(
+                [
+                    ";".join(extract_words(data=self.data, text=pd.Series(z)))
+                    for z in w.split("//")
+                ]
+            ),
             na_action="ignore",
+        )
+
+        self.data["Abstract_phrase_words"] = self.data.Abstract_phrase_words.map(
+            lambda w: w[:-2] if w[-2:] == "//" else w,
+            na_action="ignore",
+        )
+
+        self.data["Abstract_words"] = self.data.Abstract_phrase_words.copy()
+        self.data["Abstract_words"] = self.data.Abstract_words.map(
+            lambda w: w.replace("//", ";"), na_action="ignore"
+        )
+        self.data["Abstract_words"] = self.data.Abstract_words.map(
+            lambda w: w.split(";"), na_action="ignore"
+        )
+        self.data["Abstract_words"] = self.data.Abstract_words.map(
+            lambda w: ";".join(sorted(set(w))), na_action="ignore"
         )
 
     def highlight_author_keywords_in_titles(self):
