@@ -59,7 +59,7 @@ class ScopusImporter:
         self.create_historiograph_id()
         self.create_local_references()
         self.extract_title_words()
-        self.extract_abstract_words()
+        self.extract_abstract_phrases_and_words()
         self.highlight_author_keywords_in_titles()
         self.highlight_author_keywords_in_abstracts()
         self.compute_bradford_law_zones()
@@ -416,14 +416,27 @@ class ScopusImporter:
         self.logging_info("Extracting title words ...")
         self.data["Title_words"] = extract_words(data=self.data, text=self.data.Title)
 
-    def extract_abstract_words(self):
+    def extract_abstract_phrases_and_words(self):
+        #
+        def extract_elementary_context(text):
+            text = text.split(". ")
+            text = [unit for w in text for unit in w.split(":")]
+            text = [unit for w in text for unit in w.split("?")]
+            text = [unit for w in text for unit in w.split("!")]
+            return text
 
         if "Abstract" not in self.data.columns:
             return
 
-        self.logging_info("Extracting abstract words ...")
-        self.data["Abstract_words"] = extract_words(
-            data=self.data, text=self.data.Abstract
+        self.logging_info("Extracting abstract phrases and words ...")
+
+        self.data["Abstract_phrases"] = self.data.Abstract.copy()
+        self.data["Abstract_phrases"] = self.data.Abstract_phrases.map(
+            extract_elementary_context, na_action="ignore"
+        )
+        self.data["Abstract_phrase_words"] = self.data.Abstract_phrases.map(
+            lambda w: extract_words(data=self.data, text=pd.Series(w)),
+            na_action="ignore",
         )
 
     def highlight_author_keywords_in_titles(self):
@@ -517,8 +530,21 @@ class ScopusImporter:
         ## Counts number of documents per Source_title
         ##
         x["Num_Documents"] = 1
-        x = explode(x[["Source_title", "Num_Documents", "ID",]], "Source_title",)
-        m = x.groupby("Source_title", as_index=False).agg({"Num_Documents": np.sum,})
+        x = explode(
+            x[
+                [
+                    "Source_title",
+                    "Num_Documents",
+                    "ID",
+                ]
+            ],
+            "Source_title",
+        )
+        m = x.groupby("Source_title", as_index=False).agg(
+            {
+                "Num_Documents": np.sum,
+            }
+        )
         m = m[["Source_title", "Num_Documents"]]
         m = m.sort_values(["Num_Documents"], ascending=False)
         m["Cum_Num_Documents"] = m.Num_Documents.cumsum()
@@ -533,7 +559,9 @@ class ScopusImporter:
         g = m[["Num_Documents"]]
         g.loc[:, "Num_Source_titles"] = 1
         g = g.groupby(["Num_Documents"], as_index=False).agg(
-            {"Num_Source_titles": np.sum,}
+            {
+                "Num_Source_titles": np.sum,
+            }
         )
         g["Total_Num_Documents"] = g["Num_Documents"] * g["Num_Source_titles"]
         g = g.sort_values(["Num_Documents"], ascending=False)
