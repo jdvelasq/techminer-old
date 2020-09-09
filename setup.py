@@ -27,7 +27,15 @@ setup(
     keywords="bibliograpy",
     platforms="any",
     provides=["techminer"],
-    install_requires=["squarify", "nltk", "cdlib", "pyvis", "networkx", "ipywidgets"],
+    install_requires=[
+        "squarify",
+        "nltk==3.5",
+        "cdlib",
+        "pyvis",
+        "networkx",
+        "ipywidgets",
+        "textblob",
+    ],
     packages=["techminer", "techminer.plots", "techminer.core"],
     package_dir={"techminer": "techminer"},
     include_package_data=True,
@@ -44,4 +52,3 @@ setup(
         "Programming Language :: Python :: 3.8",
     ],
 )
-

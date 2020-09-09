@@ -64,10 +64,13 @@ def barh_plot(
     """
     darkness = width if darkness is None else darkness
     cmap = plt.cm.get_cmap(cmap)
-    kwargs["color"] = [
-        cmap(0.1 + 0.90 * (d - min(darkness)) / (max(darkness) - min(darkness)))
-        for d in darkness
-    ]
+    if max(darkness) == min(darkness):
+        kwargs["color"] = [cmap(0.1) for _ in darkness]
+    else:
+        kwargs["color"] = [
+            cmap(0.1 + 0.90 * (d - min(darkness)) / (max(darkness) - min(darkness)))
+            for d in darkness
+        ]
 
     matplotlib.rc("font", size=fontsize)
     fig = plt.Figure(figsize=figsize)

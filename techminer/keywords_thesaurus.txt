@@ -1,6340 +1,1005 @@
-ability
-    ability
-able
-    able
-abstract
-    abstract
-academic
-    academic
-accelerate
-    accelerate
-acceptability
-    acceptability
-    acceptance
-access
-    access
+accessibility
     accessibility
-accidents
-    accidents
-accompanying
-    accompanying
-according
-    according
-account
-    account
-accruing
-    accruing
-accuracy
-    accuracy
-accurate
-    accurate
-achieve
-    achieve
-    achieving
-acknowledgment
-    acknowledgment
-acquisition
-    acquisition
-acting
-    acting
-action spaces
-    action spaces
-actions
-    actions
-active
-    active
-    activities
+accord
+    accord
+action
+    action
+activity
     activity
-actor
-    actor
-    actors
-actual
-    actual
-adapt
-    adapt
-    adaptation
-    adaptations
-    adapting
-    adaptive
 adaptive dynamic programming
     adaptive dynamic programming
-adaptive management
-    adaptive management
-added
-    added
-added-value
-    added-value
-    value-adding
-addedvalue
-    addedvalue
-addition
-    addition
+additional
     additional
-additional costs
-    additional costs
 address
     address
-    addressed
-    addresses
-    addressing
-adequate
-    adequate
-adjusted
-    adjusted
-administrations
-    administrations
-    administrative
-administrative measures
-    administrative measures
-adopting
-    adopting
-    adoption
-adoption factors
-    adoption factors
-adp
-    adp
-advance
-    advance
+advanced
     advanced
-advanced informations
-    advanced informations
 advantage
     advantage
-    advantages
-advice
-    advice
-affect
-    affect
-    affected
-    affecting
-    affects
 affordable
     affordable
-afterwards
-    afterwards
-agency
-    agency
-agenda
-    agenda
 agent
     agent
-    agents
-agent based simulation
-    agent based simulation
-    agent-based simulation
-agent-based modelling
-    agent-based modelling
-aggregate
-    aggregate
-agreement
-    agreement
-    agreements
-agricultural
-    agricultural
-agricultural products
-    agricultural products
-agricultural products based
-    agricultural products based
-ahp
-    ahp
-aid
-    aid
 aim
     aim
-    aiming
-    aims
-air pollutants
-    air pollutants
-    air pollution
-    air pollutions
-air quality
-    air quality
-air quality problems
-    air quality problems
-airport
-    airport
 algorithm
     algorithm
-    algorithms
-algorithm-based
-    algorithm-based
-alleviate
-    alleviate
-alliances
-    alliances
-allocating
-    allocating
-    allocation
-    allocations
-allocation model
-    allocation model
-    allocation models
-allocation problems
-    allocation problems
-allof
-    allof
 allow
     allow
-    allowing
-already-known
-    already-known
-alternative
-    alternative
-    alternatives
-alternative clc locations
-    alternative clc locations
-alternative fuels
-    alternative fuels
-alternative solutions
-    alternative solutions
-alternativesone using
-    alternativesone using
-amongst
-    amongst
 amount
     amount
-amphibious vehicles
-    amphibious vehicles
-an integration platform
-    an integration platform
-analyse
-    analyse
-    analyses
-    analysing
-    analyze
-    analyzing
 analysis
     analysis
-analysis frameworks
-    analysis frameworks
-analytic
-    analytic
-    analytical
-analytic mathematical model
-    analytic mathematical model
-analytical approach
-    analytical approach
-analytical framework
-    analytical framework
-andor
-    andor
-annual
-    annual
+analyze
+    analyze
 answer
     answer
-    answers
-antecedent
-    antecedent
-anticipate
-    anticipate
-    anticipated
-antwerp
-    antwerp
-appear
-    appear
-    appearance
-applicability
-    applicability
-    applicable
+application
     application
-application examples
-    application examples
-application programs
-    application programs
-applied
-    applied
-    applies
-    apply
-    applying
 approach
     approach
-    approaches
 appropriate
     appropriate
-appropriate conditions
-    appropriate conditions
-appropriate location
-    appropriate location
-approximate dynamic programming
-    approximate dynamic programming
-approximation algorithms
-    approximation algorithms
-april
-    april
-arc-flow
-    arc-flow
 area
     area
-    areas
-argument
-    argument
-    arguments
-arising
-    arising
-arrangements
-    arrangements
-arrival
-    arrival
-    arrivals
-    arriving
-art
-    art
-article
-    article
-    articles
-artificial neural network
-    artificial neural network
 aspect
     aspect
-    aspects
-assess
-    assess
-    assesses
-    assessing
-    assessment
-assigning
-    assigning
-    assignment
-    assignments
-associations
-    associations
-assuming
-    assuming
-assumptions
-    assumptions
-asymptotic stable state
-    asymptotic stable state
-atmospheric
-    atmospheric
-attempts
-    attempts
-attention
-    attention
-attract
-    attract
-    attracting
-    attractive
-    attractiveness
-attributes
-    attributes
-auction
-    auction
-    auctions
-auction mechanisms
-    auction mechanisms
-augmented
-    augmented
-austin
-    austin
+assign
+    assign
 australia
     australia
-authorities
-    authorities
+authority
     authority
-    authors
 automated
     automated
-automated assignments
-    automated assignments
-automobiles
-    automobiles
-autonomy
-    autonomy
-auxiliary
-    auxiliary
-availability
-    availability
-    available
-average
-    average
-average numbers
-    average numbers
-back-load
-    back-load
-balance
-    balance
-banking
-    banking
-barge
-    barge
-barrier
-    barrier
-    barriers
 basis
     basis
-basis functions
-    basis functions
-bath
-    bath
-battery electric vehicles
-    battery electric vehicles
-baumol-wolfe method
-    baumol-wolfe method
-bay
-    bay
-bbfcc
-    bbfcc
-bcr
-    bcr
-become
-    become
-    becomes
-beforehand
-    beforehand
 behavior
     behavior
-    behaviour
     behavioural
-behavioral research
-    behavioral research
-beijing city
-    beijing city
-beijing city logistics
-    beijing city logistics
-belgian
-    belgian
-belgium
-    belgium
-beliefs
-    beliefs
-belongs
-    belongs
-benchmark
-    benchmark
-    benchmarking
-benchmark policies
-    benchmark policies
-beneficial
-    beneficial
-beneficiaries
-    beneficiaries
-benefit
-    benefit
-    benefits
-berbah
-    berbah
-best
-    best
-best alternative
-    best alternative
 better
     better
-bi-objective
-    bi-objective
-bi-objective programming
-    bi-objective programming
-biased randomization
-    biased randomization
-bicriteria
-    bicriteria
-bicriteria auction
-    bicriteria auction
-bid
-    bid
-bidders
-    bidders
-big
-    big
 big data applications
     big data applications
+bike
+    bike
 binary
     binary
 binary particle swarm optimization (bpso)
     binary particle swarm optimization (bpso)
 binnenstadservice
     binnenstadservice
-binnenstadservicenl
-    binnenstadservicenl
-biobjective
-    biobjective
-bologna
-    bologna
-border
-    border
-    borders
-boroughs
-    boroughs
-bottom-up
-    bottom-up
-bottom-up model
-    bottom-up model
 boundary
     boundary
-box
-    box
-    boxes
-branch and bound method
-    branch and bound method
 brazil
     brazil
 brazilian
     brazilian
-brazilian historical cities
-    brazilian historical cities
-break-even
-    break-even
-bridging
-    bridging
 bring
     bring
-    bringing
-    brings
-bristol
-    bristol
-bristol city centre
-    bristol city centre
-bristol-bath
-    bristol-bath
-bristolbath
-    bristolbath
-broad
-    broad
-broaden
-    broaden
-broken
-    broken
-brokers
-    brokers
-bronchitis
-    bronchitis
-brought
-    brought
-brussels
-    brussels
-    brussels [brussels (rga)]
-brussels [belgium]
-    brussels [belgium]
-brussels-capital
-    brussels-capital
-brussels-capital region
-    brussels-capital region
-bss
-    bss
-budget control
-    budget control
-buffer
-    buffer
 building
     building
-bulk
-    bulk
-bundle
-    bundle
-bus
-    bus
-business
-    business
-    businesses
-    busy
-business development
-    business development
 business model
     business model
-    business modeling
-    business modelling
-    business models
-business model designs
-    business model designs
-buyer-supplier
-    buyer-supplier
-bwm
-    bwm
-bwmedas
-    bwmedas
-cagliari
-    cagliari
-calabria
-    calabria
-calculate
-    calculate
-    calculated
-    calculating
-    calculation
-calibration
-    calibration
-camden
-    camden
-campaigns
-    campaigns
 candidate
     candidate
-candidate locations
-    candidate locations
-canvas
-    canvas
-cap
-    cap
-cap and trade
-    cap and trade
 capable
     capable
-capacities
-    capacities
-    capacity
-capital
-    capital
-car accidents
-    car accidents
-carbon
-    carbon
-carbon credit points
-    carbon credit points
-carbon dioxide
-    carbon dioxide
-carbon emission
-    carbon emission
-    carbon emissions
-carbon footprint
-    carbon footprint
 cargo
     cargo
-cargo bikes
-    cargo bikes
-cargo bikesnetherlands
-    cargo bikesnetherlands
-cargo consolidation
-    cargo consolidation
-cargo handling
-    cargo handling
-cargobikes
-    cargobikes
-carried
-    carried
-    carry
-    carrying
-carrier
-    carrier
+carriers
     carriers
-carrier-led
-    carrier-led
 case
     case
-    cases
-case studies
-    case studies
-    case study
-    case-study
-catchment
-    catchment
-categories
-    categories
-    category
-categorisation
-    categorisation
-categorise
-    categorise
-catering
-    catering
-cause
-    cause
-    caused
-    causing
-cba
-    cba
-cbd
-    cbd
-ccps
-    ccps
-cdus
-    cdus
-cedt
-    cedt
 center
     center
-    centers
-    centre
-    centres
-center of gravity model
-    center of gravity model
-central
-    central
-    centralized
-centre located
-    centre located
-centre using
-    centre using
-centrethe
-    centrethe
-centros de distribuicao urbana
-    centros de distribuicao urbana
-certain
-    certain
-certain environment
-    certain environment
-cflp
-    cflp
 chain
     chain
-    chains
 challenge
     challenge
-    challenges
-chance
-    chance
-    chances
-change
-    change
-    changes
-    changing
 channel
     channel
-chaotic system
-    chaotic system
-    chaotic systems
-chapter
-    chapter
 characterise
     characterise
-    characterize
 characteristic
     characteristic
-    characteristics
-charge
-    charge
-    charges
-china
-    china
 choice
     choice
-    choices
-choosing
-    choosing
-circle
-    circle
-circulation
-    circulation
-cities
-    cities
+choose
+    choose
+city
     city
-citizens
-    citizens
-city center
-    city center
-    city centers
-    city centre
-    city centres
-city distribution
-    city distribution
-city distribution center
-    city distribution center
-    city distribution centers
-    city distribution centre
-    city distribution centres
-city distribution of goods
-    city distribution of goods
 city logistic
     city logistic
     city logistics
-city logistics center
-    city logistics center
-    city logistics centers
-    city logistics centre
-city logistics distribution
-    city logistics distribution
-city logistics distribution center
-    city logistics distribution center
-city logistics distribution network
-    city logistics distribution network
-city logistics initiatives
-    city logistics initiatives
-city logistics measures
-    city logistics measures
-city logistics platform
-    city logistics platform
-city logistics services
-    city logistics services
-city logistics system
-    city logistics system
-    city logistics systems
-city planning
-    city planning
-city-freighters
-    city-freighters
-civil engineering
-    civil engineering
-civilians
-    civilians
-civitas
-    civitas
-clashing
-    clashing
-class
-    class
-classic
-    classic
-classification
-    classification
-    classification (of information)
-clc
-    clc
-clean
-    clean
-clearance
-    clearance
-client
-    client
-    clients
-climate change
-    climate change
-close
-    close
-closer
-    closer
-clt
-    clt
-clues
-    clues
+civilian
+    civilian
 cluster
     cluster
-    clustering
-    clusters
-cluster analysis
-    cluster analysis
-cluster computing
-    cluster computing
-clustering algorithms
-    clustering algorithms
-co emissions
-    co emissions
-co-creation
-    co-creation
-co2 emissions
-    co2 emissions
-coefficient
-    coefficient
-    coefficients
-coeq emissions per parcel delivered
-    coeq emissions per parcel delivered
 collaboration
     collaboration
     collaborative
-collaborative information portals
-    collaborative information portals
-collaborative integration
-    collaborative integration
-collaborative integration platform
-    collaborative integration platform
 collaborative logistics
     collaborative logistics
-collaborative network
-    collaborative network
-    collaborative networks
-collaborative urban logistics
-    collaborative urban logistics
-collect
-    collect
+collected
     collected
-    collecting
-    collection
-columns
-    columns
-combination
-    combination
-    combinations
-    combine
-    combined
-    combines
-    combining
-combinatorial optimization
-    combinatorial optimization
-combinatorial search
-    combinatorial search
-combined approach
-    combined approach
-come
-    come
-    coming
-commentators
-    commentators
-commerce
-    commerce
-commercial
-    commercial
+commercialization
     commercialization
-commercial example
-    commercial example
-commercial vehicles
-    commercial vehicles
-commission
-    commission
 commitment
     commitment
-    committing
-commodities
-    commodities
 common
     common
-communications
-    communications
-    community
-compact
-    compact
-companies
-    companies
+company
     company
-comparative analysis
-    comparative analysis
 compare
     compare
-    comparing
 comparison
     comparison
-compatibility
-    compatibility
-competence
-    competence
-    competing
-competition
-    competition
-    competitive
-    competitiveness
-competitive services
-    competitive services
-complementary
-    complementary
-complete
-    complete
 complex
     complex
-    complexity
-complex networks
-    complex networks
-complicated
-    complicated
-component-wise core
-    component-wise core
-    component-wise cores
-components
-    components
-composing
-    composing
-comprehensive
-    comprehensive
-comprises
-    comprises
-    comprising
-compromise
-    compromise
-compulsory
-    compulsory
+component
+    component
+compose
+    compose
 computation
     computation
-    computational
-    computer
-computation theory
-    computation theory
-computational budget
-    computational budget
-computational linguistics
-    computational linguistics
-computer simulation
-    computer simulation
-computer software
-    computer software
-computer systems programming
-    computer systems programming
-concentrating
-    concentrating
-    concentrations
-concept
-    concept
-    concepts
-conceptual
-    conceptual
-conceptual framework
-    conceptual framework
 concern
     concern
-    concerning
-    concerns
-concludes
-    concludes
-conclusions
-    conclusions
-condition
-    condition
-    conditions
 conduct
     conduct
-    conducting
-    conducts
-conference proceeding
-    conference proceeding
 confidentiality
     confidentiality
-configurations
-    configurations
-conflicting
-    conflicting
-conflicting objectives
-    conflicting objectives
-confronting
-    confronting
-congestion
-    congestion
-    congestions
-congestion charging
-    congestion charging
 conjunction
     conjunction
-connect
-    connect
-    connecting
+connection
     connection
     connectivity
-consensus
-    consensus
-conservation
-    conservation
 consider
     consider
-    considering
-    considers
-considerable
-    considerable
-    consideration
-    considerations
-consignments
-    consignments
-consistent
-    consistent
-    consisting
-consolidate
-    consolidate
-    consolidated
-    consolidating
+consist
+    consist
+consolidation
     consolidation
-    consolidations
-consolidated delivery
-    consolidated delivery
-consolidated delivery fleet
-    consolidated delivery fleet
-consolidated freight terminal
-    consolidated freight terminal
-consolidation center
-    consolidation center
-    consolidation centers
-    consolidation centres
 consolidation facility
     consolidation facility
-consolidation options
-    consolidation options
-consolidation scenarios
-    consolidation scenarios
-consolidation strategies
-    consolidation strategies
 constraint
     constraint
-    constraints
-construct
-    construct
-    construction
-construction development
-    construction development
-construction innovation
-    construction innovation
-construction innovation method
-    construction innovation method
-consultation process
-    consultation process
 consumer
     consumer
-    consumers
-consumption
-    consumption
-container
-    container
-    containers
-    contains
-container ship
-    container ship
-container terminal
-    container terminal
-    container terminals
-content analysis
-    content analysis
-context
-    context
-    contexts
-contiguous
-    contiguous
-continue
-    continue
-    continuous
-continuous approximation
-    continuous approximation
-    continuous approximation (ca)
-    continuous approximations
-continuous approximation methods
-    continuous approximation methods
-contracts
-    contracts
+contain
+    contain
+continued
+    continued
 contribute
     contribute
-    contributes
-    contributing
     contribution
-    contributions
-contributor
-    contributor
-control
-    control
-    controlling
-convenient
-    convenient
 conventional
     conventional
-conventional truck
-    conventional truck
-convergence
-    convergence
-convergence rate
-    convergence rate
-cooperate
-    cooperate
-    cooperation
-    cooperations
-    cooperative
-cooperation strategies
-    cooperation strategies
-cooperative freight transport systems
-    cooperative freight transport systems
-cooperative game theory
-    cooperative game theory
-coordinate
-    coordinate
-    coordinates
-    coordinating
-    coordination
-coordination mechanism
-    coordination mechanism
-    coordination mechanisms
-cope
-    cope
-copenhagen
-    copenhagen
-copenhagen [(cty) hovedstaden]
-    copenhagen [(cty) hovedstaden]
-copyright
-    copyright
-core
-    core
-corporate
-    corporate
-corporate social responsibility
-    corporate social responsibility
-correlation
-    correlation
-correspond
-    correspond
-    corresponding
-    corresponds
 cost
     cost
-    costs
-cost accounting
-    cost accounting
-cost allocation
-    cost allocation
-cost allocation model
-    cost allocation model
-cost analysis
-    cost analysis
-cost and benefit analysis
-    cost and benefit analysis
-cost benefit analysis
-    cost benefit analysis
-    cost-benefit analysis
-cost effective distance of transport
-    cost effective distance of transport
-    cost-effective distance of transport
-cost effectiveness
-    cost effectiveness
-cost reduction
-    cost reduction
-cost savings
-    cost savings
-cost-attractiveness
-    cost-attractiveness
-cost-efficient
-    cost-efficient
-cost-minimizing
-    cost-minimizing
-cost-relationships
-    cost-relationships
-costdue
-    costdue
-countries
-    countries
-cover
-    cover
-    covered
-    covering
-cplex
-    cplex
-crashworthiness
-    crashworthiness
-creates
-    creates
-    creating
-creation
-    creation
-credible
-    credible
-credits
-    credits
+country
+    country
 criteria
     criteria
-criterion
-    criterion
 critical
     critical
-critical factors
-    critical factors
-cross-case
-    cross-case
 cross-dock
     cross-dock
     cross-docking
-crowdsourcing
-    crowdsourcing
-crucial
-    crucial
-csi
-    csi
-csimod
-    csimod
-csr
-    csr
-cultural
-    cultural
 current
     current
-current barriers
-    current barriers
-current status
-    current status
-customer
-    customer
-    customers
-    customized
-    customs
-customer care
-    customer care
-customer demands
-    customer demands
-customer dissatisfaction
-    customer dissatisfaction
-customer satisfaction
-    customer satisfaction
-customer satisfaction index
-    customer satisfaction index
-customer satisfaction indices
-    customer satisfaction indices
-customer service
-    customer service
-customer-specific
-    customer-specific
-cycles
-    cycles
-czech republic
-    czech republic
-daily
-    daily
-daily demand
-    daily demand
-data
-    data
 data collection
     data collection
-data handling
-    data handling
-data processing
-    data processing
-data standardization
-    data standardization
 database
     database
 dataset
     dataset
+datum
+    datum
 day
     day
-dcap
-    dcap
-dcs
-    dcs
-deal
-    deal
-    dealing
-    deals
 decade
     decade
-    decades
-deciding
-    deciding
 decision
     decision
-    decisions
-    decisive
 decision criterions
     decision criterions
 decision hierarchy structure
     decision hierarchy structure
-decision levels
-    decision levels
-decision makers
-    decision makers
-    decision-makers
 decision making
     decision making
-    decision-making
-decision making process
-    decision making process
-    decision-making process
-decision support models
+decision support model
+    decision support model
     decision support models
-decision support system
-    decision support system
+decision support systems
     decision support systems
-decision-making systems
-    decision-making systems
-decompose
-    decompose
-decomposition strategy
-    decomposition strategy
-decoupling
-    decoupling
+decision-maker
+    decision-maker
 decrease
     decrease
-    decreasing
-define
-    define
-    defined
-definition
-    definition
 degree
     degree
-    degrees
-delay
-    delay
-    delays
-deliver
-    deliver
-    delivering
-deliveries
-    deliveries
+delivery
     delivery
-deliveries made
-    deliveries made
-delivery area
-    delivery area
-delivery fleet
-    delivery fleet
-delivery operations
-    delivery operations
-delivery platform
-    delivery platform
-delivery service
-    delivery service
-    delivery services
-delivery systems
-    delivery systems
-delivery vehicle
-    delivery vehicle
-    delivery vehicles
-delphi method
-    delphi method
-demand
-    demand
-    demanding
-    demands
-demand analysis
-    demand analysis
-demand quantity
-    demand quantity
-demand uncertainty
-    demand uncertainty
-demand-driven
-    demand-driven
-demerits
-    demerits
-demonstrate
-    demonstrate
-    demonstrating
-    demonstration
-denmark
-    denmark
 dense
     dense
-density
-    density
-department
-    department
-depend
-    depend
-    dependent
-    depending
-deploy
-    deploy
-    deployment
 depot
     depot
-    depots
-depth
-    depth
-depth of discharges
-    depth of discharges
-deriving
-    deriving
-describe
-    describe
-    describing
-description
-    description
-    descriptive
 design
     design
-    designing
-desirable
-    desirable
-    desired
-destination
-    destination
-    destinations
-destinationorigin
-    destinationorigin
-detail
-    detail
-    detailed
-detect
-    detect
 deterioration
     deterioration
-determination
-    determination
-    determine
-    determining
-devastation
-    devastation
-develop
-    develop
-    developed
-    developing
+development
     development
-    developments
-developing countries
-    developing countries
-dialogue
-    dialogue
-diaries
-    diaries
-didactic
-    didactic
-diesel
-    diesel
-diesel truck
-    diesel truck
-diesel vehicles
-    diesel vehicles
-difference
-    difference
-    differences
+diary
+    diary
+different
     different
-    differs
-difference method
-    difference method
-different distance measures
-    different distance measures
-difficult
-    difficult
-difficulties
-    difficulties
-    difficulty
-diffusion
-    diffusion
-diffusion of innovation theory
-    diffusion of innovation theory
-digital storage
-    digital storage
-dijkstra
-    dijkstra
-dijkstra algorithms
-    dijkstra algorithms
-dimensioning
-    dimensioning
-    dimensions
-direct
-    direct
-    direction
-directed towards
-    directed towards
 disaggregate
     disaggregate
-disappear
-    disappear
-discharge
-    discharge
-discipline
-    discipline
-discrete
-    discrete
-discrete choice analysis
-    discrete choice analysis
-discrete event simulation
-    discrete event simulation
-discrete networks
-    discrete networks
-discrete-event
-    discrete-event
-discuss
-    discuss
-    discussed
-    discussion
-diseases
-    diseases
-disparities
-    disparities
-dispatch
-    dispatch
-    dispatches
-dispatching problem
-    dispatching problem
-disruption
-    disruption
 distance
     distance
-    distances
-distance measure
-    distance measure
-    distance measures
 distance traveled
     distance traveled
-    distance travelled
-distinguishing
-    distinguishing
 distribution
     distribution
-    distributions
-distribution area
-    distribution area
-distribution center
-    distribution center
-    distribution centers
-    distribution centre
-    distribution centres
-distribution center location
-    distribution center location
-distribution costs
-    distribution costs
-distribution enterprises
-    distribution enterprises
-distribution models
-    distribution models
 distribution network
     distribution network
-    distribution networks
-distribution of goods
-    distribution of goods
-distribution operations
-    distribution operations
-distribution plan
-    distribution plan
 distribution system
     distribution system
-distributionmore
-    distributionmore
 distributor
     distributor
-district
-    district
-disturbance
-    disturbance
-divergences
-    divergences
-    divergent
-divide
-    divide
-documents
-    documents
-doi
-    doi
-domain
-    domain
-    domains
-domestic
-    domestic
-dominant
-    dominant
-double auction
-    double auction
-downstream
-    downstream
-downtown
-    downtown
-drawing
-    drawing
-    draws
-drivers
-    drivers
-driving
-    driving
-driving distance
-    driving distance
-dropouts
-    dropouts
-drosophila melanogaster
-    drosophila melanogaster
-dual
-    dual
-dublin
-    dublin
 due
     due
-dutch
-    dutch
-dynamic
-    dynamic
-    dynamics
-dynamic programming
-    dynamic programming
-e-bikes
-    e-bikes
-e-commerce
-    e-commerce
-e-vrp
-    e-vrp
-early
-    early
-east
-    east
-ecms
-    ecms
-eco-friendly
-    eco-friendly
-eco-friendly delivery vans
-    eco-friendly delivery vans
-ecological
-    ecological
-economic
-    economic
-    economical
-    economics
-economic activities
-    economic activities
-economic analysis
-    economic analysis
-economic and social effects
-    economic and social effects
-economic assessment
-    economic assessment
-economic benefits
-    economic benefits
-economic costs
-    economic costs
-economic efficiency
-    economic efficiency
-economic feasibilities
-    economic feasibilities
-economic sustainability
-    economic sustainability
-economic viability
-    economic viability
-economies
-    economies
+economy
     economy
-economies of scale
-    economies of scale
-ecosystems
-    ecosystems
-edas
-    edas
-effect
-    effect
+effective
     effective
-    effectiveness
-    effects
-effectual
-    effectual
-efficiencies
-    efficiencies
+efficiency
     efficiency
     efficient
-efficient managements
-    efficient managements
-efforts
-    efforts
-elaborate
-    elaborate
-elastic
-    elastic
-electric
-    electric
-electric discharges
-    electric discharges
-electric tricycles
-    electric tricycles
-electric truck
-    electric truck
-electric vehicle
-    electric vehicle
-    electric vehicles
-electrical engineering
-    electrical engineering
-electrically-assisted
-    electrically-assisted
-electron transitions
-    electron transitions
-electronic
-    electronic
-electronic commerce
-    electronic commerce
-element
-    element
-    elements
-eliciting
-    eliciting
-eliminate
-    eliminate
-embedded systems
-    embedded systems
-emergence
-    emergence
 emission
     emission
-    emissions
-emission control
-    emission control
-emissions reduction
-    emissions reduction
-    emissions reductions
-emphasis
-    emphasis
 empirical
     empirical
-employees
-    employees
-empty
-    empty
-enable
-    enable
-    enabler
-    enablers
-    enabling
-encompasses
-    encompasses
-encourage
-    encourage
-end
-    end
-end consumer movements
-    end consumer movements
-energies
-    energies
-    energy
-energy consumption
-    energy consumption
-energy efficiency
-    energy efficiency
-energy policy
-    energy policy
-energy usage
-    energy usage
-energy utilization
-    energy utilization
-engage
-    engage
-engineering method
-    engineering method
-    engineering methods
-enhance
-    enhance
-enlarge
-    enlarge
-enrichment
-    enrichment
 ensure
     ensure
-    ensures
-    ensuring
-entail
-    entail
-enter
-    enter
-enter-of-gravity model
-    enter-of-gravity model
-enterprise
-    enterprise
-    enterprises
-entire
-    entire
-entirety
-    entirety
-entities
-    entities
-entrepreneurial
-    entrepreneurial
-entropy
-    entropy
-entropy methods
-    entropy methods
-envelope
-    envelope
+entity
+    entity
 environment
     environment
-environment friendliness
-    environment friendliness
 environmental
     environmental
-environmental and social sustainability
-    environmental and social sustainability
-environmental aspects
-    environmental aspects
-environmental benefits
-    environmental benefits
-environmental economics
-    environmental economics
-environmental effectiveness
-    environmental effectiveness
-environmental impact
-    environmental impact
-    environmental impacts
-environmental impact analysis
-    environmental impact analysis
-environmental monitoring
-    environmental monitoring
-environmental problems
-    environmental problems
-environmental protection
-    environmental protection
-environmental protection agency
-    environmental protection agency
-environmental standpoint
-    environmental standpoint
-    environmental standpoints
-environmental sustainability
-    environmental sustainability
-environmentally friendly
-    environmentally friendly
-envy
-    envy
-epsilon
-    epsilon
-equal
-    equal
-    equality
-equilibrate
-    equilibrate
-equipment
-    equipment
-equity
-    equity
-equity-efficiency
-    equity-efficiency
-equivalence
-    equivalence
-    equivalent
-escalation
-    escalation
 essential
     essential
 establish
     establish
-    establishes
-    establishing
     establishment
 estate
     estate
 estimate
     estimate
-    estimates
-    estimating
-    estimation
-    estimations
-etc
-    etc
-eur
-    eur
-eurasia
-    eurasia
 europe
     europe
 european
     european
-european cities
-    european cities
-european union
-    european union
 evaluate
     evaluate
-    evaluating
     evaluation
-    evaluations
-evaluation criteria
-    evaluation criteria
-evaluation framework
-    evaluation framework
-evaluation values
-    evaluation values
-event
-    event
-eventual
-    eventual
-evidence
-    evidence
-    evident
-evolution
-    evolution
-evolutionary game
-    evolutionary game
-evolutionary game model
-    evolutionary game model
-    evolutionary game models
-evolutionary game theory
-    evolutionary game theory
 evolvement
     evolvement
-ex-ante
-    ex-ante
-ex-ante assessment
-    ex-ante assessment
-ex-post evaluations
-    ex-post evaluations
 exact
     exact
-exact method
-    exact method
-examine
-    examine
-    examining
-example
-    example
-    examples
-exceed
-    exceed
 excellent
     excellent
-excessive
-    excessive
 exchange
     exchange
-    exchanges
-executing
-    executing
-exemplary
-    exemplary
-exhaust gas
-    exhaust gas
-exhaustive
-    exhaustive
-exhibitions
-    exhibitions
-    exhibits
-existing
-    existing
-expanding
-    expanding
-expansion
-    expansion
-expectations
-    expectations
-expensive
-    expensive
 experience
     experience
-    experiences
-    experiment
-    experiments
-experimental
-    experimental
-experimental economics
-    experimental economics
-expert
-    expert
-    experts
-explanation
-    explanation
-explicit
-    explicit
-exploratory
-    exploratory
-explore
-    explore
-exports
-    exports
-extending
-    extending
-extensive
-    extensive
-extent
-    extent
-external
-    external
-    externalities
-external costs
-    external costs
-external effects
-    external effects
-extra
-    extra
-extra-regional
-    extra-regional
-extra-urban
-    extra-urban
-f-ahp
-    f-ahp
-f-statistics
-    f-statistics
-fabric
-    fabric
-face
-    face
-    facing
-facilitate
-    facilitate
-facilities
-    facilities
+facility
     facility
-facility layout
-    facility layout
 facility location
     facility location
-    facility locations
-facility location model
-    facility location model
-    facility location models
-facility location problem
-    facility location problem
-facility-location decisions
-    facility-location decisions
-fact
-    fact
 factor
     factor
-    factors
-factor weight
-    factor weight
-factorial analysis
-    factorial analysis
-fail
-    fail
-    failing
-failure
-    failure
-fairness
-    fairness
-fall
-    fall
-fano
-    fano
-fashion
-    fashion
-fast
-    fast
-faster
-    faster
-fatores localizacao
-    fatores localizacao
-favorable
-    favorable
-favorable conditions
-    favorable conditions
 favourability
     favourability
-fcc
-    fcc
-    fccs
-fcc development
-    fcc development
 feasibility
     feasibility
-    feasible
-feasibility study
-    feasibility study
-feature
-    feature
-    features
 feature-the
     feature-the
-feeder
-    feeder
-fes
-    fes
-fevs
-    fevs
-fewer
-    fewer
-fez
-    fez
-field
-    field
-    fields
-field-tested
-    field-tested
-fill
-    fill
-filtering method
-    filtering method
 final
     final
-final decision
-    final decision
-final evaluation value
-    final evaluation value
-finance
-    finance
-    financing
 financial
     financial
-financial balance
-    financial balance
-financial incentives
-    financial incentives
-financial viability
-    financial viability
-find
-    find
+finding
     finding
-    findings
-first
-    first
-first-time
-    first-time
-fish
-    fish
-fitting
-    fitting
-five grades
-    five grades
-fixed-rate
-    fixed-rate
-fleet
-    fleet
-    fleets
-fleet operations
-    fleet operations
-flexibility
-    flexibility
-    flexible
-floor
-    floor
 flow
     flow
-    flows
 flow consolidation
     flow consolidation
 flow consolidation schemes
     flow consolidation schemes
-flow efficiency
-    flow efficiency
 flow modeling
     flow modeling
-fluctuating
-    fluctuating
-    fluctuation
-fmagdm
-    fmagdm
-focus
-    focus
-focusing
-    focusing
-fold
-    fold
-following
-    following
-food
-    food
-footprints
-    footprints
-forecast
-    forecast
-    forecasting
-    forecasts
 form
     form
-    forms
 formation
     formation
-formulas
-    formulas
-formulate
-    formulate
-    formulation
 forth
     forth
-forward
-    forward
-    forwarders
-fossil
-    fossil
-foster
-    foster
-foundation
-    foundation
-four-element
-    four-element
-fragile
-    fragile
-fragmented
-    fragmented
-frame
-    frame
 framework
     framework
-france
-    france
-franchises
-    franchises
-frankfurt
-    frankfurt
-free
-    free
 freight
     freight
-    freights
-freight cars
-    freight cars
-freight centers
-    freight centers
-freight consolidation
-    freight consolidation
+freight consolidations
     freight consolidations
-freight consolidation center
-    freight consolidation center
-    freight consolidation centers
-freight consolidation facility
-    freight consolidation facility
-freight consolidation policy
-    freight consolidation policy
-freight deliveries
-    freight deliveries
-    freight delivery
-freight delivering
-    freight delivering
-freight demand
-    freight demand
 freight distribution network
     freight distribution network
-freight facilities
-    freight facilities
-freight flows
-    freight flows
-freight forwarders
-    freight forwarders
-freight handling
-    freight handling
-freight interchange warehouse
-    freight interchange warehouse
-freight modeling
-    freight modeling
-freight scheme evaluation
-    freight scheme evaluation
-freight terminals
-    freight terminals
-freight traffic
-    freight traffic
 freight transport
     freight transport
     freight transportation
-    freight transports
-    transporting freight
-freight transport externalities
-    freight transport externalities
-freight trip generation
-    freight trip generation
-freight vehicle
-    freight vehicle
-    freight vehicles
-freight vehicle routing
-    freight vehicle routing
-frequent
-    frequent
-fresh
-    fresh
-friendly
-    friendly
-frisian islands
-    frisian islands
-frontier
-    frontier
-fruit and vegetable distribution
-    fruit and vegetable distribution
-fruit flies
-    fruit flies
-fruit fly optimization algorithm
-    fruit fly optimization algorithm
-fruits
-    fruits
-fruits and vegetables
-    fruits and vegetables
-fruits and vegetables hall
-    fruits and vegetables hall
-fruits and vegetables market halls
-    fruits and vegetables market halls
-fuel
-    fuel
-fuelled-electric vehicles
-    fuelled-electric vehicles
-fulfills
-    fulfills
 full
     full
-fully electric vehicles
-    fully electric vehicles
-fully operational
-    fully operational
-function
-    function
-    functional
-    functioning
-    functions
-function evaluation
-    function evaluation
-function optimization problem
-    function optimization problem
-    function optimization problems
-functional organization
-    functional organization
-functional requirement
-    functional requirement
-    functional requirements
-fundamental
-    fundamental
-funders
-    funders
-funds
-    funds
-furbot
-    furbot
-furthermore
-    furthermore
 future
     future
-future research agenda
-    future research agenda
-fuzzy
-    fuzzy
-fuzzy cluster analysis
-    fuzzy cluster analysis
-    fuzzy clustering analysis
-fuzzy clustering
-    fuzzy clustering
-fuzzy clustering analysis method
-    fuzzy clustering analysis method
-fuzzy k-means
-    fuzzy k-means
-fuzzy logic
-    fuzzy logic
-fuzzy mathematics
-    fuzzy mathematics
-fuzzy multi attribute group decision makings (fmagdm)
-    fuzzy multi attribute group decision makings (fmagdm)
-fuzzy multi-criteria
-    fuzzy multi-criteria
-fuzzy multi-criteria decision-making
-    fuzzy multi-criteria decision-making
-fuzzy preferences
-    fuzzy preferences
-fuzzy relations
-    fuzzy relations
-fuzzy sets
-    fuzzy sets
-fuzzy technique
-    fuzzy technique
-fuzzy theories
-    fuzzy theories
-    fuzzy theory
-fuzzy topsis
-    fuzzy topsis
-fuzzy-grey relational analysis
-    fuzzy-grey relational analysis
-gaia
-    gaia
-gain
-    gain
-    gaining
-    gains
-gain-sharing
-    gain-sharing
-game
-    game
-    games
-game theory
-    game theory
-    games theory
-gap
-    gap
-    gaps
-gas emissions
-    gas emissions
-gas-powered
-    gas-powered
-gates
-    gates
-general
-    general
+gas
+    gas
+generality
     generality
-    generate
-    generated
-    generates
-    generation
-genetic algorithm
-    genetic algorithm
-    genetic algorithms
-genetic method
-    genetic method
 geographic
     geographic
-    geographical
-geographic information system
-    geographic information system
-    geographic information systems
+geographic information systems (gis)
     geographic information systems (gis)
-geographical distribution
-    geographical distribution
-germany
-    germany
 get
     get
-    getting
-ghg
-    ghg
-gini
-    gini
 gis
     gis
-give
-    give
-global
-    global
-    globalization
-global sustainability
-    global sustainability
-global warming
-    global warming
-gmm
-    gmm
-gmp
-    gmp
-goal
-    goal
-    goals
 good
     good
-    goods
-goods movement
-    goods movement
-    goods movements
-goods transportation
-    goods transportation
-goods vehicles
-    goods vehicles
-governance
-    governance
-    governing
-    government
-    governments
-governmental intervention
-    governmental intervention
-governmental intervention mechanism
-    governmental intervention mechanism
-gra
-    gra
-grading
-    grading
-gravity
-    gravity
-gravity method
-    gravity method
-great
-    great
 greater
     greater
-greedy algorithm
-    greedy algorithm
-greedy approximation algorithm
-    greedy approximation algorithm
-    greedy approximation algorithms
-greek
-    greek
-green
-    green
-green function
-    green function
-green logistics
-    green logistics
-green logistics center
-    green logistics center
-    green logistics centers
-green preferences
-    green preferences
-green products
-    green products
 green vehicle
     green vehicle
-    green vehicles
-greenbelt
-    greenbelt
-greenhouse gas
-    greenhouse gas
-greenhouse gas emissions
-    greenhouse gas emissions
-greenhouse gases
-    greenhouse gases
-grey
-    grey
-grid
-    grid
-grocery
-    grocery
 group
     group
-    grouping
-    groups
-grow
-    grow
-    growing
-growth
-    growth
-guarantee
-    guarantee
-guide
-    guide
-guidelines
-    guidelines
-habitability
-    habitability
-hague
-    hague
-hall
-    hall
-    halls
-hand
-    hand
-handle
-    handle
-    handling
-hands-on
-    hands-on
-happening
-    happening
-harbour
-    harbour
-harmful
-    harmful
-haul
-    haul
-health
-    health
-heart
-    heart
-heavy
-    heavy
-heavy-and
-    heavy-and
-helpful
-    helpful
-    helping
 heritage
     heritage
-heterogeneity
-    heterogeneity
+heterogeneous
     heterogeneous
-heterogeneous fleet
-    heterogeneous fleet
-heterogeneous vehicles
-    heterogeneous vehicles
-heuristic
-    heuristic
-hgv
-    hgv
-    hgvs
-hierarchy
-    hierarchy
-high
-    high
-high costs
-    high costs
-high-load
-    high-load
-higher
-    higher
-higher-value
-    higher-value
-highlight
-    highlight
-    highlighting
-    highlights
-historic
-    historic
+historical
     historical
-historical cities
-    historical cities
-historical heritages
-    historical heritages
-holding
-    holding
-holiday
-    holiday
-holistic
-    holistic
-home
-    home
-horeca
-    horeca
-horizon
-    horizon
+historical city
+    historical city
 horizontal
     horizontal
-horizontal cooperation
-    horizontal cooperation
-host
-    host
-hotel
-    hotel
-    hotels
-hotel industry
-    hotel industry
-hovedstaden
-    hovedstaden
-huaian
-    huaian
-hub
-    hub
-    hubs
-hub and spoke systems
-    hub and spoke systems
-    hub-and-spoke system
 huge
     huge
-human
-    human
-    humans
-hybrid
-    hybrid
-hybrid spatial fuzzy multi criteria decision making
-    hybrid spatial fuzzy multi criteria decision making
-    hybrid spatial-fuzzy multi-criteria decision-making
-hybrid vehicle
-    hybrid vehicle
-hypercube model
-    hypercube model
-hypothetical
-    hypothetical
-ibm
-    ibm
-ict
-    ict
-idea
-    idea
-ideal
-    ideal
-ideal solution
-    ideal solution
-identification
-    identification
-identified
-    identified
-    identifies
+identify
     identify
-    identifying
-ignoring
-    ignoring
-illustrate
-    illustrate
-    illustrated
-    illustrating
-    illustration
-    illustrative
-ilog
-    ilog
+ignore
+    ignore
 impact
     impact
-    impacting
-    impacts
 impact assessment
     impact assessment
 implement
     implement
     implementation
-    implementations
-    implemented
-    implementing
-implementation theory
-    implementation theory
-implications
-    implications
-implicit
-    implicit
-implies
-    implies
-import
-    import
-    importance
+important
     important
-    imports
-imposing
-    imposing
-impressive
-    impressive
-improve
-    improve
+improved
     improved
-    improvement
-    improvements
-    improving
-improved fruit fly optimization algorithm
-    improved fruit fly optimization algorithm
-imt
-    imt
-    imts
-imt location
-    imt location
-in-depth
-    in-depth
-inability
-    inability
-inadequate
-    inadequate
-inbound
-    inbound
-incentives
-    incentives
-inclination
-    inclination
-including
-    including
-inclusive
-    inclusive
-incomplete
-    incomplete
-inconsistent
-    inconsistent
-inconvenience
-    inconvenience
-incorporating
-    incorporating
+include
+    include
 increase
     increase
-    increased
-    increases
-    increasing
-increasing costs
-    increasing costs
-increment
-    increment
-incur
-    incur
-    incurs
-independent decision
-    independent decision
 index
     index
-index figures
-    index figures
-indicates
-    indicates
-    indications
+indicator
     indicator
-    indicators
-    indicators (instruments)
-indicator system
-    indicator system
 individual
     individual
-indonesia
-    indonesia
 industrial
     industrial
-    industries
-    industry
 industrially-zoned
     industrially-zoned
-inf
-    inf
-infections
-    infections
 influence
     influence
-    influences
-influential factors
-    influential factors
 information
     information
-information analysis
-    information analysis
-information systems
-    information systems
-infrastructural
-    infrastructural
+infrastructure
     infrastructure
-initial
-    initial
-    initiative
-    initiatives
-    initiator
-    initiators
-inland
-    inland
-inland waterways
-    inland waterways
 inner
     inner
 inner city area
     inner city area
-    inner-city area
 inner-city
     inner-city
-innovates
-    innovates
-    innovation
-    innovations
+innovative
     innovative
-innovative method
-    innovative method
-    innovative methods
-innovative solution
-    innovative solution
-    innovative solutions
-input
-    input
-    inputs
-insecurity
-    insecurity
-inside
-    inside
-insight
-    insight
-    insights
-installation
-    installation
 instance
     instance
-    instances
-institutional
-    institutional
-instrument
-    instrument
-insurance
-    insurance
 integer
     integer
-integer programming
-    integer programming
-integer programming models
-    integer programming models
-integrated
+integrate
+    integrate
     integrated
-    integrates
-    integrating
-    integration
-integrated maintenance
-    integrated maintenance
-integration platform
-    integration platform
-intelligence
-    intelligence
-intelligent agents
-    intelligent agents
-intensification
-    intensification
-intensity
-    intensity
-inter organisational innovation
-    inter organisational innovation
-inter organizational interaction
-    inter organizational interaction
-    inter-organizational interaction
-inter-establishment
-    inter-establishment
-inter-organisational innovation
-    inter-organisational innovation
-inter-udc
-    inter-udc
-inter-zone
-    inter-zone
-interaction
-    interaction
-interaction mechanisms
-    interaction mechanisms
-interchange
-    interchange
-    interchanges
-interconnection
-    interconnection
 interest
     interest
-    interested
-    interesting
-    interests
 interface
     interface
 intermediate
     intermediate
-intermodal
-    intermodal
-intermodal container terminals
-    intermodal container terminals
-intermodal freight
-    intermodal freight
-intermodal freight terminal
-    intermodal freight terminal
-    intermodal freight terminals
-intermodal freight transport
-    intermodal freight transport
-intermodal freight transport terminals
-    intermodal freight transport terminals
-intermodal terminals
-    intermodal terminals
-intermodal transport
-    intermodal transport
-    intermodal transportation
-internal
-    internal
-    internalize
-    international
-international policies
-    international policies
-international trade
-    international trade
 internet
     internet
-internet of things
-    internet of things
-    internet of things (iot)
-interoperability
-    interoperability
-interorganizational interaction
-    interorganizational interaction
-interurban
-    interurban
-interval-valued
-    interval-valued
-intervene
-    intervene
-intervention mechanism
-    intervention mechanism
-interviews
-    interviews
-intra-city
-    intra-city
-introduce
-    introduce
-    introduced
-    introduces
-    introducing
 introduction
     introduction
-intrusion
-    intrusion
-intuitionistic
-    intuitionistic
-inventory
-    inventory
 investigate
     investigate
-    investigated
-    investigates
-    investigating
-    investigation
-investment
-    investment
-    investments
-investment decisions
-    investment decisions
-involved
-    involved
-    involves
-    involving
-involved actors
-    involved actors
-involved stakeholders
-    involved stakeholders
-ioi
-    ioi
 isolation
     isolation
 issue
     issue
-    issues
-istanbul
-    istanbul
-italian
-    italian
-italy
-    italy
-iterative method
-    iterative method
-ivb
-    ivb
-japan
-    japan
 jds
     jds
-jiangxi
-    jiangxi
-jiujiang
-    jiujiang
-jogja inland port
-    jogja inland port
-join
-    join
-joint
-    joint
-joint decision
-    joint decision
-    joint decisions
-joint decision model
-    joint decision model
-joint delivery systems
+joint delivery system
+    joint delivery system
     joint delivery systems
-journal
-    journal
-    journals
-junction
-    junction
-justify
-    justify
 key
     key
-key performance indicators
-    key performance indicators
-key-resource
-    key-resource
-kilometers
-    kilometers
-    kilometres
-kind
-    kind
-    kinds
-kmeans
-    kmeans
-knowledge
-    knowledge
-kpi
-    kpi
-    kpis
-kpi-based
-    kpi-based
-kuehn-hamburger
-    kuehn-hamburger
-kuehne
-    kuehne
-laboratory
-    laboratory
-lack
-    lack
-    lacking
-lagrange multipliers
-    lagrange multipliers
-lagrangian
-    lagrangian
-lagrangian analysis
-    lagrangian analysis
-lagrangian relaxation
-    lagrangian relaxation
-lagrangian relaxation techniques
-    lagrangian relaxation techniques
-lagrangian slack operator
-    lagrangian slack operator
-lamilo project
-    lamilo project
+kilometer
+    kilometer
 land
     land
 large
     large
-large number
-    large number
-large-size
-    large-size
 larger
     larger
-largest
-    largest
-last
-    last
-last mile
-    last mile
-    last miles
-    last-mile
-last mile deliveries
-    last mile deliveries
+last mile delivery
     last mile delivery
-    last-mile deliveries
-last mile distribution
-    last mile distribution
-last mile logistics
-    last mile logistics
-    last-mile logistics
-last mile network design
-    last mile network design
-last-mile network
-    last-mile network
-last-minute
-    last-minute
 latin america
     latin america
 latin american
     latin american
-laws and legislation
-    laws and legislation
-layout
-    layout
-    layouts
-layout design
-    layout design
-layout optimization model
-    layout optimization model
-layout planning
-    layout planning
-layout planning methodology
-    layout planning methodology
-lbl freight consolidation
-    lbl freight consolidation
-lbl urban freight boxes
-    lbl urban freight boxes
-leading
-    leading
-learning
-    learning
-learning algorithms
-    learning algorithms
-learning-based
-    learning-based
+learn
+    learn
 least
     least
-leg
-    leg
-legal
-    legal
-less
-    less
-less-than-truckload
-    less-than-truckload
-lessons
-    lessons
+lesson
+    lesson
 level
     level
-    levels
-level 2
-    level 2
-level-1
-    level-1
-lexicographical order
-    lexicographical order
-life
-    life
-lifestyle
-    lifestyle
-light
-    light
-light-duty
-    light-duty
-likely
-    likely
-limit
-    limit
-    limitations
-    limited
-    limits
-limitationsimplications
-    limitationsimplications
-line
-    line
-linear
-    linear
+limitation
+    limitation
 linear programming
     linear programming
-linear regression model
-    linear regression model
-    linear regression models
-linguistic
-    linguistic
-    linguistics
-linguistic variable
-    linguistic variable
-    linguistic variables
-link
-    link
-    links
-lisboa
-    lisboa
-lisbon
-    lisbon
 list
     list
 literature
     literature
-literature review
-    literature review
-    literature reviews
 little
     little
-livelihood
-    livelihood
-load
-    load
-    loading
-load matching
-    load matching
-loading sequence
-    loading sequence
 local
     local
-    localization
-local government
-    local government
-local impact
-    local impact
-    local impacts
-local optimum solution
-    local optimum solution
-locate
-    locate
-    locating
+location
     location
-    locations
-location allocation
-    location allocation
-    location-allocation
-location allocation problem
-    location allocation problem
-location decisions
-    location decisions
-location factors
-    location factors
-location models
-    location models
-location plan
-    location plan
-    location planning
-    location plans
-location problems
-    location problems
-location routing problem
-    location routing problem
 location selection
     location selection
-location-allocation model
-    location-allocation model
-location-routing
-    location-routing
 logistic
     logistic
-    logistical
     logistics
 logistic platform
     logistic platform
     logistic platforms
     logistics platform
     logistics platforms
-logistic system
-    logistic system
-    logistic systems
-    logistics system
-    logistics systems
-logistica urbana
-    logistica urbana
-logistical activities
-    logistical activities
-logistical infrastructure
-    logistical infrastructure
-logistics and supply chain management
-    logistics and supply chain management
-logistics center
-    logistics center
-    logistics centers
-logistics cost
-    logistics cost
-    logistics costs
-logistics development
-    logistics development
-logistics distribution
-    logistics distribution
-logistics distribution center
-    logistics distribution center
-    logistics distribution centers
-logistics distribution networks
-    logistics distribution networks
-logistics distribution system
-    logistics distribution system
-logistics engineering
-    logistics engineering
-logistics industry
-    logistics industry
-logistics information
-    logistics information
-logistics information platform
-    logistics information platform
-logistics information systems
-    logistics information systems
-logistics network
-    logistics network
-    logistics networks
-    network logistics
-logistics pooling
-    logistics pooling
-logistics process
-    logistics process
-logistics service provider
-    logistics service provider
-    logistics service providers
-logistics services
-    logistics services
-logistics simulations
-    logistics simulations
-logistics sprawl
-    logistics sprawl
-logistics-related
-    logistics-related
-logit
-    logit
-logit analysis
-    logit analysis
-london
-    london
-long
-    long
-long distance
-    long distance
-    long-distance
-long distance transport
-    long distance transport
-long-haul
-    long-haul
-long-term
-    long-term
-longer
-    longer
-looking
-    looking
-lorries
-    lorries
 loss
     loss
-lot
-    lot
 low
     low
-low carbon
-    low carbon
-    low-carbon
-low emission zones
-    low emission zones
-low-carbon emission
-    low-carbon emission
-low-cooperative
-    low-cooperative
-low-cost
-    low-cost
-low-pollution
-    low-pollution
-lower
-    lower
-lowers rent
-    lowers rent
-lrp
-    lrp
-lsps
-    lsps
-ltz
-    ltz
-lucca
-    lucca
-maastricht
-    maastricht
 main
     main
-main stakeholders
-    main stakeholders
-maintaining
-    maintaining
-maintenance
-    maintenance
+main stakeholder
+    main stakeholder
 major
     major
-    majority
-major cost
-    major cost
-make
-    make
-    making
-mall
-    mall
-mamca
-    mamca
-manage
-    manage
-    manageable
+management
     management
     manager
-    managers
-    managing
-management structure
-    management structure
-manner
-    manner
-manual
-    manual
-manufacturing
-    manufacturing
-manuscript
-    manuscript
 many
     many
-map
-    map
-maritime transportation
-    maritime transportation
-market
-    market
-    marketing
-    markets
-market shares
-    market shares
-markov
-    markov
-mas-adp
-    mas-adp
 mas-adp based
     mas-adp based
-mas-q-learning
-    mas-q-learning
 mass-gt
     mass-gt
-massive
-    massive
-material
-    material
-    materials
 mathematical
     mathematical
-mathematical model
-    mathematical model
-    mathematical modeling
-    mathematical modelling
-    mathematical models
-mathematical model-based
-    mathematical model-based
-mathematical techniques
-    mathematical techniques
-matheuristic
-    matheuristic
-    matheuristics
-matlab
-    matlab
-matrix
-    matrix
-matters
-    matters
-maximisation
-    maximisation
-    maximising
-    maximize
-    maximizing
-maximizing auctions
-    maximizing auctions
-maximum
-    maximum
-mcdm
-    mcdm
-means
-    means
 measure
     measure
-    measurements
-    measures
-    measuring
-mechanical engineering
-    mechanical engineering
-mechanism
-    mechanism
-    mechanisms
-mechanismsoutside
-    mechanismsoutside
-med
-    med
-median
-    median
-mediterranean cities
-    mediterranean cities
 medium
     medium
-medium sized cities
-    medium sized cities
-    medium-sized cities
-medium-size
-    medium-size
+medium-sized
     medium-sized
-meet
-    meet
-    meets
-megacities
-    megacities
+megacity
     megacity
 melbourne
     melbourne
 melbourne , australia
     melbourne , australia
-member
-    member
-membership
-    membership
-met
-    met
-meta-analysis
-    meta-analysis
 meta-heuristic
     meta-heuristic
 meta-heuristic approach
     meta-heuristic approach
-    meta-heuristic approaches
-metaheuristic
-    metaheuristic
-    metaheuristics
 method
     method
-    methods
-methodological
-    methodological
-    methodologies
+methodology
     methodology
-methodological approach
-    methodological approach
-methodological frameworks
-    methodological frameworks
-metrics
-    metrics
 metropolitan
     metropolitan
-micro-consolidation
-    micro-consolidation
-micro-simulation
-    micro-simulation
-micro-simulation approach
-    micro-simulation approach
-micro-simulation model
-    micro-simulation model
-microsimulation model
-    microsimulation model
-    microsimulation models
-migration
-    migration
-milan
-    milan
-mild
-    mild
-mile
-    mile
 minas gerais
     minas gerais
-minimal
-    minimal
-    minimise
+minimization
     minimization
     minimize
-    minimizing
-minimization problems
-    minimization problems
-minimum
-    minimum
-minute
-    minute
-mip
-    mip
-mistakes
-    mistakes
-mitigate
-    mitigate
-    mitigation
-mix
-    mix
-    mixed
-    mixes
-mixed integer linear programming
-    mixed integer linear programming
-mixed integer linear programming model
-    mixed integer linear programming model
-mixed integer programming
-    mixed integer programming
-    mixed-integer programming
-    mixed-integer programs
-mixed-integer
-    mixed-integer
 mobility
     mobility
-    mobilize
-    mobilizing
-modal
-    modal
-    modality
-mode
-    mode
-    modes
-mode choice
-    mode choice
-mode-service
-    mode-service
 model
     model
-    modeling
-    modelization
     modelling
-    models
-model test
-    model test
-modeling urban distribution center
-    modeling urban distribution center
-models, theoretical
-    models, theoretical
-    theoretical model
-modern
-    modern
-modern logistics
-    modern logistics
-modified customer satisfaction index
-    modified customer satisfaction index
-monetary
-    monetary
-mono-actor
-    mono-actor
-months
-    months
+model-based
+    model-based
 moreless
     moreless
-moreover
-    moreover
-morphologies
-    morphologies
-    morphology
-mostif
-    mostif
-motion
-    motion
-motivate
-    motivate
-    motivating
-    motivations
-motor trucks
-    motor trucks
-motor vehicle
-    motor vehicle
-motor vehicle emissions
-    motor vehicle emissions
 movement
     movement
-    movements
-movers
-    movers
-moves
-    moves
-    moving
-mrlrp
-    mrlrp
-much
-    much
-mudc
-    mudc
-mudc scheme
-    mudc scheme
-multi
-    multi
-multi actor multi criteria analysis
-    multi actor multi criteria analysis
-    multi-actor multi-criteria analysis
-    multi-actor multi-criteria analysis (mamca)
-multi agent model
-    multi agent model
-    multi-agent model
-    multi-agent models
-multi agent simulation
-    multi agent simulation
-    multi-agent simulation
-multi agent simulation-adaptive dynamic programming
-    multi agent simulation-adaptive dynamic programming
-multi agent systems
-    multi agent systems
-    multi-agent system
-    multi-agent systems
 multi criteria analysis
     multi criteria analysis
-multi criteria decision making
-    multi criteria decision making
-    multi-criteria decision making
-    multi-criteria decision making (mcdm)
-    multi-criteria decision-making (mcdm)
-multi criteria evaluation framework
-    multi criteria evaluation framework
-    multi-criteria evaluation framework
-multi criteria method
-    multi criteria method
-    multi-criteria method
-multi level logistics distribution center
-    multi level logistics distribution center
-multi objective formulation
-    multi objective formulation
-    multi-objective formulation
-multi tenant buildings
-    multi tenant buildings
+multi tenant building
+    multi tenant building
     multi-tenant buildings
 multi-agent
     multi-agent
-multi-attribute
-    multi-attribute
-multi-beneficial
-    multi-beneficial
-multi-client
-    multi-client
+multi-agent models
+    multi-agent models
+multi-agent system
+    multi-agent system
 multi-commodity
     multi-commodity
 multi-criteria
     multi-criteria
-multi-criteria decision analysis (mcda)
-    multi-criteria decision analysis (mcda)
-multi-criteria evaluation
-    multi-criteria evaluation
-multi-criteria objective
-    multi-criteria objective
-multi-depot
-    multi-depot
-multi-dimensional
-    multi-dimensional
-multi-level
-    multi-level
-multi-level logistics
-    multi-level logistics
-multi-modal
-    multi-modal
-multi-modal urban distribution centre
-    multi-modal urban distribution centre
-multi-mode
-    multi-mode
-multi-objective
-    multi-objective
-multi-objective mixed-integer linear programming
-    multi-objective mixed-integer linear programming
-multi-objective optimization
-    multi-objective optimization
-multi-provider
-    multi-provider
-multi-stakeholder
-    multi-stakeholder
-multi-stakeholder analysis
-    multi-stakeholder analysis
-multi-supplier
-    multi-supplier
-multi-user
-    multi-user
-multi-variety
-    multi-variety
-multiagent
-    multiagent
-multicommodity-ring
-    multicommodity-ring
+multi-criteria decision-making (mcdm)
+    multi-criteria decision-making (mcdm)
 multicriteria analysis
     multicriteria analysis
-multicriteria optimization
-    multicriteria optimization
-multifarious
-    multifarious
-multiobjective optimization
-    multiobjective optimization
 multiple
     multiple
 multiple location decision
     multiple location decision
-multiple stakeholders
-    multiple stakeholders
-multiple-case study
-    multiple-case study
-multistage
-    multistage
-multivariant analysis
-    multivariant analysis
-multivariate
-    multivariate
-multivariate factorial analysis
-    multivariate factorial analysis
-multivariate statistical analysis
-    multivariate statistical analysis
-municipal
-    municipal
-    municipalities
-    municipality
-municipal administration
-    municipal administration
-    municipal administrations
-municipal managements
-    municipal managements
-mutual
-    mutual
-nagel
-    nagel
-national
-    national
-navigation
-    navigation
-necessary
-    necessary
-necessity
-    necessity
-need
-    need
-    needs
-negative
-    negative
-    negatively
-negative correlation
-    negative correlation
-negative effects
-    negative effects
-negative externalities
-    negative externalities
-neighbours
-    neighbours
-net
-    net
-netherlands
-    netherlands
 network
     network
-    networks
-network design
-    network design
 network flow problem
     network flow problem
-neural
-    neural
-neural networks
-    neural networks
-    neural networks (computer)
-neuro-fuzzy network
-    neuro-fuzzy network
-neurofuzzy
-    neurofuzzy
-neutral
-    neutral
-nevertheless
-    nevertheless
 new
     new
-new solution
-    new solution
-new south wales
-    new south wales
 next
     next
-night
-    night
-nijmegen
-    nijmegen
-nocv1
-    nocv1
-nodal
-    nodal
-nodes
-    nodes
-noise
-    noise
-noise emissions
-    noise emissions
-noise nuisance
-    noise nuisance
-non-
-    non-
-non-cooperative
-    non-cooperative
-non-emptiness
-    non-emptiness
-non-equal
-    non-equal
-non-linear
-    non-linear
-non-linear mixed integer programming
-    non-linear mixed integer programming
-non-motorized
-    non-motorized
-non-motorized modes
-    non-motorized modes
-noncentral
-    noncentral
-nonlinear
-    nonlinear
-nonprofit
-    nonprofit
-north
-    north
-north frisian islands
-    north frisian islands
-northern europe
-    northern europe
-norway
-    norway
-norwegian
-    norwegian
-nostram
-    nostram
-notion
-    notion
-novel
-    novel
-novi sad
-    novi sad
-nox
-    nox
+node
+    node
 np-hard
     np-hard
-nsw
-    nsw
 number
     number
-    numbers
-number of vehicles
-    number of vehicles
 numerical
     numerical
-    numerous
-numerical algorithms
-    numerical algorithms
-numerical applications
-    numerical applications
 numerical computations
     numerical computations
-numerical experiments
-    numerical experiments
-numerical model
-    numerical model
-nwe
-    nwe
 objective
     objective
-    objectives
-    objects
-observation
-    observation
+observed
     observed
-obstacle
-    obstacle
-    obstacles
 obtain
     obtain
-    obtainable
-obvious
-    obvious
 offer
     offer
     offering
-    offerings
-office
-    office
 ology
     ology
 on-going
     on-going
-on-site testing
-    on-site testing
-on-street
-    on-street
-one using
-    one using
-one year
-    one year
-ones
-    ones
 onset
     onset
-open
-    open
-operate
-    operate
-    operated
-    operating
+operation
     operation
     operational
-    operations
-    operativity
     operator
-    operators
-operating costs
-    operating costs
-operating modes
-    operating modes
-operational characteristics
-    operational characteristics
-operational requirements
+operational requirement
+    operational requirement
     operational requirements
-operational research
-    operational research
-operational scenario
-    operational scenario
-    operational scenarios
-operationalise
-    operationalise
 opinion
     opinion
-    opinions
-opportunities
-    opportunities
-    opportunity
 optimal
     optimal
-    optimality
     optimise
-    optimising
     optimization
-    optimize
-optimal locating
-    optimal locating
-    optimal locations
-optimal locating method
-    optimal locating method
-optimization algorithm
-    optimization algorithm
-    optimization algorithms
-optimization methodology
-    optimization methodology
-optimization of freight transport
-    optimization of freight transport
-optimization problems
-    optimization problems
 optimum
     optimum
-    optimums
-option
-    option
 order
     order
-    orders
-order sharing
-    order sharing
-ordered weighted averaging
-    ordered weighted averaging
 organisation
     organisation
     organization
-    organizations
-    organize
-    organizing
-organization and administration
-    organization and administration
-organization and management
-    organization and management
-organizational
-    organizational
-orient
-    orient
-origin
-    origin
-    original
-    origins
-originalityvalue
-    originalityvalue
-origindestination
-    origindestination
-orkb-framework
-    orkb-framework
-orthogonal
-    orthogonal
-oslo
-    oslo
-    oslo [oslo (cnt)]
-oslo [norway]
-    oslo [norway]
-others
-    others
-otherwise
-    otherwise
 ouro preto
     ouro preto
-outcome-
-    outcome-
-    outcomes
-outer
-    outer
-outlets
-    outlets
-outperform
-    outperform
-    outperforms
-output
-    output
-outside
-    outside
-outskirtusing
-    outskirtusing
-overall
-    overall
-overall factor
-    overall factor
-overcoming
-    overcoming
-overnight
-    overnight
-overview
-    overview
+outcome
+    outcome
 p-median
     p-median
 p-median problem
     p-median problem
-    p-median problems
-p-values
-    p-values
 package
     package
-    packages
-    packaging
-pair
-    pair
-pairwise comparison
-    pairwise comparison
-panuccio
-    panuccio
-paper
-    paper
-    papers
-paper herein
-    paper herein
-parameters
-    parameters
-parcel delivery
-    parcel delivery
+parcel
+    parcel
 parcel distribution
     parcel distribution
 parcel distribution network
     parcel distribution network
-parcels
-    parcels
-pareto
-    pareto
-paris
-    paris
-parking
-    parking
 part
     part
-    parts
-participants
-    participants
-    participating
-    participation
-participating carriers
-    participating carriers
-participating retailers
-    participating retailers
 particle
     particle
 particular
     particular
-parties
-    parties
-partner
-    partner
-    partners
-passenger
-    passenger
-path
-    path
-pathway
-    pathway
 pattern
     pattern
-    patterns
-pay
-    pay
-payload
-    payload
-penalty
-    penalty
-penetration
-    penetration
-people
-    people
-per parcel
-    per parcel
-perceive
-    perceive
-percent
-    percent
-perception
-    perception
-    perceptions
-perform
-    perform
+performance
     performance
-    performances
-    performing
-    performs
-performance evaluation
-    performance evaluation
-performance indicators
-    performance indicators
-    performance indices
-performance measurement
-    performance measurement
-    performance measurements
-performed using
-    performed using
-period
-    period
-    periods
-peripheral
-    peripheral
-periphery
-    periphery
-perishable
-    perishable
-permit
-    permit
-personal
-    personal
-personnel training
-    personnel training
-perspective
-    perspective
-    perspectives
-pertaining
-    pertaining
-petrol
-    petrol
-pharmaceutical
-    pharmaceutical
-phase
-    phase
 physical
     physical
-pickup
-    pickup
-    pickups
-picture
-    picture
-pilot
-    pilot
-    pilots
-pilot projects
-    pilot projects
-piraeus
-    piraeus
 place
     place
-    places
-plan
-    plan
-    planned
-    planning
-    plans
-planners
-    planners
-planning and evaluation methods
-    planning and evaluation methods
-planning and layout
-    planning and layout
-    planning and layouts
+planner
+    planner
 planning method
     planning method
-planning models
-    planning models
-plant
-    plant
 platform
     platform
-    platforms
-plausible
-    plausible
-play
-    play
-    plays
-players
-    players
-players-carriers
-    players-carriers
-plenty
-    plenty
-pm emissions
-    pm emissions
-pm2.5
-    pm2.5
-point
-    point
-    points
-policies
-    policies
+policy
     policy
-policy evaluation
-    policy evaluation
-policy implementation
-    policy implementation
-policy making
-    policy making
-policy support
-    policy support
-policya
-    policya
-policymakers
-    policymakers
-political
-    political
-pollutant
-    pollutant
-    polluted
-    pollution
-polluting emissions
-    polluting emissions
-polluting emissions reduction
-    polluting emissions reduction
-pooling
-    pooling
-poor
-    poor
-popular
-    popular
-populated
-    populated
-    population
-population statistics
-    population statistics
-port
-    port
-    ports
-port operation
-    port operation
-port terminals
-    port terminals
-portal
-    portal
-portfolio
-    portfolio
-ports and harbors
-    ports and harbors
-poses
-    poses
-position
-    position
-    positions
-    positive
-possibilictic linear programming
-    possibilictic linear programming
-possibilistic programming
-    possibilistic programming
-possibilities
-    possibilities
+pool
+    pool
+possibility
     possibility
     possible
-possible scenarios
-    possible scenarios
-post evaluation deliberation
-    post evaluation deliberation
-    post-evaluation deliberation
-post evaluations
-    post evaluations
-post-decision
-    post-decision
 potential
     potential
-    potentiality
-    potentials
-potential benefits
-    potential benefits
-potential demand
-    potential demand
-    potential demands
-power
-    power
-powergovernment
-    powergovernment
 practical
     practical
-    practicality
     practice
-    practices
-practitioners
-    practitioners
-pre-feasibility
-    pre-feasibility
-pre-retailing
-    pre-retailing
-precision
-    precision
-predict
-    predict
-    prediction
 preference
     preference
-    preferences
-preliminary
-    preliminary
-premises
-    premises
-preparations
-    preparations
-presence
-    presence
 present
     present
-    presenting
-    presents
-preservation
-    preservation
-    preserving
-pressure
-    pressure
-preventive
-    preventive
-preventive maintenance actions
-    preventive maintenance actions
-previous
-    previous
-price
-    price
-    prices
-    pricing
-principal
-    principal
-principle
-    principle
-    principles
-prior
-    prior
-priorities
-    priorities
+priority
     priority
-privacy preservation
-    privacy preservation
-private
-    private
-privately-initiated
-    privately-initiated
-probabilistic
-    probabilistic
-probability
-    probability
-probability function
-    probability function
-    probability functions
 problem
     problem
-    problems
-problematic
-    problematic
-procedure
-    procedure
-    procedures
 process
     process
-    processes
-    processing
-procrustes
-    procrustes
 producer
     producer
-    producers
-    producing
-product
-    product
-    production
-    productive
-    productivity
-    products
-product design
-    product design
-profit
-    profit
-    profitability
-    profitable
-    profits
-profit functions
-    profit functions
-profit margin
-    profit margin
-profit-maximizing
-    profit-maximizing
 program
     program
-    programme
-    programming
-project
-    project
-    projects
-promethee
-    promethee
-prominent
-    prominent
-promising
-    promising
-promoters
-    promoters
-    promoting
-prone
-    prone
-proper
-    proper
 properly
     properly
-properties
-    properties
-    property
 propose
     propose
-    proposed
-    proposes
-    proposing
-proposed approach
-    proposed approach
-proposed framework
-    proposed framework
-proposed model
-    proposed model
-    proposed modelling
-proposition
-    proposition
-    propositions
-protection
-    protection
-protection of the environments
-    protection of the environments
-prototype
-    prototype
-provide
-    provide
-    provider
-    providers
-    providing
-province
-    province
-proving
-    proving
-provision
-    provision
-    provisioning
 proximity
     proximity
-psychology
-    psychology
 public
     public
-public administration
-    public administration
-    public administrations
-public authorities
-    public authorities
-public policies
-    public policies
-    public policy
-public private partnership
-    public private partnership
-    public private partnerships
-    public-private partnership
 public-led
     public-led
 published
     published
-purchase
-    purchase
-purpose
-    purpose
-    purposes
-pursue
-    pursue
-putting
-    putting
-q-analysis
-    q-analysis
-q-learning
-    q-learning
-q-methodology
-    q-methodology
-qualitative
-    qualitative
-qualitative analysis
-    qualitative analysis
-quality
-    quality
-quality problems
-    quality problems
 quantify
     quantify
-    quantifying
-quantitative
-    quantitative
-quantitative calculation method
-    quantitative calculation method
-quantitative tool
-    quantitative tool
-    quantitative tools
-queensland
-    queensland
-question
-    question
-    questions
-questionnaire
-    questionnaire
-queueing theory
-    queueing theory
-queuing
-    queuing
-queuing location problem
-    queuing location problem
-queuing theory
-    queuing theory
-queuing theory-based
-    queuing theory-based
-r and shiny
-    r and shiny
-rail
-    rail
-rail transport
-    rail transport
-rail-based
-    rail-based
-railroad yards and terminals
-    railroad yards and terminals
-railroads
-    railroads
-railway
-    railway
-raise
-    raise
-random
-    random
-    randomness
-range
-    range
 rank
     rank
     ranked
-    ranking
-rapid
-    rapid
-rate
-    rate
-    rates
-    ratings
-rational
-    rational
-    rationalise
+rationalize
     rationalize
-re-examining
-    re-examining
-re-routing
-    re-routing
 reach
     reach
-    reaching
 real
     real
-real-data
-    real-data
-real-life
-    real-life
-real-time traffic datum
-    real-time traffic datum
 real-world
     real-world
-realities
-    realities
-    reality
-realize
-    realize
-    realized
-reap
-    reap
 reason
     reason
-    reasonable
-    reasons
-reasonable location
-    reasonable location
-reasonable scale
-    reasonable scale
-rebalancing
-    rebalancing
+receife
+    receife
 receive
     receive
-    receivers
-    receives
-    receiving
-recent
-    recent
-recipients
-    recipients
-recommendations
-    recommendations
-reconfigurable hardware
-    reconfigurable hardware
-record
-    record
-recur
-    recur
-recycling
-    recycling
-redesigning
-    redesigning
+    receiver
 reduce
     reduce
-    reduced
-    reducing
 reduction
     reduction
-    reductions
-reference
-    reference
-    referring
-    refers
-refinement
-    refinement
-reflect
-    reflect
-    reflecting
-regarding
-    regarding
-    regards
-regeneration
-    regeneration
-regent
-    regent
-reggio
-    reggio
-reggio di calabria
-    reggio di calabria
+regard
+    regard
 region
     region
     regional
-    regions
-region multi-level logistics distribution
-    region multi-level logistics distribution
-regional planning
-    regional planning
-regional resources
-    regional resources
-regression model
-    regression model
-regular
-    regular
-regulation
-    regulation
-    regulations
-    regulators
-regulatory
-    regulatory
-regulatory support
-    regulatory support
-reinforced learning
-    reinforced learning
-    reinforcement learning
-reinforced learning algorithms
-    reinforced learning algorithms
-related
-    related
-    relating
+reinforcement
+    reinforcement
+relation
     relation
-    relational
-    relations
-relative
-    relative
 relevant
     relevant
-reliability
-    reliability
-reliant
-    reliant
-relies
-    relies
-    rely
-remaining
-    remaining
-renaissance
-    renaissance
-renewable
-    renewable
-rent
-    rent
 replace
     replace
-    replacing
-replenishment
-    replenishment
-replicability
-    replicability
-    replicating
-reports
-    reports
-represent
-    represent
-    representative
-    representing
-representation
-    representation
-reproduce
-    reproduce
-requests
-    requests
-require
-    require
-    requirement
-    requirements
-    requiring
+replicate
+    replicate
 research
     research
-    researchers
-research agenda
-    research agenda
-research communities
-    research communities
-research framework
-    research framework
-research programs
-    research programs
-resident
-    resident
-    residents
+    researcher
 residential
     residential
-residents-bid
-    residents-bid
-resolution
-    resolution
-resource
-    resource
-    resources
-resourcesconstraints
-    resourcesconstraints
-respective
-    respective
-respiratory
-    respiratory
-respondents
-    respondents
-    responds
 response
     response
-    responses
-    responsible
-    responsive
-restart
-    restart
-restocking
-    restocking
-restricting
-    restricting
+restriction
     restriction
-    restrictions
-    restrictive
 result
     result
-    resulting
-    results
-retail
-    retail
-    retailer
+retailers
     retailers
-    retailing
-retail stores
-    retail stores
-retailers' point of view
-    retailers' point of view
-retain
-    retain
 reveal
     reveal
-    revealed
-    reveals
-revenue
-    revenue
-    revenues
-reverse
-    reverse
-reverse flow
-    reverse flow
-    reverse flows
-reverse logistics
-    reverse logistics
-reverse logistics system
-    reverse logistics system
-review
-    review
-    reviewing
-    reviews
-revival
-    revival
-rhine main area
-    rhine main area
-    rhine-main area
-ribe
-    ribe
-rijeka
-    rijeka
-ring
-    ring
-rising
-    rising
-risk
-    risk
-    risks
 road
     road
-    roads
-road congestion
-    road congestion
-road transport
-    road transport
-road-only scheme
-    road-only scheme
-roadside
-    roadside
-robust
-    robust
-    robustness
-robust optimization
-    robust optimization
-role
-    role
-    roles
-rolling horizon
-    rolling horizon
-rollout
-    rollout
-rome
-    rome
-rotation
-    rotation
-route
-    route
-    routes
-    routing
-rule
-    rule
 run
     run
-    running
-rural
-    rural
-sabara
-    sabara
-safety
-    safety
-saint-etienne
-    saint-etienne
-saintetienne
-    saintetienne
-sales
-    sales
-sales-oriented
-    sales-oriented
-sample
-    sample
-satellites
-    satellites
-satisfaction
-    satisfaction
-satisfied
-    satisfied
+satisfy
     satisfy
-    satisfying
-saturation
-    saturation
-saving
-    saving
-    savings
-scale
-    scale
-scale economies
-    scale economies
-scandinavia
-    scandinavia
-scarce
-    scarce
-scba
-    scba
 scenario
     scenario
-    scenarios
-scenario building
-    scenario building
-    scenario-building
-scenario planning
-    scenario planning
-scenario-planning methodology
-    scenario-planning methodology
-schedules
-    schedules
-    scheduling
-scheme
-    scheme
-    schemes
-scheme evaluation
-    scheme evaluation
-scheme selection
-    scheme selection
-scholars
-    scholars
-science
-    science
-    sciences
-scientific
-    scientific
-scientific method
-    scientific method
-scope
-    scope
 scotland
     scotland
-seamless
-    seamless
-search
-    search
-    searching
-search engines
-    search engines
-seasonal
-    seasonal
-second
-    second
-sections
-    sections
 sector
     sector
-    sectors
-sector-related
-    sector-related
-security
-    security
-seeking
-    seeking
-segment
-    segment
-seize
-    seize
-select
-    select
-    selecting
-    selection
-self-financing
-    self-financing
-self-service
-    self-service
-self-sustaining
-    self-sustaining
-sellers
-    sellers
-semi structured interviews
-    semi structured interviews
-semi-cooperative
-    semi-cooperative
-semi-structured
-    semi-structured
-semistructured
-    semistructured
-sensitive
-    sensitive
-    sensitivity
 sensitivity analysis
     sensitivity analysis
-sensitivy analysis
-    sensitivy analysis
 sent
     sent
-sequence
-    sequence
-sequential
-    sequential
-serbia
-    serbia
-series
-    series
-serious
-    serious
-serve
-    serve
-    serving
 service
     service
-    services
-    servicing
-service prices
-    service prices
-service providers
-    service providers
-sessions
-    sessions
-set
-    set
-    sets
-    setting
-    settings
-set-partitioning-like
-    set-partitioning-like
-setup
-    setup
 several
     several
-    severe
-    severs
-shanghai
-    shanghai
-shape
-    shape
 share
     share
-    sharing
-shareable
-    shareable
-shared-resource
-    shared-resource
-    sharing resources
-shift
-    shift
-    shifting
-ship
-    ship
-    shipping
-    ships
 shipment
     shipment
-    shipments
-shipper
-    shipper
-    shippers
-shipperscarriers
-    shipperscarriers
-shop
-    shop
+shopping
     shopping
-    shops
-shopkeepers
-    shopkeepers
-short
-    short
 show
     show
-    shows
-shuttle
-    shuttle
 significance
     significance
     significant
-significantly reduce
-    significantly reduce
-similar
-    similar
-    similarity
-simulate
-    simulate
-    simulating
+simulation
     simulation
-    simulations
-    simulator
-simulation analysis
-    simulation analysis
-simulation approach
-    simulation approach
-simulation model
-    simulation model
-    simulation models
-simulation platform
-    simulation platform
-simulation-based
-    simulation-based
-singapore
-    singapore
+simulation-adaptive dynamic programming
+    simulation-adaptive dynamic programming
 single
     single
-single location selection
-    single location selection
+sit
+    sit
 site
     site
-    sites
-    siting
 site selection
     site selection
-site testing
-    site testing
-    site-testing
-site-related
-    site-related
-situation
-    situation
-    situations
 size
     size
-    sizes
-    sizing
-skills
-    skills
-sleman
-    sleman
-slr
-    slr
-small
-    small
-small-size
-    small-size
-smaller
-    smaller
-smart
-    smart
-smart cities
-    smart cities
-    smart city
-smart city logistics
-    smart city logistics
-smartest
-    smartest
-sme
-    sme
-smile project
-    smile project
-snowball
-    snowball
-so-called
-    so-called
-social
-    social
-social and environmental
-    social and environmental
-social and environmental problems
-    social and environmental problems
 social cost benefit analysis
     social cost benefit analysis
-    social cost-benefit analysis
 societal
     societal
-society
-    society
-socio-economic
-    socio-economic
-sociological
-    sociological
-soft computing
-    soft computing
-software
-    software
-software testing
-    software testing
 sole
     sole
-solid
-    solid
 solution
     solution
-    solutions
-solution concepts
-    solution concepts
 solve
     solve
-    solved
-    solving
 solver
     solver
-    solvers
-sorting
-    sorting
-sound
-    sound
 source
     source
-    sources
-    sourcing
-south
-    south
-southampton
-    southampton
-southern italy
-    southern italy
-space
-    space
-    spaces
-spanish
-    spanish
 spatial
     spatial
 spatial analysis
     spatial analysis
 spatial data
     spatial data
-spatial decision support
-    spatial decision support
-spatial-related
-    spatial-related
-special
-    special
-specialist
-    specialist
-specialist technology
-    specialist technology
-specific
-    specific
+specificity
     specificity
-specific distribution
-    specific distribution
-specific location
-    specific location
-specific location planning
-    specific location planning
-spent
-    spent
-spite
-    spite
-spl
-    spl
-sprawl
-    sprawl
-square
-    square
-stability
-    stability
-stability requirements
-    stability requirements
-stable
-    stable
-stable collaboration
-    stable collaboration
-staff
-    staff
-stage includes
-    stage includes
-stages
-    stages
 stakeholder
     stakeholder
-    stakeholders
-stakeholder analysis
-    stakeholder analysis
 stakeholder engagement
     stakeholder engagement
-stakeholder-based
-    stakeholder-based
-stakeholder-driven
-    stakeholder-driven
-stakeholders perception
-    stakeholders perception
-stakeholders’ commitment
-    stakeholders’ commitment
-start
-    start
-    starting
-start-up
-    start-up
 state
     state
-    state-
-    states
-stated preference
-    stated preference
-    stated-preference
-stated-choice
-    stated-choice
-static
-    static
-static simulations
-    static simulations
-stationery
-    stationery
 statistical
     statistical
-    statistics
-steering
-    steering
-step
-    step
-    steps
-stifling
-    stifling
-stochastic
-    stochastic
-stochastic systems
-    stochastic systems
-stockholding
-    stockholding
-stop
-    stop
-    stops
-storage
-    storage
-store
-    store
-    stores
-stowage
-    stowage
-    stowage (mines)
-strain measurement
-    strain measurement
-straining
-    straining
 strategic
     strategic
-strategic planning
-    strategic planning
-strategic transport modelling
-    strategic transport modelling
-strategies
-    strategies
-    strategy
-stream
-    stream
-streamline
-    streamline
-street
-    street
-strength
-    strength
-    strengths
-structural
-    structural
+structure
     structure
-    structures
-structural literature review
-    structural literature review
-studied
-    studied
-    studies
+study
     study
-study analyzed
-    study analyzed
-study provides
-    study provides
-sub-gradient
-    sub-gradient
-sub-problem
-    sub-problem
-subcontracting
-    subcontracting
-subcontracting strategy
-    subcontracting strategy
-subcontractor
-    subcontractor
-subject
-    subject
-    subjective
-subsector
-    subsector
-    subsectors
-subsequent
-    subsequent
-subsidiary
-    subsidiary
-subsidies
-    subsidies
-    subsidy
-substantial
-    substantial
-suburbs
-    suburbs
-success
-    success
-    successes
+successful
     successful
-    successive
-suffer
-    suffer
-    suffering
-sufficient
-    sufficient
-sugar commodity
-    sugar commodity
-suggest
-    suggest
-    suggestions
-suitability
-    suitability
-    suitable
 suitability analysis
     suitability analysis
-suitable locations
-    suitable locations
-sum
-    sum
+suitable location
+    suitable location
 superior
     superior
-supplement
-    supplement
-supplementary
-    supplementary
 supplier
     supplier
-    suppliers
-supplies
-    supplies
-    supply
-    supplying
-supply chain
-    supply chain
-    supply chains
-supply chain management
-    supply chain management
-supply-oriented
-    supply-oriented
 support
     support
-    supporting
     supportive
-    supports
-surrounding
-    surrounding
 survey
     survey
-    surveys
-survey carried
-    survey carried
-sustainabilities
-    sustainabilities
+sustainability
     sustainability
     sustainable
 sustainability disciplines
     sustainability disciplines
 sustainability enablers
     sustainability enablers
-sustainable business
-    sustainable business
-sustainable business model
-    sustainable business model
-    sustainable business models
-sustainable city logistics
-    sustainable city logistics
-sustainable collaborative network
-    sustainable collaborative network
-sustainable development
-    sustainable development
-sustainable freight distribution
-    sustainable freight distribution
-sustainable freight transport
-    sustainable freight transport
 sustainable implementation
     sustainable implementation
-sustainable services
-    sustainable services
-sustainable transport
-    sustainable transport
-sustainable urban freight transport
-    sustainable urban freight transport
 swarm
     swarm
 sweden
     sweden
-swinoujscie
-    swinoujscie
 synthetic
     synthetic
-syracuse
-    syracuse
 system
     system
-    systems
-system dynamics
-    system dynamics
-systematic
-    systematic
-    systematical
-systematic review
-    systematic review
-systemises
-    systemises
-systems engineering
-    systems engineering
-tabu search
-    tabu search
 tactical
     tactical
-taian
-    taian
-take
-    take
-    taking
-take-up
-    take-up
-tank-to-wheel
-    tank-to-wheel
-target
-    target
-    targeting
-    targets
-target-oriented
-    target-oriented
-tax
-    tax
-taxation
-    taxation
-tchebycheff approach
-    tchebycheff approach
-tco
-    tco
-tdvrptw
-    tdvrptw
-team
-    team
-technical
-    technical
-technical solutions
-    technical solutions
 technique
     technique
-    techniques
-technological
-    technological
-    technologies
-    technology
-technology-based
-    technology-based
-tehran
-    tehran
-temporary
-    temporary
-tend
-    tend
-tenjin
-    tenjin
 term
     term
-    terms
-terminal
-    terminal
-    terminals
-territorial
-    territorial
-test
-    test
-    testing
-texas
-    texas
-thanks
-    thanks
-the netherlands
+the netherland
+    the netherland
     the netherlands
-themes
-    themes
-theoretical
-    theoretical
-theoretical foundations
-    theoretical foundations
-theoretical study
-    theoretical study
-theory
-    theory
-therefore
-    therefore
-thereto
-    thereto
-thessaloniki
-    thessaloniki
 theworld
     theworld
-thinning
-    thinning
-third
-    third
-thoughtful
-    thoughtful
-thowa
-    thowa
-thowa operator
-    thowa operator
-thpa
-    thpa
-three-stage
-    three-stage
-throughput
-    throughput
-tighter
-    tighter
 time
     time
-    times
-time windows
-    time windows
-    time-window
-time-dependent
-    time-dependent
-time-related
-    time-related
-timeliness
-    timeliness
-timeslondon
-    timeslondon
-timewindow
-    timewindow
-today
-    today
 tokyo
     tokyo
-tool
-    tool
-    tools
-topic
-    topic
-    topics
-topographical
-    topographical
 topsis
     topsis
-total
-    total
 tour formation
     tour formation
-touristic cities
-    touristic cities
-towards
-    towards
-town
-    town
-toy-sized
-    toy-sized
-trade-off
-    trade-off
+toward
+    toward
+trade-offs
     trade-offs
-tradeoff
-    tradeoff
-traditional
-    traditional
-traditional approaches
-    traditional approaches
 traffic
     traffic
-traffic and transport
-    traffic and transport
 traffic congestion
     traffic congestion
-traffic emission
-    traffic emission
-traffic volumes
-    traffic volumes
-traffic wardens
+traffic warden
+    traffic warden
     traffic wardens
-trains
-    trains
-tramways
-    tramways
-transdisciplinary
-    transdisciplinary
 transfer
     transfer
-    transferability
-    transferable
-    transferred
-transform
-    transform
-    transforming
-transhipment
-    transhipment
-transnational
-    transnational
 transport
     transport
     transportation
-    transports
-transport demand analysis
-    transport demand analysis
-transport externalities
-    transport externalities
-transport infrastructure
-    transport infrastructure
-transport modeling
-    transport modeling
-    transport modelling
-transport planning
-    transport planning
+transportation planning
     transportation planning
-transport policy
-    transport policy
-    transportation policy
-transport resources
-    transport resources
-transport services
-    transport services
-transport vehicle
-    transport vehicle
-transport-related
-    transport-related
-transportation companies
-    transportation companies
-transportation cost
-    transportation cost
-    transportation costs
-transportation development
-    transportation development
-transportation economics
-    transportation economics
-transportation impacts
-    transportation impacts
-transportation requirements
-    transportation requirements
-transportation routes
-    transportation routes
-transportation simulations
-    transportation simulations
-transportation system
-    transportation system
-    transportation systems
-transshipment
-    transshipment
-transshipment distribution center
-    transshipment distribution center
-trapezoidal
-    trapezoidal
 travel
     travel
-    travels
-travel behavior
-    travel behavior
-travel demand
-    travel demand
-treatmenthandling
-    treatmenthandling
-trends
-    trends
-trial
-    trial
-    trials
-trial systems
-    trial systems
-trialability
-    trialability
-triangular
-    triangular
-tricycles
-    tricycles
-tried
-    tried
 trip
     trip
-    trips
-trip generations
-    trip generations
 triple
     triple
 truck
     truck
-    trucks
-truck cargo
-    truck cargo
-truck load
-    truck load
-truck load matching
-    truck load matching
-truck transportation
-    truck transportation
-trust
-    trust
-tsdsm
-    tsdsm
-tuple
-    tuple
-    tuples
-turnover
-    turnover
-two echelon vehicle routing problem
-    two echelon vehicle routing problem
-    two-echelon vehicle routing problem
-two-step
-    two-step
 two-tier
     two-tier
-type
-    type
+type-
     type-
-    types
-typical
-    typical
-typology
-    typology
-u.s. environmental protection agency
-    u.s. environmental protection agency
 ucc
     ucc
     uccs
-ucc adoption
-    ucc adoption
-ucc concepts
-    ucc concepts
-ucc could
-    ucc could
-ucc could provide
-    ucc could provide
-ucc schemes
-    ucc schemes
-ucc services
-    ucc services
+ucc-services
     ucc-services
-ucc solutions
-    ucc solutions
-ucc study
-    ucc study
-ucc-environment
-    ucc-environment
-uccs-location decisions
-    uccs-location decisions
 udc
     udc
     udcs
-udc location
-    udc location
-ufcc
-    ufcc
-    ufccs
 uft
     uft
 uft policy
     uft policy
 uft policy setting
     uft policy setting
-ultimate
-    ultimate
-unattractive
-    unattractive
-unavailability
-    unavailability
-    unavailable
-unaware
-    unaware
 uncertain
     uncertain
-uncertain environment
-    uncertain environment
-    uncertain environments
-uncertain informations
-    uncertain informations
-uncertainties
-    uncertainties
-    uncertainty
-uncertainty analysis
-    uncertainty analysis
-undergone
-    undergone
-underlying
-    underlying
-understand
-    understand
+understanding
     understanding
-understood
-    understood
 undertaken
     undertaken
-undesirable
-    undesirable
-unexpected
-    unexpected
-unfriendly
-    unfriendly
 unique
     unique
-    uniqueness
-united kingdom
-    united kingdom
-units
-    units
-univariate
-    univariate
 unload
     unload
-    unloading
-unsuccessful
-    unsuccessful
-unsustainability
-    unsustainability
-    unsustainable
-unwanted
-    unwanted
-updated
-    updated
-upgrading
-    upgrading
 urban
     urban
-    urban-
-    urbanization
-urban access
-    urban access
 urban area
     urban area
-    urban areas
-urban congestion
-    urban congestion
-urban consolidation
-    urban consolidation
 urban consolidation center
     urban consolidation center
-    urban consolidation center (ucc)
     urban consolidation centers
     urban consolidation centre
     urban consolidation centre (ucc)
-    urban consolidation centres
-    urban consolidation centres (uccs)
-urban consolidation centres smart cities
-    urban consolidation centres smart cities
-urban consolodation center
-    urban consolodation center
-urban delivery
-    urban delivery
-urban delivery consolidation
-    urban delivery consolidation
 urban distribution
     urban distribution
 urban distribution center
     urban distribution center
-    urban distribution center (udc)
     urban distribution centers
-    urban distribution centers (udc)
-    urban distribution centre
-    urban distribution centres
-urban distribution center location
-    urban distribution center location
-urban distribution center location problem
-    urban distribution center location problem
-urban distribution centersthe
-    urban distribution centersthe
-urban distribution centremudc
-    urban distribution centremudc
-urban distribution of goods
-    urban distribution of goods
-urban distribution systems
-    urban distribution systems
-urban freight
-    urban freight
-urban freight consolidation
-    urban freight consolidation
-urban freight consolidation center
-    urban freight consolidation center
-    urban freight consolidation centers
-    urban freight consolidation centre
-    urban freight consolidation centre (ufcc)
-    urban freight consolidation centres
-    urban freight consolidation centres (ufccs)
-urban freight consolidation curve
-    urban freight consolidation curve
-urban freight consolidation options
-    urban freight consolidation options
-urban freight deliveries
-    urban freight deliveries
-    urban freight delivery
-urban freight demand
-    urban freight demand
-urban freight demand models
-    urban freight demand models
-urban freight distribution
-    urban freight distribution
-urban freight flows
-    urban freight flows
-urban freight terminals
-    urban freight terminals
 urban freight transport
     urban freight transport
-    urban freight transportation
-    urban freight transports
-urban freight transport agents
-    urban freight transport agents
 urban freight transportation demand
     urban freight transportation demand
-urban freight transportation systems
-    urban freight transportation systems
-urban freight transportation-cost allocation models
-    urban freight transportation-cost allocation models
-urban freight vehicles
-    urban freight vehicles
-urban goods distribution
-    urban goods distribution
-urban goods movement
-    urban goods movement
-    urban goods movements
-urban green logistics centers
-    urban green logistics centers
-urban growth
-    urban growth
-urban logistic
-    urban logistic
-    urban logistics
-urban logistics centers
-    urban logistics centers
-urban logistics development
-    urban logistics development
-urban logistics distribution center
-    urban logistics distribution center
-urban logistics information
-    urban logistics information
-urban logistics information platform
-    urban logistics information platform
-urban logistics system
-    urban logistics system
-urban planning
-    urban planning
-urban pollution
-    urban pollution
-urban population
-    urban population
-    urban populations
-urban regeneration
-    urban regeneration
-urban rural distribution centers
-    urban rural distribution centers
-urban traffic
-    urban traffic
-urban traffic control
-    urban traffic control
-urban transport
-    urban transport
-    urban transportation
-urban transport systems
-    urban transport systems
-    urban transportation systems
-urban transportation simulation
-    urban transportation simulation
-urban-rural
-    urban-rural
-urban-rural distribution
-    urban-rural distribution
-urbelog
-    urbelog
-urge
-    urge
-urgent
-    urgent
-usage
-    usage
 use
     use
-    used
-    useful
-    using
-user
-    user
-    users
-using weighted geographical information system data
-    using weighted geographical information system data
-utilised
-    utilised
-    utilization
-    utilized
-    utilizing
-uvar
-    uvar
-    uvars
-valencia
-    valencia
-valid
-    valid
-    validate
+validation
     validation
-valuable
-    valuable
-valuate
-    valuate
-value
-    value
-    values
-value function approximation
-    value function approximation
-value-decisions
-    value-decisions
-van
-    van
-    vans
-variable
-    variable
-    variables
+value-decision
+    value-decision
 variant
     variant
-    variants
-variation
-    variation
-variety
-    variety
 various
     various
-various delivery
-    various delivery
-various delivery fleet
-    various delivery fleet
-varying
-    varying
-vast
-    vast
-vegetable
-    vegetable
-    vegetables
 vehicle
     vehicle
-    vehicles
-vehicle emissions
-    vehicle emissions
-vehicle routing
-    vehicle routing
-vehicle routing problem
-    vehicle routing problem
-    vehicle routing problems
-vehicle routing problem with time windows
-    vehicle routing problem with time windows
-vehicle-kilometres
-    vehicle-kilometres
-vehicle-related
-    vehicle-related
-vehicle-type
-    vehicle-type
-verifies
-    verifies
-    verify
-versa
-    versa
-version
-    version
-versus
-    versus
-viability
-    viability
-viable
-    viable
-vice
-    vice
 vicinity
     vicinity
 victoria [australia]
     victoria [australia]
-view
-    view
-    views
-viewpoint
-    viewpoint
-    viewpoints
-virtual
-    virtual
-virtual addresses
-    virtual addresses
-virtual pricing
-    virtual pricing
-virtual reality
-    virtual reality
 vision
     vision
-visits
-    visits
-visual
-    visual
+visualisation
     visualisation
-    visualization
-visualization platforms
-    visualization platforms
-visum modelling
-    visum modelling
-vital
-    vital
-    vitality
-vmh
-    vmh
-    vmhs
 volos
     volos
 volume
     volume
-    volumes
-volume-based
-    volume-based
-vrptw
-    vrptw
-wages
-    wages
-waiting
-    waiting
-walking
-    walking
-walthambrussels
-    walthambrussels
 warehouse
     warehouse
-    warehouses
-warehouse design
-    warehouse design
-warehousing
-    warehousing
-waste
-    waste
-waterway
-    waterway
 way
     way
-    ways
-weeks
-    weeks
 weight
     weight
-    weighting
-    weights
-weighted geographical information system data
-    weighted geographical information system data
-weighted linear combinations
-    weighted linear combinations
-welfare
-    welfare
-well-structured
-    well-structured
-well-to-wheel
-    well-to-wheel
-well-to-wheel analysis
-    well-to-wheel analysis
-west
-    west
-westpomeranian region of poland
-    westpomeranian region of poland
-wet
-    wet
-whereas
-    whereas
-wherein
-    wherein
-whilst
-    whilst
-whole
-    whole
-whole process
-    whole process
 wider
     wider
-widespread
-    widespread
-widgets
-    widgets
-willing
-    willing
-willingness
-    willingness
-win-win
-    win-win
 window
     window
-    windows
-winner determination problem
-    winner determination problem
-wireless telecommunication systems
-    wireless telecommunication systems
-wlc
-    wlc
-wolfe method
-    wolfe method
-work
-    work
-    works
-workshop
-    workshop
 world
     world
-worldwide
-    worldwide
-worse
-    worse
-worst
-    worst
-writing
-    writing
-yard
-    yard
 year
     year
-    years
-yield
-    yield
-yogyakarta
-    yogyakarta
-yogyakarta special region province
-    yogyakarta special region province
-york
-    york
-zaragoza
-    zaragoza
 zero-emission zones
     zero-emission zones
 zone
     zone
-    zones

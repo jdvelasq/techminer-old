@@ -7,8 +7,13 @@ def TF_matrix(data, column, scheme=None, min_occurrence=1, max_occurrence=10000)
     X = data[[column, "ID"]].copy()
     X["value"] = 1.0
     X = explode(X, column)
+    # X = X.groupby([column, "ID"], as_index=False).agg({"value": np.sum})
     result = pd.pivot_table(
-        data=X, index="ID", columns=column, margins=False, fill_value=0.0,
+        data=X,
+        index="ID",
+        columns=column,
+        margins=False,
+        fill_value=0.0,
     )
     result.columns = [b for _, b in result.columns]
     result = result.reset_index(drop=True)
@@ -33,4 +38,3 @@ def TF_matrix(data, column, scheme=None, min_occurrence=1, max_occurrence=10000)
         result = result.applymap(lambda w: np.log(1 + w))
 
     return result
-

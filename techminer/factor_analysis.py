@@ -41,7 +41,10 @@ class Model:
         # 1.-- TF matrix
         #
         TF_matrix_ = TF_matrix(
-            data=X, column=self.column, scheme=None, min_occurrence=self.min_occurrence,
+            data=X,
+            column=self.column,
+            scheme=None,
+            min_occurrence=self.min_occurrence,
         )
 
         #
@@ -231,7 +234,8 @@ class DASHapp(DASH, Model):
         #
         self.panel_widgets = [
             dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+                desc="Column:",
+                options=[z for z in COLUMNS if z in data.columns],
             ),
             dash.min_occurrence(),
             dash.max_items(),

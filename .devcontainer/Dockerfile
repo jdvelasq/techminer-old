@@ -13,7 +13,8 @@ RUN python3 -m pip install \
     squarify \
     wordcloud \
     pyvis \
-    jsonpickle
+    jsonpickle \
+    textblob
 
 
 RUN python3 -c "import nltk; nltk.download('stopwords'); nltk.download('wordnet'); nltk.download('averaged_perceptron_tagger')"
