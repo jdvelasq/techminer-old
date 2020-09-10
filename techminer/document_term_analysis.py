@@ -143,16 +143,19 @@ class Model:
 ##
 ###############################################################################
 
-COLUMNS = [
-    "Abstract_words_CL",
-    "Abstract_words",
-    "Author_Keywords_CL",
-    "Author_Keywords",
-    "Index_Keywords_CL",
-    "Index_Keywords",
-    "Title_words_CL",
-    "Title_words",
-]
+COLUMNS = sorted(
+    [
+        "Abstract_words_CL",
+        "Abstract_words",
+        "Author_Keywords_CL",
+        "Author_Keywords",
+        "Index_Keywords_CL",
+        "Index_Keywords",
+        "Title_words_CL",
+        "Title_words",
+        "Keywords_CL",
+    ]
+)
 
 
 class DASHapp(DASH, Model):
@@ -175,17 +178,46 @@ class DASHapp(DASH, Model):
         ]
 
         self.panel_widgets = [
-            dash.dropdown(desc="Column:", options=[t for t in data if t in COLUMNS],),
-            dash.dropdown(desc="Norm:", options=[None, "L1", "L2"],),
-            dash.dropdown(desc="Use IDF:", options=[True, False,],),
-            dash.dropdown(desc="Smooth IDF:", options=[True, False,],),
-            dash.dropdown(desc="Sublinear TF:", options=[True, False,],),
+            dash.dropdown(
+                desc="Column:",
+                options=[t for t in sorted(data.columns) if t in COLUMNS],
+            ),
+            dash.dropdown(
+                desc="Norm:",
+                options=[None, "L1", "L2"],
+            ),
+            dash.dropdown(
+                desc="Use IDF:",
+                options=[
+                    True,
+                    False,
+                ],
+            ),
+            dash.dropdown(
+                desc="Smooth IDF:",
+                options=[
+                    True,
+                    False,
+                ],
+            ),
+            dash.dropdown(
+                desc="Sublinear TF:",
+                options=[
+                    True,
+                    False,
+                ],
+            ),
             dash.min_occurrence(),
             dash.max_items(),
             dash.separator(text="Visualization"),
             dash.dropdown(
                 desc="Sort by:",
-                options=["Alphabetic", "Num Documents", "Global Citations", "TF*IDF",],
+                options=[
+                    "Alphabetic",
+                    "Num Documents",
+                    "Global Citations",
+                    "TF*IDF",
+                ],
             ),
             dash.ascending(),
             dash.cmap(),
@@ -220,4 +252,3 @@ def document_term_analysis(
     return DASHapp(
         data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()
-

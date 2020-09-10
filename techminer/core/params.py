@@ -23,6 +23,7 @@ MULTIVALUED_COLS = [
     "Index_Keywords",
     "Institutions_",
     "Institutions",
+    "Keywords_CL",
     #
     "_key1_",
     "_key2_",
@@ -59,6 +60,7 @@ EXCLUDE_COLS = [
     "PubMed_ID",
     "Source",
     "Global_Citations",
+    "Local_Citations",
     "Title_HL",
     "Title",
     "Volume",

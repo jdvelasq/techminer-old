@@ -65,8 +65,21 @@ class Model:
 
         x = self.data.copy()
         x["Num_Documents"] = 1
-        x = explode(x[["Source_title", "Num_Documents", "ID",]], "Source_title",)
-        m = x.groupby("Source_title", as_index=True).agg({"Num_Documents": np.sum,})
+        x = explode(
+            x[
+                [
+                    "Source_title",
+                    "Num_Documents",
+                    "ID",
+                ]
+            ],
+            "Source_title",
+        )
+        m = x.groupby("Source_title", as_index=True).agg(
+            {
+                "Num_Documents": np.sum,
+            }
+        )
         m = m[["Num_Documents"]]
         m = m.groupby(["Num_Documents"]).size()
         w = [str(round(100 * a / sum(m), 2)) + " %" for a in m]
@@ -119,8 +132,21 @@ class Model:
         ##  Num_Documents per Author
         ##
         x["Num_Documents"] = 1
-        x = explode(x[["Authors", "Num_Documents", "ID",]], "Authors",)
-        result = x.groupby("Authors", as_index=True).agg({"Num_Documents": np.sum,})
+        x = explode(
+            x[
+                [
+                    "Authors",
+                    "Num_Documents",
+                    "ID",
+                ]
+            ],
+            "Authors",
+        )
+        result = x.groupby("Authors", as_index=True).agg(
+            {
+                "Num_Documents": np.sum,
+            }
+        )
         z = result
         authors_dict = {
             author: num_docs
@@ -226,14 +252,27 @@ class Model:
         x = self.data.copy()
         x["Num_Documents"] = 1
         x = explode(
-            x[[self.column, "Num_Documents", "Global_Citations", "ID",]], self.column,
+            x[
+                [
+                    self.column,
+                    "Num_Documents",
+                    "Global_Citations",
+                    "ID",
+                ]
+            ],
+            self.column,
         )
         result = x.groupby(self.column, as_index=True).agg(
-            {"Num_Documents": np.sum, "Global_Citations": np.sum,}
+            {
+                "Num_Documents": np.sum,
+                "Global_Citations": np.sum,
+            }
         )
         top_by = self.top_by.replace(" ", "_")
         return worldmap(
-            x=result[top_by], figsize=(self.width, self.height), cmap=self.cmap,
+            x=result[top_by],
+            figsize=(self.width, self.height),
+            cmap=self.cmap,
         )
 
     def single_multiple_publication(self):
@@ -245,9 +284,22 @@ class Model:
         x["MD"] = x[self.column].map(
             lambda w: 1 if isinstance(w, str) and len(w.split(";")) > 1 else 0
         )
-        x = explode(x[[self.column, "SD", "MD", "ID",]], self.column,)
+        x = explode(
+            x[
+                [
+                    self.column,
+                    "SD",
+                    "MD",
+                    "ID",
+                ]
+            ],
+            self.column,
+        )
         result = x.groupby(self.column, as_index=False).agg(
-            {"SD": np.sum, "MD": np.sum,}
+            {
+                "SD": np.sum,
+                "MD": np.sum,
+            }
         )
         result["SMR"] = [
             round(MD / max(SD, 1), 2) for SD, MD in zip(result.SD, result.MD)
@@ -625,8 +677,21 @@ class Model:
 
         x = self.data.copy()
         x["Num_Documents"] = 1
-        x = explode(x[["Source_title", "Num_Documents", "ID",]], "Source_title",)
-        m = x.groupby("Source_title", as_index=True).agg({"Num_Documents": np.sum,})
+        x = explode(
+            x[
+                [
+                    "Source_title",
+                    "Num_Documents",
+                    "ID",
+                ]
+            ],
+            "Source_title",
+        )
+        m = x.groupby("Source_title", as_index=True).agg(
+            {
+                "Num_Documents": np.sum,
+            }
+        )
         m = m[["Num_Documents"]]
         m = m.sort_values(by="Num_Documents", ascending=False)
         m["Cum_Num_Documents"] = m.Num_Documents.cumsum()
@@ -661,11 +726,21 @@ class Model:
 
         x["Num_Documents"] = 1
         x = explode(
-            x[["Source_title", "Num_Documents", "Global_Citations", "ID",]],
+            x[
+                [
+                    "Source_title",
+                    "Num_Documents",
+                    "Global_Citations",
+                    "ID",
+                ]
+            ],
             self.column,
         )
         result = x.groupby("Source_title", as_index=False).agg(
-            {"Num_Documents": np.sum, "Global_Citations": np.sum,}
+            {
+                "Num_Documents": np.sum,
+                "Global_Citations": np.sum,
+            }
         )
         result["Global_Citations"] = result["Global_Citations"].map(lambda w: int(w))
         result = result.sort_values(
@@ -754,7 +829,10 @@ class Model:
             color="k",
         )
         ax.fill_between(
-            documents_written, percentage_authors, color=color, alpha=0.6,
+            documents_written,
+            percentage_authors,
+            color=color,
+            alpha=0.6,
         )
 
         ##
@@ -803,7 +881,11 @@ class DASHapp(DASH, Model):
         DASH.__init__(self)
 
         COLUMNS = sorted(
-            [column for column in data.columns if column not in EXCLUDE_COLS]
+            [
+                column
+                for column in data.columns
+                if column not in EXCLUDE_COLS and column != "Abstract_phrase_words"
+            ]
         )
 
         self.app_title = "Terms Analysis"
@@ -823,7 +905,8 @@ class DASHapp(DASH, Model):
         ]
         self.panel_widgets = [
             dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+                desc="Column:",
+                options=[z for z in COLUMNS if z in data.columns],
             ),
             dash.min_occurrence(),
             dash.max_items(),
@@ -885,6 +968,7 @@ class DASHapp(DASH, Model):
                         column
                         for column in self.data.columns
                         if column not in EXCLUDE_COLS
+                        and column != "Abstract_phrase_words"
                     ]
                 ),
                 "View:": [
@@ -907,7 +991,11 @@ class DASHapp(DASH, Model):
                     "Country_1st_Author",
                     "Source_title",
                 ],
-                "View:": ["Table", "Bar plot", "Horizontal bar plot",],
+                "View:": [
+                    "Table",
+                    "Bar plot",
+                    "Horizontal bar plot",
+                ],
                 "Top by:": [
                     "Num Documents",
                     "Global Citations",
@@ -936,7 +1024,11 @@ class DASHapp(DASH, Model):
                     "Countries",
                     "Country_1st_Author",
                 ],
-                "View:": ["Table", "Bar plot", "Horizontal bar plot",],
+                "View:": [
+                    "Table",
+                    "Bar plot",
+                    "Horizontal bar plot",
+                ],
                 "Top by:": ["Num Documents"],
                 "Sort by:": [
                     "Alphabetic",
@@ -948,7 +1040,10 @@ class DASHapp(DASH, Model):
                 ],
             },
             "Worldmap": {
-                "Column:": ["Countries", "Country_1st_Author",],
+                "Column:": [
+                    "Countries",
+                    "Country_1st_Author",
+                ],
                 "Top by:": ["Num Documents", "Global Citations"],
                 "View": ["Worldmap"],
             },
@@ -965,6 +1060,7 @@ class DASHapp(DASH, Model):
                         column
                         for column in self.data.columns
                         if column not in EXCLUDE_COLS
+                        and column != "Abstract_phrase_words"
                     ]
                 )
             },
@@ -1219,4 +1315,3 @@ def by_term_analysis(
     return DASHapp(
         data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()
-

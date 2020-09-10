@@ -199,18 +199,20 @@ class Model:
 
 COLUMNS = sorted(
     [
-        "Authors",
-        "Countries",
-        "Institutions",
-        "Author_Keywords",
-        "Index_Keywords",
+        "Abstract_phrase_words",
         "Abstract_words_CL",
         "Abstract_words",
-        "Title_words_CL",
-        "Title_words",
         "Affiliations",
         "Author_Keywords_CL",
+        "Author_Keywords",
+        "Authors",
+        "Countries",
         "Index_Keywords_CL",
+        "Index_Keywords",
+        "Institutions",
+        "Keywords_CL",
+        "Title_words_CL",
+        "Title_words",
     ]
 )
 
@@ -244,7 +246,7 @@ class DASHapp(DASH, Model):
             dash.separator(text="Clustering"),
             dash.decomposition_method(),
             dash.clustering_method(),
-            dash.n_clusters(m=3, n=10, i=1),
+            dash.n_clusters(m=3, n=21, i=1),
             dash.affinity(),
             dash.linkage(),
             dash.separator(text="Visualization"),

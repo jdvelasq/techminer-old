@@ -166,7 +166,10 @@ class Model:
     def bubble_plot(self):
         self.apply()
         return bubble_plot(
-            self.X_, axis=0, cmap=self.cmap, figsize=(self.width, self.height),
+            self.X_,
+            axis=0,
+            cmap=self.cmap,
+            figsize=(self.width, self.height),
         )
 
     def chord_diagram(self):
@@ -247,18 +250,19 @@ class Model:
 
 COLUMNS = sorted(
     [
-        "Authors",
-        "Countries",
-        "Institutions",
-        "Author_Keywords",
-        "Index_Keywords",
         "Abstract_words_CL",
         "Abstract_words",
-        "Title_words_CL",
-        "Title_words",
         "Affiliations",
         "Author_Keywords_CL",
+        "Author_Keywords",
+        "Authors",
+        "Countries",
         "Index_Keywords_CL",
+        "Index_Keywords",
+        "Institutions",
+        "Keywords_CL",
+        "Title_words_CL",
+        "Title_words",
     ]
 )
 
@@ -284,30 +288,52 @@ class DASHapp(DASH, Model):
 
         self.panel_widgets = [
             dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+                desc="Column:",
+                options=[z for z in COLUMNS if z in data.columns],
             ),
             dash.dropdown(
-                desc="By:", options=[z for z in COLUMNS if z in data.columns],
+                desc="By:",
+                options=[z for z in COLUMNS if z in data.columns],
             ),
-            dash.dropdown(desc="Method:", options=["pearson", "kendall", "spearman"],),
+            dash.dropdown(
+                desc="Method:",
+                options=["pearson", "kendall", "spearman"],
+            ),
             dash.min_occurrence(),
             dash.max_items(),
             dash.dropdown(
                 desc="Clustering:",
-                options=["Label propagation", "Leiden", "Louvain", "Walktrap",],
+                options=[
+                    "Label propagation",
+                    "Leiden",
+                    "Louvain",
+                    "Walktrap",
+                ],
             ),
             dash.separator(text="Visualization"),
             dash.dropdown(
-                desc="Top by:", options=["Num Documents", "Global Citations",],
+                desc="Top by:",
+                options=[
+                    "Num Documents",
+                    "Global Citations",
+                ],
             ),
             dash.dropdown(
                 desc="Sort C-axis by:",
-                options=["Alphabetic", "Num Documents", "Global Citations",],
+                options=[
+                    "Alphabetic",
+                    "Num Documents",
+                    "Global Citations",
+                ],
             ),
             dash.c_axis_ascending(),
             dash.dropdown(
                 desc="Sort R-axis by:",
-                options=["Alphabetic", "Num Documents", "Global Citations",],
+                options=[
+                    "Alphabetic",
+                    "Num Documents",
+                    "Global Citations",
+                ],
             ),
             dash.r_axis_ascending(),
             dash.cmap(),
@@ -372,4 +398,3 @@ def correlation_analysis(
     return DASHapp(
         data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()
-

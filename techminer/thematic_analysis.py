@@ -43,7 +43,10 @@ class Model:
         ##  Construye TF_matrix binaria
         ##
         TF_matrix_ = TF_matrix(
-            self.data, self.column, scheme="binary", min_occurrence=self.min_occurrence,
+            self.data,
+            self.column,
+            scheme="binary",
+            min_occurrence=self.min_occurrence,
         )
 
         TF_matrix_ = add_counters_to_axis(
@@ -178,10 +181,18 @@ class Model:
         )
 
         ax.axhline(
-            y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1,
+            y=0,
+            color="gray",
+            linestyle="--",
+            linewidth=0.5,
+            zorder=-1,
         )
         ax.axvline(
-            x=0, color="gray", linestyle="--", linewidth=1, zorder=-1,
+            x=0,
+            color="gray",
+            linestyle="--",
+            linewidth=1,
+            zorder=-1,
         )
 
         dict_pos = {
@@ -228,10 +239,18 @@ class Model:
         )
 
         ax.axhline(
-            y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1,
+            y=0,
+            color="gray",
+            linestyle="--",
+            linewidth=0.5,
+            zorder=-1,
         )
         ax.axvline(
-            x=0, color="gray", linestyle="--", linewidth=1, zorder=-1,
+            x=0,
+            color="gray",
+            linestyle="--",
+            linewidth=1,
+            zorder=-1,
         )
 
         dict_pos = {
@@ -262,18 +281,19 @@ class Model:
 
 
 COLUMNS = [
-    "Authors",
-    "Countries",
-    "Institutions",
-    "Author_Keywords",
-    "Index_Keywords",
     "Abstract_words_CL",
     "Abstract_words",
-    "Title_words_CL",
-    "Title_words",
     "Affiliations",
     "Author_Keywords_CL",
+    "Author_Keywords",
+    "Authors",
+    "Countries",
     "Index_Keywords_CL",
+    "Index_Keywords",
+    "Institutions",
+    "Keywords_CL",
+    "Title_words_CL",
+    "Title_words",
 ]
 
 
@@ -311,9 +331,15 @@ class DASHapp(DASH, Model):
             dash.random_state(),
             dash.separator(text="Visualization"),
             dash.dropdown(
-                desc="Top by:", options=["Num Documents", "Global Citations",],
+                desc="Top by:",
+                options=[
+                    "Num Documents",
+                    "Global Citations",
+                ],
             ),
-            dash.top_n(n=101,),
+            dash.top_n(
+                n=101,
+            ),
             dash.cmap(),
             dash.x_axis(),
             dash.y_axis(),
@@ -354,4 +380,3 @@ def thematic_analysis(
         exclude=exclude,
         years_range=years_range,
     ).run()
-

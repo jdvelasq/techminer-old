@@ -177,7 +177,7 @@ def extract_words(data, text):
     #
     # Drop duplicates
     #
-    text = text.map(lambda w: list(set(w)))
+    # text = text.map(lambda w: list(set(w)))
     #
     # Checks:
     #   Replace '_' by ' '

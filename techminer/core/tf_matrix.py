@@ -4,10 +4,11 @@ from techminer.core.explode import explode
 
 
 def TF_matrix(data, column, scheme=None, min_occurrence=1, max_occurrence=10000):
+    #
     X = data[[column, "ID"]].copy()
     X["value"] = 1.0
     X = explode(X, column)
-    # X = X.groupby([column, "ID"], as_index=False).agg({"value": np.sum})
+    X = X.groupby([column, "ID"], as_index=False).agg({"value": np.sum})
     result = pd.pivot_table(
         data=X,
         index="ID",

@@ -17,8 +17,7 @@ from techminer.core import record_to_HTML
 
 
 def matrix_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
-    """Jupyter Lab dashboard to matrix data.
-    """
+    """Jupyter Lab dashboard to matrix data."""
 
     df = pd.read_csv(input_file)
 
@@ -33,7 +32,7 @@ def matrix_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
             "Index_Keywords_CL",
             "Institution_1st_Author",
             "Institutions",
-            "Keywords",
+            "Keywords_CL",
             "Source_title",
             "Title",
             "Year",
@@ -63,7 +62,10 @@ def matrix_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
         {
             "arg": "main_term",
             "desc": "Term in Column:",
-            "widget": widgets.Dropdown(options=[], layout=Layout(width="95%"),),
+            "widget": widgets.Dropdown(
+                options=[],
+                layout=Layout(width="95%"),
+            ),
         },
         # 2
         {
@@ -78,14 +80,18 @@ def matrix_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
         {
             "arg": "by_term",
             "desc": "Term in By column:",
-            "widget": widgets.Dropdown(options=[], layout=Layout(width="95%"),),
+            "widget": widgets.Dropdown(
+                options=[],
+                layout=Layout(width="95%"),
+            ),
         },
         # 4
         {
             "arg": "title",
             "desc": "Title:",
             "widget": widgets.Select(
-                options=[], layout=Layout(height="270pt", width="95%"),
+                options=[],
+                layout=Layout(height="270pt", width="95%"),
             ),
         },
     ]
@@ -113,10 +119,21 @@ def matrix_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
             y = xdf.copy()
             y["Num_Documents"] = 1
             y = explode(
-                y[["_key1_", "Num_Documents", "Global_Citations", "ID",]], "_key1_",
+                y[
+                    [
+                        "_key1_",
+                        "Num_Documents",
+                        "Global_Citations",
+                        "ID",
+                    ]
+                ],
+                "_key1_",
             )
             y = y.groupby("_key1_", as_index=True).agg(
-                {"Num_Documents": np.sum, "Global_Citations": np.sum,}
+                {
+                    "Num_Documents": np.sum,
+                    "Global_Citations": np.sum,
+                }
             )
             y["Global_Citations"] = y["Global_Citations"].map(lambda w: int(w))
             top_terms_freq = set(
@@ -167,7 +184,12 @@ def matrix_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
     args = {control["arg"]: control["widget"] for control in left_panel}
     output = widgets.Output()
     with output:
-        display(widgets.interactive_output(server, args,))
+        display(
+            widgets.interactive_output(
+                server,
+                args,
+            )
+        )
     #
     #
     grid = GridspecLayout(10, 4, height="800px")
@@ -178,11 +200,17 @@ def matrix_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
     )
     for i in range(0, len(left_panel) - 1):
         grid[i + 1, 0] = widgets.VBox(
-            [widgets.Label(value=left_panel[i]["desc"]), left_panel[i]["widget"],]
+            [
+                widgets.Label(value=left_panel[i]["desc"]),
+                left_panel[i]["widget"],
+            ]
         )
 
     grid[len(left_panel) : len(left_panel) + 5, 0] = widgets.VBox(
-        [widgets.Label(value=left_panel[-1]["desc"]), left_panel[-1]["widget"],]
+        [
+            widgets.Label(value=left_panel[-1]["desc"]),
+            left_panel[-1]["widget"],
+        ]
     )
 
     grid[1:, 1:] = widgets.VBox(

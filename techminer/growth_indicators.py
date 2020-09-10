@@ -281,18 +281,19 @@ class Model:
 
 COLUMNS = sorted(
     [
-        "Authors",
-        "Countries",
-        "Institutions",
-        "Author_Keywords",
-        "Index_Keywords",
         "Abstract_words_CL",
         "Abstract_words",
-        "Title_words_CL",
-        "Title_words",
         "Affiliations",
         "Author_Keywords_CL",
+        "Author_Keywords",
+        "Authors",
+        "Countries",
         "Index_Keywords_CL",
+        "Index_Keywords",
+        "Institutions",
+        "Keywords_CL",
+        "Title_words_CL",
+        "Title_words",
     ]
 )
 
@@ -317,11 +318,15 @@ class DASHapp(DASH, Model):
 
         self.panel_widgets = [
             dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in self.data.columns],
+                desc="Column:",
+                options=[z for z in COLUMNS if z in self.data.columns],
             ),
             dash.min_occurrence(),
             dash.max_items(),
-            dash.dropdown(desc="Time window:", options=[2, 3, 4, 5],),
+            dash.dropdown(
+                desc="Time window:",
+                options=[2, 3, 4, 5],
+            ),
             dash.separator(text="Visualization"),
             dash.dropdown(
                 desc="Top by:",
@@ -350,7 +355,10 @@ class DASHapp(DASH, Model):
                 ],
             ),
             dash.ascending(),
-            dash.dropdown(desc="Plot:", options=["bar", "barh"],),
+            dash.dropdown(
+                desc="Plot:",
+                options=["bar", "barh"],
+            ),
             dash.cmap(),
             dash.fig_width(),
             dash.fig_height(),
@@ -387,4 +395,3 @@ def growth_indicators(
     return DASHapp(
         data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()
-

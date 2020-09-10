@@ -10,8 +10,7 @@ from techminer.core import record_to_HTML
 
 
 def column_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
-    """Jupyter Lab dashboard.
-    """
+    """Jupyter Lab dashboard."""
 
     df = pd.read_csv(input_file)
 
@@ -26,7 +25,7 @@ def column_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
             "Index_Keywords_CL",
             "Institution_1st_Author",
             "Institutions",
-            "Keywords",
+            "Keywords_CL",
             "Source_title",
             "Title",
             "Year",
@@ -35,6 +34,7 @@ def column_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
             "Title_words",
             "Title_words_CL",
             "Bradford_Law_Zone",
+            "Abstract_phrase_words",
         ]
     )
 
@@ -57,14 +57,18 @@ def column_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
         {
             "arg": "value",
             "desc": "Term:",
-            "widget": widgets.Dropdown(options=[], layout=Layout(width="95%"),),
+            "widget": widgets.Dropdown(
+                options=[],
+                layout=Layout(width="95%"),
+            ),
         },
         # 2
         {
             "arg": "title",
             "desc": "Title:",
             "widget": widgets.Select(
-                options=[], layout=Layout(height="380pt", width="95%"),
+                options=[],
+                layout=Layout(height="380pt", width="95%"),
             ),
         },
     ]
@@ -85,10 +89,21 @@ def column_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
             y = df.copy()
             y["Num_Documents"] = 1
             y = explode(
-                y[[column, "Num_Documents", "Global_Citations", "ID",]], column,
+                y[
+                    [
+                        column,
+                        "Num_Documents",
+                        "Global_Citations",
+                        "ID",
+                    ]
+                ],
+                column,
             )
             y = y.groupby(column, as_index=True).agg(
-                {"Num_Documents": np.sum, "Global_Citations": np.sum,}
+                {
+                    "Num_Documents": np.sum,
+                    "Global_Citations": np.sum,
+                }
             )
             y["Global_Citations"] = y["Global_Citations"].map(lambda w: int(w))
             top_terms_freq = set(
@@ -108,6 +123,7 @@ def column_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
         # Populate titles
         #
         s = x[x[column] == left_panel[1]["widget"].value]
+        s = s[["Global_Citations", "Title"]].drop_duplicates()
         s = s.sort_values(["Global_Citations", "Title"], ascending=[False, True])
         left_panel[2]["widget"].options = s["Title"].tolist()
 
@@ -129,7 +145,12 @@ def column_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
     args = {control["arg"]: control["widget"] for control in left_panel}
     output = widgets.Output()
     with output:
-        display(widgets.interactive_output(server, args,))
+        display(
+            widgets.interactive_output(
+                server,
+                args,
+            )
+        )
 
     grid = GridspecLayout(10, 4, height="800px")
     grid[0, :] = widgets.HTML(
@@ -139,11 +160,17 @@ def column_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
     )
     for i in range(0, len(left_panel) - 1):
         grid[i + 1, 0] = widgets.VBox(
-            [widgets.Label(value=left_panel[i]["desc"]), left_panel[i]["widget"],]
+            [
+                widgets.Label(value=left_panel[i]["desc"]),
+                left_panel[i]["widget"],
+            ]
         )
 
     grid[len(left_panel) : len(left_panel) + 8, 0] = widgets.VBox(
-        [widgets.Label(value=left_panel[-1]["desc"]), left_panel[-1]["widget"],]
+        [
+            widgets.Label(value=left_panel[-1]["desc"]),
+            left_panel[-1]["widget"],
+        ]
     )
 
     grid[1:, 1:] = widgets.VBox(

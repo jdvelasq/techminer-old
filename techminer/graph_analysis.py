@@ -263,27 +263,47 @@ class DASHapp(DASH, Model):
 
         self.panel_widgets = [
             dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+                desc="Column:",
+                options=[z for z in COLUMNS if z in data.columns],
             ),
             dash.min_occurrence(),
             dash.max_items(),
             dash.normalization(),
             dash.dropdown(
                 desc="Clustering:",
-                options=["Label propagation", "Leiden", "Louvain", "Walktrap",],
+                options=[
+                    "Label propagation",
+                    "Leiden",
+                    "Louvain",
+                    "Walktrap",
+                ],
             ),
             dash.separator(text="Visualization"),
             dash.dropdown(
-                desc="Top by:", options=["Num Documents", "Global Citations",],
+                desc="Top by:",
+                options=[
+                    "Num Documents",
+                    "Global Citations",
+                ],
             ),
             dash.dropdown(
                 desc="Sort C-axis by:",
-                options=["Alphabetic", "Num Documents", "Global Citations", "Data",],
+                options=[
+                    "Alphabetic",
+                    "Num Documents",
+                    "Global Citations",
+                    "Data",
+                ],
             ),
             dash.c_axis_ascending(),
             dash.dropdown(
                 desc="Sort R-axis by:",
-                options=["Alphabetic", "Num Documents", "Global Citations", "Data",],
+                options=[
+                    "Alphabetic",
+                    "Num Documents",
+                    "Global Citations",
+                    "Data",
+                ],
             ),
             dash.r_axis_ascending(),
             dash.cmap(),

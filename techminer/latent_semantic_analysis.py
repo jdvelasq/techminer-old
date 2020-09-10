@@ -39,7 +39,10 @@ class Model:
         # 1.-- TF matrix
         #
         M = TF_matrix(
-            data=X, column=self.column, scheme=None, min_occurrence=self.min_occurrence,
+            data=X,
+            column=self.column,
+            scheme=None,
+            min_occurrence=self.min_occurrence,
         )
 
         #
@@ -174,14 +177,15 @@ class Model:
 
 COLUMNS = sorted(
     [
-        "Author_Keywords",
-        "Index_Keywords",
         "Abstract_words_CL",
         "Abstract_words",
+        "Author_Keywords_CL",
+        "Author_Keywords",
+        "Index_Keywords_CL",
+        "Index_Keywords",
+        "Keywords_CL",
         "Title_words_CL",
         "Title_words",
-        "Author_Keywords_CL",
-        "Index_Keywords_CL",
     ]
 )
 
@@ -210,13 +214,20 @@ class DASHapp(DASH, Model):
         #
         self.panel_widgets = [
             dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+                desc="Column:",
+                options=[z for z in COLUMNS if z in data.columns],
             ),
             dash.min_occurrence(),
             dash.max_items(),
             dash.random_state(),
             dash.separator(text="Decomposition"),
-            dash.dropdown(desc="Apply to:", options=["TF matrix", "TF*IDF matrix",],),
+            dash.dropdown(
+                desc="Apply to:",
+                options=[
+                    "TF matrix",
+                    "TF*IDF matrix",
+                ],
+            ),
             dash.dropdown(
                 desc="Method:",
                 options=["Factor Analysis", "PCA", "Fast ICA", "SVD", "MDS"],
@@ -228,7 +239,8 @@ class DASHapp(DASH, Model):
             dash.linkage(),
             dash.separator(text="Visualization"),
             dash.dropdown(
-                desc="Top by:", options=["Num Documents", "Global Citations"],
+                desc="Top by:",
+                options=["Num Documents", "Global Citations"],
             ),
             dash.top_n(),
             dash.x_axis(),
@@ -276,4 +288,3 @@ def latent_semantic_analysis(
         exclude=exclude,
         years_range=years_range,
     ).run()
-

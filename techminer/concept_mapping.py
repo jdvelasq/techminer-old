@@ -177,7 +177,9 @@ class Model:
         ##
         if method == "MDS":
             embedding = MDS(n_components=self.n_components)
-            X_transformed = embedding.fit_transform(1 - X,)
+            X_transformed = embedding.fit_transform(
+                1 - X,
+            )
             x_axis = X_transformed[:, x_axis]
             y_axis = X_transformed[:, y_axis]
         if method == "CA":
@@ -331,10 +333,18 @@ class Model:
         )
 
         ax.axhline(
-            y=median_density, color="gray", linestyle="--", linewidth=1, zorder=-1,
+            y=median_density,
+            color="gray",
+            linestyle="--",
+            linewidth=1,
+            zorder=-1,
         )
         ax.axvline(
-            x=median_centrality, color="gray", linestyle="--", linewidth=1, zorder=-1,
+            x=median_centrality,
+            color="gray",
+            linestyle="--",
+            linewidth=1,
+            zorder=-1,
         )
 
         #  ax.set_aspect("equal")
@@ -353,14 +363,15 @@ class Model:
 
 COLUMNS = sorted(
     [
-        "Author_Keywords",
-        "Index_Keywords",
         "Abstract_words_CL",
         "Abstract_words",
+        "Author_Keywords_CL",
+        "Author_Keywords",
+        "Index_Keywords_CL",
+        "Index_Keywords",
+        "Keywords_CL",
         "Title_words_CL",
         "Title_words",
-        "Author_Keywords_CL",
-        "Index_Keywords_CL",
     ]
 )
 
@@ -386,7 +397,8 @@ class DASHapp(DASH, Model):
 
         self.panel_widgets = [
             dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+                desc="Column:",
+                options=[z for z in COLUMNS if z in data.columns],
             ),
             dash.min_occurrence(),
             dash.max_items(),
@@ -512,4 +524,3 @@ def concept_mapping(
         exclude=exclude,
         years_range=years_range,
     ).run()
-

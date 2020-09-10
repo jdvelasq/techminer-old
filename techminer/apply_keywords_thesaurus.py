@@ -28,16 +28,30 @@ def apply_keywords_thesaurus(
     if "Index_Keywords" in df.columns:
         df["Index_Keywords_CL"] = map_(df, "Index_Keywords", th.apply_as_dict)
 
+    if "Author_Keywords_CL" in df.columns and "Index_Keywords_CL" in df.columns:
+        df["Keywords_CL"] = (
+            df.Author_Keywords_CL.map(lambda w: "" if pd.isna(w) else w)
+            + ";"
+            + df.Index_Keywords_CL.map(lambda w: "" if pd.isna(w) else w)
+        )
+        df["Keywords_CL"] = df.Keywords_CL.map(
+            lambda w: pd.NA if w[0] == ";" and len(w) == 1 else w
+        )
+        df["Keywords_CL"] = df.Keywords_CL.map(
+            lambda w: w[1:] if w[0] == ";" else w, na_action="ignore"
+        )
+        df["Keywords_CL"] = df.Keywords_CL.map(
+            lambda w: w[:-1] if w[-1] == ";" else w, na_action="ignore"
+        )
+        df["Keywords_CL"] = df.Keywords_CL.map(
+            lambda w: ";".join(sorted(set(w.split(";")))), na_action="ignore"
+        )
+
     if "Title_words" in df.columns:
         df["Title_words_CL"] = map_(df, "Title_words", th.apply_as_dict)
 
-    if "Abstract_phrase_words" in df.columns:
-        df["Abstract_phrase_words"] = map_(
-            df, "Abstract_phrase_words", th.apply_as_dict
-        )
-
-    # if "Abstract_words" in df.columns:
-    #      df["Abstract_words_CL"] = map_(df, "Abstract_words", th.apply_as_dict)
+    if "Abstract_words" in df.columns:
+        df["Abstract_words_CL"] = map_(df, "Abstract_words", th.apply_as_dict)
 
     #
     # Saves!

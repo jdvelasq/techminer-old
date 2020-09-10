@@ -200,12 +200,19 @@ class Model:
 
     def heatmap(self):
         self.apply()
-        return heatmap_(self.X_, cmap=self.cmap, figsize=(self.width, self.height),)
+        return heatmap_(
+            self.X_,
+            cmap=self.cmap,
+            figsize=(self.width, self.height),
+        )
 
     def bubble_plot(self):
         self.apply()
         return bubble_plot(
-            self.X_, axis=0, cmap=self.cmap, figsize=(self.width, self.height),
+            self.X_,
+            axis=0,
+            cmap=self.cmap,
+            figsize=(self.width, self.height),
         )
 
     def network_nx(self):
@@ -580,35 +587,56 @@ class DASHapp(DASH, Model):
         ]
 
         COLUMNS = sorted(
-            [column for column in data.columns if column not in EXCLUDE_COLS]
+            [
+                column
+                for column in data.columns
+                if column not in EXCLUDE_COLS and column != "Abstract_phrase_words"
+            ]
         )
 
         self.panel_widgets = [
             dash.separator(text="Column"),
             dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+                desc="Column:",
+                options=[z for z in COLUMNS if z in data.columns],
             ),
             dash.min_occurrence(arg="min_occurrence_column"),
             dash.max_items(arg="max_items_column"),
             dash.dropdown(
                 desc="Sort C-axis by:",
-                options=["Alphabetic", "Num Documents", "Global Citations", "Data",],
+                options=[
+                    "Alphabetic",
+                    "Num Documents",
+                    "Global Citations",
+                    "Data",
+                ],
             ),
             dash.c_axis_ascending(),
             dash.separator(text="Index"),
             dash.dropdown(
-                desc="By:", options=[z for z in COLUMNS if z in data.columns],
+                desc="By:",
+                options=[z for z in COLUMNS if z in data.columns],
             ),
             dash.min_occurrence(arg="min_occurrence_by"),
             dash.max_items(arg="max_items_by"),
             dash.dropdown(
                 desc="Sort R-axis by:",
-                options=["Alphabetic", "Num Documents", "Global Citations", "Data",],
+                options=[
+                    "Alphabetic",
+                    "Num Documents",
+                    "Global Citations",
+                    "Data",
+                ],
             ),
             dash.r_axis_ascending(),
             dash.separator(text="Visualization"),
             dash.dropdown(
-                desc="Top by:", options=["Num Documents", "Global Citations", "Data",],
+                desc="Top by:",
+                options=[
+                    "Num Documents",
+                    "Global Citations",
+                    "Data",
+                ],
             ),
             dash.cmap(arg="cmap", desc="Colormap Col:"),
             dash.cmap(arg="cmap_by", desc="Colormap By:"),
@@ -668,4 +696,3 @@ def bigraph_analysis(
     return DASHapp(
         data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()
-

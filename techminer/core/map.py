@@ -26,17 +26,11 @@ def map_(x, column, f):
         return z
 
     if column == "Abstract_phrase_words":
-        print("...")
-        for w in x[column]:
-            print(w)
-            print(type(w))
-            print()
-        z = x[column].map(lambda w: w, na_action="ignore")
-        print(z)
-        print()
-        print("^^^^^^^")
-        #  z = z.map(lambda w: [[f(y.strip()) for y in z] for z in w], na_action="ignore")
-        #  z = z.map(lambda w: [";".join(z) for z in w], na_action="ignore")
+        z = x[column].map(lambda w: w.split("//"), na_action="ignore")
+        z = z.map(lambda w: [z.split(";") for z in w], na_action="ignore")
+        z = z.map(lambda w: [[f(y.strip()) for y in z] for z in w], na_action="ignore")
+        z = z.map(lambda w: [";".join(z) for z in w], na_action="ignore")
+        z = z.map(lambda w: "//".join(w), na_action="ignore")
         return z
 
     return x[column].map(lambda w: f(w))

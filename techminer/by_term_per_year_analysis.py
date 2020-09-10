@@ -345,7 +345,11 @@ class MatrixDASHapp(DASH, MatrixModel):
         DASH.__init__(self)
 
         COLUMNS = sorted(
-            [column for column in data.columns if column not in EXCLUDE_COLS]
+            [
+                column
+                for column in data.columns
+                if column not in EXCLUDE_COLS and column != "Abstract_phrase_words"
+            ]
         )
 
         self.app_title = "Term by Year Analysis"
@@ -353,7 +357,8 @@ class MatrixDASHapp(DASH, MatrixModel):
 
         self.panel_widgets = [
             dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+                desc="Column:",
+                options=[z for z in COLUMNS if z in data.columns],
             ),
             dash.min_occurrence(),
             dash.max_items(),
@@ -442,7 +447,9 @@ class MatrixListModel(BaseModel):
         }[top_by]
 
         result.sort_values(
-            columns, ascending=False, inplace=True,
+            columns,
+            ascending=False,
+            inplace=True,
         )
 
         if self.top_n is not None:
@@ -464,7 +471,10 @@ class MatrixListModel(BaseModel):
             sort_by = self.sort_by
 
         if isinstance(self.ascending, str):
-            self.ascending = {"True": True, "False": False,}[self.ascending]
+            self.ascending = {
+                "True": True,
+                "False": False,
+            }[self.ascending]
 
         if sort_by == 0:
             result = result.sort_values([self.column], ascending=self.ascending)
@@ -538,7 +548,8 @@ class MatrixListDASHapp(DASH, MatrixListModel):
 
         self.panel_widgets = [
             dash.dropdown(
-                desc="Column:", options=[z for z in COLUMNS if z in data.columns],
+                desc="Column:",
+                options=[z for z in COLUMNS if z in data.columns],
             ),
             dash.separator(text="Visualization"),
             dash.dropdown(
@@ -592,4 +603,3 @@ def by_term_per_year_analysis(
     return MatrixDASHapp(
         data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
     ).run()
-
