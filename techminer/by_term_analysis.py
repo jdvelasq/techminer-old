@@ -1310,8 +1310,9 @@ class DASHapp(DASH, Model):
 def by_term_analysis(
     input_file="techminer.csv", limit_to=None, exclude=None, years_range=None
 ):
-
-    data = pd.read_csv(input_file)
     return DASHapp(
-        data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        data=pd.read_csv(input_file),
+        limit_to=limit_to,
+        exclude=exclude,
+        years_range=years_range,
     ).run()

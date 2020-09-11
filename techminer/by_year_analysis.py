@@ -46,7 +46,9 @@ class Model:
         result = result.reindex(years, fill_value=0)
         result["ID"] = result["ID"].map(lambda x: [] if x == 0 else x)
         result.sort_values(
-            "Year", ascending=True, inplace=True,
+            "Year",
+            ascending=True,
+            inplace=True,
         )
         result["Cum_Num_Documents"] = result["Num_Documents"].cumsum()
         result["Cum_Global_Citations"] = result["Global_Citations"].cumsum()
@@ -171,7 +173,10 @@ class DASHapp(DASH, Model):
                 ],
             ),
             dash.ascending(),
-            dash.dropdown(desc="Plot:", options=["Bar plot", "Horizontal bar plot"],),
+            dash.dropdown(
+                desc="Plot:",
+                options=["Bar plot", "Horizontal bar plot"],
+            ),
             dash.cmap(),
             dash.fig_width(),
             dash.fig_height(),
@@ -210,5 +215,4 @@ class DASHapp(DASH, Model):
 
 def by_year_analysis(input_file="techminer.csv", years_range=None):
 
-    data = pd.read_csv(input_file)
-    return DASHapp(data=data, years_range=years_range).run()
+    return DASHapp(data=pd.read_csv(input_file), years_range=years_range).run()

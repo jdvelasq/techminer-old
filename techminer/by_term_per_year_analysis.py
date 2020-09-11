@@ -594,12 +594,17 @@ def by_term_per_year_analysis(
     input_file="techminer.csv", limit_to=None, exclude=None, tab=None, years_range=None
 ):
 
-    data = pd.read_csv(input_file)
     if tab == 1:
         return MatrixListDASHapp(
-            data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+            data=pd.read_csv(input_file),
+            limit_to=limit_to,
+            exclude=exclude,
+            years_range=years_range,
         ).run()
 
     return MatrixDASHapp(
-        data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+        data=pd.read_csv(input_file),
+        limit_to=limit_to,
+        exclude=exclude,
+        years_range=years_range,
     ).run()
