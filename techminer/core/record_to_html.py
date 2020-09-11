@@ -1,10 +1,25 @@
 import pandas as pd
 import textwrap
 import re
+import os.path
+from techminer.core.thesaurus import load_file_as_dict
+
+colors = ["#FF6433", "#2E86C1", "#2EA405"] * 10
+
+#### SoftwareX
 
 
 def record_to_HTML(x, only_abstract=False, keywords_to_highlight=None):
     """"""
+
+    thesaurus = None
+    if os.path.isfile("keywords_thesaurus.txt"):
+        thesaurus = load_file_as_dict("keywords_thesaurus.txt")
+        for keyword in keywords_to_highlight.copy():
+            if keyword in thesaurus.keys():
+                for word in thesaurus[keyword]:
+                    keywords_to_highlight.append(word)
+
     HTML = ""
 
     column_list = ["Title_HL" if "Title_HL" in x.index else "Title"]
@@ -83,51 +98,20 @@ def record_to_HTML(x, only_abstract=False, keywords_to_highlight=None):
                         pattern = re.compile(keyword, re.IGNORECASE)
                         z = pattern.sub("<b>" + keyword.upper() + "</b>", z)
 
-                # if len(keywords_to_highlight) == 2 and f == "Title":
-                #     keyword1 = keywords_to_highlight[0]
-                #     keyword2 = keywords_to_highlight[1]
-                #     if keyword1.lower() in z.lower() and keyword2.lower() in z.lower():
-                #         z = '<b style="color:#FF6433">' + z + "</b>"
-
-                if len(keywords_to_highlight) == 1 and f == "Abstract":
-                    keyword = keywords_to_highlight[0]
-                    z = z.split(". ")
-                    z = [
-                        '<b_style="color:#FF6433">' + w + "</b>"
-                        if keyword.lower() in w.lower()
-                        else w
-                        for w in z
-                    ]
+                if f == "Abstract":
+                    phrases = z.split(". ")
+                    z = []
+                    for i_phrase, phrase in enumerate(phrases):
+                        for keyword in keywords_to_highlight:
+                            if keyword.lower() in phrase.lower():
+                                phrase = (
+                                    '<b_style="color:{}">'.format(colors[i_phrase])
+                                    + phrase
+                                    + "</b>"
+                                )
+                                break
+                        z.append(phrase)
                     z = ". ".join(z)
-
-                if len(keywords_to_highlight) == 2 and f == "Abstract":
-                    keyword1 = keywords_to_highlight[0]
-                    keyword2 = keywords_to_highlight[1]
-                    if not pd.isna(keyword1) and not pd.isna(keyword2):
-                        z = z.split(". ")
-                        z = [
-                            '<b_style="color:#FF6433">' + w + "</b>"
-                            if keyword1.lower() in w.lower()
-                            and keyword2.lower() in w.lower()
-                            else w
-                            for w in z
-                        ]
-                        z = [
-                            '<b_style="color:#2E86C1">' + w + "</b>"
-                            if keyword1.lower() in w.lower()
-                            and keyword2.lower() not in w.lower()
-                            else w
-                            for w in z
-                        ]
-                        z = [
-                            '<b_style="color:#2EA405">' + w + "</b>"
-                            if keyword1.lower() not in w.lower()
-                            and keyword2.lower() in w.lower()
-                            else w
-                            for w in z
-                        ]
-
-                        z = ". ".join(z)
 
                 s = textwrap.wrap(z, 80)
                 HTML += "{:>18}: {}<br>".format(f, s[0])

@@ -20,9 +20,9 @@ def column_explorer(
 
     df = pd.read_csv(input_file)
 
-    #
-    # Filter for cluster members
-    #
+    ##
+    ## Filter for cluster members
+    ##
     if clusters is not None and cluster is not None:
         df = corpus_filter(data=df, clusters=clusters, cluster=cluster)
 
