@@ -1,5 +1,5 @@
 import matplotlib.pyplot as pyplot
-
+import ipywidgets as widgets
 import numpy as np
 import pandas as pd
 
@@ -183,6 +183,36 @@ class Model:
             community.append("; ".join(x))
         return community
 
+    def communities_python_code(self):
+        self.apply()
+        members = Network(
+            X=self.X_,
+            top_by=self.top_by,
+            n_labels=self.n_labels,
+            clustering=self.clustering,
+        ).cluster_members_
+
+        dict_ = {}
+        for i_cluster, cluster in enumerate(members.columns):
+
+            x = members[cluster].tolist()
+            x = [m for m in x if m.strip() != ""]
+            x = [" ".join(m.split(" ")[:-1]) for m in x]
+
+            dict_[i_cluster] = x
+
+        HTML = "CLUSTERS = [<br>"
+        HTML += '    "' + self.column + '",<br>'
+        HTML += "    {<br>"
+        for key in dict_.keys():
+            HTML += "        " + str(key) + ": [<br>"
+            for value in dict_[key]:
+                HTML += "            " + repr(value) + ",<br>"
+            HTML += "        ],<br>"
+        HTML += "    }<br>"
+        HTML += "]"
+        return widgets.HTML("<pre>" + HTML + "</pre>")
+
     def network_interactive(self):
 
         self.apply()
@@ -255,6 +285,7 @@ class DASHapp(DASH, Model):
             "Chord diagram",
             "Communities (table)",
             "Communities (list)",
+            "Communities (Python code)",
         ]
 
         COLUMNS = sorted(
@@ -322,6 +353,13 @@ class DASHapp(DASH, Model):
         if self.menu == "Matrix":
 
             self.set_disabled("Clustering:")
+
+            self.set_enabled("Top by:")
+            self.set_enabled("Sort C-axis by:")
+            self.set_enabled("C-axis ascending:")
+            self.set_enabled("Sort R-axis by:")
+            self.set_enabled("R-axis ascending:")
+
             self.set_disabled("Colormap:")
             self.set_disabled("Layout:")
             self.set_disabled("nx iterations:")
@@ -329,9 +367,16 @@ class DASHapp(DASH, Model):
             self.set_disabled("Width:")
             self.set_disabled("Height:")
 
-        if self.menu in ["Heatmap", "Bubble plot", "Chord diagram"]:
+        if self.menu in ["Heatmap", "Bubble plot"]:
 
             self.set_disabled("Clustering:")
+
+            self.set_enabled("Top by:")
+            self.set_enabled("Sort C-axis by:")
+            self.set_enabled("C-axis ascending:")
+            self.set_enabled("Sort R-axis by:")
+            self.set_enabled("R-axis ascending:")
+
             self.set_enabled("Colormap:")
             self.set_disabled("Layout:")
             self.set_disabled("nx iterations:")
@@ -339,9 +384,33 @@ class DASHapp(DASH, Model):
             self.set_enabled("Width:")
             self.set_enabled("Height:")
 
-        if self.menu in ["Network (nx)", "Communities (list)", "Communities (table)"]:
+        if self.menu in ["Chord diagram"]:
+
+            self.set_disabled("Clustering:")
+
+            self.set_enabled("Top by:")
+            self.set_disabled("Sort C-axis by:")
+            self.set_disabled("C-axis ascending:")
+            self.set_disabled("Sort R-axis by:")
+            self.set_disabled("R-axis ascending:")
+
+            self.set_enabled("Colormap:")
+            self.set_disabled("Layout:")
+            self.set_disabled("nx iterations:")
+            self.set_disabled("N labels:")
+            self.set_enabled("Width:")
+            self.set_enabled("Height:")
+
+        if self.menu in ["Network (nx)"]:
 
             self.set_enabled("Clustering:")
+
+            self.set_disabled("Top by:")
+            self.set_disabled("Sort C-axis by:")
+            self.set_disabled("C-axis ascending:")
+            self.set_disabled("Sort R-axis by:")
+            self.set_disabled("R-axis ascending:")
+
             self.set_enabled("Colormap:")
             self.set_enabled("Layout:")
             self.set_enabled("N labels:")
@@ -353,9 +422,37 @@ class DASHapp(DASH, Model):
             else:
                 self.set_disabled("nx iterations:")
 
+        if self.menu in [
+            "Communities (list)",
+            "Communities (table)",
+            "Communities (Python code)",
+        ]:
+
+            self.set_enabled("Clustering:")
+
+            self.set_disabled("Top by:")
+            self.set_disabled("Sort C-axis by:")
+            self.set_disabled("C-axis ascending:")
+            self.set_disabled("Sort R-axis by:")
+            self.set_disabled("R-axis ascending:")
+
+            self.set_disabled("Colormap:")
+            self.set_disabled("Layout:")
+            self.set_disabled("N labels:")
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+            self.set_disabled("nx iterations:")
+
         if self.menu == "Network (interactive)":
 
             self.set_enabled("Clustering:")
+
+            self.set_disabled("Top by:")
+            self.set_disabled("Sort C-axis by:")
+            self.set_disabled("C-axis ascending:")
+            self.set_disabled("Sort R-axis by:")
+            self.set_disabled("R-axis ascending:")
+
             self.set_disabled("Colormap:")
             self.set_disabled("Layout:")
             self.set_enabled("N labels:")
