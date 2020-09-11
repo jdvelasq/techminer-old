@@ -13,15 +13,15 @@ def apply_keywords_thesaurus(
 
     df = pd.read_csv(input_file)
 
-    #
-    # Loads the thesaurus
-    #
+    ##
+    ## Loads the thesaurus
+    ##
     th = read_textfile(thesaurus_file)
     th = th.compile_as_dict()
 
-    #
-    # Cleaning
-    #
+    ##
+    ## Cleaning
+    ##
     if "Author_Keywords" in df.columns:
         df["Author_Keywords_CL"] = map_(df, "Author_Keywords", th.apply_as_dict)
 
@@ -53,7 +53,7 @@ def apply_keywords_thesaurus(
     if "Abstract_words" in df.columns:
         df["Abstract_words_CL"] = map_(df, "Abstract_words", th.apply_as_dict)
 
-    #
-    # Saves!
-    #
+    ##
+    ## Saves!
+    ##
     df.to_csv(output_file, index=False)

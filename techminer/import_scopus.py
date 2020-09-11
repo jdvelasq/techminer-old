@@ -1,7 +1,7 @@
 import numpy as np
 import re
 from techminer.core import explode
-
+from os.path import dirname, join
 
 import pandas as pd
 
@@ -12,6 +12,7 @@ from techminer.core.extract_words import extract_words
 from techminer.core.text import remove_accents
 from techminer.core.map import map_
 from techminer.core.extract_country_name import extract_country_name
+from techminer.core.thesaurus import load_file_as_dict
 
 import warnings
 
@@ -58,6 +59,7 @@ class ScopusImporter:
         self.format_abb_source_title()
         self.create_historiograph_id()
         self.create_local_references()
+        self.british_to_amerian()
         #  self.extract_title_words()
         #  self.extract_abstract_phrases_and_words()
         #  self.highlight_author_keywords_in_titles()
@@ -90,6 +92,21 @@ class ScopusImporter:
                 datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), msg
             )
         )
+
+    def british_to_amerian(self):
+
+        self.logging_info("Translate british spelling to american spelling ...")
+
+        module_path = dirname(__file__)
+        filename = join(module_path, "data/bg2am.data")
+        bg2am = load_file_as_dict(filename)
+
+        for british_word in bg2am:
+            self.data = self.data.applymap(
+                lambda w: w.replace(british_word, bg2am[british_word][0])
+                if isinstance(w, str)
+                else w
+            )
 
     def rename_columns(self):
 

@@ -1,5 +1,7 @@
 .DS_Store
 
+template/*csv
+template/*txt
 
 sphinx/_*
 guide/tutorial-old/*

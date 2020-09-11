@@ -22,14 +22,6 @@ def create_keywords_thesaurus(
     if "Index_Keywords" in data.columns:
         words_list += data.Index_Keywords.tolist()
 
-    #
-    # if "Title_words" in data.columns:
-    #      words_list += data.Title_words.tolist()
-    #
-    #  if "Abstract_words" in data.columns:
-    #      words_list += data.Abstract_words.tolist()
-    #
-
     ##
     ## Rules for keywords
     ##
