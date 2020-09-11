@@ -122,7 +122,8 @@ def column_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
         #
         # Populate titles
         #
-        s = x[x[column] == left_panel[1]["widget"].value]
+        keyword = left_panel[1]["widget"].value
+        s = x[x[column] == keyword]
         s = s[["Global_Citations", "Title"]].drop_duplicates()
         s = s.sort_values(["Global_Citations", "Title"], ascending=[False, True])
         left_panel[2]["widget"].options = s["Title"].tolist()
@@ -135,7 +136,15 @@ def column_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
         out = out.iloc[0]
         output.clear_output()
         with output:
-            display(widgets.HTML(record_to_HTML(out, only_abstract=only_abstract)))
+            display(
+                widgets.HTML(
+                    record_to_HTML(
+                        out,
+                        only_abstract=only_abstract,
+                        keywords_to_highlight=[keyword],
+                    )
+                )
+            )
 
     # -------------------------------------------------------------------------
     #

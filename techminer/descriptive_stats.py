@@ -69,6 +69,12 @@ def descriptive_stats(input_file="techminer.csv"):
         )
         x.pop("Source_title")
 
+    if "Abb_Source_Title" in x.columns:
+        general["Abbreviated Source titles:"] = round(
+            _count_terms(x, "Abb_Source_Title")
+        )
+        x.pop("Abb_Source_Title")
+
     ##
     ##  Document types
     ##
@@ -77,7 +83,7 @@ def descriptive_stats(input_file="techminer.csv"):
         z = x[["Document_Type"]].groupby("Document_Type").size()
         for index, value in zip(z.index, z):
             document_types[index + ":"] = value
-
+        x.pop("Document_Type")
     ##
     ##  Authors
     ##
@@ -117,11 +123,12 @@ def descriptive_stats(input_file="techminer.csv"):
 
     if "Countries" in x.columns:
         authors["Countries:"] = _count_terms(x, "Countries")
-        x.pop("Countries")
+        if "Countries" in x.columns:
+            x.pop("Countries")
 
     if "Country_1st_Author" in x.columns:
         authors["Countries (1st author):"] = _count_terms(x, "Country_1st_Author")
-        x.pop("Countries")
+        x.pop("Country_1st_Author")
 
     ##
     ##  Keywords
@@ -148,6 +155,10 @@ def descriptive_stats(input_file="techminer.csv"):
         )
         x.pop("Index_Keywords_CL")
 
+    if "Keywords_CL" in x.columns:
+        keywords["Keywords (cleaned):"] = round(_count_terms(x, "Keywords_CL"))
+        x.pop("Keywords_CL")
+
     if "Title_words" in x.columns:
         keywords["Title words (raw):"] = round(_count_terms(x, "Title_words"))
         x.pop("Title_words")
@@ -169,6 +180,12 @@ def descriptive_stats(input_file="techminer.csv"):
     ##
     ##  Report
     ##
+
+    if "Frac_Num_Documents" in x.columns:
+        x.pop("Frac_Num_Documents")
+
+    if "Historiograph_ID" in x.columns:
+        x.pop("Historiograph_ID")
 
     d = []
     d += [key for key in general.keys()]
@@ -213,4 +230,3 @@ def descriptive_stats(input_file="techminer.csv"):
             names=["Category", "Item"],
         ),
     )
-

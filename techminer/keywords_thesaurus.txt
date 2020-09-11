@@ -1,169 +1,1828 @@
 accessibility
     accessibility
+accidents
+    accidents
 adaptive dynamic programming
     adaptive dynamic programming
+adaptive management
+    adaptive management
+additional costs
+    additional costs
+administrative measures
+    administrative measures
+advanced informations
+    advanced informations
+agent based simulation
+    agent based simulation
+    agent-based simulation
+agent-based modelling
+    agent-based modelling
+ahp
+    ahp
+air pollutants
+    air pollutants
+    air pollution
+air quality
+    air quality
+algorithm
+    algorithm
+    algorithms
+allocation model
+    allocation model
+alternative fuels
+    alternative fuels
+alternative solutions
+    alternative solutions
+amphibious vehicles
+    amphibious vehicles
+an integration platform
+    an integration platform
+analysis frameworks
+    analysis frameworks
+analytic mathematical model
+    analytic mathematical model
+analytical approach
+    analytical approach
+analytical framework
+    analytical framework
+application examples
+    application examples
+application programs
+    application programs
+approximate dynamic programming
+    approximate dynamic programming
+approximation algorithms
+    approximation algorithms
+article
+    article
+artificial neural network
+    artificial neural network
+assessment
+    assessment
+auction mechanisms
+    auction mechanisms
 australia
     australia
+automated assignments
+    automated assignments
+automobiles
+    automobiles
+average numbers
+    average numbers
+barriers
+    barriers
+battery electric vehicles
+    battery electric vehicles
+behavioral research
+    behavioral research
+beijing city
+    beijing city
+belgium
+    belgium
+benchmarking
+    benchmarking
+bi-objective programming
+    bi-objective programming
+biased randomization
+    biased randomization
 big data applications
     big data applications
 binary particle swarm optimization (bpso)
     binary particle swarm optimization (bpso)
+bottom-up model
+    bottom-up model
+branch and bound method
+    branch and bound method
 brazil
     brazil
+bristol-bath
+    bristol-bath
+brussels [belgium]
+    brussels [belgium]
+brussels [brussels (rga)]
+    brussels [brussels (rga)]
+budget control
+    budget control
 building
     building
+business development
+    business development
 business model
     business model
+    business modeling
+    business modelling
+    business models
+business model designs
+    business model designs
+bwm
+    bwm
+calabria
+    calabria
+candidate locations
+    candidate locations
+cap and trade
+    cap and trade
+car accidents
+    car accidents
+carbon credit points
+    carbon credit points
+carbon dioxide
+    carbon dioxide
+carbon emission
+    carbon emission
+    carbon emissions
+carbon footprint
+    carbon footprint
+cargo bikes
+    cargo bikes
+cargo handling
+    cargo handling
 carriers
     carriers
-city logistics
+case studies
+    case studies
+    case study
+centros de distribuicao urbana
+    centros de distribuicao urbana
+certain environment
+    certain environment
+chaotic system
+    chaotic system
+    chaotic systems
+cities
+    cities
+    city
+city centers
+    city centers
+city distribution
+    city distribution
+city distribution center
+    city distribution center
+    city distribution centers
+city logistic
+    city logistic
     city logistics
+city logistics centers
+    city logistics centers
+    city logistics centre
+city planning
+    city planning
+civil engineering
+    civil engineering
+classification
+    classification
+    classification (of information)
+climate change
+    climate change
+cluster
+    cluster
+cluster analysis
+    cluster analysis
+cluster computing
+    cluster computing
+clustering algorithms
+    clustering algorithms
+co2 emissions
+    co2 emissions
 collaboration
     collaboration
+collaborative information portals
+    collaborative information portals
+collaborative integration
+    collaborative integration
 collaborative logistics
     collaborative logistics
+collaborative network
+    collaborative network
+collaborative urban logistics
+    collaborative urban logistics
+combinatorial optimization
+    combinatorial optimization
+combinatorial search
+    combinatorial search
+combined approach
+    combined approach
+commerce
+    commerce
+commercial vehicles
+    commercial vehicles
 commercialization
     commercialization
+comparative analysis
+    comparative analysis
+competition
+    competition
+competitive services
+    competitive services
+complex networks
+    complex networks
+computation theory
+    computation theory
+computational budget
+    computational budget
+computational linguistics
+    computational linguistics
+computer simulation
+    computer simulation
+computer software
+    computer software
+computer systems programming
+    computer systems programming
+conceptual framework
+    conceptual framework
+conference proceeding
+    conference proceeding
+conflicting objectives
+    conflicting objectives
+congestion
+    congestion
+congestion charging
+    congestion charging
 consolidation
     consolidation
+consolidation centres
+    consolidation centres
+consolidation strategies
+    consolidation strategies
+construction
+    construction
+construction development
+    construction development
+construction innovation
+    construction innovation
+container ship
+    container ship
+container terminal
+    container terminal
+containers
+    containers
+content analysis
+    content analysis
+continuous approximation (ca)
+    continuous approximation (ca)
+    continuous approximations
+continuous approximation methods
+    continuous approximation methods
+contracts
+    contracts
+cooperation strategies
+    cooperation strategies
+cooperative freight transport systems
+    cooperative freight transport systems
+cooperative game theory
+    cooperative game theory
+coordination mechanisms
+    coordination mechanisms
+copenhagen [(cty) hovedstaden]
+    copenhagen [(cty) hovedstaden]
+core
+    core
+corporate social responsibility
+    corporate social responsibility
+cost accounting
+    cost accounting
+cost allocation
+    cost allocation
+cost analysis
+    cost analysis
+cost and benefit analysis
+    cost and benefit analysis
+cost benefit analysis
+    cost benefit analysis
+    cost-benefit analysis
+cost effectiveness
+    cost effectiveness
+cost-effective distance of transport
+    cost-effective distance of transport
+costs
+    costs
+crashworthiness
+    crashworthiness
 criteria
     criteria
+critical factors
+    critical factors
+crowdsourcing
+    crowdsourcing
+current barriers
+    current barriers
+current status
+    current status
+customer demands
+    customer demands
+customer dissatisfaction
+    customer dissatisfaction
+customer satisfaction
+    customer satisfaction
+customer satisfaction index
+    customer satisfaction index
+customer satisfaction indices
+    customer satisfaction indices
+customer service
+    customer service
+czech republic
+    czech republic
+data handling
+    data handling
+data processing
+    data processing
+data standardization
+    data standardization
 database
     database
 decision criterions
     decision criterions
 decision hierarchy structure
     decision hierarchy structure
+decision levels
+    decision levels
+decision makers
+    decision makers
 decision making
     decision making
+decision making process
+    decision making process
+    decision-making process
 decision support models
     decision support models
-decision support systems
+decision support system
+    decision support system
     decision support systems
+decision-making systems
+    decision-making systems
+decomposition strategy
+    decomposition strategy
+delivery service
+    delivery service
+delivery systems
+    delivery systems
+delivery vehicle
+    delivery vehicle
+delphi method
+    delphi method
+demand analysis
+    demand analysis
+demand quantity
+    demand quantity
+demand uncertainty
+    demand uncertainty
+denmark
+    denmark
+depth of discharges
+    depth of discharges
+developing countries
+    developing countries
+diesel truck
+    diesel truck
+diesel vehicles
+    diesel vehicles
+difference method
+    difference method
+diffusion of innovation theory
+    diffusion of innovation theory
+digital storage
+    digital storage
+dijkstra
+    dijkstra
+dijkstra algorithms
+    dijkstra algorithms
+discrete choice analysis
+    discrete choice analysis
+discrete event simulation
+    discrete event simulation
+discrete networks
+    discrete networks
+dispatching problem
+    dispatching problem
+distance measure
+    distance measure
+    distance measures
+distribution
+    distribution
+distribution area
+    distribution area
+distribution center
+    distribution center
+    distribution centers
+    distribution centre
+    distribution centres
+distribution costs
+    distribution costs
+distribution models
+    distribution models
+distribution networks
+    distribution networks
+distribution of goods
+    distribution of goods
+distribution operations
+    distribution operations
 distribution system
     distribution system
+double auction
+    double auction
+drosophila melanogaster
+    drosophila melanogaster
+dynamic programming
+    dynamic programming
+dynamics
+    dynamics
+e-commerce
+    e-commerce
+eco-friendly
+    eco-friendly
+economic activities
+    economic activities
+economic analysis
+    economic analysis
+economic and social effects
+    economic and social effects
+economic assessment
+    economic assessment
+economic benefits
+    economic benefits
+economic costs
+    economic costs
+economic efficiency
+    economic efficiency
+economic feasibilities
+    economic feasibilities
+economic sustainability
+    economic sustainability
+economics
+    economics
+economies of scale
+    economies of scale
+ecosystems
+    ecosystems
+edas
+    edas
+efficiency
+    efficiency
+efficient managements
+    efficient managements
+electric discharges
+    electric discharges
+electric tricycles
+    electric tricycles
+electric truck
+    electric truck
+electric vehicle
+    electric vehicle
+    electric vehicles
+electrical engineering
+    electrical engineering
+electron transitions
+    electron transitions
+electronic commerce
+    electronic commerce
+embedded systems
+    embedded systems
+emission
+    emission
+emission control
+    emission control
+emissions reduction
+    emissions reduction
+end consumer movements
+    end consumer movements
+energy consumption
+    energy consumption
+energy policy
+    energy policy
+energy utilization
+    energy utilization
+engineering method
+    engineering method
+    engineering methods
+enter-of-gravity model
+    enter-of-gravity model
+entropy
+    entropy
+entropy methods
+    entropy methods
+environment friendliness
+    environment friendliness
+environmental and social sustainability
+    environmental and social sustainability
+environmental aspects
+    environmental aspects
+environmental benefits
+    environmental benefits
+environmental economics
+    environmental economics
+environmental effectiveness
+    environmental effectiveness
+environmental impact
+    environmental impact
+    environmental impacts
+environmental impact analysis
+    environmental impact analysis
+environmental monitoring
+    environmental monitoring
+environmental problems
+    environmental problems
+environmental protection
+    environmental protection
+environmental protection agency
+    environmental protection agency
+environmental standpoint
+    environmental standpoint
+environmental sustainability
+    environmental sustainability
+equality
+    equality
+estimation
+    estimation
+eurasia
+    eurasia
 europe
     europe
+european cities
+    european cities
+european union
+    european union
+evaluation
+    evaluation
+evaluation criteria
+    evaluation criteria
+evaluation framework
+    evaluation framework
+evolutionary game models
+    evolutionary game models
+evolutionary game theory
+    evolutionary game theory
+exhaust gas
+    exhaust gas
+exhibitions
+    exhibitions
+experimental economics
+    experimental economics
+facilities
+    facilities
+facility layout
+    facility layout
 facility location
     facility location
+    facility locations
+facility location models
+    facility location models
+facility location problem
+    facility location problem
+factor weight
+    factor weight
+factorial analysis
+    factorial analysis
+fano
+    fano
+fatores localizacao
+    fatores localizacao
+favorable conditions
+    favorable conditions
+feasibility study
+    feasibility study
+filtering method
+    filtering method
+final decision
+    final decision
+finance
+    finance
+financial balance
+    financial balance
+financial incentives
+    financial incentives
+fleet operations
+    fleet operations
 flow consolidation schemes
     flow consolidation schemes
+flow efficiency
+    flow efficiency
 flow modeling
     flow modeling
-freight consolidations
+forecasting
+    forecasting
+france
+    france
+freight cars
+    freight cars
+freight consolidation
+    freight consolidation
     freight consolidations
+freight consolidation center
+    freight consolidation center
+freight consolidation policy
+    freight consolidation policy
+freight deliveries
+    freight deliveries
+freight delivering
+    freight delivering
+freight demand
+    freight demand
 freight distribution network
     freight distribution network
+freight facilities
+    freight facilities
+freight forwarders
+    freight forwarders
+freight handling
+    freight handling
+freight modeling
+    freight modeling
+freight scheme evaluation
+    freight scheme evaluation
+freight terminals
+    freight terminals
+freight traffic
+    freight traffic
 freight transport
     freight transport
-geographic information systems (gis)
+    freight transportation
+freight trip generation
+    freight trip generation
+freight vehicle
+    freight vehicle
+freight vehicle routing
+    freight vehicle routing
+frisian islands
+    frisian islands
+fruit and vegetable distribution
+    fruit and vegetable distribution
+fruit flies
+    fruit flies
+fruit fly optimization algorithm
+    fruit fly optimization algorithm
+fruits
+    fruits
+fruits and vegetables
+    fruits and vegetables
+fruits and vegetables hall
+    fruits and vegetables hall
+fruits and vegetables market halls
+    fruits and vegetables market halls
+fuelled-electric vehicles
+    fuelled-electric vehicles
+fully electric vehicles
+    fully electric vehicles
+function evaluation
+    function evaluation
+function optimization problems
+    function optimization problems
+functional organization
+    functional organization
+functional requirement
+    functional requirement
+functions
+    functions
+fuzzy cluster analysis
+    fuzzy cluster analysis
+    fuzzy clustering analysis
+fuzzy clustering
+    fuzzy clustering
+fuzzy k-means
+    fuzzy k-means
+fuzzy logic
+    fuzzy logic
+fuzzy mathematics
+    fuzzy mathematics
+fuzzy multi attribute group decision makings (fmagdm)
+    fuzzy multi attribute group decision makings (fmagdm)
+fuzzy preferences
+    fuzzy preferences
+fuzzy relations
+    fuzzy relations
+fuzzy sets
+    fuzzy sets
+fuzzy theories
+    fuzzy theories
+    fuzzy theory
+fuzzy topsis
+    fuzzy topsis
+fuzzy-grey relational analysis
+    fuzzy-grey relational analysis
+gaia
+    gaia
+gain-sharing
+    gain-sharing
+game theory
+    game theory
+    games theory
+gas emissions
+    gas emissions
+genetic algorithm
+    genetic algorithm
+    genetic algorithms
+genetic method
+    genetic method
+geographic information system
+    geographic information system
+    geographic information systems
     geographic information systems (gis)
+geographical distribution
+    geographical distribution
+germany
+    germany
+gis
+    gis
+global sustainability
+    global sustainability
+global warming
+    global warming
+goods movement
+    goods movement
+goods transportation
+    goods transportation
+governmental intervention
+    governmental intervention
+grading
+    grading
+gravity method
+    gravity method
+greedy algorithm
+    greedy algorithm
+greedy approximation algorithms
+    greedy approximation algorithms
+green function
+    green function
+green logistics
+    green logistics
+green logistics center
+    green logistics center
+green products
+    green products
+green vehicle
+    green vehicle
+greenbelt
+    greenbelt
+greenhouse gas
+    greenhouse gas
+greenhouse gas emissions
+    greenhouse gas emissions
+greenhouse gases
+    greenhouse gases
+heterogeneous fleet
+    heterogeneous fleet
+heterogeneous vehicles
+    heterogeneous vehicles
+high costs
+    high costs
+historical cities
+    historical cities
+historical heritages
+    historical heritages
+horizontal cooperation
+    horizontal cooperation
+hovedstaden
+    hovedstaden
+hub-and-spoke system
+    hub-and-spoke system
+human
+    human
+    humans
+hybrid
+    hybrid
+hybrid spatial-fuzzy multi-criteria decision-making
+    hybrid spatial-fuzzy multi-criteria decision-making
+hybrid vehicle
+    hybrid vehicle
+hypercube model
+    hypercube model
 impact assessment
     impact assessment
+implementation
+    implementation
+increasing costs
+    increasing costs
+index figures
+    index figures
+indicator system
+    indicator system
+indicators
+    indicators
+    indicators (instruments)
+influential factors
+    influential factors
+information analysis
+    information analysis
+information systems
+    information systems
+inland waterways
+    inland waterways
 inner city area
     inner city area
 inner-city
     inner-city
+innovative method
+    innovative method
+innovative solution
+    innovative solution
+integer programming
+    integer programming
+integer programming models
+    integer programming models
+integrated maintenance
+    integrated maintenance
+integration
+    integration
+integration platform
+    integration platform
+intelligent agents
+    intelligent agents
+inter-organisational innovation
+    inter-organisational innovation
+inter-organizational interaction
+    inter-organizational interaction
+interaction mechanisms
+    interaction mechanisms
+intermodal container terminals
+    intermodal container terminals
+intermodal freight
+    intermodal freight
+intermodal freight terminal
+    intermodal freight terminal
+intermodal terminals
+    intermodal terminals
+intermodal transportation
+    intermodal transportation
+international policies
+    international policies
+international trade
+    international trade
+internet
+    internet
+internet of things
+    internet of things
+    internet of things (iot)
+interoperability
+    interoperability
+interorganizational interaction
+    interorganizational interaction
+interval-valued
+    interval-valued
+intervention mechanism
+    intervention mechanism
+investment decisions
+    investment decisions
+investments
+    investments
+italy
+    italy
+iterative method
+    iterative method
+joint decision
+    joint decision
+    joint decisions
 joint delivery systems
     joint delivery systems
+key performance indicators
+    key performance indicators
+lagrange multipliers
+    lagrange multipliers
+lagrangian
+    lagrangian
+lagrangian analysis
+    lagrangian analysis
+lagrangian relaxation
+    lagrangian relaxation
+lagrangian relaxation techniques
+    lagrangian relaxation techniques
+lagrangian slack operator
+    lagrangian slack operator
+lamilo project
+    lamilo project
+last mile
+    last mile
+    last-mile
 last mile delivery
     last mile delivery
+    last-mile deliveries
+last mile distribution
+    last mile distribution
+last mile logistics
+    last mile logistics
+    last-mile logistics
+last-mile network
+    last-mile network
 latin america
     latin america
+laws and legislation
+    laws and legislation
+layout optimization model
+    layout optimization model
+layout planning
+    layout planning
+lbl freight consolidation
+    lbl freight consolidation
+lbl urban freight boxes
+    lbl urban freight boxes
+learning algorithms
+    learning algorithms
+less-than-truckload
+    less-than-truckload
+level 2
+    level 2
+level-1
+    level-1
 linear programming
     linear programming
+linguistic variable
+    linguistic variable
+linguistics
+    linguistics
+lisboa
+    lisboa
+lisbon
+    lisbon
+literature review
+    literature review
+    literature reviews
+load matching
+    load matching
+loading sequence
+    loading sequence
+local impact
+    local impact
+local optimum solution
+    local optimum solution
+localization
+    localization
 location
     location
+location allocation
+    location allocation
+location allocation problem
+    location allocation problem
+location decisions
+    location decisions
+location factors
+    location factors
+location models
+    location models
+location plan
+    location plan
+    location planning
+    location plans
+location problems
+    location problems
+location routing problem
+    location routing problem
 location selection
     location selection
+location-allocation model
+    location-allocation model
+location-routing
+    location-routing
+logistic system
+    logistic system
+    logistic systems
+    logistics system
+logistica urbana
+    logistica urbana
+logistical activities
+    logistical activities
+logistical infrastructure
+    logistical infrastructure
 logistics
     logistics
+logistics and supply chain management
+    logistics and supply chain management
+logistics center
+    logistics center
+logistics cost
+    logistics cost
+    logistics costs
+logistics development
+    logistics development
+logistics distribution
+    logistics distribution
+logistics distribution center
+    logistics distribution center
+    logistics distribution centers
+logistics distribution networks
+    logistics distribution networks
+logistics engineering
+    logistics engineering
+logistics industry
+    logistics industry
+logistics information
+    logistics information
+logistics information platform
+    logistics information platform
+logistics network
+    logistics network
+    network logistics
+logistics platform
+    logistics platform
+    logistics platforms
+logistics pooling
+    logistics pooling
+logistics process
+    logistics process
+logistics service provider
+    logistics service provider
+logistics services
+    logistics services
+logistics simulations
+    logistics simulations
+logistics sprawl
+    logistics sprawl
+logit analysis
+    logit analysis
+long distance transport
+    long distance transport
+low carbon
+    low carbon
+low emission zones
+    low emission zones
+lucca
+    lucca
+management structure
+    management structure
+maritime transportation
+    maritime transportation
+marketing
+    marketing
+mathematical model
+    mathematical model
+    mathematical models
+mathematical techniques
+    mathematical techniques
+matheuristics
+    matheuristics
+maximizing auctions
+    maximizing auctions
+mechanical engineering
+    mechanical engineering
+medium-sized cities
+    medium-sized cities
 melbourne
     melbourne
 melbourne , australia
     melbourne , australia
+metaheuristics
+    metaheuristics
+methodological approach
+    methodological approach
+methodological frameworks
+    methodological frameworks
 methodology
     methodology
+micro-consolidation
+    micro-consolidation
+micro-simulation
+    micro-simulation
+microsimulation models
+    microsimulation models
 minas gerais
     minas gerais
+minimization problems
+    minimization problems
+mixed integer linear programming
+    mixed integer linear programming
+mixed integer linear programming model
+    mixed integer linear programming model
+mixed integer programming
+    mixed integer programming
+    mixed-integer programming
+    mixed-integer programs
+model test
+    model test
+modeling
+    modeling
+    modelization
+modeling urban distribution center
+    modeling urban distribution center
+models, theoretical
+    models, theoretical
+    theoretical model
+modern logistics
+    modern logistics
+modified customer satisfaction index
+    modified customer satisfaction index
+motor trucks
+    motor trucks
+motor vehicle
+    motor vehicle
+motor vehicle emissions
+    motor vehicle emissions
+moves
+    moves
+multi agent simulation
+    multi agent simulation
+    multi-agent simulation
+multi agent systems
+    multi agent systems
+    multi-agent system
+    multi-agent systems
 multi criteria analysis
     multi criteria analysis
-multi-agent models
-    multi-agent models
-multi-agent system
-    multi-agent system
-multi-criteria decision-making (mcdm)
+multi criteria decision making
+    multi criteria decision making
+    multi-criteria decision making
+    multi-criteria decision making (mcdm)
     multi-criteria decision-making (mcdm)
+multi-actor multi-criteria analysis
+    multi-actor multi-criteria analysis
+    multi-actor multi-criteria analysis (mamca)
+multi-agent model
+    multi-agent model
+    multi-agent models
+multi-criteria
+    multi-criteria
+multi-criteria decision analysis (mcda)
+    multi-criteria decision analysis (mcda)
+multi-criteria evaluation
+    multi-criteria evaluation
+multi-criteria evaluation framework
+    multi-criteria evaluation framework
+multi-criteria method
+    multi-criteria method
+multi-criteria objective
+    multi-criteria objective
+multi-level logistics
+    multi-level logistics
+multi-modal urban distribution centre
+    multi-modal urban distribution centre
+multi-objective formulation
+    multi-objective formulation
+multi-objective mixed-integer linear programming
+    multi-objective mixed-integer linear programming
+multi-objective optimization
+    multi-objective optimization
+multi-stakeholder
+    multi-stakeholder
 multi-tenant buildings
     multi-tenant buildings
 multicriteria analysis
     multicriteria analysis
+multicriteria optimization
+    multicriteria optimization
+multiobjective optimization
+    multiobjective optimization
 multiple location decision
     multiple location decision
+multivariant analysis
+    multivariant analysis
+multivariate factorial analysis
+    multivariate factorial analysis
+multivariate statistical analysis
+    multivariate statistical analysis
+municipal administration
+    municipal administration
+municipal managements
+    municipal managements
+municipality
+    municipality
+navigation
+    navigation
+negative correlation
+    negative correlation
+negative externalities
+    negative externalities
+netherlands
+    netherlands
+network
+    network
+network design
+    network design
 network flow problem
     network flow problem
+neural networks
+    neural networks
+    neural networks (computer)
+neuro-fuzzy network
+    neuro-fuzzy network
+new south wales
+    new south wales
+nocv1
+    nocv1
+noise emissions
+    noise emissions
+non-linear mixed integer programming
+    non-linear mixed integer programming
+non-motorized modes
+    non-motorized modes
+north frisian islands
+    north frisian islands
+northern europe
+    northern europe
+norway
+    norway
+novi sad
+    novi sad
+number of vehicles
+    number of vehicles
+numerical algorithms
+    numerical algorithms
+numerical applications
+    numerical applications
 numerical computations
     numerical computations
+numerical experiments
+    numerical experiments
+numerical model
+    numerical model
+on-site testing
+    on-site testing
+operating costs
+    operating costs
+operating modes
+    operating modes
+operational characteristics
+    operational characteristics
 operational requirements
     operational requirements
+operational research
+    operational research
+operational scenario
+    operational scenario
+optimal locating
+    optimal locating
+    optimal locations
+optimal locating method
+    optimal locating method
 optimization
     optimization
+optimization algorithms
+    optimization algorithms
+optimization methodology
+    optimization methodology
+optimization of freight transport
+    optimization of freight transport
+optimization problems
+    optimization problems
+order sharing
+    order sharing
+ordered weighted averaging
+    ordered weighted averaging
+organization and administration
+    organization and administration
+organization and management
+    organization and management
+oslo [norway]
+    oslo [norway]
+oslo [oslo (cnt)]
+    oslo [oslo (cnt)]
 ouro preto
     ouro preto
+overall factor
+    overall factor
 p-median problem
     p-median problem
+    p-median problems
+parcel delivery
+    parcel delivery
+performance evaluation
+    performance evaluation
+performance indicators
+    performance indicators
+    performance indices
+performance measurement
+    performance measurement
+    performance measurements
+personnel training
+    personnel training
+perspectives
+    perspectives
+pickups
+    pickups
+pilot projects
+    pilot projects
+planning
+    planning
+planning and evaluation methods
+    planning and evaluation methods
+planning and layout
+    planning and layout
+    planning and layouts
 planning method
     planning method
+planning models
+    planning models
+pm2.5
+    pm2.5
 policy
     policy
-retailers
+policy evaluation
+    policy evaluation
+policy implementation
+    policy implementation
+policy making
+    policy making
+policy support
+    policy support
+polluting emissions
+    polluting emissions
+population statistics
+    population statistics
+port operation
+    port operation
+port terminals
+    port terminals
+ports and harbors
+    ports and harbors
+possibilictic linear programming
+    possibilictic linear programming
+possibilistic programming
+    possibilistic programming
+post evaluations
+    post evaluations
+post-evaluation deliberation
+    post-evaluation deliberation
+potential benefits
+    potential benefits
+probability function
+    probability function
+    probability functions
+procedures
+    procedures
+product design
+    product design
+profit margin
+    profit margin
+profitability
+    profitability
+promethee
+    promethee
+protection of the environments
+    protection of the environments
+public administration
+    public administration
+public authorities
+    public authorities
+public policies
+    public policies
+    public policy
+public private partnerships
+    public private partnerships
+    public-private partnership
+q-methodology
+    q-methodology
+qualitative analysis
+    qualitative analysis
+quality problems
+    quality problems
+quantitative calculation method
+    quantitative calculation method
+quantitative tool
+    quantitative tool
+queueing theory
+    queueing theory
+queuing location problem
+    queuing location problem
+queuing theory
+    queuing theory
+r and shiny
+    r and shiny
+rail transport
+    rail transport
+railroad yards and terminals
+    railroad yards and terminals
+railroads
+    railroads
+real-time traffic datum
+    real-time traffic datum
+reasonable location
+    reasonable location
+receivers
+    receivers
+reconfigurable hardware
+    reconfigurable hardware
+reggio di calabria
+    reggio di calabria
+region multi-level logistics distribution
+    region multi-level logistics distribution
+regional planning
+    regional planning
+regional resources
+    regional resources
+reinforced learning
+    reinforced learning
+    reinforcement learning
+research communities
+    research communities
+research programs
+    research programs
+retailer
+    retailer
     retailers
+retailers' point of view
+    retailers' point of view
+reverse flow
+    reverse flow
+reverse logistics
+    reverse logistics
+rhine-main area
+    rhine-main area
+ribe
+    ribe
+road congestion
+    road congestion
+road transport
+    road transport
+robust optimization
+    robust optimization
+rolling horizon
+    rolling horizon
+routing
+    routing
+sales
+    sales
+scale economies
+    scale economies
+scandinavia
+    scandinavia
+scenario building
+    scenario building
+scenario planning
+    scenario planning
+scheme evaluation
+    scheme evaluation
+scheme selection
+    scheme selection
+scientific method
+    scientific method
+search engines
+    search engines
+semi structured interviews
+    semi structured interviews
 sensitivity analysis
     sensitivity analysis
+sensitivy analysis
+    sensitivy analysis
+serbia
+    serbia
+service prices
+    service prices
+service providers
+    service providers
+sharing resources
+    sharing resources
+shipping
+    shipping
+    ships
+simulation analysis
+    simulation analysis
+simulation approach
+    simulation approach
+simulation model
+    simulation model
+simulation platform
+    simulation platform
+single location selection
+    single location selection
+site selection
+    site selection
+site testing
+    site testing
+    site-testing
+smart cities
+    smart cities
+    smart city
+smart city logistics
+    smart city logistics
+social and environmental
+    social and environmental
 social cost benefit analysis
     social cost benefit analysis
+    social cost-benefit analysis
+soft computing
+    soft computing
+software testing
+    software testing
+solution concepts
+    solution concepts
+southern italy
+    southern italy
 spatial analysis
     spatial analysis
 spatial data
     spatial data
+spatial decision support
+    spatial decision support
+specialist technology
+    specialist technology
+specific distribution
+    specific distribution
+specific location
+    specific location
+stability requirements
+    stability requirements
 stakeholder
     stakeholder
+    stakeholders
+stakeholder analysis
+    stakeholder analysis
 stakeholder engagement
     stakeholder engagement
+stakeholders perception
+    stakeholders perception
+stakeholders’ commitment
+    stakeholders’ commitment
+stated preference
+    stated preference
+static simulations
+    static simulations
+stochastic systems
+    stochastic systems
+stowage (mines)
+    stowage (mines)
+strain measurement
+    strain measurement
+strategic planning
+    strategic planning
+strategic transport modelling
+    strategic transport modelling
+structural literature review
+    structural literature review
+sub-gradient
+    sub-gradient
+subcontracting strategy
+    subcontracting strategy
 suitability analysis
     suitability analysis
+supply chain management
+    supply chain management
+supply chains
+    supply chains
+surveys
+    surveys
 sustainability
     sustainability
 sustainability disciplines
     sustainability disciplines
 sustainability enablers
     sustainability enablers
+sustainable business
+    sustainable business
+sustainable collaborative network
+    sustainable collaborative network
+sustainable development
+    sustainable development
+sustainable freight distribution
+    sustainable freight distribution
+sustainable freight transport
+    sustainable freight transport
+sustainable services
+    sustainable services
+sustainable transport
+    sustainable transport
+sustainable urban freight transport
+    sustainable urban freight transport
+system dynamics
+    system dynamics
+systematic review
+    systematic review
+systems engineering
+    systems engineering
+tabu search
+    tabu search
+taxation
+    taxation
+tchebycheff approach
+    tchebycheff approach
+technical solutions
+    technical solutions
+technology
+    technology
+technology-based
+    technology-based
 the netherlands
     the netherlands
+theoretical foundations
+    theoretical foundations
+theoretical study
+    theoretical study
+thowa operator
+    thowa operator
+time windows
+    time windows
+time-dependent
+    time-dependent
 tokyo
     tokyo
+topsis
+    topsis
 tour formation
     tour formation
+touristic cities
+    touristic cities
+traditional approaches
+    traditional approaches
+traffic
+    traffic
+traffic and transport
+    traffic and transport
 traffic congestion
     traffic congestion
+traffic emission
+    traffic emission
+traffic volumes
+    traffic volumes
 traffic wardens
     traffic wardens
-transportation planning
+transferability
+    transferability
+transport demand analysis
+    transport demand analysis
+transport externalities
+    transport externalities
+transport infrastructure
+    transport infrastructure
+transport modeling
+    transport modeling
+    transport modelling
+transport planning
+    transport planning
     transportation planning
+transport policy
+    transport policy
+    transportation policy
+transport resources
+    transport resources
+transport services
+    transport services
+transport vehicle
+    transport vehicle
+transportation
+    transportation
+transportation cost
+    transportation cost
+transportation development
+    transportation development
+transportation economics
+    transportation economics
+transportation impacts
+    transportation impacts
+transportation requirements
+    transportation requirements
+transportation routes
+    transportation routes
+transportation simulations
+    transportation simulations
+transportation system
+    transportation system
+transshipment distribution center
+    transshipment distribution center
+travel behavior
+    travel behavior
+travel demand
+    travel demand
+trial systems
+    trial systems
+trip generations
+    trip generations
+truck load
+    truck load
+truck transportation
+    truck transportation
+trucks
+    trucks
+two-echelon vehicle routing problem
+    two-echelon vehicle routing problem
+u.s. environmental protection agency
+    u.s. environmental protection agency
+udc
+    udc
+uncertain environment
+    uncertain environment
+    uncertain environments
+uncertain informations
+    uncertain informations
+uncertainty analysis
+    uncertainty analysis
+united kingdom
+    united kingdom
+unloading
+    unloading
 urban area
     urban area
+    urban areas
+urban congestion
+    urban congestion
+urban consolidation
+    urban consolidation
 urban consolidation center
     urban consolidation center
+    urban consolidation center (ucc)
     urban consolidation centers
     urban consolidation centre
     urban consolidation centre (ucc)
-urban distribution centers
+    urban consolidation centres
+    urban consolidation centres (uccs)
+urban consolidation centres smart cities
+    urban consolidation centres smart cities
+urban consolodation center
+    urban consolodation center
+urban delivery
+    urban delivery
+urban distribution
+    urban distribution
+urban distribution center
+    urban distribution center
+    urban distribution center (udc)
     urban distribution centers
+    urban distribution centers (udc)
+    urban distribution centre
+urban distribution systems
+    urban distribution systems
+urban freight
+    urban freight
+urban freight consolidation center
+    urban freight consolidation center
+    urban freight consolidation centre
+    urban freight consolidation centre (ufcc)
+    urban freight consolidation centres (ufccs)
+urban freight consolidation curve
+    urban freight consolidation curve
+urban freight delivery
+    urban freight delivery
+urban freight demand models
+    urban freight demand models
+urban freight distribution
+    urban freight distribution
+urban freight flows
+    urban freight flows
 urban freight transport
     urban freight transport
+urban freight transport agents
+    urban freight transport agents
 urban freight transportation demand
     urban freight transportation demand
+urban goods distribution
+    urban goods distribution
+urban goods movement
+    urban goods movement
+    urban goods movements
+urban growth
+    urban growth
+urban logistic
+    urban logistic
+    urban logistics
+urban planning
+    urban planning
+urban pollution
+    urban pollution
+urban population
+    urban population
+urban traffic control
+    urban traffic control
+urban transport
+    urban transport
+    urban transportation
+urban transport systems
+    urban transport systems
+    urban transportation systems
+urban transportation simulation
+    urban transportation simulation
+urban-rural
+    urban-rural
+urban-rural distribution
+    urban-rural distribution
+vegetables
+    vegetables
+vehicle emissions
+    vehicle emissions
+vehicle routing
+    vehicle routing
+vehicle routing problem
+    vehicle routing problem
+    vehicle routing problems
+vehicle routing problem with time windows
+    vehicle routing problem with time windows
+vehicles
+    vehicles
 victoria [australia]
     victoria [australia]
+virtual addresses
+    virtual addresses
+virtual pricing
+    virtual pricing
+virtual reality
+    virtual reality
+visualization platforms
+    visualization platforms
+visum modelling
+    visum modelling
+wages
+    wages
+warehouse design
+    warehouse design
+warehouses
+    warehouses
+weighted linear combinations
+    weighted linear combinations
+well-to-wheel analysis
+    well-to-wheel analysis
+westpomeranian region of poland
+    westpomeranian region of poland
+whole process
+    whole process
+winner determination problem
+    winner determination problem
+wireless telecommunication systems
+    wireless telecommunication systems
+wolfe method
+    wolfe method
+yogyakarta special region province
+    yogyakarta special region province
 zero-emission zones
     zero-emission zones

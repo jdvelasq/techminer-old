@@ -58,10 +58,10 @@ class ScopusImporter:
         self.format_abb_source_title()
         self.create_historiograph_id()
         self.create_local_references()
-        self.extract_title_words()
-        self.extract_abstract_phrases_and_words()
-        self.highlight_author_keywords_in_titles()
-        self.highlight_author_keywords_in_abstracts()
+        #  self.extract_title_words()
+        #  self.extract_abstract_phrases_and_words()
+        #  self.highlight_author_keywords_in_titles()
+        #  self.highlight_author_keywords_in_abstracts()
         self.compute_bradford_law_zones()
 
         ##
@@ -401,7 +401,7 @@ class ScopusImporter:
         )
         local_references = local_references.explode("Local_Citations")
         local_references = local_references.groupby(
-            ["Local_Citations"], as_index=False
+            ["Local_Citations"], as_index=True
         ).size()
         self.data["Local_Citations"] = 0
         self.data.index = self.data.Historiograph_ID

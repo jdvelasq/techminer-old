@@ -101,9 +101,13 @@ def matrix_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
     #
     # -------------------------------------------------------------------------
     def server(**kwargs):
+
+        #
+        # Columns
         #
         main_column = kwargs["main_column"]
         by_column = kwargs["by_column"]
+
         #
         # Populate main_column with top_n terms
         #
@@ -112,7 +116,6 @@ def matrix_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
         xdf["_key2_"] = xdf[by_column]
         if main_column in MULTIVALUED_COLS:
             xdf = explode(xdf, "_key1_")
-        #
 
         if top_n is not None:
 
@@ -149,18 +152,26 @@ def matrix_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
             top_terms = top_terms[top_terms.map(lambda w: not pd.isna(w))]
             top_terms = top_terms.sort_values()
             left_panel[1]["widget"].options = top_terms
+
+        #
+        # Keyword selection
+        #
+        keyword1 = left_panel[1]["widget"].value
+        keyword2 = left_panel[3]["widget"].value
+
         #
         # Subset selection
         #
         if by_column in MULTIVALUED_COLS:
             xdf = explode(xdf, "_key2_")
-        xdf = xdf[xdf["_key1_"] == left_panel[1]["widget"].value]
+        xdf = xdf[xdf["_key1_"] == keyword1]
         terms = sorted(pd.Series(xdf["_key2_"].dropna().unique()))
         left_panel[3]["widget"].options = terms
+
         #
         # Title
         #
-        xdf = xdf[xdf["_key2_"] == left_panel[3]["widget"].value]
+        xdf = xdf[xdf["_key2_"] == keyword2]
         if len(xdf):
             left_panel[4]["widget"].options = sorted(xdf["Title"].tolist())
         else:
@@ -172,9 +183,16 @@ def matrix_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
         out = out.reset_index(drop=True)
         out = out.iloc[0]
         output.clear_output()
-        text = ""
         with output:
-            display(widgets.HTML(record_to_HTML(out, only_abstract=only_abstract)))
+            display(
+                widgets.HTML(
+                    record_to_HTML(
+                        out,
+                        only_abstract=only_abstract,
+                        keywords_to_highlight=[keyword1, keyword2],
+                    )
+                )
+            )
 
     # -------------------------------------------------------------------------
     #
