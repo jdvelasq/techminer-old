@@ -3,37 +3,23 @@ Analysis by Term
 ==========================================================================
 
 """
-from nltk.corpus.reader.ieer import documents
-from techminer.core import sort_axis
-from techminer.core import sort_by_axis
-import numpy as np
-import pandas as pd
 import ipywidgets as widgets
-
-from IPython.display import display
-
-from techminer.plots import bar_plot
-from techminer.plots import barh_plot
-from techminer.plots import wordcloud_
-from techminer.plots import treemap
-from techminer.plots import pie_plot
-from techminer.plots import worldmap
-from techminer.plots import stacked_bar
-from techminer.plots import stacked_barh
-
-import techminer.core.dashboard as dash
-from techminer.core import DASH
-
-from techminer.core import add_counters_to_axis
-from techminer.core import explode
-from techminer.core.params import EXCLUDE_COLS
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from IPython.display import display
+from nltk.corpus.reader.ieer import documents
+
+import techminer.core.dashboard as dash
+from techminer.core import (DASH, add_counters_to_axis, corpus_filter, explode,
+                            limit_to_exclude, sort_axis, sort_by_axis)
+from techminer.core.params import EXCLUDE_COLS
+from techminer.plots import (bar_plot, barh_plot, pie_plot, stacked_bar,
+                             stacked_barh, treemap, wordcloud_, worldmap)
 
 #  from techminer.core.dashboard import max_items, min_occurrence
 
-from techminer.core import limit_to_exclude
-from techminer.core import corpus_filter
 
 ###############################################################################
 ##

@@ -1,11 +1,13 @@
-import pandas as pd
-import os.path
-from os.path import dirname, join
 import json
-from techminer.core.thesaurus import load_file_as_dict, Thesaurus
+import os.path
 import re
-from techminer.core.extract_country_name import extract_country_name
+from os.path import dirname, join
+
+import pandas as pd
+
 from techminer.core import logging_info
+from techminer.core.extract_country_name import extract_country_name
+from techminer.core.thesaurus import Thesaurus, load_file_as_dict
 
 #
 # The algorithm searches in order until

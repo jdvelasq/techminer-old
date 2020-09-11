@@ -1,27 +1,14 @@
-from techminer.core.dashboard import min_occurrence
-from techminer.plots import heatmap
-from techminer.plots import counters_to_node_sizes
-from techminer.plots import counters_to_node_colors
-from techminer.core import sort_by_axis
-from techminer.core import add_counters_to_axis
 import matplotlib.pyplot as pyplot
-
 import numpy as np
 import pandas as pd
 
-
 import techminer.core.dashboard as dash
-from techminer.core import DASH
-
-
-from techminer.plots import ChordDiagram
-from techminer.plots import bubble_plot
-
-from techminer.core import TF_matrix
-from techminer.core import Network
-from techminer.core import limit_to_exclude
-from techminer.core import corpus_filter
-
+from techminer.core import (DASH, Network, TF_matrix, add_counters_to_axis,
+                            corpus_filter, limit_to_exclude, sort_by_axis)
+from techminer.core.dashboard import min_occurrence
+from techminer.plots import (ChordDiagram, bubble_plot,
+                             counters_to_node_colors, counters_to_node_sizes,
+                             heatmap)
 
 ###############################################################################
 ##

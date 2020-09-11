@@ -1,24 +1,12 @@
-from techminer.core import sort_axis
-from techminer.core import add_counters_to_axis
-from techminer.core import sort_by_axis
 import numpy as np
 import pandas as pd
 
-
-from techminer.by_term_per_year_analysis import by_year_analysis
-
 import techminer.core.dashboard as dash
-from techminer.core import DASH
-
-from techminer.core import explode
-from techminer.core import limit_to_exclude
+from techminer.by_term_per_year_analysis import by_year_analysis
+from techminer.core import (DASH, add_counters_to_axis, corpus_filter, explode,
+                            limit_to_exclude, sort_axis, sort_by_axis)
 from techminer.core.dashboard import max_items, min_occurrence
-
-from techminer.plots import bar_plot
-from techminer.plots import barh_plot
-from techminer.plots import stacked_bar
-from techminer.plots import stacked_barh
-from techminer.core import corpus_filter
+from techminer.plots import bar_plot, barh_plot, stacked_bar, stacked_barh
 
 ###############################################################################
 ##

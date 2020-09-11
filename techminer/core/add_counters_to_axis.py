@@ -1,6 +1,5 @@
 import numpy as np
 
-
 from techminer.core.explode import explode
 
 

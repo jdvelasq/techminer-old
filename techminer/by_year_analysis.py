@@ -2,10 +2,8 @@ import numpy as np
 import pandas as pd
 
 import techminer.core.dashboard as dash
-from techminer.core import DASH
-from techminer.plots import bar_plot
-from techminer.plots import barh_plot
-from techminer.core import corpus_filter
+from techminer.core import DASH, corpus_filter
+from techminer.plots import bar_plot, barh_plot
 
 ###############################################################################
 ##

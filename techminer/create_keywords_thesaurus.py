@@ -1,8 +1,9 @@
+import os.path
+
 import pandas as pd
 
-from techminer.core.thesaurus import text_clustering
-import os.path
-from techminer.core.thesaurus import load_file_as_dict, Thesaurus
+from techminer.core.thesaurus import (Thesaurus, load_file_as_dict,
+                                      text_clustering)
 
 
 def create_keywords_thesaurus(

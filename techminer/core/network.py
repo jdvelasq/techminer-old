@@ -1,14 +1,13 @@
-from cdlib import algorithms
-from pyvis.network import Network as Network_
 import matplotlib
 import matplotlib.pyplot as pyplot
 import networkx as nx
 import pandas as pd
-from techminer.plots import set_spines_invisible
-from techminer.plots import expand_ax_limits
-from techminer.plots import counters_to_node_sizes
-from techminer.core.sort_axis import sort_axis
+from cdlib import algorithms
+from pyvis.network import Network as Network_
 
+from techminer.core.sort_axis import sort_axis
+from techminer.plots import (counters_to_node_sizes, expand_ax_limits,
+                             set_spines_invisible)
 
 cluster_colors = [
     "tab:blue",

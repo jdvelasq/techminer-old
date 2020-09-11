@@ -1,13 +1,11 @@
-import numpy as np
 import ipywidgets as widgets
+import numpy as np
 import pandas as pd
 from IPython.display import display
 from ipywidgets import GridspecLayout, Layout
 
-from techminer.core import explode
+from techminer.core import corpus_filter, explode, record_to_HTML
 from techminer.core.params import MULTIVALUED_COLS
-from techminer.core import record_to_HTML
-from techminer.core import corpus_filter
 
 
 def column_explorer(

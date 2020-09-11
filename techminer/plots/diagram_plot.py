@@ -1,12 +1,9 @@
 import matplotlib
 import matplotlib.pyplot as pyplot
 
-
-from techminer.plots import expand_ax_limits
-from techminer.plots import counters_to_node_colors
-from techminer.plots import counters_to_node_sizes
-from techminer.plots import ax_text_node_labels
-from techminer.plots import set_spines_invisible
+from techminer.plots import (ax_text_node_labels, counters_to_node_colors,
+                             counters_to_node_sizes, expand_ax_limits,
+                             set_spines_invisible)
 
 
 def diagram_plot(x, y, labels, x_axis_at=0, y_axis_at=0, cmap=None, width=5, height=5):

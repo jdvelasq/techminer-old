@@ -1,9 +1,10 @@
 import json
+from os.path import dirname, join
+
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from os.path import dirname, join
 
 TEXTLEN = 40
 

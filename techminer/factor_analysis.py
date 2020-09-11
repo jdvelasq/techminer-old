@@ -1,20 +1,14 @@
-from sklearn.decomposition import PCA, FactorAnalysis, FastICA, TruncatedSVD
-from sklearn.manifold import MDS
-from techminer.plots import counters_to_node_sizes
-from techminer.core import sort_axis
-from techminer.core import add_counters_to_axis
-from techminer.core import clustering
-from techminer.core import DASH
-from techminer.core import limit_to_exclude
-from techminer.core import normalize_network
-from techminer.core import TF_matrix, TFIDF_matrix
-from techminer.plots import conceptual_structure_map
-from techminer.plots import xy_clusters_plot
 import numpy as np
 import pandas as pd
-import techminer.core.dashboard as dash
-from techminer.core import corpus_filter
+from sklearn.decomposition import PCA, FactorAnalysis, FastICA, TruncatedSVD
+from sklearn.manifold import MDS
 
+import techminer.core.dashboard as dash
+from techminer.core import (DASH, TF_matrix, TFIDF_matrix,
+                            add_counters_to_axis, clustering, corpus_filter,
+                            limit_to_exclude, normalize_network, sort_axis)
+from techminer.plots import (conceptual_structure_map, counters_to_node_sizes,
+                             xy_clusters_plot)
 
 ###############################################################################
 ##

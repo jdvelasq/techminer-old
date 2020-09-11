@@ -1,4 +1,5 @@
 import math
+
 import matplotlib.pyplot as pyplot
 
 from techminer.plots import expand_ax_limits

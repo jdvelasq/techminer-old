@@ -1,20 +1,15 @@
-from techminer.core import add_counters_to_axis
-from techminer.core import CA
-from techminer.core import clustering
-from techminer.core import DASH
-from techminer.core import sort_by_axis
-from techminer.core import TF_matrix, TFIDF_matrix
-from techminer.plots import ax_text_node_labels
-from techminer.plots import counters_to_node_colors
-from techminer.plots import counters_to_node_sizes
-from techminer.plots import expand_ax_limits
-from techminer.plots import set_spines_invisible
 import matplotlib
 import matplotlib.pyplot as pyplot
 import pandas as pd
+
 import techminer.core.dashboard as dash
+from techminer.core import (CA, DASH, TF_matrix, TFIDF_matrix,
+                            add_counters_to_axis, clustering, corpus_filter,
+                            sort_by_axis)
+from techminer.plots import ax_text_node_labels
 from techminer.plots import bubble_plot as bubble_plot_
-from techminer.core import corpus_filter
+from techminer.plots import (counters_to_node_colors, counters_to_node_sizes,
+                             expand_ax_limits, set_spines_invisible)
 
 ###############################################################################
 ##

@@ -12,29 +12,17 @@ import matplotlib.pyplot as pyplot
 import networkx as nx
 import numpy as np
 import pandas as pd
-
 from pyvis.network import Network
-from techminer.plots import ax_text_node_labels
-from techminer.plots import set_spines_invisible
-from techminer.plots import expand_ax_limits
-from techminer.plots import counters_to_node_colors
-from techminer.plots import counters_to_node_sizes
-from techminer.core import sort_by_axis
-from techminer.core import add_counters_to_axis
-
-from techminer.core import limit_to_exclude
 
 import techminer.core.dashboard as dash
-from techminer.core import DASH
-
-
-from techminer.core import TF_matrix
+from techminer.core import (DASH, TF_matrix, add_counters_to_axis,
+                            corpus_filter, limit_to_exclude, sort_by_axis)
 from techminer.core.params import EXCLUDE_COLS
-
-
+from techminer.plots import (ax_text_node_labels, bubble_plot,
+                             counters_to_node_colors, counters_to_node_sizes,
+                             expand_ax_limits)
 from techminer.plots import heatmap as heatmap_
-from techminer.plots import bubble_plot
-from techminer.core import corpus_filter
+from techminer.plots import set_spines_invisible
 
 warnings.filterwarnings("ignore", category=UserWarning)
 

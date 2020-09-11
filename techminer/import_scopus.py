@@ -1,20 +1,17 @@
-import numpy as np
+import datetime
 import re
-from techminer.core import explode
+import warnings
 from os.path import dirname, join
 
+import numpy as np
 import pandas as pd
 
-import datetime
-
-
-from techminer.core.extract_words import extract_words
-from techminer.core.text import remove_accents
-from techminer.core.map import map_
+from techminer.core import explode
 from techminer.core.extract_country_name import extract_country_name
+from techminer.core.extract_words import extract_words
+from techminer.core.map import map_
+from techminer.core.text import remove_accents
 from techminer.core.thesaurus import load_file_as_dict
-
-import warnings
 
 warnings.filterwarnings("ignore")
 

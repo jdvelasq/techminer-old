@@ -1,30 +1,19 @@
-"""
-Analysis by Term per Year
-==================================================================================================
-
-
-"""
-
-from techminer.core import sort_by_axis
-from techminer.core import sort_axis
 import numpy as np
 import pandas as pd
-from techminer.core.dashboard import max_items, min_occurrence
 
-from techminer.plots import gant_plot
-from techminer.plots import gant0_plot
-from techminer.plots import bubble_plot
-from techminer.plots import heatmap
-
-from techminer.core import explode
-from techminer.core import add_counters_to_axis
-from techminer.core.params import EXCLUDE_COLS
-
-
-from techminer.by_year_analysis import by_year_analysis
 import techminer.core.dashboard as dash
-from techminer.core import DASH
-from techminer.core import corpus_filter
+from techminer.by_year_analysis import by_year_analysis
+from techminer.core import (
+    DASH,
+    add_counters_to_axis,
+    corpus_filter,
+    explode,
+    sort_axis,
+    sort_by_axis,
+)
+from techminer.core.dashboard import max_items, min_occurrence
+from techminer.core.params import EXCLUDE_COLS
+from techminer.plots import bubble_plot, gant0_plot, gant_plot, heatmap
 
 TEXTLEN = 40
 

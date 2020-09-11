@@ -4,15 +4,8 @@ from os.path import dirname, join
 
 import pandas as pd
 
-
-from techminer.core.text import (
-    find_string,
-    fingerprint,
-    one_gram,
-    stemmer_porter,
-    stemmer_snowball,
-    two_gram,
-)
+from techminer.core.text import (find_string, fingerprint, one_gram,
+                                 stemmer_porter, stemmer_snowball, two_gram)
 
 
 def text_clustering(x, name_strategy="mostfrequent", key="porter", transformer=None):

@@ -1,7 +1,9 @@
-import pandas as pd
-import textwrap
-import re
 import os.path
+import re
+import textwrap
+
+import pandas as pd
+
 from techminer.core.thesaurus import load_file_as_dict
 
 colors = ["#FF6433", "#2E86C1", "#2EA405"] * 10

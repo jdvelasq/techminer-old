@@ -1,23 +1,15 @@
-from sklearn.manifold import MDS
-from techminer.core import add_counters_to_axis
-from techminer.core import CA
-from techminer.core import clustering
-from techminer.core import DASH
-from techminer.core import limit_to_exclude
-from techminer.core import normalize_network
-from techminer.core import sort_by_axis
-from techminer.core import TF_matrix, TFIDF_matrix
-from techminer.plots import ax_text_node_labels
-from techminer.plots import counters_to_node_sizes
-from techminer.plots import expand_ax_limits
-from techminer.plots import expand_ax_limits
-from techminer.plots import set_spines_invisible
 import matplotlib
 import matplotlib.pyplot as pyplot
 import numpy as np
 import pandas as pd
+from sklearn.manifold import MDS
+
 import techminer.core.dashboard as dash
-from techminer.core import corpus_filter
+from techminer.core import (CA, DASH, TF_matrix, TFIDF_matrix,
+                            add_counters_to_axis, clustering, corpus_filter,
+                            limit_to_exclude, normalize_network, sort_by_axis)
+from techminer.plots import (ax_text_node_labels, counters_to_node_sizes,
+                             expand_ax_limits, set_spines_invisible)
 
 ###############################################################################
 ##

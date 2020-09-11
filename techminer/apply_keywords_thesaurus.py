@@ -1,8 +1,7 @@
 import pandas as pd
 
-
-from techminer.core.thesaurus import read_textfile
 from techminer.core.map import map_
+from techminer.core.thesaurus import read_textfile
 
 
 def apply_keywords_thesaurus(

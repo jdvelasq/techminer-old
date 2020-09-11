@@ -1,14 +1,8 @@
 import pandas as pd
+from sklearn.cluster import (DBSCAN, AffinityPropagation,
+                             AgglomerativeClustering, Birch,
+                             FeatureAgglomeration, KMeans, MeanShift)
 
-from sklearn.cluster import (
-    AgglomerativeClustering,
-    AffinityPropagation,
-    Birch,
-    DBSCAN,
-    FeatureAgglomeration,
-    KMeans,
-    MeanShift,
-)
 from techminer.core.sort_axis import sort_axis
 from techminer.plots import expand_ax_limits
 

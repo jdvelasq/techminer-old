@@ -1,29 +1,18 @@
-import matplotlib.pyplot as pyplot
 import ipywidgets as widgets
+import matplotlib.pyplot as pyplot
 import numpy as np
 import pandas as pd
-
 from pyvis.network import Network
-from techminer.core import add_counters_to_axis
-from techminer.core import sort_by_axis
-from techminer.plots import counters_to_node_sizes
-from techminer.plots import counters_to_node_colors
-
-from techminer.plots import ChordDiagram
-
-from techminer.core.params import EXCLUDE_COLS
 
 import techminer.core.dashboard as dash
-
-from techminer.core import DASH
-from techminer.core import TF_matrix
-from techminer.core import normalize_network
-from techminer.core import limit_to_exclude
-from techminer.core import Network
-
-from techminer.plots import heatmap as heatmap_
+from techminer.core import (DASH, Network, TF_matrix, add_counters_to_axis,
+                            corpus_filter, limit_to_exclude, normalize_network,
+                            sort_by_axis)
+from techminer.core.params import EXCLUDE_COLS
+from techminer.plots import ChordDiagram
 from techminer.plots import bubble_plot as bubble_plot_
-from techminer.core import corpus_filter
+from techminer.plots import counters_to_node_colors, counters_to_node_sizes
+from techminer.plots import heatmap as heatmap_
 
 ###############################################################################
 ##

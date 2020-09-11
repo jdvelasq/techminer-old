@@ -1,8 +1,7 @@
 import ipywidgets as widgets
+import pandas as pd
 from IPython.display import display
 from ipywidgets import GridspecLayout, Layout
-import pandas as pd
-
 
 COLORMAPS = [
     "Greys",

@@ -5,11 +5,11 @@ from sklearn.decomposition import TruncatedSVD
 import techminer.common as cmn
 import techminer.dashboard as dash
 import techminer.plots as plt
+from techminer.core import limit_to_exclude
 from techminer.dashboard import DASH
 from techminer.diagram_plot import diagram_plot
 from techminer.document_term import TF_matrix, TFIDF_matrix
 from techminer.params import EXCLUDE_COLS
-from techminer.core import limit_to_exclude
 
 ###############################################################################
 ##

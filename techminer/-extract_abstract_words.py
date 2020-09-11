@@ -1,9 +1,8 @@
 import pandas as pd
 
 from techminer.core.extract_words import extract_words
-
-from techminer.core.thesaurus import read_textfile
 from techminer.core.map import map_
+from techminer.core.thesaurus import read_textfile
 
 
 def extract_abstract_words(

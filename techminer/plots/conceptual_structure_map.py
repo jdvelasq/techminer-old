@@ -1,12 +1,11 @@
 import matplotlib
-import numpy as np
 import matplotlib.pyplot as pyplot
-from scipy.spatial import ConvexHull
+import numpy as np
 import pandas as pd
-from techminer.plots import set_spines_invisible
-from techminer.core.sort_axis import sort_axis
+from scipy.spatial import ConvexHull
 
-from techminer.plots import expand_ax_limits
+from techminer.core.sort_axis import sort_axis
+from techminer.plots import expand_ax_limits, set_spines_invisible
 
 COLORS = [
     "tab:blue",

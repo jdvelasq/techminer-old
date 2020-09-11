@@ -1,17 +1,11 @@
-import pandas as pd
-from techminer.core import sort_by_axis
 import ipywidgets as widgets
-
-from techminer.core import TF_matrix
-from techminer.core import TFIDF_matrix
+import pandas as pd
 
 import techminer.core.dashboard as dash
-from techminer.plots import bar_plot
-from techminer.plots import barh_plot
-from techminer.core import DASH
-from techminer.core import limit_to_exclude
-from techminer.core import add_counters_to_axis
-
+from techminer.core import (DASH, TF_matrix, TFIDF_matrix,
+                            add_counters_to_axis, limit_to_exclude,
+                            sort_by_axis)
+from techminer.plots import bar_plot, barh_plot
 
 ###############################################################################
 ##

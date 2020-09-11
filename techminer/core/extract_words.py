@@ -1,13 +1,14 @@
 import re
-import pandas as pd
 from os.path import dirname, join
+
 import nltk
+import pandas as pd
 from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
+from textblob import Word
 
 from techminer.core.thesaurus import load_file_as_dict
-from nltk.stem import WordNetLemmatizer
-from textblob import Word
 
 
 def bigram_finder(text):
