@@ -1,6 +1,5 @@
 .DS_Store
 
-debug/*
 
 sphinx/_*
 guide/tutorial-old/*
