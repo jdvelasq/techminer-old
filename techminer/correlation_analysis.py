@@ -20,6 +20,8 @@ from techminer.plots import bubble_plot
 from techminer.core import TF_matrix
 from techminer.core import Network
 from techminer.core import limit_to_exclude
+from techminer.core import corpus_filter
+
 
 ###############################################################################
 ##
@@ -29,11 +31,25 @@ from techminer.core import limit_to_exclude
 
 
 class Model:
-    def __init__(self, data, limit_to, exclude, years_range):
+    def __init__(
+        self,
+        data,
+        limit_to,
+        exclude,
+        years_range,
+        clusters=None,
+        cluster=None,
+    ):
         ##
         if years_range is not None:
             initial_year, final_year = years_range
             data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
+
+        #
+        # Filter for cluster members
+        #
+        if clusters is not None and cluster is not None:
+            data = corpus_filter(data=data, clusters=clusters, cluster=cluster)
 
         self.data = data
         self.limit_to = limit_to
@@ -268,11 +284,25 @@ COLUMNS = sorted(
 
 
 class DASHapp(DASH, Model):
-    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
+    def __init__(
+        self,
+        data,
+        limit_to=None,
+        exclude=None,
+        years_range=None,
+        clusters=None,
+        cluster=None,
+    ):
         """Dashboard app"""
 
         Model.__init__(
-            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+            self,
+            data=data,
+            limit_to=limit_to,
+            exclude=exclude,
+            years_range=years_range,
+            clusters=clusters,
+            cluster=cluster,
         )
         DASH.__init__(self)
 
@@ -392,7 +422,12 @@ class DASHapp(DASH, Model):
 
 
 def correlation_analysis(
-    input_file="techminer.csv", limit_to=None, exclude=None, years_range=None
+    input_file="techminer.csv",
+    limit_to=None,
+    exclude=None,
+    years_range=None,
+    clusters=None,
+    cluster=None,
 ):
 
     return DASHapp(
@@ -400,4 +435,6 @@ def correlation_analysis(
         limit_to=limit_to,
         exclude=exclude,
         years_range=years_range,
+        clusters=clusters,
+        cluster=cluster,
     ).run()

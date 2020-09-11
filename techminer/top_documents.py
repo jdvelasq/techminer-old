@@ -1,18 +1,26 @@
 import pandas as pd
+from techminer.core import corpus_filter
 
 
-def top_documents(input_file="techminer.csv", top_n=10):
+def top_documents(input_file="techminer.csv", top_n=10, clusters=None, cluster=None):
 
-    df = pd.read_csv(input_file)
-    df = df.sort_values("Global_Citations", ascending=False).head(top_n)
-    df = df.reset_index(drop=True)
-    for i in range(len(df)):
+    data = pd.read_csv(input_file)
+
+    #
+    # Filter for cluster members
+    #
+    if clusters is not None and cluster is not None:
+        data = corpus_filter(data=data, clusters=clusters, cluster=cluster)
+
+    data = data.sort_values("Global_Citations", ascending=False).head(top_n)
+    data = data.reset_index(drop=True)
+    for i in range(len(data)):
         print(
-            df.Authors[i].replace(";", ", ")
+            data.Authors[i].replace(";", ", ")
             + ". "
-            + str(df.Year[i])
+            + str(data.Year[i])
             + ". "
-            + df.Title[i]
+            + data.Title[i]
             + "\t"
-            + str(int(df.Global_Citations[i]))
+            + str(int(data.Global_Citations[i]))
         )

@@ -5,7 +5,7 @@ import techminer.core.dashboard as dash
 from techminer.core import DASH
 from techminer.plots import bar_plot
 from techminer.plots import barh_plot
-
+from techminer.core import corpus_filter
 
 ###############################################################################
 ##
@@ -15,11 +15,23 @@ from techminer.plots import barh_plot
 
 
 class Model:
-    def __init__(self, data, years_range):
+    def __init__(
+        self,
+        data,
+        years_range,
+        clusters=None,
+        cluster=None,
+    ):
         ##
         if years_range is not None:
             initial_year, final_year = years_range
             data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
+
+        #
+        # Filter for cluster members
+        #
+        if clusters is not None and cluster is not None:
+            data = corpus_filter(data=data, clusters=clusters, cluster=cluster)
 
         self.data = data
 
@@ -141,11 +153,13 @@ class Model:
 
 
 class DASHapp(DASH, Model):
-    def __init__(self, data, years_range=None):
+    def __init__(self, data, years_range=None, clusters=None, cluster=None):
         #
         # Generic code
         #
-        Model.__init__(self, data, years_range=years_range)
+        Model.__init__(
+            self, data, years_range=years_range, clusters=clusters, cluster=cluster
+        )
         DASH.__init__(self)
 
         #
@@ -213,6 +227,16 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def by_year_analysis(input_file="techminer.csv", years_range=None):
+def by_year_analysis(
+    input_file="techminer.csv",
+    years_range=None,
+    clusters=None,
+    cluster=None,
+):
 
-    return DASHapp(data=pd.read_csv(input_file), years_range=years_range).run()
+    return DASHapp(
+        data=pd.read_csv(input_file),
+        years_range=years_range,
+        clusters=clusters,
+        cluster=cluster,
+    ).run()

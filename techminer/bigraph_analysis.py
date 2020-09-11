@@ -34,7 +34,7 @@ from techminer.core.params import EXCLUDE_COLS
 
 from techminer.plots import heatmap as heatmap_
 from techminer.plots import bubble_plot
-
+from techminer.core import corpus_filter
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -46,11 +46,25 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 
 class Model:
-    def __init__(self, data, limit_to, exclude, years_range):
+    def __init__(
+        self,
+        data,
+        limit_to,
+        exclude,
+        years_range,
+        clusters=None,
+        cluster=None,
+    ):
         ##
         if years_range is not None:
             initial_year, final_year = years_range
             data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
+
+        #
+        # Filter for cluster members
+        #
+        if clusters is not None and cluster is not None:
+            data = corpus_filter(data=data, clusters=clusters, cluster=cluster)
 
         self.data = data
         self.limit_to = limit_to
@@ -568,11 +582,25 @@ class Model:
 
 
 class DASHapp(DASH, Model):
-    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
+    def __init__(
+        self,
+        data,
+        limit_to=None,
+        exclude=None,
+        years_range=None,
+        clusters=None,
+        cluster=None,
+    ):
         """Dashboard app"""
 
         Model.__init__(
-            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+            self,
+            data=data,
+            limit_to=limit_to,
+            exclude=exclude,
+            years_range=years_range,
+            clusters=clusters,
+            cluster=cluster,
         )
         DASH.__init__(self)
 
@@ -690,11 +718,18 @@ class DASHapp(DASH, Model):
 
 
 def bigraph_analysis(
-    input_file="techminer.csv", limit_to=None, exclude=None, years_range=None
+    input_file="techminer.csv",
+    limit_to=None,
+    exclude=None,
+    years_range=None,
+    clusters=None,
+    cluster=None,
 ):
     return DASHapp(
         data=pd.read_csv(input_file),
         limit_to=limit_to,
         exclude=exclude,
         years_range=years_range,
+        clusters=clusters,
+        cluster=cluster,
     ).run()

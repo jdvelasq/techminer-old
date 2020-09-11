@@ -24,16 +24,31 @@ from techminer.core.params import EXCLUDE_COLS
 from techminer.by_year_analysis import by_year_analysis
 import techminer.core.dashboard as dash
 from techminer.core import DASH
+from techminer.core import corpus_filter
 
 TEXTLEN = 40
 
 
 class BaseModel:
-    def __init__(self, data, limit_to, exclude, years_range):
+    def __init__(
+        self,
+        data,
+        limit_to,
+        exclude,
+        years_range,
+        clusters=None,
+        cluster=None,
+    ):
         ##
         if years_range is not None:
             initial_year, final_year = years_range
             data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
+
+        #
+        # Filter for cluster members
+        #
+        if clusters is not None and cluster is not None:
+            data = corpus_filter(data=data, clusters=clusters, cluster=cluster)
 
         self.data = data
         self.limit_to = limit_to
@@ -167,10 +182,24 @@ class BaseModel:
 
 
 class MatrixModel(BaseModel):
-    def __init__(self, data, limit_to, exclude, years_range):
+    def __init__(
+        self,
+        data,
+        limit_to,
+        exclude,
+        years_range,
+        clusters=None,
+        cluster=None,
+    ):
         ##
         BaseModel.__init__(
-            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+            self,
+            data=data,
+            limit_to=limit_to,
+            exclude=exclude,
+            years_range=years_range,
+            clusters=clusters,
+            cluster=cluster,
         )
 
         self.top_by = None
@@ -336,11 +365,25 @@ class MatrixModel(BaseModel):
 
 
 class MatrixDASHapp(DASH, MatrixModel):
-    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
+    def __init__(
+        self,
+        data,
+        limit_to=None,
+        exclude=None,
+        years_range=None,
+        clusters=None,
+        cluster=None,
+    ):
         """Dashboard app"""
 
         MatrixModel.__init__(
-            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+            self,
+            data=data,
+            limit_to=limit_to,
+            exclude=exclude,
+            years_range=years_range,
+            clusters=clusters,
+            cluster=cluster,
         )
         DASH.__init__(self)
 
@@ -416,7 +459,13 @@ class MatrixListModel(BaseModel):
     def __init__(self, data, limit_to, exclude, years_range):
         ##
         BaseModel.__init__(
-            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+            self,
+            data=data,
+            limit_to=limit_to,
+            exclude=exclude,
+            years_range=years_range,
+            clusters=None,
+            cluster=None,
         )
 
     def apply(self):
@@ -529,11 +578,24 @@ class MatrixListModel(BaseModel):
 
 
 class MatrixListDASHapp(DASH, MatrixListModel):
-    def __init__(self, data, limit_to=None, exclude=None, years_range=None):
-        """Dashboard app"""
+    def __init__(
+        self,
+        data,
+        limit_to=None,
+        exclude=None,
+        years_range=None,
+        clusters=None,
+        cluster=None,
+    ):
 
         MatrixListModel.__init__(
-            self, data=data, limit_to=limit_to, exclude=exclude, years_range=years_range
+            self,
+            data=data,
+            limit_to=limit_to,
+            exclude=exclude,
+            years_range=years_range,
+            clusters=clusters,
+            cluster=cluster,
         )
         DASH.__init__(self)
 
@@ -591,7 +653,13 @@ class MatrixListDASHapp(DASH, MatrixListModel):
 
 
 def by_term_per_year_analysis(
-    input_file="techminer.csv", limit_to=None, exclude=None, tab=None, years_range=None
+    input_file="techminer.csv",
+    limit_to=None,
+    exclude=None,
+    tab=None,
+    years_range=None,
+    clusters=None,
+    cluster=None,
 ):
 
     if tab == 1:
@@ -600,6 +668,8 @@ def by_term_per_year_analysis(
             limit_to=limit_to,
             exclude=exclude,
             years_range=years_range,
+            clusters=clusters,
+            cluster=cluster,
         ).run()
 
     return MatrixDASHapp(
@@ -607,4 +677,6 @@ def by_term_per_year_analysis(
         limit_to=limit_to,
         exclude=exclude,
         years_range=years_range,
+        clusters=clusters,
+        cluster=cluster,
     ).run()
