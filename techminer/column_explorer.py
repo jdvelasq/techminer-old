@@ -7,12 +7,24 @@ from ipywidgets import GridspecLayout, Layout
 from techminer.core import explode
 from techminer.core.params import MULTIVALUED_COLS
 from techminer.core import record_to_HTML
+from techminer.core import corpus_filter
 
 
-def column_explorer(input_file="techminer.csv", top_n=50, only_abstract=False):
-    """Jupyter Lab dashboard."""
+def column_explorer(
+    input_file="techminer.csv",
+    top_n=50,
+    only_abstract=False,
+    clusters=None,
+    cluster=None,
+):
 
     df = pd.read_csv(input_file)
+
+    #
+    # Filter for cluster members
+    #
+    if clusters is not None and cluster is not None:
+        df = corpus_filter(data=df, clusters=clusters, cluster=cluster)
 
     COLUMNS = sorted(
         [

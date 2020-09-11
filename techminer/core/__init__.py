@@ -16,3 +16,4 @@ from .text import remove_accents
 from .tf_matrix import TF_matrix
 from .tfidf_matrix import TFIDF_matrix
 from .logging_info import logging_info
+from .corpus_filter import corpus_filter
