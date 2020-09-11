@@ -72,6 +72,9 @@ class Model:
         self.sort_r_axis_by = None
         self.top_by = None
         self.width = None
+        self.min_occurrence = None
+        self.max_items = None
+        self.n_labels = None
 
     def apply(self):
 

@@ -38,15 +38,30 @@ class Model:
             initial_year, final_year = years_range
             data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
 
-        #
-        # Filter for cluster members
-        #
+        ## Filter for cluster members
         if clusters is not None and cluster is not None:
             data = corpus_filter(data=data, clusters=clusters, cluster=cluster)
 
         self.data = data
         self.limit_to = limit_to
         self.exclude = exclude
+
+        self.y_axis = None
+        self.column = None
+        self.min_occurrence = None
+        self.max_items = None
+        self.n_labels = None
+        self.clustering_method = None
+        self.affinity = None
+        self.linkage = None
+        self.top_by = None
+        self.random_state = None
+        self.top_n = None
+        self.width = None
+        self.height = None
+        self.cmap = None
+        self.x_axis = None
+        self.global_citations_ = None
 
     def apply(self):
 
