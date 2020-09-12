@@ -6,8 +6,11 @@ from cdlib import algorithms
 from pyvis.network import Network as Network_
 
 from techminer.core.sort_axis import sort_axis
-from techminer.plots import (counters_to_node_sizes, expand_ax_limits,
-                             set_spines_invisible)
+from techminer.plots import (
+    counters_to_node_sizes,
+    expand_ax_limits,
+    set_spines_invisible,
+)
 
 cluster_colors = [
     "tab:blue",
@@ -59,7 +62,10 @@ class Network:
         ##  Top terms for labels
         ##
         X = sort_axis(
-            data=X, num_documents=(top_by == "Num Documents"), axis=1, ascending=False,
+            data=X,
+            num_documents=(top_by == "Num Documents"),
+            axis=1,
+            ascending=False,
         )
         self.top_terms_ = X.columns.tolist()[:n_labels]
 
@@ -162,8 +168,9 @@ class Network:
                 edgelist=edge,
                 width=width,
                 edge_color="k",
-                with_labels=False,
+                # with_labels=False,
                 node_size=1,
+                alpha=0.5,
             )
 
         for node in self.G_.nodes.data():
@@ -171,13 +178,13 @@ class Network:
                 self.G_,
                 pos,
                 ax=ax,
-                edge_color="k",
                 nodelist=[node[0]],
                 node_size=[node[1]["size"]],
                 node_color=cluster_colors[node[1]["group"]],
                 node_shape="o",
                 edgecolors="k",
                 linewidths=1,
+                alpha=0.8,
             )
 
         xlim = ax.get_xlim()
@@ -224,4 +231,3 @@ class Network:
             nt.nodes[i]["size"] = nt.nodes[i]["size"] / 100
 
         return nt.show("net.html")
-
