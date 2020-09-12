@@ -2,6 +2,7 @@
 
 template/*csv
 template/*txt
+template/.*
 
 sphinx/_*
 guide/tutorial-old/*

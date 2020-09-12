@@ -344,7 +344,7 @@ class Model:
             self.labels_,
             self.cluster_members_,
             self.cluster_centers_,
-            self.cluster_names_,
+            self.cluster_names_, 
         ) = clustering(
             X=R,
             method=self.clustering_method,
@@ -453,30 +453,97 @@ class DASHapp(DASH, Model):
 
     def interactive_output(self, **kwargs):
 
-        DASH.interactive_output(self, **kwargs)
+        with self.output:
+            DASH.interactive_output(self, **kwargs)
 
-        if self.menu == "Cluster members":
-            #
-            self.n_components = 10
-            #
-            self.set_disabled("X-axis:")
-            self.set_disabled("Y-axis:")
+        if self.menu in ["Keywords Map"] and self.method in [
+            "Multidimensional Scaling",
+            "PCA",
+            "Truncated SVD",
+            "Factor Analysis",
+        ]:
 
-        if self.menu == "Cluster plot":
-            #
-            self.n_components = 10
-            #
+            self.set_enabled("Method:")
+            self.set_enabled("Normalization:")
+            self.set_enabled("Min occurrence:") 
+            self.set_enabled("Max items:") 
+            self.set_enabled("Random State:")
+            self.set_enabled("Clustering Method:")
+            self.set_enabled("Top N:")
             self.set_enabled("Width:")
             self.set_enabled("Height:")
 
-        if self.menu in ["Conceptual Structure Map", "Conceptual Structure Members"]:
-            #
-            self.n_components = 2
-            #
+            self.enable_disable_clustering_options()
+
+
+        if self.menu in ["Keywords Map"] and self.method in ["Correspondence Analysis"]:
+
+            self.set_enabled("Method:")
+            self.set_disabled("Normalization:")
+            self.set_enabled("Min occurrence:") 
+            self.set_enabled("Max items:") 
+            self.set_enabled("Random State:")
+            self.set_enabled("Clustering Method:")
+            self.set_enabled("Top N:")
             self.set_enabled("Width:")
             self.set_enabled("Height:")
 
-        self.enable_disable_clustering_options()
+            self.enable_disable_clustering_options()
+
+        if self.menu in [ 
+            "Keywords by Cluster (table)",
+            "Keywords by Cluster (list)",
+            "Keywords by Cluster (Python code)"
+            ] and self.method in [
+            "Multidimensional Scaling",
+            "PCA",
+            "Truncated SVD",
+            "Factor Analysis",
+            ]:
+
+                self.set_enabled("Method:")
+                self.set_enabled("Normalization:")
+                self.set_enabled("Min occurrence:") 
+                self.set_enabled("Max items:") 
+                self.set_enabled("Random State:")
+                self.set_enabled("Clustering Method:")
+                self.set_disabled("Top N:")
+                self.set_disabled("Width:")
+                self.set_disabled("Height:")
+
+                self.enable_disable_clustering_options()
+
+        if self.menu in [
+            "Keywords by Cluster (table)",
+            "Keywords by Cluster (list)",
+            "Keywords by Cluster (Python code)"] and self.method in ["Correspondence Analysis"]:
+
+                self.set_enabled("Method:")
+                self.set_disabled("Normalization:")
+                self.set_enabled("Min occurrence:") 
+                self.set_enabled("Max items:") 
+                self.set_enabled("Random State:")
+                self.set_enabled("Clustering Method:")
+                self.set_disabled("Top N:")
+                self.set_disabled("Width:")
+                self.set_disabled("Height:")
+
+                self.enable_disable_clustering_options()
+
+
+        if self.menu in ["Keywords coverage"]:
+
+            self.set_disabled("Method:")
+            self.set_disabled("Normalization:")
+            self.set_disabled("Min occurrence:") 
+            self.set_disabled("Max items:") 
+            self.set_disabled("Random State:")
+            self.set_disabled("Clustering Method:")
+            self.set_disabled("Top N:")
+            self.set_disabled("Width:")
+            self.set_disabled("Height:")
+
+        
 
 
 ###############################################################################
