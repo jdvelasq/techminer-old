@@ -22,3 +22,4 @@ from .latent_semantic_analysis import latent_semantic_analysis
 from .matrix_explorer import matrix_explorer
 from .thematic_analysis import thematic_analysis
 from .top_documents import top_documents
+from .conceptual_structure import conceptual_structure

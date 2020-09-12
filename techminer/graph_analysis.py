@@ -5,10 +5,18 @@ import pandas as pd
 from pyvis.network import Network
 
 import techminer.core.dashboard as dash
-from techminer.core import (DASH, Network, TF_matrix, add_counters_to_axis,
-                            corpus_filter, limit_to_exclude, normalize_network,
-                            sort_by_axis)
+from techminer.core import (
+    DASH,
+    Network,
+    TF_matrix,
+    add_counters_to_axis,
+    corpus_filter,
+    limit_to_exclude,
+    normalize_network,
+    sort_by_axis,
+)
 from techminer.core.params import EXCLUDE_COLS
+from techminer.core import cluster_table_to_list
 from techminer.plots import ChordDiagram
 from techminer.plots import bubble_plot as bubble_plot_
 from techminer.plots import counters_to_node_colors, counters_to_node_sizes
@@ -181,13 +189,7 @@ class Model:
             clustering=self.clustering,
         ).cluster_members_
 
-        community = []
-        for cluster in members.columns:
-            x = members[cluster].tolist()
-            x = [m for m in x if m.strip() != ""]
-            x = [" ".join(m.split(" ")[:-1]) for m in x]
-            community.append("; ".join(x))
-        return community
+        return cluster_table_to_list(table=members)
 
     def communities_python_code(self):
         self.apply()

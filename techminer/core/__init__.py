@@ -17,3 +17,6 @@ from .sort_by_axis import sort_by_axis
 from .text import remove_accents
 from .tf_matrix import TF_matrix
 from .tfidf_matrix import TFIDF_matrix
+from .cluster_table_to_list import cluster_table_to_list
+from .cluster_table_to_python_code import cluster_table_to_python_code
+from .keywords_coverage import keywords_coverage

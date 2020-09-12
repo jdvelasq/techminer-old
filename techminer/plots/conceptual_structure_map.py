@@ -5,7 +5,8 @@ import pandas as pd
 from scipy.spatial import ConvexHull
 
 from techminer.core.sort_axis import sort_axis
-from techminer.plots import expand_ax_limits, set_spines_invisible
+from techminer.plots import expand_ax_limits
+from techminer.plots.set_spines_invisible import set_spines_invisible
 
 COLORS = [
     "tab:blue",
@@ -76,16 +77,27 @@ def conceptual_structure_map(coordinates, cluster_labels, top_n, figsize):
     for i_cluster in range(n_clusters):
 
         X = coordinates[cluster_labels == i_cluster]
-        X = sort_axis(data=X, num_documents=True, axis=0, ascending=False,)
+        X = sort_axis(
+            data=X,
+            num_documents=True,
+            axis=0,
+            ascending=False,
+        )
         X = X.head(top_n)
         x = X[X.columns[0]]
         y = X[X.columns[1]]
         ax.scatter(
-            x, y, marker="o", s=12, alpha=0.8, c=COLORS[i_cluster],
+            x,
+            y,
+            marker="o",
+            s=10,
+            alpha=0.9,
+            # c=COLORS[i_cluster],
+            c="k",
         )
 
         if len(X) > 2:
-            encircle(x, y, ax=ax, ec="k", fc=COLORS[i_cluster], alpha=0.1)
+            encircle(x, y, ax=ax, ec="k", fc=COLORS[i_cluster], alpha=0.2)
 
         xlim = ax.get_xlim()
         ylim = ax.get_ylim()
@@ -108,9 +120,19 @@ def conceptual_structure_map(coordinates, cluster_labels, top_n, figsize):
                 3: +factor * (ylim[1] - ylim[0]),
             }[quadrant]
 
-            ha = {0: "left", 1: "right", 2: "right", 3: "left",}[quadrant]
+            ha = {
+                0: "left",
+                1: "right",
+                2: "right",
+                3: "left",
+            }[quadrant]
 
-            va = {0: "bottom", 1: "bottom", 2: "top", 3: "top",}[quadrant]
+            va = {
+                0: "bottom",
+                1: "bottom",
+                2: "top",
+                3: "top",
+            }[quadrant]
 
             ax.text(
                 x_ + delta_x,
@@ -126,10 +148,18 @@ def conceptual_structure_map(coordinates, cluster_labels, top_n, figsize):
     # 3.-- Generic
     #
     ax.axhline(
-        y=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1,
+        y=0,
+        color="gray",
+        linestyle="--",
+        linewidth=0.5,
+        zorder=-1,
     )
     ax.axvline(
-        x=0, color="gray", linestyle="--", linewidth=0.5, zorder=-1,
+        x=0,
+        color="gray",
+        linestyle="--",
+        linewidth=0.5,
+        zorder=-1,
     )
     ax.axis("off")
     ax.set_aspect("equal")
