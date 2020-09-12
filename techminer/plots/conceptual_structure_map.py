@@ -83,7 +83,7 @@ def conceptual_structure_map(coordinates, cluster_labels, top_n, figsize):
             axis=0,
             ascending=False,
         )
-        X = X.head(top_n)
+
         x = X[X.columns[0]]
         y = X[X.columns[1]]
         ax.scatter(
@@ -92,8 +92,8 @@ def conceptual_structure_map(coordinates, cluster_labels, top_n, figsize):
             marker="o",
             s=10,
             alpha=0.9,
-            # c=COLORS[i_cluster],
-            c="k",
+            c=COLORS[i_cluster],
+            # c="k",
         )
 
         if len(X) > 2:
@@ -102,7 +102,9 @@ def conceptual_structure_map(coordinates, cluster_labels, top_n, figsize):
         xlim = ax.get_xlim()
         ylim = ax.get_ylim()
 
-        for x_, y_, t in zip(x.tolist(), y.tolist(), X.index):
+        for x_, y_, t in zip(
+            x.head(top_n).tolist(), y.head(top_n).tolist(), X.head(top_n).index
+        ):
 
             quadrant = _get_quadrant(x=x_, y=y_, x_axis_at=0, y_axis_at=0)
 
@@ -148,14 +150,14 @@ def conceptual_structure_map(coordinates, cluster_labels, top_n, figsize):
     # 3.-- Generic
     #
     ax.axhline(
-        y=0,
+        y=coordinates[coordinates.columns[1]].mean(),
         color="gray",
         linestyle="--",
         linewidth=0.5,
         zorder=-1,
     )
     ax.axvline(
-        x=0,
+        x=coordinates[coordinates.columns[1]].mean(),
         color="gray",
         linestyle="--",
         linewidth=0.5,

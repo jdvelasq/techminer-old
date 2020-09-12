@@ -5,6 +5,7 @@ from sklearn.manifold import MDS
 import techminer.core.dashboard as dash
 from techminer.core import (
     DASH,
+    CA,
     TF_matrix,
     TFIDF_matrix,
     add_counters_to_axis,
@@ -40,14 +41,14 @@ class Model:
         clusters=None,
         cluster=None,
     ):
-        ##
+
         if years_range is not None:
             initial_year, final_year = years_range
             data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
 
-        #
-        # Filter for cluster members
-        #
+        ##
+        ## Filter for cluster members
+        ##
         if clusters is not None and cluster is not None:
             data = corpus_filter(data=data, clusters=clusters, cluster=cluster)
 
@@ -55,10 +56,23 @@ class Model:
         self.limit_to = limit_to
         self.exclude = exclude
 
-    def apply_mds(self):
+        self.affinity = None
+        self.clustering_method = None
+        self.column = None
+        self.height = None
+        self.linkage = None
+        self.max_items = None
+        self.method = None
+        self.min_occurrence = None
+        self.normalization = None
+        self.random_state = None
+        self.top_n = None
+        self.width = None
+
+    def apply_other_methods(self):
 
         ##
-        ## Conceptual Structure Map using Multidimensinal Scaling
+        ## Conceptual Structure Map
         ##
 
         X = self.data.copy()
@@ -108,7 +122,7 @@ class Model:
         ##
         M = np.matmul(TF_matrix_.transpose().values, TF_matrix_.values)
         M = pd.DataFrame(M, columns=TF_matrix_.columns, index=TF_matrix_.columns)
-        M = normalize_network(M, normalization="Association")
+        M = normalize_network(M, normalization=self.normalization)
 
         ##
         ## Dissimilarity matrix
@@ -120,11 +134,20 @@ class Model:
         ##
         ## Decomposition
         ##
-        model = MDS(
-            n_components=2,
-            random_state=int(self.random_state),
-            dissimilarity="precomputed",
-        )
+        model = {
+            "Multidimensional Scaling": MDS(
+                n_components=2,
+                random_state=int(self.random_state),
+                dissimilarity="precomputed",
+            ),
+            "Truncated SVD": TruncatedSVD(
+                n_components=2, random_state=int(self.random_state)
+            ),
+            "Factor Analysis": FactorAnalysis(
+                n_components=2, random_state=int(self.random_state)
+            ),
+            "PCA": PCA(n_components=2, random_state=int(self.random_state)),
+        }[self.method]
 
         R = model.fit_transform(X=M.values)
         R = pd.DataFrame(
@@ -238,26 +261,37 @@ class Model:
 
     def apply(self):
 
-        if self.method == "Multidimensional Scaling":
-            self.apply_mds()
+        if self.method in [
+            "Multidimensional Scaling",
+            "Truncated SVD",
+            "Factor Analysis",
+            "PCA",
+        ]:
+            self.apply_other_methods()
 
-    def XXX_apply(self):
-        #
-        X = self.data.copy()
+        if self.method == "Correspondence Analysis":
+            self.apply_ca()
 
-        #
-        # 1.-- TF matrix
-        #
+    def apply_ca(self):
+
+        ##
+        ## Based on comparative analysis methodology
+        ##   from https://tlab.it/en/allegati/help_en_online/mcluster.htm
+        ##
+
+        ##
+        ## Computes TF matrix for terms in min_occurrence
+        ##
         TF_matrix_ = TF_matrix(
-            data=X,
+            data=self.data,
             column=self.column,
-            scheme=None,
+            scheme="binary",
             min_occurrence=self.min_occurrence,
         )
 
-        #
-        # 2.-- Limit to / Exclude
-        #
+        ##
+        ## Limit to / Exclude
+        ##
         TF_matrix_ = limit_to_exclude(
             data=TF_matrix_,
             axis=1,
@@ -266,77 +300,45 @@ class Model:
             exclude=self.exclude,
         )
 
-        #
-        # 3.-- Add counters to axes
-        #
-        TF_matrix_ = add_counters_to_axis(
-            X=TF_matrix_, axis=1, data=self.data, column=self.column
+        ##
+        ## Computtes TFIDF matrix and select max_term frequent terms
+        ##
+        ##   tf-idf = tf * (log(N / df) + 1)
+        ##
+        TFIDF_matrix_ = TFIDF_matrix(
+            TF_matrix=TF_matrix_,
+            norm=None,
+            use_idf=True,
+            smooth_idf=False,
+            sublinear_tf=False,
+            max_items=self.max_items,
         )
 
-        #
-        # 4.-- Select top terms
-        #
-        TF_matrix_ = sort_axis(
-            data=TF_matrix_, num_documents=True, axis=1, ascending=False
-        )
-        if len(TF_matrix_.columns) > self.max_items:
-            TF_matrix_ = TF_matrix_.loc[:, TF_matrix_.columns[0 : self.max_items]]
-            rows = TF_matrix_.sum(axis=1)
-            rows = rows[rows > 0]
-            TF_matrix_ = TF_matrix_.loc[rows.index, :]
-
-        #
-        # 5.-- Co-occurrence matrix and normalization
-        #
-        M = np.matmul(TF_matrix_.transpose().values, TF_matrix_.values)
-        M = pd.DataFrame(M, columns=TF_matrix_.columns, index=TF_matrix_.columns)
-        M = normalize_network(M, normalization=self.normalization)
-
-        #
-        # 6.-- Dissimilarity matrix
-        #
-        M = 1 - M
-        for i in M.columns.tolist():
-            M.at[i, i] = 0.0
-
-        #
-        # 5.-- Number of factors
-        #
-        # self.n_components = 2 if self.decomposition_method == "MDS" else 10
-
-        #
-        # 6.-- Factor decomposition
-        #
-        model = {
-            "Factor Analysis": FactorAnalysis,
-            "PCA": PCA,
-            "Fast ICA": FastICA,
-            "SVD": TruncatedSVD,
-            "MDS": MDS,
-        }[self.decomposition_method]
-
-        model = (
-            model(
-                n_components=self.n_components,
-                random_state=int(self.random_state),
-                dissimilarity="precomputed",
-            )
-            if self.decomposition_method == "MDS"
-            else model(
-                n_components=self.n_components, random_state=int(self.random_state)
-            )
+        ##
+        ## Adds counter to axies
+        ##
+        TFIDF_matrix_ = add_counters_to_axis(
+            X=TFIDF_matrix_, axis=1, data=self.data, column=self.column
         )
 
-        R = model.fit_transform(X=M.values)
+        ##
+        ## Correspondence Analysis
+        ## 2 first factors for ploting
+        ##
+        ca = CA()
+        ca.fit(TFIDF_matrix_)
+
+        R = ca.principal_coordinates_cols_
+        R = R[R.columns[:2]]
         R = pd.DataFrame(
             R,
-            columns=["Dim-{}".format(i) for i in range(self.n_components)],
-            index=M.columns,
+            columns=["Dim-{}".format(i) for i in range(2)],
+            index=TFIDF_matrix_.columns,
         )
 
-        #
-        # 7.-- Clustering
-        #
+        ##
+        ## Clustering
+        ##
         (
             self.n_clusters,
             self.labels_,
@@ -358,45 +360,10 @@ class Model:
 
         self.coordinates_ = R
 
-        #
-        # 8.-- Results
-        #
+        ##
+        ## Results
+        ##
         self.X_ = R
-
-    def XXX_cluster_members(self):
-        self.apply()
-        return self.cluster_members_
-
-    def XXX_conceptual_structure_map(self):
-        self.apply()
-        X = self.X_
-        cluster_labels = X.Cluster
-        X.pop("Cluster")
-        return conceptual_structure_map(
-            coordinates=X,
-            cluster_labels=cluster_labels,
-            top_n=self.top_n,
-            figsize=(self.width, self.height),
-        )
-
-    def XXX_conceptual_structure_members(self):
-        self.apply()
-        return self.cluster_members_
-
-    def XXX_cluster_plot(self):
-        self.apply()
-        return xy_clusters_plot(
-            x=self.cluster_centers_["Dim-{}".format(self.x_axis)],
-            y=self.cluster_centers_["Dim-{}".format(self.y_axis)],
-            x_axis_at=0,
-            y_axis_at=0,
-            labels=self.cluster_names_,
-            node_sizes=counters_to_node_sizes(self.cluster_names_),
-            color_scheme=self.color_scheme,
-            xlabel="Dim-{}".format(self.x_axis),
-            ylabel="Dim-{}".format(self.y_axis),
-            figsize=(self.width, self.height),
-        )
 
 
 ###############################################################################
@@ -451,14 +418,20 @@ class DASHapp(DASH, Model):
             "Keywords by Cluster (list)",
             "Keywords by Cluster (Python code)",
             "Keywords coverage",
-            "Most Cited Papers by Cluster",
         ]
         #
         self.panel_widgets = [
             dash.dropdown(
                 desc="Method:",
-                options=["Multidimensional Scaling"],
+                options=[
+                    "Multidimensional Scaling",
+                    "PCA",
+                    "Truncated SVD",
+                    "Factor Analysis",
+                    "Correspondence Analysis",
+                ],
             ),
+            dash.normalization(include_none=False),
             dash.dropdown(
                 desc="Column:",
                 options=[z for z in COLUMNS if z in data.columns],
