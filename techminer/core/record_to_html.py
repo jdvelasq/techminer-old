@@ -32,7 +32,9 @@ def record_to_HTML(x, only_abstract=False, keywords_to_highlight=None):
     ]
     column_list += ["Abstract_HL" if "Abstract_HL" in x.index else "Abstract"]
     column_list += [
-        "Author_Keywords",
+        "Author_Keywords_CL" if "Author_Keywords_CL" in x.index else "Author_Keywords"
+    ]
+    column_list += [
         "Source_title",
     ]
 
@@ -81,7 +83,7 @@ def record_to_HTML(x, only_abstract=False, keywords_to_highlight=None):
             ]:
                 for keyword in keywords_to_highlight:
                     if keyword.lower() in z.lower():
-                        pattern = re.compile(keyword, re.IGNORECASE)
+                        pattern = re.compile(r"\b" + keyword + r"\b", re.IGNORECASE)
                         z = pattern.sub("<b>" + keyword.upper() + "</b>", z)
 
             v = z.split(";")

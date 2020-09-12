@@ -127,7 +127,13 @@ def matrix_explorer(
         if main_column in MULTIVALUED_COLS:
             xdf = explode(xdf, "_key1_")
 
-        if top_n is not None:
+        if clusters is not None and main_column == clusters[0]:
+            #
+            # Populates value control with the terms in the cluster
+            #
+            left_panel[1]["widget"].options = clusters[1][cluster]
+
+        elif top_n is not None:
 
             y = xdf.copy()
             y["Num_Documents"] = 1
@@ -167,7 +173,6 @@ def matrix_explorer(
         # Keyword selection
         #
         keyword1 = left_panel[1]["widget"].value
-        keyword2 = left_panel[3]["widget"].value
 
         #
         # Subset selection
@@ -176,7 +181,15 @@ def matrix_explorer(
             xdf = explode(xdf, "_key2_")
         xdf = xdf[xdf["_key1_"] == keyword1]
         terms = sorted(pd.Series(xdf["_key2_"].dropna().unique()))
+
+        if clusters is not None and by_column == clusters[0]:
+            terms = [t for t in terms if t in clusters[1][cluster]]
         left_panel[3]["widget"].options = terms
+
+        #
+        # Keyword selection
+        #
+        keyword2 = left_panel[3]["widget"].value
 
         #
         # Title

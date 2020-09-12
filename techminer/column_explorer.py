@@ -90,12 +90,19 @@ def column_explorer(
     def server(**kwargs):
         #
         column = kwargs["column"]
-        #
-        # Populate value control with top_n terms
-        #
-        x = explode(df, column)
-        if top_n is not None:
 
+        x = explode(df, column)
+
+        if clusters is not None and column == clusters[0]:
+            #
+            # Populates value control with the terms in the cluster
+            #
+            left_panel[1]["widget"].options = clusters[1][cluster]
+
+        elif top_n is not None:
+            #
+            # Populate value control with top_n terms
+            #
             y = df.copy()
             y["Num_Documents"] = 1
             y = explode(
@@ -134,8 +141,9 @@ def column_explorer(
         #
         keyword = left_panel[1]["widget"].value
         s = x[x[column] == keyword]
-        s = s[["Global_Citations", "Title"]].drop_duplicates()
+        s = s[["Global_Citations", "Title"]]
         s = s.sort_values(["Global_Citations", "Title"], ascending=[False, True])
+        s = s[["Title"]].drop_duplicates()
         left_panel[2]["widget"].options = s["Title"].tolist()
 
         #

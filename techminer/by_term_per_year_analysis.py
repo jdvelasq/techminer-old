@@ -3,14 +3,8 @@ import pandas as pd
 
 import techminer.core.dashboard as dash
 from techminer.by_year_analysis import by_year_analysis
-from techminer.core import (
-    DASH,
-    add_counters_to_axis,
-    corpus_filter,
-    explode,
-    sort_axis,
-    sort_by_axis,
-)
+from techminer.core import (DASH, add_counters_to_axis, corpus_filter, explode,
+                            sort_axis, sort_by_axis)
 from techminer.core.dashboard import max_items, min_occurrence
 from techminer.core.params import EXCLUDE_COLS
 from techminer.plots import bubble_plot, gant0_plot, gant_plot, heatmap

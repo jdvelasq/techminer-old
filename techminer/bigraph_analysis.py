@@ -1,10 +1,3 @@
-"""
-Co-occurrence Analysis
-==================================================================================================
-
-
-
-"""
 import warnings
 
 import matplotlib
@@ -15,12 +8,22 @@ import pandas as pd
 from pyvis.network import Network
 
 import techminer.core.dashboard as dash
-from techminer.core import (DASH, TF_matrix, add_counters_to_axis,
-                            corpus_filter, limit_to_exclude, sort_by_axis)
+from techminer.core import (
+    DASH,
+    TF_matrix,
+    add_counters_to_axis,
+    corpus_filter,
+    limit_to_exclude,
+    sort_by_axis,
+)
 from techminer.core.params import EXCLUDE_COLS
-from techminer.plots import (ax_text_node_labels, bubble_plot,
-                             counters_to_node_colors, counters_to_node_sizes,
-                             expand_ax_limits)
+from techminer.plots import (
+    ax_text_node_labels,
+    bubble_plot,
+    counters_to_node_colors,
+    counters_to_node_sizes,
+    expand_ax_limits,
+)
 from techminer.plots import heatmap as heatmap_
 from techminer.plots import set_spines_invisible
 
@@ -54,9 +57,29 @@ class Model:
         if clusters is not None and cluster is not None:
             data = corpus_filter(data=data, clusters=clusters, cluster=cluster)
 
+        self.clusters = clusters
+        self.cluster = cluster
         self.data = data
         self.limit_to = limit_to
         self.exclude = exclude
+
+        self.by = None
+        self.c_axis_ascending = None
+        self.cmap = None
+        self.cmap_by = None
+        self.column = None
+        self.height = None
+        self.layout = None
+        self.max_items_by = None
+        self.max_items_column = None
+        self.min_occurrence_by = None
+        self.min_occurrence_column = None
+        self.r_axis_ascending = None
+        self.sort_c_axis_by = None
+        self.sort_r_axis_by = None
+        self.top_by = None
+        self.width = None
+        self.nx_iterations = None
 
     def apply(self):
 
