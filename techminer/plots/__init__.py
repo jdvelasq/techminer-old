@@ -21,3 +21,4 @@ from .treemap import treemap
 from .wordcloud_ import wordcloud_
 from .worldmap import worldmap
 from .xy_clusters_plot import xy_clusters_plot
+from .xy_cluster_members_plot import xy_cluster_members_plot

@@ -51,7 +51,7 @@ def clustering(
         try:
             labels = AffinityPropagation(random_state=int(random_state)).fit_predict(X)
             labels = repair_labels(labels)
-            n_clusters = len(set([w for w in labels if w > 0]))
+            n_clusters = len(set([w for w in labels if w >= 0]))
 
         except:
             n_clusters = 1
@@ -69,7 +69,7 @@ def clustering(
     if method == "DBSCAN":
         labels = DBSCAN().fit_predict(X)
         labels = repair_labels(labels)
-        n_clusters = len(set([w for w in labels if w > 0]))
+        n_clusters = len(set([w for w in labels if w >= 0]))
 
     if method == "KMeans":
         labels = KMeans(
@@ -79,7 +79,7 @@ def clustering(
     if method == "Mean Shift":
         labels = MeanShift().fit_predict(X)
         labels = repair_labels(labels)
-        n_clusters = len(set([w for w in labels if w > 0]))
+        n_clusters = len(set([w for w in labels if w >= 0]))
 
     ##
     ## Cluster memberships

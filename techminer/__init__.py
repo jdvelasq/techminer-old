@@ -23,3 +23,4 @@ from .matrix_explorer import matrix_explorer
 from .thematic_analysis import thematic_analysis
 from .top_documents import top_documents
 from .conceptual_structure import conceptual_structure
+from .co_word_analysis import co_word_analysis
