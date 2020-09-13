@@ -2,7 +2,8 @@
 
 template/*csv
 template/*txt
-template/.*
+template/.virtual_documents/*
+
 
 sphinx/_*
 guide/tutorial-old/*
