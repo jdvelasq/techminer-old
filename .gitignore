@@ -2,7 +2,7 @@
 
 template/*csv
 template/*txt
-template/.virtual_documents/*
+template/.virtual_documents/*ipynb
 
 
 sphinx/_*
