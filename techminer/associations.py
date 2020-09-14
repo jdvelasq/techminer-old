@@ -68,24 +68,14 @@ class Model:
         self.clusters = clusters
         self.cluster = cluster
 
-        # self.X_ = None
-        # self.c_axis_ascending = None
-        # self.clustering = None
-        # self.cmap = None
-        # self.column = None
-        # self.height = None
-        # self.layout = None
-        # self.max_nodes = None
-        # self.normalization = None
-        # self.nx_iterations = None
-        # self.r_axis_ascending = None
-        # self.sort_c_axis_by = None
-        # self.sort_r_axis_by = None
-        # self.top_by = None
-        # self.width = None
-        # self.min_occurrence = None
-        # self.max_items = None
-        # self.n_labels = None
+        self.cmap = None
+        self.column = None
+        self.height = None
+        self.keyword = None
+        self.max_items = None
+        self.min_occurrence = None
+        self.normalization = None
+        self.width = None
 
     def radial_diagram(self):
 
