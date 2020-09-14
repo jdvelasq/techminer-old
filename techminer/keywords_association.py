@@ -251,6 +251,7 @@ class Model:
             ["Authors", "Historiograph_ID", "Abstract", "Global_Citations"]
         ].dropna()
         data["Authors"] = data.Authors.map(lambda w: w.replace(";", ", "))
+        data["Global_Citations"] = data.Global_Citations.map(int)
         data["REF"] = (
             data.Authors
             + ". "
@@ -277,7 +278,7 @@ class Model:
 
         HTML = ""
         for ref, phrase in zip(data.REF, data.Abstract):
-            HTML += "=" * 80 + "<br>"
+            HTML += "=" * 100 + "<br>"
             HTML += ref + "<br><br>"
             phrases = textwrap.wrap(phrase, 80)
             for line in phrases:

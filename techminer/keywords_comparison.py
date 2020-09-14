@@ -303,7 +303,7 @@ class Model:
 
         HTML = ""
         for ref, phrase in zip(data.REF, data.Abstract):
-            HTML += "=" * 80 + "<br>"
+            HTML += "=" * 100 + "<br>"
             HTML += ref + "<br><br>"
             phrases = textwrap.wrap(phrase, 80)
             for line in phrases:

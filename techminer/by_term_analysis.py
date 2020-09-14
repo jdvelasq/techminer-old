@@ -12,11 +12,26 @@ from IPython.display import display
 from nltk.corpus.reader.ieer import documents
 
 import techminer.core.dashboard as dash
-from techminer.core import (DASH, add_counters_to_axis, corpus_filter, explode,
-                            limit_to_exclude, sort_axis, sort_by_axis)
+from techminer.core import (
+    DASH,
+    add_counters_to_axis,
+    corpus_filter,
+    explode,
+    limit_to_exclude,
+    sort_axis,
+    sort_by_axis,
+)
 from techminer.core.params import EXCLUDE_COLS
-from techminer.plots import (bar_plot, barh_plot, pie_plot, stacked_bar,
-                             stacked_barh, treemap, wordcloud_, worldmap)
+from techminer.plots import (
+    bar_plot,
+    barh_plot,
+    pie_plot,
+    stacked_bar,
+    stacked_barh,
+    treemap,
+    wordcloud_,
+    worldmap,
+)
 
 #  from techminer.core.dashboard import max_items, min_occurrence
 
@@ -715,7 +730,7 @@ class Model:
         items = [" ".join(item.split(" ")[:-1]) for item in items]
         HTML = "LIMIT_TO = {<br>"
         HTML += '    "' + self.column + '": [<br>'
-        for item in sorted(items)
+        for item in sorted(items):
             HTML += '        "' + item + '",<br>'
         HTML += "    ]<br>"
         HTML += "}<br>"
