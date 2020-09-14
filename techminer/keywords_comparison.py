@@ -71,7 +71,8 @@ class Model:
         self.cmap = None
         self.column = None
         self.height = None
-        self.keyword = None
+        self.keyword_a = None
+        self.keyword_b = None
         self.max_items = None
         self.min_occurrence = None
         self.normalization = None
@@ -136,17 +137,29 @@ class Model:
         X = normalize_network(X, self.normalization)
 
         ##
-        ## Selected Keyword
+        ## Selected Keywords
         ##
-        keyword = [
+        keyword_a = [
             w
             for w in TF_matrix_.columns.tolist()
-            if (" ".join(w.split(" ")[:-1]).lower() == self.keyword)
+            if (" ".join(w.split(" ")[:-1]).lower() == self.keyword_a)
         ]
-        if len(keyword) > 0:
-            keyword = keyword[0]
+
+        if len(keyword_a) > 0:
+            keyword_a = keyword_a[0]
         else:
-            return widgets.HTML("<pre>No associations for the selected keyword")
+            return widgets.HTML("<pre>No associations for the selected keywords")
+
+        keyword_b = [
+            w
+            for w in TF_matrix_.columns.tolist()
+            if (" ".join(w.split(" ")[:-1]).lower() == self.keyword_b)
+        ]
+
+        if len(keyword_b) > 0:
+            keyword_b = keyword_b[0]
+        else:
+            return widgets.HTML("<pre>No associations for the selected keywords")
 
         ##
         ## Network plot
@@ -159,24 +172,27 @@ class Model:
         ##
         ## Selects the column with values > 0
         ##
-        X = X[[keyword]]
-        X = X[X.index != keyword]
-        X = X[X[keyword] > 0]
+        X = X[[keyword_a, keyword_b]]
+        X = X[(X[keyword_a] > 0) | (X[keyword_b] > 0)]
 
-        nodes = X.index.tolist() + [keyword]
+        nodes = X.index.tolist()
         node_sizes = counters_to_node_sizes(nodes)
         node_colors = counters_to_node_colors(x=nodes, cmap=lambda w: w)
         node_colors = [cmap(t) for t in node_colors]
 
         G = nx.Graph()
         G.add_nodes_from(nodes)
-        for i, w in zip(X.index, X[keyword]):
-            G.add_edge(i, keyword, width=w)
+        for i, w in zip(X.index, X[keyword_a]):
+            if i != keyword_a:
+                G.add_edge(i, keyword_a, width=w)
+        for i, w in zip(X.index, X[keyword_b]):
+            if i != keyword_b:
+                G.add_edge(i, keyword_b, width=w)
 
         ##
         ## Layout
         ##
-        pos = nx.kamada_kawai_layout(G)
+        pos = nx.spring_layout(G, weight=None)
 
         ##
         ## Draw network edges
@@ -247,6 +263,7 @@ class Model:
     def concordances(self):
 
         data = self.data.copy()
+        data["Global_Citations"] = data.Global_Citations.map(int)
         data = data[
             ["Authors", "Historiograph_ID", "Abstract", "Global_Citations"]
         ].dropna()
@@ -261,7 +278,13 @@ class Model:
         data = data[["REF", "Abstract", "Global_Citations"]]
         data["Abstract"] = data.Abstract.map(lambda w: w.split(". "))
         data = data.explode("Abstract")
-        data = data[data.Abstract.map(lambda w: self.keyword.lower() in w.lower())]
+
+        contains_a = data.Abstract.map(lambda w: self.keyword_a.lower() in w.lower())
+        contains_b = data.Abstract.map(lambda w: self.keyword_b.lower() in w.lower())
+        data = data[contains_a & contains_b]
+        if len(data) == 0:
+            return widgets.HTML("<pre>No concordances found!</pre>")
+
         data = data.groupby(["REF", "Global_Citations"], as_index=False).agg(
             {"Abstract": list}
         )
@@ -269,10 +292,13 @@ class Model:
         data["Abstract"] = data.Abstract.map(lambda w: w + ".")
         data = data.sort_values(["Global_Citations", "REF"], ascending=[False, True])
         data = data.head(50)
-        #  pattern = re.compile(r"\b" + self.keyword + r"\b", re.IGNORECASE)
-        pattern = re.compile(self.keyword, re.IGNORECASE)
+        pattern = re.compile(self.keyword_a, re.IGNORECASE)
         data["Abstract"] = data.Abstract.map(
-            lambda w: pattern.sub("<b>" + self.keyword.upper() + "</b>", w)
+            lambda w: pattern.sub("<b>" + self.keyword_a.upper() + "</b>", w)
+        )
+        pattern = re.compile(self.keyword_b, re.IGNORECASE)
+        data["Abstract"] = data.Abstract.map(
+            lambda w: pattern.sub("<b>" + self.keyword_b.upper() + "</b>", w)
         )
 
         HTML = ""
@@ -294,11 +320,15 @@ class Model:
 ###############################################################################
 
 COLUMNS = [
-    "Author_Keywords",
+    "Abstract_Keywords_CL",
+    "Abstract_Keywords",
     "Author_Keywords_CL",
-    "Index_Keywords",
+    "Author_Keywords",
     "Index_Keywords_CL",
+    "Index_Keywords",
     "Keywords_CL",
+    "Title_Keywords_CL",
+    "Title_Keywords",
 ]
 
 
@@ -327,7 +357,7 @@ class DASHapp(DASH, Model):
         )
         DASH.__init__(self)
 
-        self.app_title = "Associations"
+        self.app_title = "Keywords Comparison"
         self.menu_options = [
             "Concordances",
             "Radial Diagram",
@@ -339,7 +369,11 @@ class DASHapp(DASH, Model):
                 options=[z for z in COLUMNS if z in data.columns],
             ),
             dash.dropdown(
-                desc="Keyword:",
+                desc="Keyword A:",
+                options=[],
+            ),
+            dash.dropdown(
+                desc="Keyword B:",
                 options=[],
             ),
             dash.min_occurrence(),
@@ -355,14 +389,15 @@ class DASHapp(DASH, Model):
     def interactive_output(self, **kwargs):
 
         DASH.interactive_output(self, **kwargs)
+        keywords_ = None
 
         if self.clusters is not None and self.column == self.clusters[0]:
             #
             # Populates value control with the terms in the cluster
             #
-            self.panel_widgets[1]["widget"].options = sorted(
-                self.clusters[1][self.cluster]
-            )
+            sorted_terms = sorted(self.clusters[1][self.cluster])
+            self.panel_widgets[1]["widget"].options = sorted_terms
+            keywords_ = sorted_terms
 
         elif self.top_n is not None:
             #
@@ -398,6 +433,7 @@ class DASHapp(DASH, Model):
             )
             top_terms = sorted(top_terms_freq | top_terms_cited_by)
             self.panel_widgets[1]["widget"].options = top_terms
+            keywords_ = top_terms
 
         else:
 
@@ -409,6 +445,43 @@ class DASHapp(DASH, Model):
             all_terms = all_terms[all_terms.map(lambda w: not pd.isna(w))]
             all_terms = all_terms.sort_values()
             self.panel_widgets[1]["widget"].options = all_terms
+            keywords_ = all_terms
+
+        if "Abstract" in self.data.columns:
+
+            ##
+            ## Selected keyword in the GUI
+            ##
+            keyword_a = self.panel_widgets[1]["widget"].value
+
+            ##
+            ## Keywords that appear in the same phrase
+            ##
+            data = self.data.copy()
+            data = data[["Abstract"]]
+            data = data.dropna()
+            data["Abstract"] = data["Abstract"].map(lambda w: w.lower())
+            data["Abstract"] = data["Abstract"].map(lambda w: w.split(". "))
+            data = data.explode("Abstract")
+
+            ##
+            ## Extract phrases contain keyword_a
+            ##
+            data = data[data.Abstract.map(lambda w: keyword_a in w)]
+
+            ##
+            ## Extract keywords
+            ##
+            data["Abstract"] = data.Abstract.map(
+                lambda w: [k for k in keywords_ if k in w]
+            )
+            data = data.explode("Abstract")
+            all_terms = sorted(set(data.Abstract.tolist()))
+            self.panel_widgets[2]["widget"].options = all_terms
+            # with self.output:
+            #      print("---->", keyword_a)
+        else:
+            self.panel_widgets[2]["widget"].options = keywords_
 
 
 ###############################################################################
@@ -418,7 +491,7 @@ class DASHapp(DASH, Model):
 ###############################################################################
 
 
-def associations(
+def keywords_comparison(
     input_file="techminer.csv",
     top_n=50,
     limit_to=None,

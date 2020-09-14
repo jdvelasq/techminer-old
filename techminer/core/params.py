@@ -1,8 +1,12 @@
 MULTIVALUED_COLS = [
     "Abstract_words_CL",
     "Abstract_words",
+    "Abstract_Keywords",
+    "Abstract_Keywords_CL",
     "Title_words_CL",
     "Title_words",
+    "Title_Keywords",
+    "Title_Keywords_CL",
     "Affiliations_",
     "Affiliations",
     "Author_Keywords_",

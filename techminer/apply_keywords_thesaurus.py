@@ -46,6 +46,12 @@ def apply_keywords_thesaurus(
             lambda w: ";".join(sorted(set(w.split(";")))), na_action="ignore"
         )
 
+    if "Title_Keywords" in df.columns:
+        df["Title_Keywords_CL"] = map_(df, "Title_Keywords", th.apply_as_dict)
+
+    if "Abstarct_Keywords" in df.columns:
+        df["Abstarct_Keywords_CL"] = map_(df, "Abstarct_Keywords", th.apply_as_dict)
+
     if "Title_words" in df.columns:
         df["Title_words_CL"] = map_(df, "Title_words", th.apply_as_dict)
 

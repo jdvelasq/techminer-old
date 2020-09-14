@@ -15,6 +15,8 @@ from techminer.core.thesaurus import load_file_as_dict
 
 warnings.filterwarnings("ignore")
 
+from nltk import word_tokenize
+
 
 class ScopusImporter:
     def __init__(self, input_file="scopus.csv", output_file="techminer.csv"):
@@ -57,6 +59,8 @@ class ScopusImporter:
         self.create_historiograph_id()
         self.create_local_references()
         self.british_to_amerian()
+        self.extract_title_keywords()
+        self.extract_abstract_keywords()
         #  self.extract_title_words()
         #  self.extract_abstract_phrases_and_words()
         #  self.highlight_author_keywords_in_titles()
@@ -88,6 +92,81 @@ class ScopusImporter:
             "{} - INFO - {}".format(
                 datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), msg
             )
+        )
+
+    def extract_title_keywords(self):
+
+        self.logging_info("Keywords extraction from title ...")
+
+        author_keywords = self.data.Author_Keywords.dropna()
+        author_keywords = author_keywords.map(lambda w: w.lower().split(";"))
+        author_keywords = author_keywords.explode().tolist()
+        author_keywords = set(author_keywords)
+
+        index_keywords = self.data.Index_Keywords.dropna()
+        index_keywords = index_keywords.map(lambda w: w.lower().split(";"))
+        index_keywords = index_keywords.explode().tolist()
+        index_keywords = set(index_keywords)
+
+        keywords = author_keywords | index_keywords
+
+        self.data["Title_Keywords"] = self.data.Title.copy()
+        self.data["Title_Keywords"] = self.data.Title_Keywords.map(
+            lambda w: word_tokenize(w.lower()), na_action="ignore"
+        )
+        self.data["Title_Keywords"] = self.data.Title_Keywords.map(
+            lambda w: set(w), na_action="ignore"
+        )
+        self.data["Title_Keywords"] = self.data.Title_Keywords.map(
+            lambda w: keywords & w, na_action="ignore"
+        )
+        self.data["Title_Keywords"] = self.data.Title_Keywords.map(
+            lambda w: ";".join(w), na_action="ignore"
+        )
+
+    def extract_abstract_keywords(self):
+
+        self.logging_info("Keywords extraction from abstract ...")
+
+        author_keywords = self.data.Author_Keywords.dropna()
+        author_keywords = author_keywords.map(lambda w: w.lower().split(";"))
+        author_keywords = author_keywords.explode().tolist()
+        author_keywords = set(author_keywords)
+
+        index_keywords = self.data.Index_Keywords.dropna()
+        index_keywords = index_keywords.map(lambda w: w.lower().split(";"))
+        index_keywords = index_keywords.explode().tolist()
+        index_keywords = set(index_keywords)
+
+        keywords = author_keywords | index_keywords
+
+        ##
+        ## Preserves compound keywords in abstrct
+        ##
+        compound_keywords = [w for w in keywords if len(w.split()) > 1]
+        self.data["Abstract_Keywords"] = self.data.Abstract.copy()
+        for k in compound_keywords:
+            pattern = re.compile(k, re.IGNORECASE)
+            self.data["Abstract_Keywords"] = self.data.Abstract_Keywords.map(
+                lambda w: pattern.sub(k.replace(" ", "_"), w), na_action="ignore"
+            )
+
+        ##
+        ## Tokenize words
+        ##
+        self.data["Abstract_Keywords"] = self.data.Abstract_Keywords.map(
+            lambda w: set(word_tokenize(w.lower())), na_action="ignore"
+        )
+
+        self.data["Abstract_Keywords"] = self.data.Abstract_Keywords.map(
+            lambda w: [m.replace("_", " ") for m in w], na_action="ignore"
+        )
+
+        self.data["Abstract_Keywords"] = self.data.Abstract_Keywords.map(
+            lambda w: keywords & set(w), na_action="ignore"
+        )
+        self.data["Abstract_Keywords"] = self.data.Abstract_Keywords.map(
+            lambda w: ";".join(w), na_action="ignore"
         )
 
     def british_to_amerian(self):
