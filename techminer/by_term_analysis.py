@@ -715,7 +715,7 @@ class Model:
         items = [" ".join(item.split(" ")[:-1]) for item in items]
         HTML = "LIMIT_TO = {<br>"
         HTML += '    "' + self.column + '": [<br>'
-        for item in items:
+        for item in sorted(items)
             HTML += '        "' + item + '",<br>'
         HTML += "    ]<br>"
         HTML += "}<br>"
