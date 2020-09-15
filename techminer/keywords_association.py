@@ -47,26 +47,16 @@ class Model:
         limit_to,
         exclude,
         years_range,
-        clusters=None,
-        cluster=None,
     ):
         #
         if years_range is not None:
             initial_year, final_year = years_range
             data = data[(data.Year >= initial_year) & (data.Year <= final_year)]
 
-        #
-        # Filter for cluster members
-        #
-        if clusters is not None and cluster is not None:
-            data = corpus_filter(data=data, clusters=clusters, cluster=cluster)
-
         self.data = data
         self.limit_to = limit_to
         self.exclude = exclude
         self.top_n = top_n
-        self.clusters = clusters
-        self.cluster = cluster
 
         self.cmap = None
         self.column = None
@@ -111,32 +101,7 @@ class Model:
         )
 
         ##
-        ##  Select max_items
-        ##
-        TF_matrix_ = TF_matrix_[TF_matrix_.columns[: self.max_items]]
-        if len(TF_matrix_.columns) > self.max_items:
-            top_items = TF_matrix_.sum(axis=0)
-            top_items = top_items.sort_values(ascending=False)
-            top_items = top_items.head(self.max_items)
-            TF_matrix_ = TF_matrix_.loc[:, top_items.index]
-            rows = TF_matrix_.sum(axis=1)
-            rows = rows[rows > 0]
-            TF_matrix_ = TF_matrix_.loc[rows.index, :]
-
-        ##
-        ## Remove counters from axes
-        ##
-        # TF_matrix_.columns = [" ".join(w.split(" ")[:-1]) for w in TF_matrix_.columns]
-
-        ##
-        ##  Co-occurrence matrix and association index
-        ##
-        X = np.matmul(TF_matrix_.transpose().values, TF_matrix_.values)
-        X = pd.DataFrame(X, columns=TF_matrix_.columns, index=TF_matrix_.columns)
-        X = normalize_network(X, self.normalization)
-
-        ##
-        ## Selected Keyword
+        ##  Selected keyword + counters
         ##
         keyword = [
             w
@@ -146,7 +111,29 @@ class Model:
         if len(keyword) > 0:
             keyword = keyword[0]
         else:
-            return widgets.HTML("<pre>No associations for the selected keyword")
+            return widgets.HTML(
+                "<pre>No associations found for the selected parameters </pre>"
+            )
+
+        ##
+        ##  Co-occurrence matrix and association index
+        ##
+        X = np.matmul(TF_matrix_.transpose().values, TF_matrix_[[keyword]].values)
+        X = pd.DataFrame(X, columns=[keyword], index=TF_matrix_.columns)
+
+        ##
+        ## Selectec the corresponding column
+        ##
+        X = X.sort_values([keyword], ascending=False)
+        X = X[X[keyword] > 0]
+        X = sort_by_axis(data=X, sort_by="Num_Documents", ascending=False, axis=0)
+
+        X = X[
+            X.index.map(lambda w: int(w.split(" ")[-1].split(":")[0]))
+            >= self.min_occurrence
+        ]
+
+        X = X.head(self.max_items)
 
         ##
         ## Network plot
@@ -159,9 +146,7 @@ class Model:
         ##
         ## Selects the column with values > 0
         ##
-        X = X[[keyword]]
         X = X[X.index != keyword]
-        X = X[X[keyword] > 0]
 
         nodes = X.index.tolist() + [keyword]
         node_sizes = counters_to_node_sizes(nodes)
@@ -301,7 +286,8 @@ COLUMNS = [
     "Index_Keywords_CL",
     "Keywords_CL",
     "Title_Keywords",
-    "Title_Keywords_CL" "Abstract_Keywords",
+    "Title_Keywords_CL",
+    "Abstract_Keywords",
     "Abstract_Keywords_CL",
 ]
 
@@ -314,8 +300,6 @@ class DASHapp(DASH, Model):
         limit_to=None,
         exclude=None,
         years_range=None,
-        clusters=None,
-        cluster=None,
     ):
         """Dashboard app"""
 
@@ -326,8 +310,6 @@ class DASHapp(DASH, Model):
             limit_to=limit_to,
             exclude=exclude,
             years_range=years_range,
-            clusters=clusters,
-            cluster=cluster,
         )
         DASH.__init__(self)
 
@@ -348,7 +330,7 @@ class DASHapp(DASH, Model):
             ),
             dash.min_occurrence(),
             dash.max_items(),
-            dash.normalization(include_none=False),
+            # dash.normalization(include_none=False),
             dash.separator(text="Visualization"),
             dash.cmap(),
             dash.fig_width(),
@@ -360,59 +342,44 @@ class DASHapp(DASH, Model):
 
         DASH.interactive_output(self, **kwargs)
 
-        if self.clusters is not None and self.column == self.clusters[0]:
-            #
-            # Populates value control with the terms in the cluster
-            #
-            self.panel_widgets[1]["widget"].options = sorted(
-                self.clusters[1][self.cluster]
-            )
+        if self.menu == "Concordances":
 
-        elif self.top_n is not None:
-            #
-            # Populate value control with top_n terms
-            #
-            y = self.data.copy()
-            y["Num_Documents"] = 1
-            y = explode(
-                y[
-                    [
-                        self.column,
-                        "Num_Documents",
-                        "Global_Citations",
-                        "ID",
-                    ]
-                ],
-                self.column,
-            )
-            y = y.groupby(self.column, as_index=True).agg(
-                {
-                    "Num_Documents": np.sum,
-                    "Global_Citations": np.sum,
-                }
-            )
-            y["Global_Citations"] = y["Global_Citations"].map(lambda w: int(w))
-            top_terms_freq = set(
-                y.sort_values("Num_Documents", ascending=False).head(self.top_n).index
-            )
-            top_terms_cited_by = set(
-                y.sort_values("Global_Citations", ascending=False)
-                .head(self.top_n)
-                .index
-            )
-            top_terms = sorted(top_terms_freq | top_terms_cited_by)
-            self.panel_widgets[1]["widget"].options = top_terms
+            data = self.data[[self.column, "Abstract"]].dropna()
+            data[self.column] = data[self.column].map(lambda w: w.split(";"))
+            data = data.explode(self.column)
+            data.index = list(range(len(data)))
+            data["selected"] = [
+                (k, v) for k, v in zip(data[self.column], data.Abstract)
+            ]
+            data["selected"] = data["selected"].map(lambda w: w[0] in w[1].lower())
+            data = data[data.selected]
+            keywords = sorted(set(data[self.column].tolist()))
 
-        else:
+            if self.top_n is None:
 
-            #
-            # Populate Keywords with all terms
-            #
-            x = explode(self.data, self.column)
-            all_terms = pd.Series(x[self.column].unique())
-            all_terms = all_terms[all_terms.map(lambda w: not pd.isna(w))]
-            all_terms = all_terms.sort_values()
-            self.panel_widgets[1]["widget"].options = all_terms
+                self.panel_widgets[1]["widget"].options = keywords
+
+            else:
+
+                with self.output:
+                    data = self.data[[self.column]].dropna()
+                    data[self.column] = data[self.column].map(lambda w: w.split(";"))
+                    data = data.explode(self.column)
+                    data["OCC"] = 1
+                    x = data.groupby([self.column], as_index=True).agg({"OCC": np.sum})
+                    x = x.sort_values(by="OCC", ascending=False)
+                    x = x.head(self.top_n)
+                    x = x.index.tolist()
+                    keywords = [k for k in keywords if k in x]
+                    self.panel_widgets[1]["widget"].options = keywords
+
+        if self.menu == "Concordances":
+
+            data = self.data[[self.column]].dropna()
+            data[self.column] = data[self.column].map(lambda w: w.split(";"))
+            data = data.explode(self.column)
+            keywords = sorted(set(data[self.column].tolist()))
+            self.panel_widgets[1]["widget"].options = keywords
 
 
 ###############################################################################
@@ -428,8 +395,6 @@ def keywords_association(
     limit_to=None,
     exclude=None,
     years_range=None,
-    clusters=None,
-    cluster=None,
 ):
     return DASHapp(
         data=pd.read_csv(input_file),
@@ -437,6 +402,4 @@ def keywords_association(
         limit_to=limit_to,
         exclude=exclude,
         years_range=years_range,
-        clusters=clusters,
-        cluster=cluster,
     ).run()
