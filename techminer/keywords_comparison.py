@@ -107,34 +107,6 @@ class Model:
         TF_matrix_ = add_counters_to_axis(
             X=TF_matrix_, axis=1, data=self.data, column=self.column
         )
-        TF_matrix_ = sort_by_axis(
-            data=TF_matrix_, sort_by="Num_Documents", ascending=False, axis=1
-        )
-
-        ##
-        ##  Select max_items
-        ##
-        TF_matrix_ = TF_matrix_[TF_matrix_.columns[: self.max_items]]
-        if len(TF_matrix_.columns) > self.max_items:
-            top_items = TF_matrix_.sum(axis=0)
-            top_items = top_items.sort_values(ascending=False)
-            top_items = top_items.head(self.max_items)
-            TF_matrix_ = TF_matrix_.loc[:, top_items.index]
-            rows = TF_matrix_.sum(axis=1)
-            rows = rows[rows > 0]
-            TF_matrix_ = TF_matrix_.loc[rows.index, :]
-
-        ##
-        ## Remove counters from axes
-        ##
-        # TF_matrix_.columns = [" ".join(w.split(" ")[:-1]) for w in TF_matrix_.columns]
-
-        ##
-        ##  Co-occurrence matrix and association index
-        ##
-        X = np.matmul(TF_matrix_.transpose().values, TF_matrix_.values)
-        X = pd.DataFrame(X, columns=TF_matrix_.columns, index=TF_matrix_.columns)
-        X = normalize_network(X, self.normalization)
 
         ##
         ## Selected Keywords
@@ -148,7 +120,7 @@ class Model:
         if len(keyword_a) > 0:
             keyword_a = keyword_a[0]
         else:
-            return widgets.HTML("<pre>No associations for the selected keywords")
+            return widgets.HTML("<pre>Keyword A not found in TF matrix</pre>")
 
         keyword_b = [
             w
@@ -159,7 +131,35 @@ class Model:
         if len(keyword_b) > 0:
             keyword_b = keyword_b[0]
         else:
-            return widgets.HTML("<pre>No associations for the selected keywords")
+            return widgets.HTML("<pre>Keyword B not found in TF matrix</pre>")
+
+        if keyword_a == keyword_b:
+            return widgets.HTML("<pre>Keywords must be different!!!</pre>")
+
+        ##
+        ##  Co-occurrence matrix and association index
+        ##
+        X = np.matmul(
+            TF_matrix_.transpose().values, TF_matrix_[[keyword_a, keyword_b]].values
+        )
+        X = pd.DataFrame(X, columns=[keyword_a, keyword_b], index=TF_matrix_.columns)
+
+        ##
+        ## Select occurrences > 0
+        ##
+        X = X[X.sum(axis=1) > 0]
+
+        X = X[
+            X.index.map(lambda w: int(w.split(" ")[-1].split(":")[0]))
+            >= self.min_occurrence
+        ]
+
+        X = sort_by_axis(data=X, sort_by="Num_Documents", ascending=False, axis=0)
+
+        link_keyword_a_keyword_b = X.loc[keyword_a, keyword_b]
+
+        X = X.head(self.max_items)
+        max_width = X.max().max()
 
         ##
         ## Network plot
@@ -169,19 +169,19 @@ class Model:
         ax = fig.subplots()
         cmap = pyplot.cm.get_cmap(self.cmap)
 
-        ##
-        ## Selects the column with values > 0
-        ##
-        X = X[[keyword_a, keyword_b]]
-        X = X[(X[keyword_a] > 0) | (X[keyword_b] > 0)]
-
         nodes = X.index.tolist()
+        if keyword_a not in nodes:
+            nodes.append(keyword_a)
+        if keyword_b not in nodes:
+            nodes.append(keyword_b)
+
         node_sizes = counters_to_node_sizes(nodes)
         node_colors = counters_to_node_colors(x=nodes, cmap=lambda w: w)
         node_colors = [cmap(t) for t in node_colors]
 
         G = nx.Graph()
         G.add_nodes_from(nodes)
+        G.add_edge(keyword_a, keyword_b, width=link_keyword_a_keyword_b)
         for i, w in zip(X.index, X[keyword_a]):
             if i != keyword_a:
                 G.add_edge(i, keyword_a, width=w)
@@ -200,7 +200,7 @@ class Model:
         for e in G.edges.data():
             a, b, dict_ = e
             edge = [(a, b)]
-            width = 0.5 + 2.0 * dict_["width"]
+            width = 1.0 + 5.0 * dict_["width"] / max_width
             nx.draw_networkx_edges(
                 G,
                 pos=pos,
@@ -215,12 +215,12 @@ class Model:
         ##
         ## Draw network nodes
         ##
-        for i_node, node in enumerate(G.nodes.data()):
+        for i_node, _ in enumerate(nodes):
             nx.draw_networkx_nodes(
                 G,
                 pos,
                 ax=ax,
-                nodelist=[node[0]],
+                nodelist=[nodes[i_node]],
                 node_size=node_sizes[i_node],
                 node_color=node_colors[i_node],
                 node_shape="o",
@@ -378,7 +378,7 @@ class DASHapp(DASH, Model):
             ),
             dash.min_occurrence(),
             dash.max_items(),
-            dash.normalization(include_none=False),
+            #  dash.normalization(include_none=False),
             dash.separator(text="Visualization"),
             dash.cmap(),
             dash.fig_width(),
