@@ -38,6 +38,7 @@ def clustering(
     random_state,
     top_n,
     name_prefix="Cluster {}",
+    documents=False,
 ):
 
     X = X.copy()
@@ -86,9 +87,12 @@ def clustering(
     ##
     M = pd.DataFrame({"K": X.index.tolist(), "Cluster": labels})
     M = M.groupby(["Cluster"], as_index=False).agg({"K": list})
-    M["K"] = M.K.map(
-        lambda w: sorted(w, key=lambda m: m.split(" ")[-1].split(":")[0], reverse=True)
-    )
+    if documents is False:
+        M["K"] = M.K.map(
+            lambda w: sorted(
+                w, key=lambda m: m.split(" ")[-1].split(":")[0], reverse=True
+            )
+        )
     n = M.K.map(len).max()
     M["K"] = M.K.map(lambda w: w + [pd.NA] * (n - len(w)))
     dict_ = {}

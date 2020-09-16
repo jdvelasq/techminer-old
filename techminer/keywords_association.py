@@ -361,19 +361,18 @@ class DASHapp(DASH, Model):
 
             else:
 
-                with self.output:
-                    data = self.data[[self.column]].dropna()
-                    data[self.column] = data[self.column].map(lambda w: w.split(";"))
-                    data = data.explode(self.column)
-                    data["OCC"] = 1
-                    x = data.groupby([self.column], as_index=True).agg({"OCC": np.sum})
-                    x = x.sort_values(by="OCC", ascending=False)
-                    x = x.head(self.top_n)
-                    x = x.index.tolist()
-                    keywords = [k for k in keywords if k in x]
-                    self.panel_widgets[1]["widget"].options = keywords
+                data = self.data[[self.column]].dropna()
+                data[self.column] = data[self.column].map(lambda w: w.split(";"))
+                data = data.explode(self.column)
+                data["OCC"] = 1
+                x = data.groupby([self.column], as_index=True).agg({"OCC": np.sum})
+                x = x.sort_values(by="OCC", ascending=False)
+                x = x.head(self.top_n)
+                x = x.index.tolist()
+                keywords = [k for k in keywords if k in x]
+                self.panel_widgets[1]["widget"].options = keywords
 
-        if self.menu == "Concordances":
+        if self.menu == "Radial Diagram":
 
             data = self.data[[self.column]].dropna()
             data[self.column] = data[self.column].map(lambda w: w.split(";"))

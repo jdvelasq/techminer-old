@@ -1,15 +1,27 @@
 import matplotlib
 import matplotlib.pyplot as pyplot
 import pandas as pd
+import ipywidgets as widgets
 
 import techminer.core.dashboard as dash
-from techminer.core import (CA, DASH, TF_matrix, TFIDF_matrix,
-                            add_counters_to_axis, clustering, corpus_filter,
-                            sort_by_axis)
+from techminer.core import (
+    CA,
+    DASH,
+    TF_matrix,
+    TFIDF_matrix,
+    add_counters_to_axis,
+    clustering,
+    corpus_filter,
+    sort_by_axis,
+)
 from techminer.plots import ax_text_node_labels
 from techminer.plots import bubble_plot as bubble_plot_
-from techminer.plots import (counters_to_node_colors, counters_to_node_sizes,
-                             expand_ax_limits, set_spines_invisible)
+from techminer.plots import (
+    counters_to_node_colors,
+    counters_to_node_sizes,
+    expand_ax_limits,
+    set_spines_invisible,
+)
 
 ###############################################################################
 ##
@@ -64,12 +76,13 @@ class Model:
         ## Fuente:
         ##   https://tlab.it/en/allegati/help_en_online/mrepert.htm
         ##
+        data = self.data[[self.column, "ID"]].dropna()
 
         ##
         ##  Construye TF_matrix binaria
         ##
         TF_matrix_ = TF_matrix(
-            self.data,
+            data,
             self.column,
             scheme="binary",
             min_occurrence=self.min_occurrence,
@@ -114,16 +127,52 @@ class Model:
             random_state=self.random_state,
             top_n=None,
             name_prefix="Theme {}",
+            documents=True,
         )
+
+        ##
+        ## Column names in cluster members table
+        ##
+        self.cluster_members_.columns = [
+            "Theme {:>2d}".format(i) for i in range(self.n_clusters)
+        ]
 
         ##
         ##  Matriz de contingencia.
         ##
-        matrix = TF_IDF_matrix_.copy()
+        matrix = TF_matrix_.loc[TF_IDF_matrix_.index, TF_IDF_matrix_.columns].copy()
         matrix["*cluster*"] = self.labels_
         matrix = matrix.groupby(by="*cluster*").sum()
         matrix.index = ["Theme {:>2d}".format(i) for i in range(self.n_clusters)]
         self.contingency_table_ = matrix.transpose()
+
+        ##
+        ## Keywords by Theme
+        ##
+        self.keywords_by_theme_ = self.contingency_table_.copy()
+        self.keywords_by_theme_.index = self.keywords_by_theme_.index.map(
+            lambda w: " ".join(w.split(" ")[:-1])
+        )
+        for column in self.keywords_by_theme_.columns:
+            x = self.keywords_by_theme_[column]
+            x = x.sort_values(ascending=False)
+            x = [k if v > 0 else pd.NA for k, v in zip(x.index, x)]
+            self.keywords_by_theme_[column] = x
+        self.keywords_by_theme_.index = list(range(len(self.keywords_by_theme_)))
+
+        ##
+        ## Remove NA from keywords_by_theme
+        ##
+        selected = []
+        for i in self.keywords_by_theme_.index:
+            x = self.keywords_by_theme_.loc[i, :].tolist()
+            x = all([pd.isna(m) for m in x])
+            if x is False:
+                selected.append(i)
+        self.keywords_by_theme_ = self.keywords_by_theme_.loc[selected, :]
+        self.keywords_by_theme_ = self.keywords_by_theme_.applymap(
+            lambda w: "" if pd.isna(w) else w
+        )
 
         ##
         ##  Top n for contingency table
@@ -150,9 +199,47 @@ class Model:
         self.cluster_ppal_coordinates_ = ca.principal_coordinates_cols_
         self.term_ppal_coordinates_ = ca.principal_coordinates_rows_
 
+    def keywords_by_theme(self):
+        self.apply()
+        return self.keywords_by_theme_
+
+    def documents_by_theme(self):
+        self.apply()
+        return self.cluster_members_
+
     def contingency_table(self):
         self.apply()
         return self.contingency_table_
+
+    def meaningful_contexts(self):
+        self.apply()
+        M = self.cluster_members_.copy()
+        M = M.applymap(lambda w: pd.NA if w == "" else w)
+        HTML = ""
+        for i_theme, _ in enumerate(M.columns):
+
+            HTML += "*" * 100 + "<br>"
+            HTML += "Theme {}".format(i_theme) + "<br><br>"
+
+            for i_document in M[M.columns[i_theme]].dropna().head(10):
+
+                print(i_document)
+
+                document = self.data.loc[i_document, :]
+
+                doc_ID = (
+                    document.Authors
+                    + ". "
+                    + document.Historiograph_ID
+                    + ". Times Cited: "
+                    + document.Global_Citations.map(str)
+                )
+
+                HTML += "-" * 100 + "<br>"
+                HTML += doc_ID + "<br><br>"
+                HTML += document.Abstract
+
+        return widgets.HTML("<pre>" + HTML + "</pre>")
 
     def cluster_members(self):
         self.apply()
@@ -307,16 +394,14 @@ class Model:
 
 
 COLUMNS = [
+    "Abstract_Keywords_CL",
+    "Abstract_Keywords",
     "Abstract_words_CL",
     "Abstract_words",
-    "Affiliations",
     "Author_Keywords_CL",
     "Author_Keywords",
-    "Authors",
-    "Countries",
     "Index_Keywords_CL",
     "Index_Keywords",
-    "Institutions",
     "Keywords_CL",
     "Title_words_CL",
     "Title_words",
@@ -348,8 +433,11 @@ class DASHapp(DASH, Model):
 
         self.app_title = "Thematic Analysis"
         self.menu_options = [
-            "Cluster members",
+            "Keywords by theme",
+            "Documents by theme",
+            "Meaningful contexts",
             "Contingency table",
+            "-----",
             "Cluster ppal coordinates",
             "Term ppal coordinates",
             "Clusters plot",

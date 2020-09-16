@@ -49,8 +49,8 @@ def apply_keywords_thesaurus(
     if "Title_Keywords" in df.columns:
         df["Title_Keywords_CL"] = map_(df, "Title_Keywords", th.apply_as_dict)
 
-    if "Abstarct_Keywords" in df.columns:
-        df["Abstarct_Keywords_CL"] = map_(df, "Abstarct_Keywords", th.apply_as_dict)
+    if "Abstract_Keywords" in df.columns:
+        df["Abstract_Keywords_CL"] = map_(df, "Abstract_Keywords", th.apply_as_dict)
 
     if "Title_words" in df.columns:
         df["Title_words_CL"] = map_(df, "Title_words", th.apply_as_dict)
