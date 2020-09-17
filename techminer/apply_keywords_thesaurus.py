@@ -19,14 +19,42 @@ def apply_keywords_thesaurus(
     th = th.compile_as_dict()
 
     ##
-    ## Cleaning
+    ## Author keywords cleaning
     ##
     if "Author_Keywords" in df.columns:
         df["Author_Keywords_CL"] = map_(df, "Author_Keywords", th.apply_as_dict)
 
+    ##
+    ## Index keywords cleaning
+    ##
     if "Index_Keywords" in df.columns:
         df["Index_Keywords_CL"] = map_(df, "Index_Keywords", th.apply_as_dict)
 
+    ##
+    ## Keywords new field creation
+    ##
+    if "Author_Keywords" in df.columns and "Index_Keywords" in df.columns:
+        df["Keywords"] = (
+            df.Author_Keywords.map(lambda w: "" if pd.isna(w) else w)
+            + ";"
+            + df.Index_Keywords.map(lambda w: "" if pd.isna(w) else w)
+        )
+        df["Keywords"] = df.Keywords.map(
+            lambda w: pd.NA if w[0] == ";" and len(w) == 1 else w
+        )
+        df["Keywords"] = df.Keywords.map(
+            lambda w: w[1:] if w[0] == ";" else w, na_action="ignore"
+        )
+        df["Keywords"] = df.Keywords.map(
+            lambda w: w[:-1] if w[-1] == ";" else w, na_action="ignore"
+        )
+        df["Keywords"] = df.Keywords.map(
+            lambda w: ";".join(sorted(set(w.split(";")))), na_action="ignore"
+        )
+
+    ##
+    ## Keywords_CL new field creation
+    ##
     if "Author_Keywords_CL" in df.columns and "Index_Keywords_CL" in df.columns:
         df["Keywords_CL"] = (
             df.Author_Keywords_CL.map(lambda w: "" if pd.isna(w) else w)
@@ -46,17 +74,22 @@ def apply_keywords_thesaurus(
             lambda w: ";".join(sorted(set(w.split(";")))), na_action="ignore"
         )
 
+    ##
+    ## Title Keywords
+    ##
     if "Title_Keywords" in df.columns:
         df["Title_Keywords_CL"] = map_(df, "Title_Keywords", th.apply_as_dict)
 
-    if "Abstract_Keywords" in df.columns:
-        df["Abstract_Keywords_CL"] = map_(df, "Abstract_Keywords", th.apply_as_dict)
-
-    if "Title_words" in df.columns:
-        df["Title_words_CL"] = map_(df, "Title_words", th.apply_as_dict)
-
-    if "Abstract_words" in df.columns:
-        df["Abstract_words_CL"] = map_(df, "Abstract_words", th.apply_as_dict)
+    ##
+    ## Abstract
+    ##
+    for column in [
+        "Abstract_Author_Keywords",
+        "Abstract_Index_Keywords",
+        "Abstract_Keywords",
+    ]:
+        if column in df.columns:
+            df[column + "_CL"] = map_(df, column, th.apply_as_dict)
 
     ##
     ## Saves!

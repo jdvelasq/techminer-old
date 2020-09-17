@@ -4,16 +4,7 @@ from techminer.core.params import MULTIVALUED_COLS
 
 
 def map_(x, column, f):
-    """Applies function f to column in dataframe x.
 
-    >>> import pandas as pd
-    >>> x = pd.DataFrame({'Affiliations': ['USA; Russian Federation']})
-    >>> map_(x, 'Affiliations', lambda w: __extract_country(w))
-    0    United States;Russia
-    Name: Affiliations, dtype: object
-
-
-    """
     x = x.copy()
     if column in MULTIVALUED_COLS:
         z = x[column].map(lambda w: w.split(";") if not pd.isna(w) else w)
@@ -24,7 +15,14 @@ def map_(x, column, f):
         z = z.map(lambda w: ";".join(w) if isinstance(w, list) else w)
         return z
 
-    if column == "Abstract_phrase_words":
+    if column in [
+        "Abstract_Phrase_Keywords",
+        "Abstract_Phrase_Keywords_CL",
+        "Abstract_Phrase_Author_Keywords",
+        "Abstract_Phrase_Author_Keywords_CL",
+        "Abstract_Phrase_Index_Keywords",
+        "Abstract_Phrase_Index_Keywords_CL",
+    ]:
         z = x[column].map(lambda w: w.split("//"), na_action="ignore")
         z = z.map(lambda w: [z.split(";") for z in w], na_action="ignore")
         z = z.map(lambda w: [[f(y.strip()) for y in z] for z in w], na_action="ignore")

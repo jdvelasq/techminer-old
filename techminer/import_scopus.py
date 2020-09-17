@@ -58,9 +58,10 @@ class ScopusImporter:
         self.format_abb_source_title()
         self.create_historiograph_id()
         self.create_local_references()
+        self.transform_abstract_to_lower_case()
         self.british_to_amerian()
-        self.extract_title_keywords()
         self.extract_abstract_keywords()
+        #  self.extract_title_keywords()
         #  self.extract_title_words()
         #  self.extract_abstract_phrases_and_words()
         #  self.highlight_author_keywords_in_titles()
@@ -126,7 +127,7 @@ class ScopusImporter:
 
     def extract_abstract_keywords(self):
 
-        self.logging_info("Keywords extraction from abstract ...")
+        self.logging_info("Keywords extraction from abstracts ...")
 
         author_keywords = self.data.Author_Keywords.dropna()
         author_keywords = author_keywords.map(lambda w: w.lower().split(";"))
@@ -141,32 +142,50 @@ class ScopusImporter:
         keywords = author_keywords | index_keywords
 
         ##
-        ## Preserves compound keywords in abstrct
+        ## Prepare compound keywords
         ##
         compound_keywords = [w for w in keywords if len(w.split()) > 1]
-        self.data["Abstract_Keywords"] = self.data.Abstract.copy()
+        compound_keywords = sorted(compound_keywords, key=len, reverse=True)
+
+        ##
+        ## Preserves compound keywords in abstrct
+        ##
+        phrases = self.data.Abstract.copy()
         for k in compound_keywords:
             pattern = re.compile(k, re.IGNORECASE)
-            self.data["Abstract_Keywords"] = self.data.Abstract_Keywords.map(
+            phrases = phrases.map(
                 lambda w: pattern.sub(k.replace(" ", "_"), w), na_action="ignore"
             )
 
         ##
         ## Tokenize words
         ##
-        self.data["Abstract_Keywords"] = self.data.Abstract_Keywords.map(
-            lambda w: set(word_tokenize(w.lower())), na_action="ignore"
+        phrases = phrases.map(
+            lambda w: set(word_tokenize(w.lower())),
+            na_action="ignore",
         )
 
-        self.data["Abstract_Keywords"] = self.data.Abstract_Keywords.map(
-            lambda w: [m.replace("_", " ") for m in w], na_action="ignore"
+        ##
+        ## Restore compund words
+        ##
+        phrases = phrases.map(
+            lambda w: [m.replace("_", " ") for m in w],
+            na_action="ignore",
         )
 
-        self.data["Abstract_Keywords"] = self.data.Abstract_Keywords.map(
-            lambda w: keywords & set(w), na_action="ignore"
+        ##
+        ## Extracts keywords from text
+        ###
+        self.data["Abstract_Keywords"] = phrases.map(
+            lambda w: ";".join(sorted(keywords & set(w))), na_action="ignore"
         )
-        self.data["Abstract_Keywords"] = self.data.Abstract_Keywords.map(
-            lambda w: ";".join(w), na_action="ignore"
+
+        self.data["Abstract_Author_Keywords"] = phrases.map(
+            lambda w: ";".join(sorted(author_keywords & set(w))), na_action="ignore"
+        )
+
+        self.data["Abstract_Index_Keywords"] = phrases.map(
+            lambda w: ";".join(sorted(index_keywords & set(w))), na_action="ignore"
         )
 
     def british_to_amerian(self):
@@ -178,6 +197,7 @@ class ScopusImporter:
         bg2am = load_file_as_dict(filename)
 
         for british_word in bg2am:
+
             self.data = self.data.applymap(
                 lambda w: w.replace(british_word, bg2am[british_word][0])
                 if isinstance(w, str)
@@ -405,6 +425,16 @@ class ScopusImporter:
             lambda w: ";".join(sorted([z.strip() for z in w.split(";")]))
             if not pd.isna(w)
             else w
+        )
+
+    def transform_abstract_to_lower_case(self):
+
+        if "Abstract" not in self.data.columns:
+            return
+
+        self.logging_info("Transforming Abstrct to lower case ...")
+        self.data["Abstract"] = self.data.Abstract.map(
+            lambda w: w.lower(), na_action="ignore"
         )
 
     def remove_copyright_mark_from_abstracts(self):

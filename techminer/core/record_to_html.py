@@ -82,7 +82,7 @@ def record_to_HTML(x, only_abstract=False, keywords_to_highlight=None):
                 "Index_Keywords_CL",
             ]:
                 for keyword in keywords_to_highlight:
-                    if keyword.lower() in z.lower():
+                    if isinstance(keyword, str) and keyword.lower() in z.lower():
                         pattern = re.compile(r"\b" + keyword + r"\b", re.IGNORECASE)
                         z = pattern.sub("<b>" + keyword.upper() + "</b>", z)
 
@@ -98,7 +98,7 @@ def record_to_HTML(x, only_abstract=False, keywords_to_highlight=None):
                 # Keywords to upper case
                 #
                 for keyword in keywords_to_highlight:
-                    if keyword.lower() in z.lower():
+                    if isinstance(keyword, str) and keyword.lower() in z.lower():
                         pattern = re.compile(keyword, re.IGNORECASE)
                         z = pattern.sub("<b>" + keyword.upper() + "</b>", z)
 
@@ -107,7 +107,10 @@ def record_to_HTML(x, only_abstract=False, keywords_to_highlight=None):
                     z = []
                     for i_phrase, phrase in enumerate(phrases):
                         for keyword in keywords_to_highlight:
-                            if keyword.lower() in phrase.lower():
+                            if (
+                                isinstance(keyword, str)
+                                and keyword.lower() in phrase.lower()
+                            ):
                                 phrase = (
                                     '<b_style="color:{}">'.format(colors[i_phrase])
                                     + phrase

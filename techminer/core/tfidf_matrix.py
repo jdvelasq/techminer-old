@@ -20,7 +20,7 @@ def TFIDF_matrix(
         .toarray()
     )
 
-    result = pd.DataFrame(result, columns=TF_matrix.columns)
+    result = pd.DataFrame(result, columns=TF_matrix.columns, index=TF_matrix.index)
 
     if len(result.columns) > max_items:
         terms = result.sum(axis=0)
@@ -32,4 +32,3 @@ def TFIDF_matrix(
         result = result.loc[rows.index, :]
 
     return result
-

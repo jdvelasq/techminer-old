@@ -1,3 +1,5 @@
+import re
+import textwrap
 import matplotlib
 import matplotlib.pyplot as pyplot
 import pandas as pd
@@ -9,6 +11,7 @@ from techminer.core import (
     DASH,
     TF_matrix,
     TFIDF_matrix,
+    limit_to_exclude,
     add_counters_to_axis,
     clustering,
     corpus_filter,
@@ -21,7 +24,12 @@ from techminer.plots import (
     counters_to_node_sizes,
     expand_ax_limits,
     set_spines_invisible,
+    xy_clusters_plot,
+    xy_cluster_members_plot,
 )
+from techminer.core.thesaurus import read_textfile
+
+from techminer.core.explode import explode
 
 ###############################################################################
 ##
@@ -34,6 +42,7 @@ class Model:
     def __init__(
         self,
         data,
+        thesaurus_file,
         limit_to,
         exclude,
         years_range,
@@ -50,6 +59,7 @@ class Model:
             data = corpus_filter(data=data, clusters=clusters, cluster=cluster)
 
         self.data = data
+        self.thesaurus_file = thesaurus_file
         self.limit_to = limit_to
         self.exclude = exclude
 
@@ -69,6 +79,7 @@ class Model:
         self.cmap = None
         self.x_axis = None
         self.global_citations_ = None
+        self.min_co_occurrence_within = None
 
     def apply(self):
 
@@ -88,9 +99,48 @@ class Model:
             min_occurrence=self.min_occurrence,
         )
 
-        TF_matrix_ = add_counters_to_axis(
-            X=TF_matrix_, axis=1, data=self.data, column=self.column
+        ##
+        ##  Limit to/Exclude
+        ##
+        TF_matrix_ = limit_to_exclude(
+            data=TF_matrix_,
+            axis=1,
+            column=self.column,
+            limit_to=self.limit_to,
+            exclude=self.exclude,
         )
+
+        ##
+        ## Add counters to axis
+        ##
+
+        column = {
+            "Abstract_Author_Keywords_CL": "Author_Keywords_CL",
+            "Abstract_Author_Keywords": "Author_Keywords",
+            "Abstract_Index_Keywords_CL": "Index_Keywords_CL",
+            "Abstract_Index_Keywords": "Index_Keywords",
+            "Abstract_Keywords_CL": "Keywords_CL",
+            "Abstract_Keywords": "Keywords",
+        }[self.column]
+
+        TF_matrix_ = add_counters_to_axis(
+            X=TF_matrix_, axis=1, data=self.data, column=column
+        )
+
+        ##
+        ## Minimal co-occurence within phrases
+        ##
+        TF_matrix_ = sort_by_axis(
+            data=TF_matrix_, sort_by="Num_Documents", ascending=False, axis=1
+        )
+        TF_matrix_ = TF_matrix_.loc[:, TF_matrix_.columns[0 : self.max_items]]
+
+        ##
+        ## Minimal co-occurrence within abstracts
+        ##
+        m = TF_matrix_.sum(axis=1)
+        m = m[m >= self.min_co_occurrence_within]
+        TF_matrix_ = TF_matrix_.loc[m.index.tolist(), :]
 
         ##
         ##  Construye TF-IDF y escala filas to longitud unitaria (norma euclidiana).
@@ -106,6 +156,9 @@ class Model:
             sublinear_tf=False,
             max_items=self.max_items,
         )
+
+        #  for a, b in zip(TF_matrix_.index, TF_IDF_matrix_.index):
+        #    print(a, b)
 
         ##
         ##  Clustering de las filas de TF_IDF_matrix_.
@@ -185,19 +238,22 @@ class Model:
         ##
         ## Tamaño de los clusters
         ##
-        W = TF_IDF_matrix_.copy()
-        W["*cluster*"] = self.labels_
-        W = W.groupby("*cluster*").count()[W.columns[0]].tolist()
-
+        W = pd.DataFrame({"CLUSTER": self.labels_})
+        W["ID"] = TF_IDF_matrix_.index.tolist()
+        W = W.groupby(["CLUSTER"]).count()["ID"].tolist()
         self.num_documents_ = W
 
         ##
         ##  Correspondence Analysis
         ##
-        ca = CA()
-        ca.fit(X=self.contingency_table_)
-        self.cluster_ppal_coordinates_ = ca.principal_coordinates_cols_
-        self.term_ppal_coordinates_ = ca.principal_coordinates_rows_
+        try:
+            ca = CA()
+            ca.fit(X=self.contingency_table_)
+            self.cluster_ppal_coordinates_ = ca.principal_coordinates_cols_
+            self.term_ppal_coordinates_ = ca.principal_coordinates_rows_
+        except:
+            self.cluster_ppal_coordinates_ = None
+            self.term_ppal_coordinates_ = None
 
     def keywords_by_theme(self):
         self.apply()
@@ -212,32 +268,102 @@ class Model:
         return self.contingency_table_
 
     def meaningful_contexts(self):
+
         self.apply()
+
+        ##
+        ## Obtain keywords by theme
+        ##
         M = self.cluster_members_.copy()
         M = M.applymap(lambda w: pd.NA if w == "" else w)
+
         HTML = ""
+
         for i_theme, _ in enumerate(M.columns):
 
-            HTML += "*" * 100 + "<br>"
-            HTML += "Theme {}".format(i_theme) + "<br><br>"
+            keywords = self.keywords_by_theme_[
+                self.keywords_by_theme_.columns[i_theme]
+            ].tolist()
+            keywords = [k for k in keywords if k != ""]
 
-            for i_document in M[M.columns[i_theme]].dropna().head(10):
+            ##
+            ## Adds keyword equivalents
+            ##
+            complementary_keywords = []
+            if self.column[-3:] == "_CL":
+                th = read_textfile(self.thesaurus_file)
+                for k in keywords.copy():
+                    if k in th._thesaurus.keys():
+                        complementary_keywords += th._thesaurus[k]
+                complementary_keywords = list(
+                    set(complementary_keywords) - set(keywords)
+                )
+            else:
+                complementary_keywords = None
 
-                print(i_document)
-
-                document = self.data.loc[i_document, :]
-
-                doc_ID = (
-                    document.Authors
-                    + ". "
-                    + document.Historiograph_ID
-                    + ". Times Cited: "
-                    + document.Global_Citations.map(str)
+            if complementary_keywords is not None:
+                sorted_keywords = sorted(
+                    keywords + complementary_keywords,
+                    key=lambda w: len(w.split(" ")),
+                    reverse=True,
+                )
+            else:
+                sorted_keywords = sorted(
+                    keywords, key=lambda w: len(w.split(" ")), reverse=True
                 )
 
-                HTML += "-" * 100 + "<br>"
-                HTML += doc_ID + "<br><br>"
-                HTML += document.Abstract
+            HTML += "*" * 83 + "<br><br>"
+            HTML += "Theme {}".format(i_theme) + "<br><br>"
+            HTML += "*" * 83 + "<br><br>"
+            HTML += "Keywords:<br>"
+            for k in keywords:
+                HTML += "    " + k + "<br>"
+            if complementary_keywords is not None:
+                HTML += "    " + "-" * 30 + "<br>"
+                for k in sorted(complementary_keywords):
+                    HTML += "    " + k + "<br>"
+            HTML += "<br>"
+
+            i_documents = M[M.columns[i_theme]].dropna()
+
+            data = self.data.loc[i_documents, :].copy()
+            data = data.sort_values(["Global_Citations"], ascending=False)
+            data = data.head(10)
+
+            for i_document in data.index:
+
+                document = data.loc[i_document, :]
+
+                doc_ID = (
+                    document.Authors.replace(";", ", ")
+                    + ". "
+                    + document.Historiograph_ID
+                    + ". ID: "
+                    + str(i_document)
+                    + ". Times Cited: "
+                    + str(int(document.Global_Citations))
+                )
+                doc_ID = textwrap.wrap(doc_ID, 80)
+
+                HTML += "-" * 83 + "<br>"
+                for text in doc_ID:
+                    HTML += text + "<br>"
+                HTML += "<br>"
+
+                abstract = document.Abstract
+
+                for keyword in sorted_keywords:
+                    pattern = re.compile(r"\b" + keyword + r"\b", re.IGNORECASE)
+                    abstract = pattern.sub(
+                        "<b>" + keyword.upper().replace(" ", "_") + "</b>", abstract
+                    )
+
+                abstract = abstract.replace("_", " ")
+
+                phrases = textwrap.wrap(abstract, 80)
+                for line in phrases:
+                    HTML += line + "<br>"
+                HTML += "<br><br>"
 
         return widgets.HTML("<pre>" + HTML + "</pre>")
 
@@ -245,16 +371,44 @@ class Model:
         self.apply()
         return self.cluster_members_
 
-    def cluster_ppal_coordinates(self):
-        self.apply()
-        return self.cluster_ppal_coordinates_
-
-    def term_ppal_coordinates(self):
-        self.apply()
-        return self.term_ppal_coordinates_
-
     def clusters_plot(self):
+
         self.apply()
+
+        if self.cluster_ppal_coordinates_ is None:
+            return widgets.HTML(
+                "<pre>Plot unavailable. Failed convergence for correspondence analysis.</pre>"
+            )
+
+        labels = [
+            "THEME_{} {}".format(index, label)
+            for index, label in enumerate(self.cluster_names_)
+        ]
+
+        node_sizes = self.num_documents_
+        min_size = min(node_sizes)
+        max_size = max(node_sizes)
+        if max_size == min_size:
+            node_sizes = [1000] * node_sizes
+        else:
+            node_sizes = [
+                500 + int(2500 * (w - min_size) / (max_size - min_size))
+                for w in node_sizes
+            ]
+
+        return xy_clusters_plot(
+            x=self.cluster_ppal_coordinates_["Dim-{}".format(self.x_axis)],
+            y=self.cluster_ppal_coordinates_["Dim-{}".format(self.y_axis)],
+            x_axis_at=0,
+            y_axis_at=0,
+            labels=labels,
+            node_sizes=node_sizes,
+            color_scheme=self.colors,
+            xlabel="Dim-{}".format(self.x_axis),
+            ylabel="Dim-{}".format(self.y_axis),
+            figsize=(self.width, self.height),
+        )
+
         x = self.cluster_ppal_coordinates_[
             self.cluster_ppal_coordinates_.columns[self.x_axis]
         ]
@@ -323,7 +477,13 @@ class Model:
 
         return fig
 
-    def terms_plot(self):
+    def keywords_plot(self):
+
+        if self.cluster_ppal_coordinates_ is None:
+            return widgets.HTML(
+                "<pre>Plot unavailable. Failed convergence for correspondence analysis.</pre>"
+            )
+
         self.apply()
         x = self.term_ppal_coordinates_[
             self.term_ppal_coordinates_.columns[self.x_axis]
@@ -392,19 +552,13 @@ class Model:
 ##
 ###############################################################################
 
-
 COLUMNS = [
+    "Abstract_Author_Keywords_CL",
+    "Abstract_Author_Keywords",
+    "Abstract_Index_Keywords_CL",
+    "Abstract_Index_Keywords",
     "Abstract_Keywords_CL",
     "Abstract_Keywords",
-    "Abstract_words_CL",
-    "Abstract_words",
-    "Author_Keywords_CL",
-    "Author_Keywords",
-    "Index_Keywords_CL",
-    "Index_Keywords",
-    "Keywords_CL",
-    "Title_words_CL",
-    "Title_words",
 ]
 
 
@@ -412,6 +566,7 @@ class DASHapp(DASH, Model):
     def __init__(
         self,
         data,
+        thesaurus_file,
         limit_to=None,
         exclude=None,
         years_range=None,
@@ -423,6 +578,7 @@ class DASHapp(DASH, Model):
         Model.__init__(
             self,
             data=data,
+            thesaurus_file=thesaurus_file,
             limit_to=limit_to,
             exclude=exclude,
             years_range=years_range,
@@ -437,11 +593,8 @@ class DASHapp(DASH, Model):
             "Documents by theme",
             "Meaningful contexts",
             "Contingency table",
-            "-----",
-            "Cluster ppal coordinates",
-            "Term ppal coordinates",
             "Clusters plot",
-            "Terms plot",
+            "Keywords plot",
         ]
 
         self.panel_widgets = [
@@ -451,6 +604,10 @@ class DASHapp(DASH, Model):
             ),
             dash.min_occurrence(),
             dash.max_items(),
+            dash.dropdown(
+                desc="Min co-occurrence within:",
+                options=[1, 2, 3, 4, 5],
+            ),
             dash.separator(text="Clustering"),
             dash.clustering_method(),
             dash.n_clusters(m=3, n=50, i=1),
@@ -468,7 +625,19 @@ class DASHapp(DASH, Model):
             dash.top_n(
                 n=101,
             ),
-            dash.cmap(),
+            dash.dropdown(
+                desc="Colors:",
+                options=[
+                    "4 Quadrants",
+                    "Clusters",
+                    "Greys",
+                    "Purples",
+                    "Blues",
+                    "Greens",
+                    "Oranges",
+                    "Reds",
+                ],
+            ),
             dash.x_axis(),
             dash.y_axis(),
             dash.fig_width(),
@@ -501,6 +670,7 @@ class DASHapp(DASH, Model):
 
 def thematic_analysis(
     input_file="techminer.csv",
+    thesaurus_file="keywords_thesaurus.txt",
     limit_to=None,
     exclude=None,
     years_range=None,
@@ -509,6 +679,7 @@ def thematic_analysis(
 ):
     return DASHapp(
         data=pd.read_csv(input_file),
+        thesaurus_file=thesaurus_file,
         limit_to=limit_to,
         exclude=exclude,
         years_range=years_range,

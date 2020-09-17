@@ -255,7 +255,6 @@ class Model:
         data["Abstract"] = data.Abstract.map(lambda w: w + ".")
         data = data.sort_values(["Global_Citations", "REF"], ascending=[False, True])
         data = data.head(50)
-        #  pattern = re.compile(r"\b" + self.keyword + r"\b", re.IGNORECASE)
         pattern = re.compile(self.keyword, re.IGNORECASE)
         data["Abstract"] = data.Abstract.map(
             lambda w: pattern.sub("<b>" + self.keyword.upper() + "</b>", w)
