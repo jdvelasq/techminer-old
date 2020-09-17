@@ -152,7 +152,7 @@ class ScopusImporter:
         ##
         phrases = self.data.Abstract.copy()
         for k in compound_keywords:
-            pattern = re.compile(k, re.IGNORECASE)
+            pattern = re.compile(re.escape(k), re.IGNORECASE)
             phrases = phrases.map(
                 lambda w: pattern.sub(k.replace(" ", "_"), w), na_action="ignore"
             )
