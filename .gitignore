@@ -3,7 +3,7 @@
 template/*csv
 template/*txt
 template/.*
-template/.virtual_documents/analysis.ipynb
+
 
 
 sphinx/_*
@@ -139,3 +139,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+.virtual_documents/template/analysis.ipynb

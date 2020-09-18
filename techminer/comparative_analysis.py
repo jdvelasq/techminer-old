@@ -3,9 +3,16 @@ from collections import Counter
 import pandas as pd
 
 import techminer.core.dashboard as dash
-from techminer.core import (CA, DASH, TF_matrix, TFIDF_matrix,
-                            add_counters_to_axis, clustering, corpus_filter,
-                            limit_to_exclude)
+from techminer.core import (
+    CA,
+    DASH,
+    TF_matrix,
+    TFIDF_matrix,
+    add_counters_to_axis,
+    clustering,
+    corpus_filter,
+    limit_to_exclude,
+)
 from techminer.core.params import EXCLUDE_COLS
 from techminer.plots import counters_to_node_sizes, xy_clusters_plot
 
@@ -41,16 +48,31 @@ class Model:
         self.limit_to = limit_to
         self.exclude = exclude
 
-    def correspondence_analysis(self):
+        self.column = None
+        self.min_occurrence = None
+        self.max_items = None
+        self.clustering_method = None
+        self.n_clusters = None
+        self.affinity = None
+        self.linkage = None
+        self.random_state = None
+        self.top_n = None
+        self.color_scheme = None
+        self.x_axis = None
+        self.y_axis = None
+        self.width = None
+        self.height = None
+
+    def apply(self):
 
         ##
         ## Comparative analysis
         ##   from https://tlab.it/en/allegati/help_en_online/mcluster.htm
         ##
 
-        #
-        # 1.-- Computes TF matrix for terms in min_occurrence
-        #
+        ##
+        ##  Computes TF matrix for terms in min_occurrence
+        ##
         TF_matrix_ = TF_matrix(
             data=self.data,
             column=self.column,
@@ -58,9 +80,9 @@ class Model:
             min_occurrence=self.min_occurrence,
         )
 
-        #
-        # 2.-- Limit to / Exclude
-        #
+        ##
+        ##  Limit to / Exclude
+        ##
         TF_matrix_ = limit_to_exclude(
             data=TF_matrix_,
             axis=1,
@@ -69,11 +91,18 @@ class Model:
             exclude=self.exclude,
         )
 
-        #
-        # 3.-- Computtes TFIDF matrix and select max_term frequent terms
-        #
-        #      tf-idf = tf * (log(N / df) + 1)
-        #
+        ##
+        ##  Adds counter to axies
+        ##
+        TF_matrix_ = add_counters_to_axis(
+            X=TF_matrix_, axis=1, data=self.data, column=self.column
+        )
+
+        ##
+        ##  Computtes TFIDF matrix and select max_term frequent terms
+        ##
+        ##      tf-idf = tf * (log(N / df) + 1)
+        ##
         TFIDF_matrix_ = TFIDF_matrix(
             TF_matrix=TF_matrix_,
             norm=None,
@@ -83,17 +112,10 @@ class Model:
             max_items=self.max_items,
         )
 
-        #
-        # 4.-- Adds counter to axies
-        #
-        TFIDF_matrix_ = add_counters_to_axis(
-            X=TFIDF_matrix_, axis=1, data=self.data, column=self.column
-        )
-
-        #
-        # 5.-- Correspondence Analysis
-        #      10 first factors for ploting
-        #
+        ##
+        ##  Correspondence Analysis
+        ##      10 first factors for ploting
+        ##
         ca = CA()
 
         ca.fit(TFIDF_matrix_)
@@ -109,33 +131,45 @@ class Model:
         z = z[z.columns[:10]]
         self.principal_coordinates_cols_ = z
 
-        #
-        # 6.-- Correspondence analysis plot
-        #
-        self.correspondence_analysis_plot_coordinates_ = (
-            self.principal_coordinates_cols_
-        )
-        self.correspondence_analysis_plot_labels_ = TFIDF_matrix_.columns
-
+        self.TF_matrix_ = TF_matrix_
         self.TFIDF_matrix_ = TFIDF_matrix_
 
-    def make_clustering(self):
+    def ca_plot_of_keywords(self):
 
-        #
-        # 1.-- Selects the first n_factors to cluster
-        #
-        X = self.principal_coordinates_cols_[
-            self.principal_coordinates_cols_.columns[0 : self.n_factors]
-        ]
+        self.apply()
+
+        ##
+        ##  Selects the first n_factors to cluster
+        ##
         X = pd.DataFrame(
-            X,
-            columns=["Dim-{}".format(i) for i in range(self.n_factors)],
+            self.principal_coordinates_cols_,
+            columns=["Dim-{}".format(i) for i in range(10)],
             index=self.TFIDF_matrix_.columns,
         )
 
-        #
-        # 2.-- Cluster analysis of first n_factors of CA matrix
-        #
+        return xy_clusters_plot(
+            x=X["Dim-{}".format(self.x_axis)],
+            y=X["Dim-{}".format(self.y_axis)],
+            x_axis_at=0,
+            y_axis_at=0,
+            labels=self.TFIDF_matrix_.columns,
+            node_sizes=counters_to_node_sizes(self.TFIDF_matrix_.columns),
+            color_scheme=self.color_scheme,
+            xlabel="Dim-{}".format(self.x_axis),
+            ylabel="Dim-{}".format(self.y_axis),
+            figsize=(self.width, self.height),
+        )
+
+    def cluster_plot_of_keywords(self):
+
+        self.apply()
+
+        X = pd.DataFrame(
+            self.principal_coordinates_cols_,
+            columns=["Dim-{}".format(i) for i in range(10)],
+            index=self.TFIDF_matrix_.columns,
+        )
+
         (
             self.n_clusters,
             self.labels_,
@@ -153,58 +187,63 @@ class Model:
             name_prefix="Cluster {}",
         )
 
-        X["CLUSTER"] = self.labels_
-
-    def correspondence_analysis_plot(self):
-        #
-        self.correspondence_analysis()
-        #
-        coordinates = self.correspondence_analysis_plot_coordinates_.head(self.top_n)
+        y = self.cluster_members_.copy()
+        y = y.applymap(lambda w: pd.NA if w == "" else w)
+        node_sizes = [500 + 2500 * len(y[m].dropna()) for m in y.columns]
 
         return xy_clusters_plot(
-            x=coordinates["Dim-{}".format(self.x_axis)],
-            y=coordinates["Dim-{}".format(self.y_axis)],
+            x=self.cluster_centers_["Dim-{}".format(self.x_axis)],
+            y=self.cluster_centers_["Dim-{}".format(self.y_axis)],
             x_axis_at=0,
             y_axis_at=0,
-            labels=self.correspondence_analysis_plot_labels_[: self.top_n],
-            node_sizes=counters_to_node_sizes(coordinates.index),
+            labels=["CLUST_{} xxx".format(i) for i in range(self.n_clusters)],
+            node_sizes=node_sizes,
             color_scheme=self.color_scheme,
             xlabel="Dim-{}".format(self.x_axis),
             ylabel="Dim-{}".format(self.y_axis),
             figsize=(self.width, self.height),
         )
 
-    def cluster_members(self):
-        #
-        self.correspondence_analysis()
-        self.make_clustering()
-        #
-        return self.cluster_members_
+    def cluster_plot_of_documents(self):
 
-    def cluster_plot(self):
-        #
-        self.correspondence_analysis()
-        self.make_clustering()
-        #
-        labels = self.cluster_members_.loc[0, :].tolist()
-        labels = [
-            "CLUST_{} {}".format(index, label) for index, label in enumerate(labels)
-        ]
-        #
-        node_sizes = Counter(self.labels_)
-        node_sizes = [node_sizes[i] for i in range(len(node_sizes.keys()))]
-        max_size = max(node_sizes)
-        min_size = min(node_sizes)
-        node_sizes = [
-            500 + int(2500 * (w - min_size) / (max_size - min_size)) for w in node_sizes
-        ]
-        #
+        self.apply()
+
+        X = pd.DataFrame(
+            self.principal_coordinates_rows_,
+            columns=["Dim-{}".format(i) for i in range(10)],
+            index=[
+                "{} {}".format(i, i)
+                for i in range(len(self.principal_coordinates_rows_))
+            ],
+        )
+
+        (
+            self.n_clusters,
+            self.labels_,
+            self.cluster_members_,
+            self.cluster_centers_,
+            self.cluster_names_,
+        ) = clustering(
+            X=X,
+            method=self.clustering_method,
+            n_clusters=self.n_clusters,
+            affinity=self.affinity,
+            linkage=self.linkage,
+            random_state=self.random_state,
+            top_n=self.top_n,
+            name_prefix="Cluster {}",
+        )
+
+        y = self.cluster_members_.copy()
+        y = y.applymap(lambda w: pd.NA if w == "" else w)
+        node_sizes = [500 + 2500 * len(y[m].dropna()) for m in y.columns]
+
         return xy_clusters_plot(
             x=self.cluster_centers_["Dim-{}".format(self.x_axis)],
             y=self.cluster_centers_["Dim-{}".format(self.y_axis)],
             x_axis_at=0,
             y_axis_at=0,
-            labels=labels,
+            labels=["CLUST_{} xxx".format(i) for i in range(self.n_clusters)],
             node_sizes=node_sizes,
             color_scheme=self.color_scheme,
             xlabel="Dim-{}".format(self.x_axis),
@@ -221,14 +260,11 @@ class Model:
 
 
 COLUMNS = [
-    "Author_Keywords",
-    "Index_Keywords",
-    "Abstract_words_CL",
-    "Abstract_words",
-    "Title_words_CL",
-    "Title_words",
     "Author_Keywords_CL",
+    "Author_Keywords",
     "Index_Keywords_CL",
+    "Index_Keywords",
+    "Keywords_CL",
 ]
 
 
@@ -257,14 +293,14 @@ class DASHapp(DASH, Model):
 
         self.app_title = "Comparative analysis"
         self.menu_options = [
-            "Correspondence analysis plot",
-            "Cluster members",
-            "Cluster plot",
+            "CA plot of keywords",
+            "Cluster plot of keywords",
+            "Cluster plot of documents",
         ]
 
-        COLUMNS = sorted(
-            [column for column in sorted(data.columns) if column not in EXCLUDE_COLS]
-        )
+        #  COLUMNS = sorted(
+        #      [column for column in sorted(data.columns) if column not in EXCLUDE_COLS]
+        #  )
 
         self.panel_widgets = [
             dash.dropdown(
@@ -274,10 +310,6 @@ class DASHapp(DASH, Model):
             dash.min_occurrence(),
             dash.max_items(),
             dash.separator(text="Clustering"),
-            dash.dropdown(
-                desc="N Factors:",
-                options=list(range(2, 11)),
-            ),
             dash.clustering_method(),
             dash.n_clusters(m=3, n=50, i=1),
             dash.affinity(),
