@@ -439,7 +439,7 @@ class DASHapp(DASH, Model):
             self.set_enabled("Width:")
             self.set_enabled("Height:")
 
-            if self.menu == "Network" and self.layout == "Spring":
+            if self.layout == "Spring":
                 self.set_enabled("nx iterations:")
             else:
                 self.set_disabled("nx iterations:")

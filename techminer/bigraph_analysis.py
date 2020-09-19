@@ -240,7 +240,7 @@ class Model:
             figsize=(self.width, self.height),
         )
 
-    def network_nx(self):
+    def network(self):
         ##
         self.apply()
         ##
@@ -274,18 +274,26 @@ class Model:
         G.add_nodes_from(terms)
 
         ## node positions
-        if self.layout == "Spring":
-            pos = nx.spring_layout(G, iterations=self.nx_iterations)
-        else:
-            pos = {
-                "Circular": nx.circular_layout,
-                "Kamada Kawai": nx.kamada_kawai_layout,
-                "Planar": nx.planar_layout,
-                "Random": nx.random_layout,
-                "Spectral": nx.spectral_layout,
-                "Spring": nx.spring_layout,
-                "Shell": nx.shell_layout,
-            }[self.layout](G)
+        pos = nx.spring_layout(
+            G,
+            iterations=self.nx_iterations,
+            k=self.nx_k,
+            scale=self.nx_scale,
+            seed=int(self.random_state),
+        )
+
+        # if self.layout == "Spring":
+        #     pos = nx.spring_layout(G, iterations=self.nx_iterations)
+        # else:
+        #     pos = {
+        #         "Circular": nx.circular_layout,
+        #         "Kamada Kawai": nx.kamada_kawai_layout,
+        #         "Planar": nx.planar_layout,
+        #         "Random": nx.random_layout,
+        #         "Spectral": nx.spectral_layout,
+        #         "Spring": nx.spring_layout,
+        #         "Shell": nx.shell_layout,
+        #     }[self.layout](G)
 
         ## links
         m = X.stack().to_frame().reset_index()
@@ -298,13 +306,13 @@ class Model:
         for idx in range(len(m)):
 
             edge = [(m.from_[idx], m.to_[idx])]
-            width = 0.2 + 3.8 * m.link_[idx] / max_width
+            width = 0.1 + 2.9 * m.link_[idx] / max_width
             nx.draw_networkx_edges(
                 G,
                 pos=pos,
                 ax=ax,
                 node_size=1,
-                with_labels=False,
+                #  with_labels=False,
                 edge_color="k",
                 edgelist=edge,
                 width=width,
@@ -317,7 +325,7 @@ class Model:
             G,
             pos,
             ax=ax,
-            edge_color="k",
+            #  edge_color="k",
             nodelist=X.columns.tolist(),
             node_size=column_node_sizes,
             node_color=column_node_colors,
@@ -333,7 +341,7 @@ class Model:
             G,
             pos,
             ax=ax,
-            edge_color="k",
+            #  edge_color="k",
             nodelist=X.index.tolist(),
             node_size=index_node_sizes,
             node_color=index_node_colors,
@@ -343,9 +351,46 @@ class Model:
         )
 
         node_sizes = column_node_sizes + index_node_sizes
-        ax_text_node_labels(ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes)
+
+        xlim = ax.get_xlim()
+        ylim = ax.get_ylim()
+
+        x_points = [pos[label][0] for label in terms]
+        y_points = [pos[label][1] for label in terms]
+        x_mean = sum(x_points) / len(x_points)
+        y_mean = sum(y_points) / len(y_points)
+
+        for label, size in zip(terms, column_node_sizes + index_node_sizes):
+            x_point, y_point = pos[label]
+            delta_x = 0.05 * (xlim[1] - xlim[0]) + 0.001 * size / 300 * (
+                xlim[1] - xlim[0]
+            )
+            delta_y = 0.05 * (ylim[1] - ylim[0]) + 0.001 * size / 300 * (
+                ylim[1] - ylim[0]
+            )
+            ha = "left" if x_point > x_mean else "right"
+            va = "top" if y_point > y_mean else "bottom"
+            delta_x = delta_x if x_point > x_mean else -delta_x
+            delta_y = delta_y if y_point > y_mean else -delta_y
+
+            ax.text(
+                x_point + delta_x,
+                y_point + delta_y,
+                s=label,
+                fontsize=10,
+                bbox=dict(
+                    facecolor="w",
+                    alpha=1.0,
+                    edgecolor="gray",
+                    boxstyle="round,pad=0.5",
+                ),
+                horizontalalignment=ha,
+                verticalalignment=va,
+            )
+
+        #  ax_text_node_labels(ax=ax, labels=terms, dict_pos=pos, node_sizes=node_sizes)
         expand_ax_limits(ax)
-        ax.set_aspect("equal")
+        #  ax.set_aspect("equal")
         ax.axis("off")
         set_spines_invisible(ax)
         return fig
@@ -620,8 +665,8 @@ class DASHapp(DASH, Model):
             "Matrix",
             "Heatmap",
             "Bubble plot",
-            "Network nx",
-            "Network interactive",
+            "Network",
+            ## "Network interactive",
             "Slope chart",
         ]
 
@@ -679,8 +724,10 @@ class DASHapp(DASH, Model):
             ),
             dash.cmap(arg="cmap", desc="Colormap Col:"),
             dash.cmap(arg="cmap_by", desc="Colormap By:"),
-            dash.nx_layout(),
             dash.nx_iterations(),
+            dash.nx_k(),
+            dash.nx_scale(),
+            dash.random_state(),
             dash.fig_width(),
             dash.fig_height(),
         ]
@@ -693,6 +740,7 @@ class DASHapp(DASH, Model):
         if self.column == self.by:
             for i, _ in enumerate(self.panel_widgets[2:]):
                 self.panel_widgets[i + 2]["widget"].disabled = True
+            self.set_enabled("By:")
             return
         else:
             for i, _ in enumerate(self.panel_widgets[2:]):
@@ -705,20 +753,26 @@ class DASHapp(DASH, Model):
             self.set_enabled("Width:")
             self.set_enabled("Height:")
 
-        if self.menu in ["Network nx", "Network interactive", "Slope chart"]:
+        if self.menu in ["Network", "Network interactive", "Slope chart"]:
             self.set_enabled("Colormap by:")
         else:
             self.set_disabled("Colormap by:")
 
-        if self.menu == "Network nx":
-            self.set_enabled("Layout:")
+        if self.menu == "Network":
+            self.set_enabled("NX iterations:")
+            self.set_enabled("NX K:")
+            self.set_enabled("NX scale:")
+            self.set_enabled("Random State:")
         else:
-            self.set_disabled("Layout:")
+            self.set_disabled("NX iterations:")
+            self.set_disabled("NX K:")
+            self.set_disabled("NX scale:")
+            self.set_disabled("Random State:")
 
-        if self.menu == "Network nx" and self.layout == "Spring":
-            self.set_enabled("nx interations:")
-        else:
-            self.set_disabled("nx iterations:")
+        # if self.menu == "Network" and self.layout == "Spring":
+        #     self.set_enabled("nx interations:")
+        # else:
+        #     self.set_disabled("nx iterations:")
 
 
 ###############################################################################

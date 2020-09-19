@@ -137,30 +137,34 @@ class Network:
         ##
         self.G_ = G
 
-    def networkx_plot(self, layout, iterations, figsize):
+    def networkx_plot(self, layout, iterations, k, scale, figsize):
 
         matplotlib.rc("font", size=11)
         fig = pyplot.Figure(figsize=figsize)
         ax = fig.subplots()
 
-        if layout == "Spring":
-            pos = nx.spring_layout(self.G_, iterations=iterations)
-        else:
-            pos = {
-                "Circular": nx.circular_layout,
-                "Kamada Kawai": nx.kamada_kawai_layout,
-                "Planar": nx.planar_layout,
-                "Random": nx.random_layout,
-                "Spectral": nx.spectral_layout,
-                "Spring": nx.spring_layout,
-                "Shell": nx.shell_layout,
-            }[layout](self.G_)
+        pos = nx.spring_layout(self.G_, iterations=iterations, k=k, scale=scale)
+
+        # if layout == "Spring":
+        #     pos = nx.spring_layout(self.G_, iterations=iterations, k=1)
+        # else:
+        #     pos = {
+        #         "Circular": nx.circular_layout,
+        #         "Kamada Kawai": nx.kamada_kawai_layout,
+        #         "Planar": nx.planar_layout,
+        #         "Random": nx.random_layout,
+        #         "Spectral": nx.spectral_layout,
+        #         "Spring": nx.spring_layout,
+        #         "Shell": nx.shell_layout,
+        #     }[layout](self.G_)
+
+        #  pos = nx.fruchterman_reingold_layout(self.G_)
 
         max_width = max([dict_["width"] for _, _, dict_ in self.G_.edges.data()])
         for e in self.G_.edges.data():
             a, b, dict_ = e
             edge = [(a, b)]
-            width = 0.2 + 4.0 * dict_["width"] / max_width
+            width = 0.0 + 0.5 * dict_["width"] / max_width
             nx.draw_networkx_edges(
                 self.G_,
                 pos=pos,

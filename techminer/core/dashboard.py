@@ -106,7 +106,10 @@ def ascending():
     return {
         "arg": "ascending",
         "desc": "Ascending:",
-        "widget": widgets.Dropdown(options=[True, False], layout=Layout(width="55%"),),
+        "widget": widgets.Dropdown(
+            options=[True, False],
+            layout=Layout(width="55%"),
+        ),
     }
 
 
@@ -114,7 +117,10 @@ def c_axis_ascending():
     return {
         "arg": "c_axis_ascending",
         "desc": "C-axis ascending:",
-        "widget": widgets.Dropdown(options=[True, False], layout=Layout(width="55%"),),
+        "widget": widgets.Dropdown(
+            options=[True, False],
+            layout=Layout(width="55%"),
+        ),
     }
 
 
@@ -122,7 +128,10 @@ def r_axis_ascending():
     return {
         "arg": "r_axis_ascending",
         "desc": "R-axis ascending:",
-        "widget": widgets.Dropdown(options=[True, False], layout=Layout(width="55%"),),
+        "widget": widgets.Dropdown(
+            options=[True, False],
+            layout=Layout(width="55%"),
+        ),
     }
 
 
@@ -148,7 +157,10 @@ def cmap(arg="cmap", desc="Colormap:"):
     return {
         "arg": arg,
         "desc": desc,
-        "widget": widgets.Dropdown(options=COLORMAPS, layout=Layout(width="55%"),),
+        "widget": widgets.Dropdown(
+            options=COLORMAPS,
+            layout=Layout(width="55%"),
+        ),
     }
 
 
@@ -188,7 +200,10 @@ def dropdown(desc, options):
     return {
         "arg": arg,
         "desc": desc,
-        "widget": widgets.Dropdown(options=options, layout=Layout(width="55%"),),
+        "widget": widgets.Dropdown(
+            options=options,
+            layout=Layout(width="55%"),
+        ),
     }
 
 
@@ -197,7 +212,8 @@ def fig_height():
         "arg": "height",
         "desc": "Height:",
         "widget": widgets.Dropdown(
-            options=range(5, 26, 1), layout=Layout(width="55%"),
+            options=range(5, 26, 1),
+            layout=Layout(width="55%"),
         ),
     }
 
@@ -207,7 +223,8 @@ def fig_width():
         "arg": "width",
         "desc": "Width:",
         "widget": widgets.Dropdown(
-            options=range(5, 26, 1), layout=Layout(width="55%"),
+            options=range(5, 26, 1),
+            layout=Layout(width="55%"),
         ),
     }
 
@@ -228,7 +245,8 @@ def max_iter():
         "arg": "max_iter",
         "desc": "Max iterations:",
         "widget": widgets.Dropdown(
-            options=list(range(50, 501, 50)), layout=Layout(width="55%"),
+            options=list(range(50, 501, 50)),
+            layout=Layout(width="55%"),
         ),
     }
 
@@ -251,7 +269,8 @@ def n_labels():
         "arg": "n_labels",
         "desc": "N labels:",
         "widget": widgets.Dropdown(
-            options=list(range(10, 151, 10)), layout=Layout(width="55%"),
+            options=list(range(10, 151, 10)),
+            layout=Layout(width="55%"),
         ),
     }
 
@@ -261,17 +280,8 @@ def min_occurrence(arg="min_occurrence"):
         "arg": arg,
         "desc": "Min occurrence:",
         "widget": widgets.Dropdown(
-            options=list(range(1, 21)), layout=Layout(width="55%"),
-        ),
-    }
-
-
-def nx_iterations():
-    return {
-        "arg": "nx_iterations",
-        "desc": "nx iterations:",
-        "widget": widgets.Dropdown(
-            options=list(range(5, 101, 1)), layout=Layout(width="55%"),
+            options=list(range(1, 21)),
+            layout=Layout(width="55%"),
         ),
     }
 
@@ -281,7 +291,8 @@ def n_iter():
         "arg": "n_iter",
         "desc": "Iterations:",
         "widget": widgets.Dropdown(
-            options=list(range(5, 51, 1)), layout=Layout(width="55%"),
+            options=list(range(5, 51, 1)),
+            layout=Layout(width="55%"),
         ),
     }
 
@@ -291,7 +302,8 @@ def n_clusters(m=3, n=21, i=1):
         "arg": "n_clusters",
         "desc": "N Clusters:",
         "widget": widgets.Dropdown(
-            options=list(range(m, n, i)), layout=Layout(width="55%"),
+            options=list(range(m, n, i)),
+            layout=Layout(width="55%"),
         ),
     }
 
@@ -301,7 +313,8 @@ def n_clusters_ac():
         "arg": "n_clusters",
         "desc": "N Clusters:",
         "widget": widgets.Dropdown(
-            options=["None"] + list(range(2, 21)), layout=Layout(width="55%"),
+            options=["None"] + list(range(2, 21)),
+            layout=Layout(width="55%"),
         ),
     }
 
@@ -311,7 +324,8 @@ def n_components():
         "arg": "n_components",
         "desc": "N components:",
         "widget": widgets.Dropdown(
-            options=list(range(2, 11)), layout=Layout(width="55%"),
+            options=list(range(2, 11)),
+            layout=Layout(width="55%"),
         ),
     }
 
@@ -333,7 +347,75 @@ def normalization(include_none=True):
     return {
         "arg": "normalization",
         "desc": "Normalization:",
-        "widget": widgets.Dropdown(options=options, layout=Layout(width="55%"),),
+        "widget": widgets.Dropdown(
+            options=options,
+            layout=Layout(width="55%"),
+        ),
+    }
+
+
+def nx_scale():
+    return {
+        "arg": "nx_scale",
+        "desc": "NX scale:",
+        "widget": widgets.Dropdown(
+            options=[
+                0.1,
+                0.2,
+                0.3,
+                0.4,
+                0.5,
+                0.6,
+                0.7,
+                0.8,
+                0.9,
+                1.0,
+                1.1,
+                1.2,
+                1.3,
+                1.4,
+                1.5,
+                1.6,
+                1.7,
+                1.8,
+                1.9,
+                2.0,
+            ],
+            layout=Layout(width="55%"),
+            value=1.0,
+        ),
+    }
+
+
+def nx_k():
+    return {
+        "arg": "nx_k",
+        "desc": "NX K:",
+        "widget": widgets.Dropdown(
+            options=[
+                0.00001,
+                0.0001,
+                0.001,
+                0.005,
+                0.01,
+                0.05,
+            ]
+            + [k / 10 for k in range(1, 21)]
+            + [2.5, 3.0, 3.5, 4.0, 4.5, 5.0],
+            layout=Layout(width="55%"),
+        ),
+    }
+
+
+def nx_iterations():
+    return {
+        "arg": "nx_iterations",
+        "desc": "NX iterations:",
+        "widget": widgets.Dropdown(
+            options=list(range(5, 101, 1)),
+            layout=Layout(width="55%"),
+            value=50,
+        ),
     }
 
 
@@ -411,7 +493,8 @@ def top_n(m=10, n=51, i=5):
         "arg": "top_n",
         "desc": "Top N:",
         "widget": widgets.Dropdown(
-            options=list(range(m, n, i)), layout=Layout(width="55%"),
+            options=list(range(m, n, i)),
+            layout=Layout(width="55%"),
         ),
     }
 
@@ -420,7 +503,10 @@ def x_axis(n=10):
     return {
         "arg": "x_axis",
         "desc": "X-axis:",
-        "widget": widgets.Dropdown(options=list(range(n)), layout=Layout(width="55%"),),
+        "widget": widgets.Dropdown(
+            options=list(range(n)),
+            layout=Layout(width="55%"),
+        ),
     }
 
 
@@ -429,7 +515,9 @@ def y_axis(n=10, value=1):
         "arg": "y_axis",
         "desc": "Y-axis:",
         "widget": widgets.Dropdown(
-            options=list(range(n)), value=1, layout=Layout(width="55%"),
+            options=list(range(n)),
+            value=1,
+            layout=Layout(width="55%"),
         ),
     }
 
@@ -473,7 +561,7 @@ class DASH:
         self.app_layout = []
 
         ## display pandas options
-        self.pandas_max_rows = 50
+        self.pandas_max_rows = 100
         self.pandas_max_columns = 100
 
         ## Panel controls
@@ -517,7 +605,9 @@ class DASH:
         panel_len = 0
         if self.panel_widgets is not None:
             panel_len += len(self.panel_widgets)
-        self.app_layout = GridspecLayout(max(14, panel_len + 1), 4, height="770px")
+        self.app_layout = GridspecLayout(
+            max(14, panel_len + 1), 4, height="870px"
+        )  # 770px
 
         ## Panel Title
         panel_widgets = [
@@ -532,7 +622,8 @@ class DASH:
         # menu
         if self.menu_options is not None:
             self.menu_widget = widgets.Dropdown(
-                options=self.menu_options, layout=Layout(width="98%"),
+                options=self.menu_options,
+                layout=Layout(width="98%"),
             )
             panel_widgets += [self.menu_widget]
         else:
@@ -573,8 +664,9 @@ class DASH:
         ## Output area
         self.output = widgets.Output()
         self.app_layout[:, 1:] = widgets.VBox(
-            [self.output], layout=Layout(height="770px", border="2px solid gray"),
-        )
+            [self.output],
+            layout=Layout(height="870px", border="2px solid gray"),
+        )  #  770px
 
         ## interactive
         args = {}
@@ -594,7 +686,8 @@ class DASH:
             }
 
         widgets.interactive_output(
-            self.interactive_output, args,
+            self.interactive_output,
+            args,
         )
 
     def text_transform(self, text):
@@ -680,4 +773,3 @@ class DASH:
             self.set_disabled("Linkage:")
             if include_random_state is True:
                 self.set_disabled("Random State:")
-

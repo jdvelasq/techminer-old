@@ -4,6 +4,8 @@ import matplotlib.pyplot as pyplot
 
 from techminer.plots import expand_ax_limits
 
+from adjustText import adjust_text
+
 COLORS = [
     "tab:blue",
     "tab:orange",
@@ -92,12 +94,23 @@ def xy_clusters_plot(
 
     ## plot bubbles
     ax.scatter(
-        x, y, marker="o", s=node_sizes, c=node_colors, alpha=0.4, linewidths=3,
+        x,
+        y,
+        marker="o",
+        s=node_sizes,
+        c=node_colors,
+        alpha=0.4,
+        linewidths=3,
     )
 
     ## plot centers as black dots
     ax.scatter(
-        x, y, marker="o", s=50, c="k", alpha=1.0,
+        x,
+        y,
+        marker="o",
+        s=50,
+        c="k",
+        alpha=1.0,
     )
 
     ## plot node labels
@@ -106,11 +119,23 @@ def xy_clusters_plot(
 
     factor = 0.1
 
+    texts = []
+
     for x_, y_, label, quadrant in zip(x, y, labels, quadrants):
 
-        ha = {0: "left", 1: "right", 2: "right", 3: "left",}[quadrant]
+        ha = {
+            0: "left",
+            1: "right",
+            2: "right",
+            3: "left",
+        }[quadrant]
 
-        va = {0: "center", 1: "center", 2: "center", 3: "center",}[quadrant]
+        va = {
+            0: "center",
+            1: "center",
+            2: "center",
+            3: "center",
+        }[quadrant]
 
         delta = factor * (xlim[1] - xlim[0])
         angle = math.atan(math.fabs(y_ / x_))
@@ -118,24 +143,33 @@ def xy_clusters_plot(
         x_label = math.copysign(radious * math.cos(angle), x_)
         y_label = math.copysign(radious * math.sin(angle), y_)
 
-        ax.text(
-            x_label,
-            y_label,
-            s=" ".join(label.split(" ")[:-1]),
-            fontsize=9,
-            bbox=dict(
-                facecolor="w",
-                alpha=1.0,
-                boxstyle="round,pad=0.5",
-                edgecolor="lightgray",
-            ),
-            horizontalalignment=ha,
-            verticalalignment=va,
+        texts.append(
+            ax.text(
+                x_label,
+                y_label,
+                s=" ".join(label.split(" ")[:-1]),
+                fontsize=9,
+                bbox=dict(
+                    facecolor="w",
+                    alpha=1.0,
+                    boxstyle="round,pad=0.5",
+                    edgecolor="lightgray",
+                ),
+                horizontalalignment=ha,
+                verticalalignment=va,
+            )
         )
 
         ax.plot(
-            [x_, x_label], [y_, y_label], lw=1, ls="-", c="k", zorder=-1,
+            [x_, x_label],
+            [y_, y_label],
+            lw=1,
+            ls="-",
+            c="k",
+            zorder=-1,
         )
+
+    adjust_text(texts)
 
     ## limits
     ax.axis("equal")
@@ -162,10 +196,18 @@ def xy_clusters_plot(
     ## generic
 
     ax.axhline(
-        y=y_axis_at, color="gray", linestyle="--", linewidth=1, zorder=-1,
+        y=y_axis_at,
+        color="gray",
+        linestyle="--",
+        linewidth=1,
+        zorder=-1,
     )
     ax.axvline(
-        x=x_axis_at, color="gray", linestyle="--", linewidth=1, zorder=-1,
+        x=x_axis_at,
+        color="gray",
+        linestyle="--",
+        linewidth=1,
+        zorder=-1,
     )
 
     ax.axis("off")
@@ -178,4 +220,3 @@ def xy_clusters_plot(
     fig.set_tight_layout(True)
 
     return fig
-
