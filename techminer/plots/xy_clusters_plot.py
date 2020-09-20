@@ -169,7 +169,7 @@ def xy_clusters_plot(
             zorder=-1,
         )
 
-    adjust_text(texts)
+    texts
 
     ## limits
     ax.axis("equal")

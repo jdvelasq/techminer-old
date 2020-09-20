@@ -269,7 +269,7 @@ def n_labels():
         "arg": "n_labels",
         "desc": "N labels:",
         "widget": widgets.Dropdown(
-            options=list(range(10, 151, 10)),
+            options=list(range(5, 151, 5)),
             layout=Layout(width="55%"),
         ),
     }

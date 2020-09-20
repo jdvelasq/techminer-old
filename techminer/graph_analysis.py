@@ -158,7 +158,7 @@ class Model:
             self.X_, axis=0, cmap=self.cmap, figsize=(self.width, self.height)
         )
 
-    def network_nx(self):
+    def network(self):
         self.apply()
         return Network(
             X=self.X_,
@@ -168,6 +168,9 @@ class Model:
         ).networkx_plot(
             layout=self.layout,
             iterations=self.nx_iterations,
+            k=self.nx_k,
+            scale=self.nx_scale,
+            seed=int(self.random_state),
             figsize=(self.width, self.height),
         )
 
@@ -302,8 +305,8 @@ class DASHapp(DASH, Model):
             "Matrix",
             "Heatmap",
             "Bubble plot",
-            "Network (nx)",
-            "Network (interactive)",
+            "Network",
+            #  "Network (interactive)",
             "Chord diagram",
             "Communities (table)",
             "Communities (list)",
@@ -360,9 +363,11 @@ class DASHapp(DASH, Model):
             ),
             dash.r_axis_ascending(),
             dash.cmap(),
-            dash.nx_layout(),
             dash.n_labels(),
             dash.nx_iterations(),
+            dash.nx_k(),
+            dash.nx_scale(),
+            dash.random_state(),
             dash.fig_width(),
             dash.fig_height(),
         ]
@@ -381,11 +386,12 @@ class DASHapp(DASH, Model):
             self.set_enabled("C-axis ascending:")
             self.set_enabled("Sort R-axis by:")
             self.set_enabled("R-axis ascending:")
-
             self.set_disabled("Colormap:")
-            self.set_disabled("Layout:")
-            self.set_disabled("nx iterations:")
             self.set_disabled("N labels:")
+            self.set_disabled("NX iterations:")
+            self.set_disabled("NX K:")
+            self.set_disabled("NX scale:")
+            self.set_disabled("Random State:")
             self.set_disabled("Width:")
             self.set_disabled("Height:")
 
@@ -400,9 +406,11 @@ class DASHapp(DASH, Model):
             self.set_enabled("R-axis ascending:")
 
             self.set_enabled("Colormap:")
-            self.set_disabled("Layout:")
-            self.set_disabled("nx iterations:")
             self.set_disabled("N labels:")
+            self.set_disabled("NX iterations:")
+            self.set_disabled("NX K:")
+            self.set_disabled("NX scale:")
+            self.set_enabled("Random State:")
             self.set_enabled("Width:")
             self.set_enabled("Height:")
 
@@ -417,13 +425,15 @@ class DASHapp(DASH, Model):
             self.set_disabled("R-axis ascending:")
 
             self.set_enabled("Colormap:")
-            self.set_disabled("Layout:")
-            self.set_disabled("nx iterations:")
             self.set_disabled("N labels:")
+            self.set_disabled("NX iterations:")
+            self.set_disabled("NX K:")
+            self.set_disabled("NX scale:")
+            self.set_disabled("Random State:")
             self.set_enabled("Width:")
             self.set_enabled("Height:")
 
-        if self.menu in ["Network (nx)"]:
+        if self.menu in ["Network"]:
 
             self.set_enabled("Clustering:")
 
@@ -434,15 +444,13 @@ class DASHapp(DASH, Model):
             self.set_disabled("R-axis ascending:")
 
             self.set_enabled("Colormap:")
-            self.set_enabled("Layout:")
+            self.set_enabled("NX iterations:")
+            self.set_enabled("NX K:")
+            self.set_enabled("NX scale:")
+            self.set_enabled("Random State:")
             self.set_enabled("N labels:")
             self.set_enabled("Width:")
             self.set_enabled("Height:")
-
-            if self.layout == "Spring":
-                self.set_enabled("nx iterations:")
-            else:
-                self.set_disabled("nx iterations:")
 
         if self.menu in [
             "Communities (list)",
@@ -459,11 +467,13 @@ class DASHapp(DASH, Model):
             self.set_disabled("R-axis ascending:")
 
             self.set_disabled("Colormap:")
-            self.set_disabled("Layout:")
             self.set_disabled("N labels:")
+            self.set_disabled("NX iterations:")
+            self.set_disabled("NX K:")
+            self.set_disabled("NX scale:")
+            self.set_disabled("Random State:")
             self.set_disabled("Width:")
             self.set_disabled("Height:")
-            self.set_disabled("nx iterations:")
 
         if self.menu == "Network (interactive)":
 
@@ -476,8 +486,11 @@ class DASHapp(DASH, Model):
             self.set_disabled("R-axis ascending:")
 
             self.set_disabled("Colormap:")
-            self.set_disabled("Layout:")
             self.set_enabled("N labels:")
+            self.set_disabled("NX iterations:")
+            self.set_disabled("NX K:")
+            self.set_disabled("NX scale:")
+            self.set_disabled("Random State:")
             self.set_disabled("Width:")
             self.set_disabled("Height:")
             self.set_disabled("nx iterations:")

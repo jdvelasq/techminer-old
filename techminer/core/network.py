@@ -1,3 +1,4 @@
+import math
 import matplotlib
 import matplotlib.pyplot as pyplot
 import networkx as nx
@@ -82,6 +83,8 @@ class Network:
         for term, size in zip(terms, node_sizes):
             G.nodes[term]["size"] = size
 
+        dict_ = {a: b for a, b in zip(terms, node_sizes)}
+
         ##
         ##  Add edges to the network
         ##
@@ -112,7 +115,9 @@ class Network:
         for i_community, community in enumerate(R):
             for item in community:
                 G.nodes[item]["group"] = i_community
+                dict_[item] = (dict_[item], i_community)
 
+        self.dict_ = dict_
         ##
         ##  Cluster members
         ##
@@ -137,81 +142,139 @@ class Network:
         ##
         self.G_ = G
 
-    def networkx_plot(self, layout, iterations, k, scale, figsize):
+    def networkx_plot(self, layout, iterations, k, scale, seed, figsize):
 
+        ##
+        ## Creates the plot
+        ##
         matplotlib.rc("font", size=11)
         fig = pyplot.Figure(figsize=figsize)
         ax = fig.subplots()
 
-        pos = nx.spring_layout(self.G_, iterations=iterations, k=k, scale=scale)
+        ##
+        ## Compute positions of the network nodes
+        ##
+        pos = nx.spring_layout(
+            self.G_, iterations=iterations, k=k, scale=scale, seed=seed
+        )
 
-        # if layout == "Spring":
-        #     pos = nx.spring_layout(self.G_, iterations=iterations, k=1)
-        # else:
-        #     pos = {
-        #         "Circular": nx.circular_layout,
-        #         "Kamada Kawai": nx.kamada_kawai_layout,
-        #         "Planar": nx.planar_layout,
-        #         "Random": nx.random_layout,
-        #         "Spectral": nx.spectral_layout,
-        #         "Spring": nx.spring_layout,
-        #         "Shell": nx.shell_layout,
-        #     }[layout](self.G_)
-
-        #  pos = nx.fruchterman_reingold_layout(self.G_)
-
+        ##
+        ## Draw the edges
+        ##
         max_width = max([dict_["width"] for _, _, dict_ in self.G_.edges.data()])
         for e in self.G_.edges.data():
             a, b, dict_ = e
             edge = [(a, b)]
-            width = 0.0 + 0.5 * dict_["width"] / max_width
+            width = 0.1 + 0.5 * dict_["width"] / max_width
+            edge_color = (
+                cluster_colors[self.dict_[a][1]]
+                if self.dict_[a][0] > self.dict_[b][0]
+                else cluster_colors[self.dict_[b][1]],
+            )
             nx.draw_networkx_edges(
                 self.G_,
                 pos=pos,
                 ax=ax,
                 edgelist=edge,
                 width=width,
-                edge_color="k",
-                # with_labels=False,
+                #  edge_color="k",
+                edge_color=edge_color,
                 node_size=1,
-                alpha=0.5,
+                alpha=0.7,
             )
 
-        for node in self.G_.nodes.data():
+        ##
+        ## Draw the nodes
+        ##
+        node_sizes = [node[1]["size"] for node in self.G_.nodes.data()]
+        for node, node_size in zip(self.G_.nodes.data(), node_sizes):
             nx.draw_networkx_nodes(
                 self.G_,
                 pos,
                 ax=ax,
                 nodelist=[node[0]],
-                node_size=[node[1]["size"]],
+                node_size=node_size,
+                #  node_size=[node[1]["size"]],
                 node_color=cluster_colors[node[1]["group"]],
                 node_shape="o",
                 edgecolors="k",
                 linewidths=1,
-                alpha=0.8,
+                alpha=0.75,
             )
 
+        ##
+        ## Compute label positions
+        ##
         xlim = ax.get_xlim()
         ylim = ax.get_ylim()
-        for label in self.top_terms_:
+
+        #  delta_xlim = xlim[1] - xlim[0]
+        #  delta_ylim = ylim[1] - ylim[0]
+
+        # coordinates of the nodes
+        x_points = [pos[label][0] for label in self.top_terms_]
+        y_points = [pos[label][1] for label in self.top_terms_]
+
+        ## plot centers as black dots
+        ax.scatter(
+            x_points,
+            y_points,
+            marker="o",
+            s=50,
+            c="k",
+            alpha=1.0,
+            zorder=10,
+        )
+
+        #  Center of the plot
+        x_mean = sum(x_points) / len(x_points)
+        y_mean = sum(y_points) / len(y_points)
+
+        factor = 0.1
+        rx = factor * (xlim[1] - xlim[0])
+        ry = factor * (ylim[1] - ylim[0])
+        radious = math.sqrt(rx ** 2 + ry ** 2)
+
+        for label, size in zip(self.top_terms_, node_sizes):
+
             x_point, y_point = pos[label]
+
+            x_c = x_point - x_mean
+            y_c = y_point - y_mean
+            angle = math.atan(math.fabs(y_c / x_c))
+            x_label = x_point + math.copysign(radious * math.cos(angle), x_c)
+            y_label = y_point + math.copysign(radious * math.sin(angle), y_c)
+
+            ha = "left" if x_point > x_mean else "right"
+            #  va = "top" if y_point > y_mean else "bottom"
+            va = "center"
+
             ax.text(
-                x_point
-                + 0.01 * (xlim[1] - xlim[0])
-                + 0.001 * self.G_.nodes[label]["size"] / 300 * (xlim[1] - xlim[0]),
-                y_point
-                - 0.01 * (ylim[1] - ylim[0])
-                - 0.001 * self.G_.nodes[label]["size"] / 300 * (ylim[1] - ylim[0]),
+                #  x_point + delta_x,
+                #  y_point + delta_y,
+                x_label,
+                y_label,
                 s=label,
-                fontsize=10,
+                fontsize=9,
                 bbox=dict(
                     facecolor="w",
                     alpha=1.0,
                     edgecolor="gray",
                     boxstyle="round,pad=0.5",
                 ),
-                horizontalalignment="left",
-                verticalalignment="top",
+                horizontalalignment=ha,
+                verticalalignment=va,
+                alpha=0.8,
+                zorder=13,
+            )
+
+            ax.plot(
+                [x_point, x_label],
+                [y_point, y_label],
+                lw=1,
+                ls="-",
+                c="k",
+                zorder=13,
             )
 
         fig.set_tight_layout(True)
