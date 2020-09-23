@@ -12,7 +12,8 @@ from IPython.display import display
 from ipywidgets import GridspecLayout, Layout
 
 from techminer.core import corpus_filter, explode, record_to_HTML
-from techminer.core.params import MULTIVALUED_COLS
+
+#  from techminer.core.params import MULTIVALUED_COLS
 
 
 def matrix_explorer(
@@ -124,8 +125,9 @@ def matrix_explorer(
         xdf = df.copy()
         xdf["_key1_"] = xdf[main_column]
         xdf["_key2_"] = xdf[by_column]
-        if main_column in MULTIVALUED_COLS:
-            xdf = explode(xdf, "_key1_")
+        #  if main_column in MULTIVALUED_COLS:
+        #    xdf = explode(xdf, "_key1_")
+        xdf = explode(xdf, "_key1_")
 
         if clusters is not None and main_column == clusters[0]:
             #
@@ -177,8 +179,9 @@ def matrix_explorer(
         #
         # Subset selection
         #
-        if by_column in MULTIVALUED_COLS:
-            xdf = explode(xdf, "_key2_")
+        #  if by_column in MULTIVALUED_COLS:
+        #    xdf = explode(xdf, "_key2_")
+        xdf = explode(xdf, "_key2_")
         xdf = xdf[xdf["_key1_"] == keyword1]
         terms = sorted(pd.Series(xdf["_key2_"].dropna().unique()))
 

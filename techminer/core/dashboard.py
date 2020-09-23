@@ -350,6 +350,7 @@ def normalization(include_none=True):
         "widget": widgets.Dropdown(
             options=options,
             layout=Layout(width="55%"),
+            value="Association",
         ),
     }
 

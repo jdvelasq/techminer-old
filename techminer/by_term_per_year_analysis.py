@@ -3,10 +3,16 @@ import pandas as pd
 
 import techminer.core.dashboard as dash
 from techminer.by_year_analysis import by_year_analysis
-from techminer.core import (DASH, add_counters_to_axis, corpus_filter, explode,
-                            sort_axis, sort_by_axis)
+from techminer.core import (
+    DASH,
+    add_counters_to_axis,
+    corpus_filter,
+    explode,
+    sort_axis,
+    sort_by_axis,
+)
 from techminer.core.dashboard import max_items, min_occurrence
-from techminer.core.params import EXCLUDE_COLS
+
 from techminer.plots import bubble_plot, gant0_plot, gant_plot, heatmap
 
 TEXTLEN = 40
@@ -371,11 +377,7 @@ class MatrixDASHapp(DASH, MatrixModel):
         DASH.__init__(self)
 
         COLUMNS = sorted(
-            [
-                column
-                for column in data.columns
-                if column not in EXCLUDE_COLS and column != "Abstract_phrase_words"
-            ]
+            [column for column in data.columns if column != "Abstract_phrase_words"]
         )
 
         self.app_title = "Term by Year Analysis"
@@ -582,9 +584,7 @@ class MatrixListDASHapp(DASH, MatrixListModel):
         )
         DASH.__init__(self)
 
-        COLUMNS = sorted(
-            [column for column in data.columns if column not in EXCLUDE_COLS]
-        )
+        COLUMNS = sorted([column for column in data.columns])
 
         self.app_title = "Terms by Year Analysis"
         self.menu_options = [

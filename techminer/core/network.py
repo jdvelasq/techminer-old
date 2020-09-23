@@ -132,7 +132,7 @@ class Network:
                 community, key=(lambda w: w.split(" ")[-1]), reverse=True
             )
             communities.at[0 : len(community) - 1, i_community] = community
-        communities = communities.head(n_labels)
+        # communities = communities.head(n_labels)
         communities.columns = ["Cluster {}".format(i) for i in range(n_communities)]
 
         self.cluster_members_ = communities

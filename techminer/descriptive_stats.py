@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from techminer.core.params import EXCLUDE_COLS, MULTIVALUED_COLS
+#  from techminer.core.params import EXCLUDE_COLS, MULTIVALUED_COLS
 
 ##
 ##
@@ -205,7 +205,27 @@ def descriptive_stats(input_file="techminer.csv"):
     others = {}
     for column in sorted(x.columns):
 
-        if column in EXCLUDE_COLS or column + ":" in d:
+        if column + ":" in d or column in [
+            "Abstract",
+            "Abstract_Author_Keywords",
+            "Abstract_Author_Keywords_CL",
+            "Abstract_Index_Keywords",
+            "Abstract_Index_Keywords_CL",
+            "Abstract_Keywords",
+            "Abstract_Keywords_CL",
+            "Authors_ID",
+            "Bradford_Law_Zone",
+            "Global_Citations",
+            "Global_References",
+            "ID",
+            "Keywords",
+            "Local_Citations",
+            "Local_References",
+            "Num_Authors",
+            "Title",
+            "Year",
+            "Affiliations",
+        ]:
             continue
 
         others[column] = round(_count_terms(x, column))

@@ -32,6 +32,11 @@ class ScopusImporter:
         self.data = pd.read_csv(self.input_file)
 
         ##
+        ## Remove blank spaces
+        ##
+        self.data = self.data.applymap(lambda w: w.strip() if isinstance(w, str) else w)
+
+        ##
         ## Document ID
         ##
         self.data["ID"] = range(len(self.data))
@@ -60,7 +65,7 @@ class ScopusImporter:
         self.create_local_references()
         self.transform_abstract_to_lower_case()
         self.british_to_amerian()
-        self.extract_abstract_keywords()
+        self.keywords_in_abstract()
         #  self.extract_title_keywords()
         #  self.extract_title_words()
         #  self.extract_abstract_phrases_and_words()
@@ -95,39 +100,39 @@ class ScopusImporter:
             )
         )
 
-    def extract_title_keywords(self):
+    # def extract_title_keywords(self):
 
-        self.logging_info("Keywords extraction from title ...")
+    #     self.logging_info("Keywords extraction from title ...")
 
-        author_keywords = self.data.Author_Keywords.dropna()
-        author_keywords = author_keywords.map(lambda w: w.lower().split(";"))
-        author_keywords = author_keywords.explode().tolist()
-        author_keywords = set(author_keywords)
+    #     author_keywords = self.data.Author_Keywords.dropna()
+    #     author_keywords = author_keywords.map(lambda w: w.lower().split(";"))
+    #     author_keywords = author_keywords.explode().tolist()
+    #     author_keywords = set(author_keywords)
 
-        index_keywords = self.data.Index_Keywords.dropna()
-        index_keywords = index_keywords.map(lambda w: w.lower().split(";"))
-        index_keywords = index_keywords.explode().tolist()
-        index_keywords = set(index_keywords)
+    #     index_keywords = self.data.Index_Keywords.dropna()
+    #     index_keywords = index_keywords.map(lambda w: w.lower().split(";"))
+    #     index_keywords = index_keywords.explode().tolist()
+    #     index_keywords = set(index_keywords)
 
-        keywords = author_keywords | index_keywords
+    #     keywords = author_keywords | index_keywords
 
-        self.data["Title_Keywords"] = self.data.Title.copy()
-        self.data["Title_Keywords"] = self.data.Title_Keywords.map(
-            lambda w: word_tokenize(w.lower()), na_action="ignore"
-        )
-        self.data["Title_Keywords"] = self.data.Title_Keywords.map(
-            lambda w: set(w), na_action="ignore"
-        )
-        self.data["Title_Keywords"] = self.data.Title_Keywords.map(
-            lambda w: keywords & w, na_action="ignore"
-        )
-        self.data["Title_Keywords"] = self.data.Title_Keywords.map(
-            lambda w: ";".join(w), na_action="ignore"
-        )
+    #     self.data["Title_Keywords"] = self.data.Title.copy()
+    #     self.data["Title_Keywords"] = self.data.Title_Keywords.map(
+    #         lambda w: word_tokenize(w.lower()), na_action="ignore"
+    #     )
+    #     self.data["Title_Keywords"] = self.data.Title_Keywords.map(
+    #         lambda w: set(w), na_action="ignore"
+    #     )
+    #     self.data["Title_Keywords"] = self.data.Title_Keywords.map(
+    #         lambda w: keywords & w, na_action="ignore"
+    #     )
+    #     self.data["Title_Keywords"] = self.data.Title_Keywords.map(
+    #         lambda w: ";".join(w), na_action="ignore"
+    #     )
 
-    def extract_abstract_keywords(self):
+    def keywords_in_abstract(self):
 
-        self.logging_info("Keywords extraction from abstracts ...")
+        self.logging_info("Extracting Keywords from abstracts ...")
 
         author_keywords = self.data.Author_Keywords.dropna()
         author_keywords = author_keywords.map(lambda w: w.lower().split(";"))
@@ -205,6 +210,46 @@ class ScopusImporter:
             )
 
     def rename_columns(self):
+
+        for column_to_delete in [
+            "Abstract HL",
+            #  "Abstract",
+            "Access Type",
+            #  "Affiliations",
+            "Art. No.",
+            #  "Authors_ID",
+            "Authors with affiliations",
+            #  "Bradford_Law_Zone",
+            "CODEN",
+            "Correspondence Address",
+            "DOI",
+            "Editors",
+            "EID",
+            #  "Global_References",
+            #  "ID",
+            "ISBN",
+            "ISSN",
+            "Issue",
+            "Language of Original Document",
+            "Link",
+            #  "Local_References",
+            #  "Num_Authors",
+            "Page count",
+            "Page end",
+            "Page start",
+            "Publication Stage",
+            "Publisher",
+            "PubMed ID",
+            "Source",
+            #  "Global_Citations",
+            #  "Local_Citations",
+            "Title HL",
+            #  "Title",
+            "Volume",
+            #  "Year",
+        ]:
+            if column_to_delete in self.data.columns:
+                self.data.pop(column_to_delete)
 
         scopus2tags = {
             "Abbreviated Source Title": "Abb_Source_Title",
@@ -432,7 +477,7 @@ class ScopusImporter:
         if "Abstract" not in self.data.columns:
             return
 
-        self.logging_info("Transforming Abstrct to lower case ...")
+        self.logging_info("Transforming Abstracts to lower case ...")
         self.data["Abstract"] = self.data.Abstract.map(
             lambda w: w.lower(), na_action="ignore"
         )
@@ -531,137 +576,137 @@ class ScopusImporter:
         self.data.loc[local_references.index, "Local_Citations"] = local_references
         self.data.index = list(range(len(self.data)))
 
-    def extract_title_words(self):
+    # def extract_title_words(self):
 
-        if "Title" not in self.data.columns:
-            return
+    #     if "Title" not in self.data.columns:
+    #         return
 
-        self.logging_info("Extracting title words ...")
-        self.data["Title_words"] = extract_words(data=self.data, text=self.data.Title)
+    #     self.logging_info("Extracting title words ...")
+    #     self.data["Title_words"] = extract_words(data=self.data, text=self.data.Title)
 
-    def extract_abstract_phrases_and_words(self):
-        #
-        def extract_elementary_context(text):
-            text = text.split(". ")
-            text = [unit for w in text for unit in w.split(":")]
-            text = [unit for w in text for unit in w.split("?")]
-            text = [unit for w in text for unit in w.split("!")]
-            return "//".join(text)
+    # def extract_abstract_phrases_and_words(self):
+    #     #
+    #     def extract_elementary_context(text):
+    #         text = text.split(". ")
+    #         text = [unit for w in text for unit in w.split(":")]
+    #         text = [unit for w in text for unit in w.split("?")]
+    #         text = [unit for w in text for unit in w.split("!")]
+    #         return "//".join(text)
 
-        if "Abstract" not in self.data.columns:
-            return
+    #     if "Abstract" not in self.data.columns:
+    #         return
 
-        self.logging_info("Extracting abstract phrases and words ...")
+    #     self.logging_info("Extracting abstract phrases and words ...")
 
-        self.data["Abstract_phrases"] = self.data.Abstract.map(
-            lambda w: extract_elementary_context(w), na_action="ignore"
-        )
+    #     self.data["Abstract_phrases"] = self.data.Abstract.map(
+    #         lambda w: extract_elementary_context(w), na_action="ignore"
+    #     )
 
-        self.data["Abstract_phrase_words"] = self.data.Abstract_phrases.map(
-            lambda w: "//".join(
-                [
-                    ";".join(extract_words(data=self.data, text=pd.Series(z)))
-                    for z in w.split("//")
-                ]
-            ),
-            na_action="ignore",
-        )
+    #     self.data["Abstract_phrase_words"] = self.data.Abstract_phrases.map(
+    #         lambda w: "//".join(
+    #             [
+    #                 ";".join(extract_words(data=self.data, text=pd.Series(z)))
+    #                 for z in w.split("//")
+    #             ]
+    #         ),
+    #         na_action="ignore",
+    #     )
 
-        self.data["Abstract_phrase_words"] = self.data.Abstract_phrase_words.map(
-            lambda w: w[:-2] if w[-2:] == "//" else w,
-            na_action="ignore",
-        )
+    #     self.data["Abstract_phrase_words"] = self.data.Abstract_phrase_words.map(
+    #         lambda w: w[:-2] if w[-2:] == "//" else w,
+    #         na_action="ignore",
+    #     )
 
-        self.data["Abstract_words"] = self.data.Abstract_phrase_words.copy()
-        self.data["Abstract_words"] = self.data.Abstract_words.map(
-            lambda w: w.replace("//", ";"), na_action="ignore"
-        )
-        self.data["Abstract_words"] = self.data.Abstract_words.map(
-            lambda w: w.split(";"), na_action="ignore"
-        )
-        self.data["Abstract_words"] = self.data.Abstract_words.map(
-            lambda w: ";".join(sorted(set(w))), na_action="ignore"
-        )
+    #     self.data["Abstract_words"] = self.data.Abstract_phrase_words.copy()
+    #     self.data["Abstract_words"] = self.data.Abstract_words.map(
+    #         lambda w: w.replace("//", ";"), na_action="ignore"
+    #     )
+    #     self.data["Abstract_words"] = self.data.Abstract_words.map(
+    #         lambda w: w.split(";"), na_action="ignore"
+    #     )
+    #     self.data["Abstract_words"] = self.data.Abstract_words.map(
+    #         lambda w: ";".join(sorted(set(w))), na_action="ignore"
+    #     )
 
-    def highlight_author_keywords_in_titles(self):
-        #
-        def replace_keywords(x):
-            #
-            for keyword in keywords_list:
-                x = re.sub(
-                    pattern=re.escape(keyword),
-                    repl=keyword.upper().replace(" ", "_"),
-                    string=x,
-                    flags=re.I,
-                )
-            return x
+    # def highlight_author_keywords_in_titles(self):
+    #     #
+    #     def replace_keywords(x):
+    #         #
+    #         for keyword in keywords_list:
+    #             x = re.sub(
+    #                 pattern=re.escape(keyword),
+    #                 repl=keyword.upper().replace(" ", "_"),
+    #                 string=x,
+    #                 flags=re.I,
+    #             )
+    #         return x
 
-        if "Title" not in self.data.columns:
-            return
+    #     if "Title" not in self.data.columns:
+    #         return
 
-        if "Author_Keywords" not in self.data.columns:
-            return
+    #     if "Author_Keywords" not in self.data.columns:
+    #         return
 
-        if len(self.data) >= 200:
-            return
+    #     if len(self.data) >= 200:
+    #         return
 
-        self.logging_info("Marking Author Keywords in Titles ...")
+    #     self.logging_info("Marking Author Keywords in Titles ...")
 
-        ##
-        ## Builds a list of keywords
-        ##
-        keywords_list = self.data.Author_Keywords.copy()
-        keywords_list = keywords_list.dropna()
-        keywords_list = keywords_list.map(lambda w: w.split(";"))
-        keywords_list = keywords_list.explode()
-        keywords_list = keywords_list.map(lambda w: w.upper())
-        keywords_list = keywords_list.tolist()
+    #     ##
+    #     ## Builds a list of keywords
+    #     ##
+    #     keywords_list = self.data.Author_Keywords.copy()
+    #     keywords_list = keywords_list.dropna()
+    #     keywords_list = keywords_list.map(lambda w: w.split(";"))
+    #     keywords_list = keywords_list.explode()
+    #     keywords_list = keywords_list.map(lambda w: w.upper())
+    #     keywords_list = keywords_list.tolist()
 
-        ##
-        ## Replace in titles
-        ##
-        self.data["Title_HL"] = self.data.Title
-        self.data["Title_HL"] = self.data.Title_HL.map(replace_keywords)
+    #     ##
+    #     ## Replace in titles
+    #     ##
+    #     self.data["Title_HL"] = self.data.Title
+    #     self.data["Title_HL"] = self.data.Title_HL.map(replace_keywords)
 
-    def highlight_author_keywords_in_abstracts(self):
-        #
-        def replace_keywords(x):
-            #
-            for keyword in keywords_list:
-                x = re.sub(
-                    pattern=re.escape(keyword),
-                    repl=keyword.upper().replace(" ", "_"),
-                    string=x,
-                    flags=re.I,
-                )
-            return x
+    # def highlight_author_keywords_in_abstracts(self):
+    #     #
+    #     def replace_keywords(x):
+    #         #
+    #         for keyword in keywords_list:
+    #             x = re.sub(
+    #                 pattern=re.escape(keyword),
+    #                 repl=keyword.upper().replace(" ", "_"),
+    #                 string=x,
+    #                 flags=re.I,
+    #             )
+    #         return x
 
-        if "Abstract" not in self.data.columns:
-            return
+    #     if "Abstract" not in self.data.columns:
+    #         return
 
-        if "Author_Keywords" not in self.data.columns:
-            return
+    #     if "Author_Keywords" not in self.data.columns:
+    #         return
 
-        if len(self.data) >= 200:
-            return
+    #     if len(self.data) >= 200:
+    #         return
 
-        self.logging_info("Marking Author Keywords in Abstracts ...")
+    #     self.logging_info("Marking Author Keywords in Abstracts ...")
 
-        ##
-        ## Builds a list of keywords
-        ##
-        keywords_list = self.data.Author_Keywords.copy()
-        keywords_list = keywords_list.dropna()
-        keywords_list = keywords_list.map(lambda w: w.split(";"))
-        keywords_list = keywords_list.explode()
-        keywords_list = keywords_list.map(lambda w: w.upper())
-        keywords_list = keywords_list.tolist()
+    #     ##
+    #     ## Builds a list of keywords
+    #     ##
+    #     keywords_list = self.data.Author_Keywords.copy()
+    #     keywords_list = keywords_list.dropna()
+    #     keywords_list = keywords_list.map(lambda w: w.split(";"))
+    #     keywords_list = keywords_list.explode()
+    #     keywords_list = keywords_list.map(lambda w: w.upper())
+    #     keywords_list = keywords_list.tolist()
 
-        ##
-        ## Replace in titles
-        ##
-        self.data["Abstract_HL"] = self.data.Abstract
-        self.data["Abstract_HL"] = self.data.Abstract_HL.map(replace_keywords)
+    #     ##
+    #     ## Replace in titles
+    #     ##
+    #     self.data["Abstract_HL"] = self.data.Abstract
+    #     self.data["Abstract_HL"] = self.data.Abstract_HL.map(replace_keywords)
 
     def compute_bradford_law_zones(self):
 

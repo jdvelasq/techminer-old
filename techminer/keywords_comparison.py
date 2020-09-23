@@ -20,7 +20,8 @@ from techminer.core import (
     sort_by_axis,
     explode,
 )
-from techminer.core.params import EXCLUDE_COLS
+
+#  from techminer.core.params import EXCLUDE_COLS
 from techminer.core import cluster_table_to_list
 from techminer.plots import ChordDiagram
 from techminer.plots import bubble_plot as bubble_plot_

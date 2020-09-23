@@ -5,7 +5,8 @@ from IPython.display import display
 from ipywidgets import GridspecLayout, Layout
 
 from techminer.core import corpus_filter, explode, record_to_HTML
-from techminer.core.params import MULTIVALUED_COLS
+
+#  from techminer.core.params import MULTIVALUED_COLS
 
 
 def column_explorer(

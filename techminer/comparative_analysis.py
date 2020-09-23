@@ -13,7 +13,8 @@ from techminer.core import (
     corpus_filter,
     limit_to_exclude,
 )
-from techminer.core.params import EXCLUDE_COLS
+
+#  from techminer.core.params import EXCLUDE_COLS
 from techminer.plots import counters_to_node_sizes, xy_clusters_plot
 
 ###############################################################################

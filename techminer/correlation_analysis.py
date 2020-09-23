@@ -3,12 +3,23 @@ import numpy as np
 import pandas as pd
 
 import techminer.core.dashboard as dash
-from techminer.core import (DASH, Network, TF_matrix, add_counters_to_axis,
-                            corpus_filter, limit_to_exclude, sort_by_axis)
+from techminer.core import (
+    DASH,
+    Network,
+    TF_matrix,
+    add_counters_to_axis,
+    corpus_filter,
+    limit_to_exclude,
+    sort_by_axis,
+)
 from techminer.core.dashboard import min_occurrence
-from techminer.plots import (ChordDiagram, bubble_plot,
-                             counters_to_node_colors, counters_to_node_sizes,
-                             heatmap)
+from techminer.plots import (
+    ChordDiagram,
+    bubble_plot,
+    counters_to_node_colors,
+    counters_to_node_sizes,
+    heatmap,
+)
 
 ###############################################################################
 ##
@@ -251,24 +262,6 @@ class Model:
 ##
 ###############################################################################
 
-COLUMNS = sorted(
-    [
-        "Abstract_words_CL",
-        "Abstract_words",
-        "Affiliations",
-        "Author_Keywords_CL",
-        "Author_Keywords",
-        "Authors",
-        "Countries",
-        "Index_Keywords_CL",
-        "Index_Keywords",
-        "Institutions",
-        "Keywords_CL",
-        "Title_words_CL",
-        "Title_words",
-    ]
-)
-
 
 class DASHapp(DASH, Model):
     def __init__(
@@ -299,18 +292,45 @@ class DASHapp(DASH, Model):
             "Heatmap",
             "Bubble plot",
             "Correlation map (nx)",
-            "Correlation map (interactive)",
+            #  "Correlation map (interactive)",
             "Chord diagram",
         ]
+
+        COLUMNS = sorted(
+            [
+                column
+                for column in data.columns
+                if column
+                not in [
+                    "Abb_Source_Title",
+                    "Abstract",
+                    "Affiliations",
+                    "Authors_ID",
+                    "Bradford_Law_Zone",
+                    "Document_Type",
+                    "Frac_Num_Documents",
+                    "Global_Citations",
+                    "Global_References",
+                    "Historiograph_ID",
+                    "ID",
+                    "Local_Citations",
+                    "Local_References",
+                    "Num_Authors",
+                    "Source_Title",
+                    "Title",
+                    "Year",
+                ]
+            ]
+        )
 
         self.panel_widgets = [
             dash.dropdown(
                 desc="Column:",
-                options=[z for z in COLUMNS if z in data.columns],
+                options=COLUMNS,
             ),
             dash.dropdown(
                 desc="By:",
-                options=[z for z in COLUMNS if z in data.columns],
+                options=COLUMNS,
             ),
             dash.dropdown(
                 desc="Method:",

@@ -22,6 +22,6 @@ def top_documents(input_file="techminer.csv", top_n=10, clusters=None, cluster=N
             + str(data.Year[i])
             + ". "
             + data.Title[i]
-            + "\t"
+            + ".\t"
             + str(int(data.Global_Citations[i]))
         )

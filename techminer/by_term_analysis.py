@@ -21,7 +21,6 @@ from techminer.core import (
     sort_axis,
     sort_by_axis,
 )
-from techminer.core.params import EXCLUDE_COLS
 from techminer.plots import (
     bar_plot,
     barh_plot,
@@ -910,13 +909,7 @@ class DASHapp(DASH, Model):
         )
         DASH.__init__(self)
 
-        COLUMNS = sorted(
-            [
-                column
-                for column in data.columns
-                if column not in EXCLUDE_COLS and column != "Abstract_phrase_words"
-            ]
-        )
+        COLUMNS = sorted([column for column in data.columns])
 
         self.app_title = "Terms Analysis"
         self.menu_options = [
@@ -993,14 +986,7 @@ class DASHapp(DASH, Model):
 
         config = {
             "General": {
-                "Column:": sorted(
-                    [
-                        column
-                        for column in self.data.columns
-                        if column not in EXCLUDE_COLS
-                        and column != "Abstract_phrase_words"
-                    ]
-                ),
+                "Column:": sorted([column for column in self.data.columns]),
                 "View:": [
                     "Table",
                     "Bar plot",
@@ -1085,14 +1071,7 @@ class DASHapp(DASH, Model):
             "Bradford law": {},
             "Lotka law": {},
             "LIMIT TO python code": {
-                "Column:": sorted(
-                    [
-                        column
-                        for column in self.data.columns
-                        if column not in EXCLUDE_COLS
-                        and column != "Abstract_phrase_words"
-                    ]
-                )
+                "Column:": sorted([column for column in self.data.columns])
             },
         }
 

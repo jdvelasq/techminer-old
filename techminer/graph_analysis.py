@@ -15,7 +15,7 @@ from techminer.core import (
     normalize_network,
     sort_by_axis,
 )
-from techminer.core.params import EXCLUDE_COLS
+
 from techminer.core import cluster_table_to_list
 from techminer.plots import ChordDiagram
 from techminer.plots import bubble_plot as bubble_plot_
@@ -306,7 +306,6 @@ class DASHapp(DASH, Model):
             "Heatmap",
             "Bubble plot",
             "Network",
-            #  "Network (interactive)",
             "Chord diagram",
             "Communities (table)",
             "Communities (list)",
@@ -314,7 +313,30 @@ class DASHapp(DASH, Model):
         ]
 
         COLUMNS = sorted(
-            [column for column in data.columns if column not in EXCLUDE_COLS]
+            [
+                column
+                for column in data.columns
+                if column
+                not in [
+                    "Abb_Source_Title",
+                    "Abstract",
+                    "Affiliations",
+                    "Authors_ID",
+                    "Bradford_Law_Zone",
+                    "Document_Type",
+                    "Frac_Num_Documents",
+                    "Global_Citations",
+                    "Global_References",
+                    "Historiograph_ID",
+                    "ID",
+                    "Local_Citations",
+                    "Local_References",
+                    "Num_Authors",
+                    "Source_Title",
+                    "Title",
+                    "Year",
+                ]
+            ]
         )
 
         self.panel_widgets = [
@@ -333,6 +355,7 @@ class DASHapp(DASH, Model):
                     "Louvain",
                     "Walktrap",
                 ],
+                value="Louvain",
             ),
             dash.separator(text="Visualization"),
             dash.dropdown(

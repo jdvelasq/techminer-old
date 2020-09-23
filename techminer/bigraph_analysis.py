@@ -16,7 +16,7 @@ from techminer.core import (
     limit_to_exclude,
     sort_by_axis,
 )
-from techminer.core.params import EXCLUDE_COLS
+
 from techminer.plots import (
     ax_text_node_labels,
     bubble_plot,
@@ -670,13 +670,7 @@ class DASHapp(DASH, Model):
             "Slope chart",
         ]
 
-        COLUMNS = sorted(
-            [
-                column
-                for column in data.columns
-                if column not in EXCLUDE_COLS and column != "Abstract_phrase_words"
-            ]
-        )
+        COLUMNS = sorted([column for column in data.columns])
 
         self.panel_widgets = [
             dash.separator(text="Column"),
