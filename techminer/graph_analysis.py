@@ -355,7 +355,6 @@ class DASHapp(DASH, Model):
                     "Louvain",
                     "Walktrap",
                 ],
-                value="Louvain",
             ),
             dash.separator(text="Visualization"),
             dash.dropdown(

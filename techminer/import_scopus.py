@@ -19,7 +19,24 @@ from nltk import word_tokenize
 
 
 class ScopusImporter:
-    def __init__(self, input_file="scopus.csv", output_file="techminer.csv"):
+    def __init__(
+        self,
+        input_file="scopus.csv",
+        output_file="techminer.csv",
+        article=True,
+        article_in_press=True,
+        book=True,
+        book_chapter=True,
+        business_article=True,
+        conference_paper=True,
+        conference_review=False,
+        data_paper=True,
+        editorial=False,
+        letter=False,
+        note=False,
+        review=True,
+        short_survey=True,
+    ):
         self.input_file = input_file
         self.output_file = output_file
         self.data = None
@@ -784,6 +801,38 @@ class ScopusImporter:
         )
 
 
-def import_scopus(input_file="scopus.csv", output_file="techminer.csv"):
+def import_scopus(
+    input_file="scopus.csv",
+    output_file="techminer.csv",
+    article=True,
+    article_in_press=True,
+    book=True,
+    book_chapter=True,
+    business_article=True,
+    conference_paper=True,
+    conference_review=False,
+    data_paper=False,
+    editorial=False,
+    letter=False,
+    note=False,
+    review=True,
+    short_survey=True,
+):
     #
-    ScopusImporter(input_file=input_file, output_file=output_file).run()
+    ScopusImporter(
+        input_file=input_file,
+        output_file=output_file,
+        article=article,
+        article_in_press=article_in_press,
+        book=book,
+        book_chapter=book_chapter,
+        business_article=business_article,
+        conference_paper=conference_paper,
+        conference_review=conference_review,
+        data_paper=data_paper,
+        editorial=editorial,
+        letter=letter,
+        note=note,
+        review=review,
+        short_survey=short_survey,
+    ).run()
