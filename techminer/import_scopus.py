@@ -36,10 +36,34 @@ class ScopusImporter:
         note=False,
         review=True,
         short_survey=True,
+        erratum=False,
+        report=False,
+        retracted=False,
+        abstract_report=False,
+        undefined=False,
     ):
         self.input_file = input_file
         self.output_file = output_file
         self.data = None
+
+        self.article = article
+        self.article_in_press = article_in_press
+        self.book = book
+        self.book_chapter = book_chapter
+        self.business_article = business_article
+        self.conference_paper = conference_paper
+        self.conference_review = conference_review
+        self.data_paper = data_paper
+        self.editorial = editorial
+        self.letter = letter
+        self.note = note
+        self.review = review
+        self.short_survey = short_survey
+        self.erratum = erratum
+        self.report = report
+        self.retracted = retracted
+        self.abstract_report = abstract_report
+        self.undefined = undefined
 
     def run(self):
 
@@ -62,6 +86,7 @@ class ScopusImporter:
         ## Steps
         ##
         self.rename_columns()
+        self.select_documents()
         self.remove_accents()
         self.remove_no_author_name_available()
         self.format_author_names()
@@ -146,6 +171,54 @@ class ScopusImporter:
     #     self.data["Title_Keywords"] = self.data.Title_Keywords.map(
     #         lambda w: ";".join(w), na_action="ignore"
     #     )
+
+    def select_documents(self):
+
+        document_types = []
+        if self.article is True:
+            document_types.append("Article")
+        if self.article_in_press is True:
+            document_types.append("Article-in-Press")
+        if self.book is True:
+            document_types.append("Book")
+        if self.book_chapter is True:
+            document_types.append("Book Chapter")
+        if self.business_article is True:
+            document_types.append("Business Article")
+        if self.conference_paper is True:
+            document_types.append("Conference Paper")
+        if self.conference_review is True:
+            document_types.append("Conference Review")
+        if self.data_paper is True:
+            document_types.append("Data Paper")
+        if self.editorial is True:
+            document_types.append("Editorial")
+        if self.letter is True:
+            document_types.append("Letter")
+        if self.note is True:
+            document_types.append("Note")
+        if self.review is True:
+            document_types.append("Review")
+        if self.short_survey is True:
+            document_types.append("Short Survey")
+        if self.erratum is True:
+            document_types.append("Erratum")
+        if self.report is True:
+            document_types.append("Report")
+        if self.retracted is True:
+            document_types.append("Retracted")
+        if self.abstract_report is True:
+            document_types.append("Abstract Report")
+        if self.undefined is True:
+            document_types.append("Undefined")
+
+        self.data = self.data[
+            self.data.Document_Type.map(
+                lambda w: w in document_types, na_action="ignore"
+            )
+        ]
+
+        self.data.index = range(len(self.data))
 
     def keywords_in_abstract(self):
 
@@ -817,6 +890,11 @@ def import_scopus(
     note=False,
     review=True,
     short_survey=True,
+    erratum=False,
+    report=False,
+    retracted=False,
+    abstract_report=False,
+    undefined=False,
 ):
     #
     ScopusImporter(
@@ -835,4 +913,9 @@ def import_scopus(
         note=note,
         review=review,
         short_survey=short_survey,
+        erratum=erratum,
+        report=report,
+        retracted=retracted,
+        abstract_report=abstract_report,
+        undefined=undefined,
     ).run()
