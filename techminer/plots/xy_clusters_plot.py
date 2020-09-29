@@ -4,8 +4,6 @@ import matplotlib.pyplot as pyplot
 
 from techminer.plots import expand_ax_limits
 
-from adjustText import adjust_text
-
 COLORS = [
     "tab:blue",
     "tab:orange",
