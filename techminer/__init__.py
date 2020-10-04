@@ -26,3 +26,4 @@ from .conceptual_structure import conceptual_structure
 from .co_word_analysis import co_word_analysis
 from .keywords_association import keywords_association
 from .keywords_comparison import keywords_comparison
+from .app import App
