@@ -61,7 +61,7 @@ def column_explorer(
             "desc": "Column:",
             "widget": widgets.Dropdown(
                 options=[z for z in COLUMNS if z in df.columns],
-                layout=Layout(width="95%"),
+                layout=Layout(width="98%"),
             ),
         },
         # 1
@@ -70,7 +70,7 @@ def column_explorer(
             "desc": "Term:",
             "widget": widgets.Dropdown(
                 options=[],
-                layout=Layout(width="95%"),
+                layout=Layout(width="98%"),
             ),
         },
         # 2
@@ -79,7 +79,7 @@ def column_explorer(
             "desc": "Title:",
             "widget": widgets.Select(
                 options=[],
-                layout=Layout(height="380pt", width="95%"),
+                layout=Layout(height="380pt", width="98%"),
             ),
         },
     ]
@@ -171,7 +171,7 @@ def column_explorer(
     #
     # -------------------------------------------------------------------------
     args = {control["arg"]: control["widget"] for control in left_panel}
-    output = widgets.Output()
+    output = widgets.Output().add_class("output_color")
     with output:
         display(
             widgets.interactive_output(
@@ -180,30 +180,42 @@ def column_explorer(
             )
         )
 
-    grid = GridspecLayout(10, 4, height="800px")
-    grid[0, :] = widgets.HTML(
-        value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
-            "Column Explorer (Top {} terms)".format(top_n)
-        )
-    )
+    grid = GridspecLayout(10, 4, height="706px")
+    # grid[0, :] = widgets.HTML(
+    #     value="<h1>{}</h1><hr style='height:2px;border-width:0;color:gray;background-color:gray'>".format(
+    #         "Column Explorer (Top {} terms)".format(top_n)
+    #     )
+    # )
     for i in range(0, len(left_panel) - 1):
-        grid[i + 1, 0] = widgets.VBox(
+        #  grid[i + 1, 0] = widgets.VBox(
+        grid[i, 0] = widgets.VBox(
             [
                 widgets.Label(value=left_panel[i]["desc"]),
                 left_panel[i]["widget"],
-            ]
+            ],
         )
 
-    grid[len(left_panel) : len(left_panel) + 8, 0] = widgets.VBox(
+    grid[len(left_panel) - 1 :, 0] = widgets.VBox(
         [
             widgets.Label(value=left_panel[-1]["desc"]),
             left_panel[-1]["widget"],
         ]
     )
 
-    grid[1:, 1:] = widgets.VBox(
-        [output],  #  layout=Layout(height="657px", border="2px solid gray")
-        layout=Layout(border="2px solid gray"),
+    # grid[1:, 1:]
+    grid[0:, 1:] = widgets.VBox(
+        [
+            output,
+        ],  #  layout=Layout(height="657px", border="2px solid gray")
+        layout=Layout(
+            #  border="2px solid red",
+            #  height="600px",
+            #  width="99.5%",
+            #  height="99.5%",
+            margin="10px 4px 4px 4px",
+            #  display="flex",
+            #  align_items="flex-start",
+        ),
     )
 
     return grid

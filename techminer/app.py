@@ -3,6 +3,8 @@ from ipywidgets import GridspecLayout, Layout
 from IPython.display import display
 import pandas as pd
 
+from techminer.column_explorer import column_explorer
+
 
 header_style = """
 <style>
@@ -11,43 +13,55 @@ header_style = """
     border : 2px solid #ff8000;
     height: auto;
     background-color:#ff8000;
-    box-shadow: 2px 2px lightgray;
+    box-shadow: 1px 5px  4px #BDC3C7;
 }
 
-.widget-select > select {background-color: #ff8000; color: white; border-color: light-gray;}
+.app{
+    background-color:#F4F6F7;
+}
+
+.output_color{
+    background-color:#FFFFFF;
+}
+
+.select > select {background-color: #ff8000; color: white; border-color: light-gray;}
 
 </style>
 """
+
+APPS = {
+    "Column Explorer": column_explorer,
+}
 
 
 class App:
     def __init__(self):
 
-        ## layout
-        self.app_layout = []
-        self.apps = [
-            "Column Explorer",
-            "Matrix Explorer",
-        ]
-
-        self.app_layout = GridspecLayout(14, 4, height="800px")
+        #
+        # APPs menu
+        #
+        apps_dropdown = widgets.Dropdown(
+            options=[key for key in sorted(APPS.keys())],
+            layout=Layout(width="70%"),
+        ).add_class("select")
 
         #
-        app_menu_widget = widgets.Dropdown(
-            options=self.apps,
-            layout=Layout(
-                width="70%",
-            ),
-        )
+        # Grid layout definition
+        #
+        self.app_layout = GridspecLayout(
+            11,
+            4,
+            height="780px",  # layout=Layout(border="1px solid #ff8000")
+        ).add_class("app")
 
+        #
+        # Populates the grid
+        #
         self.app_layout[0, :] = widgets.HBox(
             [
                 widgets.HTML(header_style),
                 widgets.HTML('<h2 style="color:white;">TechMiner</h2>'),
-                widgets.Dropdown(
-                    options=self.apps,
-                    layout=Layout(width="70%"),
-                ).add_class("widget-select"),
+                apps_dropdown,
             ],
             layout=Layout(
                 display="flex",
@@ -56,5 +70,16 @@ class App:
             ),
         ).add_class("hbox_style")
 
+        #
+        # Interative output
+        #
+        widgets.interactive_output(
+            self.interactive_output,
+            {"selected-app": apps_dropdown},
+        )
+
     def run(self):
         return self.app_layout
+
+    def interactive_output(self, **kwargs):
+        self.app_layout[1:, :] = APPS[kwargs["selected-app"]]()

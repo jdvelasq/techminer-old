@@ -607,7 +607,7 @@ class DASH:
         if self.panel_widgets is not None:
             panel_len += len(self.panel_widgets)
         self.app_layout = GridspecLayout(
-            max(14, panel_len + 1), 4, height="870px"
+            max(14, panel_len + 1), 4, height="700px"
         )  # 770px
 
         ## Panel Title
@@ -666,7 +666,7 @@ class DASH:
         self.output = widgets.Output()
         self.app_layout[:, 1:] = widgets.VBox(
             [self.output],
-            layout=Layout(height="870px", border="2px solid gray"),
+            layout=Layout(height="700px", border="2px solid gray"),
         )  #  770px
 
         ## interactive
